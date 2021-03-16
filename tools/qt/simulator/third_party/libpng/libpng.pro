@@ -16,8 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-DESTDIR = ../../libs
-
 SOURCES += \
     ../../../../../../../../third_party/libpng/png.c \
     ../../../../../../../../third_party/libpng/pngerror.c \
@@ -29,7 +27,6 @@ SOURCES += \
     ../../../../../../../../third_party/libpng/pngrtran.c \
     ../../../../../../../../third_party/libpng/pngrutil.c \
     ../../../../../../../../third_party/libpng/pngset.c \
-    ../../../../../../../../third_party/libpng/pngtest.c \
     ../../../../../../../../third_party/libpng/pngtrans.c \
     ../../../../../../../../third_party/libpng/pngwio.c \
     ../../../../../../../../third_party/libpng/pngwrite.c \

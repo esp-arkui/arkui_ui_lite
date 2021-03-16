@@ -24,15 +24,8 @@ FORMS += \
     main_widget.ui
 
 LIBS += -L$$DESTDIR/libs \
-        -lfreetype \
         -lharfbuzz \
         -licu \
-        -lzlib \
-        -llibpng \
-        -llibjpeg \
-        -lqrcodegen \
-        -llibui \
-        -ltest
 
 TRANSLATIONS += helloqt_zh_CN.ts
 
@@ -69,3 +62,80 @@ INCLUDEPATH += \
     ../drivers/display \
     ../drivers/indev \
     ../drivers
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../test/release/ -ltest
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../test/debug/ -ltest
+
+INCLUDEPATH += $$PWD/../test
+DEPENDPATH += $$PWD/../test
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../test/release/libtest.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../test/debug/libtest.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../test/release/test.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../test/debug/test.lib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libui/release/ -llibui
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libui/debug/ -llibui
+
+INCLUDEPATH += $$PWD/../libui
+DEPENDPATH += $$PWD/../libui
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../libui/release/liblibui.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../libui/debug/liblibui.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../libui/release/libui.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../libui/debug/libui.lib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../third_party/freetype/release/ -lfreetype
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../third_party/freetype/debug/ -lfreetype
+
+INCLUDEPATH += $$PWD/../third_party/freetype
+DEPENDPATH += $$PWD/../third_party/freetype
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/freetype/release/libfreetype.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/freetype/debug/libfreetype.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/freetype/release/freetype.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/freetype/debug/freetype.lib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../third_party/libjpeg/release/ -llibjpeg
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../third_party/libjpeg/debug/ -llibjpeg
+
+INCLUDEPATH += $$PWD/../third_party/libjpeg
+DEPENDPATH += $$PWD/../third_party/libjpeg
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libjpeg/release/liblibjpeg.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libjpeg/debug/liblibjpeg.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libjpeg/release/libjpeg.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libjpeg/debug/libjpeg.lib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../third_party/libpng/release/ -llibpng
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../third_party/libpng/debug/ -llibpng
+
+INCLUDEPATH += $$PWD/../third_party/libpng
+DEPENDPATH += $$PWD/../third_party/libpng
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libpng/release/liblibpng.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libpng/debug/liblibpng.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libpng/release/libpng.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/libpng/debug/libpng.lib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../third_party/qrcodegen/release/ -lqrcodegen
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../third_party/qrcodegen/debug/ -lqrcodegen
+
+INCLUDEPATH += $$PWD/../third_party/qrcodegen
+DEPENDPATH += $$PWD/../third_party/qrcodegen
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/qrcodegen/release/libqrcodegen.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/qrcodegen/debug/libqrcodegen.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/qrcodegen/release/qrcodegen.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/qrcodegen/debug/qrcodegen.lib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../third_party/zlib/release/ -lzlib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../third_party/zlib/debug/ -lzlib
+
+INCLUDEPATH += $$PWD/../third_party/zlib
+DEPENDPATH += $$PWD/../third_party/zlib
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/zlib/release/libzlib.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/zlib/debug/libzlib.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/zlib/release/zlib.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../third_party/zlib/debug/zlib.lib
