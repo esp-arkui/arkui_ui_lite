@@ -16,13 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-DESTDIR = ../../libs
-
 SOURCES += \
     ../../../../../../../../third_party/libjpeg/cdjpeg.c \
-    ../../../../../../../../third_party/libjpeg/cjpeg.c \
-    ../../../../../../../../third_party/libjpeg/ckconfig.c \
-    ../../../../../../../../third_party/libjpeg/djpeg.c \
     ../../../../../../../../third_party/libjpeg/jaricom.c \
     ../../../../../../../../third_party/libjpeg/jcapimin.c \
     ../../../../../../../../third_party/libjpeg/jcapistd.c \
@@ -30,6 +25,7 @@ SOURCES += \
     ../../../../../../../../third_party/libjpeg/jccoefct.c \
     ../../../../../../../../third_party/libjpeg/jccolor.c \
     ../../../../../../../../third_party/libjpeg/jcdctmgr.c \
+    ../../../../../../../../third_party/libjpeg/jchuff.c \
     ../../../../../../../../third_party/libjpeg/jcinit.c \
     ../../../../../../../../third_party/libjpeg/jcmainct.c \
     ../../../../../../../../third_party/libjpeg/jcmarker.c \
@@ -65,26 +61,17 @@ SOURCES += \
     ../../../../../../../../third_party/libjpeg/jidctint.c \
     ../../../../../../../../third_party/libjpeg/jmemansi.c \
     ../../../../../../../../third_party/libjpeg/jmemmgr.c \
-    ../../../../../../../../third_party/libjpeg/jmemnobs.c \
-    ../../../../../../../../third_party/libjpeg/jpegtran.c \
     ../../../../../../../../third_party/libjpeg/jquant1.c \
     ../../../../../../../../third_party/libjpeg/jquant2.c \
     ../../../../../../../../third_party/libjpeg/jutils.c \
     ../../../../../../../../third_party/libjpeg/rdbmp.c \
     ../../../../../../../../third_party/libjpeg/rdcolmap.c \
     ../../../../../../../../third_party/libjpeg/rdgif.c \
-    ../../../../../../../../third_party/libjpeg/rdjpgcom.c \
     ../../../../../../../../third_party/libjpeg/rdppm.c \
     ../../../../../../../../third_party/libjpeg/rdrle.c \
     ../../../../../../../../third_party/libjpeg/rdswitch.c \
     ../../../../../../../../third_party/libjpeg/rdtarga.c \
-    ../../../../../../../../third_party/libjpeg/transupp.c \
-    ../../../../../../../../third_party/libjpeg/wrbmp.c \
-    ../../../../../../../../third_party/libjpeg/wrgif.c \
-    ../../../../../../../../third_party/libjpeg/wrjpgcom.c \
-    ../../../../../../../../third_party/libjpeg/wrppm.c \
-    ../../../../../../../../third_party/libjpeg/wrrle.c \
-    ../../../../../../../../third_party/libjpeg/wrtarga.c
+    ../../../../../../../../third_party/libjpeg/transupp.c
 
 INCLUDEPATH += \
     ../../../../../../../third_party/libjpeg
