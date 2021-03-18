@@ -18,7 +18,7 @@
 #include <ctime>
 #include "securec.h"
 #include "draw/draw_rect.h"
-#include "graphic_log.h"
+#include "gfx_utils/graphic_log.h"
 #include "themes/theme_manager.h"
 
 namespace OHOS {
