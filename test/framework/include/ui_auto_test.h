@@ -13,22 +13,32 @@
  * limitations under the License.
  */
 
-#include "ui_test_app.h"
-#ifdef OHOS_GRAPHIC_UI_AUTO_TEST
-#include <thread>
+#ifndef UI_AUTO_TEST_H
+#define UI_AUTO_TEST_H
 
-void thread()
-{
-    OHOS::UIAutoTestApp::GetInstance()->Start();
-    return;
-}
-#endif // OHOS_GRAPHIC_UI_AUTO_TEST
+#include "components/ui_view.h"
 
-void RunApp()
-{
-    OHOS::UITestApp::GetInstance()->Start();
-#ifdef OHOS_GRAPHIC_UI_AUTO_TEST
-    std::thread autoTestPthread(thread);
-    autoTestPthread.detach();
-#endif // OHOS_GRAPHIC_UI_AUTO_TEST
-}
+namespace OHOS {
+class UIAutoTest {
+public:
+    UIAutoTest() {}
+    virtual ~UIAutoTest() {}
+
+    virtual void RunTestList() = 0;
+    virtual void Reset() = 0;
+
+    void ResetMainMenu();
+
+    void EnterSubMenu(const char* id);
+
+    void ClickViewById(const char* id);
+
+    void DragViewToHead(const char* id);
+
+private:
+    int16_t GetAbsoluteX(UIView* view) const;
+    int16_t GetAbsoluteY(UIView* view) const;
+    UIView* GetChildViewById(UIView* node, const char* id) const;
+};
+} //namespace OHOS
+#endif // UI_AUTO_TEST_H
