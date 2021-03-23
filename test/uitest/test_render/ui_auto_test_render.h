@@ -13,22 +13,23 @@
  * limitations under the License.
  */
 
-#include "ui_test_app.h"
-#ifdef OHOS_GRAPHIC_UI_AUTO_TEST
-#include <thread>
+#ifndef UI_AUTO_TEST_RENDER_H
+#define UI_AUTO_TEST_RENDER_H
 
-void thread()
-{
-    OHOS::UIAutoTestApp::GetInstance()->Start();
-    return;
-}
-#endif // OHOS_GRAPHIC_UI_AUTO_TEST
+#include "ui_auto_test.h"
 
-void RunApp()
-{
-    OHOS::UITestApp::GetInstance()->Start();
-#ifdef OHOS_GRAPHIC_UI_AUTO_TEST
-    std::thread autoTestPthread(thread);
-    autoTestPthread.detach();
-#endif // OHOS_GRAPHIC_UI_AUTO_TEST
-}
+namespace OHOS {
+class UIAutoTestRender : public UIAutoTest {
+public:
+    UIAutoTestRender() {}
+    ~UIAutoTestRender() {}
+
+    void Reset() const;
+    void RunTestList();
+
+    void UIKitRenderTestRender001() const;
+
+    void UIKitRenderTestRenderMeasure001() const;
+};
+} // namespace OHOS
+#endif // UI_AUTO_TEST_RENDER_H
