@@ -83,7 +83,7 @@ bool CompareTools::CompareBinary(const char* filePath, size_t length)
     }
     uint8_t* frameBuf = ScreenDeviceProxy::GetInstance()->GetBuffer();
     uint8_t sizeByColorMode = DrawUtils::GetByteSizeByColorMode(ScreenDeviceProxy::GetInstance()->GetBufferMode());
-    uint32_t buffSize = HORIZONTAL_RESOLUTION * VERTICAL_RESOLUTION * sizeByColorMode ;
+    uint32_t buffSize = HORIZONTAL_RESOLUTION * VERTICAL_RESOLUTION * sizeByColorMode;
     uint8_t* readBuf = reinterpret_cast<uint8_t*>(malloc(buffSize));
     if (fread(readBuf, buffSize, sizeof(uint8_t), fd) < 0) {
         return false;
@@ -110,7 +110,7 @@ bool CompareTools::SaveFramBuffToBinary(const char* filePath, size_t length)
     }
     uint8_t* frameBuf = ScreenDeviceProxy::GetInstance()->GetBuffer();
     uint8_t sizeByColorMode = DrawUtils::GetByteSizeByColorMode(ScreenDeviceProxy::GetInstance()->GetBufferMode());
-    uint32_t buffSize = HORIZONTAL_RESOLUTION * VERTICAL_RESOLUTION * sizeByColorMode ;
+    uint32_t buffSize = HORIZONTAL_RESOLUTION * VERTICAL_RESOLUTION * sizeByColorMode;
     if (fwrite(frameBuf, buffSize, sizeof(uint8_t), fd) < 0) {
         return false;
     }

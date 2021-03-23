@@ -14,10 +14,10 @@
  */
 
 #include "ui_auto_test.h"
+#include "compare_tools.h"
 #include "components/root_view.h"
 #include "components/ui_list.h"
 #include "components/ui_view_group.h"
-#include "compare_tools.h"
 #include "dfx/event_injector.h"
 #include "ui_test_app.h"
 #include "ui_test_group.h"
