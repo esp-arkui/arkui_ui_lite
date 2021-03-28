@@ -18,7 +18,7 @@
 #include "common/screen.h"
 #include "core/render_manager.h"
 #include "dock/screen_device_proxy.h"
-#include "graphic_log.h"
+#include "gfx_utils/graphic_log.h"
 #if ENABLE_WINDOW
 #include "window/window_impl.h"
 #endif
@@ -59,6 +59,7 @@ inline bool RootView::IntersectScreenRect(Rect& rect)
 }
 
 #if LOCAL_RENDER
+using namespace Graphic;
 static void DivideInvalidateRect(const Rect& originRect, Rect& leftoverRect, Vector<Rect>& splitRects)
 {
     Rect mask;
