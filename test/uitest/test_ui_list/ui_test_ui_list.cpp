@@ -119,7 +119,7 @@ void UITestUIList::UIKit_List_Init_Test_Full_Screen_001()
     if (container_ == nullptr) {
         return;
     }
-    UILabel* label = GetTitleLabel("UILIst设置adapter数据填满list");
+    UILabel* label = GetTitleLabel("UILIst Set adapter Data makes list full");
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, TEXT_DISTANCE_TO_TOP_SIDE);
 
@@ -143,7 +143,7 @@ void UITestUIList::UIKit_List_Init_Test_halh_Screen_001()
     if (container_ == nullptr) {
         return;
     }
-    UILabel* label = GetTitleLabel("UILIst设置adapter数据不填满list");
+    UILabel* label = GetTitleLabel("UILIst Sets adapter Data Not Fill list");
     container_->Add(label);
     // 2: half of screen width
     label->SetPosition(Screen::GetInstance().GetWidth() / 2 + TEXT_DISTANCE_TO_LEFT_SIDE, TEXT_DISTANCE_TO_TOP_SIDE);
@@ -199,19 +199,19 @@ void UITestUIList::SetControlButton()
     }
 
     positionX_ += 5; // 5: increase y-coordinate
-    SetUpButton(setBlankBtn_, "开启blank");
-    SetUpButton(setBlankOffBtn_, "关闭blank");
-    SetUpButton(setThrowDragBtn_, "开启throwDrag");
-    SetUpButton(setThrowDragOffBtn_, "关闭throwDrag");
-    SetUpButton(setRefreshBtn_, "刷新list");
-    SetUpButton(setLoopBtn_, "开启loop模式");
-    SetUpButton(setLoopOffBtn_, "关闭loop模式");
+    SetUpButton(setBlankBtn_, "Open blank");
+    SetUpButton(setBlankOffBtn_, "Close blank");
+    SetUpButton(setThrowDragBtn_, "Open throwDrag");
+    SetUpButton(setThrowDragOffBtn_, "Close throwDrag");
+    SetUpButton(setRefreshBtn_, "Refresh list");
+    SetUpButton(setLoopBtn_, "Turn On loop Mode");
+    SetUpButton(setLoopOffBtn_, "Turn Off loop Mode");
     positionX_ = setBlankBtn_->GetX() + setBlankBtn_->GetWidth() + g_blank - VIEW_DISTANCE_TO_LEFT_SIDE;
     positionY_ = setBlankBtn_->GetY();
     SetUpButton(setSelectBtn_, "select 150");
-    SetUpButton(setSelectOffBtn_, "关闭select");
-    SetUpButton(setAutoAlignBtn_, "开启自动对齐 ");
-    SetUpButton(setAutoAlignOffBtn_, "关闭自动对齐 ");
+    SetUpButton(setSelectOffBtn_, "Close select");
+    SetUpButton(setAutoAlignBtn_, "Turn On Auto Margin ");
+    SetUpButton(setAutoAlignOffBtn_, "Turn Off Auto Margin ");
 }
 
 void UITestUIList::UIKit_List_Scroll_Test_Blank_Set_001()
