@@ -23,6 +23,19 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_CHART_POLYLINE_ID = "Chart_Polyline";
+    constexpr char* UI_TEST_CHART_POLYLINE_ADD_DATA_BTN_ID_01 = "test_chart_ployline_add_data_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_DEL_DATA_BTN_ID_01 = "test_chart_ployline_del_data_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_CLR_DATA_BTN_ID_01 = "test_chart_ployline_clr_data_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_TOP_POINT_BTN_ID_01 = "test_chart_ployline_top_point_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_BOT_POINT_BTN_ID_01 = "test_chart_ployline_bot_point_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_HEAD_POINT_BTN_ID_01 = "test_chart_ployline_head_point_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_REVERSE_BTN_ID_01 = "test_chart_ployline_reverse_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_GRADIENT_BOT_BTN_ID_01 = "test_chart_ployline_gradient_bot_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_ADD_POINTS_BTN_ID_01 = "test_chart_ployline_add_points_btn_01";
+    constexpr char* UI_TEST_CHART_POLYLINE_SMOOTH_BTN_ID_01 = "test_chart_ployline_smooth_btn_01";
+}
 class UITestChartPolyline : public UITest, public UIView::OnClickListener {
 public:
     UITestChartPolyline() {}
@@ -31,7 +44,7 @@ public:
     void TearDown() override;
     UIView* GetTestView() override;
 
-    void SetUpButton(UILabelButton* btn, const char* title);
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr);
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
     bool ClickExpand(UIView& view, UIChartDataSerial::PointStyle pointStyle);

@@ -24,6 +24,9 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_FOCUS_MANAGER_ID = "FocusManager";
+}
 class UITestFocusManager : public UITest {
 public:
     UITestFocusManager() {}

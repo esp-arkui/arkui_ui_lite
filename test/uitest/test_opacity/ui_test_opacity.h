@@ -28,6 +28,21 @@
 #include "components/ui_scroll_view.h"
 #include "ui_test.h"
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_OPACITY_ID = "Opacity";
+    constexpr char* UI_TEST_OPACITY_UI_LABEL_ID_01 = "test_opacity_ui_label_01";
+    constexpr char* UI_TEST_OPACITY_UI_LABEL_ID_02 = "test_opacity_ui_label_02";
+    constexpr char* UI_TEST_OPACITY_UI_BUTTON_LABEL_ID_01 = "test_opacity_ui_button_01";
+    constexpr char* UI_TEST_OPACITY_UI_BUTTON_LABEL_ID_02 = "test_opacity_ui_button_02";
+    constexpr char* UI_TEST_OPACITY_UI_LABELBUTTON_LABEL_ID_01 = "test_opacity_ui_label_button_01";
+    constexpr char* UI_TEST_OPACITY_UI_ARCLABEL_LABEL_ID_01 = "test_opacity_ui_arc_label_01";
+    constexpr char* UI_TEST_OPACITY_UI_IMAGE_VIEW_LABEL_ID_01 = "test_opacity_ui_image_view_01";
+    constexpr char* UI_TEST_OPACITY_UI_VIEW_LABEL_ID_01 = "test_opacity_ui_view_01";
+    constexpr char* UI_TEST_OPACITY_UI_VIEWGROUP_LABEL_ID_01 = "test_opacity_ui_view_group_01";
+    constexpr char* UI_TEST_OPACITY_UI_LIST_LABEL_ID_01 = "test_opacity_ui_list_01";
+    constexpr char* UI_TEST_OPACITY_UI_SCROLLVIEW_LABEL_ID_01 = "test_opacity_ui_scroll_view_01";
+    constexpr char* UI_TEST_OPACITY_UI_SWIPEVIEW_LABEL_ID_01 = "test_opacity_ui_swipe_view_01";
+}
 class UITestOpacity : public UITest {
 public:
     UITestOpacity() {}
@@ -102,7 +117,7 @@ public:
     void UIKitOpacityTestUISwipeView001();
 
 private:
-    UIViewGroup* CreateTestCaseGroup(const char* title) const;
+    UIViewGroup* CreateTestCaseGroup(const char* title, const char* id = nullptr) const;
     UILabel* CreateTestCaseUILabel(const char* title, uint8_t opaScale) const;
     UIButton* CreateTestCaseUIButton(uint8_t opaScale) const;
     UILabelButton* CreateTestCaseUILabelButton(const char* title, uint8_t opaScale) const;

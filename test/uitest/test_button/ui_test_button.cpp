@@ -62,16 +62,20 @@ void UITestBUTTON::UIKit_Check_Box_Test_001() const
             Screen::GetInstance().GetWidth(), TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("checkbox功能");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_BUTTON_CHECKBOX_LABEL_ID);
 
         UICheckBox* checkbox = new UICheckBox();
         checkbox->SetPosition(30, 30); // 30: x-coordinate, 30: y-coordinate
+        checkbox->SetViewId(UI_TEST_BUTTON_CHECKBOX_ID_01);
 
         UICheckBox* checkbox2 = new UICheckBox();
         checkbox2->SetPosition(100, 30); // 100: x-coordinate, 30: y-coordinate
+        checkbox2->SetViewId(UI_TEST_BUTTON_CHECKBOX_ID_02);
 
         UICheckBox* checkbox3 = new UICheckBox();
         checkbox3->SetImages("", "");
         checkbox3->SetPosition(170, 30, 100, 100); // 170: x-coordinate, 30: y-coordinate, 100 : width, 100 : height
+        checkbox3->SetViewId(UI_TEST_BUTTON_CHECKBOX_ID_03);
 
         container_->Add(checkbox);
         container_->Add(checkbox2);
@@ -89,19 +93,23 @@ void UITestBUTTON::UIKit_Radio_Button_Test_001() const
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("radiobutton功能");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_RADIO_BUTTON_LABEL_ID);
 
         UIRadioButton* radioButton = new UIRadioButton("aaa");
         radioButton->SetPosition(0, 10); // 0: x-coordinate, 10: y-coordinate
+        radioButton->SetViewId(UI_TEST_RADIO_BUTTON_ID_01);
 
         UIRadioButton* radioButton2 = new UIRadioButton("aaa");
         radioButton2->SetPosition(50, 10); // 50: x-coordinate, 10: y-coordinate
         radioButton2->SetWidth(40); // 40: width
         radioButton2->SetHeight(30); // 30: height
+        radioButton2->SetViewId(UI_TEST_RADIO_BUTTON_ID_02);
 
         UIRadioButton* radioButton3 = new UIRadioButton("aaa");
         radioButton3->SetPosition(110, 10); // 110: x-coordinate, 10: y-coordinate
         radioButton3->SetWidth(80); // 80: width
         radioButton3->SetHeight(60); // 60: height
+        radioButton3->SetViewId(UI_TEST_RADIO_BUTTON_ID_03);
 
         UIRadioButton* radioButton4 = new UIRadioButton("aaa");
         radioButton4->SetPosition(10, 10); // 10: x-coordinate, 10: y-coordinate
@@ -186,11 +194,13 @@ void UITestBUTTON::UIKit_Toggle_Button_Test_001() const
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("togglebutton功能");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_TOGGLE_BUTTON_LABEL_ID);
 
         UIToggleButton* togglebutton = new UIToggleButton();
         togglebutton->SetPosition(20, 300); // 20: x-coordinate, 300: y-coordinate
         togglebutton->SetStyle(STYLE_BACKGROUND_OPA, 0); // 0: opacity
         togglebutton->SetState(false);
+        togglebutton->SetViewId(UI_TEST_TOGGLE_BUTTON_ID_01);
 
         UIToggleButton* togglebutton2 = new UIToggleButton();
         togglebutton2->SetPosition(100, 300); // 100: x-coordinate, 300: y-coordinate
@@ -198,6 +208,7 @@ void UITestBUTTON::UIKit_Toggle_Button_Test_001() const
         togglebutton2->SetState(false);
         togglebutton2->SetWidth(60); // 60: width
         togglebutton2->SetHeight(40); // 40: height
+        togglebutton2->SetViewId(UI_TEST_TOGGLE_BUTTON_ID_02);
 
         UIToggleButton* togglebutton3 = new UIToggleButton();
         togglebutton3->SetPosition(190, 300); // 190: x-coordinate, 300: y-coordinate
@@ -205,7 +216,7 @@ void UITestBUTTON::UIKit_Toggle_Button_Test_001() const
         togglebutton3->SetState(false);
         togglebutton3->SetWidth(50); // 50: width
         togglebutton3->SetHeight(70); // 70: height
-
+        togglebutton3->SetViewId(UI_TEST_TOGGLE_BUTTON_ID_03);
         UIToggleButton* togglebutton4 = new UIToggleButton();
 
         UICheckBox::OnChangeListener* ChangeListener =
@@ -253,18 +264,21 @@ void UITestBUTTON::UIKit_Check_Box_Test_002() const
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("checkbox SetImage功能");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_BUTTON_CHECKBOX_IMAGE_LABEL_ID);
 
         UICheckBox* checkbox = new UICheckBox();
         checkbox->SetPosition(30, 430); // 30: x-coordinate, 430: y-coordinate
         checkbox->SetWidth(130); // 130: width
         checkbox->SetHeight(130); // 130: height
         checkbox->SetImages(BLUE_IMAGE_PATH, YELLOW_IMAGE_PATH);
+        checkbox->SetViewId(UI_TEST_BUTTON_CHECKBOX_IMAGE_ID_01);
 
         UICheckBox* checkbox2 = new UICheckBox();
         checkbox2->SetPosition(200, 430); // 200: x-coordinate, 430: y-coordinate
         checkbox2->SetWidth(130); // 130: width
         checkbox2->SetHeight(130); // 130: height
         checkbox2->SetImages(GREEN_IMAGE_PATH, RED_IMAGE_PATH);
+        checkbox2->SetViewId(UI_TEST_BUTTON_CHECKBOX_IMAGE_ID_02);
 
         container_->Add(checkbox);
         container_->Add(checkbox2);
@@ -281,18 +295,21 @@ void UITestBUTTON::UIKit_Radio_Button_Test_002() const
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("radiobutton SetImage功能");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_RADIO_BUTTON_IMAGE_LABEL_ID);
 
         UIRadioButton* radioButton = new UIRadioButton("aaa");
         radioButton->SetPosition(30, 10); // 30: x-coordinate, 10: y-coordinate
         radioButton->SetWidth(130); // 130: width
         radioButton->SetHeight(130); // 130: height
         radioButton->SetImages(BLUE_IMAGE_PATH, YELLOW_IMAGE_PATH);
+        radioButton->SetViewId(UI_TEST_RADIO_BUTTON_IMAGE_ID_01);
 
         UIRadioButton* radioButton2 = new UIRadioButton("aaa");
         radioButton2->SetPosition(200, 10); // 200: x-coordinate, 10: y-coordinate
         radioButton2->SetWidth(130); // 130: width
         radioButton2->SetHeight(130); // 130: height
         radioButton2->SetImages(GREEN_IMAGE_PATH, RED_IMAGE_PATH);
+        radioButton2->SetViewId(UI_TEST_RADIO_BUTTON_IMAGE_ID_02);
 
         OHOS::UIViewGroup* viewGroup = new UIViewGroup();
         viewGroup->SetPosition(0, 600); // 0: x-coordinate, 600: y-coordinate
@@ -317,6 +334,7 @@ void UITestBUTTON::UIKit_Toggle_Button_Test_002() const
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("togglebutton SetImage功能");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_TOGGLE_BUTTON_IMAGE_LABEL_ID);
 
         UIToggleButton* togglebutton = new UIToggleButton();
         togglebutton->SetPosition(30, 770); // 30: x-coordinate, 770: y-coordinate
@@ -325,6 +343,7 @@ void UITestBUTTON::UIKit_Toggle_Button_Test_002() const
         togglebutton->SetWidth(130); // 130: width
         togglebutton->SetHeight(130); // 130: height
         togglebutton->SetImages(BLUE_IMAGE_PATH, YELLOW_IMAGE_PATH);
+        togglebutton->SetViewId(UI_TEST_TOGGLE_BUTTON_IMAGE_ID_01);
 
         UIToggleButton* togglebutton2 = new UIToggleButton();
         UICheckBox::OnChangeListener* ChangeListener =
@@ -336,6 +355,7 @@ void UITestBUTTON::UIKit_Toggle_Button_Test_002() const
         togglebutton2->SetWidth(130); // 130: width
         togglebutton2->SetHeight(130); // 130: height
         togglebutton2->SetImages(GREEN_IMAGE_PATH, RED_IMAGE_PATH);
+        togglebutton2->SetViewId(UI_TEST_TOGGLE_BUTTON_IMAGE_ID_02);
 
         container_->Add(togglebutton);
         container_->Add(togglebutton2);

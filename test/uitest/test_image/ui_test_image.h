@@ -27,6 +27,23 @@
 #endif
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_IMAGE_ID = "Image";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_01 = "test_image_set_image_01";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_02 = "test_image_set_image_02";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_04 = "test_image_set_image_04";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_05 = "test_image_set_image_05";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_06 = "test_image_set_image_06";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_07 = "test_image_set_image_07";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_08 = "test_image_set_image_08";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_09 = "test_image_set_image_09";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_10 = "test_image_set_image_10";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_11 = "test_image_set_image_11";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_12 = "test_image_set_image_12";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_13 = "test_image_set_image_13";
+    constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_14 = "test_image_set_image_14";
+    constexpr char* UI_TEST_IMAGE_UNCOMPARESS_ID_01 = "test_image_uncompress_01";
+}
 #ifndef VERSION_LITE
 class UITestImage : public UITest, public OHOS::UIView::OnClickListener {
 #else

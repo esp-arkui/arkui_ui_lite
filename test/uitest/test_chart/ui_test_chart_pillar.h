@@ -23,6 +23,15 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_CHART_POLLAR_ID = "Chart_Pillar";
+    constexpr char* UI_TEST_CHART_PILLAR_ADD_DATA_BTN_ID_01 = "test_chart_pillar_add_data_btn_01";
+    constexpr char* UI_TEST_CHART_PILLAR_DEL_DATA_BTN_ID_01 = "test_chart_pillar_del_data_btn_01";
+    constexpr char* UI_TEST_CHART_PILLAR_CLR_DATA_BTN_ID_01 = "test_chart_pillar_clr_data_btn_01";
+    constexpr char* UI_TEST_CHART_PILLAR_REVERSE_BTN_ID_01 = "test_chart_pillar_reverse_btn_01";
+    constexpr char* UI_TEST_CHART_PILLAR_AXIS_COLOR_BTN_ID_01 = "test_chart_pillar_axis_color_btn_01";
+    constexpr char* UI_TEST_CHART_PILLAR_AXIS_VISIBLE_BTN_ID_01 = "test_chart_pillar_axis_visible_btn_01";
+}
 class UITestChartPillar : public UITest, public UIView::OnClickListener {
 public:
     UITestChartPillar() : dataSerial_() {}
@@ -31,7 +40,7 @@ public:
     void TearDown() override;
     UIView* GetTestView() override;
 
-    void SetUpButton(UILabelButton* btn, const char* title);
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr);
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
 
