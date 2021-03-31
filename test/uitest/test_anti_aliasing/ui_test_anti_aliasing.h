@@ -21,6 +21,9 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_ANTI_ALIASING_ID = "Anti_Aliasing";
+}
 class UITestAntiAliasing : public UITest {
 public:
     UITestAntiAliasing() {}
