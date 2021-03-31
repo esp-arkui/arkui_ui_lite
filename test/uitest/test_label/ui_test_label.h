@@ -22,6 +22,31 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_LABEL_ID = "UILabel";
+    constexpr char* UI_TEST_LABEL_FONTSIZE_BTN_ID_01 = "test_label_font_size_button_01";
+    constexpr char* UI_TEST_LABEL_FONTSIZE_BTN_ID_02 = "test_label_font_size_button_02";
+    constexpr char* UI_TEST_LABEL_FONTSIZE_BTN_ID_03 = "test_label_font_size_button_03";
+    constexpr char* UI_TEST_LABEL_HORALIGN_BTN_ID_01 = "test_label_hor_align_button_01";
+    constexpr char* UI_TEST_LABEL_HORALIGN_BTN_ID_02 = "test_label_hor_align_button_02";
+    constexpr char* UI_TEST_LABEL_HORALIGN_BTN_ID_03 = "test_label_hor_align_button_03";
+    constexpr char* UI_TEST_LABEL_COLOR_BTN_ID_01 = "test_label_color_button_01";
+    constexpr char* UI_TEST_LABEL_COLOR_BTN_ID_02 = "test_label_color_button_02";
+    constexpr char* UI_TEST_LABEL_COLOR_BTN_ID_03 = "test_label_color_button_03";
+    constexpr char* UI_TEST_LABEL_BEYOND_BTN_ID_01 = "test_label_beyond_button_01";
+    constexpr char* UI_TEST_LABEL_BEYOND_BTN_ID_02 = "test_label_beyond_button_02";
+    constexpr char* UI_TEST_LABEL_BEYOND_BTN_ID_03 = "test_label_beyond_button_03";
+    constexpr char* UI_TEST_LABEL_LINE_BTN_ID_01 = "test_label_line_button_01";
+    constexpr char* UI_TEST_LABEL_LINE_BTN_ID_02 = "test_label_line_button_02";
+    constexpr char* UI_TEST_LABEL_VERALIGN_BTN_ID_01 = "test_label_ver_align_button_01";
+    constexpr char* UI_TEST_LABEL_VERALIGN_BTN_ID_02 = "test_label_ver_align_button_02";
+    constexpr char* UI_TEST_LABEL_VERALIGN_BTN_ID_03 = "test_label_ver_align_button_03";
+    constexpr char* UI_TEST_LABEL_DIRECTION_BTN_ID_01 = "test_label_direction_button_01";
+    constexpr char* UI_TEST_LABEL_DIRECTION_BTN_ID_02 = "test_label_direction_button_02";
+    constexpr char* UI_TEST_LABEL_SIZE_LABEL_ID_01 = "test_label_size_label_01";
+    constexpr char* UI_TEST_LABEL_DYNAMIC_HEIGHT_BTN_ID_01 = "test_label_dynacamic_height_button_01";
+    constexpr char* UI_TEST_LABEL_DYNAMIC_WIDTH_BTN_ID_01 = "test_label_diynacamic_width_button_01";
+}
 class UITestLabel : public UITest, public UIView::OnClickListener {
 public:
     UITestLabel() {}
@@ -68,7 +93,9 @@ private:
 
     void InnerTestTitle(const char* title);
     UILabelButton* SetUpButton(const char* title, int16_t x, int16_t y, UIViewGroup* uiViewGroup,
-        int16_t width = 80, int16_t height = 40)
+        const char* id = nullptr,
+        int16_t width = 80,
+        int16_t height = 40)
     {
         if (uiViewGroup == nullptr) {
             return nullptr;
@@ -76,6 +103,7 @@ private:
         UILabelButton* btn = new UILabelButton();
         btn->SetPosition(x, y, width, height);
         btn->SetText(title);
+        btn->SetViewId(id);
         btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
         btn->SetOnClickListener(this);
         btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

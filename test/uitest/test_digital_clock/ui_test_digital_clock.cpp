@@ -54,13 +54,14 @@ void UITestDigitalClock::TearDown()
     container_ = nullptr;
 }
 
-void UITestDigitalClock::InnerTestTitle(const char* title)
+void UITestDigitalClock::InnerTestTitle(const char* title, const char* id)
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, Screen::GetInstance().GetWidth(),
                             TITLE_LABEL_DEFAULT_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + GAP;
 }
@@ -82,7 +83,7 @@ UIView* UITestDigitalClock::GetTestView()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_Display_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("UIDigitalClock效果");
+        InnerTestTitle("UIDigitalClock效果", UI_TEST_DIGITAL_CLOCK_DISPLAY_LABEL_ID_01);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -96,7 +97,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_Display_001()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_Display_002()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("UIDigitalClock效果");
+        InnerTestTitle("UIDigitalClock效果", UI_TEST_DIGITAL_CLOCK_DISPLAY_LABEL_ID_02);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -110,7 +111,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_Display_002()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_SetColor()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock颜色");
+        InnerTestTitle("设置Digital Clock颜色", UI_TEST_DIGITAL_CLOCK_SET_COLOR_LABEL_ID_01);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -125,7 +126,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_SetColor()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock仅显示小时、分钟 ");
+        InnerTestTitle("设置Digital Clock仅显示小时、分钟 ", UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_01);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -140,7 +141,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_001()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_002()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock 24小时制仅显示小时、分钟 ");
+        InnerTestTitle("设置Digital Clock 24小时制仅显示小时、分钟 ", UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_02);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -155,7 +156,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_002()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_003()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock 12小时制 ");
+        InnerTestTitle("设置Digital Clock 12小时制 ", UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_03);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -170,7 +171,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_003()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_004()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock 24小时制 ");
+        InnerTestTitle("设置Digital Clock 24小时制 ", UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_04);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -185,7 +186,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayMode_004()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayLeadingZero()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock不显示首位的0 ");
+        InnerTestTitle("设置Digital Clock不显示首位的0 ", UI_TEST_DIGITAL_CLOCK_DISPLAY_LEADING_ZERO_LABEL_ID_01);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);
@@ -200,7 +201,7 @@ void UITestDigitalClock::UIKit_UIDigitalClock_Test_DisplayLeadingZero()
 void UITestDigitalClock::UIKit_UIDigitalClock_Test_SetOpacity()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("设置Digital Clock透明度 ");
+        InnerTestTitle("设置Digital Clock透明度 ", UI_TEST_DIGITAL_CLOCK_DISPLAY_SET_OPACITY_LABEL_ID_01);
         UIDigitalClock* dClock = new UIDigitalClock();
         dClock->SetPosition(positionX_, positionY_);
         dClock->Resize(DIGITAL_CLOCK_WIDTH, DIGITAL_CLOCK_HEIGHT);

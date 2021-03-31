@@ -52,7 +52,7 @@ const UIView* UITestQrcode::GetTestView()
     return container_;
 }
 
-UIViewGroup* UITestQrcode::CreateTestCaseGroup(const char* title) const
+UIViewGroup* UITestQrcode::CreateTestCaseGroup(const char* title, const char* id) const
 {
     UIViewGroup* group = new UIViewGroup();
     group->SetStyle(STYLE_BACKGROUND_COLOR, Color::Black().full);
@@ -62,6 +62,7 @@ UIViewGroup* UITestQrcode::CreateTestCaseGroup(const char* title) const
     titleLabel->SetPosition(0, 0, Screen::GetInstance().GetWidth(), TITLE_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     group->Add(titleLabel);
     return group;
 }
@@ -69,7 +70,7 @@ UIViewGroup* UITestQrcode::CreateTestCaseGroup(const char* title) const
 void UITestQrcode::UIKitUIQrcodeTestDisplay001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display qrcode 60 * 60");
+        UIViewGroup* group = CreateTestCaseGroup(" display qrcode 60 * 60", UI_TEST_QRCODE_DISPLAY_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), 100); // 100 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay001");
 
@@ -84,7 +85,7 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay001()
 void UITestQrcode::UIKitUIQrcodeTestDisplay002()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display qrcode 120 * 250");
+        UIViewGroup* group = CreateTestCaseGroup(" display qrcode 120 * 250", UI_TEST_QRCODE_DISPLAY_LABEL_ID_02);
         group->Resize(Screen::GetInstance().GetWidth(), 300); // 300 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay002");
 
@@ -103,7 +104,7 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay002()
 void UITestQrcode::UIKitUIQrcodeTestDisplay003()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display qrcode 400 * 200, MAX_LENGTH");
+        UIViewGroup* group = CreateTestCaseGroup(" display qrcode 400 * 200, MAX_LENGTH", UI_TEST_QRCODE_DISPLAY_LABEL_ID_03);
         group->Resize(Screen::GetInstance().GetWidth(), 450); // 450 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay003");
 
@@ -127,7 +128,8 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay003()
 void UITestQrcode::UIKitUIQrcodeTestDisplay004()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup("qrcode 50 * 50, width is less than minimum qrcode size, error!");
+        UIViewGroup* group = CreateTestCaseGroup("qrcode 50 * 50, width is less than minimum qrcode size, error!",
+            UI_TEST_QRCODE_DISPLAY_LABEL_ID_04);
         group->Resize(Screen::GetInstance().GetWidth(), 100); // 100 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay004");
 
@@ -147,7 +149,8 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay004()
 void UITestQrcode::UIKitUIQrcodeTestDisplay005()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, val length is greater than MAX_LENGTH, error!");
+        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, val length is greater than MAX_LENGTH, error!",
+            UI_TEST_QRCODE_DISPLAY_LABEL_ID_05);
         group->Resize(Screen::GetInstance().GetWidth(), 300); // 300 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay005");
 
@@ -167,7 +170,7 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay005()
 void UITestQrcode::UIKitUIQrcodeTestDisplay006()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, str = \"\" ");
+        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, str = \"\" ", UI_TEST_QRCODE_DISPLAY_LABEL_ID_06);
         group->Resize(Screen::GetInstance().GetWidth(), 300); // 300 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay006");
 
@@ -184,7 +187,7 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay006()
 void UITestQrcode::UIKitUIQrcodeTestDisplay007()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, str = \" \"");
+        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, str = \" \"", UI_TEST_QRCODE_DISPLAY_LABEL_ID_07);
         group->Resize(Screen::GetInstance().GetWidth(), 300); // 300 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay007");
 
@@ -201,7 +204,7 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay007()
 void UITestQrcode::UIKitUIQrcodeTestDisplay008()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, str = nullptr");
+        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, str = nullptr", UI_TEST_QRCODE_DISPLAY_LABEL_ID_08);
         group->Resize(Screen::GetInstance().GetWidth(), 300); // 300 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay008");
 
@@ -218,7 +221,7 @@ void UITestQrcode::UIKitUIQrcodeTestDisplay008()
 void UITestQrcode::UIKitUIQrcodeTestDisplay009()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, position x = -50");
+        UIViewGroup* group = CreateTestCaseGroup("qrcode 250 * 250, position x = -50", UI_TEST_QRCODE_DISPLAY_LABEL_ID_09);
         group->Resize(Screen::GetInstance().GetWidth(), 300); // 300 : height
         group->SetViewId("UIKitUIQrcodeTestDisplay009");
 

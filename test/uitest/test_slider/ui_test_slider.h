@@ -23,6 +23,31 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_SLIDER_ID = "Slider";
+    constexpr char* UI_TEST_SLIDER_SETRANGE_INCMIN_BTN_ID_01 = "test_slider_set_range_01";
+    constexpr char* UI_TEST_SLIDER_SETRANGE_DECMIN_BTN_ID_02 = "test_slider_set_range_02";
+    constexpr char* UI_TEST_SLIDER_SETRANGE_INCMAX_BTN_ID_03 = "test_slider_set_range_03";
+    constexpr char* UI_TEST_SLIDER_SETRANGE_DECMAX_BTN_ID_04 = "test_slider_set_range_04";
+    constexpr char* UI_TEST_SLIDER_SETVALUE_BTN_ID_01 = "test_slider_set_value_01";
+    constexpr char* UI_TEST_SLIDER_SETVALUE_BTN_ID_02 = "test_slider_set_value_02";
+    constexpr char* UI_TEST_SLIDER_SETIMAGE_BTN_ID_01 = "test_slider_set_image_01";
+    constexpr char* UI_TEST_SLIDER_UNSETIMAGE_BTN_ID_02 = "test_slider_unset_image_02";
+    constexpr char* UI_TEST_SLIDER_SETIMAGE_LABEL_ID_01 = "test_slider_set_image_label_01";
+    constexpr char* UI_TEST_SLIDER_SETSTYLE_BTN_ID_01 = "test_slider_set_style_01";
+    constexpr char* UI_TEST_SLIDER_SETSTYLE_BTN_ID_02 = "test_slider_set_style_02";
+    constexpr char* UI_TEST_SLIDER_SETKNOBWIDTH_BTN_ID_01 = "test_slider_set_knob_width_01";
+    constexpr char* UI_TEST_SLIDER_SETKNOBWIDTH_BTN_ID_02 = "test_slider_set_knob_width_02";
+    constexpr char* UI_TEST_SLIDER_SETSTEP_BTN_ID_01 = "test_slider_set_step_01";
+    constexpr char* UI_TEST_SLIDER_SETCOLOR_BTN_ID_01 = "test_slider_set_color_01";
+    constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_01 = "test_slider_set_direction_01";
+    constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_02 = "test_slider_set_direction_02";
+    constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_03 = "test_slider_set_direction_03";
+    constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_04 = "test_slider_set_direction_04";
+    constexpr char* UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_01 = "test_slider_set_valid_size_01";
+    constexpr char* UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_02 = "test_slider_set_valid_size_02";
+    constexpr char* UI_TEST_SLIDER_SETRADIUS_BTN_ID_01= "test_slider_set_radius_01";
+}
 class TestUISliderEventListener : public UISlider::UISliderEventListener,
                                   public UIView::OnClickListener,
                                   public UIView::OnDragListener {
@@ -52,8 +77,8 @@ public:
     void TearDown() override;
     UIView* GetTestView() override;
 
-    void SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y);
-    void SetUpLabel(const char* title, int16_t x, int16_t y) const;
+    void SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y, const char* id = nullptr);
+    void SetUpLabel(const char* title, int16_t x, int16_t y, const char* id = nullptr) const;
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
     bool ExpandClick1(UIView& view, const ClickEvent& event);

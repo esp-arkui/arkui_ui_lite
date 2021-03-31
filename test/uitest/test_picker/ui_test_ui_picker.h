@@ -25,6 +25,9 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_UIPICKER_ID = "UIPicker";
+}
 class UITestUIPicker : public UITest, UIView::OnClickListener, UIPicker::SelectedListener,
     UITimePicker::SelectedListener {
 public:

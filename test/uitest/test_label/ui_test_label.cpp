@@ -122,36 +122,47 @@ void UITestLabel::CreateLabels(UIViewGroup* uiViewGroup)
     label1->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE2, TEXT_DISTANCE_TO_TOP_SIDE, 288, 48);
     label1->SetText("字号");
     label1->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-    labelFontSizeBtn1_ = SetUpButton("18 ", 24, 48, uiViewGroup); // 24: x-coordinate; 48: y-coordinate
-    labelFontSizeBtn2_ = SetUpButton("24", 116, 48, uiViewGroup); // 116: x-coordinate; 48: y-coordinate
-    labelFontSizeBtn3_ = SetUpButton("30", 208, 48, uiViewGroup); // 208: x-coordinate; 48: y-coordinate
+    // 24: x-coordinate; 48: y-coordinate
+    labelFontSizeBtn1_ = SetUpButton("18 ", 24, 48, uiViewGroup, UI_TEST_LABEL_FONTSIZE_BTN_ID_01);
+    // 116: x-coordinate; 48: y-coordinate
+    labelFontSizeBtn2_ = SetUpButton("24", 116, 48, uiViewGroup, UI_TEST_LABEL_FONTSIZE_BTN_ID_02);
+    // 208: x-coordinate; 48: y-coordinate
+    labelFontSizeBtn3_ = SetUpButton("30", 208, 48, uiViewGroup, UI_TEST_LABEL_FONTSIZE_BTN_ID_03);
 
     UILabel* label2 = new UILabel();
     uiViewGroup->Add(label2);
     label2->SetPosition(24, 107, 288, 48); // 24: x-coordinate, 107: y-coordinate, 288: width; 48: height
     label2->SetText("水平对齐方式");
     label2->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-    labelHorAlignBtn1_ = SetUpButton("左对齐 ", 24, 144, uiViewGroup);  // 24: x-coordinate; 144: y-coordinate
-    labelHorAlignBtn2_ = SetUpButton("中对齐 ", 116, 144, uiViewGroup); // 116: x-coordinate; 144: y-coordinate
-    labelHorAlignBtn3_ = SetUpButton("右对齐 ", 208, 144, uiViewGroup); // 208: x-coordinate; 144: y-coordinate
-
+    // 24: x-coordinate; 144: y-coordinate
+    labelHorAlignBtn1_ = SetUpButton("左对齐 ", 24, 144, uiViewGroup, UI_TEST_LABEL_HORALIGN_BTN_ID_01);
+    // 116: x-coordinate; 144: y-coordinate
+    labelHorAlignBtn2_ = SetUpButton("中对齐 ", 116, 144, uiViewGroup, UI_TEST_LABEL_HORALIGN_BTN_ID_02);
+    // 208: x-coordinate; 144: y-coordinate
+    labelHorAlignBtn3_ = SetUpButton("右对齐 ", 208, 144, uiViewGroup, UI_TEST_LABEL_HORALIGN_BTN_ID_03);
     UILabel* label3 = new UILabel();
     uiViewGroup->Add(label3);
     label3->SetPosition(24, 203, 288, 48); // 24: x-coordinate, 203: y-coordinate, 288: width; 48: height
     label3->SetText("颜色");
     label3->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-    labelColorBtn1_ = SetUpButton("白色 ", 24, 240, uiViewGroup);    // 24: x-coordinate; 240: y-coordinate
-    labelColorBtn2_ = SetUpButton("变色 ", 116, 240, uiViewGroup);   // 116: x-coordinate; 240: y-coordinate
-    labelColorBtn3_ = SetUpButton("半透明 ", 208, 240, uiViewGroup); // 208: x-coordinate; 240: y-coordinate
+    // 24: x-coordinate; 240: y-coordinate
+    labelColorBtn1_ = SetUpButton("白色 ", 24, 240, uiViewGroup, UI_TEST_LABEL_COLOR_BTN_ID_01);
+    // 116: x-coordinate; 240: y-coordinate
+    labelColorBtn2_ = SetUpButton("变色 ", 116, 240, uiViewGroup, UI_TEST_LABEL_COLOR_BTN_ID_02);
+    // 208: x-coordinate; 240: y-coordinate
+    labelColorBtn3_ = SetUpButton("半透明 ", 208, 240, uiViewGroup, UI_TEST_LABEL_COLOR_BTN_ID_03);
 
     UILabel* label4 = new UILabel();
     uiViewGroup->Add(label4);
     label4->SetPosition(24, 299, 288, 48); // 24: x-coordinate, 299: y-coordinate, 288: width; 48: height
     label4->SetText("超出处理");
     label4->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-    labelBeyondBtn1_ = SetUpButton("截断 ", 24, 336, uiViewGroup);  // 24: x-coordinate; 336: y-coordinate
-    labelBeyondBtn2_ = SetUpButton("省略 ", 116, 336, uiViewGroup); // 116: x-coordinate; 336: y-coordinate
-    labelBeyondBtn3_ = SetUpButton("滚动 ", 208, 336, uiViewGroup); // 208: x-coordinate; 336: y-coordinate
+    // 24: x-coordinate; 336: y-coordinate
+    labelBeyondBtn1_ = SetUpButton("截断 ", 24, 336, uiViewGroup, UI_TEST_LABEL_BEYOND_BTN_ID_01);
+    // 116: x-coordinate; 336: y-coordinate
+    labelBeyondBtn2_ = SetUpButton("省略 ", 116, 336, uiViewGroup, UI_TEST_LABEL_BEYOND_BTN_ID_02);
+    // 208: x-coordinate; 336: y-coordinate
+    labelBeyondBtn3_ = SetUpButton("滚动 ", 208, 336, uiViewGroup, UI_TEST_LABEL_BEYOND_BTN_ID_03);
     positionX_ += 312;                                              // 312: increase y-coordinate
 }
 
@@ -167,23 +178,30 @@ void UITestLabel::UIKit_UILabel_Test_Display_002()
         label->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE2, TEXT_DISTANCE_TO_TOP_SIDE, 288, 48);
         label->SetText("行数");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-        labelLineBtn1_ = SetUpButton("单行 ", 24, 48, uiViewGroup);  // 24: x-coordinate; 48: y-coordinate
-        labelLineBtn2_ = SetUpButton("多行 ", 116, 48, uiViewGroup); // 116: x-coordinate; 48: y-coordinate
+        // 24: x-coordinate; 48: y-coordinate
+        labelLineBtn1_ = SetUpButton("单行 ", 24, 48, uiViewGroup, UI_TEST_LABEL_LINE_BTN_ID_01);
+        // 116: x-coordinate; 48: y-coordinate
+        labelLineBtn2_ = SetUpButton("多行 ", 116, 48, uiViewGroup, UI_TEST_LABEL_LINE_BTN_ID_02);
         UILabel* label2 = new UILabel();
         uiViewGroup->Add(label2);
         label2->SetPosition(24, 107, 288, 48); // 24: x-coordinate, 107: y-coordinate, 288: width; 48: height
         label2->SetText("竖直对齐方式");
         label2->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-        labelVerAlignlBtn1_ = SetUpButton("上对齐 ", 24, 144, uiViewGroup);  // 24: x-coordinate; 144: y-coordinate
-        labelVerAlignlBtn2_ = SetUpButton("中对齐 ", 116, 144, uiViewGroup); // 116: x-coordinate; 144: y-coordinate
-        labelVerAlignlBtn3_ = SetUpButton("下对齐 ", 208, 144, uiViewGroup); // 208: x-coordinate; 144: y-coordinate
+        // 24: x-coordinate; 144: y-coordinate
+        labelVerAlignlBtn1_ = SetUpButton("上对齐 ", 24, 144, uiViewGroup, UI_TEST_LABEL_VERALIGN_BTN_ID_01);
+        // 116: x-coordinate; 144: y-coordinate
+        labelVerAlignlBtn2_ = SetUpButton("中对齐 ", 116, 144, uiViewGroup, UI_TEST_LABEL_VERALIGN_BTN_ID_02);
+        // 208: x-coordinate; 144: y-coordinate
+        labelVerAlignlBtn3_ = SetUpButton("下对齐 ", 208, 144, uiViewGroup, UI_TEST_LABEL_VERALIGN_BTN_ID_03);
         UILabel* label3 = new UILabel();
         uiViewGroup->Add(label3);
         label3->SetPosition(24, 203, 288, 48); // 24: x-coordinate, 203: y-coordinate, 288: width; 48: height
         label3->SetText("方向");
         label3->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
-        labelDirectionBtn1_ = SetUpButton("左往右 ", 24, 240, uiViewGroup);  // 24: x-coordinate; 240: y-coordinate
-        labelDirectionBtn2_ = SetUpButton("右往左 ", 116, 240, uiViewGroup); // 116: x-coordinate; 240: y-coordinate
+        // 24: x-coordinate; 240: y-coordinate
+        labelDirectionBtn1_ = SetUpButton("左往右 ", 24, 240, uiViewGroup, UI_TEST_LABEL_DIRECTION_BTN_ID_01);
+        // 116: x-coordinate; 240: y-coordinate
+        labelDirectionBtn2_ = SetUpButton("右往左 ", 116, 240, uiViewGroup, UI_TEST_LABEL_DIRECTION_BTN_ID_02);
         positionY_ += 384;                                                   // 384: increase x-coordinate
         positionX_ -= 312;                                                   // 312: increase y-coordinate
     }
@@ -199,11 +217,12 @@ void UITestLabel::UIKit_UILabel_Test_Display_003()
         uiViewGroup->Add(label);
         label->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE2, TEXT_DISTANCE_TO_TOP_SIDE, 420, 48); // 420: width; 48: height
         label->SetText("Label大小");
+        label->SetViewId(UI_TEST_LABEL_SIZE_LABEL_ID_01);
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
         // 24: x-coordinate; 48: y-coordinate; 120: width
-        labelSizeBtn1_ = SetUpButton("动态宽度 ", 24, 48, uiViewGroup, 120);
+        labelSizeBtn1_ = SetUpButton("动态宽度 ", 24, 48, uiViewGroup, UI_TEST_LABEL_DYNAMIC_HEIGHT_BTN_ID_01, 120);
         // 156: x-coordinate; 48: y-coordinate; 120: width
-        labelSizeBtn2_ = SetUpButton("动态高度 ", 156, 48, uiViewGroup, 120);
+        labelSizeBtn2_ = SetUpButton("动态高度 ", 156, 48, uiViewGroup, UI_TEST_LABEL_DYNAMIC_WIDTH_BTN_ID_01, 120);
     }
 }
 

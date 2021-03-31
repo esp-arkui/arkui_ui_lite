@@ -22,6 +22,16 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_ARC_LABEL_ID = "Arc_Label";
+    constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_01 = "test_arc_label_display_01";
+    constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_02 = "test_arc_label_display_02";
+    constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_03 = "test_arc_label_display_03";
+    constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_04 = "test_arc_label_display_04";
+    constexpr char* UI_TEST_ARC_LABEL_ALIGN_ID_01 = "test_arc_label_display_01";
+    constexpr char* UI_TEST_ARC_LABEL_ALIGN_ID_02 = "test_arc_label_display_02";
+    constexpr char* UI_TEST_ARC_LABEL_ALIGN_ID_03 = "test_arc_label_display_03";
+}
 class UITestArcLabel : public UITest {
 public:
     UITestArcLabel() {}
@@ -68,11 +78,11 @@ public:
 private:
     UIScrollView* container_ = nullptr;
 
-    void InnerTestTitle(const char* title, int16_t x, int16_t y) const;
+    void InnerTestTitle(const char* title, int16_t x, int16_t y, const char* id = nullptr) const;
 
     // for direction and orientation
     void TestArcLabelDisplay(const char* title, const int16_t startAngle, const int16_t endAngle,
-        const UIArcLabel::TextOrientation orientation, int16_t x, int16_t y);
+        const UIArcLabel::TextOrientation orientation, int16_t x, int16_t y, const char* id = nullptr);
 };
 } // namespace OHOS
 #endif // UI_TEST_ARC_LABEL_H

@@ -21,6 +21,17 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_FONT_ID = "Font";
+    constexpr char* UI_TEST_FONT_PSRAM_LABEL_ID_01 = "test_font_psram_01";
+    constexpr char* UI_TEST_FONT_FONTPATH_LABEL_ID_01 = "test_font_font_path_01";
+    constexpr char* UI_TEST_FONT_SETFONTID_LABEL_ID_01 = "test_font_set_font_id_01";
+    constexpr char* UI_TEST_FONT_SETFONT_LABEL_ID_01 = "test_font_set_font_01";
+    constexpr char* UI_TEST_FONT_GETFONTHEIGHT_LABEL_ID_01 = "test_font_get_font_height_01";
+    constexpr char* UI_TEST_FONT_GETFONTVERSION_LABEL_ID_01 = "test_font_get_font_version_01";
+    constexpr char* UI_TEST_FONT_GETFONTID_LABEL_ID_01 = "test_font_get_font_id_01";
+    constexpr char* UI_TEST_FONT_GETFONTHEADER_LABEL_ID_01 = "test_font_get_font_header_01";
+}
 class UITestFont : public UITest {
 public:
     UITestFont() {}
@@ -71,7 +82,7 @@ public:
 
 private:
     UIScrollView* container_ = nullptr;
-    void InnerTestTitle(const char* title);
+    void InnerTestTitle(const char* title, const char* id = nullptr);
 };
 } // namespace OHOS
 #endif // UI_TEST_FONT_H

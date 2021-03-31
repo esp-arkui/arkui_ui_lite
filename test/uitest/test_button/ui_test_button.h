@@ -20,6 +20,30 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_BUTTON_ID = "Button";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_LABEL_ID = "test_button_checkbox_label";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_ID_01 = "test_button_checkbox_01";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_ID_02 = "test_button_checkbox_02";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_ID_03 = "test_button_checkbox_03";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_IMAGE_LABEL_ID = "test_button_checkbox_image_label";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_IMAGE_ID_01 = "test_button_checkbox_image_01";
+    constexpr char* UI_TEST_BUTTON_CHECKBOX_IMAGE_ID_02 = "test_button_checkbox_image_02";
+    constexpr char* UI_TEST_RADIO_BUTTON_LABEL_ID = "test_radio_button_label";
+    constexpr char* UI_TEST_RADIO_BUTTON_ID_01 = "test_radio_button_01";
+    constexpr char* UI_TEST_RADIO_BUTTON_ID_02 = "test_radio_button_02";
+    constexpr char* UI_TEST_RADIO_BUTTON_ID_03 = "test_radio_button_03";
+    constexpr char* UI_TEST_RADIO_BUTTON_IMAGE_LABEL_ID = "test_radio_button_image_label";
+    constexpr char* UI_TEST_RADIO_BUTTON_IMAGE_ID_01 = "test_radio_button_image_01";
+    constexpr char* UI_TEST_RADIO_BUTTON_IMAGE_ID_02 = "test_radio_button_image_02";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_LABEL_ID = "test_radio_toggle_button_label";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_ID_01 = "test_toggle_button_01";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_ID_02 = "test_toggle_button_02";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_ID_03 = "test_toggle_button_03";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_IMAGE_LABEL_ID = "test_toggle_button_image_label";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_IMAGE_ID_01 = "test_toggle_button_image_01";
+    constexpr char* UI_TEST_TOGGLE_BUTTON_IMAGE_ID_02 = "test_toggle_button_image_02";
+}
 class UITestBUTTON : public UITest {
 public:
     UITestBUTTON() {}
