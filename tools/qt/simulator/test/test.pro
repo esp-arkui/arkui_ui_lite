@@ -69,6 +69,7 @@ SOURCES += \
     ../../../../test/framework/src/ui_auto_test.cpp \
     ../../../../test/framework/src/ui_auto_test_group.cpp \
     ../../../../test/framework/src/compare_tools.cpp \
+    ../../../../test/uitest/test_anti_aliasing/ui_auto_test_anti_aliasing.cpp \
     ../../../../test/uitest/test_render/ui_auto_test_render.cpp \
 
 HEADERS += \
@@ -121,6 +122,7 @@ HEADERS += \
     ../../../../test/framework/include/ui_auto_test.h \
     ../../../../test/framework/include/ui_auto_test_group.h \
     ../../../../test/framework/include/compare_tools.h \
+    ../../../../test/uitest/test_anti_aliasing/ui_auto_test_anti_aliasing.h \
     ../../../../test/uitest/test_render/ui_auto_test_render.h
 
 INCLUDEPATH += \

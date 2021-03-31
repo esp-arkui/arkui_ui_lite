@@ -15,6 +15,7 @@
 
 #include "ui_auto_test_group.h"
 #include "graphic_config.h"
+#include "test_anti_aliasing/ui_auto_test_anti_aliasing.h"
 #include "test_render/ui_auto_test_render.h"
 
 namespace OHOS {
@@ -22,6 +23,7 @@ List<UIAutoTest*> UIAutoTestGroup::testCaseList_;
 
 void UIAutoTestGroup::SetUpTestCase()
 {
+    testCaseList_.PushBack(new UiAutoTestAntiAliasing());
     testCaseList_.PushBack(new UIAutoTestRender());
 }
 
