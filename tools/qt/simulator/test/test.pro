@@ -70,7 +70,26 @@ SOURCES += \
     ../../../../test/framework/src/ui_auto_test.cpp \
     ../../../../test/framework/src/ui_auto_test_group.cpp \
     ../../../../test/framework/src/compare_tools.cpp \
+    ../../../../test/uitest/test_anti_aliasing/ui_auto_test_anti_aliasing.cpp \
+    ../../../../test/uitest/test_arc_label/ui_auto_test_arc_label.cpp \
+    ../../../../test/uitest/test_button/ui_auto_test_button.cpp \
+    ../../../../test/uitest/test_canvas/ui_auto_test_canvas.cpp \
+    ../../../../test/uitest/test_chart/ui_auto_test_chart_pillar.cpp \
+    ../../../../test/uitest/test_chart/ui_auto_test_chart_polyline.cpp \
+    ../../../../test/uitest/test_digital_clock/ui_auto_test_digital_clock.cpp \
+    ../../../../test/uitest/test_draw_line/ui_auto_test_draw_line.cpp \
+    ../../../../test/uitest/test_draw_rect/ui_auto_test_draw_rect.cpp \
+    ../../../../test/uitest/test_focus_manager/ui_auto_test_focus_manager.cpp \
+    ../../../../test/uitest/test_font/ui_auto_test_font.cpp \
+    ../../../../test/uitest/test_image/ui_auto_test_image.cpp \
+    ../../../../test/uitest/test_label/ui_auto_test_label.cpp \
+    ../../../../test/uitest/test_layout/ui_auto_test_basic_layout.cpp \
+    ../../../../test/uitest/test_opacity/ui_auto_test_opacity.cpp \
+    ../../../../test/uitest/test_picker/ui_auto_test_ui_picker.cpp \
+    ../../../../test/uitest/test_qrcode/ui_auto_test_qrcode.cpp \
     ../../../../test/uitest/test_render/ui_auto_test_render.cpp \
+    ../../../../test/uitest/test_slider/ui_auto_test_slider.cpp \
+    ../../../../test/uitest/test_transform/ui_auto_test_transform.cpp
 
 HEADERS += \
     ../../../../test/framework/include/test_case_list_adapter.h \
@@ -123,7 +142,26 @@ HEADERS += \
     ../../../../test/framework/include/ui_auto_test.h \
     ../../../../test/framework/include/ui_auto_test_group.h \
     ../../../../test/framework/include/compare_tools.h \
-    ../../../../test/uitest/test_render/ui_auto_test_render.h
+    ../../../../test/uitest/test_anti_aliasing/ui_auto_test_anti_aliasing.h \
+    ../../../../test/uitest/test_arc_label/ui_auto_test_arc_label.h \
+    ../../../../test/uitest/test_button/ui_auto_test_button.h \
+    ../../../../test/uitest/test_canvas/ui_auto_test_canvas.h \
+    ../../../../test/uitest/test_chart/ui_auto_test_chart_pillar.h \
+    ../../../../test/uitest/test_chart/ui_auto_test_chart_polyline.h \
+    ../../../../test/uitest/test_digital_clock/ui_auto_test_digital_clock.h \
+    ../../../../test/uitest/test_draw_line/ui_auto_test_draw_line.h \
+    ../../../../test/uitest/test_draw_rect/ui_auto_test_draw_rect.h \
+    ../../../../test/uitest/test_focus_manager/ui_auto_test_focus_manager.h \
+    ../../../../test/uitest/test_font/ui_auto_test_font.h \
+    ../../../../test/uitest/test_image/ui_auto_test_image.h \
+    ../../../../test/uitest/test_label/ui_auto_test_label.h \
+    ../../../../test/uitest/test_layout/ui_auto_test_basic_layout.h \
+    ../../../../test/uitest/test_opacity/ui_auto_test_opacity.h \
+    ../../../../test/uitest/test_picker/ui_auto_test_ui_picker.h \
+    ../../../../test/uitest/test_qrcode/ui_auto_test_qrcode.h \
+    ../../../../test/uitest/test_render/ui_auto_test_render.h \
+    ../../../../test/uitest/test_slider/ui_auto_test_slider.h \
+    ../../../../test/uitest/test_transform/ui_auto_test_transform.h
 
 INCLUDEPATH += \
     ../../../../frameworks \

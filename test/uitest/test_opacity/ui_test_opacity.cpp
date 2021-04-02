@@ -58,7 +58,7 @@ void UITestOpacity::TearDown()
     container_ = nullptr;
 }
 
-UIViewGroup* UITestOpacity::CreateTestCaseGroup(const char* title) const
+UIViewGroup* UITestOpacity::CreateTestCaseGroup(const char* title, const char* id) const
 {
     UIViewGroup* group = new UIViewGroup();
     group->SetStyle(STYLE_BACKGROUND_COLOR, Color::Black().full);
@@ -68,6 +68,7 @@ UIViewGroup* UITestOpacity::CreateTestCaseGroup(const char* title) const
     titleLabel->SetPosition(0, 0, Screen::GetInstance().GetWidth(), TITLE_LABEL_DEFAULT_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     group->Add(titleLabel);
     return group;
 }
@@ -106,7 +107,8 @@ UILabel* UITestOpacity::CreateTestCaseUILabel(const char* title, uint8_t opaScal
 void UITestOpacity::UIKitOpacityTestUILabel001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display dynamic text with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display dynamic text with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), LABEL_HEIGHT + 50); // 50 : height
         group->SetViewId("UIKitOpacityTestUILabel001");
         UILabel* label = CreateTestCaseUILabel("轻量级GUI-200", 200);  // 200: opacity
@@ -121,7 +123,8 @@ void UITestOpacity::UIKitOpacityTestUILabel001()
 void UITestOpacity::UIKitOpacityTestUILabel002()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display dynamic text with opacity 256  and -1, uint8_t");
+        UIViewGroup* group = CreateTestCaseGroup(" display dynamic text with opacity 256  and -1, uint8_t",
+            UI_TEST_OPACITY_UI_LABEL_ID_02);
         group->Resize(Screen::GetInstance().GetWidth(), LABEL_HEIGHT + 50); // 50 : height
         group->SetViewId("UIKitOpacityTestUILabel002");
         UILabel* label = CreateTestCaseUILabel("轻量级GUI-200", 256); // 256: opacity
@@ -137,7 +140,8 @@ void UITestOpacity::UIKitOpacityTestUILabel002()
 void UITestOpacity::UIKitOpacityTestUIButton001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIButton with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIButton with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_BUTTON_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT);
         group->SetViewId("UIKitOpacityTestUIButton001");
 
@@ -169,7 +173,8 @@ UIButton* UITestOpacity::CreateTestCaseUIButton(uint8_t opaScale) const
 void UITestOpacity::UIKitOpacityTestUIButton002()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIButton Image with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIButton Image with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_BUTTON_LABEL_ID_02);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT + 50); // 50 : height
         group->SetViewId("UIKitOpacityTestUIButton002");
 
@@ -195,7 +200,8 @@ UILabelButton* UITestOpacity::CreateTestCaseUILabelButton(const char* title, uin
 void UITestOpacity::UIKitOpacityTestUILabelButton001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UILabelButton with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UILabelButton with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_LABELBUTTON_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT);
         group->SetViewId("UIKitOpacityTestUILabelButton001");
         UILabelButton* labelButton = CreateTestCaseUILabelButton("200", 200); // 200 : opacity
@@ -225,7 +231,8 @@ UIArcLabel* UITestOpacity::CreateTestCaseUIArcLabel(const char* title, uint8_t o
 void UITestOpacity::UIKitOpacityTestUIArcLabel001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIArcLabel with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIArcLabel with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_ARCLABEL_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT + 50); // 50 : height
         group->SetViewId("UIKitOpacityTestUIArcLabel001");
         UIArcLabel* label = CreateTestCaseUIArcLabel("01234567", 200); // 200: opacity
@@ -255,7 +262,8 @@ UIImageView* UITestOpacity::CreateTestCaseUIImageView(const char* path, uint8_t 
 void UITestOpacity::UIKitOpacityTestUIImageView001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIImageView with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIImageView with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_IMAGE_VIEW_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT + 50); // 50 : height
         group->SetViewId("UIKitOpacityTestUIImageView001");
         UIImageView* imageView = CreateTestCaseUIImageView(BLUE_IMAGE_PATH, 200); // 200: opacity
@@ -307,7 +315,8 @@ UIView* UITestOpacity::CreateTestCaseUIView(uint8_t opaScale) const
 void UITestOpacity::UIKitOpacityTestUIView001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIView with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIView with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_VIEW_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT + 50); // 50 : height
         group->SetViewId("UIKitOpacityTestUIView001");
 
@@ -325,7 +334,8 @@ void UITestOpacity::UIKitOpacityTestUIView001()
 void UITestOpacity::UIKitOpacityTestUIViewGroup001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIViewGroup with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIViewGroup with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_VIEWGROUP_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), (BUTTON_HEIGHT << 1) + 100); // 100: height
         group->SetViewId("UIKitOpacityTestUIViewGroup001");
 
@@ -400,7 +410,8 @@ UIList* UITestOpacity::CreateTestCaseUIList(uint8_t opaScale) const
 void UITestOpacity::UIKitOpacityTestUIList001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIList with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIList with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_LIST_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT + 100); // 100: height
         group->SetViewId("UIKitOpacityTestUIList001");
         UIList* list = CreateTestCaseUIList(200); // 200 : opacity
@@ -416,7 +427,8 @@ void UITestOpacity::UIKitOpacityTestUIList001()
 void UITestOpacity::UIKitOpacityTestUIScrollView001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UIScrollView with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UIScrollView with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_SCROLLVIEW_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT << 1);
         group->SetViewId("UIKitOpacityTestUIScrollView001");
 
@@ -457,7 +469,8 @@ void UITestOpacity::UIKitOpacityTestUIScrollView001()
 void UITestOpacity::UIKitOpacityTestUISwipeView001()
 {
     if (container_ != nullptr) {
-        UIViewGroup* group = CreateTestCaseGroup(" display UISwipeView with opacity 200 and 100");
+        UIViewGroup* group = CreateTestCaseGroup(" display UISwipeView with opacity 200 and 100",
+            UI_TEST_OPACITY_UI_SWIPEVIEW_LABEL_ID_01);
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT);
         group->SetViewId("UIKitOpacityTestUISwipeView001");
 

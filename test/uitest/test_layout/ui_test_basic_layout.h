@@ -24,6 +24,28 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_BASIC_LAYOUT_ID = "Basic_Layout";
+    constexpr char* UI_TEST_BASIC_LAYOUT_RESET_BTN_ID = "test_basic_layout_reset_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_MARGIN_BTN_ID = "test_basic_layout_margin_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_PADDING_BTN_ID = "test_basic_layout_padding_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_CENTEROFPARENT_BTN_ID = "test_basic_layout_center_of_parent_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_LEFTOFPARENT_BTN_ID = "test_basic_layout_left_of_parent_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_RIGHTOFPARENT_BTN_ID = "test_basic_layout_right_of_parent_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_TOPOFPARENT_BTN_ID = "test_basic_layout_top_of_parent_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_BOTTOMOFPARENT_BTN_ID = "test_basic_layout_bottom_of_parent_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_LEFTOFSIBLING_BTN_ID = "test_basic_layout_left_of_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_RIGHTOFSIBLING_BTN_ID = "test_basic_layout_right_of_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_TOPOFSIBLING_BTN_ID = "test_basic_layout_top_of_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_BOTTOMOFSIBLING_BTN_ID = "test_basic_layout_bottom_of_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_HORCENTEROFSIBLING_BTN_ID = "test_basic_layout_hor_center_of_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_VERCENTEROFSIBLING_BTN_ID = "test_basic_layout_ver_center_of_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_LEFTTOSIBLING_BTN_ID = "test_basic_layout_left_to_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_RIGHTTOSIBLING_BTN_ID = "test_basic_layout_right_to_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_TOPTOSIBLING_BTN_ID = "test_basic_layout_top_to_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_BOTTOMTOSIBLING_BTN_ID = "test_basic_layout_bottom_to_sibling_button";
+    constexpr char* UI_TEST_BASIC_LAYOUT_INVALIDLAYOUT_BTN_ID = "test_basic_layout_invalid_layout_button";
+}
 class UITestBasicLayout : public UITest, public UIView::OnClickListener {
 public:
     UITestBasicLayout() {}
@@ -72,7 +94,7 @@ private:
     UILabelButton* padBtn_ = nullptr;
     UILabelButton* setStyle_ = nullptr;
 
-    void SetUpButton(UILabelButton* btn, const char* title)
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr)
     {
         if (btn == nullptr) {
             return;

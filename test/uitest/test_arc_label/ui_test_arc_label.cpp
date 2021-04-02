@@ -44,12 +44,13 @@ void UITestArcLabel::TearDown()
     container_ = nullptr;
 }
 
-void UITestArcLabel::InnerTestTitle(const char* title, int16_t x, int16_t y) const
+void UITestArcLabel::InnerTestTitle(const char* title, int16_t x, int16_t y, const char* id) const
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(x, y, Screen::GetInstance().GetWidth(), TITLE_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
 }
 
@@ -71,28 +72,31 @@ void UITestArcLabel::UIKit_UIArcLabel_Test_Display_001()
     const char* title = "显示内部角度从0到270的弧形文本 ";
     // 0: start angle  270: end angle
     TestArcLabelDisplay(title, 0, 270, UIArcLabel::TextOrientation::INSIDE, VIEW_DISTANCE_TO_LEFT_SIDE,
-                        VIEW_DISTANCE_TO_TOP_SIDE);
+                        VIEW_DISTANCE_TO_TOP_SIDE, UI_TEST_ARC_LABEL_DISPLAY_ID_01);
 }
 
 void UITestArcLabel::UIKit_UIArcLabel_Test_Display_002()
 {
     const char* title = "显示内部角度从0到-270的弧形文本 ";
     // 0: start angle  -270: end angle  100: y-coordinate
-    TestArcLabelDisplay(title, 0, -270, UIArcLabel::TextOrientation::INSIDE, VIEW_DISTANCE_TO_LEFT_SIDE, 100);
+    TestArcLabelDisplay(title, 0, -270, UIArcLabel::TextOrientation::INSIDE, VIEW_DISTANCE_TO_LEFT_SIDE, 100,
+                        UI_TEST_ARC_LABEL_DISPLAY_ID_02);
 }
 
 void UITestArcLabel::UIKit_UIArcLabel_Test_Display_003()
 {
     const char* title = "显示外部角度从0到270的弧形文本 ";
     // 0: start angle  270: end angle  200: y-coordinate
-    TestArcLabelDisplay(title, 0, 270, UIArcLabel::TextOrientation::OUTSIDE, VIEW_DISTANCE_TO_LEFT_SIDE, 200);
+    TestArcLabelDisplay(title, 0, 270, UIArcLabel::TextOrientation::OUTSIDE, VIEW_DISTANCE_TO_LEFT_SIDE, 200,
+                        UI_TEST_ARC_LABEL_DISPLAY_ID_03);
 }
 
 void UITestArcLabel::UIKit_UIArcLabel_Test_Display_004()
 {
     const char* title = "显示外部角度从0到-270的弧形文本 ";
     // 0: start angle  -270: end angle  300: y-coordinate
-    TestArcLabelDisplay(title, 0, -270, UIArcLabel::TextOrientation::OUTSIDE, VIEW_DISTANCE_TO_LEFT_SIDE, 300);
+    TestArcLabelDisplay(title, 0, -270, UIArcLabel::TextOrientation::OUTSIDE, VIEW_DISTANCE_TO_LEFT_SIDE, 300,
+                        UI_TEST_ARC_LABEL_DISPLAY_ID_04);
 }
 
 void UITestArcLabel::TestArcLabelDisplay(const char* title,
@@ -100,10 +104,11 @@ void UITestArcLabel::TestArcLabelDisplay(const char* title,
                                          const int16_t endAngle,
                                          const UIArcLabel::TextOrientation orientation,
                                          int16_t x,
-                                         int16_t y)
+                                         int16_t y,
+                                         const char* id)
 {
     if (container_ != nullptr) {
-        InnerTestTitle(title, x, positionY_);
+        InnerTestTitle(title, x, positionY_, id);
         UIArcLabel* label = new UIArcLabel();
         label->SetArcTextCenter(CENTER_X, CENTER_Y + positionY_ + GAP * 4); // 4: 4 times GAP
         label->SetArcTextRadius(RADIUS);
@@ -123,7 +128,7 @@ void UITestArcLabel::UIKit_UIArcLabel_Test_Align_001()
         // 2: half of screen width
         positionX_ = Screen::GetInstance().GetWidth() / 2 + VIEW_DISTANCE_TO_LEFT_SIDE;
         positionY_ = 0;
-        InnerTestTitle("弧形文本在0到90度之间左对齐 ", positionX_, positionY_);
+        InnerTestTitle("弧形文本在0到90度之间左对齐 ", positionX_, positionY_, UI_TEST_ARC_LABEL_ALIGN_ID_01);
         positionY_ += TITLE_HEIGHT + GAP;
         UIView* back = new UIView();
         back->SetPosition(positionX_, positionY_ + GAP);
@@ -149,7 +154,7 @@ void UITestArcLabel::UIKit_UIArcLabel_Test_Align_001()
 void UITestArcLabel::UIKit_UIArcLabel_Test_Align_002()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("弧形文本在0到90度之间居中对齐 ", positionX_, positionY_);
+        InnerTestTitle("弧形文本在0到90度之间居中对齐 ", positionX_, positionY_, UI_TEST_ARC_LABEL_ALIGN_ID_02);
         positionY_ += TITLE_HEIGHT + GAP;
         UIView* back = new UIView();
         back->SetPosition(positionX_, positionY_ + GAP);
@@ -175,7 +180,7 @@ void UITestArcLabel::UIKit_UIArcLabel_Test_Align_002()
 void UITestArcLabel::UIKit_UIArcLabel_Test_Align_003()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("弧形文本在0到90度之间右对齐 ", positionX_, positionY_);
+        InnerTestTitle("弧形文本在0到90度之间右对齐 ", positionX_, positionY_, UI_TEST_ARC_LABEL_ALIGN_ID_03);
         positionY_ += TITLE_HEIGHT + GAP;
         UIView* back = new UIView();
         back->SetPosition(positionX_, positionY_ + GAP);

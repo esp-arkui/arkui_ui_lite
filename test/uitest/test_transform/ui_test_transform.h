@@ -24,6 +24,12 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_TRANSFORM_ID = "Transform";
+    constexpr char* UI_TEST_TRANSFORM_ROTATE_ID_01 = "test_transform_rotate_01";
+    constexpr char* UI_TEST_TRANSFORM_SCALE_ID_01 = "test_transform_scale_01";
+    constexpr char* UI_TEST_TRANSFORM_TRANSLATE_ID_01 = "test_transform_translate_01";
+}
 class UITestTransform : public UITest, public UIView::OnClickListener {
 public:
     UITestTransform() {}
@@ -32,7 +38,7 @@ public:
     void TearDown() override;
     UIView* GetTestView() override;
 
-    void SetUpButton(UILabelButton* btn, const char* title);
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr);
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
 

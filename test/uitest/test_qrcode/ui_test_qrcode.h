@@ -21,6 +21,18 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_QRCODE_ID = "UIQrcode";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_01 = "test_qrcode_display_label_01";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_02 = "test_qrcode_display_label_02";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_03 = "test_qrcode_display_label_03";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_04 = "test_qrcode_display_label_04";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_05 = "test_qrcode_display_label_05";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_06 = "test_qrcode_display_label_06";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_07 = "test_qrcode_display_label_07";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_08 = "test_qrcode_display_label_08";
+    constexpr char* UI_TEST_QRCODE_DISPLAY_LABEL_ID_09 = "test_qrcode_display_label_09";
+}
 class UITestQrcode : public UITest {
 public:
     UITestQrcode() {}
@@ -42,7 +54,7 @@ public:
     void UIKitUIQrcodeTestDisplay009();
 private:
     UIScrollView* container_ = nullptr;
-    UIViewGroup* CreateTestCaseGroup(const char* title) const;
+    UIViewGroup* CreateTestCaseGroup(const char* title, const char* id = nullptr) const;
 };
 } // namespace OHOS
 #endif // UI_TEST_QRCODE_H

@@ -47,13 +47,14 @@ void UITestFont::TearDown()
     container_ = nullptr;
 }
 
-void UITestFont::InnerTestTitle(const char* title)
+void UITestFont::InnerTestTitle(const char* title, const char* id)
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, Screen::GetInstance().GetWidth(),
                             TITLE_LABEL_DEFAULT_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + GAP;
 }
@@ -74,7 +75,7 @@ UIView* UITestFont::GetTestView()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestPsram_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Psram");
+        InnerTestTitle("Test Psram", UI_TEST_FONT_PSRAM_LABEL_ID_01);
         UIFont::GetInstance()->SetPsramMemory(reinterpret_cast<uintptr_t>(g_newFontPsramBaseAddr),
                                               OHOS::MIN_FONT_PSRAM_LENGTH);
         UILabel* label = new UILabel();
@@ -92,7 +93,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestPsram_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestFontPath_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Font Path");
+        InnerTestTitle("Test Font Path", UI_TEST_FONT_FONTPATH_LABEL_ID_01);
         std::string dpath;
         std::string spath;
         size_t len = dpath.size();
@@ -113,7 +114,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestFontPath_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestSetFontId_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Set Font Id");
+        InnerTestTitle("Test Set Font Id", UI_TEST_FONT_SETFONTID_LABEL_ID_01);
         UILabel* label = new UILabel();
         label->SetPosition(positionX_, positionY_);
         label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -129,7 +130,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestSetFontId_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestSetFont_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Set Font");
+        InnerTestTitle("Test Set Font", UI_TEST_FONT_SETFONT_LABEL_ID_01);
         UILabel* label = new UILabel();
         label->SetPosition(positionX_, positionY_);
         label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -146,7 +147,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestSetFont_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontHeight_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Get Font Height");
+        InnerTestTitle("Test Get Font Height", UI_TEST_FONT_GETFONTHEIGHT_LABEL_ID_01);
         UILabel* label = new UILabel();
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, 18); // 18 : size
         char buf[BUF_SIZE] = {0};
@@ -161,7 +162,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontHeight_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontVersion_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Get Font Version");
+        InnerTestTitle("Test Get Font Version", UI_TEST_FONT_GETFONTVERSION_LABEL_ID_01);
         UILabel* label = new UILabel();
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
         char buf[BUF_SIZE] = {0};
@@ -176,7 +177,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontVersion_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontId_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Get Font Id");
+        InnerTestTitle("Test Get Font Id", UI_TEST_FONT_GETFONTID_LABEL_ID_01);
         UILabel* label = new UILabel();
         label->SetFont("HYQiHei-65S", 18);                   // 18: means font size
         UIFont::GetInstance()->GetFontId("HYQiHei-65S", 18); // 18: means font size
@@ -192,7 +193,7 @@ void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontId_001()
 void UITestFont::Font_FontEngine_FontConvert_Test_FontTestGetFontHeader_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Test Get Font Header");
+        InnerTestTitle("Test Get Font Header", UI_TEST_FONT_GETFONTHEADER_LABEL_ID_01);
         UILabel* label = new UILabel();
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
         FontHeader fontHeader;

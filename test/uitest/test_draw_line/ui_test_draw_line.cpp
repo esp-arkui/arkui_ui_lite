@@ -97,6 +97,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_001()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("水平直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_01);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -119,6 +120,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_002()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("垂直直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_02);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -142,6 +144,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_003()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("左下-右上方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_03);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -167,6 +170,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_004()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("左上-右下方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_04);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -192,6 +196,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_005()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("右上-左下方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_05);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -218,6 +223,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_006()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("左上-右下方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_06);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -244,6 +250,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_007()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("宽度为零直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_07);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -268,6 +275,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_008()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不同宽度的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_08);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -301,6 +309,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_009()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("全透明的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_09);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -325,6 +334,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_010()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不透明的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_10);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -349,6 +359,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_011()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不同透明度的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_11);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -379,6 +390,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_012()
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不同颜色的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_12);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
