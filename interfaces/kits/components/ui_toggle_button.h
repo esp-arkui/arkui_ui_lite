@@ -107,6 +107,7 @@ public:
 
 protected:
     void CalculateSize() override;
+    virtual void Callback(UIView* view) override;
 
 private:
     static constexpr int16_t DEFAULT_WIDTH = 32;
@@ -117,9 +118,13 @@ private:
     static constexpr uint8_t DEFAULT_BG_GREEN = 113;
     static constexpr uint8_t DEFAULT_BG_BLUE = 255;
 
-    uint16_t corner_;
-    uint16_t radius_;
-    int16_t rectWidth_;
+    uint16_t corner_ = DEFAULT_CORNER_RADIUS;
+    uint16_t radius_ = DEFAULT_CORNER_RADIUS - DEAFULT_RADIUS_DIFF;
+    int16_t rectWidth_ = DEFAULT_WIDTH;
+    Point leftCenter_ = {0,0};
+    Point rightCenter_ = {0,0};
+    Point currentCenter_ = {0,0};
+    Rect rectMid_ = Rect();
 }; // class UIToggleButton
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_TOGGLE_BUTTON_H
