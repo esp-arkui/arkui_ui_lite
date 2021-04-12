@@ -35,6 +35,7 @@
 #ifndef GRAPHIC_LITE_UI_CHECKBOX_H
 #define GRAPHIC_LITE_UI_CHECKBOX_H
 
+#include "animator/animator.h"
 #include "common/image.h"
 #include "components/ui_view.h"
 
@@ -47,7 +48,7 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-class UICheckBox : public UIView {
+class UICheckBox : public UIView, public AnimatorCallback {
 public:
     /**
      * @brief Enumerates the states of a check box.
@@ -216,6 +217,18 @@ public:
     void SetState(UICheckBoxState state);
 
 protected:
+
+    void RsetCallback()
+    {
+        animator_.Stop();
+        curtTime_ = 0;
+    }
+
+    virtual void Callback(UIView* view) override;
+
+    uint16_t curtTime_ = 0;
+    uint16_t dragTimes_ = 10;
+
     virtual void ReverseState();
     virtual void CalculateSize();
     void SelectedStateSoftwareDrawing(Rect rect, Rect trunc, int16_t borderRadius, int16_t rectLineWidth);
@@ -229,6 +242,7 @@ protected:
     int16_t height_;
     int16_t borderWidth_;
     Image image_[MAX_STATUS_NUM];
+    Animator animator_;
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CHECKBOX_H
