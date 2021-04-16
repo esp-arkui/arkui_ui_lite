@@ -97,6 +97,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_001()
                            Screen::GetInstance().GetWidth(), TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("rgb888 格式图片测试 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_01);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 40); // 40 : offset
@@ -128,6 +129,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_002()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示ARGB8888bin文件图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_02);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30: increase offset
@@ -149,6 +151,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_004()
                            Screen::GetInstance().GetWidth(), TITLE_LABEL_DEFAULT_HEIGHT); // 5: increase offset
         label->SetText("显示RGB565bin文件图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_04);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 35); //  35 : offset
@@ -171,6 +174,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_005()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示ARGB8888 数组型图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_05);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 40); // 40 : increase offset
@@ -201,6 +205,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_006()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示24位真彩色jpg图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_06);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -222,6 +227,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_007()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深1索引png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_07);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -243,6 +249,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_008()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深2索引png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_08);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -264,6 +271,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_009()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深4索引png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_09);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -285,6 +293,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_010()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深8索引png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_10);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -306,6 +315,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_011()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深24真彩色png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_11);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -327,6 +337,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_012()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深32真彩色带Alpha通道png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_12);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -348,6 +359,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_013()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深8灰度png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_13);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -369,6 +381,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_014()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深16灰度png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_SETIMAGE_ID_14);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -496,6 +509,7 @@ void UITestImage::UIKit_UIImage_Test_Uncompress_001()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("图片解压测试");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_UNCOMPARESS_ID_01);
 
         UIImageView* imageView1 = new UIImageView();
         imageView1->SetPosition(48, g_height + 30); // 48 : offset; 30 : offset

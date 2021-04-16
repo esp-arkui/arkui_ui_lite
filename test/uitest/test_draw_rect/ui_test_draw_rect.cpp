@@ -136,6 +136,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius=0");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -163,7 +164,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_002()
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width > height, radius > height/2");
     group->Add(label);
-
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_02);
     UIView* view = CreateUIView();
     int16_t width = 120; // 120 : width
     int16_t height = 50; // 50 : height
@@ -189,6 +190,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_003()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width > height, radius = height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -216,6 +218,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_004()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width > height, radius < height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_04);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -243,6 +246,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_005()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width = height, radius > height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_05);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -270,6 +274,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_006()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width = height, radius = height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_06);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -297,6 +302,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_007()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width = height, radius < height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_07);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -324,6 +330,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_008()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width < height, radius > width/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_08);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -351,6 +358,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_009()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width < height, radius = width/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_09);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -378,6 +386,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_0010()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width < height, radius < width/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_10);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -405,6 +414,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderNoRadius_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border, radius=0");
+    label->SetViewId(UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -432,6 +442,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderNoRadius_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border = 1, radius=0");
+    label->SetViewId(UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -459,6 +470,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border, radius<border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -487,6 +499,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度 >高度，radius > 高度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -515,6 +528,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_003()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度>高度，radius = 高度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -543,6 +557,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_004()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度>高度，radius < 高度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_04);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -571,6 +586,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_005()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度=高度，radius > 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_05);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -599,6 +615,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_006()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度=高度，radius = 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_06);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -627,6 +644,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_007()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度=高度，radius < 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_07);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -655,6 +673,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_008()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度<高度，radius > 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_08);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -683,6 +702,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_009()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度<高度，radius = 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_09);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -711,6 +731,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_010()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度<高度，radius < 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_10);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -739,6 +760,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_011()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border = 2, radius = 1");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_11);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -767,6 +789,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_Rect_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形绘制: ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECT_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -792,6 +815,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectColor_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同颜色的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTCOLOR_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -823,6 +847,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置圆角为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -847,6 +872,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置圆角等于宽度的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -871,6 +897,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_003()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置圆角等于宽度的正方形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -895,6 +922,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_004()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同圆角大小的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_04);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -926,6 +954,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不透明背景矩形绘制: ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -949,6 +978,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置全透明背景矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -972,6 +1002,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_003()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同透明度矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1001,6 +1032,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderColor_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同边框颜色的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDERCOLOR_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1033,6 +1065,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderWidth_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置边框宽度为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1056,6 +1089,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderWidth_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同宽度边框大小的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1085,6 +1119,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不透明边框矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1109,6 +1144,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置全透明边框矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1133,6 +1169,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_003()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同透明度边框矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1164,6 +1201,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPadding_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置padding为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1190,6 +1228,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPadding_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置padding不为零的矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1230,6 +1269,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectMargin_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置margin为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1256,6 +1296,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectMargin_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置margin不为零的矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1291,6 +1332,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPaddingMargin_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置 padding/margin 均为零的矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDINGMARGIN_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1321,6 +1363,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPaddingMargin_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置padding/margin均不为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDINGMARGIN_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1364,6 +1407,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_001()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置宽度为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1388,6 +1432,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_002()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置高度为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1412,6 +1457,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_003()
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置宽度和高度都为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();

@@ -22,6 +22,56 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_DRAW_RECT_ID = "Draw_Rect";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_01 = "test_draw_rect_rect_no_border_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_02 = "test_draw_rect_rect_no_border_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_03 = "test_draw_rect_rect_no_border_03";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_04 = "test_draw_rect_rect_no_border_04";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_05 = "test_draw_rect_rect_no_border_05";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_06 = "test_draw_rect_rect_no_border_06";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_07 = "test_draw_rect_rect_no_border_07";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_08 = "test_draw_rect_rect_no_border_08";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_09 = "test_draw_rect_rect_no_border_09";
+    constexpr char* UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_10 = "test_draw_rect_rect_no_border_10";
+    constexpr char* UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_01 = "test_draw_rect_border_no_radius_01";
+    constexpr char* UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_02 = "test_draw_rect_border_no_radius_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_01 = "test_draw_rect_rect_border_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_02 = "test_draw_rect_rect_border_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_03 = "test_draw_rect_rect_border_03";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_04 = "test_draw_rect_rect_border_04";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_05 = "test_draw_rect_rect_border_05";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_06 = "test_draw_rect_rect_border_06";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_07 = "test_draw_rect_rect_border_07";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_08 = "test_draw_rect_rect_border_08";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_09 = "test_draw_rect_rect_border_09";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_10 = "test_draw_rect_rect_border_10";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_11 = "test_draw_rect_rect_border_11";
+    constexpr char* UI_TEST_DRAW_RECT_RECT_LABEL_ID_01 = "test_draw_rect_rect_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTCOLOR_LABEL_ID_01 = "test_draw_rect_rect_color_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_01 = "test_draw_rect_rect_radius_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_02 = "test_draw_rect_rect_radius_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_03 = "test_draw_rect_rect_radius_03";
+    constexpr char* UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_04 = "test_draw_rect_rect_radius_04";
+    constexpr char* UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_01 = "test_draw_rect_rect_opacity_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_02 = "test_draw_rect_rect_opacity_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_03 = "test_draw_rect_rect_opacity_03";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDERCOLOR_LABEL_ID_01 = "test_draw_rect_rect_border_color_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_01 = "test_draw_rect_rect_border_width_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_02 = "test_draw_rect_rect_border_width_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_01 = "test_draw_rect_rect_border_opacity_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_02 = "test_draw_rect_rect_border_opacity_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_03 = "test_draw_rect_rect_border_opacity_03";
+    constexpr char* UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_01 = "test_draw_rect_rect_padding_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_02 = "test_draw_rect_rect_padding_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_01 = "test_draw_rect_rect_margin_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_02 = "test_draw_rect_rect_margin_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTPADDINGMARGIN_LABEL_ID_01 = "test_draw_rect_rect_padding_margin_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTPADDINGMARGIN_LABEL_ID_02 = "test_draw_rect_rect_padding_margin_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_01 = "test_draw_rect_rect_width_and_height_01";
+    constexpr char* UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_02 = "test_draw_rect_rect_width_and_height_02";
+    constexpr char* UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_03 = "test_draw_rect_rect_width_and_height_03";
+}
 class UITestDrawRect : public UITest {
 public:
     UITestDrawRect() {}

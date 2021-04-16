@@ -79,7 +79,7 @@ UIView* UITestTransform::GetTestView()
     return container_;
 }
 
-void UITestTransform::SetUpButton(UILabelButton* btn, const char* title)
+void UITestTransform::SetUpButton(UILabelButton* btn, const char* title, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -87,6 +87,7 @@ void UITestTransform::SetUpButton(UILabelButton* btn, const char* title)
     layout_->Add(btn);
     btn->Resize(BUTTON_WIDHT1, BUTTON_HEIGHT1);
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);
@@ -100,19 +101,19 @@ void UITestTransform::SetUpButton(UILabelButton* btn, const char* title)
 void UITestTransform::UIKit_Transform_Test_Rotate_001()
 {
     rotateBtn_ = new UILabelButton();
-    SetUpButton(rotateBtn_, "旋转");
+    SetUpButton(rotateBtn_, "旋转", UI_TEST_TRANSFORM_ROTATE_ID_01);
 }
 
 void UITestTransform::UIKit_Transform_Test_Scale_002()
 {
     scaleBtn_ = new UILabelButton();
-    SetUpButton(scaleBtn_, "缩放");
+    SetUpButton(scaleBtn_, "缩放", UI_TEST_TRANSFORM_SCALE_ID_01);
 }
 
 void UITestTransform::UIKit_Transform_Test_Translate_003()
 {
     translateBtn_ = new UILabelButton();
-    SetUpButton(translateBtn_, "平移");
+    SetUpButton(translateBtn_, "平移", UI_TEST_TRANSFORM_TRANSLATE_ID_01);
 }
 
 bool UITestTransform::OnClick(UIView& view, const ClickEvent& event)

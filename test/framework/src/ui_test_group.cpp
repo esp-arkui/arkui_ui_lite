@@ -92,28 +92,28 @@ void UITestGroup::SetUpTestCase()
     }
 #endif
     testCaseList_.PushBack(TestCaseInfo{"Input_Event", new UITestInputEvent()});
-    testCaseList_.PushBack(TestCaseInfo{"Button", new UITestBUTTON()});
-    testCaseList_.PushBack(TestCaseInfo{"UILabel", new UITestLabel()});
-    testCaseList_.PushBack(TestCaseInfo{"Image", new UITestImage()});
-    testCaseList_.PushBack(TestCaseInfo{"Basic_Layout", new UITestBasicLayout()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_BUTTON_ID, new UITestBUTTON()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_LABEL_ID, new UITestLabel()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_IMAGE_ID, new UITestImage()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_BASIC_LAYOUT_ID, new UITestBasicLayout()});
     testCaseList_.PushBack(TestCaseInfo{"Advanced_Layout", new UITestAdvancedLayout()});
     testCaseList_.PushBack(TestCaseInfo{"ListLayout", new UITestListLayout()});
     testCaseList_.PushBack(TestCaseInfo{"UIScrollView", new UITestUIScrollView()});
     testCaseList_.PushBack(TestCaseInfo{"Box_Progress", new UITestBoxProgress()});
     testCaseList_.PushBack(TestCaseInfo{"Circle_Progress", new UITestCircleProgress()});
-    testCaseList_.PushBack(TestCaseInfo{"Slider", new UITestSlider()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_SLIDER_ID, new UITestSlider()});
     testCaseList_.PushBack(TestCaseInfo{"Animator", new UITestAnimator()});
-    testCaseList_.PushBack(TestCaseInfo{"Canvas", new UITestCanvas()});
-    testCaseList_.PushBack(TestCaseInfo{"Draw_Rect", new UITestDrawRect()});
-    testCaseList_.PushBack(TestCaseInfo{"Draw_Line", new UITestDrawLine()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_CANVAS_ID, new UITestCanvas()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_DRAW_RECT_ID, new UITestDrawRect()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_DRAW_LINE_ID, new UITestDrawLine()});
     testCaseList_.PushBack(TestCaseInfo{UI_TEST_RENDER_ID, new UITestRender()});
-    testCaseList_.PushBack(TestCaseInfo{"Anti_Aliasing", new UITestAntiAliasing()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_ANTI_ALIASING_ID, new UITestAntiAliasing()});
     testCaseList_.PushBack(TestCaseInfo{"UIList", new UITestUIList()});
     testCaseList_.PushBack(TestCaseInfo{"UISwipeView", new UITestUISwipeView()});
     testCaseList_.PushBack(TestCaseInfo{"Image_Animator", new UITestImageAnimator()});
-    testCaseList_.PushBack(TestCaseInfo{"UIPicker", new UITestUIPicker()});
-    testCaseList_.PushBack(TestCaseInfo{"Font", new UITestFont()});
-    testCaseList_.PushBack(TestCaseInfo{"Arc_Label", new UITestArcLabel()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_UIPICKER_ID, new UITestUIPicker()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_FONT_ID, new UITestFont()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_ARC_LABEL_ID, new UITestArcLabel()});
 #if ENABLE_DEBUG
     testCaseList_.PushBack(TestCaseInfo{"Event_Injector", new UITestEventInjector()});
     testCaseList_.PushBack(TestCaseInfo{"Dump_Dom", new UITestDumpDomTree()});
@@ -123,23 +123,23 @@ void UITestGroup::SetUpTestCase()
 #endif // ENABLE_DEBUG
     testCaseList_.PushBack(TestCaseInfo{"View_Percent", new UITestViewPercent()});
     testCaseList_.PushBack(TestCaseInfo{"Texture_Mapper", new UITestTextureMapper()});
-    testCaseList_.PushBack(TestCaseInfo{"Chart_Polyline", new UITestChartPolyline()});
-    testCaseList_.PushBack(TestCaseInfo{"Chart_Pillar", new UITestChartPillar()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_CHART_POLYLINE_ID, new UITestChartPolyline()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_CHART_POLLAR_ID, new UITestChartPillar()});
 #if ENABLE_WINDOW
     testCaseList_.PushBack(TestCaseInfo{"Dialog", new UITestDialog()});
 #endif
     testCaseList_.PushBack(TestCaseInfo{"Analog_Clock", new UITestAnalogClock()});
-    testCaseList_.PushBack(TestCaseInfo{"Digital_Clock", new UITestDigitalClock()});
-    testCaseList_.PushBack(TestCaseInfo{"Transform", new UITestTransform()});
-    testCaseList_.PushBack(TestCaseInfo{"Opacity", new UITestOpacity()});
-    testCaseList_.PushBack(TestCaseInfo{"UIQrcode", new UITestQrcode()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_DIGITAL_CLOCK_ID, new UITestDigitalClock()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_TRANSFORM_ID, new UITestTransform()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_OPACITY_ID, new UITestOpacity()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_QRCODE_ID, new UITestQrcode()});
     testCaseList_.PushBack(TestCaseInfo{"UIViewGroup", new UITestViewGroup()});
     testCaseList_.PushBack(TestCaseInfo{"View Bitmap", new UITestViewBitmap()});
 #ifndef VERSION_LITE
     testCaseList_.PushBack(TestCaseInfo{"Video", new UITestVideo()});
 #endif
 #if ENABLE_FOCUS_MANAGER
-    testCaseList_.PushBack(TestCaseInfo{"FocusManager", new UITestFocusManager()});
+    testCaseList_.PushBack(TestCaseInfo{UI_TEST_FOCUS_MANAGER_ID, new UITestFocusManager()});
 #endif
 }
 

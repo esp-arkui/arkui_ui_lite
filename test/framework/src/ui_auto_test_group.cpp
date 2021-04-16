@@ -15,14 +15,54 @@
 
 #include "ui_auto_test_group.h"
 #include "graphic_config.h"
+#include "test_anti_aliasing/ui_auto_test_anti_aliasing.h"
+#include "test_arc_label/ui_auto_test_arc_label.h"
+#include "test_button/ui_auto_test_button.h"
+#include "test_canvas/ui_auto_test_canvas.h"
+#include "test_chart/ui_auto_test_chart_pillar.h"
+#include "test_chart/ui_auto_test_chart_polyline.h"
+#include "test_digital_clock/ui_auto_test_digital_clock.h"
+#include "test_draw_line/ui_auto_test_draw_line.h"
+#include "test_draw_rect/ui_auto_test_draw_rect.h"
+#include "test_focus_manager/ui_auto_test_focus_manager.h"
+#include "test_font/ui_auto_test_font.h"
+#include "test_image/ui_auto_test_image.h"
+#include "test_label/ui_auto_test_label.h"
+#include "test_layout/ui_auto_test_basic_layout.h"
+#include "test_opacity/ui_auto_test_opacity.h"
+#include "test_picker/ui_auto_test_ui_picker.h"
+#include "test_qrcode/ui_auto_test_qrcode.h"
 #include "test_render/ui_auto_test_render.h"
+#include "test_slider/ui_auto_test_slider.h"
+#include "test_transform/ui_auto_test_transform.h"
 
 namespace OHOS {
 List<UIAutoTest*> UIAutoTestGroup::testCaseList_;
 
 void UIAutoTestGroup::SetUpTestCase()
 {
+    testCaseList_.PushBack(new UIAutoTestAntiAliasing());
+    testCaseList_.PushBack(new UIAutoTestArcLabel());
+    testCaseList_.PushBack(new UIAutoTestButton());
+    testCaseList_.PushBack(new UIAutoTestCanvas());
+    testCaseList_.PushBack(new UIAutoTestChartPillar());
+    testCaseList_.PushBack(new UIAutoTestChartPolyline());
+    testCaseList_.PushBack(new UIAutoTestDigitalClock());
+    testCaseList_.PushBack(new UIAutoTestDrawLine());
+    testCaseList_.PushBack(new UIAutoTestDrawRect());
+    testCaseList_.PushBack(new UIAutoTestFont());
+    testCaseList_.PushBack(new UIAutoTestImage());
+    testCaseList_.PushBack(new UIAutoTestLabel());
+    testCaseList_.PushBack(new UIAutoTestBasicLayout());
+    testCaseList_.PushBack(new UIAutoTestOpacity());
+    testCaseList_.PushBack(new UIAutoTestUiPicker());
+    testCaseList_.PushBack(new UIAutoTestQrcode());
     testCaseList_.PushBack(new UIAutoTestRender());
+    testCaseList_.PushBack(new UIAutoTestTransform());
+    testCaseList_.PushBack(new UIAutoTestSlider());
+#if ENABLE_FOCUS_MANAGER
+    testCaseList_.PushBack(new UIAutoTestFocusManager());
+#endif
 }
 
 List<UIAutoTest*>& UIAutoTestGroup::GetTestCase()
