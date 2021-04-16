@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestSlider : public UIAutoTest {
+class UIAutoTestSlider : public UIAutoTest {
 public:
-    UiAutoTestSlider() {}
-    ~UiAutoTestSlider() {}
+    UIAutoTestSlider() {}
+    ~UIAutoTestSlider() {}
 
     void Reset() const;
     void RunTestList();

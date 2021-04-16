@@ -17,13 +17,13 @@
 #include "ui_test_chart_pillar.h"
 
 namespace OHOS {
-void UiAutoTestChartPillar::Reset() const
+void UIAutoTestChartPillar::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_CHART_POLLAR_ID);
 }
 
-void UiAutoTestChartPillar::RunTestList()
+void UIAutoTestChartPillar::RunTestList()
 {
     Reset();
     UIKitChartPillarTestAddDataSerial001();
@@ -34,7 +34,7 @@ void UiAutoTestChartPillar::RunTestList()
     UIKitChartPillarTestSetAxisLineVisible001();
 }
 
-void UiAutoTestChartPillar::UIKitChartPillarTestAddDataSerial001() const
+void UIAutoTestChartPillar::UIKitChartPillarTestAddDataSerial001() const
 {
     Reset();
     const char* fileName = "ui_test_chart_pillar_add_data_01.bin";
@@ -47,7 +47,7 @@ void UiAutoTestChartPillar::UIKitChartPillarTestAddDataSerial001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestChartPillar::UIKitChartPillarTestDeleteDataSerial001() const
+void UIAutoTestChartPillar::UIKitChartPillarTestDeleteDataSerial001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_PILLAR_ADD_DATA_BTN_ID_01);
@@ -64,7 +64,7 @@ void UiAutoTestChartPillar::UIKitChartPillarTestDeleteDataSerial001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestChartPillar::UIKitChartPillarTestClearDataSerial001() const
+void UIAutoTestChartPillar::UIKitChartPillarTestClearDataSerial001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_PILLAR_ADD_DATA_BTN_ID_01);
@@ -75,7 +75,7 @@ void UiAutoTestChartPillar::UIKitChartPillarTestClearDataSerial001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPillar::UIKitChartPillarTestReverse001() const
+void UIAutoTestChartPillar::UIKitChartPillarTestReverse001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_PILLAR_REVERSE_BTN_ID_01);
@@ -83,7 +83,7 @@ void UiAutoTestChartPillar::UIKitChartPillarTestReverse001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPillar::UIKitChartPillarTestSetAxisLineColor001() const
+void UIAutoTestChartPillar::UIKitChartPillarTestSetAxisLineColor001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_PILLAR_AXIS_COLOR_BTN_ID_01);
@@ -91,7 +91,7 @@ void UiAutoTestChartPillar::UIKitChartPillarTestSetAxisLineColor001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPillar::UIKitChartPillarTestSetAxisLineVisible001() const
+void UIAutoTestChartPillar::UIKitChartPillarTestSetAxisLineVisible001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_PILLAR_AXIS_VISIBLE_BTN_ID_01);

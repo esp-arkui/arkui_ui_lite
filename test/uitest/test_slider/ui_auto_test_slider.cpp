@@ -17,13 +17,13 @@
 #include "ui_test_slider.h"
 
 namespace OHOS {
-void UiAutoTestSlider::Reset() const
+void UIAutoTestSlider::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_SLIDER_ID);
 }
 
-void UiAutoTestSlider::RunTestList()
+void UIAutoTestSlider::RunTestList()
 {
     UIKitSliderTestSetRange001();
     UIKitSliderTestSetValue001();
@@ -37,7 +37,7 @@ void UiAutoTestSlider::RunTestList()
     UIKitSliderTestSetRadius001();
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetRange001() const
+void UIAutoTestSlider::UIKitSliderTestSetRange001() const
 {
     Reset();
     ClickViewById(UI_TEST_SLIDER_SETRANGE_INCMIN_BTN_ID_01);
@@ -54,7 +54,7 @@ void UiAutoTestSlider::UIKitSliderTestSetRange001() const
     CompareByBinary(fileName4);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetValue001() const
+void UIAutoTestSlider::UIKitSliderTestSetValue001() const
 {
     Reset();
     ClickViewById(UI_TEST_SLIDER_SETVALUE_BTN_ID_01);
@@ -65,7 +65,7 @@ void UiAutoTestSlider::UIKitSliderTestSetValue001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetImage001() const
+void UIAutoTestSlider::UIKitSliderTestSetImage001() const
 {
     ClickViewById(UI_TEST_SLIDER_SETIMAGE_BTN_ID_01);
     const char* fileName = "ui_test_slider_set_image_001.bin";
@@ -75,7 +75,7 @@ void UiAutoTestSlider::UIKitSliderTestSetImage001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetStyle001() const
+void UIAutoTestSlider::UIKitSliderTestSetStyle001() const
 {
     Reset();
     DragViewToHead(UI_TEST_SLIDER_SETIMAGE_LABEL_ID_01);
@@ -87,7 +87,7 @@ void UiAutoTestSlider::UIKitSliderTestSetStyle001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetKnobWidth001() const
+void UIAutoTestSlider::UIKitSliderTestSetKnobWidth001() const
 {
     Reset();
     DragViewToHead(UI_TEST_SLIDER_SETIMAGE_LABEL_ID_01);
@@ -99,14 +99,14 @@ void UiAutoTestSlider::UIKitSliderTestSetKnobWidth001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetStep001() const
+void UIAutoTestSlider::UIKitSliderTestSetStep001() const
 {
     ClickViewById(UI_TEST_SLIDER_SETSTEP_BTN_ID_01);
     const char* fileName = "ui_test_slider_set_step_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetColor001() const
+void UIAutoTestSlider::UIKitSliderTestSetColor001() const
 {
     Reset();
     ClickViewById(UI_TEST_SLIDER_SETCOLOR_BTN_ID_01);
@@ -114,7 +114,7 @@ void UiAutoTestSlider::UIKitSliderTestSetColor001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetDirection001() const
+void UIAutoTestSlider::UIKitSliderTestSetDirection001() const
 {
     Reset();
     ClickViewById(UI_TEST_SLIDER_SETDIRECTION_BTN_ID_01);
@@ -131,7 +131,7 @@ void UiAutoTestSlider::UIKitSliderTestSetDirection001() const
     CompareByBinary(fileName4);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetValidSize001() const
+void UIAutoTestSlider::UIKitSliderTestSetValidSize001() const
 {
     ClickViewById(UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_01);
     const char* fileName = "ui_test_slider_set_valid_size_001.bin";
@@ -141,7 +141,7 @@ void UiAutoTestSlider::UIKitSliderTestSetValidSize001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestSlider::UIKitSliderTestSetRadius001() const
+void UIAutoTestSlider::UIKitSliderTestSetRadius001() const
 {
     Reset();
     DragViewToHead(UI_TEST_SLIDER_SETIMAGE_LABEL_ID_01);

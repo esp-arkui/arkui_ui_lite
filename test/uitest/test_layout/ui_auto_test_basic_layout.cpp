@@ -17,13 +17,13 @@
 #include "ui_test_basic_layout.h"
 
 namespace OHOS {
-void UiAutoTestBasicLayout::Reset() const
+void UIAutoTestBasicLayout::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_BASIC_LAYOUT_ID);
 }
 
-void UiAutoTestBasicLayout::RunTestList()
+void UIAutoTestBasicLayout::RunTestList()
 {
     Reset();
     UIKitBasicLayoutTestMargin001();
@@ -45,7 +45,7 @@ void UiAutoTestBasicLayout::RunTestList()
     UIKitBasicLayoutTestBottomToSibling001();
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestMargin001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestMargin001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_MARGIN_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_LEFTOFPARENT_BTN_ID);
@@ -62,7 +62,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestMargin001() const
     CompareByBinary(fileName4);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestPadding001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestPadding001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_PADDING_BTN_ID);
@@ -70,7 +70,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestPadding001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestCenterOfParent001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestCenterOfParent001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_CENTEROFPARENT_BTN_ID);
@@ -78,7 +78,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestCenterOfParent001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestLeftOfParent001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestLeftOfParent001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_LEFTOFPARENT_BTN_ID);
@@ -86,7 +86,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestLeftOfParent001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestRightOfParent001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestRightOfParent001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_RIGHTOFPARENT_BTN_ID);
@@ -94,7 +94,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestRightOfParent001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestTopOfParent001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestTopOfParent001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_TOPOFPARENT_BTN_ID);
@@ -102,7 +102,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestTopOfParent001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestBottomOfParent001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestBottomOfParent001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_BOTTOMOFPARENT_BTN_ID);
@@ -110,7 +110,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestBottomOfParent001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestLeftOfSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestLeftOfSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_LEFTOFSIBLING_BTN_ID);
@@ -118,7 +118,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestLeftOfSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestRightOfSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestRightOfSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_RIGHTOFSIBLING_BTN_ID);
@@ -126,7 +126,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestRightOfSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestTopOfSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestTopOfSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_TOPOFSIBLING_BTN_ID);
@@ -134,7 +134,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestTopOfSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestBottomOfSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestBottomOfSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_BOTTOMOFSIBLING_BTN_ID);
@@ -142,7 +142,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestBottomOfSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestHorCenterOfSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestHorCenterOfSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_HORCENTEROFSIBLING_BTN_ID);
@@ -150,7 +150,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestHorCenterOfSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestVerCenterOfSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestVerCenterOfSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_VERCENTEROFSIBLING_BTN_ID);
@@ -158,7 +158,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestVerCenterOfSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestLeftToSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestLeftToSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_LEFTTOSIBLING_BTN_ID);
@@ -166,7 +166,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestLeftToSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestRightToSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestRightToSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_RIGHTTOSIBLING_BTN_ID);
@@ -174,7 +174,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestRightToSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestTopToSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestTopToSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_TOPTOSIBLING_BTN_ID);
@@ -182,7 +182,7 @@ void UiAutoTestBasicLayout::UIKitBasicLayoutTestTopToSibling001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestBasicLayout::UIKitBasicLayoutTestBottomToSibling001() const
+void UIAutoTestBasicLayout::UIKitBasicLayoutTestBottomToSibling001() const
 {
     ClickViewById(UI_TEST_BASIC_LAYOUT_RESET_BTN_ID);
     ClickViewById(UI_TEST_BASIC_LAYOUT_BOTTOMTOSIBLING_BTN_ID);

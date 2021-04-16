@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestAntiAliasing : public UIAutoTest {
+class UIAutoTestAntiAliasing : public UIAutoTest {
 public:
-    UiAutoTestAntiAliasing() {}
-    ~UiAutoTestAntiAliasing() {}
+    UIAutoTestAntiAliasing() {}
+    ~UIAutoTestAntiAliasing() {}
 
     void Reset() const;
     void RunTestList();

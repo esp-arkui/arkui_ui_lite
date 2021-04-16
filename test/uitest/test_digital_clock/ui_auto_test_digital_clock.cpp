@@ -17,13 +17,13 @@
 #include "ui_test_digital_clock.h"
 
 namespace OHOS {
-void UiAutoTestDigitalClock::Reset() const
+void UIAutoTestDigitalClock::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_DIGITAL_CLOCK_ID);
 }
 
-void UiAutoTestDigitalClock::RunTestList()
+void UIAutoTestDigitalClock::RunTestList()
 {
     Reset();
     UIKitUIDigitalClockTestDisplay001();
@@ -37,63 +37,63 @@ void UiAutoTestDigitalClock::RunTestList()
     UIKitUIDigitalClockTestSetOpacity001();
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplay001() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplay001() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_LABEL_ID_01);
     const char* fileName = "ui_test_digital_clock_display_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplay002() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplay002() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_LABEL_ID_02);
     const char* fileName = "ui_test_digital_clock_display_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestSetColor001() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestSetColor001() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_SET_COLOR_LABEL_ID_01);
     const char* fileName = "ui_test_digital_clock_set_color_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_001() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_001() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_01);
     const char* fileName = "ui_test_digital_clock_display_mode_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_002() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_002() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_02);
     const char* fileName = "ui_test_digital_clock_display_mode_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_003() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_003() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_03);
     const char* fileName = "ui_test_digital_clock_display_mode_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_004() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayMode_004() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_MODE_LABEL_ID_04);
     const char* fileName = "ui_test_digital_clock_display_mode_04.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayLeadingZero001() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestDisplayLeadingZero001() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_LEADING_ZERO_LABEL_ID_01);
     const char* fileName = "test_digital_clock_display_leading_zero_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDigitalClock::UIKitUIDigitalClockTestSetOpacity001() const
+void UIAutoTestDigitalClock::UIKitUIDigitalClockTestSetOpacity001() const
 {
     DragViewToHead(UI_TEST_DIGITAL_CLOCK_DISPLAY_SET_OPACITY_LABEL_ID_01);
     const char* fileName = "test_digital_clock_set_opacity_01.bin";

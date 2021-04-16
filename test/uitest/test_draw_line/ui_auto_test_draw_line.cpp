@@ -17,13 +17,13 @@
 #include "ui_test_draw_line.h"
 
 namespace OHOS {
-void UiAutoTestDrawLine::Reset() const
+void UIAutoTestDrawLine::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_DRAW_LINE_ID);
 }
 
-void UiAutoTestDrawLine::RunTestList()
+void UIAutoTestDrawLine::RunTestList()
 {
     Reset();
     UIKitDrawLineTestLine001();
@@ -40,84 +40,84 @@ void UiAutoTestDrawLine::RunTestList()
     UIKitDrawLineTestLine012();
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine001() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine001() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_01);
     const char* fileName = "ui_test_draw_line_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine002() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine002() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_02);
     const char* fileName = "ui_test_draw_line_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine003() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine003() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_03);
     const char* fileName = "ui_test_draw_line_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine004() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine004() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_04);
     const char* fileName = "ui_test_draw_line_04.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine005() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine005() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_05);
     const char* fileName = "ui_test_draw_line_05.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine006() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine006() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_06);
     const char* fileName = "ui_test_draw_line_06.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine007() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine007() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_07);
     const char* fileName = "ui_test_draw_line_07.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine008() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine008() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_08);
     const char* fileName = "ui_test_draw_line_08.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine009() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine009() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_09);
     const char* fileName = "ui_test_draw_line_09.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine010() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine010() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_10);
     const char* fileName = "ui_test_draw_line_10.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine011() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine011() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_11);
     const char* fileName = "ui_test_draw_line_11.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawLine::UIKitDrawLineTestLine012() const
+void UIAutoTestDrawLine::UIKitDrawLineTestLine012() const
 {
     DragViewToHead(UI_TEST_DRAW_LINE_LABEL_ID_12);
     const char* fileName = "ui_test_draw_line_12.bin";

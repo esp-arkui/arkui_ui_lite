@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestChartPolyline : public UIAutoTest {
+class UIAutoTestChartPolyline : public UIAutoTest {
 public:
-    UiAutoTestChartPolyline() {}
-    ~UiAutoTestChartPolyline() {}
+    UIAutoTestChartPolyline() {}
+    ~UIAutoTestChartPolyline() {}
 
     void Reset() const;
     void RunTestList();

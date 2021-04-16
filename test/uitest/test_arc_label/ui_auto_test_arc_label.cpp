@@ -17,13 +17,13 @@
 #include "ui_test_arc_label.h"
 
 namespace OHOS {
-void UiAutoTestArcLabel::Reset() const
+void UIAutoTestArcLabel::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_ARC_LABEL_ID);
 }
 
-void UiAutoTestArcLabel::RunTestList()
+void UIAutoTestArcLabel::RunTestList()
 {
     Reset();
     UIKitUIArcLabelTestDisplay001();
@@ -36,49 +36,49 @@ void UiAutoTestArcLabel::RunTestList()
     UIKitUIArcLabelTestAlign003();
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestDisplay001() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestDisplay001() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_DISPLAY_ID_01);
     const char* fileName = "ui_test_arc_label_display_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestDisplay002() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestDisplay002() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_DISPLAY_ID_02);
     const char* fileName = "ui_test_arc_label_display_002.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestDisplay003() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestDisplay003() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_DISPLAY_ID_03);
     const char* fileName = "ui_test_arc_label_display_003.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestDisplay004() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestDisplay004() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_DISPLAY_ID_04);
     const char* fileName = "ui_test_arc_label_display_004.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestAlign001() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestAlign001() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_ALIGN_ID_01);
     const char* fileName = "ui_test_arc_label_align_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestAlign002() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestAlign002() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_ALIGN_ID_02);
     const char* fileName = "ui_test_arc_label_align_002.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestArcLabel::UIKitUIArcLabelTestAlign003() const
+void UIAutoTestArcLabel::UIKitUIArcLabelTestAlign003() const
 {
     DragViewToHead(UI_TEST_ARC_LABEL_ALIGN_ID_03);
     const char* fileName = "ui_test_arc_label_align_003.bin";

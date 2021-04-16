@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestDigitalClock : public UIAutoTest {
+class UIAutoTestDigitalClock : public UIAutoTest {
 public:
-    UiAutoTestDigitalClock() {}
-    ~UiAutoTestDigitalClock() {}
+    UIAutoTestDigitalClock() {}
+    ~UIAutoTestDigitalClock() {}
 
     void Reset() const;
     void RunTestList();

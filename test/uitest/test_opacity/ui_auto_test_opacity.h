@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestOpacity : public UIAutoTest {
+class UIAutoTestOpacity : public UIAutoTest {
 public:
-    UiAutoTestOpacity() {}
-    ~UiAutoTestOpacity() {}
+    UIAutoTestOpacity() {}
+    ~UIAutoTestOpacity() {}
 
     void Reset() const;
     void RunTestList();

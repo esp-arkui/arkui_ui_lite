@@ -17,13 +17,13 @@
 #include "ui_test_chart_polyline.h"
 
 namespace OHOS {
-void UiAutoTestChartPolyline::Reset() const
+void UIAutoTestChartPolyline::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_CHART_POLYLINE_ID);
 }
 
-void UiAutoTestChartPolyline::RunTestList()
+void UIAutoTestChartPolyline::RunTestList()
 {
     Reset();
     UIKitChartPolylineTestAddDataSerial001();
@@ -36,7 +36,7 @@ void UiAutoTestChartPolyline::RunTestList()
     UIKitChartPolylineTestGradientBottom001();
     UIKitChartPolylineTestAddPoints001();
 }
-void UiAutoTestChartPolyline::UIKitChartPolylineTestAddDataSerial001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestAddDataSerial001() const
 {
     Reset();
     const char* fileName = "ui_test_chart_ployline_add_data_01.bin";
@@ -49,7 +49,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestAddDataSerial001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestDeleteDataSerial001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestDeleteDataSerial001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_ADD_DATA_BTN_ID_01);
@@ -66,7 +66,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestDeleteDataSerial001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestClearDataSerial001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestClearDataSerial001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_ADD_DATA_BTN_ID_01);
@@ -77,7 +77,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestClearDataSerial001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestTopPoint001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestTopPoint001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_TOP_POINT_BTN_ID_01);
@@ -85,7 +85,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestTopPoint001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestBotPoint001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestBotPoint001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_BOT_POINT_BTN_ID_01);
@@ -93,7 +93,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestBotPoint001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestHeadPoint001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestHeadPoint001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_HEAD_POINT_BTN_ID_01);
@@ -101,7 +101,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestHeadPoint001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestReverse001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestReverse001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_REVERSE_BTN_ID_01);
@@ -109,7 +109,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestReverse001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestGradientBottom001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestGradientBottom001() const
 {
     Reset();
     ClickViewById(UI_TEST_CHART_POLYLINE_GRADIENT_BOT_BTN_ID_01);
@@ -117,7 +117,7 @@ void UiAutoTestChartPolyline::UIKitChartPolylineTestGradientBottom001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestChartPolyline::UIKitChartPolylineTestAddPoints001() const
+void UIAutoTestChartPolyline::UIKitChartPolylineTestAddPoints001() const
 {
     Reset();
     for (uint8_t i = 0; i < 8; i++) { // 8: click button times;

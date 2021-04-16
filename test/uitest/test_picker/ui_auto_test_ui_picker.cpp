@@ -17,19 +17,19 @@
 #include "ui_test_ui_picker.h"
 
 namespace OHOS {
-void UiAutoTestUiPicker::Reset() const
+void UIAutoTestUiPicker::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_UIPICKER_ID);
 }
 
-void UiAutoTestUiPicker::RunTestList()
+void UIAutoTestUiPicker::RunTestList()
 {
     Reset();
     UIKitPickerTest001();
 }
 
-void UiAutoTestUiPicker::UIKitPickerTest001() const
+void UIAutoTestUiPicker::UIKitPickerTest001() const
 {
     const char* fileName = "ui_test_ui_picker_001.bin";
     CompareByBinary(fileName);

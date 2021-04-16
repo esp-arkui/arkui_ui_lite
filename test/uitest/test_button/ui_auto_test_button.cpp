@@ -17,13 +17,13 @@
 #include "ui_test_button.h"
 
 namespace OHOS {
-void UiAutoTestButton::Reset() const
+void UIAutoTestButton::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_BUTTON_ID);
 }
 
-void UiAutoTestButton::RunTestList()
+void UIAutoTestButton::RunTestList()
 {
     UIKitCheckBoxTest001();
     UIKitRadioButtonTest001();
@@ -33,7 +33,7 @@ void UiAutoTestButton::RunTestList()
     UIKitToggleButtonTest002();
 }
 
-void UiAutoTestButton::UIKitCheckBoxTest001() const
+void UIAutoTestButton::UIKitCheckBoxTest001() const
 {
     Reset();
     DragViewToHead(UI_TEST_BUTTON_CHECKBOX_LABEL_ID);
@@ -57,7 +57,7 @@ void UiAutoTestButton::UIKitCheckBoxTest001() const
     CompareByBinary(fileName6);
 }
 
-void UiAutoTestButton::UIKitRadioButtonTest001() const
+void UIAutoTestButton::UIKitRadioButtonTest001() const
 {
     Reset();
     DragViewToHead(UI_TEST_RADIO_BUTTON_LABEL_ID);
@@ -74,7 +74,7 @@ void UiAutoTestButton::UIKitRadioButtonTest001() const
     CompareByBinary(fileName4);
 }
 
-void UiAutoTestButton::UIKitToggleButtonTest001() const
+void UIAutoTestButton::UIKitToggleButtonTest001() const
 {
     Reset();
     DragViewToHead(UI_TEST_TOGGLE_BUTTON_LABEL_ID);
@@ -98,7 +98,7 @@ void UiAutoTestButton::UIKitToggleButtonTest001() const
     CompareByBinary(fileName6);
 }
 
-void UiAutoTestButton::UIKitCheckBoxTest002() const
+void UIAutoTestButton::UIKitCheckBoxTest002() const
 {
     Reset();
     DragViewToHead(UI_TEST_BUTTON_CHECKBOX_IMAGE_LABEL_ID);
@@ -116,7 +116,7 @@ void UiAutoTestButton::UIKitCheckBoxTest002() const
     CompareByBinary(fileName4);
 }
 
-void UiAutoTestButton::UIKitRadioButtonTest002() const
+void UIAutoTestButton::UIKitRadioButtonTest002() const
 {
     Reset();
     DragViewToHead(UI_TEST_BUTTON_CHECKBOX_IMAGE_LABEL_ID);
@@ -131,7 +131,7 @@ void UiAutoTestButton::UIKitRadioButtonTest002() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestButton::UIKitToggleButtonTest002() const
+void UIAutoTestButton::UIKitToggleButtonTest002() const
 {
     Reset();
     DragViewToHead(UI_TEST_BUTTON_CHECKBOX_IMAGE_LABEL_ID);

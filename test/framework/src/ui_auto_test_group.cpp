@@ -41,27 +41,27 @@ List<UIAutoTest*> UIAutoTestGroup::testCaseList_;
 
 void UIAutoTestGroup::SetUpTestCase()
 {
-    testCaseList_.PushBack(new UiAutoTestAntiAliasing());
-    testCaseList_.PushBack(new UiAutoTestArcLabel());
-    testCaseList_.PushBack(new UiAutoTestButton());
-    testCaseList_.PushBack(new UiAutoTestCanvas());
-    testCaseList_.PushBack(new UiAutoTestChartPillar());
-    testCaseList_.PushBack(new UiAutoTestChartPolyline());
-    testCaseList_.PushBack(new UiAutoTestDigitalClock());
-    testCaseList_.PushBack(new UiAutoTestDrawLine());
-    testCaseList_.PushBack(new UiAutoTestDrawRect());
-    testCaseList_.PushBack(new UiAutoTestFont());
-    testCaseList_.PushBack(new UiAutoTestImage());
-    testCaseList_.PushBack(new UiAutoTestLabel());
-    testCaseList_.PushBack(new UiAutoTestBasicLayout());
-    testCaseList_.PushBack(new UiAutoTestOpacity());
-    testCaseList_.PushBack(new UiAutoTestUiPicker());
-    testCaseList_.PushBack(new UiAutoTestQrcode());
+    testCaseList_.PushBack(new UIAutoTestAntiAliasing());
+    testCaseList_.PushBack(new UIAutoTestArcLabel());
+    testCaseList_.PushBack(new UIAutoTestButton());
+    testCaseList_.PushBack(new UIAutoTestCanvas());
+    testCaseList_.PushBack(new UIAutoTestChartPillar());
+    testCaseList_.PushBack(new UIAutoTestChartPolyline());
+    testCaseList_.PushBack(new UIAutoTestDigitalClock());
+    testCaseList_.PushBack(new UIAutoTestDrawLine());
+    testCaseList_.PushBack(new UIAutoTestDrawRect());
+    testCaseList_.PushBack(new UIAutoTestFont());
+    testCaseList_.PushBack(new UIAutoTestImage());
+    testCaseList_.PushBack(new UIAutoTestLabel());
+    testCaseList_.PushBack(new UIAutoTestBasicLayout());
+    testCaseList_.PushBack(new UIAutoTestOpacity());
+    testCaseList_.PushBack(new UIAutoTestUiPicker());
+    testCaseList_.PushBack(new UIAutoTestQrcode());
     testCaseList_.PushBack(new UIAutoTestRender());
-    testCaseList_.PushBack(new UiAutoTestTransform());
-    testCaseList_.PushBack(new UiAutoTestSlider());
+    testCaseList_.PushBack(new UIAutoTestTransform());
+    testCaseList_.PushBack(new UIAutoTestSlider());
 #if ENABLE_FOCUS_MANAGER
-    testCaseList_.PushBack(new UiAutoTestFocusManager());
+    testCaseList_.PushBack(new UIAutoTestFocusManager());
 #endif
 }
 

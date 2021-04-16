@@ -17,19 +17,19 @@
 #include "ui_test_focus_manager.h"
 #if ENABLE_FOCUS_MANAGER
 namespace OHOS {
-void UiAutoTestFocusManager::Reset() const
+void UIAutoTestFocusManager::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_FOCUS_MANAGER_ID);
 }
 
-void UiAutoTestFocusManager::RunTestList()
+void UIAutoTestFocusManager::RunTestList()
 {
     Reset();
     UIKitFocusManagerTest001();
 }
 
-void UiAutoTestFocusManager::UIKitFocusManagerTest001() const
+void UIAutoTestFocusManager::UIKitFocusManagerTest001() const
 {
     const char* fileName = "ui_test_focus_manager_01.bin";
     CompareByBinary(fileName);

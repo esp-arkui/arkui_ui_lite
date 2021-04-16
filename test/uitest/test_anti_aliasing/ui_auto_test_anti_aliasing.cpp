@@ -17,19 +17,19 @@
 #include "ui_test_anti_aliasing.h"
 
 namespace OHOS {
-void UiAutoTestAntiAliasing::Reset() const
+void UIAutoTestAntiAliasing::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_ANTI_ALIASING_ID);
 }
 
-void UiAutoTestAntiAliasing::RunTestList()
+void UIAutoTestAntiAliasing::RunTestList()
 {
     Reset();
     UIKitAntiAliasingTest001();
 }
 
-void UiAutoTestAntiAliasing::UIKitAntiAliasingTest001() const
+void UIAutoTestAntiAliasing::UIKitAntiAliasingTest001() const
 {
     const char* fileName = "ui_test_anti_aliasing_001.bin";
     CompareByBinary(fileName);

@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestQrcode : public UIAutoTest {
+class UIAutoTestQrcode : public UIAutoTest {
 public:
-    UiAutoTestQrcode() {}
-    ~UiAutoTestQrcode() {}
+    UIAutoTestQrcode() {}
+    ~UIAutoTestQrcode() {}
 
     void Reset() const;
     void RunTestList();

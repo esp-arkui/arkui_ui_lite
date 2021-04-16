@@ -17,13 +17,13 @@
 #include "ui_test_label.h"
 
 namespace OHOS {
-void UiAutoTestLabel::Reset() const
+void UIAutoTestLabel::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_LABEL_ID);
 }
 
-void UiAutoTestLabel::RunTestList()
+void UIAutoTestLabel::RunTestList()
 {
     UIKitUILabelTestFontSize001();
     UIKitUILabelTestHorAlign001();
@@ -36,7 +36,7 @@ void UiAutoTestLabel::RunTestList()
     UIKitUILabelTestDynamicWidth001();
 }
 
-void UiAutoTestLabel::UIKitUILabelTestFontSize001() const
+void UIAutoTestLabel::UIKitUILabelTestFontSize001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_FONTSIZE_BTN_ID_01);
@@ -52,7 +52,7 @@ void UiAutoTestLabel::UIKitUILabelTestFontSize001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestHorAlign001() const
+void UIAutoTestLabel::UIKitUILabelTestHorAlign001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_HORALIGN_BTN_ID_01);
@@ -68,7 +68,7 @@ void UiAutoTestLabel::UIKitUILabelTestHorAlign001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestColor001() const
+void UIAutoTestLabel::UIKitUILabelTestColor001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_COLOR_BTN_ID_01);
@@ -84,7 +84,7 @@ void UiAutoTestLabel::UIKitUILabelTestColor001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestBeyond001() const
+void UIAutoTestLabel::UIKitUILabelTestBeyond001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_BEYOND_BTN_ID_01);
@@ -100,7 +100,7 @@ void UiAutoTestLabel::UIKitUILabelTestBeyond001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestLine001() const
+void UIAutoTestLabel::UIKitUILabelTestLine001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_LINE_BTN_ID_01);
@@ -112,7 +112,7 @@ void UiAutoTestLabel::UIKitUILabelTestLine001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestVorAlign001() const
+void UIAutoTestLabel::UIKitUILabelTestVorAlign001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_VERALIGN_BTN_ID_01);
@@ -128,7 +128,7 @@ void UiAutoTestLabel::UIKitUILabelTestVorAlign001() const
     CompareByBinary(fileName3);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestDirection001() const
+void UIAutoTestLabel::UIKitUILabelTestDirection001() const
 {
     Reset();
     ClickViewById(UI_TEST_LABEL_DIRECTION_BTN_ID_01);
@@ -140,7 +140,7 @@ void UiAutoTestLabel::UIKitUILabelTestDirection001() const
     CompareByBinary(fileName2);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestDynamicHeight001() const
+void UIAutoTestLabel::UIKitUILabelTestDynamicHeight001() const
 {
     Reset();
     DragViewToHead(UI_TEST_LABEL_SIZE_LABEL_ID_01);
@@ -149,7 +149,7 @@ void UiAutoTestLabel::UIKitUILabelTestDynamicHeight001() const
     CompareByBinary(fileName);
 }
 
-void UiAutoTestLabel::UIKitUILabelTestDynamicWidth001() const
+void UIAutoTestLabel::UIKitUILabelTestDynamicWidth001() const
 {
     Reset();
     DragViewToHead(UI_TEST_LABEL_SIZE_LABEL_ID_01);

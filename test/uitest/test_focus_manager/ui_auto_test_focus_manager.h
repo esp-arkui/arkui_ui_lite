@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestFocusManager : public UIAutoTest {
+class UIAutoTestFocusManager : public UIAutoTest {
 public:
-    UiAutoTestFocusManager() {}
-    ~UiAutoTestFocusManager() {}
+    UIAutoTestFocusManager() {}
+    ~UIAutoTestFocusManager() {}
 
     void Reset() const;
     void RunTestList();

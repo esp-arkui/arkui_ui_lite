@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestChartPillar : public UIAutoTest {
+class UIAutoTestChartPillar : public UIAutoTest {
 public:
-    UiAutoTestChartPillar() {}
-    ~UiAutoTestChartPillar() {}
+    UIAutoTestChartPillar() {}
+    ~UIAutoTestChartPillar() {}
 
     void Reset() const;
     void RunTestList();

@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestTransform : public UIAutoTest {
+class UIAutoTestTransform : public UIAutoTest {
 public:
-    UiAutoTestTransform() {}
-    ~UiAutoTestTransform() {}
+    UIAutoTestTransform() {}
+    ~UIAutoTestTransform() {}
 
     void Reset() const;
     void RunTestList();

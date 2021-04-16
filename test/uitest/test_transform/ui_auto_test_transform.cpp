@@ -17,34 +17,34 @@
 #include "ui_test_transform.h"
 
 namespace OHOS {
-void UiAutoTestTransform::Reset() const
+void UIAutoTestTransform::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_TRANSFORM_ID);
 }
 
-void UiAutoTestTransform::RunTestList()
+void UIAutoTestTransform::RunTestList()
 {
     Reset();
     UIKitTransformTestRotate001();
     UIKitTransformTestScale001();
     UIKitTransformTestTranslate001();
 }
-void UiAutoTestTransform::UIKitTransformTestRotate001() const
+void UIAutoTestTransform::UIKitTransformTestRotate001() const
 {
     ClickViewById(UI_TEST_TRANSFORM_ROTATE_ID_01);
     const char* fileName = "ui_test_transform_rotate_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestTransform::UIKitTransformTestScale001() const
+void UIAutoTestTransform::UIKitTransformTestScale001() const
 {
     ClickViewById(UI_TEST_TRANSFORM_SCALE_ID_01);
     const char* fileName = "ui_test_transform_scale_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestTransform::UIKitTransformTestTranslate001() const
+void UIAutoTestTransform::UIKitTransformTestTranslate001() const
 {
     ClickViewById(UI_TEST_TRANSFORM_TRANSLATE_ID_01);
     const char* fileName = "ui_test_transform_translate_001.bin";

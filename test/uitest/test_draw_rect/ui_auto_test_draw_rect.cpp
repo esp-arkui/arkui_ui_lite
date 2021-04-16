@@ -17,13 +17,13 @@
 #include "ui_test_draw_rect.h"
 
 namespace OHOS {
-void UiAutoTestDrawRect::Reset() const
+void UIAutoTestDrawRect::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_DRAW_RECT_ID);
 }
 
-void UiAutoTestDrawRect::RunTestList()
+void UIAutoTestDrawRect::RunTestList()
 {
     Reset();
     UIKitDrawRectTestRectNoBorder001();
@@ -75,329 +75,329 @@ void UiAutoTestDrawRect::RunTestList()
     UIKitDrawRectTestRectWidthAndHeight003();
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_no_border_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_no_border_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder003() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder003() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_03);
     const char* fileName = "ui_test_draw_rect_no_border_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder004() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder004() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_04);
     const char* fileName = "ui_test_draw_rect_no_border_04.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder005() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder005() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_05);
     const char* fileName = "ui_test_draw_rect_no_border_05.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder006() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder006() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_06);
     const char* fileName = "ui_test_draw_rect_no_border_06.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder007() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder007() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_07);
     const char* fileName = "ui_test_draw_rect_no_border_07.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder008() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder008() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_08);
     const char* fileName = "ui_test_draw_rect_no_border_08.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder009() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder009() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_09);
     const char* fileName = "ui_test_draw_rect_no_border_09.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectNoBorder010() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectNoBorder010() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_10);
     const char* fileName = "ui_test_draw_rect_no_border_10.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderNoRadius001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderNoRadius001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_no_radius_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderNoRadius002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderNoRadius002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_no_radius_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_border_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_border_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius003() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius003() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_03);
     const char* fileName = "ui_test_draw_rect_border_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius004() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius004() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_04);
     const char* fileName = "ui_test_draw_rect_border_04.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius005() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius005() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_05);
     const char* fileName = "ui_test_draw_rect_border_05.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius006() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius006() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_06);
     const char* fileName = "ui_test_draw_rect_border_06.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius007() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius007() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_07);
     const char* fileName = "ui_test_draw_rect_border_07.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius008() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius008() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_08);
     const char* fileName = "ui_test_draw_rect_border_08.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius009() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius009() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_09);
     const char* fileName = "ui_test_draw_rect_border_09.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius010() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius010() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_10);
     const char* fileName = "ui_test_draw_rect_border_10.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius011() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderRadius011() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_11);
     const char* fileName = "ui_test_draw_rect_border_11.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRect001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRect001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECT_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectColor001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectColor001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTCOLOR_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_color_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectRadius001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectRadius001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_radius_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectRadius002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectRadius002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_radius_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectRadius003() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectRadius003() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_03);
     const char* fileName = "ui_test_draw_rect_rect_radius_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectRadius004() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectRadius004() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_04);
     const char* fileName = "ui_test_draw_rect_rect_radius_04.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectOpacity001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectOpacity001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_opacity_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectOpacity002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectOpacity002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_opacity_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectOpacity003() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectOpacity003() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_03);
     const char* fileName = "ui_test_draw_rect_rect_opacity_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderColor001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderColor001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDERCOLOR_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_border_color_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderWidth001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderWidth001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_border_width_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderWidth002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderWidth002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_border_width_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderOpacity001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderOpacity001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_border_opacity_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderOpacity002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderOpacity002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_border_opacity_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectBorderOpacity003() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectBorderOpacity003() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_03);
     const char* fileName = "ui_test_draw_rect_rect_border_opacity_03.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectPadding001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectPadding001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_padding_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectPadding002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectPadding002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_padding_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectMargin001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectMargin001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_margin_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectMargin002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectMargin002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_margin_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectPaddingMargin001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectPaddingMargin001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_margin_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectPaddingMargin002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectPaddingMargin002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_margin_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectWidthAndHeight001() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectWidthAndHeight001() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_01);
     const char* fileName = "ui_test_draw_rect_rect_width_and_height_01.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectWidthAndHeight002() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectWidthAndHeight002() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_02);
     const char* fileName = "ui_test_draw_rect_rect_width_and_height_02.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestDrawRect::UIKitDrawRectTestRectWidthAndHeight003() const
+void UIAutoTestDrawRect::UIKitDrawRectTestRectWidthAndHeight003() const
 {
     DragViewToHead(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_03);
     const char* fileName = "ui_test_draw_rect_rect_width_and_height_03.bin";

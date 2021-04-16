@@ -17,13 +17,13 @@
 #include "ui_test_opacity.h"
 
 namespace OHOS {
-void UiAutoTestOpacity::Reset() const
+void UIAutoTestOpacity::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_OPACITY_ID);
 }
 
-void UiAutoTestOpacity::RunTestList()
+void UIAutoTestOpacity::RunTestList()
 {
     Reset();
     UIKitOpacityTestUILabel001();
@@ -40,84 +40,84 @@ void UiAutoTestOpacity::RunTestList()
     UIKitOpacityTestUISwipeView001();
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUILabel001() const
+void UIAutoTestOpacity::UIKitOpacityTestUILabel001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_label_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUILabel002() const
+void UIAutoTestOpacity::UIKitOpacityTestUILabel002() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_LABEL_ID_02);
     const char* fileName = "ui_test_opacity_label_002.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIButton001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIButton001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_BUTTON_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_button_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIButton002() const
+void UIAutoTestOpacity::UIKitOpacityTestUIButton002() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_BUTTON_LABEL_ID_02);
     const char* fileName = "ui_test_opacity_ui_button_002.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUILabelButton001() const
+void UIAutoTestOpacity::UIKitOpacityTestUILabelButton001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_LABELBUTTON_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_label_button_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIArcLabel001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIArcLabel001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_ARCLABEL_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_arc_label_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIImageView001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIImageView001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_IMAGE_VIEW_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_image_view_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIView001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIView001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_VIEW_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_view_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIViewGroup001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIViewGroup001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_VIEWGROUP_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_view_group_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIList001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIList001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_LIST_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_list_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUIScrollView001() const
+void UIAutoTestOpacity::UIKitOpacityTestUIScrollView001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_SCROLLVIEW_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_scroll_view_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestOpacity::UIKitOpacityTestUISwipeView001() const
+void UIAutoTestOpacity::UIKitOpacityTestUISwipeView001() const
 {
     DragViewToHead(UI_TEST_OPACITY_UI_SWIPEVIEW_LABEL_ID_01);
     const char* fileName = "ui_test_opacity_ui_swipe_view_001.bin";

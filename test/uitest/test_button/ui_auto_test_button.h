@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestButton : public UIAutoTest {
+class UIAutoTestButton : public UIAutoTest {
 public:
-    UiAutoTestButton() {}
-    ~UiAutoTestButton() {}
+    UIAutoTestButton() {}
+    ~UIAutoTestButton() {}
 
     void Reset() const;
     void RunTestList();

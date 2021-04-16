@@ -17,13 +17,13 @@
 #include "ui_test_qrcode.h"
 
 namespace OHOS {
-void UiAutoTestQrcode::Reset() const
+void UIAutoTestQrcode::Reset() const
 {
     ResetMainMenu();
     EnterSubMenu(UI_TEST_QRCODE_ID);
 }
 
-void UiAutoTestQrcode::RunTestList()
+void UIAutoTestQrcode::RunTestList()
 {
     Reset();
     UIKitUIQrcodeTestDisplay001();
@@ -37,63 +37,63 @@ void UiAutoTestQrcode::RunTestList()
     UIKitUIQrcodeTestDisplay009();
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay001() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay001() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_01);
     const char* fileName = "ui_test_qrcode_display_001.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay002() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay002() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_02);
     const char* fileName = "ui_test_qrcode_display_002.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay003() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay003() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_03);
     const char* fileName = "ui_test_qrcode_display_003.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay004() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay004() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_04);
     const char* fileName = "ui_test_qrcode_display_004.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay005() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay005() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_05);
     const char* fileName = "ui_test_qrcode_display_005.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay006() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay006() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_06);
     const char* fileName = "ui_test_qrcode_display_006.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay007() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay007() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_07);
     const char* fileName = "ui_test_qrcode_display_007.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay008() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay008() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_08);
     const char* fileName = "ui_test_qrcode_display_008.bin";
     CompareByBinary(fileName);
 }
 
-void UiAutoTestQrcode::UIKitUIQrcodeTestDisplay009() const
+void UIAutoTestQrcode::UIKitUIQrcodeTestDisplay009() const
 {
     DragViewToHead(UI_TEST_QRCODE_DISPLAY_LABEL_ID_09);
     const char* fileName = "ui_test_qrcode_display_009.bin";

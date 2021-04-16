@@ -19,10 +19,10 @@
 #include "ui_auto_test.h"
 
 namespace OHOS {
-class UiAutoTestFont : public UIAutoTest {
+class UIAutoTestFont : public UIAutoTest {
 public:
-    UiAutoTestFont() {}
-    ~UiAutoTestFont() {}
+    UIAutoTestFont() {}
+    ~UIAutoTestFont() {}
 
     void Reset() const;
     void RunTestList();
