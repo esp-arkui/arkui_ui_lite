@@ -25,7 +25,7 @@
 namespace OHOS {
 UICheckBox::UICheckBox()
     : state_(UNSELECTED), onStateChangeListener_(nullptr), width_(DEFAULT_HOT_WIDTH), height_(DEFAULT_HOT_HEIGHT),
-      borderWidth_(DEFAULT_BORDER_WIDTH)
+      borderWidth_(DEFAULT_BORDER_WIDTH), animator_(this, this, 0, true)
 {
     touchable_ = true;
     style_ = &(StyleDefault::GetBackgroundTransparentStyle());
@@ -34,10 +34,13 @@ UICheckBox::UICheckBox()
     ImageHeader header = { 0 };
     image_[UNSELECTED].GetHeader(header);
     Resize(header.width, header.height);
+    AnimatorManager::GetInstance()->Add(&animator_);
 }
 
 UICheckBox::~UICheckBox()
 {
+    animator_.Stop();
+    AnimatorManager::GetInstance()->Remove(&animator_);
 }
 
 void UICheckBox::SetState(UICheckBoxState state)
@@ -59,6 +62,9 @@ void UICheckBox::ReverseState()
 bool UICheckBox::OnClickEvent(const ClickEvent& event)
 {
     ReverseState();
+    RsetCallback();
+    CalculateSize();
+    animator_.Start();
     Invalidate();
     return UIView::OnClickEvent(event);
 }
@@ -177,5 +183,10 @@ void UICheckBox::OnDraw(const Rect& invalidatedArea)
                 break;
         }
     }
+}
+
+void UICheckBox::Callback(UIView* view)
+{
+
 }
 } // namespace OHOS
