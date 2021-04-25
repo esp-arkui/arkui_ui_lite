@@ -53,7 +53,11 @@ void UICheckBox::SetState(UICheckBoxState state)
 
 void UICheckBox::ReverseState()
 {
-    state_ = (state_ == SELECTED) ? UNSELECTED : SELECTED;
+    if (state_ == SELECTED) {
+        SetState(UNSELECTED);
+    } else {
+        SetState(SELECTED);
+    }
 }
 
 bool UICheckBox::OnClickEvent(const ClickEvent& event)
