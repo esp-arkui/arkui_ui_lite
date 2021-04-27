@@ -16,6 +16,7 @@
 #ifndef BASE_FONT
 #define BASE_FONT
 #include "font/ui_font_header.h"
+#include "font/ui_font_initialization.h"
 #include "graphic_config.h"
 
 namespace OHOS {
@@ -101,7 +102,7 @@ public:
 
     virtual uint8_t GetCurrentLangId() const
     {
-        return GetTotalLangId();
+        return UIFontInitialization::GetInstance()->GetTotalLangId();
     }
 
     int8_t GetDefaultParamByLangId(uint8_t langId, LangTextParam** pParam) const;

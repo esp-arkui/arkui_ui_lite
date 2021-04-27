@@ -58,6 +58,7 @@ HEADERS += \
 
 INCLUDEPATH += \
     ../../../../frameworks \
+    ../../../../test/framework \
     ../../../../../utils/interfaces/innerkits \
     ../../../../../utils/interfaces/kits \
     ../../../../../ui/interfaces/innerkits \
