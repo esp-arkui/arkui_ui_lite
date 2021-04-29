@@ -406,6 +406,21 @@ public:
     void SetHeight(int16_t height) override;
 
     void ReMeasure() override;
+    /**
+     * @brief Sets the x-coordinate for the view.
+     * @param x Indicates the x-coordinate to set.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetX(int16_t x) override;
+
+    /**
+     * @brief Sets the y-coordinate for the view.
+     * @param y Indicates the y-coordinate to set.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetY(int16_t y) override;
 
 protected:
     Text* labelText_;
