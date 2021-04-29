@@ -405,6 +405,7 @@ public:
      */
     void SetHeight(int16_t height) override;
 
+    void ReMeasure() override;
     /**
      * @brief Sets the x-coordinate for the view.
      * @param x Indicates the x-coordinate to set.
@@ -430,7 +431,6 @@ protected:
 private:
     friend class LabelAnimator;
 
-    void ReMeasure() override;
     void RemeasureForMarquee(int16_t textWidth);
 
     bool needRefresh_ : 1;
