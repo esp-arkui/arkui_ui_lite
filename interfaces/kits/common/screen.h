@@ -39,7 +39,6 @@
 #include "gfx_utils/image_info.h"
 
 namespace OHOS {
-
 /**
  * @brief Represents the screen info of the device.
  *
@@ -52,11 +51,7 @@ public:
      * @brief Obtains a singleton <b>Screen</b> instance.
      * @return Returns the <b>Screen</b> instance.
      */
-    static Screen& GetInstance()
-    {
-        static Screen instance;
-        return instance;
-    }
+    static Screen& GetInstance();
 
     /**
      * @brief Obtains the width of this screen.

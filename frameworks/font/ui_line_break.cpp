@@ -41,6 +41,14 @@ static void* MemRealloc(const void* context, void* mem, size_t size)
     return UIRealloc(mem, size);
 }
 
+UILineBreakEngine& UILineBreakEngine::GetInstance()
+{
+    if (instance_ == nullptr) {
+        instance_ = new UILineBreakEngine();
+    }
+    return *instance_;
+}
+
 uint16_t UILineBreakEngine::GetNextBreakPos(UILineBreakProxy& record)
 {
     UChar* str = reinterpret_cast<UChar*>(record.GetStr());
