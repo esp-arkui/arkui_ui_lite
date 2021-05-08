@@ -36,7 +36,6 @@ SOURCES += \
     ../../../../frameworks/common/task.cpp \
     ../../../../frameworks/common/text.cpp \
     ../../../../frameworks/common/typed_text.cpp \
-    ../../../../frameworks/common/ui_font_header.cpp \
     ../../../../frameworks/components/root_view.cpp \
     ../../../../frameworks/components/text_adapter.cpp \
     ../../../../frameworks/components/ui_abstract_clock.cpp \
@@ -98,7 +97,9 @@ SOURCES += \
     ../../../../frameworks/font/ui_font.cpp \
     ../../../../frameworks/font/ui_font_adaptor.cpp \
     ../../../../frameworks/font/ui_font_allocator.cpp \
+    ../../../../frameworks/font/ui_font_bitmap.cpp \
     ../../../../frameworks/font/ui_font_cache.cpp \
+    ../../../../frameworks/font/ui_font_initialization.cpp \
     ../../../../frameworks/font/ui_font_vector.cpp \
     ../../../../frameworks/font/ui_line_break.cpp \
     ../../../../frameworks/font/ui_multi_font_manager.cpp \
@@ -209,6 +210,7 @@ HEADERS += \
     ../../../../interfaces/kits/events/virtual_device_event.h \
     ../../../../interfaces/kits/font/ui_font.h \
     ../../../../interfaces/kits/font/ui_font_header.h \
+    ../../../../interfaces/kits/font/ui_font_initialization.h \
     ../../../../interfaces/kits/layout/flex_layout.h \
     ../../../../interfaces/kits/layout/grid_layout.h \
     ../../../../interfaces/kits/layout/layout.h \
