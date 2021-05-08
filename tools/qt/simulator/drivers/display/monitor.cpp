@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 
 #include "monitor.h"
+
 #include "common/graphic_startup.h"
 #include "common/image_decode_ability.h"
 #include "common/input_device_manager.h"
@@ -27,7 +28,9 @@
 #include "font/ui_font_bitmap.h"
 #endif
 #include "mousewheel_input.h"
+#include "key_input.h"
 #include "mouse_input.h"
+#include "mousewheel_input.h"
 
 namespace OHOS {
 void Monitor::InitHal()
@@ -48,6 +51,11 @@ void Monitor::InitHal()
 #if USE_MOUSEWHEEL && ENABLE_ROTATE_INPUT
     MousewheelInput* mousewheel = MousewheelInput::GetInstance();
     InputDeviceManager::GetInstance()->Add(mousewheel);
+#endif
+
+#if USE_KEY
+    KeyInput* key = KeyInput::GetInstance();
+    InputDeviceManager::GetInstance()->Add(key);
 #endif
 }
 

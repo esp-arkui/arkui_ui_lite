@@ -13,31 +13,33 @@
  * limitations under the License.
  */
 
-#include "ui_auto_test_group.h"
-#include "graphic_config.h"
-#include "test_render/ui_auto_test_render.h"
+#ifndef GRAPHIC_LITE_KEY_INPUT_H
+#define GRAPHIC_LITE_KEY_INPUT_H
+
+#include <QKeyEvent>
+
+#include "config.h"
+#include "dock/key_input_device.h"
 
 namespace OHOS {
-List<UIAutoTest*> UIAutoTestGroup::testCaseList_;
-
-void UIAutoTestGroup::SetUpTestCase()
-{
-    testCaseList_.PushBack(new UIAutoTestRender());
-}
-
-List<UIAutoTest*>& UIAutoTestGroup::GetTestCase()
-{
-    return testCaseList_;
-}
-
-void UIAutoTestGroup::TearDownTestCase()
-{
-    ListNode<UIAutoTest*>* node = testCaseList_.Begin();
-    while (node != testCaseList_.End()) {
-        delete node->data_;
-        node->data_ = nullptr;
-        node = node->next_;
+#if USE_KEY
+class KeyInput : public KeyInputDevice {
+public:
+    KeyInput() {}
+    virtual ~KeyInput() {}
+    static KeyInput* GetInstance()
+    {
+        static KeyInput keyInput;
+        return &keyInput;
     }
-    testCaseList_.Clear();
-}
+    bool Read(DeviceData& data) override;
+    void KeyHandler(QKeyEvent* event);
+
+private:
+    bool leftButtonDown_;
+    int16_t lastX_;
+    int16_t lastY_;
+};
+#endif // USE_KEY
 } // namespace OHOS
+#endif // GRAPHIC_LITE_KEY_INPUT_H
