@@ -22,12 +22,19 @@ static int16_t g_rotate = 0;
 namespace OHOS {
 #if USE_MOUSEWHEEL
 #if ENABLE_ROTATE_INPUT
+MousewheelInput* MousewheelInput::GetInstance()
+{
+    static MousewheelInput mousewheelInput;
+    return &mousewheelInput;
+}
+
 bool MousewheelInput::Read(DeviceData &data)
 {
     data.rotate = g_rotate;
     g_rotate = 0;
     return false;
 }
+
 void MousewheelInput::MousewheelHandler(QWheelEvent *event)
 {
     if (event == nullptr) {
