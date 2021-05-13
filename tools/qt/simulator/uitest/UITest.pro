@@ -85,6 +85,7 @@ SOURCES += \
     ../../../../frameworks/dfx/performance_task.cpp \
     ../../../../frameworks/dfx/point_event_injector.cpp \
     ../../../../frameworks/dfx/ui_dump_dom_tree.cpp \
+    ../../../../frameworks/dfx/ui_view_bounds.cpp \
     ../../../../frameworks/dock/input_device.cpp \
     ../../../../frameworks/dock/key_input_device.cpp \
     ../../../../frameworks/dock/pointer_input_device.cpp \
@@ -180,6 +181,7 @@ SOURCES += \
     ../../../../test/uitest/test_ui_swipe_view/ui_test_ui_swipe_view.cpp \
     ../../../../test/uitest/test_vector_font/ui_test_vector_font.cpp \
     ../../../../test/uitest/test_view_bitmap/ui_test_view_bitmap.cpp \
+    ../../../../test/uitest/test_view_bounds/ui_test_view_bounds.cpp \
     ../../../../test/uitest/test_view_group/ui_test_view_group.cpp \
     ../../../../test/uitest/test_view_percent/ui_test_view_percent.cpp \
     ../../../../test/uitest/test_view_scale_rotate/ui_test_view_scale_rotate.cpp
@@ -207,6 +209,7 @@ HEADERS += \
     ../../../../frameworks/default_resource/check_box_res.h \
     ../../../../frameworks/dfx/key_event_injector.h \
     ../../../../frameworks/dfx/point_event_injector.h \
+    ../../../../frameworks/dfx/ui_view_bounds.h \
     ../../../../frameworks/dock/input_device.h \
     ../../../../frameworks/dock/pointer_input_device.h \
     ../../../../frameworks/dock/virtual_input_device.h \
@@ -371,6 +374,7 @@ HEADERS += \
     ../../../../test/uitest/test_ui_swipe_view/ui_test_ui_swipe_view.h \
     ../../../../test/uitest/test_vector_font/ui_test_vector_font.h \
     ../../../../test/uitest/test_view_bitmap/ui_test_view_bitmap.h \
+    ../../../../test/uitest/test_view_bounds/ui_test_view_bounds.h \
     ../../../../test/uitest/test_view_group/ui_test_view_group.h \
     ../../../../test/uitest/test_view_percent/ui_test_view_percent.h \
     ../../../../test/uitest/test_view_scale_rotate/ui_test_view_scale_rotate.h
