@@ -37,9 +37,6 @@ static UIView* g_viewStack[VIEW_STACK_DEPTH];
 } // namespace
 RootView::RootView()
 {
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_init(&lock_, nullptr);
-#endif
     InitDrawContext();
 }
 
@@ -52,9 +49,6 @@ RootView* RootView::GetInstance()
 RootView::~RootView()
 {
     DestroyDrawContext();
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_destroy(&lock_);
-#endif
 }
 #if ENABLE_WINDOW
 Window* RootView::GetBoundWindow() const
@@ -258,9 +252,7 @@ static void AddRenderedRects(Rect& rect, List<Rect>& renderedRects, ListNode<Rec
 
 void RootView::RemoveViewFromInvalidMap(UIView* view)
 {
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_lock(&lock_);
-#endif
+    mutex_.Lock();
 
     int16_t stackCount = 0;
     do {
@@ -284,9 +276,7 @@ void RootView::RemoveViewFromInvalidMap(UIView* view)
         }
     } while (stackCount >= 0);
 
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_unlock(&lock_);
-#endif
+    mutex_.Unlock();
 }
 
 void RootView::OptimizeInvalidView(UIView* curview, UIView* background, List<Rect>& renderedRects)
@@ -422,15 +412,11 @@ void RootView::AddInvalidateRect(Rect& rect, UIView* view)
 
 void RootView::AddInvalidateRectWithLock(Rect& rect, UIView* view)
 {
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_lock(&lock_);
-#endif
+    mutex_.Lock();
 
     AddInvalidateRect(rect, view);
 
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_unlock(&lock_);
-#endif
+    mutex_.Unlock();
 }
 
 void RootView::Measure()
@@ -470,9 +456,7 @@ void RootView::MeasureView(UIView* view)
 
 void RootView::Render()
 {
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_lock(&lock_);
-#endif
+    mutex_.Lock();
 
 #if LOCAL_RENDER
     if (!invalidateMap_.empty()) {
@@ -494,9 +478,7 @@ void RootView::Render()
         BaseGfxEngine::GetInstance()->Flush();
     }
 
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_unlock(&lock_);
-#endif
+    mutex_.Unlock();
 }
 
 void RootView::BlitMapBuffer(Rect& curViewRect, TransformMap& transMap, const Rect& invalidatedArea)

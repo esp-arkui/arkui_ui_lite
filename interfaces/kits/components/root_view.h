@@ -38,14 +38,11 @@
 #ifndef GRAPHIC_LITE_ROOT_VIEW_H
 #define GRAPHIC_LITE_ROOT_VIEW_H
 
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-#include <pthread.h>
-#endif
-
 #include "components/ui_view_group.h"
 #include "events/key_event.h"
 #include "events/virtual_device_event.h"
 #include "gfx_utils/list.h"
+#include "graphic_mutex.h"
 
 #if LOCAL_RENDER
 #include <map>
@@ -322,9 +319,7 @@ private:
 #endif
     OnKeyActListener* onKeyActListener_ {nullptr};
     OnVirtualDeviceEventListener* onVirtualEventListener_ {nullptr};
-#if defined __linux__ || defined __LITEOS__ || defined __APPLE__
-    pthread_mutex_t lock_;
-#endif
+    GraphicMutex mutex_;
 
 #if ENABLE_WINDOW
     WindowImpl* boundWindow_ {nullptr};
