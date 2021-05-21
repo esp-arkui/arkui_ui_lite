@@ -78,6 +78,7 @@ public:
         return UI_SLIDER;
     }
 
+#if ENABLE_SLIDER_KNOB
     /**
      * @brief Sets the width for this knob.
      *
@@ -198,7 +199,7 @@ public:
      * @version 1.0
      */
     int64_t GetKnobStyle(uint8_t key) const;
-
+#else
     /**
      * @brief Sets the images as pixel maps for this slider, including the background, foreground, and knob images.
      *
@@ -246,6 +247,7 @@ public:
         SetBackgroundStyle(STYLE_BORDER_RADIUS, backgroundRadius);
         SetForegroundStyle(STYLE_BORDER_RADIUS, foregroundRadius);
     }
+#endif
 
 #if ENABLE_ROTATE_INPUT
     /**
@@ -349,13 +351,12 @@ private:
     static constexpr uint8_t FOREGROUND_COLOR_B = 0xff;
 #if ENABLE_SLIDER_KNOB
     void DrawKnob(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, const Rect& foregroundRect);
-#else
     int16_t knobWidth_;
     bool knobWidthSetFlag_;
     bool knobStyleAllocFlag_;
     Style* knobStyle_;
     Image* knobImage_;
-
+#else
     void DrawForeground(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, Rect& coords);
 #endif
     int32_t CalculateCurrentValue(int16_t length, int16_t totalLength);

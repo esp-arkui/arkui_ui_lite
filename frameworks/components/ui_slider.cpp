@@ -25,8 +25,14 @@
 
 namespace OHOS {
 UISlider::UISlider()
-    : knobWidth_(0), knobWidthSetFlag_(false), knobStyleAllocFlag_(false), knobImage_(nullptr), listener_(nullptr)
 {
+#if ENABLE_SLIDER_KNOB
+    knobWidth_ = 0;
+    knobWidthSetFlag_ = false;
+    knobStyleAllocFlag_ = false;
+    knobImage_ = nullptr;
+#endif
+    listener_ = nullptr;
     touchable_ = true;
     draggable_ = true;
     dragParentInstead_ = false;
@@ -34,16 +40,26 @@ UISlider::UISlider()
     focusable_ = true;
 #endif
 
+#if ENABLE_SLIDER_KNOB
+    Theme* theme = ThemeManager::GetInstance().GetCurrent();
+    if (theme != nullptr) {
+        knobStyle_ = &(theme->GetSliderKnobStyle());
+    } else {
+        knobStyle_ = &(StyleDefault::GetSliderKnobStyle());
+    }
+#else
     SetBackgroundStyle(STYLE_LINE_CAP, CapType::CAP_ROUND);
     SetBackgroundStyle(STYLE_BACKGROUND_OPA, BACKGROUND_OPA);
     SetBackgroundStyle(STYLE_BACKGROUND_COLOR, Color::Black().full);
     SetForegroundStyle(STYLE_LINE_CAP, CapType::CAP_ROUND);
     SetForegroundStyle(STYLE_BACKGROUND_COLOR,
         Color::GetColorFromRGB(FOREGROUND_COLOR_R, FOREGROUND_COLOR_G, FOREGROUND_COLOR_B).full);
+#endif
 }
 
 UISlider::~UISlider()
 {
+#if ENABLE_SLIDER_KNOB
     if (knobImage_ != nullptr) {
         delete knobImage_;
         knobImage_ = nullptr;
@@ -54,8 +70,10 @@ UISlider::~UISlider()
         knobStyle_ = nullptr;
         knobStyleAllocFlag_ = false;
     }
+#endif
 }
 
+#if ENABLE_SLIDER_KNOB
 void UISlider::SetKnobStyle(const Style& style)
 {
     if (!knobStyleAllocFlag_) {
@@ -124,7 +142,6 @@ void UISlider::SetImage(const char* backgroundImage, const char* foregroundImage
     knobImage_->SetSrc(knobImage);
 }
 
-#if ENABLE_SLIDER_KNOB
 void UISlider::DrawKnob(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, const Rect& foregroundRect)
 {
     int16_t halfKnobWidth = GetKnobWidth() >> 1;
@@ -161,21 +178,6 @@ void UISlider::DrawKnob(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, c
     }
     DrawValidRect(gfxDstBuffer, knobImage_, knobBar, invalidatedArea, *knobStyle_, 0);
 }
-
-bool UISlider::InitImage()
-{
-    if (!UIAbstractProgress::InitImage()) {
-        return false;
-    }
-    if (knobImage_ == nullptr) {
-        knobImage_ = new Image();
-        if (knobImage_ == nullptr) {
-            GRAPHIC_LOGE("new Image fail");
-            return false;
-        }
-    }
-    return true;
-}
 #else
 void UISlider::SetImage(const ImageInfo* backgroundImage, const ImageInfo* foregroundImage)
 {
@@ -193,14 +195,6 @@ void UISlider::SetImage(const char* backgroundImage, const char* foregroundImage
     }
     backgroundImage_->SetSrc(backgroundImage);
     foregroundImage_->SetSrc(foregroundImage);
-}
-
-bool UISlider::InitImage()
-{
-    if (!UIAbstractProgress::InitImage()) {
-        return false;
-    }
-    return true;
 }
 
 void UISlider::DrawForeground(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, Rect& coords)
@@ -270,6 +264,23 @@ void UISlider::DrawForeground(BufferInfo& gfxDstBuffer, const Rect& invalidatedA
     }
 }
 #endif
+
+bool UISlider::InitImage()
+{
+    if (!UIAbstractProgress::InitImage()) {
+        return false;
+    }
+#if ENABLE_SLIDER_KNOB
+    if (knobImage_ == nullptr) {
+        knobImage_ = new Image();
+        if (knobImage_ == nullptr) {
+            GRAPHIC_LOGE("new Image fail");
+            return false;
+        }
+    }
+#endif
+    return true;
+}
 
 void UISlider::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
