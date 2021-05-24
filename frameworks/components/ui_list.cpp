@@ -179,7 +179,7 @@ bool UIList::OnDragEndEvent(const DragEvent& event)
 
 bool UIList::OnPressEvent(const PressEvent& event)
 {
-    StopAnimator();
+    UIAbstractScroll::StopAnimator();
     return UIView::OnPressEvent(event);
 }
 
@@ -192,9 +192,9 @@ bool UIList::OnRotateEvent(const RotateEvent& event)
 
     isRotating_ = true;
     if (throwDrag_ && event.GetRotate() == 0) {
-        last = Point {midPointX, midPointY};
-        (direction_ == VERTICAL) ? (current = Point {midPointX, static_cast<int16_t>(midPointY + lastRotateLen_)})
-                                 : (current = Point {static_cast<int16_t>(midPointX + lastRotateLen_), midPointY});
+        last = Point{midPointX, midPointY};
+        (direction_ == VERTICAL) ? (current = Point{midPointX, static_cast<int16_t>(midPointY + lastRotateLen_)}) :
+                                   (current = Point{static_cast<int16_t>(midPointX + lastRotateLen_), midPointY});
         isReCalculateDragEnd_ = false;
         DragThrowAnimator(current, last);
         lastRotateLen_ = 0;
@@ -226,9 +226,6 @@ void UIList::ScrollBy(int16_t distance)
 
 bool UIList::DragXInner(int16_t distance)
 {
-    if (IsNeedReCalculateDragEnd()) {
-        return false;
-    }
     int16_t listWidth = GetWidth();
     if (distance == 0) {
         return true;
@@ -247,7 +244,7 @@ bool UIList::DragXInner(int16_t distance)
     }
     if (distance > 0) {
         if (childrenHead_ && ((childrenHead_->GetX() + distance) >
-            (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_LEFT)))) {
+                              (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_LEFT)))) {
             distance =
                 scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_LEFT) - childrenHead_->GetX();
         }
@@ -268,9 +265,6 @@ bool UIList::DragXInner(int16_t distance)
 
 bool UIList::DragYInner(int16_t distance)
 {
-    if (IsNeedReCalculateDragEnd()) {
-        return false;
-    }
     int16_t listHeigh = GetHeight();
     if (distance == 0) {
         return true;
@@ -288,9 +282,8 @@ bool UIList::DragYInner(int16_t distance)
         return MoveOffset(distance);
     }
     if (distance > 0) {
-        if (childrenHead_ &&
-            ((childrenHead_->GetY() + distance) >
-            (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_TOP)))) {
+        if (childrenHead_ && ((childrenHead_->GetY() + distance) >
+                              (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_TOP)))) {
             distance =
                 scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_TOP) - childrenHead_->GetY();
         }
@@ -335,14 +328,14 @@ bool UIList::IsNeedReCalculateDragEnd()
     }
     int16_t animationLess = 0;
     if (direction_ == VERTICAL) {
-        animationLess = animatorCallback_.endValueY_ - animatorCallback_.previousValueY_;
+        animationLess = endValueY_ - previousValueY_;
     } else {
-        animationLess = animatorCallback_.endValueX_ - animatorCallback_.previousValueX_;
+        animationLess = endValueX_ - previousValueX_;
     }
     if (!isDragging_ || (MATH_ABS(animationLess) > RECALCULATE_DRAG_DISTANCE)) {
         return false;
     }
-    return true;
+    return ReCalculateDragEnd();
 }
 bool UIList::ReCalculateDragEnd()
 {
@@ -359,11 +352,11 @@ bool UIList::ReCalculateDragEnd()
         // 2: half
         offsetX = selectPosition_ - (onSelectedView_->GetX() + (onSelectedView_->GetRelativeRect().GetWidth() / 2));
     }
-    animatorCallback_.RsetCallback();
-    animatorCallback_.SetDragStartValue(0, 0);
-    animatorCallback_.SetDragEndValue(offsetX, offsetY);
-    animatorCallback_.SetDragTimes(GetAutoAlignTime() / DEFAULT_TASK_PERIOD);
-    scrollAnimator_.Start();
+
+    RsetCallback();
+    SetDragStartValue(0, 0);
+    SetDragEndValue(offsetX, offsetY);
+    dragTimes_ = alignTime_ / DEFAULT_TASK_PERIOD;
     isReCalculateDragEnd_ = true;
     return true;
 }
@@ -394,7 +387,7 @@ bool UIList::MoveChildStepInner(int16_t distance,
     } else {
         if ((childrenTail_ == nullptr) ||
             ((childrenTail_->*getXOrY)() + (childrenTail_->*getWidthOrHeight)() + distance <
-            (this->*getWidthOrHeight)())) {
+             (this->*getWidthOrHeight)())) {
             UIView* newView = recycle_.GetView(GetIndexInc(bottomIndex_));
             if (newView == nullptr) {
                 return false;
@@ -537,7 +530,7 @@ void UIList::MoveChildByOffset(int16_t xOffset, int16_t yOffset)
             height = view->GetRelativeRect().GetHeight();
             if ((GetChildrenHead()->GetY() + yOffset > selectPosition_) ||
                 (childrenTail_->GetY() + height + childrenTail_->GetStyle(STYLE_MARGIN_BOTTOM) + yOffset <
-                selectPosition_)) {
+                 selectPosition_)) {
                 onSelectedIndex_ = NULL_SELECT_INDEX;
                 onSelectedView_ = nullptr;
                 if (scrollListener_ != nullptr) {
@@ -600,15 +593,12 @@ void UIList::MoveChildByOffset(int16_t xOffset, int16_t yOffset)
 #endif
 }
 
-void UIList::StopAnimator()
+void UIList::OnStop(UIView& view)
 {
-    UIAbstractScroll::StopAnimator();
-    if (!ReCalculateDragEnd()) {
-        if ((scrollListener_ != nullptr) &&
-            (scrollListener_->GetScrollState() == ListScrollListener::SCROLL_STATE_MOVE)) {
-            scrollListener_->SetScrollState(ListScrollListener::SCROLL_STATE_STOP);
-            scrollListener_->OnScrollEnd(onSelectedIndex_, onSelectedView_);
-        }
+    UIAbstractScroll::OnStop(view);
+    if ((scrollListener_ != nullptr) && (scrollListener_->GetScrollState() == ListScrollListener::SCROLL_STATE_MOVE)) {
+        scrollListener_->SetScrollState(ListScrollListener::SCROLL_STATE_STOP);
+        scrollListener_->OnScrollEnd(onSelectedIndex_, onSelectedView_);
     }
 }
 
@@ -731,6 +721,13 @@ void UIList::CalculateReboundDistance(int16_t& dragDistanceX, int16_t& dragDista
             }
             dragDistanceX += scrollWidth - scrollBlankSize_ - 1 - (right + dragDistanceX);
         }
+    }
+}
+
+void UIList::Callback(UIView* view)
+{
+    if (!IsNeedReCalculateDragEnd()) {
+        UIAbstractScroll::Callback(view);
     }
 }
 

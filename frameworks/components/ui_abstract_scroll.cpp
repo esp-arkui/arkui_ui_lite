@@ -17,22 +17,7 @@
 
 namespace OHOS {
 UIAbstractScroll::UIAbstractScroll()
-    : scrollBlankSize_(0),
-      reboundSize_(0),
-      maxScrollDistance_(0),
-      lastDeltaY_{0},
-      dragAccCoefficient_(DRAG_ACC_FACTOR),
-      swipeAccCoefficient_(0),
-      direction_(VERTICAL),
-      deltaYIndex_(0),
-      reserve_(0),
-      throwDrag_(false),
-      easingFunc_(EasingEquation::CubicEaseOut),
-      scrollAnimator_(&animatorCallback_, this, 0, true)
 {
-#if ENABLE_ROTATE_INPUT
-    rotateFactor_ = DEFAULT_ROTATE_FACTOR;
-#endif
 #if ENABLE_FOCUS_MANAGER
     focusable_ = true;
 #endif
@@ -78,7 +63,7 @@ int16_t UIAbstractScroll::GetMaxDeltaY() const
 void UIAbstractScroll::StopAnimator()
 {
     scrollAnimator_.Stop();
-    animatorCallback_.RsetCallback();
+    RsetCallback();
     isDragging_ = false;
 }
 
@@ -105,11 +90,12 @@ void UIAbstractScroll::StartAnimator(int16_t dragDistanceX, int16_t dragDistance
     if (dragTimes < MIN_DRAG_TIMES) {
         dragTimes = MIN_DRAG_TIMES;
     }
-    animatorCallback_.RsetCallback();
-    animatorCallback_.SetDragStartValue(0, 0);
-    animatorCallback_.SetDragEndValue(dragDistanceX, dragDistanceY);
-    animatorCallback_.SetDragTimes(dragTimes * DRAG_ACC_FACTOR / GetDragACCLevel());
+    RsetCallback();
+    SetDragStartValue(0, 0);
+    SetDragEndValue(dragDistanceX, dragDistanceY);
+    dragTimes_ = dragTimes * DRAG_ACC_FACTOR / GetDragACCLevel();
     scrollAnimator_.Start();
+    isDragging_ = true;
 }
 
 void UIAbstractScroll::CalculateDragDistance(Point currentPos,
@@ -142,21 +128,19 @@ void UIAbstractScroll::CalculateDragDistance(Point currentPos,
     }
 }
 
-void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
+void UIAbstractScroll::Callback(UIView* view)
 {
     if (view == nullptr) {
         return;
     }
 
     UIAbstractScroll* scrollView = static_cast<UIAbstractScroll*>(view);
-    scrollView->isDragging_ = true;
-
     if (curtTime_ <= dragTimes_) {
         bool needStopX = false;
         bool needStopY = false;
         if (startValueY_ != endValueY_) {
             int16_t actY = scrollView->easingFunc_(startValueY_, endValueY_, curtTime_, dragTimes_);
-            if (!scrollView->DragYInner(actY - previousValueY_)) {
+            if ((actY != previousValueY_) && !scrollView->DragYInner(actY - previousValueY_)) {
                 needStopY = true;
             }
             previousValueY_ = actY;
@@ -165,7 +149,7 @@ void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
         }
         if (startValueX_ != endValueX_) {
             int16_t actX = scrollView->easingFunc_(startValueX_, endValueX_, curtTime_, dragTimes_);
-            if (!scrollView->DragXInner(actX - previousValueX_)) {
+            if ((actX != previousValueX_) && !scrollView->DragXInner(actX - previousValueX_)) {
                 needStopX = true;
             }
             previousValueX_ = actX;
@@ -180,5 +164,11 @@ void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
     } else {
         scrollView->StopAnimator();
     }
+}
+
+void UIAbstractScroll::OnStop(UIView& view)
+{
+    RsetCallback();
+    isDragging_ = false;
 }
 } // namespace OHOS

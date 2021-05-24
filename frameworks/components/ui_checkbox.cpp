@@ -72,7 +72,7 @@ void UICheckBox::SetState(UICheckBoxState state)
 #endif
     }
     if (onStateChangeListener_ != nullptr) {
-        onStateChangeListener_->OnChange(state);
+        onStateChangeListener_->OnChange(this, state);
     }
     Invalidate();
 }

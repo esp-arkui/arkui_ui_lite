@@ -221,7 +221,7 @@ public:
 
     ~TestBtnOnStateChangeListener() {}
 
-    bool OnChange(UICheckBox::UICheckBoxState state) override
+    bool OnChange(UIView* view, UICheckBox::UICheckBoxState state) override
     {
         int16_t xPos = uiView_->GetX();
         int16_t yPos = uiView_->GetY();

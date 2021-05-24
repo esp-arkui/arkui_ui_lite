@@ -69,11 +69,7 @@ public:
         virtual ~OnSwipeListener() {}
     };
 
-    enum AlignMode : uint8_t {
-        ALIGN_LEFT,
-        ALIGN_CENTER,
-        ALIGN_RIGHT
-    };
+    enum AlignMode : uint8_t { ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT };
 
     /**
      * @brief A constructor used to create a <b>UISwipeView</b> instance.
@@ -347,13 +343,12 @@ protected:
      * @version 1.0
      */
     constexpr static uint16_t DEFAULT_BLANK_SIZE = 30;
-    uint16_t tickTime_;
-    OnSwipeListener* swipeListener_;
-    uint16_t curIndex_;
-    uint16_t blankSize_;
-    UIView* curView_;
+    OnSwipeListener* swipeListener_ = nullptr;
+    uint16_t curIndex_ = 0;
+    uint16_t blankSize_ = DEFAULT_BLANK_SIZE;
+    UIView* curView_ = nullptr;
     AlignMode alignMode_ = ALIGN_CENTER;
-    bool loop_;
+    bool loop_ = false;
 #if ENABLE_ROTATE_INPUT
     static constexpr float DEFAULT_ROTATE_FACTOR = 2.0;
 #endif
@@ -363,7 +358,6 @@ private:
     void RefreshCurrentViewInner(int16_t distance,
                                  int16_t (UIView::*pfnGetXOrY)() const,
                                  int16_t (UIView::*pfnGetWidthOrHeight)());
-
     bool isNeedLoop();
     void MoveFirstChildToLast();
     void MoveLastChildToFirst();

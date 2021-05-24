@@ -170,6 +170,8 @@ public:
      */
     virtual ~UIList();
 
+    void OnStop(UIView& view) override;
+
     /**
      * @brief Obtains the view type.
      * @return Returns the view type, as defined in {@link UIViewType}.
@@ -363,7 +365,8 @@ public:
     }
 
     /**
-     * @brief 设置自动对齐动画时长，单位为毫秒，默认为100毫秒。该功能依赖EnableAutoAlign()方法，自动对齐设置为true情况下才生效。
+     * @brief
+     * 设置自动对齐动画时长，单位为毫秒，默认为100毫秒。该功能依赖EnableAutoAlign()方法，自动对齐设置为true情况下才生效。
      *
      * @param value 自动对齐动画时长,0表示无动画。
      * @since 3.0
@@ -396,9 +399,9 @@ protected:
     static constexpr int16_t RECALCULATE_DRAG_DISTANCE = 10;
     static constexpr int16_t RECALCULATE_DRAG_TIMES = 10;
     static constexpr int16_t DEFAULT_ALINE_TIMES = 100;
-    void StopAnimator() override;
     bool DragXInner(int16_t distance) override;
     bool DragYInner(int16_t distance) override;
+    virtual void Callback(UIView* view) override;
 
 private:
     friend class UIPicker;

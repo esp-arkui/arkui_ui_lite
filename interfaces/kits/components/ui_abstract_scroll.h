@@ -48,7 +48,7 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-class UIAbstractScroll : public UIViewGroup {
+class UIAbstractScroll : public UIViewGroup, public AnimatorCallback {
 public:
     /**
      * @brief A constructor used to create a <b>UIAbstractScroll</b> instance.
@@ -262,63 +262,34 @@ protected:
     /* the maximum number of historical drag data */
     static constexpr uint8_t MAX_DELTA_Y_SIZE = 3;
 
-    class ListAnimatorCallback : public AnimatorCallback {
-    public:
-        ListAnimatorCallback()
-            : curtTime_(0),
-              dragTimes_(0),
-              startValueX_(0),
-              endValueX_(0),
-              previousValueX_(0),
-              startValueY_(0),
-              endValueY_(0),
-              previousValueY_(0)
-        {
-        }
+    void SetDragStartValue(int16_t startValueX, int16_t startValueY)
+    {
+        startValueX_ = startValueX;
+        previousValueX_ = startValueX;
+        startValueY_ = startValueY;
+        previousValueY_ = startValueY;
+    }
 
-        virtual ~ListAnimatorCallback() {}
+    void SetDragEndValue(int16_t endValueX, int16_t endValueY)
+    {
+        endValueX_ = endValueX;
+        endValueY_ = endValueY;
+    }
 
-        void SetDragTimes(uint16_t times)
-        {
-            dragTimes_ = times;
-        }
+    void RsetCallback()
+    {
+        curtTime_ = 0;
+        dragTimes_ = 0;
+        startValueX_ = 0;
+        previousValueX_ = 0;
+        endValueX_ = 0;
+        startValueY_ = 0;
+        previousValueX_ = 0;
+        endValueY_ = 0;
+    }
 
-        void SetDragStartValue(int16_t startValueX, int16_t startValueY)
-        {
-            startValueX_ = startValueX;
-            previousValueX_ = startValueX;
-            startValueY_ = startValueY;
-            previousValueY_ = startValueY;
-        }
-
-        void SetDragEndValue(int16_t endValueX, int16_t endValueY)
-        {
-            endValueX_ = endValueX;
-            endValueY_ = endValueY;
-        }
-
-        void RsetCallback()
-        {
-            curtTime_ = 0;
-            dragTimes_ = 0;
-            startValueX_ = 0;
-            endValueX_ = 0;
-            startValueY_ = 0;
-            endValueY_ = 0;
-        }
-
-        virtual void Callback(UIView* view) override;
-
-        uint16_t curtTime_;
-        uint16_t dragTimes_;
-        int16_t startValueX_;
-        int16_t endValueX_;
-        int16_t previousValueX_;
-        int16_t startValueY_;
-        int16_t endValueY_;
-        int16_t previousValueY_;
-    };
-
+    virtual void Callback(UIView* view) override;
+    virtual void OnStop(UIView& view) override;
     bool DragThrowAnimator(Point currentPos, Point lastPos);
     virtual void StopAnimator();
     virtual bool DragXInner(int16_t distance) = 0;
@@ -331,25 +302,32 @@ protected:
 
     void CalculateDragDistance(Point currentPos, Point lastPos, int16_t& dragDistanceX, int16_t& dragDistanceY);
     void StartAnimator(int16_t dragDistanceX, int16_t dragDistanceY);
-    virtual void CalculateReboundDistance(int16_t& dragDistanceX, int16_t& dragDistanceY) {};
+    virtual void CalculateReboundDistance(int16_t& dragDistanceX, int16_t& dragDistanceY){};
     int16_t GetMaxDeltaY() const;
 
-    uint16_t scrollBlankSize_;
-    uint16_t reboundSize_;
-    uint16_t maxScrollDistance_;
-    int16_t lastDeltaY_[MAX_DELTA_Y_SIZE];
-    uint8_t dragAccCoefficient_;
-    uint8_t swipeAccCoefficient_;
-    uint8_t direction_ : 2;
-    uint8_t deltaYIndex_ : 2;
-    uint8_t reserve_ : 4;
-    bool throwDrag_;
-    EasingFunc easingFunc_;
-    ListAnimatorCallback animatorCallback_;
-    Animator scrollAnimator_;
+    uint16_t curtTime_ = 0;
+    uint16_t dragTimes_ = 0;
+    int16_t startValueX_ = 0;
+    int16_t endValueX_ = 0;
+    int16_t previousValueX_ = 0;
+    int16_t startValueY_ = 0;
+    int16_t endValueY_ = 0;
+    int16_t previousValueY_ = 0;
+    uint16_t scrollBlankSize_ = 0;
+    uint16_t reboundSize_ = 0;
+    uint16_t maxScrollDistance_ = 0;
+    int16_t lastDeltaY_[MAX_DELTA_Y_SIZE] = {0};
+    uint8_t dragAccCoefficient_ = DRAG_ACC_FACTOR;
+    uint8_t swipeAccCoefficient_ = 0;
+    uint8_t direction_ = VERTICAL;
+    uint8_t deltaYIndex_ = 0;
+    uint8_t reserve_ = 0;
+    bool throwDrag_ = false;
+    EasingFunc easingFunc_ = EasingEquation::CubicEaseOut;
+    Animator scrollAnimator_ = Animator(this, this, 0, true);
 #if ENABLE_ROTATE_INPUT
     static constexpr float DEFAULT_ROTATE_FACTOR = 1.0;
-    float rotateFactor_;
+    float rotateFactor_ = DEFAULT_ROTATE_FACTOR;
 #endif
 };
 } // namespace OHOS

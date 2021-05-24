@@ -46,7 +46,7 @@ public:
 
     virtual ~MarginListener() {}
 
-    bool OnChange(UICheckBox::UICheckBoxState state) override
+    bool OnChange(UIView* view, UICheckBox::UICheckBoxState state) override
     {
         if (state == UICheckBox::SELECTED) {
             view_->style_.SetStyle(STYLE_MARGIN_LEFT, MARGIN_SIZE);
@@ -77,7 +77,7 @@ public:
 
     virtual ~BorderListener() {}
 
-    bool OnChange(UICheckBox::UICheckBoxState state) override
+    bool OnChange(UIView* view, UICheckBox::UICheckBoxState state) override
     {
         if (state == UICheckBox::SELECTED) {
             view_->style_.SetStyle(STYLE_BORDER_WIDTH, 20); // 20: border width
@@ -103,7 +103,7 @@ public:
 
     virtual ~PaddingListener() {}
 
-    bool OnChange(UICheckBox::UICheckBoxState state) override
+    bool OnChange(UIView* view, UICheckBox::UICheckBoxState state) override
     {
         if (state == UICheckBox::SELECTED) {
             view_->style_.SetStyle(STYLE_PADDING_LEFT, PADDING_SIZE);
