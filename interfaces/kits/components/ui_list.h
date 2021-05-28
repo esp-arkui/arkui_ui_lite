@@ -413,11 +413,6 @@ private:
             adapter_ = adapter;
         }
 
-        void SetList(UIList* listView)
-        {
-            listView_ = listView;
-        }
-
         void AddScrapView(UIView* view)
         {
             scrapView_.PushBack(view);
@@ -433,6 +428,7 @@ private:
             scrapView_.Clear();
         }
 
+        Rect GetAdapterItemsReletiveRect();
     private:
         void FillActiveView();
 

@@ -38,9 +38,11 @@
 
 #include "animator/animator.h"
 #include "animator/easing_equation.h"
+#include "components/ui_abstract_scroll_bar.h"
 #include "components/ui_view_group.h"
 
 namespace OHOS {
+class BarAnimator;
 /**
  * @brief Defines the attributes of a scroll, including the scroll direction, blank size of a scroll view, velocity and
  *        effects of a scroll animation.
@@ -245,6 +247,23 @@ public:
         rotateFactor_ = factor;
     }
 #endif
+#if !ROUND_SCREEN
+    void SetXScrollBarVisible(bool visible)
+    {
+        xScrollBarVisible_ = visible;
+    }
+#endif
+    void SetYScrollBarVisible(bool visible)
+    {
+        yScrollBarVisible_ = visible;
+    }
+
+    void EnableScrollBarAnimator(bool enable)
+    {
+        enableScrollBarAnimator_ = enable;
+    }
+
+    void OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
     static constexpr uint8_t HORIZONTAL = 0;
     static constexpr uint8_t VERTICAL = 1;
@@ -261,6 +280,8 @@ protected:
     static constexpr uint8_t DRAG_ACC_FACTOR = 10;
     /* the maximum number of historical drag data */
     static constexpr uint8_t MAX_DELTA_Y_SIZE = 3;
+
+    static constexpr uint16_t SCROLL_BAR_WIDTH = 5;
 
     class ListAnimatorCallback : public AnimatorCallback {
     public:
@@ -334,23 +355,35 @@ protected:
     virtual void CalculateReboundDistance(int16_t& dragDistanceX, int16_t& dragDistanceY) {};
     int16_t GetMaxDeltaY() const;
 
-    uint16_t scrollBlankSize_;
-    uint16_t reboundSize_;
-    uint16_t maxScrollDistance_;
-    int16_t lastDeltaY_[MAX_DELTA_Y_SIZE];
-    uint8_t dragAccCoefficient_;
-    uint8_t swipeAccCoefficient_;
+    uint16_t scrollBlankSize_ = 0;
+    uint16_t reboundSize_ = 0;
+    uint16_t maxScrollDistance_ = 0;
+    int16_t lastDeltaY_[MAX_DELTA_Y_SIZE] = {0};
+    uint8_t dragAccCoefficient_ = DRAG_ACC_FACTOR;
+    uint8_t swipeAccCoefficient_ = 0;
     uint8_t direction_ : 2;
     uint8_t deltaYIndex_ : 2;
     uint8_t reserve_ : 4;
-    bool throwDrag_;
+    bool throwDrag_ = false;
     EasingFunc easingFunc_;
     ListAnimatorCallback animatorCallback_;
     Animator scrollAnimator_;
 #if ENABLE_ROTATE_INPUT
     static constexpr float DEFAULT_ROTATE_FACTOR = 1.0;
-    float rotateFactor_;
+    float rotateFactor_ = DEFAULT_ROTATE_FACTOR;
 #endif
+    bool enableScrollBarAnimator_ = false;
+    bool yScrollBarVisible_ = false;
+    UIAbstractScrollBar* yScrollBar_ = nullptr;
+#if !ROUND_SCREEN
+    bool xScrollBarVisible_ = false;
+    UIAbstractScrollBar* xScrollBar_ = nullptr;
+#endif
+#if DEFAULT_ANIMATION
+    friend class BarAnimator;
+    BarAnimator* barAnimator_ = nullptr;
+#endif
+    void FreshAnimator();
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_ABSTRACT_LIST_VIEW_H
