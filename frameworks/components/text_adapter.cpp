@@ -14,8 +14,8 @@
  */
 
 #include "components/text_adapter.h"
-#include "securec.h"
 #include <cstdio>
+#include "securec.h"
 
 namespace OHOS {
 bool TextFormatter::Format(int16_t value, char* outText, uint16_t textLen)
@@ -225,15 +225,5 @@ uint16_t TextAdapter::GetCount()
         default:
             return 0;
     }
-}
-
-int16_t TextAdapter::GetItemWidthWithMargin(int16_t index)
-{
-    return width_;
-}
-
-int16_t TextAdapter::GetItemHeightWithMargin(int16_t index)
-{
-    return height_;
 }
 } // namespace OHOS

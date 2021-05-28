@@ -254,10 +254,6 @@ public:
         formatter_ = formatter;
     }
 
-    int16_t GetItemWidthWithMargin(int16_t index) override;
-
-    int16_t GetItemHeightWithMargin(int16_t index) override;
-
 protected:
     virtual UILabel* GetTextView(UIView* inView, int16_t index);
     uint8_t dataMode_;

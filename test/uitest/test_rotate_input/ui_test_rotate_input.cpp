@@ -229,7 +229,9 @@ void UITestRotateInput::UIKit_Rotate_Event_Scroll_View_002()
     }
     scroll_->SetStyle(STYLE_BACKGROUND_COLOR, Color::Black().full);
     scroll_->SetPosition(0, label->GetY() + g_blank, g_scrollW, g_scrollH);
+#if RECTANGLE_SCREEN
     scroll_->SetXScrollBarVisible(true);
+#endif
     scroll_->SetYScrollBarVisible(true);
     scroll_->SetRotateFactor(10); // 10 : rotateFactor
     UIButton* btn = new UIButton();

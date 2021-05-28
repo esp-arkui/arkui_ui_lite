@@ -29,6 +29,8 @@ public:
 
     virtual void SetPosition(int16_t x, int16_t y, int16_t width, int16_t height) {}
 
+    virtual void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, uint8_t backgroundOpa) {}
+
     void SetBackgroundStyle(const Style& backroundStyle);
 
     void SetForegroundStyle(const Style& foregroundStyle);
@@ -58,8 +60,6 @@ public:
     {
         return opacity_;
     }
-
-    virtual void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, uint8_t backgroundOpa) {}
 
 protected:
     bool backgroundStyleAllocFlag_ : 1;

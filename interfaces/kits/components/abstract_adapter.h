@@ -87,16 +87,6 @@ public:
      * @version 1.0
      */
     virtual UIView* GetView(UIView* inView, int16_t index) = 0;
-
-    virtual int16_t GetItemWidthWithMargin(int16_t index)
-    {
-        return 0;
-    }
-
-    virtual int16_t GetItemHeightWithMargin(int16_t index)
-    {
-        return 0;
-    }
     
     virtual void DeleteView(UIView*& view){};
 };

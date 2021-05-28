@@ -247,7 +247,7 @@ public:
         rotateFactor_ = factor;
     }
 #endif
-#if !ROUND_SCREEN
+#if RECTANGLE_SCREEN
     void SetXScrollBarVisible(bool visible)
     {
         xScrollBarVisible_ = visible;
@@ -354,6 +354,7 @@ protected:
     void StartAnimator(int16_t dragDistanceX, int16_t dragDistanceY);
     virtual void CalculateReboundDistance(int16_t& dragDistanceX, int16_t& dragDistanceY) {};
     int16_t GetMaxDeltaY() const;
+    void FreshAnimator();
 
     uint16_t scrollBlankSize_ = 0;
     uint16_t reboundSize_ = 0;
@@ -375,7 +376,7 @@ protected:
     bool enableScrollBarAnimator_ = false;
     bool yScrollBarVisible_ = false;
     UIAbstractScrollBar* yScrollBar_ = nullptr;
-#if !ROUND_SCREEN
+#if RECTANGLE_SCREEN
     bool xScrollBarVisible_ = false;
     UIAbstractScrollBar* xScrollBar_ = nullptr;
 #endif
@@ -383,7 +384,6 @@ protected:
     friend class BarAnimator;
     BarAnimator* barAnimator_ = nullptr;
 #endif
-    void FreshAnimator();
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_ABSTRACT_LIST_VIEW_H

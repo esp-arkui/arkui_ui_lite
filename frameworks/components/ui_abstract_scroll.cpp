@@ -18,7 +18,7 @@
 #include "animator/interpolation.h"
 #include "graphic_timer.h"
 
-#if ROUND_SCREEN
+#if !RECTANGLE_SCREEN
 #include "components/ui_arc_scroll_bar.h"
 #define BAR_OP(obj, op, ...) obj.yScrollBar_->op(__VA_ARGS__)
 #else
@@ -46,6 +46,7 @@ public:
           animator_(this, nullptr, ANIMATOR_DURATION, false)
     {
     }
+
     ~BarAnimator()
     {
         timer_.Stop();
@@ -61,7 +62,8 @@ public:
         } else if (srollView_.yScrollBar_->GetOpacity() == OPA_TRANSPARENT) {
             animator_.Start();
         } else {
-            timer_.Start();
+            timer_.Start(); // updates the start time of timer, ensuring that timer is triggered two seconds after the
+                            // last operation
         }
 
         isEaseIn_ = true;
@@ -77,7 +79,8 @@ private:
             opa = OPA_OPAQUE - opa;
         }
         float bezielY = opa;
-        bezielY = Interpolation::GetBezierY(bezielY / OPA_OPAQUE, 0, 0.33f, 0.67f, 1); // specific bezier 0.33f 0.67f
+        bezielY =
+            Interpolation::GetBezierY(bezielY / OPA_OPAQUE, 0, BEZIER_CONTROL_POINT_Y_1, BEZIER_CONTROL_POINT_X_2, 1);
         opa = static_cast<uint8_t>(bezielY * opa);
         BAR_OP(srollView_, SetOpacity, opa);
         srollView_.Invalidate();
@@ -88,7 +91,7 @@ private:
         (void)view;
         if (isEaseIn_) {
             BAR_OP(srollView_, SetOpacity, OPA_OPAQUE);
-            timer_.Start();
+            timer_.Start(); // The timer is triggered when animation stops.
         } else {
             BAR_OP(srollView_, SetOpacity, OPA_TRANSPARENT);
         }
@@ -103,10 +106,12 @@ private:
     }
     static constexpr uint16_t ANIMATOR_DURATION = 250;
     static constexpr uint16_t APPEAR_PERIOD = 2000;
+    static constexpr float BEZIER_CONTROL_POINT_Y_1 = 0.33f;
+    static constexpr float BEZIER_CONTROL_POINT_X_2 = 0.67f;
     UIAbstractScroll& srollView_;
     GraphicTimer timer_;
     Animator animator_;
-    bool isEaseIn_;
+    bool isEaseIn_ = true;
 };
 #endif
 
@@ -117,11 +122,11 @@ UIAbstractScroll::UIAbstractScroll()
       easingFunc_(EasingEquation::CubicEaseOut),
       scrollAnimator_(&animatorCallback_, this, 0, true)
 {
-#if ROUND_SCREEN
-    yScrollBar_ = new UIArcScrollBar();
-#else
+#if RECTANGLE_SCREEN
     xScrollBar_ = new UIBoxScrollBar();
     yScrollBar_ = new UIBoxScrollBar();
+#else
+    yScrollBar_ = new UIArcScrollBar();
 #endif
 #if DEFAULT_ANIMATION
     barAnimator_ = new BarAnimator(*this);
@@ -139,8 +144,21 @@ UIAbstractScroll::~UIAbstractScroll()
 {
     scrollAnimator_.Stop();
 #if DEFAULT_ANIMATION
-    delete barAnimator_;
+    if (barAnimator_ != nullptr) {
+        delete barAnimator_;
+        barAnimator_ = nullptr;
+    }
 #endif
+#if RECTANGLE_SCREEN
+    if (xScrollBar_ != nullptr) {
+        delete xScrollBar_;
+        xScrollBar_ = nullptr;
+    }
+#endif
+    if (yScrollBar_ != nullptr) {
+        delete yScrollBar_;
+        yScrollBar_ = nullptr;
+    }
 }
 
 void UIAbstractScroll::MoveChildByOffset(int16_t offsetX, int16_t offsetY)
@@ -165,7 +183,7 @@ void UIAbstractScroll::MoveChildByOffset(int16_t offsetX, int16_t offsetY)
     yScrollBar_->SetForegroundProportion(static_cast<float>(len) / totalLen);
     /* calculate scrolling progress */
     yScrollBar_->SetScrollProgress(static_cast<float>(scrollBlankSize_ - childrenRect.GetTop()) / (totalLen - len));
-#if !ROUND_SCREEN
+#if RECTANGLE_SCREEN
     /* so do x-bar */
     totalLen = childrenRect.GetWidth() + 2 * scrollBlankSize_;
     len = GetWidth();
@@ -297,14 +315,7 @@ void UIAbstractScroll::OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalida
 {
     Rect scrollRect = GetRect();
     uint8_t opa = GetMixOpaScale();
-#if ROUND_SCREEN
-    if (yScrollBarVisible_) {
-        int16_t x = scrollRect.GetX() + (GetWidth() >> 1);
-        int16_t y = scrollRect.GetY() + (GetHeight() >> 1);
-        yScrollBar_->SetPosition(x, y, SCROLL_BAR_WIDTH, GetWidth() >> 1);
-        yScrollBar_->OnDraw(invalidatedArea, opa);
-    }
-#else
+#if RECTANGLE_SCREEN
     if (yScrollBarVisible_) {
         yScrollBar_->SetPosition(scrollRect.GetRight() - SCROLL_BAR_WIDTH + 1, scrollRect.GetTop(), SCROLL_BAR_WIDTH,
                                  scrollRect.GetHeight());
@@ -314,6 +325,13 @@ void UIAbstractScroll::OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalida
         xScrollBar_->SetPosition(scrollRect.GetLeft(), scrollRect.GetBottom() - SCROLL_BAR_WIDTH + 1,
                                  scrollRect.GetWidth() - SCROLL_BAR_WIDTH, SCROLL_BAR_WIDTH);
         xScrollBar_->OnDraw(gfxDstBuffer, invalidatedArea, opa);
+    }
+#else
+    if (yScrollBarVisible_) {
+        int16_t x = scrollRect.GetX() + (GetWidth() >> 1);
+        int16_t y = scrollRect.GetY() + (GetHeight() >> 1);
+        yScrollBar_->SetPosition(x, y, SCROLL_BAR_WIDTH, GetWidth() >> 1);
+        yScrollBar_->OnDraw(gfxDstBuffer, invalidatedArea, opa);
     }
 #endif
 }

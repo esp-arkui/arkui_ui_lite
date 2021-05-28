@@ -64,6 +64,9 @@ UIView* UIList::Recycle::GetView(int16_t index)
 
 void UIList::Recycle::FillActiveView()
 {
+    if ((adapter_ == nullptr) || (listView_ == nullptr)) {
+        return;
+    }
     uint16_t index = listView_->GetStartIndex();
     if (listView_->GetDirection() == UIList::VERTICAL) {
         int16_t childBottom = 0;
@@ -104,22 +107,22 @@ Rect UIList::Recycle::GetAdapterItemsReletiveRect()
     if (listView_->direction_ == VERTICAL) {
         int32_t height = 0;
         for (; i < idx; i++) {
-            height += adapter_->GetItemHeightWithMargin(i);
+            height += GetView(i)->GetHeightWithMargin();
         }
         int16_t y = childHead->GetRelativeRect().GetTop() - height - childHead->GetStyle(STYLE_MARGIN_TOP);
         for (; i < adapter_->GetCount(); i++) {
-            height += adapter_->GetItemHeightWithMargin(i);
+            height += GetView(i)->GetHeightWithMargin();
         }
         return Rect(0, y, listView_->GetWidth() - 1, y + height - 1);
     } else {
         int32_t width = 0;
         for (; i < idx; i++) {
-            width += adapter_->GetItemWidthWithMargin(i);
+            width += GetView(i)->GetWidthWithMargin();
         }
         int16_t x = childHead->GetRelativeRect().GetLeft() - width - childHead->GetStyle(STYLE_MARGIN_LEFT);
         for (; i < adapter_->GetCount(); i++) {
-            width += adapter_->GetItemWidthWithMargin(i);
-        }
+            width += GetView(i)->GetWidthWithMargin();
+        }   
         return Rect(x, 0, x + width - 1, listView_->GetHeight() - 1);
     }
 }
@@ -217,9 +220,9 @@ bool UIList::OnRotateEvent(const RotateEvent& event)
 
     isRotating_ = true;
     if (throwDrag_ && event.GetRotate() == 0) {
-        last = Point{midPointX, midPointY};
-        (direction_ == VERTICAL) ? (current = Point{midPointX, static_cast<int16_t>(midPointY + lastRotateLen_)}) :
-                                   (current = Point{static_cast<int16_t>(midPointX + lastRotateLen_), midPointY});
+        last = Point {midPointX, midPointY};
+        (direction_ == VERTICAL) ? (current = Point {midPointX, static_cast<int16_t>(midPointY + lastRotateLen_)})
+                                 : (current = Point {static_cast<int16_t>(midPointX + lastRotateLen_), midPointY});
         isReCalculateDragEnd_ = false;
         DragThrowAnimator(current, last);
         lastRotateLen_ = 0;
@@ -272,7 +275,7 @@ bool UIList::DragXInner(int16_t distance)
     }
     if (distance > 0) {
         if (childrenHead_ && ((childrenHead_->GetX() + distance) >
-                              (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_LEFT)))) {
+            (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_LEFT)))) {
             distance =
                 scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_LEFT) - childrenHead_->GetX();
         }
@@ -313,8 +316,9 @@ bool UIList::DragYInner(int16_t distance)
         return MoveOffset(distance);
     }
     if (distance > 0) {
-        if (childrenHead_ && ((childrenHead_->GetY() + distance) >
-                              (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_TOP)))) {
+        if (childrenHead_ &&
+            ((childrenHead_->GetY() + distance) >
+            (scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_TOP)))) {
             distance =
                 scrollBlankSize_ + reboundSize + childrenHead_->GetStyle(STYLE_MARGIN_TOP) - childrenHead_->GetY();
         }
@@ -338,22 +342,12 @@ bool UIList::MoveOffset(int16_t offset)
     if (offset == 0) {
         return false;
     }
-
-    int16_t x = 0;
-    int16_t y = 0;
-    ((direction_ == VERTICAL) ? y : x) = offset;
-    MoveChildByOffset(x, y);
-
-    Rect allItemsRect = recycle_.GetAdapterItemsReletiveRect();
-    yScrollBar_->SetForegroundProportion(static_cast<float>(GetHeight()) / allItemsRect.GetHeight());
-    yScrollBar_->SetScrollProgress(allItemsRect.GetTop() /
-                                   (static_cast<float>(GetHeight()) - allItemsRect.GetHeight() + 2 * scrollBlankSize_));
-#if !ROUND_SCREEN
-    xScrollBar_->SetForegroundProportion(static_cast<float>(GetWidth()) / allItemsRect.GetWidth());
-    xScrollBar_->SetScrollProgress(allItemsRect.GetLeft() /
-                                   (static_cast<float>(GetWidth()) - allItemsRect.GetWidth() + 2 * scrollBlankSize_));
-#endif
-    FreshAnimator();
+    if (direction_ == VERTICAL) {
+        MoveChildByOffset(0, offset);
+    } else {
+        MoveChildByOffset(offset, 0);
+    }
+    UpdateScrollBar();
     Invalidate();
     if (scrollListener_ && (scrollListener_->GetScrollState() == ListScrollListener::SCROLL_STATE_STOP)) {
         scrollListener_->SetScrollState(ListScrollListener::SCROLL_STATE_MOVE);
@@ -361,6 +355,25 @@ bool UIList::MoveOffset(int16_t offset)
     }
 
     return true;
+}
+
+void UIList::UpdateScrollBar()
+{
+    Rect allItemsRect = recycle_.GetAdapterItemsReletiveRect();
+    int16_t totalLen = allItemsRect.GetHeight() + 2 * scrollBlankSize_;
+    int16_t len = GetHeight();
+    yScrollBar_->SetForegroundProportion(static_cast<float>(len) / totalLen);
+    yScrollBar_->SetScrollProgress(static_cast<float>(scrollBlankSize_ - allItemsRect.GetTop()) / (totalLen - len));
+#if RECTANGLE_SCREEN
+    int16_t totalLen = allItemsRect.GetHeight() + 2 * scrollBlankSize_;
+    int16_t len = GetHeight();
+    yScrollBar_->SetForegroundProportion(static_cast<float>(len) / totalLen);
+    yScrollBar_->SetScrollProgress(static_cast<float>(scrollBlankSize_ - allItemsRect.GetTop()) / (totalLen - len));
+    xScrollBar_->SetForegroundProportion(static_cast<float>(GetWidth()) / allItemsRect.GetWidth());
+    xScrollBar_->SetScrollProgress((allItemsRect.GetLeft() - scrollBlankSize_) /
+                                   (static_cast<float>(GetWidth()) - allItemsRect.GetWidth() + 2 * scrollBlankSize_));
+#endif
+    FreshAnimator();
 }
 
 bool UIList::IsNeedReCalculateDragEnd()
@@ -429,7 +442,7 @@ bool UIList::MoveChildStepInner(int16_t distance,
     } else {
         if ((childrenTail_ == nullptr) ||
             ((childrenTail_->*getXOrY)() + (childrenTail_->*getWidthOrHeight)() + distance <
-             (this->*getWidthOrHeight)())) {
+            (this->*getWidthOrHeight)())) {
             UIView* newView = recycle_.GetView(GetIndexInc(bottomIndex_));
             if (newView == nullptr) {
                 return false;
@@ -572,7 +585,7 @@ void UIList::MoveChildByOffset(int16_t xOffset, int16_t yOffset)
             height = view->GetRelativeRect().GetHeight();
             if ((view->GetY() + yOffset > selectPosition_) ||
                 (childrenTail_->GetY() + height + childrenTail_->GetStyle(STYLE_MARGIN_BOTTOM) + yOffset <
-                 selectPosition_)) {
+                selectPosition_)) {
                 onSelectedIndex_ = NULL_SELECT_INDEX;
                 onSelectedView_ = nullptr;
                 if (scrollListener_ != nullptr) {

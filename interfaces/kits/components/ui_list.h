@@ -413,6 +413,11 @@ private:
             adapter_ = adapter;
         }
 
+        void SetList(UIList* listView)
+        {
+            listView_ = listView;
+        }
+
         void AddScrapView(UIView* view)
         {
             scrapView_.PushBack(view);
@@ -448,6 +453,7 @@ private:
     uint16_t GetIndexDec(uint16_t index);
 
     bool MoveOffset(int16_t offset);
+    void UpdateScrollBar();
     bool IsNeedReCalculateDragEnd();
     bool ReCalculateDragEnd();
 #if ENABLE_ROTATE_INPUT
