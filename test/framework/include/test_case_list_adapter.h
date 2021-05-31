@@ -31,7 +31,6 @@ public:
     ~TestCaseListAdapter() {}
     UIView* GetView(UIView* inView, int16_t index) override;
     uint16_t GetCount() override;
-
 private:
     RootView* rootView_;
     UIView* mainList_;

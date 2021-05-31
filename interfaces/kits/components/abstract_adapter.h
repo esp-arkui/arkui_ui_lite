@@ -87,12 +87,8 @@ public:
      * @version 1.0
      */
     virtual UIView* GetView(UIView* inView, int16_t index) = 0;
-
+    
     virtual void DeleteView(UIView*& view){};
-
-protected:
-    static const uint16_t DEFAULT_WIDTH = 200;
-    static const uint16_t DEFAULT_HEIGHT = 50;
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_ABSTRACT_ADAPTER_H

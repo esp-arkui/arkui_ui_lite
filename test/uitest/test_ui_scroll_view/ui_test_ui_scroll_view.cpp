@@ -17,6 +17,12 @@
 #include "common/screen.h"
 #include "components/ui_label_button.h"
 
+#if RECTANGLE_SCREEN
+#define VISIBLE_XBAR(visible)  scroll->SetXScrollBarVisible(visible)
+#else
+#define VISIBLE_XBAR(visible)
+#endif
+
 namespace OHOS {
 namespace {
 static int16_t g_buttonH = 400;
@@ -80,6 +86,7 @@ void UITestUIScrollView::TearDown()
     }
     lastX_ = 0;
     lastY_ = 0;
+    UITest::TearDown();
 }
 
 const UIView* UITestUIScrollView::GetTestView()
@@ -102,7 +109,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_001()
     }
     positionX_ = TEXT_DISTANCE_TO_LEFT_SIDE;
     positionY_ = TEXT_DISTANCE_TO_TOP_SIDE;
-    UILabel* label = GetTitleLabel("UIScrollView设置游标不可见 ");
+    UILabel* label = GetTitleLabel("UIScrollView设置游标可见 ");
     label->SetPosition(positionX_, positionY_);
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE_2;
@@ -111,8 +118,8 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_001()
     scroll->SetIntercept(true);
     scroll->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
-    scroll->SetXScrollBarVisible(false);
-    scroll->SetYScrollBarVisible(false);
+    VISIBLE_XBAR(false);
+    scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -137,7 +144,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_002()
     scroll->SetIntercept(true);
     scroll->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
-    scroll->SetXScrollBarVisible(true);
+    VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
     UIButton* button1 = new UIButton();
@@ -162,7 +169,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_003()
     scroll->SetIntercept(true);
     scroll->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
-    scroll->SetXScrollBarVisible(true);
+    VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
@@ -192,7 +199,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_004()
     scroll->SetIntercept(true);
     scroll->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
-    scroll->SetXScrollBarVisible(true);
+    VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     scroll->SetScrollbarWidth(20); // 20: means scroll bar width
     container_->Add(scroll);
@@ -222,7 +229,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_001()
     scroll->SetScrollBlankSize(20); // 20: means scroll blank size
     scroll->SetHorizontalScrollState(false);
     scroll->SetVerticalScrollState(true);
-    scroll->SetXScrollBarVisible(true);
+    VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
@@ -250,7 +257,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_002()
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
     scroll->SetHorizontalScrollState(true);
     scroll->SetVerticalScrollState(false);
-    scroll->SetXScrollBarVisible(true);
+    VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
@@ -277,7 +284,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scroll_Blank_Set_001()
     scroll->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
     scroll->SetScrollBlankSize(50); // (50): means scroll blank size
-    scroll->SetXScrollBarVisible(true);
+    VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();

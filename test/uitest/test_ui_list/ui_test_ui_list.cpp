@@ -138,6 +138,7 @@ void UITestUIList::UIKit_List_Init_Test_Full_Screen_001()
     list->SetStartIndex(5); // 5: list start index
     list->GetStartIndex();
     list->SetAdapter(adapter1_);
+    list->SetYScrollBarVisible(true);
     container_->Add(list);
 }
 
@@ -163,6 +164,7 @@ void UITestUIList::UIKit_List_Init_Test_halh_Screen_001()
     list->SetPosition(Screen::GetInstance().GetWidth() / 2 + VIEW_DISTANCE_TO_LEFT_SIDE, VIEW_DISTANCE_TO_TOP_SIDE,
                       g_listW, g_listH - 150); // 150: decrease height
     list->SetAdapter(adapter2_);
+    list->SetYScrollBarVisible(true);
     container_->Add(list);
 }
 
@@ -251,6 +253,7 @@ void UITestUIList::UIKit_List_Scroll_Test_Blank_Set_001()
     list->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_listH - 95, g_listW, g_listH); // 95: decrease y-coordinate
     list->SetAdapter(adapter4_);
     list->SetScrollStateListener(this);
+    list->SetYScrollBarVisible(true);
     currentList_ = list;
 
     if (scrollStateLabel_ == nullptr) {

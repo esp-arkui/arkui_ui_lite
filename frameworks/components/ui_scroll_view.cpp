@@ -42,28 +42,13 @@ UIScrollView::UIScrollView()
     ySlider_.SetStyle(StyleDefault::GetBrightStyle());
 }
 
-void UIScrollView::OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
-{
-    if (!xSlider_.IsVisible() && !ySlider_.IsVisible()) {
-        return;
-    }
-    Rect scrollRect = GetRect();
-    if (xSlider_.IsVisible()) {
-        xSlider_.SetPosition(scrollRect.GetX() + xSliderPos_.x, scrollRect.GetY() + xSliderPos_.y);
-        xSlider_.OnDraw(gfxDstBuffer, invalidatedArea);
-    }
-    if (ySlider_.IsVisible()) {
-        ySlider_.SetPosition(scrollRect.GetX() + ySliderPos_.x, scrollRect.GetY() + ySliderPos_.y);
-        ySlider_.OnDraw(gfxDstBuffer, invalidatedArea);
-    }
-}
-
 bool UIScrollView::OnDragEvent(const DragEvent& event)
 {
     if (scrollAnimator_.GetState() != Animator::STOP) {
         UIAbstractScroll::StopAnimator();
     }
     Drag(event);
+    FreshAnimator();
     return UIView::OnDragEvent(event);
 }
 
@@ -148,6 +133,7 @@ bool UIScrollView::OnRotateEvent(const RotateEvent& event)
         vibratorFunc(VibratorType::VIBRATOR_TYPE_ONE);
     }
 #endif
+    FreshAnimator();
     return UIView::OnRotateEvent(event);
 }
 #endif
