@@ -42,7 +42,7 @@
 #include "components/ui_view_group.h"
 
 namespace OHOS {
-class BarAnimator;
+class BarEaseInOutAnimator;
 /**
  * @brief Defines the attributes of a scroll, including the scroll direction, blank size of a scroll view, velocity and
  *        effects of a scroll animation.
@@ -381,8 +381,8 @@ protected:
     UIAbstractScrollBar* xScrollBar_ = nullptr;
 #endif
 #if DEFAULT_ANIMATION
-    friend class BarAnimator;
-    BarAnimator* barAnimator_ = nullptr;
+    friend class BarEaseInOutAnimator;
+    BarEaseInOutAnimator* barEaseInOutAnimator_ = nullptr;
 #endif
 };
 } // namespace OHOS

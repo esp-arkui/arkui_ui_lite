@@ -43,8 +43,8 @@ namespace OHOS {
  * @brief Enumerates screen shapes.
  */
 enum ScreenShape {
-    RECTANGLE, // rectangular shape
-    CIRCLE    // circular shape
+    RECTANGLE = 0, // rectangular screen
+    CIRCLE         // circular screen
 };
 
 /**

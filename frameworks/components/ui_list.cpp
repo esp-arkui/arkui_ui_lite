@@ -104,25 +104,26 @@ Rect UIList::Recycle::GetAdapterItemsReletiveRect()
     uint16_t i = 0;
     UIView* childHead = listView_->childrenHead_;
     uint16_t idx = childHead->GetViewIndex();
+    UIView* newView = adapter_->GetView(nullptr, idx);
     if (listView_->direction_ == VERTICAL) {
         int32_t height = 0;
         for (; i < idx; i++) {
-            height += GetView(i)->GetHeightWithMargin();
+            height += adapter_->GetView(newView, i)->GetHeightWithMargin();
         }
         int16_t y = childHead->GetRelativeRect().GetTop() - height - childHead->GetStyle(STYLE_MARGIN_TOP);
         for (; i < adapter_->GetCount(); i++) {
-            height += GetView(i)->GetHeightWithMargin();
+            height += adapter_->GetView(newView, i)->GetHeightWithMargin();
         }
         return Rect(0, y, listView_->GetWidth() - 1, y + height - 1);
     } else {
         int32_t width = 0;
         for (; i < idx; i++) {
-            width += GetView(i)->GetWidthWithMargin();
+            width += adapter_->GetView(newView, i)->GetWidthWithMargin();
         }
         int16_t x = childHead->GetRelativeRect().GetLeft() - width - childHead->GetStyle(STYLE_MARGIN_LEFT);
         for (; i < adapter_->GetCount(); i++) {
-            width += GetView(i)->GetWidthWithMargin();
-        }   
+            width += adapter_->GetView(newView, i)->GetWidthWithMargin();
+        }
         return Rect(x, 0, x + width - 1, listView_->GetHeight() - 1);
     }
 }
@@ -360,19 +361,10 @@ bool UIList::MoveOffset(int16_t offset)
 void UIList::UpdateScrollBar()
 {
     Rect allItemsRect = recycle_.GetAdapterItemsReletiveRect();
-    int16_t totalLen = allItemsRect.GetHeight() + 2 * scrollBlankSize_;
-    int16_t len = GetHeight();
-    yScrollBar_->SetForegroundProportion(static_cast<float>(len) / totalLen);
-    yScrollBar_->SetScrollProgress(static_cast<float>(scrollBlankSize_ - allItemsRect.GetTop()) / (totalLen - len));
-#if RECTANGLE_SCREEN
-    int16_t totalLen = allItemsRect.GetHeight() + 2 * scrollBlankSize_;
-    int16_t len = GetHeight();
-    yScrollBar_->SetForegroundProportion(static_cast<float>(len) / totalLen);
-    yScrollBar_->SetScrollProgress(static_cast<float>(scrollBlankSize_ - allItemsRect.GetTop()) / (totalLen - len));
-    xScrollBar_->SetForegroundProportion(static_cast<float>(GetWidth()) / allItemsRect.GetWidth());
-    xScrollBar_->SetScrollProgress((allItemsRect.GetLeft() - scrollBlankSize_) /
-                                   (static_cast<float>(GetWidth()) - allItemsRect.GetWidth() + 2 * scrollBlankSize_));
-#endif
+    int16_t totalHeight = allItemsRect.GetHeight() + 2 * scrollBlankSize_;
+    int16_t height = GetHeight();
+    yScrollBar_->SetForegroundProportion(static_cast<float>(height) / totalHeight);
+    yScrollBar_->SetScrollProgress(static_cast<float>(scrollBlankSize_ - allItemsRect.GetTop()) / (totalHeight - height));
     FreshAnimator();
 }
 

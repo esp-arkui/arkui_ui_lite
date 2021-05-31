@@ -32,22 +32,22 @@
 
 namespace OHOS {
 #if DEFAULT_ANIMATION
-class BarAnimator final : private AnimatorCallback {
+class BarEaseInOutAnimator final : private AnimatorCallback {
 public:
-    BarAnimator() = delete;
-    BarAnimator(const BarAnimator&) = delete;
-    BarAnimator& operator=(const BarAnimator&) = delete;
-    BarAnimator(BarAnimator&&) = delete;
-    BarAnimator& operator=(BarAnimator&&) = delete;
+    BarEaseInOutAnimator() = delete;
+    BarEaseInOutAnimator(const BarEaseInOutAnimator&) = delete;
+    BarEaseInOutAnimator& operator=(const BarEaseInOutAnimator&) = delete;
+    BarEaseInOutAnimator(BarEaseInOutAnimator&&) = delete;
+    BarEaseInOutAnimator& operator=(BarEaseInOutAnimator&&) = delete;
 
-    BarAnimator(UIAbstractScroll& srollView)
+    BarEaseInOutAnimator(UIAbstractScroll& srollView)
         : srollView_(srollView),
           timer_(APPEAR_PERIOD, TimerCb, this),
           animator_(this, nullptr, ANIMATOR_DURATION, false)
     {
     }
 
-    ~BarAnimator()
+    ~BarEaseInOutAnimator()
     {
         timer_.Stop();
         animator_.Stop();
@@ -100,7 +100,7 @@ private:
 
     static void TimerCb(void* arg)
     {
-        BarAnimator* barAnimator = reinterpret_cast<BarAnimator*>(arg);
+        BarEaseInOutAnimator* barAnimator = reinterpret_cast<BarEaseInOutAnimator*>(arg);
         barAnimator->isEaseIn_ = false;
         barAnimator->animator_.Start();
     }
@@ -129,7 +129,7 @@ UIAbstractScroll::UIAbstractScroll()
     yScrollBar_ = new UIArcScrollBar();
 #endif
 #if DEFAULT_ANIMATION
-    barAnimator_ = new BarAnimator(*this);
+    barEaseInOutAnimator_ = new BarEaseInOutAnimator(*this);
 #endif
 #if ENABLE_FOCUS_MANAGER
     focusable_ = true;
@@ -144,9 +144,9 @@ UIAbstractScroll::~UIAbstractScroll()
 {
     scrollAnimator_.Stop();
 #if DEFAULT_ANIMATION
-    if (barAnimator_ != nullptr) {
-        delete barAnimator_;
-        barAnimator_ = nullptr;
+    if (barEaseInOutAnimator_ != nullptr) {
+        delete barEaseInOutAnimator_;
+        barEaseInOutAnimator_ = nullptr;
     }
 #endif
 #if RECTANGLE_SCREEN
@@ -339,8 +339,7 @@ void UIAbstractScroll::OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalida
 void UIAbstractScroll::FreshAnimator()
 {
 #if DEFAULT_ANIMATION
-    barAnimator_->FreshBar();
+    barEaseInOutAnimator_->FreshBar();
 #endif
 }
-
 } // namespace OHOS
