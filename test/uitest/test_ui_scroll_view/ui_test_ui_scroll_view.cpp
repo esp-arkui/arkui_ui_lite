@@ -17,11 +17,10 @@
 #include "common/screen.h"
 #include "components/ui_label_button.h"
 
-#if RECTANGLE_SCREEN
-#define VISIBLE_XBAR(visible)  scroll->SetXScrollBarVisible(visible)
-#else
-#define VISIBLE_XBAR(visible)
-#endif
+#define VISIBLE_XBAR(visible)                                               \
+    if (Screen::GetInstance().GetScreenShape() == ScreenShape::RECTANGLE) { \
+        scroll->SetXScrollBarVisible(visible);                              \
+    }                                                                       \
 
 namespace OHOS {
 namespace {

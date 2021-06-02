@@ -44,6 +44,10 @@ void UIArcScrollBar::DrawForeground(BufferInfo& gfxDstBuffer, const Rect& invali
     int16_t startAngle = minAngle + scrollProgress_ * (maxAngle - minAngle);
     int16_t endAngle = startAngle + foregoundAngleRange;
 
+    if ((startAngle > END_ANGLE_IN_DEGREE) || (endAngle < START_ANGLE_IN_DEGREE)) {
+        return;
+    }
+
     ArcInfo arcInfo = {0};
     arcInfo.radius = radius_;
     arcInfo.center = center_;

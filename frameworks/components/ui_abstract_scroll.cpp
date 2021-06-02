@@ -18,16 +18,16 @@
 #include "animator/interpolation.h"
 #include "graphic_timer.h"
 
-#if !RECTANGLE_SCREEN
-#include "components/ui_arc_scroll_bar.h"
-#define BAR_OP(obj, op, ...) obj.yScrollBar_->op(__VA_ARGS__)
-#else
+#if RECTANGLE_SCREEN
 #include "components/ui_box_scroll_bar.h"
 #define BAR_OP(obj, op, ...)              \
     do {                                  \
         obj.yScrollBar_->op(__VA_ARGS__); \
         obj.xScrollBar_->op(__VA_ARGS__); \
     } while (0)
+#else
+#include "components/ui_arc_scroll_bar.h"
+#define BAR_OP(obj, op, ...) obj.yScrollBar_->op(__VA_ARGS__)
 #endif
 
 namespace OHOS {
@@ -144,21 +144,12 @@ UIAbstractScroll::~UIAbstractScroll()
 {
     scrollAnimator_.Stop();
 #if DEFAULT_ANIMATION
-    if (barEaseInOutAnimator_ != nullptr) {
-        delete barEaseInOutAnimator_;
-        barEaseInOutAnimator_ = nullptr;
-    }
+    delete barEaseInOutAnimator_;
 #endif
 #if RECTANGLE_SCREEN
-    if (xScrollBar_ != nullptr) {
-        delete xScrollBar_;
-        xScrollBar_ = nullptr;
-    }
+    delete xScrollBar_;
 #endif
-    if (yScrollBar_ != nullptr) {
-        delete yScrollBar_;
-        yScrollBar_ = nullptr;
-    }
+    delete yScrollBar_;
 }
 
 void UIAbstractScroll::MoveChildByOffset(int16_t offsetX, int16_t offsetY)

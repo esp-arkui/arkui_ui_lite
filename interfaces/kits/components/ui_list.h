@@ -413,11 +413,6 @@ private:
             adapter_ = adapter;
         }
 
-        void SetList(UIList* listView)
-        {
-            listView_ = listView;
-        }
-
         void AddScrapView(UIView* view)
         {
             scrapView_.PushBack(view);
@@ -434,12 +429,15 @@ private:
         }
 
         Rect GetAdapterItemsReletiveRect();
+        void MoveAdapterItemsRelativeRect(int16_t x, int16_t y);
     private:
         void FillActiveView();
+        void MesureAdapterRelativeRect();
 
         List<UIView*> scrapView_;
         AbstractAdapter* adapter_;
         UIList* listView_;
+        Rect adapterRelativeRect_;
     };
 
     void PushBack(UIView* view);
@@ -452,7 +450,7 @@ private:
     uint16_t GetIndexInc(uint16_t index);
     uint16_t GetIndexDec(uint16_t index);
 
-    bool MoveOffset(int16_t offset);
+    bool MoveOffset(int16_t x, int16_t y);
     void UpdateScrollBar();
     bool IsNeedReCalculateDragEnd();
     bool ReCalculateDragEnd();

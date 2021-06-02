@@ -338,9 +338,9 @@ void UITestEventInjector::SetUpScrollView()
     scrollTestView_->SetIntercept(true);
     scrollTestView_->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scrollTestView_->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, positionY_, SCROLL_WIDTH, SCROLL_HEIGHT);
-#if RECTANGLE_SCREEN
-    scrollTestView_->SetXScrollBarVisible(true);
-#endif
+    if (Screen::GetInstance().GetScreenShape() == ScreenShape::RECTANGLE) {
+        scrollTestView_->SetXScrollBarVisible(true);
+    }
     scrollTestView_->SetYScrollBarVisible(true);
     scrollTestView_->SetThrowDrag(true);
     container_->Add(scrollTestView_);
