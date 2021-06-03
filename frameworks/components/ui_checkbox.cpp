@@ -73,7 +73,7 @@ void UICheckBox::SetState(UICheckBoxState state, bool needAnimater)
         }
     }
     if (onStateChangeListener_ != nullptr) {
-        onStateChangeListener_->OnChange(state);
+        onStateChangeListener_->OnChange(this, state);
     }
     Invalidate();
 }

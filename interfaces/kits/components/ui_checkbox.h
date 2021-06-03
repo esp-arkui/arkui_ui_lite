@@ -106,7 +106,7 @@ public:
          * @since 1.0
          * @version 1.0
          */
-        virtual bool OnChange(UICheckBoxState state) = 0;
+        virtual bool OnChange(UIView* view, UICheckBoxState state) = 0;
 
         /**
          * @brief A destructor used to delete the <b>OnChangeListener</b> instance.

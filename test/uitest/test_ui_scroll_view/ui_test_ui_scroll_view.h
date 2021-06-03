@@ -16,33 +16,37 @@
 #ifndef UI_TEST_UI_SCROLL_VIEW_H
 #define UI_TEST_UI_SCROLL_VIEW_H
 
+#include "components/ui_checkbox.h"
 #include "components/ui_label.h"
 #include "components/ui_scroll_view.h"
+#include "layout/grid_layout.h"
 #include "ui_test.h"
 
 namespace OHOS {
-class UITestUIScrollView : public UITest {
+class UITestUIScrollView : public UITest,
+                           public UICheckBox::OnChangeListener,
+                           public UIScrollView::OnScrollListener,
+                           public UIView::OnClickListener {
 public:
     UITestUIScrollView() {}
-    ~UITestUIScrollView() {}
+    virtual ~UITestUIScrollView() {}
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
-
-    void UIKit_UIScrollView_Test_bar_001();
-    void UIKit_UIScrollView_Test_bar_002();
-    void UIKit_UIScrollView_Test_bar_003();
-    void UIKit_UIScrollView_Test_bar_004();
-    void UIKit_UIScrollView_Test_Scrollable_Set_001();
-    void UIKit_UIScrollView_Test_Scrollable_Set_002();
-    void UIKit_UIScrollView_Test_Scroll_Blank_Set_001();
-    void UIKit_UIScrollView_Test_Scroll_listener_001();
+    bool OnChange(UIView* view, UICheckBox::UICheckBoxState state) override;
+    void OnScrollStart() override;
+    void OnScrollEnd() override;
+    bool OnClick(UIView& view, const ClickEvent& event) override;
+    void UIKit_UIScrollView_Test_001();
 
 private:
-    void SetLastPos(UIView* view);
-    UIScrollView* container_ = nullptr;
-    int16_t lastX_ = 0;
-    int16_t lastY_ = 0;
+    UIViewGroup* container_ = nullptr;
+    GridLayout* layoutButton_ = nullptr;
+    UIScrollView* scroll_ = nullptr;
+    UILabel* scrollSateLabel_ = nullptr;
+    UILabelButton* button_ = nullptr;
+    int16_t buttonHeigh_ = 600;
+    int16_t buttonWidth_ = 600;
 };
 } // namespace OHOS
 #endif // UI_TEST_UI_SCROLL_VIEW_H

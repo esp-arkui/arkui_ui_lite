@@ -19,14 +19,13 @@
 
 namespace OHOS {
 UISwipeView::UISwipeView(uint8_t direction)
-    : swipeListener_(nullptr), curIndex_(0), blankSize_(DEFAULT_BLANK_SIZE), curView_(nullptr), loop_(false)
 {
 #if ENABLE_ROTATE_INPUT
     rotateFactor_ = DEFAULT_ROTATE_FACTOR;
 #endif
     direction_ = direction;
-    tickTime_ = ANIMATOR_TIME;
     swipeAccCoefficient_ = DRAG_ACC_FACTOR;
+    dragTimes_ = ANIMATOR_TIME;
 }
 
 UISwipeView::~UISwipeView() {}
@@ -201,11 +200,10 @@ UIView* UISwipeView::GetViewByIndex(uint16_t index) const
 
 void UISwipeView::SetAnimatorTime(uint16_t time)
 {
-    tickTime_ = time / DEFAULT_TASK_PERIOD;
-    if (tickTime_ == 0) {
-        tickTime_ = 1;
+    dragTimes_ = time / DEFAULT_TASK_PERIOD;
+    if (dragTimes_ == 0) {
+        dragTimes_ = 1;
     }
-    animatorCallback_.SetDragTimes(tickTime_);
 }
 
 void UISwipeView::SwitchToPage(int16_t dst, bool needAnimator)
@@ -243,9 +241,8 @@ void UISwipeView::SwitchToPage(int16_t dst, bool needAnimator)
             scrollAnimator_.Stop();
         }
         if (needAnimator) {
-            animatorCallback_.SetDragTimes(tickTime_);
-            animatorCallback_.SetDragStartValue(0, 0);
-            animatorCallback_.SetDragEndValue(xOffset, yOffset);
+            SetDragStartValue(0, 0);
+            SetDragEndValue(xOffset, yOffset);
             scrollAnimator_.Start();
         } else {
             MoveChildByOffset(xOffset, yOffset);
@@ -346,7 +343,7 @@ void UISwipeView::RefreshCurrentViewInner(int16_t distance,
          */
         if (((curView_->*pfnGetXOrY)() + ((curView_->*pfnGetWidthOrHeight)() >> 1) < swipeMid) &&
             ((curView_->*pfnGetXOrY)() + ((curView_->*pfnGetWidthOrHeight)() * 7 / 10) - accelerationOffset <
-            swipeMid)) {
+             swipeMid)) {
             curIndex_++;
         }
     } else if (distance > 0) {
@@ -356,7 +353,7 @@ void UISwipeView::RefreshCurrentViewInner(int16_t distance,
          */
         if (((curView_->*pfnGetXOrY)() + ((curView_->*pfnGetWidthOrHeight)() >> 1) > swipeMid) &&
             ((curView_->*pfnGetXOrY)() + ((curView_->*pfnGetWidthOrHeight)() * 3 / 10) + accelerationOffset >
-            swipeMid)) {
+             swipeMid)) {
             curIndex_--;
         }
     } else {
