@@ -97,7 +97,7 @@ hb build lite_ui
 
 foundation/graphic/ui/test/uitest中提供了图形所有组件和功能接口的使用范例。
 
--   Windows环境可运行QT工程调试
+-   Windows环境可运行QT工程调试 [使用说明](https://gitee.com/openharmony/ace_engine_lite/tree/master/frameworks/tools/qt/simulator)
 
     工程文件路径：
 
