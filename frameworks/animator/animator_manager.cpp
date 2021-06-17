@@ -56,8 +56,8 @@ void AnimatorManager::Remove(const Animator* animator)
     ListNode<Animator*>* pos = list_.Begin();
     while (pos != list_.End()) {
         if (pos->data_ == animator) {
-            list_.Remove(pos);
-            return;
+            pos->data_ = nullptr;
+            break;
         }
         pos = pos->next_;
     }
@@ -70,10 +70,17 @@ void AnimatorManager::AnimatorTask()
 
     while (pos != list_.End()) {
         animator = pos->data_;
-        pos = pos->next_;
+        if (animator == nullptr) {
+            // clean up animator list
+            ListNode<Animator*>* next = pos->next_;
+            list_.Remove(pos);
+            pos = next;
+            continue;
+        }
         if (animator->GetState() == Animator::START) {
             animator->Run();
         }
+        pos = pos->next_;
     }
 }
 } // namespace OHOS
