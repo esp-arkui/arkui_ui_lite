@@ -27,7 +27,6 @@ Point TypedText::GetTextSize(const char* text, int16_t letterSpace, int16_t line
     Point size{0, 0};
 
     if (text == nullptr) {
-        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "TypedText::GetTextSize invalid parameter");
         return size;
     }
 

@@ -195,7 +195,6 @@ int32_t WindowImpl::GetWindowId()
 
 void WindowImpl::Flush()
 {
-    HILOG_INFO(HILOG_MODULE_GRAPHIC, "Flush");
     if (iWindow_ == nullptr) {
         return;
     }
