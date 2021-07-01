@@ -160,6 +160,35 @@ HWTEST_F(ScrollBarTest, UIScrollBarSetYScrollBarVisible, TestSize.Level0)
     EXPECT_TRUE(uiList.GetYScrollBarVisible());
 }
 
+HWTEST_F(ScrollBarTest, UIScrollBarSetScrollBarVisible, TestSize.Level0)
+{
+    TestUIScrollView scrollView;
+    TestUIList uiList;
+
+    EXPECT_FALSE(scrollView.GetYScrollBarVisible());
+    EXPECT_FALSE(uiList.GetYScrollBarVisible());
+
+    scrollView.SetYScrollBarVisible(true);
+    uiList.SetYScrollBarVisible(true);
+    EXPECT_TRUE(scrollView.GetYScrollBarVisible());
+    EXPECT_TRUE(uiList.GetYScrollBarVisible());
+
+    scrollView.SetYScrollBarVisible(false);
+    uiList.SetYScrollBarVisible(false);
+    EXPECT_FALSE(scrollView.GetYScrollBarVisible());
+    EXPECT_FALSE(uiList.GetYScrollBarVisible());
+
+    scrollView.SetYScrollBarVisible(true);
+    uiList.SetYScrollBarVisible(false);
+    EXPECT_TRUE(scrollView.GetYScrollBarVisible());
+    EXPECT_FALSE(uiList.GetYScrollBarVisible());
+
+    scrollView.SetYScrollBarVisible(false);
+    uiList.SetYScrollBarVisible(true);
+    EXPECT_FALSE(scrollView.GetYScrollBarVisible());
+    EXPECT_TRUE(uiList.GetYScrollBarVisible());
+}
+
 HWTEST_F(ScrollBarTest, UIScrollBarSetPosition, TestSize.Level0)
 {
     constexpr int16_t VALID_POSITION = 5;
