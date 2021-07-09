@@ -1170,7 +1170,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetTransformMap(const TransformMap& transMap);
+    virtual void SetTransformMap(const TransformMap& transMap);
 
     /**
      * @brief Obtains an affine transformation matrix.
@@ -1509,7 +1509,7 @@ public:
      * @since 5.0
      * @version 3.0
      */
-    void Rotate(int16_t angle, const Vector2<float>& pivot);
+    virtual void Rotate(int16_t angle, const Vector2<float>& pivot);
 
     /**
      * @brief Scales the view.
@@ -1519,9 +1519,9 @@ public:
      * @since 5.0
      * @version 3.0
      */
-    void Scale(const Vector2<float>& scale, const Vector2<float>& pivot);
+    virtual void Scale(const Vector2<float>& scale, const Vector2<float>& pivot);
 
-    void Translate(const Vector2<int16_t>& trans);
+    virtual void Translate(const Vector2<int16_t>& trans);
 
     bool IsTransInvalid();
 
