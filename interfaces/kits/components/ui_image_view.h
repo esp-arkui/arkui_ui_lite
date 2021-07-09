@@ -157,9 +157,6 @@ public:
     void SetAutoEnable(bool enable)
     {
         if (autoEnable_ != enable) {
-            if (enable) {
-                SetResizeMode(ImageResizeMode::NONE);
-            }
             needRefresh_ = autoEnable_ ? needRefresh_ : true;
             autoEnable_ = enable;
         }
@@ -262,20 +259,6 @@ public:
         return image_.GetSrcType();
     }
 
-    enum ImageResizeMode : uint8_t {
-        NONE,
-        FILL,
-        CONTAIN,
-    };
-
-    void SetResizeMode(ImageResizeMode mode);
-    void SetWidth(int16_t width) override;
-    void SetHeight(int16_t height) override;
-    void Rotate(int16_t angle, const Vector2<float>& pivot) override;
-    void Scale(const Vector2<float>& scale, const Vector2<float>& pivot) override;
-    void Translate(const Vector2<int16_t>& trans) override;
-    void SetTransformMap(const TransformMap& transMap) override;
-
 protected:
     /**
      * @brief Represents the width of this image.
@@ -307,9 +290,6 @@ protected:
     uint8_t algorithm_ : 1;
     uint8_t reserve_ : 1;
     Image image_;
-    ImageResizeMode imageResizeMode_ = ImageResizeMode::NONE;
-    TransformMap* drawTransMap_ = nullptr;
-    Matrix3<float>* contentMatrix_ = nullptr;
 
 private:
     void ReMeasure() override;
@@ -320,8 +300,6 @@ private:
     Animator* gifImageAnimator_;
     bool gifFrameFlag_;
 #endif
-    void UpdateContentMatrix();
-    void UpdateDrawTransMap(bool updateContentMatrix = false);
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_IMAGE_VIEW_H
