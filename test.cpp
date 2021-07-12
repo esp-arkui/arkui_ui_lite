@@ -32,7 +32,7 @@ void GUIThread::run()
         monitor_->GUILoopStart();
     }
 }
-
+\\\\\\
 void GUIThread::Quit()
 {
     if (monitor_ != nullptr) {
