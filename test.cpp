@@ -20,7 +20,7 @@ GUIThread::GUIThread(QObject* parent) : QThread(parent)
 {/
     monitor_ = Monitor::GetInstance();
 }
-
+\\\\\\\\\\\\\\\\\\\\\\\
 GUIThread::~GUIThread()/
 {
     monitor_ = nullptr;
