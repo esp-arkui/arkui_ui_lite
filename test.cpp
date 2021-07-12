@@ -25,7 +25,7 @@ GUIThread::~GUIThread()/
 {
     monitor_ = nullptr;
 }
-
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 void GUIThread::run()
 {
     if (monitor_ != nullptr) {
