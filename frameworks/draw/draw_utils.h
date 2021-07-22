@@ -299,6 +299,8 @@ private:
 
     static OpacityType GetPxAlphaForAlphaImg(const TransformDataInfo& dataInfo, const Point& point);
 
+    static void EdgeAntialise(uint8_t** buffer, TransformDataInfo& info, const TransformDataInfo& dataInfo);
+
     void FillArea(BufferInfo& gfxDstBuffer, const Rect& rect, const Rect& mask,
                   bool isTransparent, const ColorType* colorBuf);
 };
