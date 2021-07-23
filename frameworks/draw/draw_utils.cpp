@@ -1557,6 +1557,54 @@ BottomHalf:
     DrawTriangleTransformPart(gfxDstBuffer, part);
 }
 
+void DrawUtils::EdgeAntialise(uint8_t** buffer, TransformDataInfo& info, const TransformDataInfo& dataInfo)
+{
+    if (buffer == nullptr) {
+        return;
+    }
+    int16_t offset = 2; // 2 : offset
+    uint16_t width = dataInfo.header.width;
+    uint16_t height = dataInfo.header.height;
+    int16_t diff = 0;
+    if (dataInfo.pxSize > FONT_WEIGHT_8) {
+        width += offset;
+        height += offset;
+        diff = offset * dataInfo.pxSize / FONT_WEIGHT_8;
+    } else {
+        width += offset * FONT_WEIGHT_8 / dataInfo.pxSize;
+        height += offset;
+        diff = offset;
+    }
+    uint16_t widthInByte = width * dataInfo.pxSize / FONT_WEIGHT_8;
+    if ((width * dataInfo.pxSize) % FONT_WEIGHT_8 != 0) {
+        widthInByte++;
+    }
+    *buffer = static_cast<uint8_t*>(UIMalloc(widthInByte * height));
+    if (*buffer == nullptr) {
+        return;
+    }
+    if (memset_s(*buffer, widthInByte * height, 0, widthInByte * height) != EOK) {
+        UIFree(static_cast<void*>(*buffer));
+        *buffer = nullptr;
+        return;
+    }
+    uint8_t* tmp = *buffer;
+    uint8_t* data = const_cast<uint8_t*>(dataInfo.data);
+    tmp += widthInByte * offset / 2 + diff / 2; // 2: half
+    for (int i = 0; i < dataInfo.header.height; ++i) {
+        if (memcpy_s(tmp, widthInByte - diff, data, widthInByte - diff) != EOK) {
+            UIFree(static_cast<void*>(*buffer));
+            *buffer = nullptr;
+            return;
+        }
+        tmp += widthInByte;
+        data  += widthInByte - diff;
+    }
+    info = TransformDataInfo{ImageHeader{dataInfo.header.colorMode, dataInfo.header.version,
+                             dataInfo.header.compressMode, dataInfo.header.reserved, width, height}, *buffer,
+                             dataInfo.pxSize, dataInfo.blurLevel, dataInfo.algorithm};
+}
+
 void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
                               const Rect& mask,
                               const Point& position,
@@ -1568,6 +1616,19 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     if (opaScale == OPA_TRANSPARENT) {
         return;
     }
+    uint8_t* newBuffer = nullptr;
+    TransformDataInfo newDataInfo;
+    if ((transMap.GetTransMapRect().GetWidth() == dataInfo.header.width) &&
+        (transMap.GetTransMapRect().GetHeight() == dataInfo.header.height)) {
+        EdgeAntialise(&newBuffer, newDataInfo, dataInfo);
+        if (newBuffer == nullptr) {
+            return;
+        }
+        TransformMap& newTransMap = const_cast<TransformMap&>(transMap);
+        newTransMap.Resize(newDataInfo.header.width, newDataInfo.header.height);
+    } else {
+        newDataInfo = dataInfo;
+    }
     Rect trans = transMap.GetBoxRect();
     trans.SetX(trans.GetX() + position.x);
     trans.SetY(trans.GetY() + position.y);
@@ -1576,7 +1637,7 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     }
 
     TriangleTransformDataInfo triangleInfo{
-        dataInfo,
+        newDataInfo,
     };
     Polygon polygon = transMap.GetPolygon();
     Point p1;
@@ -1614,6 +1675,10 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     triangleInfo.p3 = p4;
     if ((triangleInfo.p1.y <= mask.GetBottom()) && (triangleInfo.p3.y >= mask.GetTop())) {
         DrawTriangleTransform(gfxDstBuffer, mask, position, color, opaScale, transMap, triangleInfo);
+    }
+    if (newBuffer != nullptr) {
+        UIFree(static_cast<void*>(newBuffer));
+        newBuffer = nullptr;
     }
 }
 
