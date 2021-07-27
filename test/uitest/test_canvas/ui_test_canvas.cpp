@@ -91,12 +91,13 @@ const UIView* UITestCanvas::GetTestView()
     return container_;
 }
 
-void UITestCanvas::CreateTitleLabel(const char* title)
+void UITestCanvas::CreateTitleLabel(const char* title, const char* id)
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, Screen::GetInstance().GetWidth(), TITLE_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + 8; // 8: gap
 }
@@ -118,7 +119,7 @@ void UITestCanvas::UIKitCanvasTestDrawLine001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制直线");
+    CreateTitleLabel("绘制直线", UI_TEST_CANVAS_DRAW_LINE_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
     Paint paint;
     // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
@@ -130,7 +131,7 @@ void UITestCanvas::UIKitCanvasTestDrawLine002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制直线");
+    CreateTitleLabel("绘制直线", UI_TEST_CANVAS_DRAW_LINE_LABEL_ID_02);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -144,7 +145,7 @@ void UITestCanvas::UIKitCanvasTestDrawCurve001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制曲线");
+    CreateTitleLabel("绘制曲线", UI_TEST_CANVAS_DRAW_CURVE_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -157,7 +158,7 @@ void UITestCanvas::UIKitCanvasTestDrawCurve002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制曲线");
+    CreateTitleLabel("绘制曲线", UI_TEST_CANVAS_DRAW_CURVE_LABEL_ID_02);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -170,7 +171,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("矩形填充");
+    CreateTitleLabel("矩形填充", UI_TEST_CANVAS_DRAW_RECT_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -186,7 +187,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("矩形描边");
+    CreateTitleLabel("矩形描边", UI_TEST_CANVAS_DRAW_RECT_LABEL_ID_02);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -201,7 +202,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect003()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("矩形填充 + 描边");
+    CreateTitleLabel("矩形填充 + 描边", UI_TEST_CANVAS_DRAW_RECT_LABEL_ID_03);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -217,7 +218,7 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("圆形填充");
+    CreateTitleLabel("圆形填充", UI_TEST_CANVAS_DRAW_CIRCLE_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -235,7 +236,7 @@ void UITestCanvas::UIKitCanvasTestDrawCircle002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("圆形描边");
+    CreateTitleLabel("圆形描边", UI_TEST_CANVAS_DRAW_CIRCLE_LABEL_ID_02);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -252,7 +253,7 @@ void UITestCanvas::UIKitCanvasTestDrawCircle003()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("圆形填充 + 描边");
+    CreateTitleLabel("圆形填充 + 描边", UI_TEST_CANVAS_DRAW_CIRCLE_LABEL_ID_03);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -270,7 +271,7 @@ void UITestCanvas::UIKitCanvasTestDrawArc001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制弧线");
+    CreateTitleLabel("绘制弧线", UI_TEST_CANVAS_DRAW_ARC_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -286,7 +287,7 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制图片");
+    CreateTitleLabel("绘制图片", UI_TEST_CANVAS_DRAW_IMAGE_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -300,7 +301,7 @@ void UITestCanvas::UIKitCanvasTestDrawLabel001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制文字");
+    CreateTitleLabel("绘制文字", UI_TEST_CANVAS_DRAW_LABEL_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -320,7 +321,7 @@ void UITestCanvas::UIKitCanvasTestDrawSector001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("扇形填充");
+    CreateTitleLabel("扇形填充", UI_TEST_CANVAS_DRAW_SECTOR_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -335,7 +336,7 @@ void UITestCanvas::UIKitCanvasTestClear001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("清空画布，无显示");
+    CreateTitleLabel("清空画布，无显示", UI_TEST_CANVAS_CLEAR_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -349,7 +350,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo，无显示");
+    CreateTitleLabel("moveTo，无显示", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_01);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -364,7 +365,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("lineTo，无显示");
+    CreateTitleLabel("lineTo，无显示", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_02);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -378,7 +379,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath003()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("arc");
+    CreateTitleLabel("arc", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_03);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -392,7 +393,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath004()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("rect");
+    CreateTitleLabel("rect", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_04);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -406,7 +407,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath005()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("closePath，无显示");
+    CreateTitleLabel("closePath，无显示", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_05);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -420,7 +421,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath006()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo");
+    CreateTitleLabel("moveTo + lineTo", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_06);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -435,7 +436,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath007()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + arc");
+    CreateTitleLabel("moveTo + arc", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_07);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -450,7 +451,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath008()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + rect");
+    CreateTitleLabel("moveTo + rect", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_08);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -465,7 +466,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath009()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + closePath");
+    CreateTitleLabel("moveTo + closePath", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_09);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -482,7 +483,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath010()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("闭合路径调用closePath");
+    CreateTitleLabel("闭合路径调用closePath", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_10);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -500,7 +501,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath011()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo + moveTo + lineTo");
+    CreateTitleLabel("moveTo + lineTo + moveTo + lineTo", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_11);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -517,7 +518,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath012()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo + arc");
+    CreateTitleLabel("moveTo + lineTo + arc", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_12);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -533,7 +534,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath013()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo + arc + closePath");
+    CreateTitleLabel("moveTo + lineTo + arc + closePath", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_13);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -550,7 +551,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath014()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo + rect");
+    CreateTitleLabel("moveTo + lineTo + rect", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_14);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -566,7 +567,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath015()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo + rect + closePath");
+    CreateTitleLabel("moveTo + lineTo + rect + closePath", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_15);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -583,7 +584,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath016()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("rect + lineTo");
+    CreateTitleLabel("rect + lineTo", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_16);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -598,7 +599,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath017()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("rect + moveTo + lineTo");
+    CreateTitleLabel("rect + moveTo + lineTo", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_17);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -614,7 +615,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath018()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("rect + arc");
+    CreateTitleLabel("rect + arc", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_18);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -629,7 +630,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath019()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("arc + rect");
+    CreateTitleLabel("arc + rect", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_19);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -644,7 +645,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath020()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + arc + closePath + lineTo");
+    CreateTitleLabel("moveTo + arc + closePath + lineTo", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_20);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -661,7 +662,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath021()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("不调用beginPath，无显示");
+    CreateTitleLabel("不调用beginPath，无显示", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_21);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -677,7 +678,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath022()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("不调用drawPath，无显示");
+    CreateTitleLabel("不调用drawPath，无显示", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_22);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -693,7 +694,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath023()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + lineTo + closePath");
+    CreateTitleLabel("moveTo + lineTo + closePath", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_23);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -709,7 +710,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath024()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("moveTo + closePath，无显示");
+    CreateTitleLabel("moveTo + closePath，无显示", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_24);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -724,7 +725,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath025()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("多次drawPath");
+    CreateTitleLabel("多次drawPath", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_25);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -743,7 +744,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath026()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("arc起止角度互换");
+    CreateTitleLabel("arc起止角度互换", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_26);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -762,7 +763,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath027()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("arc扫描范围超过360度 ");
+    CreateTitleLabel("arc扫描范围超过360度 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_27);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -779,7 +780,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath028()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("创建两条路径，只绘制后一条 ");
+    CreateTitleLabel("创建两条路径，只绘制后一条 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_28);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -799,7 +800,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath029()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制两条不同样式的路径 ");
+    CreateTitleLabel("绘制两条不同样式的路径 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_29);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -820,7 +821,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath030()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("同一条路径绘制100遍 ");
+    CreateTitleLabel("同一条路径绘制100遍 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_30);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -839,7 +840,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath031()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制直线超出canvas范围");
+    CreateTitleLabel("绘制直线超出canvas范围", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_31);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -855,7 +856,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath032()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制直线传入临界值 ");
+    CreateTitleLabel("绘制直线传入临界值 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_32);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -881,7 +882,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath033()
         return;
     }
 
-    CreateTitleLabel("绘制arc传入临界值 ");
+    CreateTitleLabel("绘制arc传入临界值 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_33);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -911,7 +912,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath034()
         return;
     }
 
-    CreateTitleLabel("绘制rect传入临界值 ");
+    CreateTitleLabel("绘制rect传入临界值 ", UI_TEST_CANVAS_DRAW_PATH_LABEL_ID_34);
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;

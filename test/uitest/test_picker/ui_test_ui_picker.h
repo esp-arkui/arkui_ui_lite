@@ -25,6 +25,16 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_PICKER_UI_PICKER_ID_01 = "test_picker_ui_picker_01";
+constexpr char* UI_TEST_PICKER_UI_PICKER_ID_02 = "test_picker_ui_picker_02";
+constexpr char* UI_TEST_PICKER_UI_PICKER_ID_03 = "test_picker_ui_picker_03";
+constexpr char* UI_TEST_PICKER_POSITIONING_BTN_ID_01 = "test_picker_positioning_01";
+constexpr char* UI_TEST_PICKER_LEFT_TO_RIGHT_BTN_ID_01 = "test_picker_left_to_right_01";
+constexpr char* UI_TEST_PICKER_RIGHT_TO_LEFT_BTN_ID_01 = "test_picker_right_to_left_01";
+constexpr char* UI_TEST_PICKER_LOOP_ON_BTN_ID_01 = "test_picker_loop_on_01";
+constexpr char* UI_TEST_PICKER_LOOP_OFF_BTN_ID_01 = "test_picker_loop_off_01";
+}
 class UITestUIPicker : public UITest, UIView::OnClickListener, UIPicker::SelectedListener,
     UITimePicker::SelectedListener {
 public:
@@ -37,13 +47,13 @@ public:
     void OnPickerStoped(UIPicker& picker) override;
     void OnTimePickerStoped(UITimePicker& picker) override;
     void CreatButtons();
-    void UIKit_Picker_Test_Base_001();
-    void UIKit_Picker_Test_Base_002();
-    void UIKit_Picker_Test_Time_Picker_001();
+    void UIKitPickerTestBase001();
+    void UIKitPickerTestBase002();
+    void UIKitPickerTestTimePicker001();
 
 private:
     void SetLastPos(UIView* view);
-    void SetUpButton(UILabelButton* btn, const char* title);
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr);
     UILabelButton* setLoopBtn_ = nullptr;
     UILabelButton* setLoopOffBtn_ = nullptr;
     UILabelButton* setSelectBtn_ = nullptr;

@@ -47,21 +47,22 @@ void UITestListLayout::TearDown()
 
 const UIView* UITestListLayout::GetTestView()
 {
-    UIKit_List_Vertical_Add_Test_Auto_Size_001();
-    UIKit_List_Vertical_Remove_Test_Auto_Size_001();
-    UIKit_List_Vertical_Remove_Test_Auto_Size_002();
-    UIKit_List_Hor_Add_Test_Auto_Size_001();
-    UIKit_List_Hor_Remove_Test_Auto_Size_001();
-    UIKit_List_Hor_Remove_Test_Auto_Size_002();
+    UIKitListVerticalAddTestAutoSize001();
+    UIKitListVerticalRemoveTestAutoSize001();
+    UIKitListVerticalRemoveTestAutoSize002();
+    UIKitListHorAddTestAutoSize001();
+    UIKitListHorRemoveTestAutoSize001();
+    UIKitListHorRemoveTestAutoSize002();
     return container_;
 }
 
-void UITestListLayout::UIKit_List_Vertical_Add_Test_Auto_Size_001()
+void UITestListLayout::UIKitListVerticalAddTestAutoSize001()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UILIst高度自适应 Add Insert");
+    label->SetViewId(UI_TEST_LIST_LAYOUT_ADD_INSERT_LABEL_01);
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
 
@@ -89,7 +90,7 @@ void UITestListLayout::UIKit_List_Vertical_Add_Test_Auto_Size_001()
     if (list->GetDirection() == ListLayout::VERTICAL) {
         listDirect_->SetText("VERTICAL");
     } else {
-        listDirect_->SetText("HROIZONTAL");
+        listDirect_->SetText("HORIZONTAL");
     }
 
     container_->Add(listDirect_);
@@ -97,12 +98,13 @@ void UITestListLayout::UIKit_List_Vertical_Add_Test_Auto_Size_001()
     SetLastPos(list);
 }
 
-void UITestListLayout::UIKit_List_Vertical_Remove_Test_Auto_Size_001()
+void UITestListLayout::UIKitListVerticalRemoveTestAutoSize001()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UILIst高度自适应 Remove");
+    label->SetViewId(UI_TEST_LIST_LAYOUT_REMOVE_LABEL_01);
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
 
@@ -124,7 +126,7 @@ void UITestListLayout::UIKit_List_Vertical_Remove_Test_Auto_Size_001()
     SetLastPos(list);
 }
 
-void UITestListLayout::UIKit_List_Vertical_Remove_Test_Auto_Size_002()
+void UITestListLayout::UIKitListVerticalRemoveTestAutoSize002()
 {
     if (container_ == nullptr) {
         return;
@@ -151,12 +153,13 @@ void UITestListLayout::UIKit_List_Vertical_Remove_Test_Auto_Size_002()
     SetLastPos(list);
 }
 
-void UITestListLayout::UIKit_List_Hor_Add_Test_Auto_Size_001()
+void UITestListLayout::UIKitListHorAddTestAutoSize001()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UILIst宽度自适应 Add Insert");
+    label->SetViewId(UI_TEST_LIST_LAYOUT_REMOVE_LABEL_01);
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
 
@@ -164,7 +167,7 @@ void UITestListLayout::UIKit_List_Hor_Add_Test_Auto_Size_001()
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
 
     list->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, label->GetY() + TITLE_LABEL_DEFAULT_HEIGHT + g_gap, 0,
-                      Screen::GetInstance().GetHeight());
+                      Screen::GetInstance().GetHeight() / 2); // 2 :half of screen height
     container_->Add(list);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -177,12 +180,13 @@ void UITestListLayout::UIKit_List_Hor_Add_Test_Auto_Size_001()
     SetLastPos(list);
 }
 
-void UITestListLayout::UIKit_List_Hor_Remove_Test_Auto_Size_001()
+void UITestListLayout::UIKitListHorRemoveTestAutoSize001()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UILIst宽度自适应 Remove");
+    label->SetViewId(UI_TEST_LIST_LAYOUT_REMOVE_LABEL_02);
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
 
@@ -190,7 +194,7 @@ void UITestListLayout::UIKit_List_Hor_Remove_Test_Auto_Size_001()
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
 
     list->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, label->GetY() + TITLE_LABEL_DEFAULT_HEIGHT + g_gap, 0,
-                      Screen::GetInstance().GetHeight());
+                      Screen::GetInstance().GetHeight() / 2); // 2 :half of screen height
     container_->Add(list);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -204,7 +208,7 @@ void UITestListLayout::UIKit_List_Hor_Remove_Test_Auto_Size_001()
     SetLastPos(list);
 }
 
-void UITestListLayout::UIKit_List_Hor_Remove_Test_Auto_Size_002()
+void UITestListLayout::UIKitListHorRemoveTestAutoSize002()
 {
     if (container_ == nullptr) {
         return;

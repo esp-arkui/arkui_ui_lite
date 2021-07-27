@@ -86,31 +86,33 @@ void UITestBoxProgress::TearDown()
 
 const UIView* UITestBoxProgress::GetTestView()
 {
-    UIKit_BoxProgress_Test_UIBoxProgress_001();
-    UIKit_BoxProgress_Test_SetRange_002();
-    UIKit_BoxProgress_Test_SetValue_003();
-    UIKit_BoxProgress_Test_SetImage_004();
-    UIKit_BoxProgress_Test_SetStyle_005();
-    UIKit_BoxProgress_Test_GetStyle_006();
-    UIKit_BoxProgress_Test_SetCapType_007();
-    UIKit_BoxProgress_Test_SetDirection_008();
-    UIKit_BoxProgress_Test_EnableBackground_009();
-    UIKit_BoxProgress_Test_SetStep_010();
-    UIKit_BoxProgress_Test_SetValidSize_011();
-    UIKit_BoxProgress_Test_SetBorderAndPadding_012();
+    UIKitBoxProgressTestUIBoxProgress001();
+    UIKitBoxProgressTestSetRange002();
+    UIKitBoxProgressTestSetValue003();
+    UIKitBoxProgressTestSetImage004();
+    UIKitBoxProgressTestSetStyle005();
+    UIKitBoxProgressTestGetStyle006();
+    UIKitBoxProgressTestSetCapType007();
+    UIKitBoxProgressTestSetDirection008();
+    UIKitBoxProgressTestEnableBackground009();
+    UIKitBoxProgressTestSetStep010();
+    UIKitBoxProgressTestSetValidSize011();
+    UIKitBoxProgressTestSetBorderAndPadding012();
 
     return container_;
 }
 
-void UITestBoxProgress::SetUpLabel(const char* title, int16_t x, int16_t y) const
+void UITestBoxProgress::SetUpLabel(const char* title, int16_t x, int16_t y, const  char* id) const
 {
     UILabel* label = new UILabel();
     scroll_->Add(label);
     label->SetPosition(x, y, 288, 30); // 288: width; 30: height
     label->SetText(title);
+    label->SetViewId(id);
     label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
 }
-void UITestBoxProgress::SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y)
+void UITestBoxProgress::SetUpButton(UILabelButton* btn, const char* title,
+    int16_t x, int16_t y, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -118,6 +120,7 @@ void UITestBoxProgress::SetUpButton(UILabelButton* btn, const char* title, int16
     scroll_->Add(btn);
     btn->SetPosition(x, y, BUTTON_WIDHT2, BUTTON_HEIGHT2);
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);
@@ -129,17 +132,17 @@ void UITestBoxProgress::SetUpButton(UILabelButton* btn, const char* title, int16
     scroll_->Invalidate();
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_UIBoxProgress_001()
+void UITestBoxProgress::UIKitBoxProgressTestUIBoxProgress001()
 {
     resetBtn_ = new UILabelButton();
     positionX_ = VIEW_DISTANCE_TO_LEFT_SIDE2;
     positionY_ = 0;
     SetUpLabel("创建条形进度条：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(resetBtn_, "重置", positionX_, positionY_);
+    SetUpButton(resetBtn_, "重置", positionX_, positionY_, "test_box_progress_reset_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetRange_002()
+void UITestBoxProgress::UIKitBoxProgressTestSetRange002()
 {
     incMinProgressBtn_ = new UILabelButton();
     decMinProgressBtn_ = new UILabelButton();
@@ -149,17 +152,21 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_SetRange_002()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条范围：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(incMinProgressBtn_, "下限+", positionX_, positionY_);
+    SetUpButton(incMinProgressBtn_, "下限+", positionX_, positionY_,
+        "test_box_progress_inc_min_progress_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decMinProgressBtn_, "下限-", positionX_, positionY_);
+    SetUpButton(decMinProgressBtn_, "下限-", positionX_, positionY_,
+        "test_box_progress_dec_min_progress_button");
     positionX_ = VIEW_DISTANCE_TO_LEFT_SIDE2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE;
-    SetUpButton(incMaxProgressBtn_, "上限+", positionX_, positionY_);
+    SetUpButton(incMaxProgressBtn_, "上限+", positionX_, positionY_,
+        "test_box_progress_inc_max_progress_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decMaxProgressBtn_, "上限-", positionX_, positionY_);
+    SetUpButton(decMaxProgressBtn_, "上限-", positionX_, positionY_,
+        "test_box_progress_dec_max_progress_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetValue_003()
+void UITestBoxProgress::UIKitBoxProgressTestSetValue003()
 {
     incProgressBtn_ = new UILabelButton();
     decProgressBtn_ = new UILabelButton();
@@ -167,45 +174,52 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_SetValue_003()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条当前值：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(incProgressBtn_, "进度+", positionX_, positionY_);
+    SetUpButton(incProgressBtn_, "进度+", positionX_, positionY_,
+        "test_box_progress_inc_progress_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decProgressBtn_, "进度-", positionX_, positionY_);
+    SetUpButton(decProgressBtn_, "进度-", positionX_, positionY_,
+        "test_box_progress_dec_progress_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetImage_004()
+void UITestBoxProgress::UIKitBoxProgressTestSetImage004()
 {
     imageBtn_ = new UILabelButton();
     noImageBtn_ = new UILabelButton();
     positionX_ = VIEW_DISTANCE_TO_LEFT_SIDE2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
-    SetUpLabel("设置条形进度条图片：", positionX_, positionY_);
+    SetUpLabel("设置条形进度条图片：", positionX_, positionY_,
+        "test_box_progress_image_label");
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(imageBtn_, "设置图片", positionX_, positionY_);
+    SetUpButton(imageBtn_, "设置图片", positionX_, positionY_,
+        "test_box_progress_set_image_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(noImageBtn_, "取消图片", positionX_, positionY_);
+    SetUpButton(noImageBtn_, "取消图片", positionX_, positionY_,
+        "test_box_progress_no_image_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetStyle_005()
+void UITestBoxProgress::UIKitBoxProgressTestSetStyle005()
 {
     setStyleBtn_ = new UILabelButton();
     positionX_ = VIEW_DISTANCE_TO_LEFT_SIDE2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条样式:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(setStyleBtn_, "设置样式", positionX_, positionY_);
+    SetUpButton(setStyleBtn_, "设置样式", positionX_, positionY_,
+        "test_box_progress_set_style_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_GetStyle_006()
+void UITestBoxProgress::UIKitBoxProgressTestGetStyle006()
 {
     getStyleBtn_ = new UILabelButton();
     positionX_ = VIEW_DISTANCE_TO_LEFT_SIDE2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条样式:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(getStyleBtn_, "设置样式", positionX_, positionY_);
+    SetUpButton(getStyleBtn_, "设置样式", positionX_, positionY_,
+        "test_box_progress_get_style_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetCapType_007()
+void UITestBoxProgress::UIKitBoxProgressTestSetCapType007()
 {
     roundCapBtn_ = new UILabelButton();
     noneCapBtn_ = new UILabelButton();
@@ -213,12 +227,14 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_SetCapType_007()
     positionY_ = 0;
     SetUpLabel("设置条形进度条端点：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(roundCapBtn_, "圆形端点", positionX_, positionY_);
+    SetUpButton(roundCapBtn_, "圆形端点", positionX_, positionY_,
+        "test_box_progress_round_cap_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(noneCapBtn_, "方形端点", positionX_, positionY_);
+    SetUpButton(noneCapBtn_, "方形端点", positionX_, positionY_,
+        "test_box_progress_none_cap_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetDirection_008()
+void UITestBoxProgress::UIKitBoxProgressTestSetDirection008()
 {
     dirL2RBtn_ = new UILabelButton();
     dirR2LBtn_ = new UILabelButton();
@@ -228,17 +244,21 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_SetDirection_008()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条方向：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(dirL2RBtn_, "从左到右", positionX_, positionY_);
+    SetUpButton(dirL2RBtn_, "从左到右", positionX_, positionY_,
+        "test_box_progress_l2r_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(dirR2LBtn_, "从右到左", positionX_, positionY_);
+    SetUpButton(dirR2LBtn_, "从右到左", positionX_, positionY_,
+        "test_box_progress_r2l_button");
     positionX_ = DELTA_X_COORDINATE_2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE;
-    SetUpButton(dirT2BBtn_, "从上到下", positionX_, positionY_);
+    SetUpButton(dirT2BBtn_, "从上到下", positionX_, positionY_,
+        "test_box_progress_t2b_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(dirB2TBtn_, "从下到上", positionX_, positionY_);
+    SetUpButton(dirB2TBtn_, "从下到上", positionX_, positionY_,
+        "test_box_progress_b2t_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_EnableBackground_009()
+void UITestBoxProgress::UIKitBoxProgressTestEnableBackground009()
 {
     enableBgBtn_ = new UILabelButton();
     disableBgBtn_ = new UILabelButton();
@@ -246,22 +266,25 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_EnableBackground_009()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条背景：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(enableBgBtn_, "设置背景", positionX_, positionY_);
+    SetUpButton(enableBgBtn_, "设置背景", positionX_, positionY_,
+        "test_box_progress_enable_background_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(disableBgBtn_, "隐藏背景", positionX_, positionY_);
+    SetUpButton(disableBgBtn_, "隐藏背景", positionX_, positionY_,
+        "test_box_progress_disable_background_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetStep_010()
+void UITestBoxProgress::UIKitBoxProgressTestSetStep010()
 {
     stepBtn_ = new UILabelButton();
     positionX_ = DELTA_X_COORDINATE_2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置条形进度条步长：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(stepBtn_, "步长+", positionX_, positionY_);
+    SetUpButton(stepBtn_, "步长+", positionX_, positionY_,
+        "test_box_progress_set_step_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetValidSize_011()
+void UITestBoxProgress::UIKitBoxProgressTestSetValidSize011()
 {
     incWidthBtn_ = new UILabelButton();
     incHeightBtn_ = new UILabelButton();
@@ -277,12 +300,14 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_SetValidSize_011()
     SetUpButton(incWidthBtn_, "box宽度+", positionX_, positionY_);
     positionX_ = DELTA_X_COORDINATE_2;
     positionY_ += LABEL_HEIGHT + DELTA_Y_COORDINATE_2;
-    SetUpButton(decHeightBtn_, "box高度-", positionX_, positionY_);
+    SetUpButton(decHeightBtn_, "box高度-", positionX_, positionY_,
+        "test_box_progress_dec_height_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE_2;
-    SetUpButton(decWidthBtn_, "box宽度-", positionX_, positionY_);
+    SetUpButton(decWidthBtn_, "box宽度-", positionX_, positionY_,
+        "test_box_progress_dec_width_button");
 }
 
-void UITestBoxProgress::UIKit_BoxProgress_Test_SetBorderAndPadding_012()
+void UITestBoxProgress::UIKitBoxProgressTestSetBorderAndPadding012()
 {
     borderIncBtn_ = new UILabelButton();
     borderDecBtn_ = new UILabelButton();
@@ -294,19 +319,25 @@ void UITestBoxProgress::UIKit_BoxProgress_Test_SetBorderAndPadding_012()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置边宽和内边距:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(borderIncBtn_, "边宽+", positionX_, positionY_);
+    SetUpButton(borderIncBtn_, "边宽+", positionX_, positionY_,
+        "test_box_progress_border_inc_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE_2;
-    SetUpButton(borderDecBtn_, "边宽-", positionX_, positionY_);
+    SetUpButton(borderDecBtn_, "边宽-", positionX_, positionY_,
+        "test_box_progress_border_dec_button");
     positionX_ = DELTA_X_COORDINATE_2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
-    SetUpButton(paddingLeftIncBtn_, "左内边距+", positionX_, positionY_);
+    SetUpButton(paddingLeftIncBtn_, "左内边距+", positionX_, positionY_,
+        "test_box_progress_padding_left_inc_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE_2;
-    SetUpButton(paddingRightIncBtn_, "右内边距+", positionX_, positionY_);
+    SetUpButton(paddingRightIncBtn_, "右内边距+", positionX_, positionY_,
+        "test_box_progress_padding_right_inc_button");
     positionX_ = DELTA_X_COORDINATE_2;
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
-    SetUpButton(paddingTopIncBtn_, "上内边距+", positionX_, positionY_);
+    SetUpButton(paddingTopIncBtn_, "上内边距+", positionX_, positionY_,
+        "test_box_progress_padding_top_inc_button");
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE_2;
-    SetUpButton(paddingBottomIncBtn_, "下内边距+", positionX_, positionY_);
+    SetUpButton(paddingBottomIncBtn_, "下内边距+", positionX_, positionY_,
+        "test_box_progress_padding_bottom_inc_button");
 }
 
 bool UITestBoxProgress::OnClick(UIView& view, const ClickEvent& event)

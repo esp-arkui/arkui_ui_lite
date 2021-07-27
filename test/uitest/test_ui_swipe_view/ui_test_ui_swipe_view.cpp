@@ -62,23 +62,21 @@ void UITestUISwipeView::TearDown()
 
 const UIView* UITestUISwipeView::GetTestView()
 {
-    UIKit_Swipe_View_Test_Horizontal_001();
-    UIKit_Swipe_View_Test_Horizontal_002();
-    UIKit_Swipe_View_Test_Horizontal_003();
-    UIKit_Swipe_View_Test_Align_001(UISwipeView::ALIGN_LEFT);
-    UIKit_Swipe_View_Test_Align_001(UISwipeView::ALIGN_CENTER);
-    UIKit_Swipe_View_Test_Align_001(UISwipeView::ALIGN_RIGHT);
+    UIKitSwipeViewTestHorizontal001();
+    UIKitSwipeViewTestHorizontal002();
+    UIKitSwipeViewTestHorizontal003();
+    UIKitSwipeViewTestAlign001(UISwipeView::ALIGN_LEFT);
+    UIKitSwipeViewTestAlign001(UISwipeView::ALIGN_CENTER);
+    UIKitSwipeViewTestAlign001(UISwipeView::ALIGN_RIGHT);
 
-    UIKit_Swipe_View_Test_Ver_001();
-    UIKit_Swipe_View_Test_Ver_002();
-    UIKit_Swipe_View_Test_Remove_001();
-
-    UIKit_Swipe_View_Test_SetCurrentPage();
-
+    UIKitSwipeViewTestVer001();
+    UIKitSwipeViewTestVer002();
+    UIKitSwipeViewTestRemove001();
+    UIKitSwipeViewTestSetCurrentPage();
     return container_;
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_001()
+void UITestUISwipeView::UIKitSwipeViewTestHorizontal001()
 {
     if (container_ == nullptr) {
         return;
@@ -96,6 +94,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_001()
     swipe->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     swipe->SetPosition(positionX_, positionY_, g_swipeW, g_swipeHorH);
     swipe->SetBlankSize(100); // 100: is blank size
+    swipe->SetViewId("test_ui_scroll_view_horizontal_swipe_id_01");
     container_->Add(swipe);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -109,7 +108,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_001()
     positionY_ += g_swipeHorH;
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_002()
+void UITestUISwipeView::UIKitSwipeViewTestHorizontal002()
 {
     if (container_ == nullptr) {
         return;
@@ -142,12 +141,13 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_002()
     positionY_ += g_swipeHorH;
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_003()
+void UITestUISwipeView::UIKitSwipeViewTestHorizontal003()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UISwipeView循环水平滑动");
+    label->SetViewId("test_ui_scroll_view_horizontal_label_id_02");
     container_->Add(label);
     positionY_ += g_deltaCoordinateY;
     label->SetPosition(positionX_, positionY_);
@@ -159,6 +159,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_003()
     swipe->SetPosition(positionX_, positionY_, g_swipeW, g_swipeHorH);
     swipe->SetLoopState(true);
     swipe->SetAnimatorTime(100); // 100: mean animator drag time(ms)
+    swipe->SetViewId("test_ui_scroll_view_horizontal_swipe_id_02");
     container_->Add(swipe);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -176,7 +177,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Horizontal_003()
     positionY_ += g_swipeHorH;
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Ver_001()
+void UITestUISwipeView::UIKitSwipeViewTestVer001()
 {
     if (container_ == nullptr) {
         return;
@@ -193,6 +194,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Ver_001()
     swipe->SetIntercept(true);
     swipe->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     swipe->SetPosition(positionX_, positionY_, g_swipeH, g_swipeW);
+    swipe->SetViewId("test_ui_scroll_view_ver_swipe_id_01");
     container_->Add(swipe);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonH, g_buttonW);
@@ -206,13 +208,14 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Ver_001()
     positionY_ += g_swipeW + g_deltaCoordinateY;
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Ver_002()
+void UITestUISwipeView::UIKitSwipeViewTestVer002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UILabel* label = GetTitleLabel("UISwipeView循环垂直滑动");
+    label->SetViewId("test_ui_scroll_view_ver_label_id_02");
     container_->Add(label);
     label->SetPosition(positionX_, positionY_);
     positionY_ += g_deltaCoordinateY2;
@@ -223,6 +226,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Ver_002()
     swipe->SetPosition(positionX_, positionY_, g_swipeH, g_swipeW);
     swipe->SetLoopState(true);
     swipe->SetAnimatorTime(100); // 100: is animator drag time(ms)
+    swipe->SetViewId("test_ui_scroll_view_ver_swipe_id_02");
     container_->Add(swipe);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonH, g_buttonW);
@@ -240,7 +244,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Ver_002()
     positionY_ += g_swipeW;
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Remove_001()
+void UITestUISwipeView::UIKitSwipeViewTestRemove001()
 {
     if (container_ == nullptr) {
         return;
@@ -280,17 +284,17 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Remove_001()
     }
 
     positionX_ = positionX_ + swipe->GetWidth() + 20; // 20: is interval between button and swipe
-    SetUpButton(addBtnInHead_, "增加至头部 ");
-    SetUpButton(addBtnInTail_, "增加至尾部 ");
-    SetUpButton(addBtnInMid_, "增加至头部后 ");
-    SetUpButton(removeHeadBtn_, "删除头部节点 ");
-    SetUpButton(removeMidBtn_, "删除中间节点 ");
-    SetUpButton(removeAllBtn_, "删除全部节点 ");
+    SetUpButton(addBtnInHead_, "增加至头部 ", "test_ui_swipe_view_add_head_btn_id");
+    SetUpButton(addBtnInTail_, "增加至尾部 ", "test_ui_swipe_view_add_tail_btn_id");
+    SetUpButton(addBtnInMid_, "增加至头部后 ", "test_ui_swipe_view_add_mid_btn_id");
+    SetUpButton(removeHeadBtn_, "删除头部节点 ", "test_ui_swipe_view_remove_head_btn_id");
+    SetUpButton(removeMidBtn_, "删除中间节点 ", "test_ui_swipe_view_remove_mid_btn_id");
+    SetUpButton(removeAllBtn_, "删除全部节点 ", "test_ui_swipe_view_remove_all_btn_id");
 
     SetLastPos(swipe);
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_Align_001(UISwipeView::AlignMode alignMode)
+void UITestUISwipeView::UIKitSwipeViewTestAlign001(UISwipeView::AlignMode alignMode)
 {
     static uint8_t divNum = 4;
     if (container_ == nullptr) {
@@ -303,10 +307,13 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Align_001(UISwipeView::AlignMode a
     UILabel* label;
     if (alignMode == UISwipeView::ALIGN_LEFT) {
         label = GetTitleLabel(leftTitle);
+        label->SetViewId("test_ui_swipe_view_align_left_label_id");
     } else if (alignMode == UISwipeView::ALIGN_RIGHT) {
         label = GetTitleLabel(rightTitle);
+        label->SetViewId("test_ui_swipe_view_align_right_label_id");
     } else {
         label = GetTitleLabel(centerTitle);
+        label->SetViewId("test_ui_swipe_view_align_center_label_id");
     }
 
     container_->Add(label);
@@ -349,7 +356,7 @@ void UITestUISwipeView::UIKit_Swipe_View_Test_Align_001(UISwipeView::AlignMode a
     SetLastPos(swipe);
 }
 
-void UITestUISwipeView::UIKit_Swipe_View_Test_SetCurrentPage()
+void UITestUISwipeView::UIKitSwipeViewTestSetCurrentPage()
 {
     if (container_ == nullptr) {
         return;
@@ -446,7 +453,7 @@ bool UITestUISwipeView::OnClick(UIView& view, const ClickEvent& event)
     return true;
 }
 
-void UITestUISwipeView::SetUpButton(UILabelButton* btn, const char* title)
+void UITestUISwipeView::SetUpButton(UILabelButton* btn, const char* title, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -455,6 +462,7 @@ void UITestUISwipeView::SetUpButton(UILabelButton* btn, const char* title)
     btn->SetPosition(positionX_, positionY_, BUTTON_WIDHT2, BUTTON_HEIGHT2);
     positionY_ += btn->GetHeight() + 10; // 10: increase y-coordinate
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

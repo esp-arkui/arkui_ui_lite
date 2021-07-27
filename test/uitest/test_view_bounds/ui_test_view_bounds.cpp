@@ -117,6 +117,7 @@ void UITestViewBounds::UIKitViewBoundsSetState001()
 
     UIToggleButton* toggle = new UIToggleButton();
     group->Add(toggle);
+    toggle->SetViewId("test_view_bounds_toggle_button_id");
     toggle->SetWidth(50);  // 50: width
     toggle->SetHeight(50); // 50: height
     toggle->LayoutCenterOfParent();

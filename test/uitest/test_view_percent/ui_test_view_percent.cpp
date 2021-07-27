@@ -93,6 +93,7 @@ void UITestViewPercent::InitView()
     positionY_ += (TEXT_H + GAP);
 
     flexLayout_ = new FlexLayout();
+    flexLayout_->SetViewId("test_percent_flex_layout_id");
     container_->Add(flexLayout_);
     InitFlexLayout();
     positionY_ += flexLayout_->GetHeight() + GAP;
@@ -101,6 +102,7 @@ void UITestViewPercent::InitView()
     positionY_ += viewGroup->GetHeight() + GAP;
 
     GridLayout* gridLayout = new GridLayout();
+    gridLayout->SetViewId("test_percent_grid_layout_id");
     container_->Add(gridLayout);
     gridLayout->Resize(260, 60); // 260: width; 60: height
     gridLayout->SetLayoutDirection(LAYOUT_HOR);
@@ -109,7 +111,8 @@ void UITestViewPercent::InitView()
     gridLayout->LayoutLeftOfParent(Screen::GetInstance().GetWidth() / 2 - gridLayout->GetWidth() / 2);
     gridLayout->SetRows(1); // set gridlayout row as 1
     gridLayout->SetCols(3); // set gridlayout column as 3
-
+    BiggerBtn_->SetViewId("test_percent_bigger_id");
+    SmallerBtn_->SetViewId("test_percent_smaller_id");
     SetUpButton(*gridLayout, *resetfBtn_, "reset");
     SetUpButton(*gridLayout, *BiggerBtn_, "Bigger");
     SetUpButton(*gridLayout, *SmallerBtn_, "Smaller");

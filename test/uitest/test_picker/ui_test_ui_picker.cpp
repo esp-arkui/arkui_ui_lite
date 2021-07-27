@@ -71,9 +71,9 @@ void UITestUIPicker::TearDown()
 
 const UIView* UITestUIPicker::GetTestView()
 {
-    UIKit_Picker_Test_Base_001();
-    UIKit_Picker_Test_Base_002();
-    UIKit_Picker_Test_Time_Picker_001();
+    UIKitPickerTestBase001();
+    UIKitPickerTestBase002();
+    UIKitPickerTestTimePicker001();
     return container_;
 }
 
@@ -90,7 +90,7 @@ void UITestUIPicker::OnTimePickerStoped(UITimePicker& picker)
     selectTime_->Invalidate();
 }
 
-void UITestUIPicker::UIKit_Picker_Test_Base_001()
+void UITestUIPicker::UIKitPickerTestBase001()
 {
     if (container_ == nullptr) {
         return;
@@ -111,7 +111,7 @@ void UITestUIPicker::UIKit_Picker_Test_Base_001()
     picker1_->SetDirect(UITextLanguageDirect::TEXT_DIRECT_RTL);
     picker1_->SetValues(g_pickerRange, sizeof(g_pickerRange) / sizeof(g_pickerRange[0]));
     picker1_->RegisterSelectedListener(this);
-
+    picker1_->SetViewId(UI_TEST_PICKER_UI_PICKER_ID_01);
     positionX_ = picker1_->GetWidth();
     positionY_ = picker1_->GetY();
     CreatButtons();
@@ -122,11 +122,11 @@ void UITestUIPicker::UIKit_Picker_Test_Base_001()
     selectIndex_->SetPosition(positionX_ + 40, label->GetY() + g_blank); // 40: increase x-coordinate
     positionY_ += label->GetY() + g_blank;
     container_->Add(selectIndex_);
-    SetUpButton(setLoopBtn_, "开启循环 ");
-    SetUpButton(setLoopOffBtn_, "关闭循环 ");
-    SetUpButton(setSelectBtn_, "定位到第5个 ");
-    SetUpButton(setLeftToRightBtn_, "从左往右 ");
-    SetUpButton(setRightToLeftBtn_, "从右往左 ");
+    SetUpButton(setLoopBtn_, "开启循环 ", UI_TEST_PICKER_LOOP_ON_BTN_ID_01);
+    SetUpButton(setLoopOffBtn_, "关闭循环 ", UI_TEST_PICKER_LOOP_OFF_BTN_ID_01);
+    SetUpButton(setSelectBtn_, "定位到第5个 ", UI_TEST_PICKER_POSITIONING_BTN_ID_01);
+    SetUpButton(setLeftToRightBtn_, "从左往右 ", UI_TEST_PICKER_LEFT_TO_RIGHT_BTN_ID_01);
+    SetUpButton(setRightToLeftBtn_, "从右往左 ", UI_TEST_PICKER_RIGHT_TO_LEFT_BTN_ID_01);
     container_->Add(picker1_);
     SetLastPos(picker1_);
 }
@@ -150,7 +150,7 @@ void UITestUIPicker::CreatButtons()
     }
 }
 
-void UITestUIPicker::UIKit_Picker_Test_Base_002()
+void UITestUIPicker::UIKitPickerTestBase002()
 {
     if (container_ == nullptr) {
         return;
@@ -167,7 +167,7 @@ void UITestUIPicker::UIKit_Picker_Test_Base_002()
     picker3_->SetTextColor(Color::Gray(), Color::Red());
     picker3_->SetValues(-5, 20); // -5: start 20:end
     picker3_->SetTextFormatter(new TextFormatter());
-
+    picker3_->SetViewId(UI_TEST_PICKER_UI_PICKER_ID_03);
     positionX_ = picker3_->GetWidth();
     positionY_ = picker3_->GetY();
 
@@ -175,7 +175,7 @@ void UITestUIPicker::UIKit_Picker_Test_Base_002()
     SetLastPos(picker3_);
 }
 
-void UITestUIPicker::UIKit_Picker_Test_Time_Picker_001()
+void UITestUIPicker::UIKitPickerTestTimePicker001()
 {
     if (container_ == nullptr) {
         return;
@@ -191,6 +191,7 @@ void UITestUIPicker::UIKit_Picker_Test_Time_Picker_001()
     picker2_->SetPosition(652, label->GetY() + g_blank, g_ListW, g_ListH); // 652: x-coordinate
     picker2_->SetItemHeight(50);                                           // 50 height
     picker2_->RegisterSelectedListener(this);
+    picker2_->SetViewId(UI_TEST_PICKER_UI_PICKER_ID_02);
     positionX_ = picker2_->GetWidth();
     positionY_ = picker2_->GetY();
 
@@ -221,7 +222,7 @@ bool UITestUIPicker::OnClick(UIView& view, const ClickEvent& event)
     return true;
 }
 
-void UITestUIPicker::SetUpButton(UILabelButton* btn, const char* title)
+void UITestUIPicker::SetUpButton(UILabelButton* btn, const char* title, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -230,6 +231,7 @@ void UITestUIPicker::SetUpButton(UILabelButton* btn, const char* title)
     btn->SetPosition(positionX_ + 30, positionY_, BUTTON_WIDHT2, BUTTON_HEIGHT2); // 30: increase x-coordinate;
     positionY_ += btn->GetHeight() + 12;                                          // 12: increase y-coordinate
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

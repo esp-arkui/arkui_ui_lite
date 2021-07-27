@@ -23,6 +23,20 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_CLIP_RADIUS_ADD_ONE_BTN_ID = "test_clip_radius_add_01";
+constexpr char* UI_TEST_CLIP_RADIUS_ADD_FIVE_BTN_ID = "test_clip_radius_add_02";
+constexpr char* UI_TEST_CLIP_RADIUS_REDUCE_ONE_BTN_ID = "test_clip_radius_reduce_01";
+constexpr char* UI_TEST_CLIP_RADIUS_REDUCE_FIVE_BTN_ID = "test_clip_radius_reduce_02";
+constexpr char* UI_TEST_CLIP_START_ANGLE_ADD_BTN_ID = "test_clip_start_angle_add_01";
+constexpr char* UI_TEST_CLIP_START_ANGLE_REDUCE_BTN_ID = "test_clip_start_angle_reduce_01";
+constexpr char* UI_TEST_CLIP_END_ANGLE_ADD_BTN_ID = "test_clip_end_angle_add_01";
+constexpr char* UI_TEST_CLIP_END_ANGLE_REDUCE_BTN_ID = "test_clip_end_angle_reduce_01";
+constexpr char* UI_TEST_CLIP_ARC_LABEL_ID = "test_clip_arc_label_01";
+constexpr char* UI_TEST_CLIP_POLYGON_FIVE_STAR_LABEL_ID = "test_clip_polygon_label_01";
+constexpr char* UI_TEST_CLIP_BESSEL_LABEL_ID = "test_clip_bessel_label_01";
+constexpr char* UI_TEST_CLIP_POLYGON_LABEL_ID = "test_clip_polygon_label_02";
+}
 class UITestClip : public UITest, public UIView::OnClickListener {
 public:
     UITestClip() {}
@@ -50,10 +64,11 @@ private:
     const static int16_t RADIUS_STEP_1 = 1;
     const static int16_t RADIUS_STEP_5 = 5;
 
-    void CreateTitleLabel(const char* title);
+    void CreateTitleLabel(const char* title, const char* id = nullptr);
     UIImageView* CreateImageView();
     void ClipImage(UIImageView* imageView, ClipPath& path);
-    void SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y);
+    void SetUpButton(UILabelButton* btn, const char* title, int16_t x,
+        int16_t y, const char* id = nullptr);
 
     UILabelButton* btnRadiusInc1_ = nullptr;
     UILabelButton* btnRadiusInc5_ = nullptr;

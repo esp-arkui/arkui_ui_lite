@@ -62,8 +62,8 @@ void UITestImageAnimator::SetUp()
 
         imageAnimator_ = new UIImageAnimatorView();
         imageAnimator_->SetPosition(50, 50, 200, 200); // 50 : offset 50 : offset 200 : offset 200: offset
-        imageAnimator_->SetImageAnimatorSrc(g_imageAnimatorInfo, 4, 100); // 4: the number of images, 100: updating time
-        imageAnimator_->Start();
+        // 4: the number of images, 100: updating time
+        imageAnimator_->SetImageAnimatorSrc(g_imageAnimatorInfo2, 4, 100);
         listener_ = new TestAnimatorStopListener(container_);
         listener_->Init();
         uiViewGroupFrame_->Add(imageAnimator_);
@@ -212,22 +212,22 @@ void UITestImageAnimator::TearDown()
 
 const UIView* UITestImageAnimator::GetTestView()
 {
-    UIKit_ImageAnimator_Test_Start_001();
-    UIKit_ImageAnimator_Test_Stop_002();
-    UIKit_ImageAnimator_Test_Pause_003();
-    UIKit_ImageAnimator_Test_Resume_004();
-    UIKit_ImageAnimator_Test_SetImageAnimatorSrc_005();
-    UIKit_ImageAnimator_Test_SetTickOfUpdate_006();
-    UIKit_ImageAnimator_Test_SetSizeFixed_007();
-    UIKit_ImageAnimator_Test_SetRepeat_008();
-    UIKit_ImageAnimator_Test_SetReverse_009();
-    UIKit_ImageAnimator_Test_SetAnimatorStopListener_010();
-    UIKit_ImageAnimator_Test_SetRepeatTimes_011();
-    UIKit_ImageAnimator_Test_SetFillMode_True_Forward_012();
-    UIKit_ImageAnimator_Test_SetFillMode_True_Backward_013();
-    UIKit_ImageAnimator_Test_SetFillMode_False_Forward_014();
-    UIKit_ImageAnimator_Test_SetFillMode_False_Backward_015();
-    UIKit_ImageAnimator_Test_SetImageInfo_016();
+    UIKitImageAnimatorTestStart001();
+    UIKitImageAnimatorTestStop002();
+    UIKitImageAnimatorTestPause003();
+    UIKitImageAnimatorTestResume004();
+    UIKitImageAnimatorTestSetImageAnimatorSrc005();
+    UIKitImageAnimatorTestSetTickOfUpdate006();
+    UIKitImageAnimatorTestSetSizeFixed007();
+    UIKitImageAnimatorTestSetRepeat008();
+    UIKitImageAnimatorTestSetReverse009();
+    UIKitImageAnimatorTestSetAnimatorStopListener010();
+    UIKitImageAnimatorTestSetRepeatTimes011();
+    UIKitImageAnimatorTestSetFillModeTrueForward012();
+    UIKitImageAnimatorTestSetFillModeTrueBackward013();
+    UIKitImageAnimatorTestSetFillModeFalseForward014();
+    UIKitImageAnimatorTestSetFillModeFalseBackward015();
+    UIKitImageAnimatorTestSetImageInfo016();
 
     layout_->LayoutChildren();
     return container_;
@@ -251,103 +251,121 @@ void UITestImageAnimator::SetUpButton(UILabelButton* btn, const char* title)
     btn->SetStyleForState(STYLE_BACKGROUND_COLOR, BUTTON_STYLE_BACKGROUND_COLOR_VALUE, UIButton::INACTIVE);
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_Start_001()
+void UITestImageAnimator::UIKitImageAnimatorTestStart001()
 {
     startBtn_ = new UILabelButton();
+    startBtn_->SetViewId("test_image_animator_start_btn");
     SetUpButton(startBtn_, "Start");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_Stop_002()
+void UITestImageAnimator::UIKitImageAnimatorTestStop002()
 {
     stopBtn_ = new UILabelButton();
+    stopBtn_->SetViewId("test_image_animator_stop_btn");
     SetUpButton(stopBtn_, "Stop");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_Pause_003()
+void UITestImageAnimator::UIKitImageAnimatorTestPause003()
 {
     pauseBtn_ = new UILabelButton();
+    pauseBtn_->SetViewId("test_image_animator_pause_btn");
     SetUpButton(pauseBtn_, "Pause");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_Resume_004()
+void UITestImageAnimator::UIKitImageAnimatorTestResume004()
 {
     resumeBtn_ = new UILabelButton();
+    resumeBtn_->SetViewId("test_image_animator_resume_btn");
     SetUpButton(resumeBtn_, "Resume");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetImageAnimatorSrc_005()
+void UITestImageAnimator::UIKitImageAnimatorTestSetImageAnimatorSrc005()
 {
     setImageBtn_ = new UILabelButton();
+    setImageBtn_->SetViewId("test_image_animator_set_image_btn");
     SetUpButton(setImageBtn_, "设置图片");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetTickOfUpdate_006()
+void UITestImageAnimator::UIKitImageAnimatorTestSetTickOfUpdate006()
 {
     setSpeedBtn_ = new UILabelButton();
+    setSpeedBtn_->SetViewId("test_image_animator_set_speed_btn");
     SetUpButton(setSpeedBtn_, "设置速度");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetSizeFixed_007()
+void UITestImageAnimator::UIKitImageAnimatorTestSetSizeFixed007()
 {
     fixedBtn_ = new UILabelButton();
+    fixedBtn_->SetViewId("test_image_animator_fixe_btn");
     SetUpButton(fixedBtn_, "图片大小固定");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetRepeat_008()
+void UITestImageAnimator::UIKitImageAnimatorTestSetRepeat008()
 {
     repeatBtn_ = new UILabelButton();
     noRepeatBtn_ = new UILabelButton();
     SetUpButton(repeatBtn_, "循环播放");
+    repeatBtn_->SetViewId("test_image_animator_repeat_btn");
     SetUpButton(noRepeatBtn_, "播放一次 ");
+    noRepeatBtn_->SetViewId("test_image_animator_no_repeat_btn");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetReverse_009()
+void UITestImageAnimator::UIKitImageAnimatorTestSetReverse009()
 {
     reverseOrderBtn_ = new UILabelButton();
     positiveOrderBtn_ = new UILabelButton();
     SetUpButton(reverseOrderBtn_, "逆序播放");
+    reverseOrderBtn_->SetViewId("test_image_animator_reverse_order_btn");
     SetUpButton(positiveOrderBtn_, "正序播放");
+    positiveOrderBtn_->SetViewId("test_image_animator_positive_order_btn");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetAnimatorStopListener_010()
+void UITestImageAnimator::UIKitImageAnimatorTestSetAnimatorStopListener010()
 {
     listenerBtn_ = new UILabelButton();
     SetUpButton(listenerBtn_, "播放结束监听");
+    listenerBtn_->SetViewId("test_image_animator_listener_btn");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetRepeatTimes_011()
+void UITestImageAnimator::UIKitImageAnimatorTestSetRepeatTimes011()
 {
     repeatTimesBtn_ = new UILabelButton();
     SetUpButton(repeatTimesBtn_, "播放次数+");
+    repeatTimesBtn_->SetViewId("test_image_animator_repeat_times_btn");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetFillMode_True_Forward_012()
+void UITestImageAnimator::UIKitImageAnimatorTestSetFillModeTrueForward012()
 {
     fillModeTrueForwardBtn_ = new UILabelButton();
+    fillModeTrueForwardBtn_->SetViewId("test_image_animator_fill_mode_true_forward_btn");
     SetUpButton(fillModeTrueForwardBtn_, "fillMode true 正播");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetFillMode_True_Backward_013()
+void UITestImageAnimator::UIKitImageAnimatorTestSetFillModeTrueBackward013()
 {
     fillModeTrueBackwardBtn_ = new UILabelButton();
+    fillModeTrueBackwardBtn_->SetViewId("test_image_animator_fill_mode_true_backward_btn");
     SetUpButton(fillModeTrueBackwardBtn_, "fillMode true 逆播");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetFillMode_False_Forward_014()
+void UITestImageAnimator::UIKitImageAnimatorTestSetFillModeFalseForward014()
 {
     fillModeFalseForwardBtn_ = new UILabelButton();
+    fillModeFalseForwardBtn_->SetViewId("test_image_animator_fill_mode_false_forward_btn");
     SetUpButton(fillModeFalseForwardBtn_, "fillMode false 正播");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetFillMode_False_Backward_015()
+void UITestImageAnimator::UIKitImageAnimatorTestSetFillModeFalseBackward015()
 {
     fillModeFalseBackwardBtn_ = new UILabelButton();
+    fillModeFalseBackwardBtn_->SetViewId("test_image_animator_fill_mode_false_backward_btn");
     SetUpButton(fillModeFalseBackwardBtn_, "fillMode false 逆播");
 }
 
-void UITestImageAnimator::UIKit_ImageAnimator_Test_SetImageInfo_016()
+void UITestImageAnimator::UIKitImageAnimatorTestSetImageInfo016()
 {
     setImageInfoBtn_ = new UILabelButton();
+    setImageInfoBtn_->SetViewId("test_image_animator_set_image_info_btn");
     SetUpButton(setImageInfoBtn_, "设置ImageInfo");
 }
 

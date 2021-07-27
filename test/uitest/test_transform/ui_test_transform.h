@@ -16,12 +16,12 @@
 #ifndef UI_TEST_TRANSFORM_H
 #define UI_TEST_TRANSFORM_H
 
+#include "components/ui_checkbox.h"
 #include "components/ui_image_view.h"
 #include "components/ui_label.h"
 #include "components/ui_label_button.h"
-#include "components/ui_scroll_view.h"
-#include "components/ui_checkbox.h"
 #include "components/ui_radio_button.h"
+#include "components/ui_scroll_view.h"
 #include "layout/grid_layout.h"
 #include "ui_test.h"
 
@@ -45,9 +45,9 @@ public:
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
 
-    void UIKit_Transform_Test_Rotate_001();
-    void UIKit_Transform_Test_Scale_002();
-    void UIKit_Transform_Test_Translate_003();
+    void UIKitTransformTestRotate001();
+    void UIKitTransformTestScale002();
+    void UIKitTransformTestTranslate003();
 
     void SetScaleMode(ImageScaleMode mode);
 private:

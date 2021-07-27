@@ -143,18 +143,19 @@ void UITestViewBitmap::TearDown()
 
 const UIView* UITestViewBitmap::GetTestView()
 {
-    UIKit_Bitmap_Test_GetViewBitmap_001();
-    UIKit_Bitmap_Test_GetScreenBitmap_001();
+    UIKitBitmapTestGetViewBitmap001();
+    UIKitBitmapTestGetScreenBitmap001();
     return container_;
 }
 
-void UITestViewBitmap::UIKit_Bitmap_Test_GetViewBitmap_001()
+void UITestViewBitmap::UIKitBitmapTestGetViewBitmap001()
 {
     UILabelButton* btn = new UILabelButton();
     container_->Add(btn);
     // 100 : x pos of button; 50: y pos of  button.
     btn->SetPosition(100, 50, BUTTON_WIDHT3, BUTTON_HEIGHT3);
     btn->SetText("测试组件截屏");
+    btn->SetViewId(UI_TEST_VIEW_BITMAP_BTN_ID_01);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(viewBitmapListener_);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);
@@ -165,13 +166,14 @@ void UITestViewBitmap::UIKit_Bitmap_Test_GetViewBitmap_001()
     btn->SetStyleForState(STYLE_BACKGROUND_COLOR, BUTTON_STYLE_BACKGROUND_COLOR_VALUE, UIButton::INACTIVE);
 }
 
-void UITestViewBitmap::UIKit_Bitmap_Test_GetScreenBitmap_001()
+void UITestViewBitmap::UIKitBitmapTestGetScreenBitmap001()
 {
     UILabelButton* btn = new UILabelButton();
     container_->Add(btn);
     // 100 : x pos of button; 150: y pos of  button.
     btn->SetPosition(100, 150, BUTTON_WIDHT3, BUTTON_HEIGHT3);
     btn->SetText("测试全屏截屏");
+    btn->SetViewId(UI_TEST_VIEW_BITMAP_BTN_ID_02);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(screenBitmapListener_);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

@@ -36,7 +36,7 @@ public:
     /**
      * @brief Test screenshot Function
      */
-    void UIKit_SCREENSHOT_TEST_001();
+    void UIKitSCREENSHOTTest001();
 
 private:
     UIScrollView* container_ = nullptr;

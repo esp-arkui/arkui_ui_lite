@@ -76,11 +76,13 @@ void UITestScrollBar::SetUp()
     scrollView_->SetYScrollBarVisible(true);
     scrollView_->SetHorizontalScrollState(false);
     scrollView_->SetReboundSize(50); // 50: rebound size
+    scrollView_->SetViewId("test_scroll_bar_scroll_view_id");
 
     container_->Add(list_);
     list_->SetPosition(450, 0, VIEW_WIDTH, VIEW_HEIGHT); // 450: x
     list_->SetYScrollBarVisible(true);
     list_->SetReboundSize(50); // 50: rebound size
+    list_->SetViewId("test_scroll_bar_list_id");
 }
 
 void UITestScrollBar::TearDown()
@@ -106,12 +108,12 @@ void UITestScrollBar::TearDown()
 
 const UIView* UITestScrollBar::GetTestView()
 {
-    UIKit_ScrollBar_TEST_Scroll_view_001();
-    UIKit_ScrollBar_TEST_List_001();
+    UIKitScrollBarTestScrollview001();
+    UIKitScrollBarTestList001();
     return container_;
 }
 
-void UITestScrollBar::UIKit_ScrollBar_TEST_Scroll_view_001()
+void UITestScrollBar::UIKitScrollBarTestScrollview001()
 {
     UILabelButton* label1 = new UILabelButton();
     scrollView_->Add(label1);
@@ -163,7 +165,7 @@ void UITestScrollBar::UIKit_ScrollBar_TEST_Scroll_view_001()
     foreImg1_->SetPosition(0, 0);
 }
 
-void UITestScrollBar::UIKit_ScrollBar_TEST_List_001()
+void UITestScrollBar::UIKitScrollBarTestList001()
 {
     adapter_->SetLineBreakMode(UILabel::LINE_BREAK_CLIP);
     adapter_->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);

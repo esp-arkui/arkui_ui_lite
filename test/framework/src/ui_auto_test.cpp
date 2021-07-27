@@ -20,8 +20,47 @@
 #include "components/ui_list.h"
 #include "components/ui_view_group.h"
 #include "dfx/event_injector.h"
+#include "test_anti_aliasing/ui_auto_test_anti_aliasing.h"
+#include "test_arc_label/ui_auto_test_arc_label.h"
+#include "test_border_margin_padding/ui_auto_test_border_margin_padding.h"
+#include "test_button/ui_auto_test_button.h"
+#include "test_canvas/ui_auto_test_canvas.h"
+#include "test_chart/ui_auto_test_chart_pillar.h"
+#include "test_chart/ui_auto_test_chart_polyline.h"
+#include "test_clip/ui_auto_test_clip.h"
+#include "test_digital_clock/ui_auto_test_digital_clock.h"
+#include "test_draw_line/ui_auto_test_draw_line.h"
+#include "test_draw_rect/ui_auto_test_draw_rect.h"
+#include "test_event_injector/ui_auto_test_event_injector.h"
+#include "test_focus_manager/ui_auto_test_focus_manager.h"
+#include "test_font/ui_auto_test_font.h"
+#include "test_image/ui_auto_test_image.h"
+#include "test_image_animator/ui_auto_test_image_animator.h"
+#include "test_label/ui_auto_test_label.h"
 #include "test_layout/ui_auto_test_basic_layout.h"
+#include "test_opacity/ui_auto_test_opacity.h"
+#include "test_picker/ui_auto_test_ui_picker.h"
+#include "test_progress_bar/ui_auto_test_box_progress.h"
+#include "test_progress_bar/ui_auto_test_circle_progress.h"
+#include "test_qrcode/ui_auto_test_qrcode.h"
 #include "test_render/ui_auto_test_render.h"
+#include "test_scroll_bar/ui_auto_test_scroll_bar.h"
+#include "test_slider/ui_auto_test_slider.h"
+#include "test_texture_mapper/ui_auto_test_texture_mapper.h"
+#include "test_transform/ui_auto_test_transform.h"
+#include "test_ui_analog_clock/ui_auto_test_analog_clock.h"
+#include "test_ui_list/ui_auto_test_ui_list.h"
+#include "test_ui_list_view/ui_auto_test_list_layout.h"
+#include "test_ui_scroll_view/ui_auto_test_ui_scroll_view.h"
+#include "test_ui_swipe_view/ui_auto_test_ui_swipe_view.h"
+#if ENABLE_VECTOR_FONT
+#include "test_vector_font/ui_auto_test_vector_font.h"
+#endif
+#include "test_view_bitmap/ui_auto_test_view_bitmap.h"
+#include "test_view_bounds/ui_auto_test_view_bounds.h"
+#include "test_view_group/ui_auto_test_view_group.h"
+#include "test_view_percent/ui_auto_test_view_percent.h"
+#include "test_view_scale_rotate/ui_auto_test_view_scale_rotate.h"
 #include "ui_test_app.h"
 #include "ui_test_group.h"
 
@@ -89,10 +128,78 @@ void UIAutoTest::DragViewToHead(const char* id) const
     startPoint.y = view->GetOrigRect().GetY();
 
     Point endPoint;
-    endPoint.x = 100; // 100 :end point x position;
-    endPoint.y = 100; // 100 :end point y position;
+    endPoint.x = startPoint.x;
+    endPoint.y = 80; // 80 :end point y position;
     EventInjector::GetInstance()->SetDragEvent(startPoint, endPoint, 300); // 300: drag time
-    CompareTools::WaitSuspend();
+    CompareTools::WaitSuspend(2000); // 2000 :wait time after set drag event
+}
+
+void UIAutoTest::DragViewById(const char* id, DragDirection direction) const
+{
+    if (id == nullptr) {
+        return;
+    }
+    UIView* view = RootView::GetInstance()->GetChildById(id);
+    if (view == nullptr) {
+        return;
+    }
+    Point startPoint;
+    Point endPoint;
+    switch (direction) {
+        case BOTTOM_TO_TOP:
+            startPoint.x = view->GetOrigRect().GetX();
+            startPoint.y = view->GetOrigRect().GetBottom();
+            endPoint.x = startPoint.x;
+            endPoint.y = view->GetOrigRect().GetTop();
+            break;
+        case TOP_TO_BOTTOM:
+            startPoint.x = view->GetOrigRect().GetX();
+            startPoint.y = view->GetOrigRect().GetTop();
+            endPoint.x = startPoint.x;
+            endPoint.y = view->GetOrigRect().GetBottom();
+            break;
+        case LEFT_TO_RIGHT:
+            startPoint.x = view->GetOrigRect().GetLeft();
+            startPoint.y = view->GetOrigRect().GetY();
+            endPoint.x = view->GetOrigRect().GetRight();
+            endPoint.y = startPoint.y;
+            break;
+        case RIGHT_TO_LEFT:
+            startPoint.x = view->GetOrigRect().GetRight();
+            startPoint.y = view->GetOrigRect().GetY();
+            endPoint.x = view->GetOrigRect().GetLeft();
+            endPoint.y = startPoint.y;
+            break;
+        case UPPER_LEFT_CORNER_TO_BOTTOM_RIGHT_CORNER:
+            startPoint.x = view->GetOrigRect().GetLeft();
+            startPoint.y = view->GetOrigRect().GetTop();
+            endPoint.x = view->GetOrigRect().GetRight();
+            endPoint.y = view->GetOrigRect().GetBottom();
+            break;
+        case BOTTOM_RIGHT_CORNER_TO_UPPER_LEFT_CORNER:
+            startPoint.x = view->GetOrigRect().GetRight();
+            startPoint.y = view->GetOrigRect().GetBottom();
+            endPoint.x = view->GetOrigRect().GetLeft();
+            endPoint.y = view->GetOrigRect().GetTop();
+            break;
+        case UPPER_RIGHT_CORNER_TO_BOTTOM_LEFT_CORNER:
+            startPoint.x = view->GetOrigRect().GetRight();
+            startPoint.y = view->GetOrigRect().GetTop();
+            endPoint.x = view->GetOrigRect().GetLeft();
+            endPoint.y = view->GetOrigRect().GetBottom();
+            break;
+        case BOTTOM_LEFT_CORNER_TO_UPPER_RIGHT_CORNER:
+            startPoint.x = view->GetOrigRect().GetLeft();
+            startPoint.y = view->GetOrigRect().GetBottom();
+            endPoint.x = view->GetOrigRect().GetRight();
+            endPoint.y = view->GetOrigRect().GetTop();
+            break;
+        default:
+            return;
+    }
+
+    EventInjector::GetInstance()->SetDragEvent(startPoint, endPoint, 300); // 300: drag time
+    CompareTools::WaitSuspend(2000); // 2000 :wait time after set drag event
 }
 
 void UIAutoTest::CompareByBinary(const char* fileName) const
@@ -111,7 +218,46 @@ void UIAutoTest::CompareByBinary(const char* fileName) const
 
 void UIAutoTest::SetUpTestCase()
 {
-    AutoTestCaseGroup::AddTestCase(new UIAutoTestRender());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestAntiAliasing());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestArcLabel());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestBorderMarginPadding());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestButton());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestCanvas());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestChartPillar());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestChartPolyline());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestClip());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestDigitalClock());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestDrawLine());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestDrawRect());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestEventInjector());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestFocusManager());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestFont());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestImage());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestImageAnimator());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestLabel());
     AutoTestCaseGroup::AddTestCase(new UIAutoTestBasicLayout());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestOpacity());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestUiPicker());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestBoxProgress());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestCircleProgress());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestQrcode());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestRender());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestScrollBar());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestSlider());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestTextureMapper());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestTransform());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestAnalogClock());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestUIList());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestUIListLayout());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestScrollView());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestSwipeView());
+#if ENABLE_VECTOR_FONT
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestVectorFont());
+#endif
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestViewBitmap());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestViewBounds());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestViewGroup());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestViewPercent());
+    AutoTestCaseGroup::AddTestCase(new UIAutoTestViewScaleRotate());
 }
 } // namespace OHOS

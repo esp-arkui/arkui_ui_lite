@@ -22,6 +22,36 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_BUTTON_CHECKBOX_ID_01 = "test_button_checkbox_01";
+constexpr char* UI_TEST_BUTTON_CHECKBOX_ID_02 = "test_button_checkbox_02";
+constexpr char* UI_TEST_BUTTON_CHECKBOX_ID_03 = "test_button_checkbox_03";
+constexpr char* UI_TEST_BUTTON_CHECKBOX_IMAGE_ID_01 = "test_button_checkbox_image_01";
+constexpr char* UI_TEST_BUTTON_CHECKBOX_IMAGE_ID_02 = "test_button_checkbox_image_02";
+constexpr char* UI_TEST_RADIO_BUTTON_ID_01 = "test_radio_button_01";
+constexpr char* UI_TEST_RADIO_BUTTON_ID_02 = "test_radio_button_02";
+constexpr char* UI_TEST_RADIO_BUTTON_ID_03 = "test_radio_button_03";
+constexpr char* UI_TEST_RADIO_BUTTON_IMAGE_ID_01 = "test_radio_button_image_01";
+constexpr char* UI_TEST_RADIO_BUTTON_IMAGE_ID_02 = "test_radio_button_image_02";
+constexpr char* UI_TEST_TOGGLE_BUTTON_ID_01 = "test_toggle_button_01";
+constexpr char* UI_TEST_TOGGLE_BUTTON_ID_02 = "test_toggle_button_02";
+constexpr char* UI_TEST_TOGGLE_BUTTON_ID_03 = "test_toggle_button_03";
+constexpr char* UI_TEST_TOGGLE_BUTTON_IMAGE_ID_01 = "test_toggle_button_image_01";
+constexpr char* UI_TEST_TOGGLE_BUTTON_IMAGE_ID_02 = "test_toggle_button_image_02";
+constexpr char* UI_TEST_BUTTON_RESET_ID = "test_button_reset_01";
+constexpr char* UI_TEST_BUTTON_BIG_ID_01 = "test_button_big_01";
+constexpr char* UI_TEST_BUTTON_SMALL_ID_01 = "test_button_small_01";
+constexpr char* UI_TEST_BUTTON_LIFT_ID_01 = "test_button_lift_01";
+constexpr char* UI_TEST_BUTTON_RIGHT_ID_01 = "test_button_right_01";
+constexpr char* UI_TEST_BUTTON_UP_ID_01 = "test_button_up_01";
+constexpr char* UI_TEST_BUTTON_DOWN_ID_01 = "test_button_down_01";
+constexpr char* UI_TEST_BUTTON_RED_ID_01 = "test_button_red_01";
+constexpr char* UI_TEST_BUTTON_WHITE_ID_01 = "test_button_white_01";
+constexpr char* UI_TEST_BUTTON_HIDE_ID_01 = "test_button_hide_01";
+constexpr char* UI_TEST_BUTTON_DISPLAY_ID_01 = "test_button_display_01";
+constexpr char* UI_TEST_CHECKBOX_IMAGE_LABEL_ID = "test_checkbox_image_label_01";
+constexpr char* UI_TEST_TOGGLE_BUTTON_IMAGE_LABEL_ID = "test_toggle_button_image_label_01";
+}
 class UITestBUTTON : public UITest {
 public:
     UITestBUTTON() {}
@@ -33,44 +63,45 @@ public:
     /**
      * @brief Test Checkbox Function
      */
-    void UIKit_Check_Box_Test_001();
+    void UIKitCheckBoxTest001();
 
     /**
      * @brief Test Checkbox's SetImage Function
      */
-    void UIKit_Check_Box_Test_002() const;
+    void UIKitCheckBoxTest002() const;
 
     /**
      * @brief Test Radiobutton Function
      */
-    void UIKit_Radio_Button_Test_001();
+    void UIKitRadioButtonTest001();
 
     /**
      * @brief Test Radiobutton's SetImage Function
      */
-    void UIKit_Radio_Button_Test_002() const;
+    void UIKitRadioButtonTest002() const;
 
     /**
      * @brief Test Togglebutton Function
      */
-    void UIKit_Toggle_Button_Test_001();
+    void UIKitToggleButtonTest001();
 
     /**
      * @brief Test Togglebutton's SetImage Function
      */
-    void UIKit_Toggle_Button_Test_002();
+    void UIKitToggleButtonTest002();
 
     /**
      * @brief Test button Function
      */
-    void UIKit_Button_Test_001();
+    void UIKitButtonTest001();
 
 private:
-    void UIKit_Button_Test_002(UIScrollView* container, UIButton* button);
+    void UIKitButtonTest002(UIScrollView* container, UIButton* button);
     UIViewGroup* CreateButtonGroup(int16_t posX, int16_t posY, int16_t width, int16_t height,
                                     UICheckBox::OnChangeListener** listener,
                                     UIViewType type = UI_CHECK_BOX,
-                                    const char* name = "aa");
+                                    const char* name = "aa",
+                                    const char* id = nullptr);
     static constexpr int16_t CHANGE_SIZE = 10;
     UIScrollView* container_ = nullptr;
 

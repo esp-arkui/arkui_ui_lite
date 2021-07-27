@@ -26,14 +26,17 @@
 #include "components/ui_label_button.h"
 #include "components/ui_list.h"
 #include "components/ui_scroll_view.h"
+#include "components/ui_toggle_button.h"
 #include "ui_test.h"
 namespace OHOS {
-class UITestOpacity : public UITest {
+class UITestOpacity : public UITest, UIView::OnClickListener {
 public:
     UITestOpacity() {}
     ~UITestOpacity() {}
     void SetUp() override;
     void TearDown() override;
+    bool OnClick(UIView& view, const ClickEvent& event) override;
+
     const UIView* GetTestView() override;
 
     /**
@@ -114,6 +117,9 @@ private:
     UIList* CreateTestCaseUIList(uint8_t opaScale) const;
 
     UIScrollView* container_ = nullptr;
+    UIImageAnimatorView* imageAnimator_ = nullptr;
+    UIImageAnimatorView* imageAnimator2_ = nullptr;
+    UIToggleButton* toggleBtn_ = nullptr;
 };
 }
 #endif // UI_TEST_OPACITY_H

@@ -36,14 +36,14 @@ public:
     void OnScrollStart(int16_t index, UIView* view) override;
     void OnScrollEnd(int16_t index, UIView* view) override;
     void OnItemSelected(int16_t index, UIView* view) override;
-    void UIKit_List_Init_Test_Full_Screen_001();
-    void UIKit_List_Init_Test_halh_Screen_001();
-    void UIKit_List_Scroll_Test_Blank_Set_001();
+    void UIKitListInitTestFullScreen001();
+    void UIKitListInitTestHalfScreen001();
+    void UIKitListScrollTestBlank_Set001();
 
 private:
     static constexpr int16_t ALINE_TIME_CHANGE_VALUE = 100;
     void SetLastPos(UIView* view);
-    void SetUpButton(UILabelButton* btn, const char* title);
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr);
     void SetControlButton();
     UILabelButton* setBlankBtn_ = nullptr;
     UILabelButton* setBlankOffBtn_ = nullptr;

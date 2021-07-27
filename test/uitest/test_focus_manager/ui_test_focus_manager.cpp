@@ -228,7 +228,7 @@ void UITestFocusManager::TearDown()
 
 const UIView* UITestFocusManager::GetTestView()
 {
-    UIKit_Focus_Manager_Test_001();
+    UIKitFocusManagerTest001();
     return container_;
 }
 
@@ -270,7 +270,7 @@ UIViewGroup* UITestFocusManager::CreateTestUIViewGroup(UIViewGroup* parent, bool
     return viewGroup;
 }
 
-void UITestFocusManager::UIKit_Focus_Manager_Test_001()
+void UITestFocusManager::UIKitFocusManagerTest001()
 {
     UILabel* label = new UILabel();
     container_->Add(label);
@@ -353,35 +353,45 @@ void UITestFocusManager::UIKit_Focus_Manager_Test_001()
         clearFocusListener_ = static_cast<UIView::OnClickListener*>(new ClearFocusOnClickListener());
     }
     /* 10: x, 10: y */
-    SetUpButton("向左 ", 10, 10, btnViewGroup, requestFocusByDirectionLeftListener_);
+    SetUpButton("向左 ", 10, 10, btnViewGroup, requestFocusByDirectionLeftListener_,
+        UI_TEST_FOCUS_MANAGER_LEFT_BTN_ID_01);
     /* 150: x, 10: y */
-    SetUpButton("向右 ", 150, 10, btnViewGroup, requestFocusByDirectionRightListener_);
+    SetUpButton("向右 ", 150, 10, btnViewGroup, requestFocusByDirectionRightListener_,
+        UI_TEST_FOCUS_MANAGER_RIGHT_BTN_ID_01);
     /* 10: x, 60: y */
-    SetUpButton("向上 ", 10, 60, btnViewGroup, requestFocusByDirectionUpListener_);
+    SetUpButton("向上 ", 10, 60, btnViewGroup, requestFocusByDirectionUpListener_,
+        UI_TEST_FOCUS_MANAGER_UP_BTN_ID_01);
     /* 150: x, 60: y */
-    SetUpButton("向下 ", 150, 60, btnViewGroup, requestFocusByDirectionDownListener_);
+    SetUpButton("向下 ", 150, 60, btnViewGroup, requestFocusByDirectionDownListener_,
+        UI_TEST_FOCUS_MANAGER_DOWN_BTN_ID_01);
     /* 10: x, 110: y */
-    SetUpButton("2可获焦 ", 10, 110, btnViewGroup, setFocusableViewListener_);
+    SetUpButton("2可获焦 ", 10, 110, btnViewGroup, setFocusableViewListener_,
+        UI_TEST_FOCUS_MANAGER_FOCUS_BTN_ID_01);
     /* 150: x, 110: y */
-    SetUpButton("2不可获焦 ", 150, 110, btnViewGroup, setFocusableViewListener1_);
+    SetUpButton("2不可获焦 ", 150, 110, btnViewGroup, setFocusableViewListener1_,
+        UI_TEST_FOCUS_MANAGER_UNFOCUSED_BTN_ID_01);
     /* 10: x, 160: y */
-    SetUpButton("设置4容器拦截 ", 10, 160, btnViewGroup, setGroupInterceptListener_);
+    SetUpButton("设置4容器拦截 ", 10, 160, btnViewGroup, setGroupInterceptListener_,
+        UI_TEST_FOCUS_MANAGER_INTERCEPT_BTN_ID_01);
     /* 150: x, 160: y */
-    SetUpButton("取消4容器拦截 ", 150, 160, btnViewGroup, setGroupInterceptListener1_);
+    SetUpButton("取消4容器拦截 ", 150, 160, btnViewGroup, setGroupInterceptListener1_,
+        UI_TEST_FOCUS_MANAGER_UNBLOCK_BTN_ID_01);
     /* 10: x, 210: y */
-    SetUpButton("重置焦点 ", 10, 210, btnViewGroup, resetFocusListener_);
+    SetUpButton("重置焦点 ", 10, 210, btnViewGroup, resetFocusListener_,
+        UI_TEST_FOCUS_MANAGER_RESET_BTN_ID_01);
     /* 150: x, 210: y */
-    SetUpButton("清除焦点 ", 150, 210, btnViewGroup, clearFocusListener_);
-
+    SetUpButton("清除焦点 ", 150, 210, btnViewGroup, clearFocusListener_,
+        UI_TEST_FOCUS_MANAGER_CLEAR_BTN_ID_01);
     FocusManager::GetInstance()->RequestFocus(viewGroup1->GetChildById("1"));
 }
 
 UILabelButton* UITestFocusManager::SetUpButton(const char* title, int16_t x, int16_t y, UIViewGroup* viewGroup,
-    UIView::OnClickListener* listener)
+    UIView::OnClickListener* listener, const char* id)
 {
     UILabelButton* btn = new UILabelButton();
     btn->SetPosition(x, y, BUTTON_WIDHT2, BUTTON_HEIGHT1);
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(listener);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

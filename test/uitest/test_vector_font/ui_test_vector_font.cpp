@@ -58,7 +58,7 @@ void UITestVectorFont::TearDown()
     container_ = nullptr;
 }
 
-void UITestVectorFont::InnerTestTitle(const char* title)
+void UITestVectorFont::InnerTestTitle(const char* title, const char* id)
 {
     UILabel* titleLabel = new UILabel();
     UIFont::GetInstance()->RegisterFontInfo(DEFAULT_VECTOR_FONT_FILENAME);
@@ -66,6 +66,7 @@ void UITestVectorFont::InnerTestTitle(const char* title)
                             TITLE_LABEL_DEFAULT_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + GAP;
 }
@@ -93,7 +94,7 @@ const UIView* UITestVectorFont::GetTestView()
 void UITestVectorFont::Font_FontEngine_Vector_Test_CH_Lang_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("CH Language");
+        InnerTestTitle("CH Language", UI_TEST_VECTOR_FONT_CH_LANG_01);
         UILabel* label = new UILabel();
         UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
         label->SetPosition(positionX_, positionY_);
@@ -109,7 +110,7 @@ void UITestVectorFont::Font_FontEngine_Vector_Test_CH_Lang_001()
 void UITestVectorFont::Font_FontEngine_Vector_Test_CH_Lang_002()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("Multiline text");
+        InnerTestTitle("Multiline text", UI_TEST_VECTOR_FONT_CH_LANG_02);
         UILabel* label = new UILabel();
         UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
         label->SetPosition(positionX_, positionY_);
@@ -124,7 +125,7 @@ void UITestVectorFont::Font_FontEngine_Vector_Test_CH_Lang_002()
 void UITestVectorFont::Font_FontEngine_Vector_Test_JA_Lang_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("JA Language");
+        InnerTestTitle("JA Language", UI_TEST_VECTOR_FONT_JA_LANG_01);
         UILabel* label = new UILabel();
         UIFont::GetInstance()->RegisterFontInfo(NOTOSANSCJKJP_REGULAR);
         label->SetPosition(positionX_, positionY_);
@@ -140,7 +141,7 @@ void UITestVectorFont::Font_FontEngine_Vector_Test_JA_Lang_001()
 void UITestVectorFont::Font_FontEngine_Vector_Test_JA_Lang_002()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("JA Language");
+        InnerTestTitle("JA Language", UI_TEST_VECTOR_FONT_JA_LANG_02);
         UILabel* label = new UILabel();
         UIFont::GetInstance()->RegisterFontInfo(NOTOSANSCJKJP_REGULAR);
         label->SetPosition(positionX_, positionY_);
@@ -156,7 +157,7 @@ void UITestVectorFont::Font_FontEngine_Vector_Test_JA_Lang_002()
 void UITestVectorFont::Font_FontEngine_Vector_Test_KR_Lang_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("KR Language");
+        InnerTestTitle("KR Language", UI_TEST_VECTOR_FONT_KR_LANG_01);
         UILabel* label = new UILabel();
         label->SetPosition(positionX_, positionY_);
         label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -172,7 +173,7 @@ void UITestVectorFont::Font_FontEngine_Vector_Test_KR_Lang_001()
 void UITestVectorFont::Font_FontEngine_Vector_Test_VI_Lang_001()
 {
     if (container_ != nullptr) {
-        InnerTestTitle("VI Language");
+        InnerTestTitle("VI Language", UI_TEST_VECTOR_FONT_VI_LANG_01);
         UIFont::GetInstance()->RegisterFontInfo(NOTOSANSCJKJP_REGULAR);
         UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
         UILabel* label = new UILabel();

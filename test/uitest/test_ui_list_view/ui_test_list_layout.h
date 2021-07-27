@@ -21,6 +21,12 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_LIST_LAYOUT_ADD_INSERT_LABEL_01 = "test_list_layout_add_insert_label_01";
+constexpr char* UI_TEST_LIST_LAYOUT_REMOVE_LABEL_01 = "test_list_layout_remove_label_01";
+constexpr char* UI_TEST_LIST_LAYOUT_ADD_INSERT_LABEL_02 = "test_list_layout_add_insert_label_02";
+constexpr char* UI_TEST_LIST_LAYOUT_REMOVE_LABEL_02 = "test_list_layout_remove_label_02";
+};
 class UITestListLayout : public UITest {
 public:
     UITestListLayout() {}
@@ -29,12 +35,12 @@ public:
     void TearDown() override;
     const UIView* GetTestView() override;
 
-    void UIKit_List_Vertical_Add_Test_Auto_Size_001();
-    void UIKit_List_Vertical_Remove_Test_Auto_Size_001();
-    void UIKit_List_Vertical_Remove_Test_Auto_Size_002();
-    void UIKit_List_Hor_Add_Test_Auto_Size_001();
-    void UIKit_List_Hor_Remove_Test_Auto_Size_001();
-    void UIKit_List_Hor_Remove_Test_Auto_Size_002();
+    void UIKitListVerticalAddTestAutoSize001();
+    void UIKitListVerticalRemoveTestAutoSize001();
+    void UIKitListVerticalRemoveTestAutoSize002();
+    void UIKitListHorAddTestAutoSize001();
+    void UIKitListHorRemoveTestAutoSize001();
+    void UIKitListHorRemoveTestAutoSize002();
 
 private:
     void SetLastPos(UIView* view);
