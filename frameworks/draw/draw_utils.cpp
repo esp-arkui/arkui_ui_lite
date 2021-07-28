@@ -273,28 +273,59 @@ void DrawUtils::DrawPixel(BufferInfo& gfxDstBuffer,
 
 void DrawUtils::DrawLetter(BufferInfo& gfxDstBuffer, const LabelLetterInfo& letterInfo) const
 {
-    OpacityType opa = letterInfo.opa;
-    Color32 fillColor;
-    fillColor.full = Color::ColorTo32(letterInfo.color);
-
-    DRAW_UTILS_PREPROCESS(gfxDstBuffer, opa);
     UIFont* fontEngine = UIFont::GetInstance();
-    FontHeader head;
-    GlyphNode node;
-    if (fontEngine->GetCurrentFontHeader(head) != 0) {
-        return;
-    }
 
+    GlyphNode node;
     const uint8_t* fontMap = fontEngine->GetBitmap(letterInfo.letter, node, letterInfo.shapingId);
     if (fontMap == nullptr) {
         return;
     }
+
     uint16_t letterW = node.cols;
     uint16_t letterH = node.rows;
-    uint8_t opacityMask;
     int16_t posX;
     int16_t posY = letterInfo.pos.y + letterInfo.fontSize - node.top - letterInfo.offsetY;
+
+    if (letterInfo.direct == TEXT_DIRECT_RTL) {
+        /* RTL */
+        posX = letterInfo.pos.x - node.advance + node.left + letterInfo.offsetX;
+    } else {
+        /* LTR */
+        posX = letterInfo.pos.x + node.left + letterInfo.offsetX;
+    }
+
+    if ((posX + letterW < letterInfo.mask.GetLeft()) || (posX > letterInfo.mask.GetRight()) ||
+        (posY + letterH < letterInfo.mask.GetTop()) || (posY > letterInfo.mask.GetBottom())) {
+        return;
+    }
+
+    uint16_t rowStart = (posY >= letterInfo.mask.GetTop()) ? 0 : (letterInfo.mask.GetTop() - posY);
+    uint16_t rowEnd =
+        (posY + letterH <= letterInfo.mask.GetBottom()) ? letterH : (letterInfo.mask.GetBottom() - posY + 1);
+    uint16_t colStart = (posX >= letterInfo.mask.GetLeft()) ? 0 : (letterInfo.mask.GetLeft() - posX);
+    uint16_t colEnd =
+        (posX + letterW <= letterInfo.mask.GetRight()) ? letterW : (letterInfo.mask.GetRight() - posX + 1);
+
+    Rect srcRect(posX, posY, posX + letterW - 1, posY + letterH - 1);
+    Rect subRect(posX + colStart, posY + rowStart, colEnd - 1 + posX, rowEnd - 1 + posY);
+
     uint8_t fontWeight = fontEngine->GetFontWeight(letterInfo.fontId);
+    BaseGfxEngine::GetInstance()->DrawLetter(gfxDstBuffer, fontMap, srcRect, subRect, fontWeight, letterInfo.color,
+                                             letterInfo.opa);
+    return;
+}
+
+void DrawUtils::DrawLetter(BufferInfo& gfxDstBuffer,
+                           const uint8_t* fontMap,
+                           const Rect& fontRect,
+                           const Rect& subRect,
+                           const uint8_t fontWeight,
+                           const ColorType& color,
+                           const OpacityType opa) const
+{
+    Color32 fillColor;
+    fillColor.full = Color::ColorTo32(color);
+    uint8_t opacityMask;
     uint8_t colorMode = 0;
     uint8_t opacityStep = 1;
     switch (fontWeight) {
@@ -321,57 +352,21 @@ void DrawUtils::DrawLetter(BufferInfo& gfxDstBuffer, const LabelLetterInfo& lett
             return;
     }
 
-    if (letterInfo.direct == TEXT_DIRECT_RTL) {
-        /* RTL */
-        posX = letterInfo.pos.x - node.advance + node.left + letterInfo.offsetX;
-    } else {
-        /* LTR */
-        posX = letterInfo.pos.x + node.left + letterInfo.offsetX;
-    }
-
-    if ((posX + letterW < letterInfo.mask.GetLeft()) || (posX > letterInfo.mask.GetRight()) ||
-        (posY + letterH < letterInfo.mask.GetTop()) || (posY > letterInfo.mask.GetBottom())) {
-        return;
-    }
-
-    uint16_t rowStart = (posY >= letterInfo.mask.GetTop()) ? 0 : (letterInfo.mask.GetTop() - posY);
-    uint16_t rowEnd =
-        (posY + letterH <= letterInfo.mask.GetBottom()) ? letterH : (letterInfo.mask.GetBottom() - posY + 1);
-    uint16_t colStart = (posX >= letterInfo.mask.GetLeft()) ? 0 : (letterInfo.mask.GetLeft() - posX);
-    uint16_t colEnd =
-        (posX + letterW <= letterInfo.mask.GetRight()) ? letterW : (letterInfo.mask.GetRight() - posX + 1);
-
-    uint8_t letterWidthInByte = (letterW * fontWeight) >> SHIFT_3;
-    if ((letterW * fontWeight) & 0x7) { // 0x7 : less than 1 byte is counted as 1 byte
+    uint8_t letterWidthInByte = (fontRect.GetWidth() * fontWeight) >> SHIFT_3;
+    if ((fontRect.GetWidth() * fontWeight) & 0x7) { // 0x7 : less than 1 byte is counted as 1 byte
         letterWidthInByte++;
     }
+    int16_t rowStart = subRect.GetY() - fontRect.GetY();
+    int16_t rowEnd = rowStart + subRect.GetHeight();
+    int16_t colStart = subRect.GetX() - fontRect.GetX();
+    int16_t colEnd = colStart + subRect.GetWidth();
 
-    int16_t dstPosX = posX + colStart;
-    int16_t dstPosY = posY + rowStart;
-
-#if ENABLE_HARDWARE_ACCELERATION && ENABLE_HARDWARE_ACCELERATION_FOR_TEXT
-    Rect srcRect(colStart, rowStart, colEnd - 1, rowEnd - 1);
-    BufferInfo src;
-    src.rect = srcRect;
-    src.virAddr = static_cast<void*>(const_cast<uint8_t*>(fontMap));
-    src.stride = letterWidthInByte;
-    src.mode = static_cast<ColorMode>(colorMode);
-    src.color = Color::ColorTo32(letterInfo.color);
-
-    Point dstPos = {dstPosX, dstPosY};
-    BlendOption blendOption;
-    blendOption.opacity = opa;
-
-    Rect subRect(dstPosX, dstPosY, letterW, letterH);
-    BaseGfxEngine::GetInstance()->Blit(*gfxDstBuffer, dstPos, src, subRect, blendOption);
-    return;
-#endif
-
-    screenBuffer += ((dstPosY * screenBufferWidth) + dstPosX) * bufferPxSize;
+    DRAW_UTILS_PREPROCESS(gfxDstBuffer, opa);
+    screenBuffer += ((subRect.GetY() * screenBufferWidth) + subRect.GetX()) * bufferPxSize;
     fontMap += (rowStart * letterWidthInByte) + ((colStart * fontWeight) >> SHIFT_3);
 
     uint8_t offsetInFont = (colStart * fontWeight) % FONT_WEIGHT_8;
-    int16_t temp = (colEnd - colStart) * fontWeight - FONT_WEIGHT_8 + offsetInFont;
+    int16_t temp = subRect.GetWidth() * fontWeight - FONT_WEIGHT_8 + offsetInFont;
     if (temp < 0) {
         temp = 0;
     }
@@ -402,7 +397,7 @@ void DrawUtils::DrawLetter(BufferInfo& gfxDstBuffer, const LabelLetterInfo& lett
             tempOffset = 0;
             tempFontByte = *(fontMap++);
         }
-        fontMap += (letterWidthInByte)-validWidthInByte - 1;
+        fontMap += letterWidthInByte - validWidthInByte - 1;
         screenBuffer += (screenBufferWidth - (colEnd - colStart)) * bufferPxSize;
     }
 }
@@ -1562,6 +1557,88 @@ BottomHalf:
     DrawTriangleTransformPart(gfxDstBuffer, part);
 }
 
+void DrawUtils::AddBorderToImageData(TransformDataInfo& newDataInfo)
+{
+    int16_t border = 1; // 1 : border width
+    int16_t offset = border * 2; // 2 : offset
+    uint16_t width = newDataInfo.header.width;
+    uint16_t height = newDataInfo.header.height;
+    int16_t diff = 0;
+    if (newDataInfo.pxSize > FONT_WEIGHT_8) {
+        width += offset;
+        height += offset;
+        diff = border * newDataInfo.pxSize / FONT_WEIGHT_8;
+    } else {
+        width += offset * FONT_WEIGHT_8 / newDataInfo.pxSize;
+        height += offset;
+        diff = border;
+    }
+    uint16_t widthInByte = width * newDataInfo.pxSize / FONT_WEIGHT_8;
+    if ((width * newDataInfo.pxSize) % FONT_WEIGHT_8 != 0) {
+        widthInByte++;
+    }
+    uint8_t* newData = static_cast<uint8_t*>(UIMalloc(widthInByte * height));
+    if (newData == nullptr) {
+        return;
+    }
+    if (memset_s(newData, widthInByte * height, 0, widthInByte * height) != EOK) {
+        UIFree(static_cast<void*>(newData));
+        newData = nullptr;
+        return;
+    }
+    uint8_t* tmp = newData;
+    uint8_t* data = const_cast<uint8_t*>(newDataInfo.data);
+    tmp += widthInByte * border + diff;
+    for (int i = 0; i < newDataInfo.header.height; ++i) {
+        // 2 : double
+        if (memcpy_s(tmp, widthInByte - diff * 2, data, widthInByte - diff * 2) != EOK) {
+            UIFree(static_cast<void*>(newData));
+            newData = nullptr;
+            return;
+        }
+        tmp += widthInByte;
+        data += widthInByte - diff * 2; // 2 : double
+    }
+    newDataInfo.header.width = width;
+    newDataInfo.header.height = height;
+    newDataInfo.data = newData;
+}
+
+void DrawUtils::UpdateTransMap(int16_t width, int16_t height, TransformMap& transMap)
+{
+    Rect rect = transMap.GetTransMapRect();
+    Matrix3<float> matrix = transMap.GetTransformMatrix();
+    matrix = matrix * (Matrix3<float>::Translate(Vector2<float>(-rect.GetX(), -rect.GetY())));
+    int16_t offsetX = (width - rect.GetWidth()) / 2;  //  2 : half;
+    int16_t offsetY = (height - rect.GetHeight()) / 2;  //  2 : half;
+    rect.SetPosition(rect.GetX() - offsetX, rect.GetY() - offsetY);
+    rect.Resize(width, height);
+    Polygon polygon = Polygon(rect);
+    uint8_t vertexNum = transMap.GetPolygon().GetVertexNum();
+    Vector3<float> imgPoint3;
+    for (uint8_t i = 0; i < vertexNum; i++) {
+        Vector3<float> point(polygon[i].x_, polygon[i].y_, 1);
+        imgPoint3 = matrix * point;
+        if (imgPoint3.x_ < COORD_MIN) {
+            polygon[i].x_ = COORD_MIN;
+        } else if (imgPoint3.x_ > COORD_MAX) {
+            polygon[i].x_ = COORD_MAX;
+        } else {
+            polygon[i].x_ = MATH_ROUND(imgPoint3.x_);
+        }
+
+        if (imgPoint3.y_ < COORD_MIN) {
+            polygon[i].y_ = COORD_MIN;
+        } else if (imgPoint3.y_ > COORD_MAX) {
+            polygon[i].y_ = COORD_MAX;
+        } else {
+            polygon[i].y_ = MATH_ROUND(imgPoint3.y_);
+        }
+    }
+    transMap.SetPolygon(polygon);
+    transMap.invMatrix_ = (matrix * (Matrix3<float>::Translate(Vector2<float>(rect.GetX(), rect.GetY())))).Inverse();
+}
+
 void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
                               const Rect& mask,
                               const Point& position,
@@ -1573,27 +1650,32 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     if (opaScale == OPA_TRANSPARENT) {
         return;
     }
-    Rect trans = transMap.GetBoxRect();
+    TransformDataInfo newDataInfo = dataInfo;
+    TransformMap newTransMap = transMap;
+    // If the width and height of the rectangle of transMap are not equal to the width and height of the ImageHeader,
+    // a border of transparency values to the data cannot be added.
+    if ((transMap.GetTransMapRect().GetWidth() == dataInfo.header.width) &&
+        (transMap.GetTransMapRect().GetHeight() == dataInfo.header.height)) {
+        // Add a border of transparency values to the data
+        AddBorderToImageData(newDataInfo);
+        // Update the transMap according to new rect width and height
+        UpdateTransMap(newDataInfo.header.width, newDataInfo.header.height, newTransMap);
+    }
+
+    Rect trans = newTransMap.GetBoxRect();
     trans.SetX(trans.GetX() + position.x);
     trans.SetY(trans.GetY() + position.y);
     if (!trans.Intersect(trans, mask)) {
+        if (newDataInfo.data != dataInfo.data) {
+            UIFree(reinterpret_cast<void*>(const_cast<uint8_t*>(newDataInfo.data)));
+        }
         return;
     }
-#if ENABLE_HARDWARE_ACCELERATION    // to do for backends
-    DRAW_UTILS_PREPROCESS(gfxDstBuffer, opaScale);
-    TransformOption option;
-    option.algorithm = dataInfo.algorithm;
-    if (ScreenDeviceProxy::GetInstance()->HardwareTransform(dataInfo.data,
-        static_cast<ColorMode>(dataInfo.header.colorMode), transMap.GetTransMapRect(), transMap.GetTransformMatrix(),
-        opaScale, Color::ColorTo32(color), mask, screenBuffer, screenBufferWidth * bufferPxSize, bufferMode, option)) {
-        return;
-    }
-#endif
 
     TriangleTransformDataInfo triangleInfo{
-        dataInfo,
+        newDataInfo,
     };
-    Polygon polygon = transMap.GetPolygon();
+    Polygon polygon = newTransMap.GetPolygon();
     Point p1;
     p1.x = polygon[0].x_ + position.x; // 0:first point
     p1.y = polygon[0].y_ + position.y; // 0:first point
@@ -1611,7 +1693,7 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     triangleInfo.p2 = p2;
     triangleInfo.p3 = p3;
     if ((triangleInfo.p1.y <= mask.GetBottom()) && (triangleInfo.p3.y >= mask.GetTop())) {
-        DrawTriangleTransform(gfxDstBuffer, mask, position, color, opaScale, transMap, triangleInfo);
+        DrawTriangleTransform(gfxDstBuffer, mask, position, color, opaScale, newTransMap, triangleInfo);
     }
 
     triangleInfo.ignoreJunctionPoint = true;
@@ -1628,7 +1710,10 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     triangleInfo.p2 = p3;
     triangleInfo.p3 = p4;
     if ((triangleInfo.p1.y <= mask.GetBottom()) && (triangleInfo.p3.y >= mask.GetTop())) {
-        DrawTriangleTransform(gfxDstBuffer, mask, position, color, opaScale, transMap, triangleInfo);
+        DrawTriangleTransform(gfxDstBuffer, mask, position, color, opaScale, newTransMap, triangleInfo);
+    }
+    if (newDataInfo.data != dataInfo.data) {
+        UIFree(reinterpret_cast<void*>(const_cast<uint8_t*>(newDataInfo.data)));
     }
 }
 
