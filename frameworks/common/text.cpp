@@ -375,7 +375,7 @@ uint16_t Text::GetLetterIndexByPosition(const Rect& textRect, const Style& style
         lineStart = nextLineStart;
     }
     if (nextLineStart == textLen) {
-        return TEXT_ELLIPSIS_END_INV;
+       // return TEXT_ELLIPSIS_END_INV;
     }
     /* Calculate the x coordinate */
     width = pos.x;
