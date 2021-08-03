@@ -112,13 +112,13 @@ void UITestUIList::TearDown()
 
 const UIView* UITestUIList::GetTestView()
 {
-    UIKit_List_Init_Test_Full_Screen_001();
-    UIKit_List_Init_Test_halh_Screen_001();
-    UIKit_List_Scroll_Test_Blank_Set_001();
+    UIKitListInitTestFullScreen001();
+    UIKitListInitTestHalfScreen001();
+    UIKitListScrollTestBlank_Set001();
     return container_;
 }
 
-void UITestUIList::UIKit_List_Init_Test_Full_Screen_001()
+void UITestUIList::UIKitListInitTestFullScreen001()
 {
     if (container_ == nullptr) {
         return;
@@ -133,6 +133,7 @@ void UITestUIList::UIKit_List_Init_Test_Full_Screen_001()
     adapter1_->SetData(adapterData2_);
 
     UIList* list = new UIList(UIList::VERTICAL);
+    list->SetViewId("test_list_full_screen_list_id");
     list->SetIntercept(true);
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     list->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, VIEW_DISTANCE_TO_TOP_SIDE, g_listW,
@@ -144,7 +145,7 @@ void UITestUIList::UIKit_List_Init_Test_Full_Screen_001()
     container_->Add(list);
 }
 
-void UITestUIList::UIKit_List_Init_Test_halh_Screen_001()
+void UITestUIList::UIKitListInitTestHalfScreen001()
 {
     if (container_ == nullptr) {
         return;
@@ -161,6 +162,7 @@ void UITestUIList::UIKit_List_Init_Test_halh_Screen_001()
 
     UIList* list = new UIList(UIList::VERTICAL);
     list->SetIntercept(true);
+    list->SetViewId("test_list_hal_screen_list_id");
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     // 2: half of screen width
     list->SetPosition(Screen::GetInstance().GetWidth() / 2 + VIEW_DISTANCE_TO_LEFT_SIDE, VIEW_DISTANCE_TO_TOP_SIDE,
@@ -219,8 +221,8 @@ void UITestUIList::SetControlButton()
         setYScrollBarInvisableBtn_ = new UILabelButton();
     }
     positionX_ += 5; // 5: increase y-coordinate
-    SetUpButton(setBlankBtn_, "开启blank");
-    SetUpButton(setBlankOffBtn_, "关闭blank");
+    SetUpButton(setBlankBtn_, "开启blank", "test_ui_list_open_blank_button_id");
+    SetUpButton(setBlankOffBtn_, "关闭blank", "test_ui_list_close_blank_button_id");
     SetUpButton(setThrowDragBtn_, "开启throwDrag");
     SetUpButton(setThrowDragOffBtn_, "关闭throwDrag");
     SetUpButton(setRefreshBtn_, "刷新list");
@@ -238,12 +240,13 @@ void UITestUIList::SetControlButton()
     SetUpButton(setYScrollBarInvisableBtn_, "不显示纵向滚动条");
 }
 
-void UITestUIList::UIKit_List_Scroll_Test_Blank_Set_001()
+void UITestUIList::UIKitListScrollTestBlank_Set001()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UILIst设置blank和throwDrag");
+    label->SetViewId("test_ui_list_blank_set_label_id");
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, g_listH - 132); // 132: decrease y-coordinate
 
@@ -257,6 +260,7 @@ void UITestUIList::UIKit_List_Scroll_Test_Blank_Set_001()
     adapter4_->SetData(adapterData2_);
 
     UIList* list = new UIList(UIList::VERTICAL);
+    list->SetViewId("test_ui_list_blank_set_list_id");
     list->SetIntercept(true);
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     list->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_listH - 95, g_listW, g_listH); // 95: decrease y-coordinate
@@ -372,7 +376,7 @@ void UITestUIList::OnItemSelected(int16_t index, UIView* view)
     }
 }
 
-void UITestUIList::SetUpButton(UILabelButton* btn, const char* title)
+void UITestUIList::SetUpButton(UILabelButton* btn, const char* title, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -381,6 +385,7 @@ void UITestUIList::SetUpButton(UILabelButton* btn, const char* title)
     btn->SetPosition(positionX_ + VIEW_DISTANCE_TO_LEFT_SIDE, positionY_, BUTTON_WIDHT3, BUTTON_HEIGHT3);
     positionY_ += btn->GetHeight() + 10;    // 10: button interval
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

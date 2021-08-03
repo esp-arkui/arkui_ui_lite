@@ -24,6 +24,18 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_FOCUS_MANAGER_LEFT_BTN_ID_01 = "test_focus_manager_left_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_RIGHT_BTN_ID_01 = "test_focus_manager_right_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_UP_BTN_ID_01 = "test_focus_manager_up_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_DOWN_BTN_ID_01 = "test_focus_manager_down_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_FOCUS_BTN_ID_01 = "test_focus_manager_focus_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_UNFOCUSED_BTN_ID_01 = "test_focus_manager_unfocused_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_INTERCEPT_BTN_ID_01 = "test_focus_manager_intercept_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_UNBLOCK_BTN_ID_01 = "test_focus_manager_unblock_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_RESET_BTN_ID_01 = "test_focus_manager_reset_01";
+constexpr char* UI_TEST_FOCUS_MANAGER_CLEAR_BTN_ID_01 = "test_focus_manager_clear_01";
+}
 class UITestFocusManager : public UITest {
 public:
     UITestFocusManager() {}
@@ -32,14 +44,14 @@ public:
     void TearDown() override;
     const UIView* GetTestView() override;
 
-    void UIKit_Focus_Manager_Test_001();
+    void UIKitFocusManagerTest001();
 
 private:
     UIView* CreateTestUILabel(UIViewGroup* parent, int16_t x, int16_t y,
         const char* text, bool focusable);
     UIViewGroup* CreateTestUIViewGroup(UIViewGroup* parent, bool focusable, bool interceptFocus);
     UILabelButton* SetUpButton(const char* title, int16_t x, int16_t y, UIViewGroup* viewGroup,
-        UIView::OnClickListener* listener);
+        UIView::OnClickListener* listener, const char* id = nullptr);
     UIScrollView* container_ = nullptr;
     UIView::OnFocusListener* testOnFocusListener_ = nullptr;
     UIView::OnClickListener* requestFocusByDirectionLeftListener_ = nullptr;

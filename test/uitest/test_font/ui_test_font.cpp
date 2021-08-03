@@ -54,7 +54,7 @@ void UITestFont::TearDown()
     container_ = nullptr;
 }
 
-void UITestFont::InnerTestTitle(const char* title)
+void UITestFont::InnerTestTitle(const char* title, const char* id)
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, Screen::GetInstance().GetWidth(),
@@ -65,6 +65,7 @@ void UITestFont::InnerTestTitle(const char* title)
     titleLabel->SetFontId(F_SOURCEHANSANSSC_REGULAR_18_4);
 #endif
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + GAP;
 }
@@ -94,7 +95,7 @@ void UITestFont::UIKitFontTestDispaly001()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display single line Chinese");
+    InnerTestTitle(" Display single line Chinese", UI_TEST_FONT_DISPLAY_LABEL_01);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -114,7 +115,7 @@ void UITestFont::UIKitFontTestDispaly002()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display multiline Chinese");
+    InnerTestTitle(" Display multiline Chinese", UI_TEST_FONT_DISPLAY_LABEL_02);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT * 2); // 2 : double
@@ -135,7 +136,7 @@ void UITestFont::UIKitFontTestDispaly003()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display single line English");
+    InnerTestTitle(" Display single line English", UI_TEST_FONT_DISPLAY_LABEL_03);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -156,7 +157,7 @@ void UITestFont::UIKitFontTestDispaly004()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display multiline English");
+    InnerTestTitle(" Display multiline English", UI_TEST_FONT_DISPLAY_LABEL_04);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT * 2); // 2 : double
@@ -177,7 +178,7 @@ void UITestFont::UIKitFontTestDispaly005()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display single line Chinese and English");
+    InnerTestTitle(" Display single line Chinese and English", UI_TEST_FONT_DISPLAY_LABEL_05);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -197,7 +198,7 @@ void UITestFont::UIKitFontTestDispaly006()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display multiline Chinese and English");
+    InnerTestTitle(" Display multiline Chinese and English", UI_TEST_FONT_DISPLAY_LABEL_06);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT * 2); // 2 : double
@@ -218,7 +219,7 @@ void UITestFont::UIKitFontTestDispaly007()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display single line text color");
+    InnerTestTitle(" Display single line text color", UI_TEST_FONT_DISPLAY_LABEL_07);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
@@ -239,7 +240,7 @@ void UITestFont::UIKitFontTestDispaly008()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Display multiline text color");
+    InnerTestTitle(" Display multiline text color", UI_TEST_FONT_DISPLAY_LABEL_08);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH, LABEL_HEIGHT * 2); // 2 : double
@@ -260,7 +261,7 @@ void UITestFont::UIKitFontTestBaseline001()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle("Font baseline alignment");
+    InnerTestTitle("Font baseline alignment", UI_TEST_FONT_BASELINE_LABEL_01);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH / 2, LABEL_HEIGHT); // 2 : half
@@ -293,7 +294,7 @@ void UITestFont::UIKitFontTestBaseline002()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Font baseline alignment");
+    InnerTestTitle(" Font baseline alignment", UI_TEST_FONT_BASELINE_LABEL_02);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH / 2, LABEL_HEIGHT); // 2 : half
@@ -328,7 +329,7 @@ void UITestFont::UIKitFontTestLineHeight001()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Font lineheight alignment");
+    InnerTestTitle(" Font lineheight alignment", UI_TEST_FONT_LINE_HEIGHT_LABEL_01);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH / 2, LABEL_HEIGHT * 2); // 2 : half
@@ -361,7 +362,7 @@ void UITestFont::UIKitFontTestLineHeight002()
     if (container_ == nullptr) {
         return;
     }
-    InnerTestTitle(" Font lineheight alignment");
+    InnerTestTitle(" Font lineheight alignment", UI_TEST_FONT_LINE_HEIGHT_LABEL_02);
     UILabel* label = new UILabel();
     label->SetPosition(positionX_, positionY_);
     label->Resize(LABEL_WIDTH / 2, LABEL_HEIGHT * 2); // 2 : half

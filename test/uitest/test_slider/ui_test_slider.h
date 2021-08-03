@@ -23,6 +23,30 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_SLIDER_SETRANGE_INCMIN_BTN_ID_01 = "test_slider_set_range_01";
+constexpr char* UI_TEST_SLIDER_SETRANGE_DECMIN_BTN_ID_02 = "test_slider_set_range_02";
+constexpr char* UI_TEST_SLIDER_SETRANGE_INCMAX_BTN_ID_03 = "test_slider_set_range_03";
+constexpr char* UI_TEST_SLIDER_SETRANGE_DECMAX_BTN_ID_04 = "test_slider_set_range_04";
+constexpr char* UI_TEST_SLIDER_SETVALUE_BTN_ID_01 = "test_slider_set_value_01";
+constexpr char* UI_TEST_SLIDER_SETVALUE_BTN_ID_02 = "test_slider_set_value_02";
+constexpr char* UI_TEST_SLIDER_SETIMAGE_BTN_ID_01 = "test_slider_set_image_01";
+constexpr char* UI_TEST_SLIDER_UNSETIMAGE_BTN_ID_02 = "test_slider_unset_image_02";
+constexpr char* UI_TEST_SLIDER_SETIMAGE_LABEL_ID_01 = "test_slider_set_image_label_01";
+constexpr char* UI_TEST_SLIDER_SETSTYLE_BTN_ID_01 = "test_slider_set_style_01";
+constexpr char* UI_TEST_SLIDER_SETSTYLE_BTN_ID_02 = "test_slider_set_style_02";
+constexpr char* UI_TEST_SLIDER_SETKNOBWIDTH_BTN_ID_01 = "test_slider_set_knob_width_01";
+constexpr char* UI_TEST_SLIDER_SETKNOBWIDTH_BTN_ID_02 = "test_slider_set_knob_width_02";
+constexpr char* UI_TEST_SLIDER_SETSTEP_BTN_ID_01 = "test_slider_set_step_01";
+constexpr char* UI_TEST_SLIDER_SETCOLOR_BTN_ID_01 = "test_slider_set_color_01";
+constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_01 = "test_slider_set_direction_01";
+constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_02 = "test_slider_set_direction_02";
+constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_03 = "test_slider_set_direction_03";
+constexpr char* UI_TEST_SLIDER_SETDIRECTION_BTN_ID_04 = "test_slider_set_direction_04";
+constexpr char* UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_01 = "test_slider_set_valid_size_01";
+constexpr char* UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_02 = "test_slider_set_valid_size_02";
+constexpr char* UI_TEST_SLIDER_SETRADIUS_BTN_ID_01 = "test_slider_set_radius_01";
+}
 class TestUISliderEventListener : public UISlider::UISliderEventListener,
                                   public UIView::OnClickListener,
                                   public UIView::OnDragListener {
@@ -52,30 +76,30 @@ public:
     void TearDown() override;
     const UIView* GetTestView() override;
 
-    void SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y);
-    void SetUpLabel(const char* title, int16_t x, int16_t y) const;
+    void SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y, const char* id = nullptr);
+    void SetUpLabel(const char* title, int16_t x, int16_t y, const char* id = nullptr) const;
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
     bool ExpandClick1(UIView& view, const ClickEvent& event);
     bool ExpandClick2(UIView& view, const ClickEvent& event);
 
-    void UIKit_Slider_Test_UISlider_001();
-    void UIKit_Slider_Test_SetRange_002();
-    void UIKit_Slider_Test_SetValue_003();
-    void UIKit_Slider_Test_SetImage_004();
-    void UIKit_Slider_Test_SetStyle_005();
-    void UIKit_Slider_Test_GetStyle_006();
-    void UIKit_Slider_Test_SetKnobWidth_007();
-    void UIKit_Slider_Test_SetStep_008();
-    void UIKit_Slider_Test_SetColor_009();
-    void UIKit_Slider_Test_SetDirection_010();
-    void UIKit_Slider_Test_SetValidSize_011();
-    void UIKit_Slider_Test_SetRadius_012();
-    void UIKit_Slider_Test_SetOnChangeListener_013();
-    void UIKit_Slider_Test_SetOnReleaseListener_014();
-    void UIKit_Slider_Test_SetOnClickCallback_015();
-    void UIKit_Slider_Test_SetOnDragCallback_016();
-    void UIKit_Slider_Test_SetCircularStyle_017();
+    void UIKitSliderTestUISlider001();
+    void UIKitSliderTestSetRange002();
+    void UIKitSliderTestSetValue003();
+    void UIKitSliderTestSetImage004();
+    void UIKitSliderTestSetStyle005();
+    void UIKitSliderTestGetStyle006();
+    void UIKitSliderTestSetKnobWidth007();
+    void UIKitSliderTestSetStep008();
+    void UIKitSliderTestSetColor009();
+    void UIKitSliderTestSetDirection010();
+    void UIKitSliderTestSetValidSize011();
+    void UIKitSliderTestSetRadius012();
+    void UIKitSliderTestSetOnChangeListener013();
+    void UIKitSliderTestSetOnReleaseListener014();
+    void UIKitSliderTestSetOnClickCallback015();
+    void UIKitSliderTestSetOnDragCallback016();
+    void UIKitSliderTestSetCircularStyle017();
 
 private:
     static constexpr int32_t DEFAULT_VALUE = 20;

@@ -22,6 +22,15 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_01 = "test_arc_label_display_01";
+constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_02 = "test_arc_label_display_02";
+constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_03 = "test_arc_label_display_03";
+constexpr char* UI_TEST_ARC_LABEL_DISPLAY_ID_04 = "test_arc_label_display_04";
+constexpr char* UI_TEST_ARC_LABEL_ALIGN_ID_01 = "test_arc_label_align_01";
+constexpr char* UI_TEST_ARC_LABEL_ALIGN_ID_02 = "test_arc_label_align_02";
+constexpr char* UI_TEST_ARC_LABEL_ALIGN_ID_03 = "test_arc_label_align_03";
+}
 class UITestArcLabel : public UITest {
 public:
     UITestArcLabel() {}
@@ -33,46 +42,46 @@ public:
     /**
      * @brief Test display arc text from 0 to 270 INSIDE
      */
-    void UIKit_UIArcLabel_Test_Display_001();
+    void UIKitUIArcLabelTestDisplay001();
 
     /**
      * @brief Test display arc text from 270 to 0 INSIDE
      */
-    void UIKit_UIArcLabel_Test_Display_002();
+    void UIKitUIArcLabelTestDisplay002();
 
     /**
      * @brief Test display arc text from 0 to 270 OUTSIDE
      */
-    void UIKit_UIArcLabel_Test_Display_003();
+    void UIKitUIArcLabelTestDisplay003();
 
     /**
      * @brief Test display arc text from 270 to 0 OUTSIDE
      */
-    void UIKit_UIArcLabel_Test_Display_004();
+    void UIKitUIArcLabelTestDisplay004();
 
     /**
      * @brief Test arc text align LEFT
      */
-    void UIKit_UIArcLabel_Test_Align_001();
+    void UIKitUIArcLabelTestAlign001();
 
     /**
      * @brief Test arc text align CENTER
      */
-    void UIKit_UIArcLabel_Test_Align_002();
+    void UIKitUIArcLabelTestAlign002();
 
     /**
      * @brief Test arc text align RIGHT
      */
-    void UIKit_UIArcLabel_Test_Align_003();
+    void UIKitUIArcLabelTestAlign003();
 
 private:
     UIScrollView* container_ = nullptr;
 
-    void InnerTestTitle(const char* title, int16_t x, int16_t y) const;
+    void InnerTestTitle(const char* title, int16_t x, int16_t y, const char* id) const;
 
     // for direction and orientation
     void TestArcLabelDisplay(const char* title, const int16_t startAngle, const int16_t endAngle,
-        const UIArcLabel::TextOrientation orientation, int16_t x, int16_t y);
+        const UIArcLabel::TextOrientation orientation, int16_t x, int16_t y, const char* id);
 };
 } // namespace OHOS
 #endif // UI_TEST_ARC_LABEL_H

@@ -34,9 +34,9 @@ void UITestViewGroup::TearDown()
 
 const UIView* UITestViewGroup::GetTestView()
 {
-    UIKit_ViewGroup_Test_AddRemove_001();
-    UIKit_ViewGroup_Test_Add_Error_001();
-    UIKit_ViewGroup_Test_Insert_Error_001();
+    UIKitViewGroupTestAddRemove001();
+    UIKitViewGroupTestAddError001();
+    UIKitViewGroupTestInsertError001();
     return container_;
 }
 
@@ -71,14 +71,14 @@ UILabelButton* UITestViewGroup::CreateButton(const char* text, int16_t width, in
     return button;
 }
 
-void UITestViewGroup::UIKit_ViewGroup_Test_AddRemove_001()
+void UITestViewGroup::UIKitViewGroupTestAddRemove001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_ViewGroup_Test_AddRemove_001");
+    group->SetViewId("UIKitViewGroupTestAddRemove001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
@@ -110,14 +110,14 @@ void UITestViewGroup::UIKit_ViewGroup_Test_AddRemove_001()
     container_->Add(group);
 }
 
-void UITestViewGroup::UIKit_ViewGroup_Test_Add_Error_001()
+void UITestViewGroup::UIKitViewGroupTestAddError001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_ViewGroup_Test_Add_Error_001");
+    group->SetViewId("UIKitViewGroupTestAddError001");
     container_->Add(group);
 
     UILabel* label = CreateTitleLabel();
@@ -147,17 +147,17 @@ void UITestViewGroup::UIKit_ViewGroup_Test_Add_Error_001()
     addSelfBtn_->LayoutCenterOfParent();
     addSelfBtn_->LayoutRightToSibling("addMultiParentBtn", 10); // 10: offset
 
-    group->LayoutBottomToSibling("UIKit_ViewGroup_Test_AddRemove_001", 10); // 10: offset
+    group->LayoutBottomToSibling("UIKitViewGroupTestAddRemove001", 10); // 10: offset
 }
 
-void UITestViewGroup::UIKit_ViewGroup_Test_Insert_Error_001()
+void UITestViewGroup::UIKitViewGroupTestInsertError001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_ViewGroup_Test_Insert_Error_001");
+    group->SetViewId("UIKitViewGroupTestInsertError001");
     container_->Add(group);
 
     UILabel* label = CreateTitleLabel();
@@ -187,7 +187,7 @@ void UITestViewGroup::UIKit_ViewGroup_Test_Insert_Error_001()
     insertSelfBtn_->LayoutCenterOfParent();
     insertSelfBtn_->LayoutRightToSibling("insertMultiParentBtn", 10); // 10: offset
 
-    group->LayoutBottomToSibling("UIKit_ViewGroup_Test_Add_Error_001", 10); // 10: offset
+    group->LayoutBottomToSibling("UIKitViewGroupTestAddError001", 10); // 10: offset
 }
 
 bool UITestViewGroup::OnClick(UIView& view, const ClickEvent& event)
@@ -225,7 +225,7 @@ void UITestViewGroup::AddView()
     view->SetPosition(50, 50); // 50: position x 50: position y
     view->SetStyle(STYLE_BACKGROUND_COLOR, Color::Yellow().full);
     view->SetViewId("id_view1");
-    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKit_ViewGroup_Test_AddRemove_001"));
+    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKitViewGroupTestAddRemove001"));
     if (vg != nullptr) {
         vg->Add(view);
         vg->Invalidate();
@@ -234,7 +234,7 @@ void UITestViewGroup::AddView()
 
 void UITestViewGroup::RemoveView()
 {
-    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKit_ViewGroup_Test_AddRemove_001"));
+    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKitViewGroupTestAddRemove001"));
     UIView* view1 = container_->GetChildById("id_view1");
     if ((vg != nullptr) && (view1 != nullptr)) {
         vg->Remove(view1);
@@ -244,7 +244,7 @@ void UITestViewGroup::RemoveView()
 
 void UITestViewGroup::RemoveAndAddView()
 {
-    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKit_ViewGroup_Test_AddRemove_001"));
+    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKitViewGroupTestAddRemove001"));
     UIView* view1 = container_->GetChildById("id_view1");
     if ((vg != nullptr) && (view1 != nullptr)) {
         vg->Remove(view1);
@@ -256,7 +256,7 @@ void UITestViewGroup::RemoveAndAddView()
 void UITestViewGroup::AddMultiParent()
 {
     UIView* view = new UIView();
-    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKit_ViewGroup_Test_Add_Error_001"));
+    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKitViewGroupTestAddError001"));
     if ((vg != nullptr) && (view != nullptr)) {
         vg->Add(view);
     }
@@ -266,7 +266,7 @@ void UITestViewGroup::AddMultiParent()
 void UITestViewGroup::InsertMultiParent()
 {
     UIView* view = new UIView();
-    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKit_ViewGroup_Test_Insert_Error_001"));
+    UIViewGroup* vg = static_cast<UIViewGroup*>(container_->GetChildById("UIKitViewGroupTestInsertError001"));
     if ((vg != nullptr) && (view != nullptr)) {
         vg->Insert(nullptr, view);
     }

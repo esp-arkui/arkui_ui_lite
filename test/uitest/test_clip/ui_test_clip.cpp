@@ -106,16 +106,17 @@ bool UITestClip::OnClick(UIView& view, const ClickEvent& event)
         ClipImage(imageView2_, path);
         imageView2_->Invalidate();
     }
-    
+
     return true;
 }
 
-void UITestClip::CreateTitleLabel(const char* title)
+void UITestClip::CreateTitleLabel(const char* title, const char* id)
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, Screen::GetInstance().GetWidth(), TITLE_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(id);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + 8; // 8: gap
 }
@@ -137,7 +138,7 @@ UIImageView* UITestClip::CreateImageView()
     return imageVIew;
 }
 
-void UITestClip::SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y)
+void UITestClip::SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -145,6 +146,7 @@ void UITestClip::SetUpButton(UILabelButton* btn, const char* title, int16_t x, i
     container_->Add(btn);
     btn->SetPosition(x, y, BUTTON_WIDHT2, BUTTON_HEIGHT2);
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);
@@ -172,14 +174,14 @@ void UITestClip::UIKitClipTest001()
     int16_t x = VIEW_DISTANCE_TO_LEFT_SIDE + BLOCK_WIDTH + GAP;
     int16_t y = positionY_;
     btnRadiusInc1_ = new UILabelButton();
-    SetUpButton(btnRadiusInc1_, "半径+1", x, y);
+    SetUpButton(btnRadiusInc1_, "半径+1", x, y, UI_TEST_CLIP_RADIUS_ADD_ONE_BTN_ID);
     btnRadiusDec1_ = new UILabelButton();
-    SetUpButton(btnRadiusDec1_, "半径-1", x + BUTTON_WIDHT2 + GAP, y);
+    SetUpButton(btnRadiusDec1_, "半径-1", x + BUTTON_WIDHT2 + GAP, y, UI_TEST_CLIP_RADIUS_REDUCE_ONE_BTN_ID);
     btnRadiusInc5_ = new UILabelButton();
     y += BUTTON_HEIGHT2 + GAP;
-    SetUpButton(btnRadiusInc5_, "半径+5", x, y);
+    SetUpButton(btnRadiusInc5_, "半径+5", x, y, UI_TEST_CLIP_RADIUS_ADD_FIVE_BTN_ID);
     btnRadiusDec5_ = new UILabelButton();
-    SetUpButton(btnRadiusDec5_, "半径-5", x + BUTTON_WIDHT2 + GAP, y);
+    SetUpButton(btnRadiusDec5_, "半径-5", x + BUTTON_WIDHT2 + GAP, y, UI_TEST_CLIP_RADIUS_REDUCE_FIVE_BTN_ID);
     y += BUTTON_HEIGHT2 + GAP;
 
     radiusText_ = new UILabel();
@@ -204,18 +206,18 @@ void UITestClip::UIKitClipTest002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("弧形裁剪 ");
+    CreateTitleLabel("弧形裁剪 ", UI_TEST_CLIP_ARC_LABEL_ID);
     int16_t x = VIEW_DISTANCE_TO_LEFT_SIDE + BLOCK_WIDTH + GAP;
     int16_t y = positionY_;
     btnStartAngleInc_ = new UILabelButton();
-    SetUpButton(btnStartAngleInc_, "起始角度+", x, y);
+    SetUpButton(btnStartAngleInc_, "起始角度+", x, y, UI_TEST_CLIP_START_ANGLE_ADD_BTN_ID);
     btnStartAngleDec_ = new UILabelButton();
-    SetUpButton(btnStartAngleDec_, "起始角度-", x + BUTTON_WIDHT2 + GAP, y);
+    SetUpButton(btnStartAngleDec_, "起始角度-", x + BUTTON_WIDHT2 + GAP, y, UI_TEST_CLIP_START_ANGLE_REDUCE_BTN_ID);
     btnEndAngleInc_ = new UILabelButton();
     y += BUTTON_HEIGHT2 + GAP;
-    SetUpButton(btnEndAngleInc_, "结束角度+", x, y);
+    SetUpButton(btnEndAngleInc_, "结束角度+", x, y, UI_TEST_CLIP_END_ANGLE_ADD_BTN_ID);
     btnEndAngleDec_ = new UILabelButton();
-    SetUpButton(btnEndAngleDec_, "结束角度-", x + BUTTON_WIDHT2 + GAP, y);
+    SetUpButton(btnEndAngleDec_, "结束角度-", x + BUTTON_WIDHT2 + GAP, y, UI_TEST_CLIP_END_ANGLE_REDUCE_BTN_ID);
     y += BUTTON_HEIGHT2 + GAP;
 
     ClipPath path;
@@ -231,7 +233,7 @@ void UITestClip::UIKitClipTest003()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("多边形裁剪----五角星 ");
+    CreateTitleLabel("多边形裁剪----五角星 ", UI_TEST_CLIP_POLYGON_FIVE_STAR_LABEL_ID);
 
     int32_t rot = 0;
     // 80: Radius of outer circle
@@ -264,7 +266,7 @@ void UITestClip::UIKitClipTest004()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("贝塞尔曲线裁剪 ");
+    CreateTitleLabel("贝塞尔曲线裁剪 ", UI_TEST_CLIP_BESSEL_LABEL_ID);
 
     ClipPath path;
     // {50, 50}, {100, 50}, {100, 100}, {50, 100}: path points; {60, 110}, {80, 10}: control points of curve
@@ -279,7 +281,7 @@ void UITestClip::UIKitClipTest005()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("多边形裁剪 ");
+    CreateTitleLabel("多边形裁剪 ", UI_TEST_CLIP_POLYGON_LABEL_ID);
 
     ClipPath path;
     // {20, 70}, {50, 60}, {110, 80}, {110, 130}, {50, 100}, {20, 120}: path points

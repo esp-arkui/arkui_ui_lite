@@ -102,12 +102,12 @@ void UITestDumpDomTree::TearDown()
 const UIView* UITestDumpDomTree::GetTestView()
 {
     positionY_ = 0;
-    UIKit_TestDumpDom_001();
-    UIKit_TestDumpDom_002();
-    UIKit_TestDumpDom_003();
-    UIKit_TestDumpDom_004();
-    UIKit_TestDumpDom_005();
-    UIKit_TestDumpDom_006();
+    UIKitTestDumpDom_001();
+    UIKitTestDumpDom_002();
+    UIKitTestDumpDom_003();
+    UIKitTestDumpDom_004();
+    UIKitTestDumpDom_005();
+    UIKitTestDumpDom_006();
     return container_;
 }
 
@@ -154,7 +154,7 @@ private:
     const char* id_;
 };
 
-void UITestDumpDomTree::UIKit_TestDumpDom_001()
+void UITestDumpDomTree::UIKitTestDumpDom_001()
 {
     if (container_ != nullptr) {
         UILabel* label = GetTitleLabel("dump checkbox");
@@ -241,7 +241,7 @@ void UITestDumpDomTree::CreateButtons(GridLayout* layout)
     dumpButton5->SetOnClickListener(clickDumpDomListener5_);
 }
 
-void UITestDumpDomTree::UIKit_TestDumpDom_002()
+void UITestDumpDomTree::UIKitTestDumpDom_002()
 {
     if (container_ != nullptr) {
         UIViewGroup* group2 = new UIViewGroup();
@@ -277,7 +277,7 @@ void UITestDumpDomTree::UIKit_TestDumpDom_002()
     }
 }
 
-void UITestDumpDomTree::UIKit_TestDumpDom_003()
+void UITestDumpDomTree::UIKitTestDumpDom_003()
 {
     if (container_ != nullptr) {
         UIViewGroup* group5 = new UIViewGroup();
@@ -321,7 +321,7 @@ void UITestDumpDomTree::UIKit_TestDumpDom_003()
     }
 }
 
-void UITestDumpDomTree::UIKit_TestDumpDom_004()
+void UITestDumpDomTree::UIKitTestDumpDom_004()
 {
     if (container_ != nullptr) {
         UIViewGroup* group4 = new UIViewGroup();
@@ -365,7 +365,7 @@ void UITestDumpDomTree::UIKit_TestDumpDom_004()
     }
 }
 
-void UITestDumpDomTree::UIKit_TestDumpDom_005()
+void UITestDumpDomTree::UIKitTestDumpDom_005()
 {
     if (container_ != nullptr) {
         UIViewGroup* group3 = new UIViewGroup();
@@ -432,7 +432,7 @@ void UITestDumpDomTree::UIKit_TestDumpDom_005()
     }
 }
 
-void UITestDumpDomTree::UIKit_TestDumpDom_006()
+void UITestDumpDomTree::UIKitTestDumpDom_006()
 {
     if (container_ != nullptr) {
         UIViewGroup* group6 = new UIViewGroup();

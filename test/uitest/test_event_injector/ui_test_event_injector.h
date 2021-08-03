@@ -28,6 +28,19 @@
 #include "layout/grid_layout.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_EVENT_INJECTOR_CLICK_BTN_ID_01 = "test_event_injector_click_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_DRAG_BTN_ID_01 = "test_event_injector_drag_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_LONG_PRESS_BTN_ID_01 = "test_event_injector_long_press_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_KEY_EVENT_BTN_ID_01 = "test_event_injector_key_event_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_DRAG_LABEL_ID_01 = "test_event_injector_drag_label_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_UP_TO_DOWN_BTN_ID_01 = "test_event_injector_up_to_down_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_DOWN_TO_UP_BTN_ID_01 = "test_event_injector_down_to_up_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_LEFT_TO_RIGHT_ID_01 = "test_event_injector_left_to_right_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_RIGHT_TO_LEFT_BTN_ID_01 = "test_event_injector_right_to_left_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_ULEFT_TO_LRIGHT_BTN_ID_01 = "test_event_injector_uleft_to_lright_01";
+constexpr char* UI_TEST_EVENT_INJECTOR_LRIGHT_TO_ULEFT_BTN_ID_01 = "test_event_injector_lright_to_uleft_01";
+}
 class TestEventInjectorView;
 class UITestEventInjector : public UITest, public UIView::OnClickListener {
 public:

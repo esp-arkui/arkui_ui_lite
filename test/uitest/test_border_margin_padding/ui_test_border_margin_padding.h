@@ -30,7 +30,11 @@ namespace OHOS {
 class BorderListener;
 class MarginListener;
 class PaddingListener;
-
+namespace {
+constexpr char* UI_TEST_BORDER_MARGIN_PADDING_MARGIN_BTN_ID_01 = "test_button_border_margin_padding_margin";
+constexpr char* UI_TEST_BORDER_MARGIN_PADDING_BORDER_BTN_ID_01 = "test_button_border_margin_padding_border";
+constexpr char* UI_TEST_BORDER_MARGIN_PADDING_PADDING_BTN_ID_01 = "test_button_border_margin_padding_padding";
+}
 class UITestBorderMarginPadding : public UITest {
 public:
     UITestBorderMarginPadding()
@@ -45,24 +49,24 @@ public:
     const UIView* GetTestView() override;
     void ReloadTest();
 
-    void UIKit_UITestBorderMarginPadding_Test_001();
-    void UIKit_UITestBorderMarginPadding_Test_002();
-    void UIKit_UITestBorderMarginPadding_Test_003();
-    void UIKit_UITestBorderMarginPadding_Test_004();
-    void UIKit_UITestBorderMarginPadding_Test_005();
-    void UIKit_UITestBorderMarginPadding_Test_006();
-    void UIKit_UITestBorderMarginPadding_Test_007();
-    void UIKit_UITestBorderMarginPadding_Test_008();
-    void UIKit_UITestBorderMarginPadding_Test_009();
-    void UIKit_UITestBorderMarginPadding_Test_010();
-    void UIKit_UITestBorderMarginPadding_Test_011();
-    void UIKit_UITestBorderMarginPadding_Test_012();
-    void UIKit_UITestBorderMarginPadding_Test_013();
-    void UIKit_UITestBorderMarginPadding_Test_014();
-    void UIKit_UITestBorderMarginPadding_Test_015();
-    void UIKit_UITestBorderMarginPadding_Test_016();
-    void UIKit_UITestBorderMarginPadding_Test_017();
-    void UIKit_UITestBorderMarginPadding_Test_018();
+    void UIKitUITestBorderMarginPaddingTest001();
+    void UIKitUITestBorderMarginPaddingTest002();
+    void UIKitUITestBorderMarginPaddingTest003();
+    void UIKitUITestBorderMarginPaddingTest004();
+    void UIKitUITestBorderMarginPaddingTest005();
+    void UIKitUITestBorderMarginPaddingTest006();
+    void UIKitUITestBorderMarginPaddingTest007();
+    void UIKitUITestBorderMarginPaddingTest008();
+    void UIKitUITestBorderMarginPaddingTest009();
+    void UIKitUITestBorderMarginPaddingTest010();
+    void UIKitUITestBorderMarginPaddingTest011();
+    void UIKitUITestBorderMarginPaddingTest012();
+    void UIKitUITestBorderMarginPaddingTest013();
+    void UIKitUITestBorderMarginPaddingTest014();
+    void UIKitUITestBorderMarginPaddingTest015();
+    void UIKitUITestBorderMarginPaddingTest016();
+    void UIKitUITestBorderMarginPaddingTest017();
+    void UIKitUITestBorderMarginPaddingTest018();
     Style style_;
 
 private:

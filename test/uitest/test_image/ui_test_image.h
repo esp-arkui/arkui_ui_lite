@@ -27,6 +27,23 @@
 #endif
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_IMAGE_ID = "Image";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_01 = "test_image_set_image_01";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_02 = "test_image_set_image_02";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_04 = "test_image_set_image_04";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_05 = "test_image_set_image_05";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_06 = "test_image_set_image_06";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_07 = "test_image_set_image_07";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_08 = "test_image_set_image_08";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_09 = "test_image_set_image_09";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_10 = "test_image_set_image_10";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_11 = "test_image_set_image_11";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_12 = "test_image_set_image_12";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_13 = "test_image_set_image_13";
+constexpr char* UI_TEST_IMAGE_SETIMAGE_ID_14 = "test_image_set_image_14";
+constexpr char* UI_TEST_IMAGE_UNCOMPRESS_ID_01 = "test_image_uncompress_01";
+}
 #ifndef VERSION_LITE
 class UITestImage : public UITest, public OHOS::UIView::OnClickListener {
 #else
@@ -38,25 +55,25 @@ public:
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
-    void UIKit_UIImage_Test_SetImage_001();
-    void UIKit_UIImage_Test_SetImage_002();
-    void UIKit_UIImage_Test_SetImage_004();
-    void UIKit_UIImage_Test_SetImage_005();
-    void UIKit_UIImage_Test_SetImage_006();
-    void UIKit_UIImage_Test_SetImage_007();
-    void UIKit_UIImage_Test_SetImage_008();
-    void UIKit_UIImage_Test_SetImage_009();
-    void UIKit_UIImage_Test_SetImage_010();
-    void UIKit_UIImage_Test_SetImage_011();
-    void UIKit_UIImage_Test_SetImage_012();
-    void UIKit_UIImage_Test_SetImage_013();
-    void UIKit_UIImage_Test_SetImage_014();
+    void UIKitUIImageTestSetImage001();
+    void UIKitUIImageTestSetImage002();
+    void UIKitUIImageTestSetImage004();
+    void UIKitUIImageTestSetImage005();
+    void UIKitUIImageTestSetImage006();
+    void UIKitUIImageTestSetImage007();
+    void UIKitUIImageTestSetImage008();
+    void UIKitUIImageTestSetImage009();
+    void UIKitUIImageTestSetImage010();
+    void UIKitUIImageTestSetImage011();
+    void UIKitUIImageTestSetImage012();
+    void UIKitUIImageTestSetImage013();
+    void UIKitUIImageTestSetImage014();
 #ifndef VERSION_LITE
-    void UIKit_UIImage_Test_SetImage_015();
-    void UIKit_UIImage_Test_SetImage_016();
+    void UIKitUIImageTestSetImage015();
+    void UIKitUIImageTestSetImage016();
 #endif
-    void UIKit_UIImage_Test_Uncompress_001();
-    void UIKit_UIImage_Test_Resize_001();
+    void UIKitUIImageTestUncompress001();
+    void UIKitUIImageTestResize001();
 private:
     const char* GetCharByImageSrcType(ImageSrcType srcType) const;
 #ifndef VERSION_LITE

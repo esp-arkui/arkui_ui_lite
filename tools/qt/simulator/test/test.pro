@@ -64,6 +64,7 @@ SOURCES += \
     ../../../../test/uitest/test_slider/ui_test_slider.cpp \
     ../../../../test/uitest/test_texture_mapper/ui_test_texture_mapper.cpp \
     ../../../../test/uitest/test_transform/ui_test_transform.cpp \
+    ../../../../test/uitest/test_ui_analog_clock/ui_auto_test_analog_clock.cpp \
     ../../../../test/uitest/test_ui_analog_clock/ui_test_analog_clock.cpp \
     ../../../../test/uitest/test_ui_dump_dom_tree/ui_test_dump_dom.cpp \
     ../../../../test/uitest/test_ui_list/ui_test_ui_list.cpp \
@@ -80,10 +81,47 @@ SOURCES += \
 SOURCES += \
     ../../../../test/framework/src/auto_test_app.cpp \
     ../../../../test/framework/src/auto_test_case_group.cpp \
+    ../../../../test/framework/src/auto_test_counter.cpp \
     ../../../../test/framework/src/compare_tools.cpp \
     ../../../../test/framework/src/ui_auto_test.cpp \
+    ../../../../test/uitest/test_anti_aliasing/ui_auto_test_anti_aliasing.cpp \
+    ../../../../test/uitest/test_arc_label/ui_auto_test_arc_label.cpp \
+    ../../../../test/uitest/test_border_margin_padding/ui_auto_test_border_margin_padding.cpp \
+    ../../../../test/uitest/test_button/ui_auto_test_button.cpp \
+    ../../../../test/uitest/test_canvas/ui_auto_test_canvas.cpp \
+    ../../../../test/uitest/test_chart/ui_auto_test_chart_pillar.cpp \
+    ../../../../test/uitest/test_chart/ui_auto_test_chart_polyline.cpp \
+    ../../../../test/uitest/test_clip/ui_auto_test_clip.cpp \
+    ../../../../test/uitest/test_digital_clock/ui_auto_test_digital_clock.cpp \
+    ../../../../test/uitest/test_draw_line/ui_auto_test_draw_line.cpp \
+    ../../../../test/uitest/test_draw_rect/ui_auto_test_draw_rect.cpp \
+    ../../../../test/uitest/test_event_injector/ui_auto_test_event_injector.cpp \
+    ../../../../test/uitest/test_focus_manager/ui_auto_test_focus_manager.cpp \
+    ../../../../test/uitest/test_font/ui_auto_test_font.cpp\
+    ../../../../test/uitest/test_image/ui_auto_test_image.cpp\
+    ../../../../test/uitest/test_image_animator/ui_auto_test_image_animator.cpp\
+    ../../../../test/uitest/test_label/ui_auto_test_label.cpp\
+    ../../../../test/uitest/test_layout/ui_auto_test_basic_layout.cpp \
+    ../../../../test/uitest/test_opacity/ui_auto_test_opacity.cpp \
+    ../../../../test/uitest/test_picker/ui_auto_test_ui_picker.cpp \
+    ../../../../test/uitest/test_progress_bar/ui_auto_test_box_progress.cpp \
+    ../../../../test/uitest/test_progress_bar/ui_auto_test_circle_progress.cpp \
+    ../../../../test/uitest/test_qrcode/ui_auto_test_qrcode.cpp \
     ../../../../test/uitest/test_render/ui_auto_test_render.cpp \
-    ../../../../test/uitest/test_layout/ui_auto_test_basic_layout.cpp
+    ../../../../test/uitest/test_transform/ui_auto_test_transform.cpp \
+    ../../../../test/uitest/test_scroll_bar/ui_auto_test_scroll_bar.cpp \
+    ../../../../test/uitest/test_slider/ui_auto_test_slider.cpp \
+    ../../../../test/uitest/test_texture_mapper/ui_auto_test_texture_mapper.cpp \
+    ../../../../test/uitest/test_ui_list/ui_auto_test_ui_list.cpp \
+    ../../../../test/uitest/test_ui_list_view/ui_auto_test_list_layout.cpp \
+    ../../../../test/uitest/test_ui_scroll_view/ui_auto_test_ui_scroll_view.cpp \
+    ../../../../test/uitest/test_ui_swipe_view/ui_auto_test_ui_swipe_view.cpp \
+    ../../../../test/uitest/test_vector_font/ui_auto_test_vector_font.cpp \
+    ../../../../test/uitest/test_view_bitmap/ui_auto_test_view_bitmap.cpp \
+    ../../../../test/uitest/test_view_bounds/ui_auto_test_view_bounds.cpp \
+    ../../../../test/uitest/test_view_group/ui_auto_test_view_group.cpp \
+    ../../../../test/uitest/test_view_percent/ui_auto_test_view_percent.cpp \
+    ../../../../test/uitest/test_view_scale_rotate/ui_auto_test_view_scale_rotate.cpp
 
 HEADERS += \
     ../../../../test/framework/common/ui_text_language.h \

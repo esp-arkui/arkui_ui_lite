@@ -49,7 +49,7 @@ public:
         uint32_t biClrImportant;
     };
 
-    static void WaitSuspend();
+    static void WaitSuspend(uint64_t time = DEFAULT_WAIT_TIME_MS);
     static bool StrnCatPath(char* filePath, size_t pathMax, const char* fileName, size_t count);
     static bool CompareFile(const char* filePath, size_t length);
     static bool SaveFile(const char* filePath, size_t length);

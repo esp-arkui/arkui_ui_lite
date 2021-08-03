@@ -37,54 +37,54 @@ void UITestDrawRect::TearDown()
 
 const UIView* UITestDrawRect::GetTestView()
 {
-    UIKit_DrawRect_Test_RectNoBorder_001();
-    UIKit_DrawRect_Test_RectNoBorder_002();
-    UIKit_DrawRect_Test_RectNoBorder_003();
-    UIKit_DrawRect_Test_RectNoBorder_004();
-    UIKit_DrawRect_Test_RectNoBorder_005();
-    UIKit_DrawRect_Test_RectNoBorder_006();
-    UIKit_DrawRect_Test_RectNoBorder_007();
-    UIKit_DrawRect_Test_RectNoBorder_008();
-    UIKit_DrawRect_Test_RectNoBorder_009();
-    UIKit_DrawRect_Test_RectNoBorder_0010();
-    UIKit_DrawRect_Test_RectBorderNoRadius_001();
-    UIKit_DrawRect_Test_RectBorderNoRadius_002();
-    UIKit_DrawRect_Test_RectBorderRadius_001();
-    UIKit_DrawRect_Test_RectBorderRadius_002();
-    UIKit_DrawRect_Test_RectBorderRadius_003();
-    UIKit_DrawRect_Test_RectBorderRadius_004();
-    UIKit_DrawRect_Test_RectBorderRadius_005();
-    UIKit_DrawRect_Test_RectBorderRadius_006();
-    UIKit_DrawRect_Test_RectBorderRadius_007();
-    UIKit_DrawRect_Test_RectBorderRadius_008();
-    UIKit_DrawRect_Test_RectBorderRadius_009();
-    UIKit_DrawRect_Test_RectBorderRadius_010();
-    UIKit_DrawRect_Test_RectBorderRadius_011();
+    UIKitDrawRectTestRectNoBorder001();
+    UIKitDrawRectTestRectNoBorder002();
+    UIKitDrawRectTestRectNoBorder003();
+    UIKitDrawRectTestRectNoBorder004();
+    UIKitDrawRectTestRectNoBorder005();
+    UIKitDrawRectTestRectNoBorder006();
+    UIKitDrawRectTestRectNoBorder007();
+    UIKitDrawRectTestRectNoBorder008();
+    UIKitDrawRectTestRectNoBorder009();
+    UIKitDrawRectTestRectNoBorder0010();
+    UIKitDrawRectTestRectBorderNoRadius001();
+    UIKitDrawRectTestRectBorderNoRadius002();
+    UIKitDrawRectTestRectBorderRadius001();
+    UIKitDrawRectTestRectBorderRadius002();
+    UIKitDrawRectTestRectBorderRadius003();
+    UIKitDrawRectTestRectBorderRadius004();
+    UIKitDrawRectTestRectBorderRadius005();
+    UIKitDrawRectTestRectBorderRadius006();
+    UIKitDrawRectTestRectBorderRadius007();
+    UIKitDrawRectTestRectBorderRadius008();
+    UIKitDrawRectTestRectBorderRadius009();
+    UIKitDrawRectTestRectBorderRadius010();
+    UIKitDrawRectTestRectBorderRadius011();
 
-    UIKit_DrawRect_Test_Rect_001();
-    UIKit_DrawRect_Test_RectColor_001();
-    UIKit_DrawRect_Test_RectRadius_001();
-    UIKit_DrawRect_Test_RectRadius_002();
-    UIKit_DrawRect_Test_RectRadius_003();
-    UIKit_DrawRect_Test_RectRadius_004();
-    UIKit_DrawRect_Test_RectOpacity_001();
-    UIKit_DrawRect_Test_RectOpacity_002();
-    UIKit_DrawRect_Test_RectOpacity_003();
-    UIKit_DrawRect_Test_RectBorderColor_001();
-    UIKit_DrawRect_Test_RectBorderWidth_001();
-    UIKit_DrawRect_Test_RectBorderWidth_002();
-    UIKit_DrawRect_Test_RectBorderOpacity_001();
-    UIKit_DrawRect_Test_RectBorderOpacity_002();
-    UIKit_DrawRect_Test_RectBorderOpacity_003();
-    UIKit_DrawRect_Test_RectPadding_001();
-    UIKit_DrawRect_Test_RectPadding_002();
-    UIKit_DrawRect_Test_RectMargin_001();
-    UIKit_DrawRect_Test_RectMargin_002();
-    UIKit_DrawRect_Test_RectPaddingMargin_001();
-    UIKit_DrawRect_Test_RectPaddingMargin_002();
-    UIKit_DrawRect_Test_RectWidthAndHeight_001();
-    UIKit_DrawRect_Test_RectWidthAndHeight_002();
-    UIKit_DrawRect_Test_RectWidthAndHeight_003();
+    UIKitDrawRectTestRect001();
+    UIKitDrawRectTestRectColor001();
+    UIKitDrawRectTestRectRadius001();
+    UIKitDrawRectTestRectRadius002();
+    UIKitDrawRectTestRectRadius003();
+    UIKitDrawRectTestRectRadius004();
+    UIKitDrawRectTestRectOpacity001();
+    UIKitDrawRectTestRectOpacity002();
+    UIKitDrawRectTestRectOpacity003();
+    UIKitDrawRectTestRectBorderColor001();
+    UIKitDrawRectTestRectBorderWidth001();
+    UIKitDrawRectTestRectBorderWidth002();
+    UIKitDrawRectTestRectBorderOpacity001();
+    UIKitDrawRectTestRectBorderOpacity002();
+    UIKitDrawRectTestRectBorderOpacity003();
+    UIKitDrawRectTestRectPadding001();
+    UIKitDrawRectTestRectPadding002();
+    UIKitDrawRectTestRectMargin001();
+    UIKitDrawRectTestRectMargin002();
+    UIKitDrawRectTestRectPaddingMargin001();
+    UIKitDrawRectTestRectPaddingMargin002();
+    UIKitDrawRectTestRectWidthAndHeight001();
+    UIKitDrawRectTestRectWidthAndHeight002();
+    UIKitDrawRectTestRectWidthAndHeight003();
     return container_;
 }
 
@@ -124,18 +124,19 @@ UIView* UITestDrawRect::CreateUIView() const
     return view;
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_001()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_001");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius=0");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -150,19 +151,20 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_001()
     container_->Add(group);
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_002()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_002");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder002");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width > height, radius > height/2");
     group->Add(label);
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_02);
 
     UIView* view = CreateUIView();
     int16_t width = 120; // 120 : width
@@ -174,21 +176,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_003()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_003");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder003");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width > height, radius = height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -201,21 +204,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_003()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_004()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder004()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_004");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder004");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width > height, radius < height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_04);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -228,21 +232,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_004()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_003", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder003", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_005()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder005()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_005");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder005");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width = height, radius > height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_05);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -255,21 +260,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_005()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_004", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder004", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_006()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder006()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_006");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder006");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width = height, radius = height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_06);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -282,21 +288,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_006()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_005", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder005", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_007()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder007()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_007");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder007");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width = height, radius < height/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_07);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -309,21 +316,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_007()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_006", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder006", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_008()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder008()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_008");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder008");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width < height, radius > width/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_08);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -336,21 +344,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_008()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_007", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder007", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_009()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder009()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_009");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder009");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width < height, radius = width/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_09);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -363,21 +372,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_009()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_008", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder008", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_0010()
+void UITestDrawRect::UIKitDrawRectTestRectNoBorder0010()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectNoBorder_0010");
+    group->SetViewId("UIKitDrawRectTestRectNoBorder0010");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形无border, radius>0, width < height, radius < width/2 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTNOBORDER_LABEL_ID_10);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -390,21 +400,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectNoBorder_0010()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_009", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder009", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderNoRadius_001()
+void UITestDrawRect::UIKitDrawRectTestRectBorderNoRadius001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderNoRadius_001");
+    group->SetViewId("UIKitDrawRectTestRectBorderNoRadius001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border, radius=0");
+    label->SetViewId(UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -417,21 +428,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderNoRadius_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectNoBorder_0010", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectNoBorder0010", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderNoRadius_002()
+void UITestDrawRect::UIKitDrawRectTestRectBorderNoRadius002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderNoRadius_002");
+    group->SetViewId("UIKitDrawRectTestRectBorderNoRadius002");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border = 1, radius=0");
+    label->SetViewId(UI_TEST_DRAW_RECT_BORDERNORADIUS_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -444,21 +456,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderNoRadius_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderNoRadius_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderNoRadius001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_001()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_001");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border, radius<border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -472,21 +485,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderNoRadius_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderNoRadius001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_002()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_002");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius002");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度 >高度，radius > 高度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -500,21 +514,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_003()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_003");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius003");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度>高度，radius = 高度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -528,21 +543,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_003()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_004()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius004()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_004");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius004");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度>高度，radius < 高度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_04);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -556,21 +572,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_004()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_003", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius003", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_005()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius005()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_005");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius005");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度=高度，radius > 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_05);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -584,21 +601,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_005()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_004", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius004", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_006()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius006()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_006");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius006");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度=高度，radius = 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_06);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -612,21 +630,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_006()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_005", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius005", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_007()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius007()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_007");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius007");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度=高度，radius < 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_07);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -640,21 +659,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_007()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_006", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius006", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_008()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius008()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_008");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius008");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度<高度，radius > 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_08);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -668,21 +688,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_008()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_007", 10); // 10 : value
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius007", 10); // 10 : value
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_009()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius009()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_009");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius009");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度<高度，radius = 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_09);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -696,21 +717,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_009()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_008", 10); // 10 : value
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius008", 10); // 10 : value
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_010()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius010()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_010");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius010");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("border场景，radius>border.width，宽度<高度，radius < 宽度/2 + border.width");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_10);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -724,21 +746,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_010()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_009", 10); // 10 : value
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius009", 10); // 10 : value
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_011()
+void UITestDrawRect::UIKitDrawRectTestRectBorderRadius011()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderRadius_011");
+    group->SetViewId("UIKitDrawRectTestRectBorderRadius011");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形有border = 2, radius = 1");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDER_LABEL_ID_11);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -752,21 +775,22 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_011()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_010", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius010", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_Rect_001()
+void UITestDrawRect::UIKitDrawRectTestRect001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_Rect_001");
+    group->SetViewId("UIKitDrawRectTestRect001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     label->SetText("矩形绘制: ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECT_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -778,20 +802,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_Rect_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_009", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderRadius009", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectColor_001()
+void UITestDrawRect::UIKitDrawRectTestRectColor001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectColor_001");
+    group->SetViewId("UIKitDrawRectTestRectColor001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同颜色的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTCOLOR_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -809,20 +834,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectColor_001()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_Rect_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRect001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_001()
+void UITestDrawRect::UIKitDrawRectTestRectRadius001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectRadius_001");
+    group->SetViewId("UIKitDrawRectTestRectRadius001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置圆角为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -833,20 +859,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectColor_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectColor001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_002()
+void UITestDrawRect::UIKitDrawRectTestRectRadius002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectRadius_002");
+    group->SetViewId("UIKitDrawRectTestRectRadius002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置圆角等于宽度的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -857,20 +884,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectRadius_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectRadius001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_003()
+void UITestDrawRect::UIKitDrawRectTestRectRadius003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectRadius_003");
+    group->SetViewId("UIKitDrawRectTestRectRadius003");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置圆角等于宽度的正方形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -881,20 +909,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_003()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectRadius_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectRadius002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_004()
+void UITestDrawRect::UIKitDrawRectTestRectRadius004()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectRadius_004");
+    group->SetViewId("UIKitDrawRectTestRectRadius004");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同圆角大小的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTRADIUS_LABEL_ID_04);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -912,20 +941,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectRadius_004()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectRadius_003", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectRadius003", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_001()
+void UITestDrawRect::UIKitDrawRectTestRectOpacity001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectOpacity_001");
+    group->SetViewId("UIKitDrawRectTestRectOpacity001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不透明背景矩形绘制: ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -935,20 +965,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectRadius_004", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectRadius004", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_002()
+void UITestDrawRect::UIKitDrawRectTestRectOpacity002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectOpacity_002");
+    group->SetViewId("UIKitDrawRectTestRectOpacity002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置全透明背景矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -958,20 +989,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectOpacity_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectOpacity001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_003()
+void UITestDrawRect::UIKitDrawRectTestRectOpacity003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectOpacity_003");
+    group->SetViewId("UIKitDrawRectTestRectOpacity003");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同透明度矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTOPACITY_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -987,20 +1019,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectOpacity_003()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectOpacity_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectOpacity002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderColor_001()
+void UITestDrawRect::UIKitDrawRectTestRectBorderColor001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderColor_001");
+    group->SetViewId("UIKitDrawRectTestRectBorderColor001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同边框颜色的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDERCOLOR_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1019,20 +1052,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderColor_001()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectOpacity_003", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectOpacity003", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderWidth_001()
+void UITestDrawRect::UIKitDrawRectTestRectBorderWidth001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderWidth_001");
+    group->SetViewId("UIKitDrawRectTestRectBorderWidth001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置边框宽度为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1042,20 +1076,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderWidth_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderColor_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderColor001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderWidth_002()
+void UITestDrawRect::UIKitDrawRectTestRectBorderWidth002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderWidth_002");
+    group->SetViewId("UIKitDrawRectTestRectBorderWidth002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同宽度边框大小的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDERWIDTH_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1071,20 +1106,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderWidth_002()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderWidth_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderWidth001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_001()
+void UITestDrawRect::UIKitDrawRectTestRectBorderOpacity001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderOpacity_001");
+    group->SetViewId("UIKitDrawRectTestRectBorderOpacity001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不透明边框矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1095,20 +1131,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderWidth_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderWidth002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_002()
+void UITestDrawRect::UIKitDrawRectTestRectBorderOpacity002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderOpacity_002");
+    group->SetViewId("UIKitDrawRectTestRectBorderOpacity002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置全透明边框矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1119,20 +1156,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderOpacity_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderOpacity001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_003()
+void UITestDrawRect::UIKitDrawRectTestRectBorderOpacity003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectBorderOpacity_003");
+    group->SetViewId("UIKitDrawRectTestRectBorderOpacity003");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置不同透明度边框矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTBORDEROPACITY_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1150,20 +1188,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderOpacity_003()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderOpacity_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderOpacity002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectPadding_001()
+void UITestDrawRect::UIKitDrawRectTestRectPadding001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectPadding_001");
+    group->SetViewId("UIKitDrawRectTestRectPadding001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置padding为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1176,20 +1215,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPadding_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderOpacity_003", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectBorderOpacity003", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectPadding_002()
+void UITestDrawRect::UIKitDrawRectTestRectPadding002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectPadding_002");
+    group->SetViewId("UIKitDrawRectTestRectPadding002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置padding不为零的矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDING_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1216,20 +1256,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPadding_002()
     group->Add(view2);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectPadding_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectPadding001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectMargin_001()
+void UITestDrawRect::UIKitDrawRectTestRectMargin001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectMargin_001");
+    group->SetViewId("UIKitDrawRectTestRectMargin001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置margin为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1242,20 +1283,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectMargin_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectPadding_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectPadding002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectMargin_002()
+void UITestDrawRect::UIKitDrawRectTestRectMargin002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectMargin_002");
+    group->SetViewId("UIKitDrawRectTestRectMargin002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置margin不为零的矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTMARGIN_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1277,20 +1319,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectMargin_002()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectMargin_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectMargin001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectPaddingMargin_001()
+void UITestDrawRect::UIKitDrawRectTestRectPaddingMargin001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectPaddingMargin_001");
+    group->SetViewId("UIKitDrawRectTestRectPaddingMargin001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置 padding/margin 均为零的矩形绘制:");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDINGMARGIN_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1307,20 +1350,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPaddingMargin_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectMargin_002", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectMargin002", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectPaddingMargin_002()
+void UITestDrawRect::UIKitDrawRectTestRectPaddingMargin002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectPaddingMargin_002");
+    group->SetViewId("UIKitDrawRectTestRectPaddingMargin002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置padding/margin均不为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTPADDINGMARGIN_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1350,20 +1394,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectPaddingMargin_002()
     group->Add(view1);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectPaddingMargin_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectPaddingMargin001", 10); // 10 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_001()
+void UITestDrawRect::UIKitDrawRectTestRectWidthAndHeight001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectWidthAndHeight_001");
+    group->SetViewId("UIKitDrawRectTestRectWidthAndHeight001");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置宽度为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_01);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1374,20 +1419,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_001()
     container_->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectPaddingMargin_002", 20); // 20 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectPaddingMargin002", 20); // 20 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_002()
+void UITestDrawRect::UIKitDrawRectTestRectWidthAndHeight002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectWidthAndHeight_002");
+    group->SetViewId("UIKitDrawRectTestRectWidthAndHeight002");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置高度为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_02);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1398,20 +1444,21 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_002()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectWidthAndHeight_001", 20); // 20 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectWidthAndHeight001", 20); // 20 : offset size
 }
 
-void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_003()
+void UITestDrawRect::UIKitDrawRectTestRectWidthAndHeight003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_DrawRect_Test_RectWidthAndHeight_003");
+    group->SetViewId("UIKitDrawRectTestRectWidthAndHeight003");
 
     UILabel* label = CreateTitleLabel();
     label->SetText("设置宽度和高度都为零的矩形绘制 ");
+    label->SetViewId(UI_TEST_DRAW_RECT_RECTWIDTHANDHEIGHT_LABEL_ID_03);
     group->Add(label);
 
     UIView* view = CreateUIView();
@@ -1422,6 +1469,6 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectWidthAndHeight_003()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectWidthAndHeight_002", 20); // 20 : offset size
+    group->LayoutBottomToSibling("UIKitDrawRectTestRectWidthAndHeight002", 20); // 20 : offset size
 }
 } // namespace OHOS

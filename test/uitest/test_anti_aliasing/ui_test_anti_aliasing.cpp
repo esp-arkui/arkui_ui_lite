@@ -38,9 +38,9 @@ void UITestAntiAliasing::TearDown()
 
 const UIView* UITestAntiAliasing::GetTestView()
 {
-    UIKit_Anti_Aliasing_Test_Rect_001();
-    UIKit_Anti_Aliasing_Test_Circle_001();
-    UIKit_Anti_Aliasing_Test_Line_001();
+    UIKitAntiAliasingTestRect001();
+    UIKitAntiAliasingTestCircle001();
+    UIKitAntiAliasingTestLine001();
     return container_;
 }
 
@@ -60,7 +60,7 @@ UILabel* UITestAntiAliasing::CreateTitleLabel() const
     return label;
 }
 
-void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Rect_001()
+void UITestAntiAliasing::UIKitAntiAliasingTestRect001()
 {
     if (container_ == nullptr) {
         return;
@@ -69,7 +69,7 @@ void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Rect_001()
     UIViewGroup* group = CreateTestCaseGroup();
     // 2: half of screen width, 110: group height
     group->Resize(Screen::GetInstance().GetWidth() / 2, 110);
-    group->SetViewId("UIKit_Draw_Rect_Test_Rect_001");
+    group->SetViewId("UIKitDrawRectTestRect001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
@@ -93,7 +93,7 @@ void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Rect_001()
     container_->Add(group);
 }
 
-void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Circle_001()
+void UITestAntiAliasing::UIKitAntiAliasingTestCircle001()
 {
     if (container_ == nullptr) {
         return;
@@ -104,7 +104,7 @@ void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Circle_001()
     group->SetPosition(336, 0);
     // 2: half of screen width; 180: group height
     group->Resize(Screen::GetInstance().GetWidth() / 2, 180);
-    group->SetViewId("UIKit_Anti_Aliasing_Test_Circle_001");
+    group->SetViewId("UIKitAntiAliasingTestCircle001");
 
     UILabel* label = CreateTitleLabel();
     label->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE2, TEXT_DISTANCE_TO_TOP_SIDE);
@@ -130,7 +130,7 @@ void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Circle_001()
     container_->Add(group);
 }
 
-void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Line_001()
+void UITestAntiAliasing::UIKitAntiAliasingTestLine001()
 {
     if (container_ == nullptr) {
         return;
@@ -140,7 +140,7 @@ void UITestAntiAliasing::UIKit_Anti_Aliasing_Test_Line_001()
     // 648: x-coordinate
     group->SetPosition(648, 0);
     group->Resize(Screen::GetInstance().GetWidth() / 2, 250); // 2: half of screen width; // 250: y-coordinate
-    group->SetViewId("UIKit_Anti_Aliasing_Test_Line_001");
+    group->SetViewId("UIKitAntiAliasingTestLine001");
 
     UILabel* label = CreateTitleLabel();
     label->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE2, TEXT_DISTANCE_TO_TOP_SIDE);

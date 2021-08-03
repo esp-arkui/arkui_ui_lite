@@ -20,6 +20,16 @@
 #include "components/ui_view.h"
 
 namespace OHOS {
+enum DragDirection {
+    BOTTOM_TO_TOP,
+    TOP_TO_BOTTOM,
+    LEFT_TO_RIGHT,
+    RIGHT_TO_LEFT,
+    UPPER_LEFT_CORNER_TO_BOTTOM_RIGHT_CORNER,
+    BOTTOM_RIGHT_CORNER_TO_UPPER_LEFT_CORNER,
+    UPPER_RIGHT_CORNER_TO_BOTTOM_LEFT_CORNER,
+    BOTTOM_LEFT_CORNER_TO_UPPER_RIGHT_CORNER
+};
 class UIAutoTest : public AutoTestCaseGroup::AutoTestCase {
 public:
     UIAutoTest() {}
@@ -30,6 +40,7 @@ public:
     void EnterSubMenu(const char* id) const;
     void ClickViewById(const char* id) const;
     void DragViewToHead(const char* id) const;
+    void DragViewById(const char* id, DragDirection direction) const;
     void CompareByBinary(const char* fileName) const;
 };
 } // namespace OHOS

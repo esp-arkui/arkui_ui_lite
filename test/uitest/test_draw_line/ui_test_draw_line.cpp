@@ -41,18 +41,18 @@ void UITestDrawLine::TearDown()
 
 const UIView* UITestDrawLine::GetTestView()
 {
-    UIKit_Draw_Line_Test_Line_001();
-    UIKit_Draw_Line_Test_Line_002();
-    UIKit_Draw_Line_Test_Line_003();
-    UIKit_Draw_Line_Test_Line_004();
-    UIKit_Draw_Line_Test_Line_005();
-    UIKit_Draw_Line_Test_Line_006();
-    UIKit_Draw_Line_Test_Line_007();
-    UIKit_Draw_Line_Test_Line_008();
-    UIKit_Draw_Line_Test_Line_009();
-    UIKit_Draw_Line_Test_Line_010();
-    UIKit_Draw_Line_Test_Line_011();
-    UIKit_Draw_Line_Test_Line_012();
+    UIKitDrawLineTestLine001();
+    UIKitDrawLineTestLine002();
+    UIKitDrawLineTestLine003();
+    UIKitDrawLineTestLine004();
+    UIKitDrawLineTestLine005();
+    UIKitDrawLineTestLine006();
+    UIKitDrawLineTestLine007();
+    UIKitDrawLineTestLine008();
+    UIKitDrawLineTestLine009();
+    UIKitDrawLineTestLine010();
+    UIKitDrawLineTestLine011();
+    UIKitDrawLineTestLine012();
     return container_;
 }
 
@@ -84,19 +84,20 @@ UICanvas* UITestDrawLine::CreateCanvas() const
     return canvas;
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_001()
+void UITestDrawLine::UIKitDrawLineTestLine001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_001");
+    group->SetViewId("UIKitDrawLineTestLine001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("水平直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_01);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -106,19 +107,20 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_001()
     container_->Add(group);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_002()
+void UITestDrawLine::UIKitDrawLineTestLine002()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_002");
+    group->SetViewId("UIKitDrawLineTestLine002");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("垂直直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_02);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -126,22 +128,23 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_002()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_001", DELTA_X);
+    group->LayoutRightToSibling("UIKitDrawLineTestLine001", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_003()
+void UITestDrawLine::UIKitDrawLineTestLine003()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_003");
+    group->SetViewId("UIKitDrawLineTestLine003");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("左下-右上方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_03);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -151,22 +154,23 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_003()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_002", DELTA_X);
+    group->LayoutRightToSibling("UIKitDrawLineTestLine002", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_004()
+void UITestDrawLine::UIKitDrawLineTestLine004()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_004");
+    group->SetViewId("UIKitDrawLineTestLine004");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("左上-右下方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_04);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -176,22 +180,23 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_004()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine001", 10); // 10 : offset size
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_005()
+void UITestDrawLine::UIKitDrawLineTestLine005()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_005");
+    group->SetViewId("UIKitDrawLineTestLine005");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("右上-左下方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_05);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -201,23 +206,24 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_005()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_002", 10); // 10: offset
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_004", DELTA_X);
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine002", 10); // 10: offset
+    group->LayoutRightToSibling("UIKitDrawLineTestLine004", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_006()
+void UITestDrawLine::UIKitDrawLineTestLine006()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_006");
+    group->SetViewId("UIKitDrawLineTestLine006");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("左上-右下方向直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_06);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -227,23 +233,24 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_006()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_003", 10); // 10: offset
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_005", DELTA_X);
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine003", 10); // 10: offset
+    group->LayoutRightToSibling("UIKitDrawLineTestLine005", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_007()
+void UITestDrawLine::UIKitDrawLineTestLine007()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_007");
+    group->SetViewId("UIKitDrawLineTestLine007");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("宽度为零直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_07);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -252,22 +259,23 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_007()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_004", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine004", 10); // 10 : offset size
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_008()
+void UITestDrawLine::UIKitDrawLineTestLine008()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_008");
+    group->SetViewId("UIKitDrawLineTestLine008");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不同宽度的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_08);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -284,23 +292,24 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_008()
     canvas->DrawLine({40, 90}, {90, 40}, paint4); // 40 : start x 90 : start y 90 : end x 40 : end y
     group->Add(canvas);
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_005", 10); // 10: offset
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_007", DELTA_X);
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine005", 10); // 10: offset
+    group->LayoutRightToSibling("UIKitDrawLineTestLine007", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_009()
+void UITestDrawLine::UIKitDrawLineTestLine009()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_009");
+    group->SetViewId("UIKitDrawLineTestLine009");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("全透明的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_09);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -308,23 +317,24 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_009()
     canvas->DrawLine({10, 190}, {190, 10}, paint); // 10 : start x 190 : start y 190 : end x 10 : end y
     group->Add(canvas);
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_006", 10); // 10: offset
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_008", DELTA_X);
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine006", 10); // 10: offset
+    group->LayoutRightToSibling("UIKitDrawLineTestLine008", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_010()
+void UITestDrawLine::UIKitDrawLineTestLine010()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_010");
+    group->SetViewId("UIKitDrawLineTestLine010");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不透明的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_10);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -333,22 +343,23 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_010()
     group->Add(canvas);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_007", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine007", 10); // 10 : offset size
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_011()
+void UITestDrawLine::UIKitDrawLineTestLine011()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_011");
+    group->SetViewId("UIKitDrawLineTestLine011");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不同透明度的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_11);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -362,23 +373,24 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_011()
     canvas->DrawLine({50, 190}, {190, 50}, paint3); // 50 : start x 190 : start y 190 : end x 50 : end y
     group->Add(canvas);
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_008", 10); // 10 : offset size
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_010", DELTA_X);
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine008", 10); // 10 : offset size
+    group->LayoutRightToSibling("UIKitDrawLineTestLine010", DELTA_X);
 }
 
-void UITestDrawLine::UIKit_Draw_Line_Test_Line_012()
+void UITestDrawLine::UIKitDrawLineTestLine012()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Draw_Line_Test_Line_012");
+    group->SetViewId("UIKitDrawLineTestLine012");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
     group->Add(label);
     label->SetText("不同颜色的直线绘制 ");
+    label->SetViewId(UI_TEST_DRAW_LINE_LABEL_ID_12);
 
     UICanvas* canvas = CreateCanvas();
     Paint paint;
@@ -392,7 +404,7 @@ void UITestDrawLine::UIKit_Draw_Line_Test_Line_012()
     canvas->DrawLine({50, 190}, {190, 50}, paint3); // 50 : start x 190 : start y 190 : end x 50 : end y
     group->Add(canvas);
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_Draw_Line_Test_Line_009", 10); // 10 : offset size
-    group->LayoutRightToSibling("UIKit_Draw_Line_Test_Line_011", DELTA_X);
+    group->LayoutBottomToSibling("UIKitDrawLineTestLine009", 10); // 10 : offset size
+    group->LayoutRightToSibling("UIKitDrawLineTestLine011", DELTA_X);
 }
 } // namespace OHOS

@@ -24,6 +24,14 @@
 #include <string>
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_VECTOR_FONT_CH_LANG_01 = "test_vector_font_ch_lang_01";
+constexpr char* UI_TEST_VECTOR_FONT_CH_LANG_02 = "test_vector_font_ch_lang_02";
+constexpr char* UI_TEST_VECTOR_FONT_JA_LANG_01 = "test_vector_font_ja_lang_01";
+constexpr char* UI_TEST_VECTOR_FONT_JA_LANG_02 = "test_vector_font_ja_lang_02";
+constexpr char* UI_TEST_VECTOR_FONT_KR_LANG_01 = "test_vector_font_kr_lang_01";
+constexpr char* UI_TEST_VECTOR_FONT_VI_LANG_01 = "test_vector_font_vi_lang_01";
+};
 class UITestVectorFont : public UITest {
 public:
     UITestVectorFont() {}
@@ -75,7 +83,7 @@ public:
 #endif
 private:
     UIScrollView* container_ = nullptr;
-    void InnerTestTitle(const char* title);
+    void InnerTestTitle(const char* title, const char* id = nullptr);
     int16_t xPos = 50; // 50: x initial position
     int16_t yPos = 5; // 5 : y initial position
 };

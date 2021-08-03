@@ -21,6 +21,9 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+    constexpr char* UI_TEST_QRCODE_ID = "UIQrcode";
+}
 class UITestQrcode : public UITest {
 public:
     UITestQrcode() {}

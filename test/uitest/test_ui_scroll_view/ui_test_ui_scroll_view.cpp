@@ -90,18 +90,18 @@ void UITestUIScrollView::TearDown()
 
 const UIView* UITestUIScrollView::GetTestView()
 {
-    UIKit_UIScrollView_Test_bar_001();
-    UIKit_UIScrollView_Test_bar_002();
-    UIKit_UIScrollView_Test_bar_003();
-    UIKit_UIScrollView_Test_bar_004();
-    UIKit_UIScrollView_Test_Scrollable_Set_001();
-    UIKit_UIScrollView_Test_Scrollable_Set_002();
-    UIKit_UIScrollView_Test_Scroll_Blank_Set_001();
-    UIKit_UIScrollView_Test_Scroll_listener_001();
+    UIKitUIScrollViewTestbar001();
+    UIKitUIScrollViewTestbar002();
+    UIKitUIScrollViewTestbar003();
+    UIKitUIScrollViewTestbar004();
+    UIKitUIScrollViewTestScrollableSet001();
+    UIKitUIScrollViewTestScrollableSet002();
+    UIKitUIScrollViewTestScrollBlankSet001();
+    UIKitUIScrollViewTestScrollListener001();
     return container_;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_bar_001()
+void UITestUIScrollView::UIKitUIScrollViewTestbar001()
 {
     if (container_ == nullptr) {
         return;
@@ -120,6 +120,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_001()
     VISIBLE_XBAR(false);
     scroll->SetYScrollBarVisible(true);
     scroll->SetReboundSize(50); // 50: rebound size
+    scroll->SetViewId("test_ui_scroll_view_bar_scroll_id_01");
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -129,12 +130,13 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_001()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_bar_002()
+void UITestUIScrollView::UIKitUIScrollViewTestbar002()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UIScrollView设置游标可见 ");
+    label->SetViewId("test_ui_scroll_view_bar_label_id_02");
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
@@ -146,6 +148,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_002()
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
     VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
+    scroll->SetViewId("test_ui_scroll_view_bar_scroll_id_02");
     container_->Add(scroll);
     UIButton* button1 = new UIButton();
     button1->SetPosition(0, 0, g_smallButtonW, g_smallButtonH);
@@ -154,12 +157,13 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_002()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_bar_003()
+void UITestUIScrollView::UIKitUIScrollViewTestbar003()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UIScrollView游标滑动状态 ");
+    label->SetViewId("test_ui_scroll_view_bar_label_id_03");
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
@@ -171,6 +175,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_003()
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
     VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
+    scroll->SetViewId("test_ui_scroll_view_bar_scroll_id_03");
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
     button1->SetText("button1");
@@ -184,12 +189,13 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_003()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_bar_004()
+void UITestUIScrollView::UIKitUIScrollViewTestbar004()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UIScrollView设置游标宽度为20");
+    label->SetViewId("test_ui_scroll_view_bar_label_id_04");
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
@@ -199,6 +205,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_004()
     scroll->SetIntercept(true);
     scroll->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
     scroll->SetPosition(positionX_, positionY_, g_scrollW, g_scrollH);
+    scroll->SetViewId("test_ui_scroll_view_bar_scroll_id_04");
     VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
@@ -209,7 +216,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_004()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_001()
+void UITestUIScrollView::UIKitUIScrollViewTestScrollableSet001()
 {
     if (container_ == nullptr) {
         return;
@@ -217,6 +224,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_001()
     positionX_ = Screen::GetInstance().GetWidth() / 2 + TEXT_DISTANCE_TO_LEFT_SIDE; // 2: half of screen width
     positionY_ = TEXT_DISTANCE_TO_TOP_SIDE;
     UILabel* label = GetTitleLabel("UIScrollView设置仅垂直方向可滑动 ");
+    label->SetViewId("test_ui_scroll_view_scrollable_label_id_01");
     container_->Add(label);
     label->SetPosition(positionX_, positionY_);
     positionY_ += DELTA_Y_COORDINATE_2;
@@ -228,6 +236,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_001()
     scroll->SetScrollBlankSize(20); // 20: means scroll blank size
     scroll->SetHorizontalScrollState(false);
     scroll->SetVerticalScrollState(true);
+    scroll->SetViewId("test_ui_scroll_view_scrollable_scroll_id_01");
     VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
     container_->Add(scroll);
@@ -239,12 +248,13 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_001()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_002()
+void UITestUIScrollView::UIKitUIScrollViewTestScrollableSet002()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UIScrollView设置仅垂直方向不可滑动 ");
+    label->SetViewId("test_ui_scroll_view_scrollable_label_id_02");
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
@@ -258,6 +268,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_002()
     scroll->SetVerticalScrollState(false);
     VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
+    scroll->SetViewId("test_ui_scroll_view_scrollable_scroll_id_02");
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -267,12 +278,13 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scrollable_Set_002()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_Scroll_Blank_Set_001()
+void UITestUIScrollView::UIKitUIScrollViewTestScrollBlankSet001()
 {
     if (container_ == nullptr) {
         return;
     }
     UILabel* label = GetTitleLabel("UIScrollView设置高为50的可滑动空白区域 ");
+    label->SetViewId("test_ui_scroll_view_scroll_blank_set_label_id_01");
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
@@ -285,6 +297,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scroll_Blank_Set_001()
     scroll->SetScrollBlankSize(50); // (50): means scroll blank size
     VISIBLE_XBAR(true);
     scroll->SetYScrollBarVisible(true);
+    scroll->SetViewId("test_ui_scroll_view_scroll_blank_set_scroll_id_01");
     container_->Add(scroll);
     UILabelButton* button1 = new UILabelButton();
     button1->SetPosition(0, 0, g_buttonW, g_buttonH);
@@ -294,7 +307,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_Scroll_Blank_Set_001()
     positionY_ += g_scrollH;
 }
 
-void UITestUIScrollView::UIKit_UIScrollView_Test_Scroll_listener_001()
+void UITestUIScrollView::UIKitUIScrollViewTestScrollListener001()
 {
     if (container_ == nullptr) {
         return;

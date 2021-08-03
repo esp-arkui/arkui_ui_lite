@@ -16,6 +16,7 @@
 #include "ui_test_app.h"
 
 #include "auto_test_app.h"
+#include "auto_test_counter.h"
 #include "compare_tools.h"
 #include "test_resource_config.h"
 #include "ui_auto_test.h"
@@ -72,7 +73,8 @@ public:
 
     bool OnClick(UIView& view, const ClickEvent& event) override
     {
-        ThreadCreate(AutoTestThread, nullptr, nullptr);
+        ThreadId thread = ThreadCreate(AutoTestThread, nullptr, nullptr);
+        AutoTestCounter::GetInstance().SetThreadId(thread);
     }
 };
 

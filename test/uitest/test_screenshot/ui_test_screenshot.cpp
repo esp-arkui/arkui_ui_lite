@@ -46,7 +46,7 @@ void UITestScreenshot::TearDown()
 
 const UIView* UITestScreenshot::GetTestView()
 {
-    UIKit_SCREENSHOT_TEST_001();
+    UIKitSCREENSHOTTest001();
     return container_;
 }
 
@@ -80,7 +80,7 @@ private:
     UIView* uiView_;
 };
 
-void UITestScreenshot::UIKit_SCREENSHOT_TEST_001()
+void UITestScreenshot::UIKitSCREENSHOTTest001()
 {
     const int16_t titleLableHeight = 29;
     const int16_t labelButtonWidth = 80;

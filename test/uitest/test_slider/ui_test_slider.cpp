@@ -172,37 +172,39 @@ void UITestSlider::TearDown()
 
 const UIView* UITestSlider::GetTestView()
 {
-    UIKit_Slider_Test_UISlider_001();
-    UIKit_Slider_Test_SetRange_002();
-    UIKit_Slider_Test_SetValue_003();
-    UIKit_Slider_Test_SetImage_004();
-    UIKit_Slider_Test_SetStyle_005();
-    UIKit_Slider_Test_GetStyle_006();
-    UIKit_Slider_Test_SetKnobWidth_007();
-    UIKit_Slider_Test_SetStep_008();
-    UIKit_Slider_Test_SetColor_009();
-    UIKit_Slider_Test_SetDirection_010();
-    UIKit_Slider_Test_SetValidSize_011();
-    UIKit_Slider_Test_SetRadius_012();
-    UIKit_Slider_Test_SetOnChangeListener_013();
-    UIKit_Slider_Test_SetOnReleaseListener_014();
-    UIKit_Slider_Test_SetOnClickCallback_015();
-    UIKit_Slider_Test_SetOnDragCallback_016();
-    UIKit_Slider_Test_SetCircularStyle_017();
+    UIKitSliderTestUISlider001();
+    UIKitSliderTestSetRange002();
+    UIKitSliderTestSetValue003();
+    UIKitSliderTestSetImage004();
+    UIKitSliderTestSetStyle005();
+    UIKitSliderTestGetStyle006();
+    UIKitSliderTestSetKnobWidth007();
+    UIKitSliderTestSetStep008();
+    UIKitSliderTestSetColor009();
+    UIKitSliderTestSetDirection010();
+    UIKitSliderTestSetValidSize011();
+    UIKitSliderTestSetRadius012();
+    UIKitSliderTestSetOnChangeListener013();
+    UIKitSliderTestSetOnReleaseListener014();
+    UIKitSliderTestSetOnClickCallback015();
+    UIKitSliderTestSetOnDragCallback016();
+    UIKitSliderTestSetCircularStyle017();
 
     return container_;
 }
 
-void UITestSlider::SetUpLabel(const char* title, int16_t x, int16_t y) const
+void UITestSlider::SetUpLabel(const char* title, int16_t x, int16_t y, const char* id) const
 {
     UILabel* label = new UILabel();
     scroll_->Add(label);
     // 288: width
     label->SetPosition(x, y, 288, LABEL_HEIGHT);
     label->SetText(title);
+    label->SetViewId(id);
     label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
 }
-void UITestSlider::SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y)
+
+void UITestSlider::SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -210,6 +212,7 @@ void UITestSlider::SetUpButton(UILabelButton* btn, const char* title, int16_t x,
     scroll_->Add(btn);
     btn->SetPosition(x, y, BUTTON_WIDHT2, BUTTON_HEIGHT2);
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);
@@ -221,7 +224,7 @@ void UITestSlider::SetUpButton(UILabelButton* btn, const char* title, int16_t x,
     scroll_->Invalidate();
 }
 
-void UITestSlider::UIKit_Slider_Test_UISlider_001()
+void UITestSlider::UIKitSliderTestUISlider001()
 {
     resetBtn_ = new UILabelButton();
     positionX_ = 24; // 24: x-coordinate
@@ -231,7 +234,7 @@ void UITestSlider::UIKit_Slider_Test_UISlider_001()
     SetUpButton(resetBtn_, "重置", positionX_, positionY_);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetRange_002()
+void UITestSlider::UIKitSliderTestSetRange002()
 {
     incMinProgressBtn_ = new UILabelButton();
     decMinProgressBtn_ = new UILabelButton();
@@ -241,17 +244,17 @@ void UITestSlider::UIKit_Slider_Test_SetRange_002()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置Slider范围:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(incMinProgressBtn_, "下限+", positionX_, positionY_);
+    SetUpButton(incMinProgressBtn_, "下限+", positionX_, positionY_, UI_TEST_SLIDER_SETRANGE_INCMIN_BTN_ID_01);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decMinProgressBtn_, "下限-", positionX_, positionY_);
+    SetUpButton(decMinProgressBtn_, "下限-", positionX_, positionY_, UI_TEST_SLIDER_SETRANGE_DECMIN_BTN_ID_02);
     positionX_ = 24; // 24: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE;
-    SetUpButton(incMaxProgressBtn_, "上限+", positionX_, positionY_);
+    SetUpButton(incMaxProgressBtn_, "上限+", positionX_, positionY_, UI_TEST_SLIDER_SETRANGE_INCMAX_BTN_ID_03);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decMaxProgressBtn_, "上限-", positionX_, positionY_);
+    SetUpButton(decMaxProgressBtn_, "上限-", positionX_, positionY_, UI_TEST_SLIDER_SETRANGE_DECMAX_BTN_ID_04);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetValue_003()
+void UITestSlider::UIKitSliderTestSetValue003()
 {
     incProgressBtn_ = new UILabelButton();
     decProgressBtn_ = new UILabelButton();
@@ -259,45 +262,45 @@ void UITestSlider::UIKit_Slider_Test_SetValue_003()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置Slider当前值：", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(incProgressBtn_, "进度+", positionX_, positionY_);
+    SetUpButton(incProgressBtn_, "进度+", positionX_, positionY_, UI_TEST_SLIDER_SETVALUE_BTN_ID_01);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decProgressBtn_, "进度-", positionX_, positionY_);
+    SetUpButton(decProgressBtn_, "进度-", positionX_, positionY_, UI_TEST_SLIDER_SETVALUE_BTN_ID_02);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetImage_004()
+void UITestSlider::UIKitSliderTestSetImage004()
 {
     imageBtn_ = new UILabelButton();
     noImageBtn_ = new UILabelButton();
     positionX_ = 24; // 24: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
-    SetUpLabel("Slider设置图片:", positionX_, positionY_);
+    SetUpLabel("Slider设置图片:", positionX_, positionY_, UI_TEST_SLIDER_SETIMAGE_LABEL_ID_01);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(imageBtn_, "设置图片", positionX_, positionY_);
+    SetUpButton(imageBtn_, "设置图片", positionX_, positionY_, UI_TEST_SLIDER_SETIMAGE_BTN_ID_01);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(noImageBtn_, "取消图片", positionX_, positionY_);
+    SetUpButton(noImageBtn_, "取消图片", positionX_, positionY_, UI_TEST_SLIDER_UNSETIMAGE_BTN_ID_02);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetStyle_005()
+void UITestSlider::UIKitSliderTestSetStyle005()
 {
     setStyleBtn_ = new UILabelButton();
     positionX_ = 24; // 24: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("Slider设置样式:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(setStyleBtn_, "设置样式", positionX_, positionY_);
+    SetUpButton(setStyleBtn_, "设置样式", positionX_, positionY_, UI_TEST_SLIDER_SETSTYLE_BTN_ID_01);
 }
 
-void UITestSlider::UIKit_Slider_Test_GetStyle_006()
+void UITestSlider::UIKitSliderTestGetStyle006()
 {
     getStyleBtn_ = new UILabelButton();
     positionX_ = 24; // 24: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("Slider设置样式:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(getStyleBtn_, "设置样式", positionX_, positionY_);
+    SetUpButton(getStyleBtn_, "设置样式", positionX_, positionY_, UI_TEST_SLIDER_SETSTYLE_BTN_ID_02);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetKnobWidth_007()
+void UITestSlider::UIKitSliderTestSetKnobWidth007()
 {
     incKnobWidthBtn_ = new UILabelButton();
     decKnobWidthBtn_ = new UILabelButton();
@@ -305,32 +308,32 @@ void UITestSlider::UIKit_Slider_Test_SetKnobWidth_007()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置Slider滑块宽度:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(incKnobWidthBtn_, "滑块宽度+", positionX_, positionY_);
+    SetUpButton(incKnobWidthBtn_, "滑块宽度+", positionX_, positionY_, UI_TEST_SLIDER_SETKNOBWIDTH_BTN_ID_01);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(decKnobWidthBtn_, "滑块宽度-", positionX_, positionY_);
+    SetUpButton(decKnobWidthBtn_, "滑块宽度-", positionX_, positionY_, UI_TEST_SLIDER_SETKNOBWIDTH_BTN_ID_02);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetStep_008()
+void UITestSlider::UIKitSliderTestSetStep008()
 {
     stepBtn_ = new UILabelButton();
     positionX_ = 24; // 24: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置Slider步长:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(stepBtn_, "步长+", positionX_, positionY_);
+    SetUpButton(stepBtn_, "步长+", positionX_, positionY_, UI_TEST_SLIDER_SETSTEP_BTN_ID_01);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetColor_009()
+void UITestSlider::UIKitSliderTestSetColor009()
 {
     colorBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
     positionY_ = 0;
     SetUpLabel("设置Slider颜色:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(colorBtn_, "设置颜色", positionX_, positionY_);
+    SetUpButton(colorBtn_, "设置颜色", positionX_, positionY_, UI_TEST_SLIDER_SETCOLOR_BTN_ID_01);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetDirection_010()
+void UITestSlider::UIKitSliderTestSetDirection010()
 {
     dirL2RBtn_ = new UILabelButton();
     dirR2LBtn_ = new UILabelButton();
@@ -340,17 +343,17 @@ void UITestSlider::UIKit_Slider_Test_SetDirection_010()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置Slider方向:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(dirL2RBtn_, "从左到右", positionX_, positionY_);
+    SetUpButton(dirL2RBtn_, "从左到右", positionX_, positionY_, UI_TEST_SLIDER_SETDIRECTION_BTN_ID_01);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(dirR2LBtn_, "从右到左", positionX_, positionY_);
+    SetUpButton(dirR2LBtn_, "从右到左", positionX_, positionY_, UI_TEST_SLIDER_SETDIRECTION_BTN_ID_02);
     positionX_ = 336; // 336: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE;
-    SetUpButton(dirT2BBtn_, "从上到下", positionX_, positionY_);
+    SetUpButton(dirT2BBtn_, "从上到下", positionX_, positionY_, UI_TEST_SLIDER_SETDIRECTION_BTN_ID_03);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(dirB2TBtn_, "从下到上", positionX_, positionY_);
+    SetUpButton(dirB2TBtn_, "从下到上", positionX_, positionY_, UI_TEST_SLIDER_SETDIRECTION_BTN_ID_04);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetValidSize_011()
+void UITestSlider::UIKitSliderTestSetValidSize011()
 {
     widthBtn_ = new UILabelButton();
     heightBtn_ = new UILabelButton();
@@ -358,22 +361,22 @@ void UITestSlider::UIKit_Slider_Test_SetValidSize_011()
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
     SetUpLabel("设置Slider有效区域宽高:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(heightBtn_, "box高度 ", positionX_, positionY_);
+    SetUpButton(heightBtn_, "box高度 ", positionX_, positionY_, UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_01);
     positionX_ += BUTTON_WIDTH + DELTA_Y_COORDINATE;
-    SetUpButton(widthBtn_, "box宽度 ", positionX_, positionY_);
+    SetUpButton(widthBtn_, "box宽度 ", positionX_, positionY_, UI_TEST_SLIDER_SETVALIDSIZE_BTN_ID_02);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetRadius_012()
+void UITestSlider::UIKitSliderTestSetRadius012()
 {
     radiusBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
     positionY_ += BUTTON_HEIGHT + DELTA_Y_COORDINATE_2;
-    SetUpLabel("设置Slider圆角弧度:", positionX_, positionY_);
+    SetUpLabel("设置lider圆角弧度:", positionX_, positionY_);
     positionY_ += LABEL_HEIGHT + DELTA_X_COORDINATE;
-    SetUpButton(radiusBtn_, "圆角弧度", positionX_, positionY_);
+    SetUpButton(radiusBtn_, "圆角弧度", positionX_, positionY_, UI_TEST_SLIDER_SETRADIUS_BTN_ID_01);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetOnChangeListener_013()
+void UITestSlider::UIKitSliderTestSetOnChangeListener013()
 {
     onChangeBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
@@ -383,7 +386,7 @@ void UITestSlider::UIKit_Slider_Test_SetOnChangeListener_013()
     SetUpButton(onChangeBtn_, "OnChange", positionX_, positionY_);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetOnReleaseListener_014()
+void UITestSlider::UIKitSliderTestSetOnReleaseListener014()
 {
     onReleaseBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
@@ -393,7 +396,7 @@ void UITestSlider::UIKit_Slider_Test_SetOnReleaseListener_014()
     SetUpButton(onReleaseBtn_, "OnRelease", positionX_, positionY_);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetOnClickCallback_015()
+void UITestSlider::UIKitSliderTestSetOnClickCallback015()
 {
     onClickBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
@@ -403,7 +406,7 @@ void UITestSlider::UIKit_Slider_Test_SetOnClickCallback_015()
     SetUpButton(onClickBtn_, "OnClick回调", positionX_, positionY_);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetOnDragCallback_016()
+void UITestSlider::UIKitSliderTestSetOnDragCallback016()
 {
     onDragBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
@@ -413,7 +416,7 @@ void UITestSlider::UIKit_Slider_Test_SetOnDragCallback_016()
     SetUpButton(onDragBtn_, "OnDrag回调", positionX_, positionY_);
 }
 
-void UITestSlider::UIKit_Slider_Test_SetCircularStyle_017()
+void UITestSlider::UIKitSliderTestSetCircularStyle017()
 {
     circularStyleBtn_ = new UILabelButton();
     positionX_ = 336; // 336: x-coordinate
@@ -567,7 +570,7 @@ bool UITestSlider::ExpandClick2(UIView& view, const ClickEvent& event)
         g_onClick = true;
     } else if (&view == onDragBtn_) {
         g_onDrag = true;
-    } else if (&view == circularStyleBtn_) {
+        } else if (&view == circularStyleBtn_) {
         slider_->SetKnobWidth(0);
         slider_->SetBackgroundStyle(STYLE_LINE_CAP, CapType::CAP_ROUND);
         slider_->SetBackgroundStyle(STYLE_BACKGROUND_OPA, BACKGROUND_OPA);

@@ -14,6 +14,7 @@
  */
 
 #include "task_thread.h"
+#include "include/auto_test_counter.h"
 
 namespace OHOS {
 void TaskThread::run()
@@ -21,6 +22,7 @@ void TaskThread::run()
     taskQuitQry = false;
     while (!taskQuitQry) {
         TaskManager::GetInstance()->TaskHandler();
+        AutoTestCounter::GetInstance().Increase();
         Sleep(DEFAULT_TASK_PERIOD);
     }
 }

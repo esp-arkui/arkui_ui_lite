@@ -21,6 +21,20 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_01 = "test_font_display_label_01";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_02 = "test_font_display_label_02";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_03 = "test_font_display_label_03";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_04 = "test_font_display_label_04";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_05 = "test_font_display_label_05";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_06 = "test_font_display_label_06";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_07 = "test_font_display_label_07";
+constexpr char* UI_TEST_FONT_DISPLAY_LABEL_08 = "test_font_display_label_08";
+constexpr char* UI_TEST_FONT_BASELINE_LABEL_01 = "test_font_baseline_label_01";
+constexpr char* UI_TEST_FONT_BASELINE_LABEL_02 = "test_font_baseline_label_02";
+constexpr char* UI_TEST_FONT_LINE_HEIGHT_LABEL_01 = "test_font_line_height_label_01";
+constexpr char* UI_TEST_FONT_LINE_HEIGHT_LABEL_02 = "test_font_line_height_label_02";
+}
 class UITestFont : public UITest {
 public:
     UITestFont() {}
@@ -102,7 +116,7 @@ public:
 #endif // ENABLE_MULTI_FONT
 private:
     UIScrollView* container_ = nullptr;
-    void InnerTestTitle(const char* title);
+    void InnerTestTitle(const char* title, const char* id = nullptr);
 };
 } // namespace OHOS
 #endif // UI_TEST_FONT_H

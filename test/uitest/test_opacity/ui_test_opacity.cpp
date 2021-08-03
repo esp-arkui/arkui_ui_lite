@@ -56,6 +56,9 @@ void UITestOpacity::TearDown()
 {
     DeleteChildren(container_);
     container_ = nullptr;
+    imageAnimator_ = nullptr;
+    imageAnimator2_ = nullptr;
+    toggleBtn_ = nullptr;
 }
 
 UIViewGroup* UITestOpacity::CreateTestCaseGroup(const char* title) const
@@ -268,6 +271,19 @@ void UITestOpacity::UIKitOpacityTestUIImageView001()
     }
 }
 
+bool UITestOpacity::OnClick(UIView& view, const ClickEvent& event)
+{
+    if (&view == toggleBtn_) {
+        if (toggleBtn_->GetState()) {
+            imageAnimator_->Start();
+            imageAnimator2_->Start();
+        } else {
+            imageAnimator_->Stop();
+            imageAnimator2_->Stop();
+        }
+    }
+}
+
 UIImageAnimatorView* UITestOpacity::CreateTestCaseUIImageAnimator(const ImageAnimatorInfo imageAnimatorInfo[],
                                                                   uint8_t opaScale) const
 {
@@ -275,7 +291,6 @@ UIImageAnimatorView* UITestOpacity::CreateTestCaseUIImageAnimator(const ImageAni
     imageAnimator->SetPosition(10, 30, 200, 200); // 10 : offset 30 : offset 200 : offset 200: offset
     imageAnimator->SetOpaScale(opaScale);
     imageAnimator->SetImageAnimatorSrc(imageAnimatorInfo, 4, 10); // 4: image number, 10: updating time
-    imageAnimator->Start();
     return imageAnimator;
 }
 
@@ -285,15 +300,31 @@ void UITestOpacity::UIKitOpacityTestUIImageAnimator001()
         UIViewGroup* group = CreateTestCaseGroup(" display UIImageAnimator with opacity 200 and 100");
         group->Resize(Screen::GetInstance().GetWidth(), BUTTON_HEIGHT + 50); // 50: height
         group->SetViewId("UIKitOpacityTestUIImageAnimator001");
-        UIImageAnimatorView* imageAnimator = CreateTestCaseUIImageAnimator(g_imageAnimatorInfo, 200); // 200: opacity
-        group->Add(imageAnimator);
-        UIImageAnimatorView* imageAnimator2 = CreateTestCaseUIImageAnimator(g_imageAnimatorInfo2, 100); // 100: opacity
-        imageAnimator2->SetPosition(230, 30); // 230: width 30: height
-        group->Add(imageAnimator2);
+        if (imageAnimator_ != nullptr) {
+            return;
+        }
+        imageAnimator_ = CreateTestCaseUIImageAnimator(g_imageAnimatorInfo, 200); // 200: opacity
+        group->Add(imageAnimator_);
+        if (imageAnimator2_ != nullptr) {
+            return;
+        }
+        imageAnimator2_ = CreateTestCaseUIImageAnimator(g_imageAnimatorInfo2, 100); // 100: opacity
+        imageAnimator2_->SetPosition(230, 30); // 230: width 30: height
+        group->Add(imageAnimator2_);
+        if (toggleBtn_ != nullptr) {
+            return;
+        }
+        toggleBtn_ = new UIToggleButton();
+        // 350: btn x position, 40: btn y position, 80: width, 50:height
+        toggleBtn_->SetPosition(350, 40, 80, 50);
+        toggleBtn_->SetOnClickListener(this);
+        toggleBtn_->SetViewId("test_opacity_toggle_btn");
+        group->Add(toggleBtn_);
         container_->Add(group);
         group->LayoutBottomToSibling("UIKitOpacityTestUIImageView001", 10); // 10: height
     }
 }
+
 UIView* UITestOpacity::CreateTestCaseUIView(uint8_t opaScale) const
 {
     UIView* view = new UIView();

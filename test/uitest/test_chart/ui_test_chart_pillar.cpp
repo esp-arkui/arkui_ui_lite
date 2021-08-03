@@ -87,14 +87,14 @@ void UITestChartPillar::TearDown()
 
 const UIView* UITestChartPillar::GetTestView()
 {
-    UIKit_ChartPillar_Test_AddDataSerial_001();
-    UIKit_ChartPillar_Test_EnableReverse_002();
-    UIKit_ChartPillar_Test_SetAxisLineColor_003();
-    UIKit_ChartPillar_Test_SetAxisLineVisible_004();
+    UIKitChartPillarTestAddDataSerial001();
+    UIKitChartPillarTestEnableReverse002();
+    UIKitChartPillarTestSetAxisLineColor003();
+    UIKitChartPillarTestSetAxisLineVisible004();
     return container_;
 }
 
-void UITestChartPillar::UIKit_ChartPillar_Test_AddDataSerial_001()
+void UITestChartPillar::UIKitChartPillarTestAddDataSerial001()
 {
     UILabel* label = GetTitleLabel("UIChartPillar效果 ");
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, TEXT_DISTANCE_TO_TOP_SIDE);
@@ -121,38 +121,38 @@ void UITestChartPillar::UIKit_ChartPillar_Test_AddDataSerial_001()
 
     positionY_ = lastY_ + 10; // 10: increase y-coordinate
     positionX_ = 48; // 48: x-coordinate
-    SetUpButton(addDataSerialBtn_, "添加数据 ");
+    SetUpButton(addDataSerialBtn_, "添加数据 ", UI_TEST_CHART_PILLAR_ADD_DATA_BTN_ID_01);
 
     positionX_ = addDataSerialBtn_->GetX() + addDataSerialBtn_->GetWidth() + g_blank;
     positionY_ = addDataSerialBtn_->GetY();
-    SetUpButton(deleteDataSerialBtn_, "删除数据 ");
+    SetUpButton(deleteDataSerialBtn_, "删除数据 ", UI_TEST_CHART_PILLAR_DEL_DATA_BTN_ID_01);
 
     positionX_ = deleteDataSerialBtn_->GetX() + deleteDataSerialBtn_->GetWidth() + g_blank;
     positionY_ = deleteDataSerialBtn_->GetY();
-    SetUpButton(clearDataSerialBtn_, "清空数据 ");
+    SetUpButton(clearDataSerialBtn_, "清空数据 ", UI_TEST_CHART_PILLAR_CLR_DATA_BTN_ID_01);
 }
 
-void UITestChartPillar::UIKit_ChartPillar_Test_EnableReverse_002()
+void UITestChartPillar::UIKitChartPillarTestEnableReverse002()
 {
     reverseBtn_ = new UILabelButton();
     positionX_ = 48; // 48: x-coordinate
-    SetUpButton(reverseBtn_, "翻转 ");
+    SetUpButton(reverseBtn_, "翻转 ", UI_TEST_CHART_PILLAR_REVERSE_BTN_ID_01);
 }
 
-void UITestChartPillar::UIKit_ChartPillar_Test_SetAxisLineColor_003()
+void UITestChartPillar::UIKitChartPillarTestSetAxisLineColor003()
 {
     setAxisColorBtn_ = new UILabelButton();
     positionX_ = reverseBtn_->GetX() + reverseBtn_->GetWidth() + g_blank;
     positionY_ = reverseBtn_->GetY();
-    SetUpButton(setAxisColorBtn_, "坐标轴颜色 ");
+    SetUpButton(setAxisColorBtn_, "坐标轴颜色 ", UI_TEST_CHART_PILLAR_AXIS_COLOR_BTN_ID_01);
 }
 
-void UITestChartPillar::UIKit_ChartPillar_Test_SetAxisLineVisible_004()
+void UITestChartPillar::UIKitChartPillarTestSetAxisLineVisible004()
 {
     setAxisVisibleBtn_ = new UILabelButton();
     positionX_ = setAxisColorBtn_->GetX() + setAxisColorBtn_->GetWidth() + g_blank;
     positionY_ = setAxisColorBtn_->GetY();
-    SetUpButton(setAxisVisibleBtn_, "坐标轴不可见");
+    SetUpButton(setAxisVisibleBtn_, "坐标轴不可见", UI_TEST_CHART_PILLAR_AXIS_VISIBLE_BTN_ID_01);
 }
 
 bool UITestChartPillar::OnClick(UIView& view, const ClickEvent& event)
@@ -194,7 +194,7 @@ bool UITestChartPillar::OnClick(UIView& view, const ClickEvent& event)
     return true;
 }
 
-void UITestChartPillar::SetUpButton(UILabelButton* btn, const char* title)
+void UITestChartPillar::SetUpButton(UILabelButton* btn, const char* title, const char* id)
 {
     if (btn == nullptr) {
         return;
@@ -203,6 +203,7 @@ void UITestChartPillar::SetUpButton(UILabelButton* btn, const char* title)
     btn->SetPosition(positionX_, positionY_, BUTTON_WIDHT2, BUTTON_HEIGHT2);
     positionY_ += btn->GetHeight() + 10; // 10: increase height
     btn->SetText(title);
+    btn->SetViewId(id);
     btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
     btn->SetOnClickListener(this);
     btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);

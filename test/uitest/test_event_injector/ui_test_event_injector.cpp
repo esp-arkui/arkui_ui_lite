@@ -200,60 +200,70 @@ const UIView* UITestEventInjector::GetTestView()
 void UITestEventInjector::UIKit_Event_Injector_Click_Event_001()
 {
     clickBtn_ = new UILabelButton();
+    clickBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_CLICK_BTN_ID_01);
     InnerTest("模拟点击事件 ", true, false, false, "click", clickBtn_, clickTestView_);
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Drag_Event_002()
 {
     dragBtn_ = new UILabelButton();
+    dragBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_DRAG_BTN_ID_01);
     InnerTest("模拟滑动事件 ", true, true, false, "drag", dragBtn_, dragTestView_);
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Long_Press_Event_003()
 {
     longPressBtn_ = new UILabelButton();
+    longPressBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_LONG_PRESS_BTN_ID_01);
     InnerTest("模拟长按事件 ", true, true, true, "long press", longPressBtn_, longPressTestView_);
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Key_Event_004()
 {
     keyBtn_ = new UILabelButton();
+    keyBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_KEY_EVENT_BTN_ID_01);
     InnerTest("模拟按键输入 ", true, false, false, "key event", keyBtn_, KeyEventTestView_);
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Up_to_Down_005()
 {
     upToDownBtn_ = new UILabelButton();
+    upToDownBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_UP_TO_DOWN_BTN_ID_01);
     SetUpButton(upToDownBtn_, "up to down");
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Down_to_Up_006()
 {
     downToUpBtn_ = new UILabelButton();
+    downToUpBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_DOWN_TO_UP_BTN_ID_01);
     SetUpButton(downToUpBtn_, "down to up");
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Left_to_Right_007()
 {
     leftToRightBtn_ = new UILabelButton();
+    leftToRightBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_LEFT_TO_RIGHT_ID_01);
     SetUpButton(leftToRightBtn_, "left to right");
 }
 
 void UITestEventInjector::UIKit_Event_Injector_Right_to_Left_008()
 {
     rightToLeftBtn_ = new UILabelButton();
+    rightToLeftBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_RIGHT_TO_LEFT_BTN_ID_01);
     SetUpButton(rightToLeftBtn_, "right to left");
 }
 
 void UITestEventInjector::UIKit_Event_Injector_ULeft_to_LRight_009()
 {
     uLeftTolRightBtn_ = new UILabelButton();
+    uLeftTolRightBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_ULEFT_TO_LRIGHT_BTN_ID_01);
     SetUpButton(uLeftTolRightBtn_, "uLeft to lRight");
 }
 
 void UITestEventInjector::UIKit_Event_Injector_LRight_to_ULeft_010()
 {
     lRightTouLeftBtn_ = new UILabelButton();
+    lRightTouLeftBtn_->SetViewId(UI_TEST_EVENT_INJECTOR_LRIGHT_TO_ULEFT_BTN_ID_01);
     SetUpButton(lRightTouLeftBtn_, "lRight to uleft");
 }
 
@@ -330,6 +340,7 @@ void UITestEventInjector::SetUpScrollView()
         return;
     }
     UILabel* label = GetTitleLabel("模拟Drag事件测试");
+    label->SetViewId(UI_TEST_EVENT_INJECTOR_DRAG_LABEL_ID_01);
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_);
     SetLastPos(label);

@@ -34,8 +34,8 @@ void UITestRender::TearDown()
 
 const UIView* UITestRender::GetTestView()
 {
-    UIKit_Render_Test_Render_001();
-    UIKit_Render_Test_RenderMeasure_001();
+    UIKitRenderTestRender001();
+    UIKitRenderTestRenderMeasure001();
     return container_;
 }
 
@@ -72,14 +72,14 @@ UILabel* UITestRender::CreateTitleLabel() const
     return label;
 }
 
-void UITestRender::UIKit_Render_Test_Render_001()
+void UITestRender::UIKitRenderTestRender001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Render_Test_Render_001");
+    group->SetViewId("UIKitRenderTestRender001");
     group->SetPosition(0, 0);
 
     UILabel* label = CreateTitleLabel();
@@ -104,14 +104,14 @@ void UITestRender::UIKit_Render_Test_Render_001()
     container_->Add(group);
 }
 
-void UITestRender::UIKit_Render_Test_RenderMeasure_001()
+void UITestRender::UIKitRenderTestRenderMeasure001()
 {
     if (container_ == nullptr) {
         return;
     }
 
     UIViewGroup* group = CreateTestCaseGroup();
-    group->SetViewId("UIKit_Render_Test_RenderMeasure_001");
+    group->SetViewId("UIKitRenderTestRenderMeasure001");
     container_->Add(group);
 
     UILabel* label = CreateTitleLabel();
@@ -143,7 +143,7 @@ void UITestRender::UIKit_Render_Test_RenderMeasure_001()
     labelButton_->SetOnClickListener(this);
     labelButton_->LayoutBottomToSibling("label_text"); // 10: offset
 
-    group->LayoutBottomToSibling("UIKit_Render_Test_Render_001", 10); // 10: offset
+    group->LayoutBottomToSibling("UIKitRenderTestRender001", 10); // 10: offset
 }
 
 bool UITestRender::OnClick(UIView& view, const ClickEvent& event)

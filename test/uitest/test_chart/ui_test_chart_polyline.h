@@ -23,6 +23,18 @@
 #include "ui_test.h"
 
 namespace OHOS {
+namespace {
+constexpr char* UI_TEST_CHART_POLYLINE_ADD_DATA_BTN_ID_01 = "test_chart_ployline_add_data_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_DEL_DATA_BTN_ID_01 = "test_chart_ployline_del_data_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_CLR_DATA_BTN_ID_01 = "test_chart_ployline_clr_data_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_TOP_POINT_BTN_ID_01 = "test_chart_ployline_top_point_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_BOT_POINT_BTN_ID_01 = "test_chart_ployline_bot_point_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_HEAD_POINT_BTN_ID_01 = "test_chart_ployline_head_point_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_REVERSE_BTN_ID_01 = "test_chart_ployline_reverse_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_GRADIENT_BOT_BTN_ID_01 = "test_chart_ployline_gradient_bot_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_ADD_POINTS_BTN_ID_01 = "test_chart_ployline_add_points_btn_01";
+constexpr char* UI_TEST_CHART_POLYLINE_SMOOTH_BTN_ID_01 = "test_chart_ployline_smooth_btn_01";
+}
 class UITestChartPolyline : public UITest, public UIView::OnClickListener {
 public:
     UITestChartPolyline() {}
@@ -31,15 +43,15 @@ public:
     void TearDown() override;
     const UIView* GetTestView() override;
 
-    void SetUpButton(UILabelButton* btn, const char* title);
+    void SetUpButton(UILabelButton* btn, const char* title, const char* id = nullptr);
 
     bool OnClick(UIView& view, const ClickEvent& event) override;
     bool ClickExpand(UIView& view, UIChartDataSerial::PointStyle pointStyle);
 
-    void UIKit_ChartPolyline_Test_AddDataSerial_001();
-    void UIKit_ChartPolyline_Test_EnableReverse_002();
-    void UIKit_ChartPolyline_Test_SetGradientBottom_003();
-    void UIKit_ChartPolyline_Test_AddPoints_004();
+    void UIKitChartPolylineTestAddDataSerial001();
+    void UIKitChartPolylineTestEnableReverse002();
+    void UIKitChartPolylineTestSetGradientBottom003();
+    void UIKitChartPolylineTestAddPoints004();
 
 private:
     void SetLastPos(UIView* view);

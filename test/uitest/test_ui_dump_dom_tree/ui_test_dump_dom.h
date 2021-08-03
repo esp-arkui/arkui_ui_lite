@@ -34,12 +34,12 @@ public:
     const UIView* GetTestView() override;
     void CreateButtons(GridLayout* layout);
 
-    void UIKit_TestDumpDom_001();
-    void UIKit_TestDumpDom_002();
-    void UIKit_TestDumpDom_003();
-    void UIKit_TestDumpDom_004();
-    void UIKit_TestDumpDom_005();
-    void UIKit_TestDumpDom_006();
+    void UIKitTestDumpDom_001();
+    void UIKitTestDumpDom_002();
+    void UIKitTestDumpDom_003();
+    void UIKitTestDumpDom_004();
+    void UIKitTestDumpDom_005();
+    void UIKitTestDumpDom_006();
     UILabelButton* GetLabelButton(const char* buttonname);
 
 private:
