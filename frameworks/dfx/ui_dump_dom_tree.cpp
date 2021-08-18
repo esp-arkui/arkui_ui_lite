@@ -77,6 +77,33 @@ void UIDumpDomTree::AddImageViewSpecialField(const UIView* view, cJSON* usr) con
     }
 }
 
+void UIDumpDomTree::AddButtonField(const UIView* view, cJSON* usr) const
+{
+    if ((view == nullptr) || (usr == nullptr)) {
+        return;
+    }
+    const UIButton* tmpButton = static_cast<const UIButton*>(view);
+    const Image* img = tmpButton->GetCurImageSrc();
+    if (img == nullptr) {
+        cJSON_AddStringToObject(usr, "currentImgSrc", "");
+        return;
+    }
+    ImageSrcType srcType = img->GetSrcType();
+    if (srcType == IMG_SRC_FILE) {
+        cJSON_AddStringToObject(usr, "currentImgSrc", reinterpret_cast<const char*>(img->GetPath()));
+    } else if (srcType == IMG_SRC_VARIABLE) {
+        const ImageInfo* imageInfo = reinterpret_cast<const ImageInfo*>(img->GetImageInfo());
+        if ((imageInfo == nullptr) || (imageInfo->userData == nullptr)) {
+            cJSON_AddStringToObject(usr, "currentImgSrc", "");
+            return;
+        }
+        uintptr_t userData = reinterpret_cast<uintptr_t>(imageInfo->userData);
+        cJSON_AddNumberToObject(usr, "currentImgSrc", static_cast<uint32_t>(userData));
+    } else {
+        cJSON_AddStringToObject(usr, "currentImgSrc", "");
+    }
+}
+
 void UIDumpDomTree::AddLabelField(const UIView* view, cJSON* usr) const
 {
     const UILabel* tmpLabel = static_cast<const UILabel*>(view);
@@ -177,6 +204,9 @@ void UIDumpDomTree::AddSpecialField(const UIView* view, cJSON* usr) const
         return;
     }
     switch (view->GetViewType()) {
+        case UI_BUTTON:
+            AddButtonField(view, usr);
+            break;
         case UI_LABEL:
         case UI_ARC_LABEL:
             AddLabelField(view, usr);
