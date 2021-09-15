@@ -69,11 +69,7 @@ public:
         virtual ~OnSwipeListener() {}
     };
 
-    enum AlignMode : uint8_t {
-        ALIGN_LEFT,
-        ALIGN_CENTER,
-        ALIGN_RIGHT
-    };
+    enum AlignMode : uint8_t { ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT };
 
     /**
      * @brief A constructor used to create a <b>UISwipeView</b> instance.
@@ -216,6 +212,8 @@ public:
 #if ENABLE_ROTATE_INPUT
     bool OnRotateStartEvent(const RotateEvent& event) override;
 
+    bool OnRotateEvent(const RotateEvent& event) override;
+
     bool OnRotateEndEvent(const RotateEvent& event) override;
 #endif
 
@@ -323,6 +321,7 @@ public:
     void SetScrollBarSide(uint8_t side) = delete;
 
     void SetScrollBarCenter(Point center) = delete;
+
 protected:
     bool DragXInner(int16_t distance) override;
     bool DragYInner(int16_t distance) override;
@@ -370,11 +369,11 @@ protected:
 #endif
 
 private:
-    void RefreshCurrentView(int16_t distance, uint8_t dragDirection);
-    void RefreshCurrentViewInner(int16_t distance,
-                                 uint8_t dragDirection,
-                                 int16_t (UIView::*pfnGetXOrY)() const,
-                                 int16_t (UIView::*pfnGetWidthOrHeight)());
+    void RefreshCurrentViewByPosition(int16_t (UIView::*pfnGetXOrY)() const, int16_t (UIView::*pfnGetWidthOrHeight)());
+    void RefreshCurrentViewByThrow(int16_t distance,
+                                   uint8_t dragDirection,
+                                   int16_t (UIView::*pfnGetXOrY)() const,
+                                   int16_t (UIView::*pfnGetWidthOrHeight)());
 
     bool isNeedLoop();
     void MoveFirstChildToLast();
