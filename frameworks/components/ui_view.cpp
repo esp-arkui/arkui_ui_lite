@@ -914,43 +914,49 @@ uint8_t UIView::GetMixOpaScale() const
 
 bool UIView::GetBitmap(ImageInfo& bitmap)
 {
+    return GetBitmap(bitmap, GetRect());
+}
+
+bool UIView::GetBitmap(ImageInfo& bitmap, const Rect& mask)
+{
     UIView* tempSibling = nextSibling_;
     UIView* tempParent = parent_;
     int16_t tempX = rect_.GetX();
     int16_t tempY = rect_.GetY();
+    Rect viewMask = GetRect();
+    Rect relativeMask(mask.GetLeft() - viewMask.GetLeft(), mask.GetTop() - viewMask.GetTop(), mask.GetWidth() - 1,
+                      mask.GetHeight() - 1);
+    rect_.SetPosition(0, 0);
     nextSibling_ = nullptr;
     parent_ = nullptr;
+    viewMask = GetRect();
+    viewMask.Intersect(relativeMask, viewMask);
 
-    BufferInfo* bufferInfo = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
-    if (bufferInfo == nullptr) {
-        return false;
-    }
-    int16_t screenWidth = bufferInfo->rect.GetWidth();
-    int16_t screenHeight = bufferInfo->rect.GetHeight();
-    Rect screenRect(0, 0, screenWidth, screenHeight);
-    rect_.SetPosition(0, 0);
-    Rect mask = GetRect();
-    mask.Intersect(mask, screenRect);
-    uint16_t bufferWidth = static_cast<uint16_t>(mask.GetWidth());
-    uint16_t bufferHeight = static_cast<uint16_t>(mask.GetHeight());
+    uint16_t bufferWidth = static_cast<uint16_t>(viewMask.GetWidth());
+    uint16_t bufferHeight = static_cast<uint16_t>(viewMask.GetHeight());
     bitmap.header.colorMode = ARGB8888;
     bitmap.dataSize = bufferWidth * bufferHeight * DrawUtils::GetByteSizeByColorMode(bitmap.header.colorMode);
     bitmap.header.width = bufferWidth;
     bitmap.header.height = bufferHeight;
     bitmap.header.reserved = 0;
 
-    uint8_t* viewBitmapBuffer = reinterpret_cast<uint8_t*>(ImageCacheMalloc(bitmap));
+    void* viewBitmapBuffer = ImageCacheMalloc(bitmap);
     if (viewBitmapBuffer == nullptr) {
+        GRAPHIC_LOGE("GetBitmap buffer alloc failed.");
         nextSibling_ = tempSibling;
         parent_ = tempParent;
         rect_.SetPosition(tempX, tempY);
         return false;
     }
+    if (memset_s(viewBitmapBuffer, bitmap.dataSize, 0, bitmap.dataSize) != EOK) {
+        GRAPHIC_LOGE("GetBitmap buffer memset failed.");
+        return false;
+    }
 
     BufferInfo newBufferInfo;
-    newBufferInfo.virAddr = static_cast<void*>(viewBitmapBuffer);
+    newBufferInfo.virAddr = viewBitmapBuffer;
     newBufferInfo.phyAddr = newBufferInfo.virAddr;
-    newBufferInfo.rect = mask;
+    newBufferInfo.rect = viewMask;
     newBufferInfo.width = bufferWidth;
     newBufferInfo.height = bufferHeight;
     newBufferInfo.mode = ARGB8888;
@@ -959,8 +965,8 @@ bool UIView::GetBitmap(ImageInfo& bitmap)
     RootView::GetInstance()->SaveDrawContext();
     RootView::GetInstance()->UpdateBufferInfo(&newBufferInfo);
     RootView::GetInstance()->Measure();
-    RootView::GetInstance()->DrawTop(this, mask);
-    bitmap.data = viewBitmapBuffer;
+    RootView::GetInstance()->DrawTop(this, viewMask);
+    bitmap.data = reinterpret_cast<uint8_t*>(viewBitmapBuffer);
     RootView::GetInstance()->RestoreDrawContext();
     nextSibling_ = tempSibling;
     parent_ = tempParent;
