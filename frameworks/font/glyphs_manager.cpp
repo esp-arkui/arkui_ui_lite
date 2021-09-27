@@ -267,15 +267,15 @@ int8_t GlyphsManager::SetCurrentFontId(uint8_t fontId)
 
     uint32_t size = 0;
     fontId_ = fontId;
-    curFontHeader_ = fontHeaderCache_ + fontIdx;
     curGlyphNode_ = nullptr;
-    curFontIndexSectionStart_ = fontIndexSectionStart_ + curFontHeader_->indexOffset;
+    curFontIndexSectionStart_ = fontIndexSectionStart_ + (fontHeaderCache_ + fontIdx)->indexOffset;
     for (uint32_t i = 0; i < fontIdx; i++) {
         size += fontHeaderCache_[i].glyphNum * sizeof(GlyphNode);
     }
     curGlyphNodeSectionStart_ = glyphNodeSectionStart_ + size;
-    curBitMapSectionStart_ = bitMapSectionStart_ + curFontHeader_->glyphOffset;
-    curIndexCache_ = indexCache_ + curFontHeader_->indexOffset;
+    curBitMapSectionStart_ = bitMapSectionStart_ + (fontHeaderCache_ + fontIdx)->glyphOffset;
+    curIndexCache_ = indexCache_ + (fontHeaderCache_ + fontIdx)->indexOffset;
+    curFontHeader_ = fontHeaderCache_ + fontIdx;
     isFontIdSet_ = true;
 
     return RET_VALUE_OK;
