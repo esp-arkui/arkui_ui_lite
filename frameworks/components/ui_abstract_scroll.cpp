@@ -39,7 +39,9 @@ public:
     BarEaseInOutAnimator(UIAbstractScroll& scrollView)
         : scrollView_(scrollView),
           timer_(APPEAR_PERIOD, TimerCb, this),
-          animator_(this, nullptr, ANIMATOR_DURATION, false) {}
+          animator_(this, nullptr, ANIMATOR_DURATION, false)
+    {
+    }
 
     ~BarEaseInOutAnimator()
     {
@@ -88,8 +90,7 @@ private:
             if (scrollView_.yScrollBarVisible_) {
                 scrollView_.yScrollBar_->SetOpacity(OPA_OPAQUE);
             }
-            if (Screen::GetInstance().GetScreenShape() == ScreenShape::RECTANGLE &&
-                scrollView_.xScrollBarVisible_) {
+            if (Screen::GetInstance().GetScreenShape() == ScreenShape::RECTANGLE && scrollView_.xScrollBarVisible_) {
                 scrollView_.xScrollBar_->SetOpacity(OPA_OPAQUE);
             }
             timer_.Start(); // The timer is triggered when animation stops.
@@ -126,6 +127,7 @@ UIAbstractScroll::UIAbstractScroll()
       deltaIndex_(0),
       reserve_(0),
       easingFunc_(EasingEquation::CubicEaseOut),
+      alignEasingFunc_(EasingEquation::CubicEaseOut),
       scrollAnimator_(&animatorCallback_, this, 0, true),
       scrollBarSide_(SCROLL_BAR_RIGHT_SIDE),
       scrollBarCenter_({0, 0}),
@@ -199,10 +201,7 @@ void UIAbstractScroll::StopAnimator()
     isDragging_ = false;
 }
 
-bool UIAbstractScroll::DragThrowAnimator(Point currentPos,
-                                         Point lastPos,
-                                         uint8_t dragDirection,
-                                         bool dragBack)
+bool UIAbstractScroll::DragThrowAnimator(Point currentPos, Point lastPos, uint8_t dragDirection, bool dragBack)
 {
     if (!throwDrag_ && (reboundSize_ == 0)) {
         return false;
@@ -234,6 +233,7 @@ void UIAbstractScroll::StartAnimator(int16_t dragDistanceX, int16_t dragDistance
     animatorCallback_.SetDragStartValue(0, 0);
     animatorCallback_.SetDragEndValue(dragDistanceX, dragDistanceY);
     animatorCallback_.SetDragTimes(dragTimes * DRAG_ACC_FACTOR / GetDragACCLevel());
+    animatorCallback_.curtFunc_ = alignEasingFunc_;
     scrollAnimator_.Start();
 }
 
@@ -248,7 +248,8 @@ void UIAbstractScroll::CalculateDragDistance(Point currentPos,
         if (isRotating_) {
             // 255 : uint8 max value
             uint8_t coeff = (rotateAccCoefficient_ >= 255 - ROTATE_DISTANCE_COEFFICIENT) ?
-                            255 : (ROTATE_DISTANCE_COEFFICIENT + rotateAccCoefficient_); // 255 : uint8 max value
+                                255 :
+                                (ROTATE_DISTANCE_COEFFICIENT + rotateAccCoefficient_); // 255 : uint8 max value
             dragDistanceY *= coeff;
         } else {
             dragDistanceY *= DRAG_DISTANCE_COEFFICIENT;
@@ -266,7 +267,8 @@ void UIAbstractScroll::CalculateDragDistance(Point currentPos,
         if (isRotating_) {
             // 255 : uint8 max value
             uint8_t coeff = (rotateAccCoefficient_ >= 255 - ROTATE_DISTANCE_COEFFICIENT) ?
-                            255 : (ROTATE_DISTANCE_COEFFICIENT + rotateAccCoefficient_); // 255 : uint8 max value
+                                255 :
+                                (ROTATE_DISTANCE_COEFFICIENT + rotateAccCoefficient_); // 255 : uint8 max value
             dragDistanceX *= coeff;
         } else {
             dragDistanceX *= DRAG_DISTANCE_COEFFICIENT;
@@ -304,7 +306,7 @@ void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
         bool needStopX = false;
         bool needStopY = false;
         if (startValueY_ != endValueY_) {
-            int16_t actY = scrollView->easingFunc_(startValueY_, endValueY_, curtTime_, dragTimes_);
+            int16_t actY = curtFunc_(startValueY_, endValueY_, curtTime_, dragTimes_);
             if (!scrollView->DragYInner(actY - previousValueY_)) {
                 needStopY = true;
             }
@@ -313,7 +315,7 @@ void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
             needStopY = true;
         }
         if (startValueX_ != endValueX_) {
-            int16_t actX = scrollView->easingFunc_(startValueX_, endValueX_, curtTime_, dragTimes_);
+            int16_t actX = curtFunc_(startValueX_, endValueX_, curtTime_, dragTimes_);
             if (!scrollView->DragXInner(actX - previousValueX_)) {
                 needStopX = true;
             }
@@ -361,7 +363,7 @@ bool UIAbstractScroll::OnRotateEndEvent(const RotateEvent& event)
         dir = (lastRotateLen_ >= 0) ? DragEvent::DIRECTION_TOP_TO_BOTTOM : DragEvent::DIRECTION_BOTTOM_TO_TOP;
     }
     bool triggerAnimator = (MATH_ABS(lastRotateLen_) >= (GetWidth() / rotateThrowthreshold_)) ||
-        (MATH_ABS(lastRotateLen_) >= (GetHeight() / rotateThrowthreshold_));
+                           (MATH_ABS(lastRotateLen_) >= (GetHeight() / rotateThrowthreshold_));
     if (throwDrag_ && triggerAnimator) {
         Point current;
         if (direction_ == HORIZONTAL) {
@@ -420,8 +422,8 @@ void UIAbstractScroll::OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalida
                 yScrollBar_->SetPosition(scrollRect.GetRight() - SCROLL_BAR_WIDTH + 1, scrollRect.GetTop(),
                                          SCROLL_BAR_WIDTH, scrollRect.GetHeight());
             } else {
-                yScrollBar_->SetPosition(scrollRect.GetLeft(), scrollRect.GetTop(),
-                                         SCROLL_BAR_WIDTH, scrollRect.GetHeight());
+                yScrollBar_->SetPosition(scrollRect.GetLeft(), scrollRect.GetTop(), SCROLL_BAR_WIDTH,
+                                         scrollRect.GetHeight());
             }
             yScrollBar_->OnDraw(gfxDstBuffer, invalidatedArea, opa);
         }
@@ -445,7 +447,7 @@ void UIAbstractScroll::OnPostDraw(BufferInfo& gfxDstBuffer, const Rect& invalida
                 x = scrollRect.GetX() + scrollBarCenter_.x;
                 y = scrollRect.GetY() + scrollBarCenter_.y;
             } else {
-                x = scrollRect.GetX() + (GetWidth() / 2); // 2: half
+                x = scrollRect.GetX() + (GetWidth() / 2);  // 2: half
                 y = scrollRect.GetY() + (GetHeight() / 2); // 2: half
             }
             yScrollBar_->SetPosition(x, y, SCROLL_BAR_WIDTH, GetWidth() / 2); // 2: half
