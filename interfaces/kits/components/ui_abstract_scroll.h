@@ -148,6 +148,19 @@ public:
     }
 
     /**
+     * @brief 设置自动对齐动画曲线.
+     *
+     * @param func Indicates the easing function to set. The default function is {@link EasingEquation::CubicEaseOut}.
+     *             For details, see {@link EasingEquation}.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetAutoAlignFunc(EasingFunc func)
+    {
+        alignEasingFunc_ = func;
+    }
+
+    /**
      * @brief Sets whether to continue scrolling after a finger lifts the screen.
      *
      * @param throwDrag Specifies whether to continue scrolling after a finger lifts the screen. <b>true</b> indicates
@@ -367,7 +380,8 @@ protected:
               previousValueX_(0),
               startValueY_(0),
               endValueY_(0),
-              previousValueY_(0)
+              previousValueY_(0),
+              curtFunc_(EasingEquation::CubicEaseOut)
         {
         }
 
@@ -412,6 +426,7 @@ protected:
         int16_t startValueY_;
         int16_t endValueY_;
         int16_t previousValueY_;
+        EasingFunc curtFunc_;
     };
 
     bool DragThrowAnimator(Point currentPos, Point lastPos, uint8_t dragDirection, bool dragBack = true);
@@ -455,6 +470,7 @@ protected:
     uint8_t reserve_ : 4;
     bool throwDrag_ = false;
     EasingFunc easingFunc_;
+    EasingFunc alignEasingFunc_;
     ListAnimatorCallback animatorCallback_;
     Animator scrollAnimator_;
 #if ENABLE_ROTATE_INPUT

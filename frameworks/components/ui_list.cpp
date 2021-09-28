@@ -405,6 +405,7 @@ bool UIList::ReCalculateDragEnd()
     animatorCallback_.SetDragStartValue(0, 0);
     animatorCallback_.SetDragEndValue(offsetX, offsetY);
     animatorCallback_.SetDragTimes(GetAutoAlignTime() / DEFAULT_TASK_PERIOD);
+    animatorCallback_.curtFunc_ = alignEasingFunc_;
     scrollAnimator_.Start();
     isReCalculateDragEnd_ = true;
     return true;
