@@ -385,7 +385,7 @@ int8_t GlyphsManager::GetBitmap(uint32_t unicode, uint8_t* bitmap, uint8_t fontI
         return INVALID_RET_VALUE;
     }
     const GlyphNode* node = GetGlyphNode(unicode);
-    while ((fontId != 0) && (node != nullptr) && (node->reserve != fontId)) {
+    while ((node != nullptr) && (node->reserve != fontId)) {
         SetCurrentFontId(fontId);
         node = GetGlyphNode(unicode);
     }
@@ -394,7 +394,7 @@ int8_t GlyphsManager::GetBitmap(uint32_t unicode, uint8_t* bitmap, uint8_t fontI
         return INVALID_RET_VALUE;
     }
 
-    if ((fontId != 0) && (fontId_ != fontId)) {
+    if (fontId_ != fontId) {
         SetCurrentFontId(fontId);
     }
     uint32_t offset = curBitMapSectionStart_ + node->dataOff;
