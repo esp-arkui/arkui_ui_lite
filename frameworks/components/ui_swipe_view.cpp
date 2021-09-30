@@ -290,6 +290,7 @@ void UISwipeView::SwitchToPage(int16_t dst, bool needAnimator)
             animatorCallback_.SetDragTimes(tickTime_);
             animatorCallback_.SetDragStartValue(0, 0);
             animatorCallback_.SetDragEndValue(xOffset, yOffset);
+            animatorCallback_.currentFunc_ = easingFunc_;
             scrollAnimator_.Start();
         } else {
             MoveChildByOffset(xOffset, yOffset);
