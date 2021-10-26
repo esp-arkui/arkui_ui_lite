@@ -19,6 +19,7 @@
 #include "draw/draw_image.h"
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/graphic_log.h"
+#include <engines/gfx/gfx_enginex_manager.h>
 
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
@@ -451,6 +452,11 @@ void UICanvas::DrawPath(const Paint& paint)
 void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
     Rect rect = GetOrigRect();
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+    if(destBuf == nullptr) return;
+
+    m_graphics->attach(destBuf,gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
     BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
 
     void* param = nullptr;
@@ -463,6 +469,204 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
             curDraw->data_.DrawGraphics(gfxDstBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
         }
     }
+    //添加的处理机制的。。。
+    m_graphics->viewport(0, 0, 600, 600,0, 0, gfxDstBuffer.width,gfxDstBuffer.height,
+                         //BaseGfxExtendEngine::Anisotropic);
+                         BaseGfxExtendEngine::XMidYMid);
+
+
+    // Rounded Rect
+    m_graphics->lineColor(0, 255, 0);
+    m_graphics->lineWidth(13.0);
+    m_graphics->lineCap(BaseGfxExtendEngine::CapRound);
+
+    m_graphics->noFill();
+    //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
+    m_graphics->line(10.5, 10.5, 500-0.5, 500-0.5);
+    m_graphics->lineColor(0, 0, 255,128);
+    m_graphics->lineCap(BaseGfxExtendEngine::CapButt);
+    //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
+    m_graphics->line(210.5, 110.5, 200-0.5, 250-0.5);
+
+    double xb1 = 400;
+    double yb1 = 80;
+    double xb2 = xb1 + 150;
+    double yb2 = yb1 + 36;
+
+    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
+    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,80, 255));
+    m_graphics->lineWidth(1.0);
+    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
+
+    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
+    m_graphics->fillLinearGradient(xb1, yb1, xb1, yb1+30,
+                                   BaseGfxExtendEngine::Color(100,200,255,255),
+                                   BaseGfxExtendEngine::Color(255,255,255,0));
+    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
+
+    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 200));
+    m_graphics->noLine();
+
+    m_graphics->fillLinearGradient(xb1, yb2-20, xb1, yb2-3,
+                                   BaseGfxExtendEngine::Color(0,  0,  255,0),
+                                   BaseGfxExtendEngine::Color(100,255,255,255));
+    m_graphics->roundedRect(xb1+3, yb2-20, xb2-3, yb2-2, 1, 1, 9, 18);
+
+
+    // Aqua Button Pressed
+    xb1 = 400;
+    yb1 = 30;
+    xb2 = xb1 + 150;
+    yb2 = yb1 + 36;
+
+    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
+    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,  255));
+    m_graphics->lineWidth(2.0);
+    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
+
+    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
+    m_graphics->fillLinearGradient(xb1, yb1+2, xb1, yb1+25,
+                                   BaseGfxExtendEngine::Color(60, 160,255,255),
+                                   BaseGfxExtendEngine::Color(100,255,255,0));
+    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
+
+    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 255));
+    m_graphics->noLine();
+    m_graphics->fillLinearGradient(xb1, yb2-25, xb1, yb2-5,
+                                   BaseGfxExtendEngine::Color(0,  180,255,0),
+                                   BaseGfxExtendEngine::Color(0,  200,255,255));
+    m_graphics->roundedRect(xb1+3, yb2-25, xb2-3, yb2-2, 1, 1, 9, 18);
+
+
+
+
+    // Basic Shapes -- Ellipse
+    //===========================================
+    m_graphics->lineWidth(3.5);
+    m_graphics->lineColor(20,  80,  80);
+    m_graphics->fillColor(200, 255, 80, 200);
+    m_graphics->ellipse(450, 200, 50, 90);
+
+
+    // Paths
+    //===========================================
+    m_graphics->resetPath();
+    m_graphics->fillColor(255, 0, 0, 100);
+    m_graphics->lineColor(0, 0, 255, 100);
+    m_graphics->lineWidth(2);
+    m_graphics->moveTo(300/2, 200/2);
+    m_graphics->horLineRel(-150/2);
+    m_graphics->arcRel(150/2, 150/2, 0, 1, 0, 150/2, -150/2);
+    m_graphics->closePolygon();
+    m_graphics->drawPath();
+
+    m_graphics->resetPath();
+    m_graphics->fillColor(255, 255, 0, 100);
+    m_graphics->lineColor(0, 0, 255, 100);
+    m_graphics->lineWidth(2);
+    m_graphics->moveTo(275/2, 175/2);
+    m_graphics->verLineRel(-150/2);
+    m_graphics->arcRel(150/2, 150/2, 0, 0, 0, -150/2, 150/2);
+    m_graphics->closePolygon();
+    m_graphics->drawPath();
+
+
+    m_graphics->resetPath();
+    m_graphics->noFill();
+    m_graphics->lineColor(127, 0, 0);
+    m_graphics->lineWidth(5);
+    m_graphics->moveTo(600/2, 350/2);
+    m_graphics->lineRel(50/2, -25/2);
+    m_graphics->arcRel(25/2, 25/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
+    m_graphics->lineRel(50/2, -25/2);
+    m_graphics->arcRel(25/2, 50/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
+    m_graphics->lineRel(50/2, -25/2);
+    m_graphics->arcRel(25/2, 75/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
+    m_graphics->lineRel(50, -25);
+    m_graphics->arcRel(25/2, 100/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
+    m_graphics->lineRel(50/2, -25/2);
+    m_graphics->drawPath();
+
+
+    // Master Alpha. From now on everything will be translucent
+    //===========================================
+    m_graphics->masterAlpha(0.85);
+
+
+    // Image Transformations
+    // Transform the whole image to the destination rectangle
+    //-----------------
+    //m_graphics->transformImage(img, 450, 200, 595, 350);
+
+    // Transform the rectangular part of the image to the destination rectangle
+    //-----------------
+    //m_graphics->transformImage(img, 60, 60, img.width()-60, img.height()-60,
+    //                          450, 200, 595, 350);
+
+    // Transform the whole image to the destination parallelogram
+    //-----------------
+    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
+    //m_graphics->transformImage(img, parl);
+
+    // Transform the rectangular part of the image to the destination parallelogram
+    //-----------------
+    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
+    //m_graphics->transformImage(img, 60, 60, img.width()-60, img.height()-60, parl);
+
+    // Transform image to the destination path. The scale is determined by a rectangle
+    //-----------------
+    //m_graphics->resetPath();
+    //m_graphics->moveTo(450, 200);
+    //m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
+    //m_graphics->lineTo(470, 340);
+    //m_graphics->transformImagePath(img, 450, 200, 595, 350);
+
+
+    // Transform image to the destination path.
+    // The scale is determined by a rectangle
+    //-----------------
+    m_graphics->resetPath();
+    m_graphics->moveTo(450, 200);
+    m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
+    m_graphics->lineTo(470, 340);
+
+    // Transform image to the destination path.
+    // The transformation is determined by a parallelogram
+    //m_graphics->resetPath();
+    //m_graphics->moveTo(450, 200);
+    //m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
+    //m_graphics->lineTo(470, 340);
+    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
+    //m_graphics->transformImagePath(img, parl);
+
+    // Transform the rectangular part of the image to the destination path.
+    // The transformation is determined by a parallelogram
+    //m_graphics->resetPath();
+    //m_graphics->moveTo(450, 200);
+    //m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
+    //m_graphics->lineTo(470, 340);
+    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
+    //m_graphics->transformImagePath(img, 60, 60, img.width()-60, img.height()-60, parl);
+
+
+    // Add/Sub/Contrast Blending Modes
+    m_graphics->noLine();
+    m_graphics->fillColor(70, 70, 0);
+    m_graphics->blendMode(BaseGfxExtendEngine::BlendAdd);
+    m_graphics->ellipse(500, 280, 20, 40);
+
+    m_graphics->fillColor(255, 255, 255);
+    m_graphics->blendMode(BaseGfxExtendEngine::BlendOverlay);
+    m_graphics->ellipse(500+40, 280, 20, 40);
+
+    // Radial gradient.
+    m_graphics->blendMode(BaseGfxExtendEngine::BlendAlpha);
+    m_graphics->fillRadialGradient(400, 500, 40,
+                                   BaseGfxExtendEngine::Color(255, 255, 0, 0),
+                                   BaseGfxExtendEngine::Color(0, 0, 127),
+                                   BaseGfxExtendEngine::Color(0, 255, 0, 0));
+    m_graphics->ellipse(400, 500, 40, 40);
+
 }
 
 void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
@@ -752,73 +956,73 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
     ListNode<PathCmd>* iter = path->cmd_.Begin();
     for (uint16_t i = 0; (i < pathParam->count) && (iter != path->cmd_.End()); i++, iter = iter->next_) {
         switch (iter->data_) {
-            case CMD_MOVE_TO: {
-                pointIter = pointIter->next_;
+        case CMD_MOVE_TO: {
+            pointIter = pointIter->next_;
+            break;
+        }
+        case CMD_LINE_TO: {
+            Point start = pointIter->prev_->data_;
+            Point end = pointIter->data_;
+            pointIter = pointIter->next_;
+            if ((start.x == end.x) && (start.y == end.y)) {
                 break;
             }
-            case CMD_LINE_TO: {
-                Point start = pointIter->prev_->data_;
-                Point end = pointIter->data_;
-                pointIter = pointIter->next_;
-                if ((start.x == end.x) && (start.y == end.y)) {
-                    break;
-                }
 
-                GetAbsolutePosition(start, rect, style, start);
-                GetAbsolutePosition(end, rect, style, end);
+            GetAbsolutePosition(start, rect, style, start);
+            GetAbsolutePosition(end, rect, style, end);
+            BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
+                                                   paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+            if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
+                DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
+            }
+            pathEnd = end;
+            break;
+        }
+        case CMD_ARC: {
+            ArcInfo arcInfo = {{0}};
+            arcInfo.imgPos = Point{0, 0};
+            arcInfo.startAngle = arcIter->data_.startAngle;
+            arcInfo.endAngle = arcIter->data_.endAngle;
+            Style drawStyle = StyleDefault::GetDefaultStyle();
+            drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
+            drawStyle.lineColor_ = paint.GetStrokeColor();
+            drawStyle.lineOpa_ = OPA_OPAQUE;
+            arcInfo.radius = arcIter->data_.radius + ((paint.GetStrokeWidth() + 1) >> 1);
+
+            GetAbsolutePosition(arcIter->data_.center, rect, style, arcInfo.center);
+            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+                                                  CapType::CAP_NONE);
+            if (pointIter != path->points_.Begin()) {
+                DoDrawLineJoin(gfxDstBuffer, pathEnd, invalidatedArea, paint);
+            }
+
+            GetAbsolutePosition(pointIter->data_, rect, style, pathEnd);
+            pointIter = pointIter->next_;
+            arcIter = arcIter->next_;
+            break;
+        }
+        case CMD_CLOSE: {
+            Point start = pointIter->prev_->data_;
+            Point end = pointIter->data_;
+            GetAbsolutePosition(start, rect, style, start);
+            GetAbsolutePosition(end, rect, style, end);
+            if ((start.x != end.x) || (start.y != end.y)) {
                 BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
                                                        paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
                 if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
                     DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
                 }
                 pathEnd = end;
-                break;
             }
-            case CMD_ARC: {
-                ArcInfo arcInfo = {{0}};
-                arcInfo.imgPos = Point{0, 0};
-                arcInfo.startAngle = arcIter->data_.startAngle;
-                arcInfo.endAngle = arcIter->data_.endAngle;
-                Style drawStyle = StyleDefault::GetDefaultStyle();
-                drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
-                drawStyle.lineColor_ = paint.GetStrokeColor();
-                drawStyle.lineOpa_ = OPA_OPAQUE;
-                arcInfo.radius = arcIter->data_.radius + ((paint.GetStrokeWidth() + 1) >> 1);
 
-                GetAbsolutePosition(arcIter->data_.center, rect, style, arcInfo.center);
-                BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                                      CapType::CAP_NONE);
-                if (pointIter != path->points_.Begin()) {
-                    DoDrawLineJoin(gfxDstBuffer, pathEnd, invalidatedArea, paint);
-                }
-
-                GetAbsolutePosition(pointIter->data_, rect, style, pathEnd);
-                pointIter = pointIter->next_;
-                arcIter = arcIter->next_;
-                break;
+            if ((pathEnd.x == end.x) && (pathEnd.y == end.y)) {
+                DoDrawLineJoin(gfxDstBuffer, end, invalidatedArea, paint);
             }
-            case CMD_CLOSE: {
-                Point start = pointIter->prev_->data_;
-                Point end = pointIter->data_;
-                GetAbsolutePosition(start, rect, style, start);
-                GetAbsolutePosition(end, rect, style, end);
-                if ((start.x != end.x) || (start.y != end.y)) {
-                    BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
-                                                           paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
-                    if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
-                        DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
-                    }
-                    pathEnd = end;
-                }
-
-                if ((pathEnd.x == end.x) && (pathEnd.y == end.y)) {
-                    DoDrawLineJoin(gfxDstBuffer, end, invalidatedArea, paint);
-                }
-                pointIter = pointIter->next_;
-                break;
-            }
-            default:
-                break;
+            pointIter = pointIter->next_;
+            break;
+        }
+        default:
+            break;
         }
     }
 }
