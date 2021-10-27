@@ -644,7 +644,7 @@ void BaseGfxExtendEngine::lineWidth(double w)
 
 
 //------------------------------------------------------------------------
-double BaseGfxExtendEngine::lineWidth(double w) const
+double BaseGfxExtendEngine::lineWidth() const
 {
     return m_lineWidth;
 }
