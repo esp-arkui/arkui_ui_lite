@@ -452,11 +452,7 @@ void UICanvas::DrawPath(const Paint& paint)
 void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
     Rect rect = GetOrigRect();
-    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
-    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-    if(destBuf == nullptr) return;
 
-    m_graphics->attach(destBuf,gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
     BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
 
     void* param = nullptr;
@@ -464,15 +460,80 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     Rect coords = GetOrigRect();
     Rect trunc = invalidatedArea;
     if (trunc.Intersect(trunc, coords)) {
+        //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
             curDraw->data_.DrawGraphics(gfxDstBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
         }
     }
-    //添加的处理机制的。。。
-    m_graphics->viewport(0, 0, 600, 600,0, 0, gfxDstBuffer.width,gfxDstBuffer.height,
-                         //BaseGfxExtendEngine::Anisotropic);
-                         BaseGfxExtendEngine::XMidYMid);
+}
+
+void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
+{
+    point.x = prePoint.x + rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
+    point.y = prePoint.y + rect.GetTop() + style.paddingTop_ + style.borderWidth_;
+}
+
+void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
+                          void* param,
+                          const Paint& paint,
+                          const Rect& rect,
+                          const Rect& invalidatedArea,
+                          const Style& style)
+{
+    if (param == nullptr) {
+        return;
+    }
+
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    if(m_graphics==nullptr) {
+        return;
+    }
+    LineParam* lineParam = static_cast<LineParam*>(param);
+    Point start;
+    Point end;
+    GetAbsolutePosition(lineParam->start, rect, style, start);
+    GetAbsolutePosition(lineParam->end, rect, style, end);
+    int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
+    int16_t posTop=rect.GetTop() + style.paddingTop_ + style.borderWidth_;
+    Rect lineArea;
+
+    if (start.x < end.x) {
+        lineArea.SetX(start.x);
+        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
+        lineArea.SetWidth(end.x - start.x + 1);
+        lineArea.SetHeight(paint.GetStrokeWidth());
+    } else {
+        lineArea.SetX(end.x);
+        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
+        lineArea.SetWidth(start.x - end.x + 1);
+        lineArea.SetHeight(paint.GetStrokeWidth());
+    }
+    //1.。。这个地方的重绘尤其要注意,重绘制的处理
+    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
+    Rect fillArea; //
+    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
+        return;
+    }
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+    if (gfxDstBuffer.virAddr == nullptr) {
+            return;
+    }
+
+    ColorMode mode = gfxDstBuffer.mode;
+    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
+    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
+            posLeft;
+    destBuf += offset * destByteSize;
+    m_graphics->attach(destBuf,rect.GetWidth(),
+                       rect.GetHeight(),gfxDstBuffer.stride);
+    //绘制背景可以不绘制...
+    //m_graphics->clearAll(128, 128, 128);
+    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
+    m_graphics->viewport(0, 0, 600, 600,0,0, rect.GetWidth(),
+                         rect.GetHeight(),
+                         BaseGfxExtendEngine::Anisotropic);
+                         //BaseGfxExtendEngine::XMidYMid);
 
 
     // Rounded Rect
@@ -481,8 +542,8 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     m_graphics->lineCap(BaseGfxExtendEngine::CapRound);
 
     m_graphics->noFill();
-    //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
     m_graphics->line(10.5, 10.5, 500-0.5, 500-0.5);
+
     m_graphics->lineColor(0, 0, 255,128);
     m_graphics->lineCap(BaseGfxExtendEngine::CapButt);
     //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
@@ -524,6 +585,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     m_graphics->lineWidth(2.0);
     m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
 
+
     m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
     m_graphics->fillLinearGradient(xb1, yb1+2, xb1, yb1+25,
                                    BaseGfxExtendEngine::Color(60, 160,255,255),
@@ -536,161 +598,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                    BaseGfxExtendEngine::Color(0,  180,255,0),
                                    BaseGfxExtendEngine::Color(0,  200,255,255));
     m_graphics->roundedRect(xb1+3, yb2-25, xb2-3, yb2-2, 1, 1, 9, 18);
-
-
-
-
-    // Basic Shapes -- Ellipse
-    //===========================================
-    m_graphics->lineWidth(3.5);
-    m_graphics->lineColor(20,  80,  80);
-    m_graphics->fillColor(200, 255, 80, 200);
-    m_graphics->ellipse(450, 200, 50, 90);
-
-
-    // Paths
-    //===========================================
-    m_graphics->resetPath();
-    m_graphics->fillColor(255, 0, 0, 100);
-    m_graphics->lineColor(0, 0, 255, 100);
-    m_graphics->lineWidth(2);
-    m_graphics->moveTo(300/2, 200/2);
-    m_graphics->horLineRel(-150/2);
-    m_graphics->arcRel(150/2, 150/2, 0, 1, 0, 150/2, -150/2);
-    m_graphics->closePolygon();
-    m_graphics->drawPath();
-
-    m_graphics->resetPath();
-    m_graphics->fillColor(255, 255, 0, 100);
-    m_graphics->lineColor(0, 0, 255, 100);
-    m_graphics->lineWidth(2);
-    m_graphics->moveTo(275/2, 175/2);
-    m_graphics->verLineRel(-150/2);
-    m_graphics->arcRel(150/2, 150/2, 0, 0, 0, -150/2, 150/2);
-    m_graphics->closePolygon();
-    m_graphics->drawPath();
-
-
-    m_graphics->resetPath();
-    m_graphics->noFill();
-    m_graphics->lineColor(127, 0, 0);
-    m_graphics->lineWidth(5);
-    m_graphics->moveTo(600/2, 350/2);
-    m_graphics->lineRel(50/2, -25/2);
-    m_graphics->arcRel(25/2, 25/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
-    m_graphics->lineRel(50/2, -25/2);
-    m_graphics->arcRel(25/2, 50/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
-    m_graphics->lineRel(50/2, -25/2);
-    m_graphics->arcRel(25/2, 75/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
-    m_graphics->lineRel(50, -25);
-    m_graphics->arcRel(25/2, 100/2, BaseGfxExtendEngine::deg2Rad(-30), 0, 1, 50/2, -25/2);
-    m_graphics->lineRel(50/2, -25/2);
-    m_graphics->drawPath();
-
-
-    // Master Alpha. From now on everything will be translucent
-    //===========================================
-    m_graphics->masterAlpha(0.85);
-
-
-    // Image Transformations
-    // Transform the whole image to the destination rectangle
-    //-----------------
-    //m_graphics->transformImage(img, 450, 200, 595, 350);
-
-    // Transform the rectangular part of the image to the destination rectangle
-    //-----------------
-    //m_graphics->transformImage(img, 60, 60, img.width()-60, img.height()-60,
-    //                          450, 200, 595, 350);
-
-    // Transform the whole image to the destination parallelogram
-    //-----------------
-    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
-    //m_graphics->transformImage(img, parl);
-
-    // Transform the rectangular part of the image to the destination parallelogram
-    //-----------------
-    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
-    //m_graphics->transformImage(img, 60, 60, img.width()-60, img.height()-60, parl);
-
-    // Transform image to the destination path. The scale is determined by a rectangle
-    //-----------------
-    //m_graphics->resetPath();
-    //m_graphics->moveTo(450, 200);
-    //m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
-    //m_graphics->lineTo(470, 340);
-    //m_graphics->transformImagePath(img, 450, 200, 595, 350);
-
-
-    // Transform image to the destination path.
-    // The scale is determined by a rectangle
-    //-----------------
-    m_graphics->resetPath();
-    m_graphics->moveTo(450, 200);
-    m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
-    m_graphics->lineTo(470, 340);
-
-    // Transform image to the destination path.
-    // The transformation is determined by a parallelogram
-    //m_graphics->resetPath();
-    //m_graphics->moveTo(450, 200);
-    //m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
-    //m_graphics->lineTo(470, 340);
-    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
-    //m_graphics->transformImagePath(img, parl);
-
-    // Transform the rectangular part of the image to the destination path.
-    // The transformation is determined by a parallelogram
-    //m_graphics->resetPath();
-    //m_graphics->moveTo(450, 200);
-    //m_graphics->cubicCurveTo(595, 220, 575, 350, 595, 350);
-    //m_graphics->lineTo(470, 340);
-    //double parl[6] = { 450, 200, 595, 220, 575, 350 };
-    //m_graphics->transformImagePath(img, 60, 60, img.width()-60, img.height()-60, parl);
-
-
-    // Add/Sub/Contrast Blending Modes
-    m_graphics->noLine();
-    m_graphics->fillColor(70, 70, 0);
-    m_graphics->blendMode(BaseGfxExtendEngine::BlendAdd);
-    m_graphics->ellipse(500, 280, 20, 40);
-
-    m_graphics->fillColor(255, 255, 255);
-    m_graphics->blendMode(BaseGfxExtendEngine::BlendOverlay);
-    m_graphics->ellipse(500+40, 280, 20, 40);
-
-    // Radial gradient.
-    m_graphics->blendMode(BaseGfxExtendEngine::BlendAlpha);
-    m_graphics->fillRadialGradient(400, 500, 40,
-                                   BaseGfxExtendEngine::Color(255, 255, 0, 0),
-                                   BaseGfxExtendEngine::Color(0, 0, 127),
-                                   BaseGfxExtendEngine::Color(0, 255, 0, 0));
-    m_graphics->ellipse(400, 500, 40, 40);
-
-}
-
-void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
-{
-    point.x = prePoint.x + rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
-    point.y = prePoint.y + rect.GetTop() + style.paddingTop_ + style.borderWidth_;
-}
-
-void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
-                          void* param,
-                          const Paint& paint,
-                          const Rect& rect,
-                          const Rect& invalidatedArea,
-                          const Style& style)
-{
-    if (param == nullptr) {
-        return;
-    }
-    LineParam* lineParam = static_cast<LineParam*>(param);
-    Point start;
-    Point end;
-    GetAbsolutePosition(lineParam->start, rect, style, start);
-    GetAbsolutePosition(lineParam->end, rect, style, end);
-
+    //rect, trunc,
     BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
                                            paint.GetStrokeColor(), paint.GetOpacity());
 }
