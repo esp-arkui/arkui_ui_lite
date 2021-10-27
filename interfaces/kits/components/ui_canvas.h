@@ -528,6 +528,7 @@ public:
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
 protected:
+
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
     struct LineParam : public HeapBase {

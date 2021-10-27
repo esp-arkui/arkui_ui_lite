@@ -105,6 +105,7 @@ SOURCES += \
     ../../../../frameworks/draw/draw_rect.cpp \
     ../../../../frameworks/draw/draw_triangle.cpp \
     ../../../../frameworks/draw/draw_utils.cpp \
+    ../../../../frameworks/engines/gfx/gfx_enginex_manager.cpp \
     ../../../../frameworks/events/event.cpp \
     ../../../../frameworks/font/base_font.cpp \
     ../../../../frameworks/font/glyphs_manager.cpp \
@@ -118,6 +119,32 @@ SOURCES += \
     ../../../../frameworks/font/ui_line_break.cpp \
     ../../../../frameworks/font/ui_multi_font_manager.cpp \
     ../../../../frameworks/font/ui_text_shaping.cpp \
+    ../../../../frameworks/graphics/src/agg_arc.cpp \
+    ../../../../frameworks/graphics/src/agg_arrowhead.cpp \
+    ../../../../frameworks/graphics/src/agg_bezier_arc.cpp \
+    ../../../../frameworks/graphics/src/agg_bspline.cpp \
+    ../../../../frameworks/graphics/src/agg_color_rgba.cpp \
+    ../../../../frameworks/graphics/src/agg_curves.cpp \
+    ../../../../frameworks/graphics/src/agg_embedded_raster_fonts.cpp \
+    ../../../../frameworks/graphics/src/agg_gsv_text.cpp \
+    ../../../../frameworks/graphics/src/agg_image_filters.cpp \
+    ../../../../frameworks/graphics/src/agg_line_aa_basics.cpp \
+    ../../../../frameworks/graphics/src/agg_line_profile_aa.cpp \
+    ../../../../frameworks/graphics/src/agg_rounded_rect.cpp \
+    ../../../../frameworks/graphics/src/agg_sqrt_tables.cpp \
+    ../../../../frameworks/graphics/src/agg_trans_affine.cpp \
+    ../../../../frameworks/graphics/src/agg_trans_double_path.cpp \
+    ../../../../frameworks/graphics/src/agg_trans_single_path.cpp \
+    ../../../../frameworks/graphics/src/agg_trans_warp_magnifier.cpp \
+    ../../../../frameworks/graphics/src/agg_vcgen_bspline.cpp \
+    ../../../../frameworks/graphics/src/agg_vcgen_contour.cpp \
+    ../../../../frameworks/graphics/src/agg_vcgen_dash.cpp \
+    ../../../../frameworks/graphics/src/agg_vcgen_markers_term.cpp \
+    ../../../../frameworks/graphics/src/agg_vcgen_smooth_poly1.cpp \
+    ../../../../frameworks/graphics/src/agg_vcgen_stroke.cpp \
+    ../../../../frameworks/graphics/src/agg_vpgen_clip_polygon.cpp \
+    ../../../../frameworks/graphics/src/agg_vpgen_clip_polyline.cpp \
+    ../../../../frameworks/graphics/src/agg_vpgen_segmentator.cpp \
     ../../../../frameworks/imgdecode/cache_manager.cpp \
     ../../../../frameworks/imgdecode/file_img_decoder.cpp \
     ../../../../frameworks/imgdecode/image_load.cpp \
@@ -137,7 +164,7 @@ SOURCES += \
     ../../../../../utils/frameworks/transform.cpp \
     ../../../../../utils/frameworks/version.cpp \
     ../../../../../../../third_party/bounds_checking_function/src/memset_s.c \
-    ../../../../../../../third_party/cJSON/cJSON.c
+    ../../../../../../../third_party/cJSON/cJSON.c \
 
 HEADERS += \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
@@ -161,6 +188,136 @@ HEADERS += \
     ../../../../frameworks/draw/draw_utils.h \
     ../../../../frameworks/font/ui_font_adaptor.h \
     ../../../../frameworks/font/ui_multi_font_manager.h \
+    ../../../../frameworks/graphics/include/agg_alpha_mask_u8.h \
+    ../../../../frameworks/graphics/include/agg_arc.h \
+    ../../../../frameworks/graphics/include/agg_array.h \
+    ../../../../frameworks/graphics/include/agg_arrowhead.h \
+    ../../../../frameworks/graphics/include/agg_basics.h \
+    ../../../../frameworks/graphics/include/agg_bezier_arc.h \
+    ../../../../frameworks/graphics/include/agg_bitset_iterator.h \
+    ../../../../frameworks/graphics/include/agg_blur.h \
+    ../../../../frameworks/graphics/include/agg_bounding_rect.h \
+    ../../../../frameworks/graphics/include/agg_bspline.h \
+    ../../../../frameworks/graphics/include/agg_clip_liang_barsky.h \
+    ../../../../frameworks/graphics/include/agg_color_gray.h \
+    ../../../../frameworks/graphics/include/agg_color_rgba.h \
+    ../../../../frameworks/graphics/include/agg_config.h \
+    ../../../../frameworks/graphics/include/agg_conv_adaptor_vcgen.h \
+    ../../../../frameworks/graphics/include/agg_conv_adaptor_vpgen.h \
+    ../../../../frameworks/graphics/include/agg_conv_bspline.h \
+    ../../../../frameworks/graphics/include/agg_conv_clip_polygon.h \
+    ../../../../frameworks/graphics/include/agg_conv_clip_polyline.h \
+    ../../../../frameworks/graphics/include/agg_conv_close_polygon.h \
+    ../../../../frameworks/graphics/include/agg_conv_concat.h \
+    ../../../../frameworks/graphics/include/agg_conv_contour.h \
+    ../../../../frameworks/graphics/include/agg_conv_curve.h \
+    ../../../../frameworks/graphics/include/agg_conv_dash.h \
+    ../../../../frameworks/graphics/include/agg_conv_gpc.h \
+    ../../../../frameworks/graphics/include/agg_conv_marker.h \
+    ../../../../frameworks/graphics/include/agg_conv_marker_adaptor.h \
+    ../../../../frameworks/graphics/include/agg_conv_segmentator.h \
+    ../../../../frameworks/graphics/include/agg_conv_shorten_path.h \
+    ../../../../frameworks/graphics/include/agg_conv_smooth_poly1.h \
+    ../../../../frameworks/graphics/include/agg_conv_stroke.h \
+    ../../../../frameworks/graphics/include/agg_conv_transform.h \
+    ../../../../frameworks/graphics/include/agg_conv_unclose_polygon.h \
+    ../../../../frameworks/graphics/include/agg_curves.h \
+    ../../../../frameworks/graphics/include/agg_dda_line.h \
+    ../../../../frameworks/graphics/include/agg_ellipse.h \
+    ../../../../frameworks/graphics/include/agg_ellipse_bresenham.h \
+    ../../../../frameworks/graphics/include/agg_embedded_raster_fonts.h \
+    ../../../../frameworks/graphics/include/agg_font_cache_manager.h \
+    ../../../../frameworks/graphics/include/agg_font_cache_manager2.h \
+    ../../../../frameworks/graphics/include/agg_gamma_functions.h \
+    ../../../../frameworks/graphics/include/agg_gamma_lut.h \
+    ../../../../frameworks/graphics/include/agg_glyph_raster_bin.h \
+    ../../../../frameworks/graphics/include/agg_gradient_lut.h \
+    ../../../../frameworks/graphics/include/agg_gsv_text.h \
+    ../../../../frameworks/graphics/include/agg_image_accessors.h \
+    ../../../../frameworks/graphics/include/agg_image_filters.h \
+    ../../../../frameworks/graphics/include/agg_line_aa_basics.h \
+    ../../../../frameworks/graphics/include/agg_math.h \
+    ../../../../frameworks/graphics/include/agg_math_stroke.h \
+    ../../../../frameworks/graphics/include/agg_path_length.h \
+    ../../../../frameworks/graphics/include/agg_path_storage.h \
+    ../../../../frameworks/graphics/include/agg_path_storage_integer.h \
+    ../../../../frameworks/graphics/include/agg_pattern_filters_rgba.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_amask_adaptor.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_base.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_gray.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_rgb.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_rgb_packed.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_rgba.h \
+    ../../../../frameworks/graphics/include/agg_pixfmt_transposer.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_cells_aa.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_compound_aa.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_outline.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_outline_aa.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_scanline_aa.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_scanline_aa_nogamma.h \
+    ../../../../frameworks/graphics/include/agg_rasterizer_sl_clip.h \
+    ../../../../frameworks/graphics/include/agg_renderer_base.h \
+    ../../../../frameworks/graphics/include/agg_renderer_markers.h \
+    ../../../../frameworks/graphics/include/agg_renderer_mclip.h \
+    ../../../../frameworks/graphics/include/agg_renderer_outline_aa.h \
+    ../../../../frameworks/graphics/include/agg_renderer_outline_image.h \
+    ../../../../frameworks/graphics/include/agg_renderer_primitives.h \
+    ../../../../frameworks/graphics/include/agg_renderer_raster_text.h \
+    ../../../../frameworks/graphics/include/agg_renderer_scanline.h \
+    ../../../../frameworks/graphics/include/agg_rendering_buffer.h \
+    ../../../../frameworks/graphics/include/agg_rendering_buffer_dynarow.h \
+    ../../../../frameworks/graphics/include/agg_rounded_rect.h \
+    ../../../../frameworks/graphics/include/agg_scanline_bin.h \
+    ../../../../frameworks/graphics/include/agg_scanline_boolean_algebra.h \
+    ../../../../frameworks/graphics/include/agg_scanline_p.h \
+    ../../../../frameworks/graphics/include/agg_scanline_storage_aa.h \
+    ../../../../frameworks/graphics/include/agg_scanline_storage_bin.h \
+    ../../../../frameworks/graphics/include/agg_scanline_u.h \
+    ../../../../frameworks/graphics/include/agg_shorten_path.h \
+    ../../../../frameworks/graphics/include/agg_simul_eq.h \
+    ../../../../frameworks/graphics/include/agg_span_allocator.h \
+    ../../../../frameworks/graphics/include/agg_span_converter.h \
+    ../../../../frameworks/graphics/include/agg_span_gouraud.h \
+    ../../../../frameworks/graphics/include/agg_span_gouraud_gray.h \
+    ../../../../frameworks/graphics/include/agg_span_gouraud_rgba.h \
+    ../../../../frameworks/graphics/include/agg_span_gradient.h \
+    ../../../../frameworks/graphics/include/agg_span_gradient_alpha.h \
+    ../../../../frameworks/graphics/include/agg_span_gradient_contour.h \
+    ../../../../frameworks/graphics/include/agg_span_gradient_image.h \
+    ../../../../frameworks/graphics/include/agg_span_image_filter.h \
+    ../../../../frameworks/graphics/include/agg_span_image_filter_gray.h \
+    ../../../../frameworks/graphics/include/agg_span_image_filter_rgb.h \
+    ../../../../frameworks/graphics/include/agg_span_image_filter_rgba.h \
+    ../../../../frameworks/graphics/include/agg_span_interpolator_adaptor.h \
+    ../../../../frameworks/graphics/include/agg_span_interpolator_linear.h \
+    ../../../../frameworks/graphics/include/agg_span_interpolator_persp.h \
+    ../../../../frameworks/graphics/include/agg_span_interpolator_trans.h \
+    ../../../../frameworks/graphics/include/agg_span_pattern_gray.h \
+    ../../../../frameworks/graphics/include/agg_span_pattern_rgb.h \
+    ../../../../frameworks/graphics/include/agg_span_pattern_rgba.h \
+    ../../../../frameworks/graphics/include/agg_span_solid.h \
+    ../../../../frameworks/graphics/include/agg_span_subdiv_adaptor.h \
+    ../../../../frameworks/graphics/include/agg_trans_affine.h \
+    ../../../../frameworks/graphics/include/agg_trans_bilinear.h \
+    ../../../../frameworks/graphics/include/agg_trans_double_path.h \
+    ../../../../frameworks/graphics/include/agg_trans_perspective.h \
+    ../../../../frameworks/graphics/include/agg_trans_single_path.h \
+    ../../../../frameworks/graphics/include/agg_trans_viewport.h \
+    ../../../../frameworks/graphics/include/agg_trans_warp_magnifier.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_bspline.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_contour.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_dash.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_markers_term.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_smooth_poly1.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_stroke.h \
+    ../../../../frameworks/graphics/include/agg_vcgen_vertex_sequence.h \
+    ../../../../frameworks/graphics/include/agg_vertex_sequence.h \
+    ../../../../frameworks/graphics/include/agg_vpgen_clip_polygon.h \
+    ../../../../frameworks/graphics/include/agg_vpgen_clip_polyline.h \
+    ../../../../frameworks/graphics/include/agg_vpgen_segmentator.h \
+    ../../../../frameworks/graphics/include/util/agg_color_conv.h \
+    ../../../../frameworks/graphics/include/util/agg_color_conv_rgb16.h \
+    ../../../../frameworks/graphics/include/util/agg_color_conv_rgb8.h \
     ../../../../frameworks/imgdecode/cache_manager.h \
     ../../../../frameworks/imgdecode/file_img_decoder.h \
     ../../../../frameworks/imgdecode/image_load.h \
@@ -171,6 +328,7 @@ HEADERS += \
     ../../../../interfaces/innerkits/dock/focus_manager.h \
     ../../../../interfaces/innerkits/dock/rotate_input_device.h \
     ../../../../interfaces/innerkits/dock/vibrator_manager.h \
+    ../../../../interfaces/innerkits/engines/gfx/gfx_enginex_manager.h \
     ../../../../interfaces/innerkits/font/ui_font_builder.h \
     ../../../../interfaces/innerkits/engines/gfx/gfx_engine_manager.h \
     ../../../../interfaces/kits/animator/animator.h \
@@ -269,6 +427,7 @@ HEADERS += \
 
 INCLUDEPATH += \
     ../../../../frameworks \
+    ../../../../frameworks/graphics/include \
     ../../../../../utils/frameworks/windows \
     ../../../../../utils/interfaces/innerkits \
     ../../../../../utils/interfaces/kits \
