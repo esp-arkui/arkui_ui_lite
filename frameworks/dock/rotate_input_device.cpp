@@ -14,7 +14,9 @@
  */
 
 #include "dock/rotate_input_device.h"
+#include "gfx_utils/graphic_log.h"
 #include "dock/focus_manager.h"
+
 
 #if ENABLE_ROTATE_INPUT
 namespace {
@@ -41,11 +43,13 @@ void RotateInputDevice::DispatchEvent(const DeviceData& data)
     }
 
     if (!cachedToRotate && !rotateStart_) {
+        GRAPHIC_LOGW("RotateInputDevice failed to dispatch event without rotate cached and started!\n");
         return;
     }
 
     UIView* view = FocusManager::GetInstance()->GetFocusedView();
     if (view == nullptr) {
+        GRAPHIC_LOGE("RotateInputDevice Failed to dispatch event without focused view!\n");
         return;
     }
 
@@ -57,14 +61,14 @@ void RotateInputDevice::DispatchEvent(const DeviceData& data)
         par = par->GetParent();
     }
     if (par->GetViewType() != UI_ROOT_VIEW) {
+        GRAPHIC_LOGW("RotateInputDevice failed to dispatch event without target view attached!\n");
         return;
     }
-    if (MATH_ABS(data.rotate) < threshold_ && !rotateStart_ && !cachedToRotate) {
-        return;
-    }
+
     if (data.rotate == 0 && rotateStart_) {
         view->OnRotateEndEvent(0);
         rotateStart_ = false;
+        GRAPHIC_LOGW("RotateInputDevice dispatched 0-value event!\n");
         return;
     }
     if (!rotateStart_) {
@@ -72,6 +76,8 @@ void RotateInputDevice::DispatchEvent(const DeviceData& data)
     }
     view->OnRotateEvent(data.rotate);
     rotateStart_ = true;
+    GRAPHIC_LOGI("RotateInputDevice dispatched rotate event, targetView Type = %d, rotate value = %d\n!",
+        static_cast<uint8_t>(view->GetViewType()), data.rotate);
 }
 } // namespace OHOS
 #endif
