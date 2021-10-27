@@ -294,7 +294,7 @@ public:
     void fillEvenOdd(bool evenOddFlag);
     bool fillEvenOdd() const;
 
-    // Transformations
+    // Transformations-
     //-----------------------
     Transformations transformations() const;
     void transformations(const Transformations& tr);
