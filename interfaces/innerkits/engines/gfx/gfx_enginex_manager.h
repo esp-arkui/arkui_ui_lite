@@ -283,7 +283,7 @@ public:
     void lineRadialGradient(double x, double y, double r);
 
     void lineWidth(double w);
-    double lineWidth(double w) const;
+    double lineWidth() const;
 
     void lineCap(LineCap cap);
     LineCap lineCap() const;
@@ -294,7 +294,7 @@ public:
     void fillEvenOdd(bool evenOddFlag);
     bool fillEvenOdd() const;
 
-    // Transformations
+    // Transformations-
     //-----------------------
     Transformations transformations() const;
     void transformations(const Transformations& tr);
