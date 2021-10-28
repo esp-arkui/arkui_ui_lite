@@ -489,9 +489,10 @@ bool UICanvas::InitDrawEnvironment(BufferInfo& gfxDstBuffer, BaseGfxExtendEngine
     destBuf += offset * destByteSize;
     m_graphics->attach(destBuf,screenRect.GetWidth(),
                        screenRect.GetHeight(),gfxDstBuffer.stride);
-    //绘制背景可以不绘制...
-    //m_graphics->clearAll(128, 128, 128);
-    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
+
+//    绘制背景可以不绘制...
+//    m_graphics->clearAll(128, 128, 128);
+
     m_graphics->viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
                          screenRect.GetLeft(),screenRect.GetTop(), screenRect.GetRight(),
                          screenRect.GetBottom(),
