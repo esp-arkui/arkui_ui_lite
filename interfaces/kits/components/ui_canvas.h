@@ -80,6 +80,27 @@ public:
     };
 
     /**
+     * @brief 线性渐变所需要的起止点
+     */
+    struct LinearGradientPoint{
+        /**  开始点坐标x  */
+        double x0;
+        /**  开始点坐标y  */
+        double y0;
+        /**  结束点坐标x  */
+        double x1;
+        /**  结束点坐标y  */
+        double y1;
+    };
+
+     struct StopAndColor{
+        /** 介于 0.0 与 1.0 之间的值，表示渐变中开始与结束之间的位置。  */
+        double stop;
+        /** 在结束位置显示的颜色值 */
+        ColorType color;
+    };
+
+    /**
      * @brief Sets the paint style of a closed graph.
      *
      * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link PaintStyle}.
@@ -214,12 +235,43 @@ public:
         return opacity_;
     }
 
+
+    void createLinearGradient(double startx,double starty,double endx,double endy){
+        linearGradientPoint.x0=startx;
+        linearGradientPoint.y0=starty;
+        linearGradientPoint.x1=endx;
+        linearGradientPoint.y1=endy;
+    }
+
+
+    LinearGradientPoint getLinearGradientPoit() const{
+        return linearGradientPoint;
+    }
+
+
+    void addColorStop(double stop,ColorType color){  
+        StopAndColor stopAndColor;
+        stopAndColor.stop = stop;
+        stopAndColor.color = color;
+        stopAndColors.PushBack(stopAndColor);
+    }
+
+    List<StopAndColor> getStopAndColor() const
+    {
+       stopAndColors.Size();
+        return stopAndColors;
+    }
+
+
 private:
     PaintStyle style_;
     ColorType fillColor_;
     ColorType strokeColor_;
     uint8_t opacity_;
     uint16_t strokeWidth_;
+    LinearGradientPoint linearGradientPoint;
+    List<StopAndColor> stopAndColors;
+
 };
 
 /**
@@ -712,6 +764,7 @@ protected:
                            const Rect& invalidatedArea,
                            const Style& style);
     static void GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point);
+    static void GetLinePoint(double x0,double y0,double x1,double y2,double scale,PointD& pointd);
     static void DoDrawLineJoin(BufferInfo& gfxDstBuffer,
                                const Point& center,
                                const Rect& invalidatedArea,

@@ -39,54 +39,55 @@ void UITestCanvas::TearDown()
 const UIView* UITestCanvas::GetTestView()
 {
     UIKitCanvasTestDrawLine001();
-    UIKitCanvasTestDrawLine002();
-    UIKitCanvasTestDrawCurve001();
-    UIKitCanvasTestDrawCurve002();
-    UIKitCanvasTestDrawRect001();
+//    UIKitCanvasTestDrawLine002();
+//    UIKitCanvasTestDrawCurve001();
+//    UIKitCanvasTestDrawCurve002();
+//    UIKitCanvasTestDrawRect001();
     UIKitCanvasTestDrawRect002();
-    UIKitCanvasTestDrawRect003();
-    UIKitCanvasTestDrawCircle001();
-    UIKitCanvasTestDrawCircle002();
-    UIKitCanvasTestDrawCircle003();
-    UIKitCanvasTestDrawArc001();
-    UIKitCanvasTestDrawImage001();
-    UIKitCanvasTestDrawLabel001();
-    UIKitCanvasTestDrawSector001();
-    UIKitCanvasTestClear001();
-    UIKitCanvasTestDrawPath001();
-    UIKitCanvasTestDrawPath002();
-    UIKitCanvasTestDrawPath003();
-    UIKitCanvasTestDrawPath004();
-    UIKitCanvasTestDrawPath005();
-    UIKitCanvasTestDrawPath006();
-    UIKitCanvasTestDrawPath007();
-    UIKitCanvasTestDrawPath008();
-    UIKitCanvasTestDrawPath009();
-    UIKitCanvasTestDrawPath010();
-    UIKitCanvasTestDrawPath011();
-    UIKitCanvasTestDrawPath012();
-    UIKitCanvasTestDrawPath013();
-    UIKitCanvasTestDrawPath014();
-    UIKitCanvasTestDrawPath015();
-    UIKitCanvasTestDrawPath016();
-    UIKitCanvasTestDrawPath017();
-    UIKitCanvasTestDrawPath018();
-    UIKitCanvasTestDrawPath019();
-    UIKitCanvasTestDrawPath020();
-    UIKitCanvasTestDrawPath021();
-    UIKitCanvasTestDrawPath022();
-    UIKitCanvasTestDrawPath023();
-    UIKitCanvasTestDrawPath024();
-    UIKitCanvasTestDrawPath025();
-    UIKitCanvasTestDrawPath026();
-    UIKitCanvasTestDrawPath027();
-    UIKitCanvasTestDrawPath028();
-    UIKitCanvasTestDrawPath029();
-    UIKitCanvasTestDrawPath030();
-    UIKitCanvasTestDrawPath031();
-    UIKitCanvasTestDrawPath032();
-    UIKitCanvasTestDrawPath033();
-    UIKitCanvasTestDrawPath034();
+//    UIKitCanvasTestDrawRect003();
+//    UIKitCanvasTestDrawCircle001();
+//    UIKitCanvasTestDrawCircle002();
+//    UIKitCanvasTestDrawCircle003();
+//    UIKitCanvasTestDrawArc001();
+//    UIKitCanvasTestDrawImage001();
+//    UIKitCanvasTestDrawLabel001();
+//    UIKitCanvasTestDrawSector001();
+//    UIKitCanvasTestClear001();
+//    UIKitCanvasTestDrawPath001();
+//    UIKitCanvasTestDrawPath002();
+//    UIKitCanvasTestDrawPath003();
+//    UIKitCanvasTestDrawPath004();
+//    UIKitCanvasTestDrawPath005();
+//    UIKitCanvasTestDrawPath006();
+//    UIKitCanvasTestDrawPath007();
+//    UIKitCanvasTestDrawPath008();
+//    UIKitCanvasTestDrawPath009();
+//    UIKitCanvasTestDrawPath010();
+//    UIKitCanvasTestDrawPath011();
+//    UIKitCanvasTestDrawPath012();
+//    UIKitCanvasTestDrawPath013();
+//    UIKitCanvasTestDrawPath014();
+//    UIKitCanvasTestDrawPath015();
+//    UIKitCanvasTestDrawPath016();
+//    UIKitCanvasTestDrawPath017();
+//    UIKitCanvasTestDrawPath018();
+//    UIKitCanvasTestDrawPath019();
+//    UIKitCanvasTestDrawPath020();
+//    UIKitCanvasTestDrawPath021();
+//    UIKitCanvasTestDrawPath022();
+//    UIKitCanvasTestDrawPath023();
+//    UIKitCanvasTestDrawPath024();
+//    UIKitCanvasTestDrawPath025();
+//    UIKitCanvasTestDrawPath026();
+//    UIKitCanvasTestDrawPath027();
+//    UIKitCanvasTestDrawPath028();
+//    UIKitCanvasTestDrawPath029();
+//    UIKitCanvasTestDrawPath030();
+//    UIKitCanvasTestDrawPath031();
+//    UIKitCanvasTestDrawPath032();
+//    UIKitCanvasTestDrawPath033();
+//    UIKitCanvasTestDrawPath034();
+    UIKitCanvasTestLinearGradient();
 
     return container_;
 }
@@ -178,7 +179,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect001()
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(30); // 30: line width
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
-    canvas->DrawRect({ 100, 10 }, 50, 50, paint);
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawRect002()
@@ -193,7 +194,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect002()
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Blue());
     // {200, 10}: left corner coordinates point, 50: width, 50: rectangle style
-    canvas->DrawRect({ 200, 10 }, 50, 50, paint);
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawRect003()
@@ -924,4 +925,37 @@ void UITestCanvas::UIKitCanvasTestDrawPath034()
     paint.SetStrokeColor(Color::Red());
     canvas->DrawPath(paint);
 }
+
+/**
+ * 调试线性渐变
+ */
+void UITestCanvas::UIKitCanvasTestLinearGradient(){
+    if (container_ == nullptr) {
+        return;
+    }
+
+    CreateTitleLabel("调试渐变 ");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetFillColor(Color::Yellow());
+    paint.SetStrokeWidth(5);
+    paint.createLinearGradient(100,50,200,50);
+    paint.SetStrokeColor(Color::White());
+    paint.addColorStop(0,Color::White());
+    paint.addColorStop(1,Color::Blue());
+    // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
+
+
+
+
+}
+
+
+
+
+
+
 } // namespace OHOS

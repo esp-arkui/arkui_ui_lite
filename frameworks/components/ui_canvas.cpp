@@ -452,11 +452,7 @@ void UICanvas::DrawPath(const Paint& paint)
 void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
     Rect rect = GetOrigRect();
-    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
-    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-    if(destBuf == nullptr) return;
 
-    m_graphics->attach(destBuf,gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
     BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
 
     void* param = nullptr;
@@ -478,6 +474,12 @@ void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, cons
     point.y = prePoint.y + rect.GetTop() + style.paddingTop_ + style.borderWidth_;
 }
 
+void UICanvas::GetLinePoint(double x0,double y0,double x1,double y1,double scale,PointD& pointd)
+{
+    pointd.x=x0+(x1-x0)*scale;
+    pointd.y=y0+(y1-y0)*scale;
+}
+
 void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
                           void* param,
                           const Paint& paint,
@@ -493,32 +495,10 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     if(m_graphics==nullptr) {
         return;
     }
-    LineParam* lineParam = static_cast<LineParam*>(param);
-    Point start;
-    Point end;
-    GetAbsolutePosition(lineParam->start, rect, style, start);
-    GetAbsolutePosition(lineParam->end, rect, style, end);
+
     int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
     int16_t posTop=rect.GetTop() + style.paddingTop_ + style.borderWidth_;
-    Rect lineArea;
 
-    if (start.x < end.x) {
-        lineArea.SetX(start.x);
-        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
-        lineArea.SetWidth(end.x - start.x + 1);
-        lineArea.SetHeight(paint.GetStrokeWidth());
-    } else {
-        lineArea.SetX(end.x);
-        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
-        lineArea.SetWidth(start.x - end.x + 1);
-        lineArea.SetHeight(paint.GetStrokeWidth());
-    }
-    //1.。。这个地方的重绘尤其要注意,重绘制的处理
-    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
-    Rect fillArea; //
-    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
-        return;
-    }
     uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
     if (gfxDstBuffer.virAddr == nullptr) {
             return;
@@ -529,82 +509,33 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
             posLeft;
     destBuf += offset * destByteSize;
-    m_graphics->attach(destBuf,rect.GetWidth(),
-                       rect.GetHeight(),gfxDstBuffer.stride);
+    m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
     //绘制背景可以不绘制...
     //m_graphics->clearAll(128, 128, 128);
     //2..这个地方的viewport也是尤其要注意的..映射的处理的..
-    m_graphics->viewport(0, 0, 600, 600,0,0, rect.GetWidth(),
-                         rect.GetHeight(),
-                         BaseGfxExtendEngine::Anisotropic);
+//    m_graphics->viewport(0, 0, 600, 600,0,0, rect.GetWidth(),
+//                         rect.GetHeight(),
+//                         BaseGfxExtendEngine::Anisotropic);
                          //BaseGfxExtendEngine::XMidYMid);
 
 
     // Rounded Rect
-    m_graphics->lineColor(0, 255, 0);
-    m_graphics->lineWidth(13.0);
-    m_graphics->lineCap(BaseGfxExtendEngine::CapRound);
-
-    m_graphics->noFill();
-    m_graphics->line(10.5, 10.5, 500-0.5, 500-0.5);
-
-    m_graphics->lineColor(0, 0, 255,128);
-    m_graphics->lineCap(BaseGfxExtendEngine::CapButt);
-    //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
-    m_graphics->line(210.5, 110.5, 200-0.5, 250-0.5);
 
     double xb1 = 400;
     double yb1 = 80;
     double xb2 = xb1 + 150;
     double yb2 = yb1 + 36;
 
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,80, 255));
-    m_graphics->lineWidth(1.0);
-    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
-
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
-    m_graphics->fillLinearGradient(xb1, yb1, xb1, yb1+30,
-                                   BaseGfxExtendEngine::Color(100,200,255,255),
-                                   BaseGfxExtendEngine::Color(255,255,255,0));
-    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 200));
-    m_graphics->noLine();
-
-    m_graphics->fillLinearGradient(xb1, yb2-20, xb1, yb2-3,
-                                   BaseGfxExtendEngine::Color(0,  0,  255,0),
-                                   BaseGfxExtendEngine::Color(100,255,255,255));
-    m_graphics->roundedRect(xb1+3, yb2-20, xb2-3, yb2-2, 1, 1, 9, 18);
-
-
-    // Aqua Button Pressed
-    xb1 = 400;
+    xb1 = 100;
     yb1 = 30;
-    xb2 = xb1 + 150;
-    yb2 = yb1 + 36;
+    xb2 = xb1 + 200;
+    yb2 = yb1 +30;
 
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,  255));
-    m_graphics->lineWidth(2.0);
-    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
-
-
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
-    m_graphics->fillLinearGradient(xb1, yb1+2, xb1, yb1+25,
-                                   BaseGfxExtendEngine::Color(60, 160,255,255),
-                                   BaseGfxExtendEngine::Color(100,255,255,0));
-    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 255));
-    m_graphics->noLine();
-    m_graphics->fillLinearGradient(xb1, yb2-25, xb1, yb2-5,
-                                   BaseGfxExtendEngine::Color(0,  180,255,0),
-                                   BaseGfxExtendEngine::Color(0,  200,255,255));
-    m_graphics->roundedRect(xb1+3, yb2-25, xb2-3, yb2-2, 1, 1, 9, 18);
-    //rect, trunc,
-    BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
-                                           paint.GetStrokeColor(), paint.GetOpacity());
+    m_graphics->lineColor(BaseGfxExtendEngine::Color(220,220,220,  255));
+    m_graphics->fillLinearGradient(xb1, yb1, xb2, yb1,
+                                   BaseGfxExtendEngine::Color(255,  255,255,255),
+                                   BaseGfxExtendEngine::Color(0,  0,255,255));
+    m_graphics->rectangle(xb1, yb1, xb2, yb2+30);
 }
 
 void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer,
@@ -681,6 +612,9 @@ void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
     coords.SetHeight(lineWidth);
     coords.SetWidth(rectParam->width);
     BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+
+
+
 }
 
 void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
@@ -699,20 +633,98 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
         return;
     }
-    Point start;
-    GetAbsolutePosition(rectParam->start, rect, style, start);
+//    Point start;
+//    GetAbsolutePosition(rectParam->start, rect, style, start);
 
-    Rect coords;
-    coords.SetPosition(start.x + (lineWidth + 1) / 2, start.y + (lineWidth + 1) / 2); // 2: half
-    coords.SetHeight(rectParam->height - lineWidth);
-    coords.SetWidth(rectParam->width - lineWidth);
+//    Rect coords;
+//    coords.SetPosition(start.x + (lineWidth + 1) / 2, start.y + (lineWidth + 1) / 2); // 2: half
+//    coords.SetHeight(rectParam->height - lineWidth);
+//    coords.SetWidth(rectParam->width - lineWidth);
 
-    Style drawStyle = StyleDefault::GetDefaultStyle();
-    drawStyle.bgColor_ = paint.GetFillColor();
-    drawStyle.bgOpa_ = paint.GetOpacity();
-    drawStyle.borderRadius_ = 0;
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+//    Style drawStyle = StyleDefault::GetDefaultStyle();
+//    drawStyle.bgColor_ = paint.GetFillColor();
+//    drawStyle.bgOpa_ = paint.GetOpacity();
+//    drawStyle.borderRadius_ = 0;
+//    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+
+
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+
+    int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
+    int16_t posTop=rect.GetTop() + style.paddingTop_ + style.borderWidth_;
+
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+    if (gfxDstBuffer.virAddr == nullptr) {
+            return;
+    }
+
+    ColorMode mode = gfxDstBuffer.mode;
+    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
+    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
+            posLeft;
+    destBuf += offset * destByteSize;
+    m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
+
+
+
+    double x0 = paint.getLinearGradientPoit().x0;
+    double y0 = paint.getLinearGradientPoit().y0;
+    double x1 = paint.getLinearGradientPoit().x1;
+    double y1 = paint.getLinearGradientPoit().y1;
+
+
+    const List<Paint::StopAndColor>&  stopAndColors= paint.getStopAndColor();
+//    auto iter= stopAndColors.Begin();
+
+    PointD startPoint;
+    startPoint.x=x0;
+    startPoint.y=y0;
+    const double eps = 1e-6;
+    ColorType startColor;
+    for (ListNode<Paint::StopAndColor>* iter1 = stopAndColors.Begin(); iter1 != stopAndColors.End(); iter1 = iter1->next_) {
+        ColorType color = iter1->data_.color;
+        PointD stopPoint;
+        double stop = iter1->data_.stop;
+        stopPoint.x=x0+(x1-x0)*iter1->data_.stop;
+        stopPoint.y=y0+(y1-y0)*iter1->data_.stop;
+        if(fabs(startPoint.x-stopPoint.x)<eps && fabs(startPoint.y-stopPoint.y)<eps){
+            startColor=color;
+            continue;
+        }
+        m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
+                                           BaseGfxExtendEngine::Color(startColor.red,startColor.green,startColor.blue,startColor.alpha),
+                                           BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
+        startPoint = stopPoint;
+        startColor=color;
+    }
+//            color = iter->data_.color;
+//            double stop =iter->data_.stop;
+//            GetLinePoint(x0,y0,x1,y1,stop,stopPoint);
+//            m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
+//                                               BaseGfxExtendEngine::Color(startColor.red,startColor.green,startColor.blue,startColor.alpha),
+//                                               BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
+
+
+//            startColor = color;
+//            color = iter->next_->data_.color;
+//             stop =iter->next_->data_.stop;
+//            GetLinePoint(x0,y0,x1,y1,stop,stopPoint);
+//            m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
+//                                               BaseGfxExtendEngine::Color(startColor.red,startColor.green,startColor.blue,startColor.alpha),
+//                                               BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
+
+
+            m_graphics->lineWidth(paint.GetStrokeWidth());
+           ColorType strokeColor = paint.GetStrokeColor();
+            m_graphics->lineColor(BaseGfxExtendEngine::Color(strokeColor.red,strokeColor.green,strokeColor.blue,strokeColor.alpha));
+                m_graphics->rectangle(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
+//                m_graphics->rectangle(100,30,300,60);
+
+
 }
+
+
+
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
                             void* param,
@@ -938,4 +950,6 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
         }
     }
 }
+
+
 } // namespace OHOS
