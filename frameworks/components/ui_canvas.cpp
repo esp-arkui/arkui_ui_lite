@@ -452,7 +452,11 @@ void UICanvas::DrawPath(const Paint& paint)
 void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
     Rect rect = GetOrigRect();
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+    if(destBuf == nullptr) return;
 
+    m_graphics->attach(destBuf,gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
     BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
 
     void* param = nullptr;
