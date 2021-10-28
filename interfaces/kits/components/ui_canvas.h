@@ -41,12 +41,14 @@
 #include "gfx_utils/list.h"
 
 namespace OHOS {
+class BaseGfxExtendEngine;
 /**
  * @brief Defines the basic styles of graphs drawn on canvases.
  *
  * @since 1.0
  * @version 1.0
  */
+
 class Paint : public HeapBase {
 public:
     /**
@@ -656,6 +658,10 @@ protected:
         }
         delete pathParam;
     }
+
+    static bool InitDrawEnvironment(BufferInfo& gfxDstBuffer,BaseGfxExtendEngine* m_graphics,
+                                    const Rect& worldRect, const Rect& screenRect, const Rect &viewRect,
+                                    const Style &style);
 
     static void DoDrawLine(BufferInfo& gfxDstBuffer,
                            void* param,

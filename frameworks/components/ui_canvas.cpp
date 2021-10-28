@@ -468,6 +468,39 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     }
 }
 
+bool UICanvas::InitDrawEnvironment(BufferInfo& gfxDstBuffer, BaseGfxExtendEngine* m_graphics, const Rect &worldRect,
+                                   const Rect &screenRect,const Rect &viewRect,const Style& style)
+{
+
+    if(m_graphics==nullptr) {
+        return false;
+    }
+    int16_t posLeft=viewRect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
+    int16_t posTop=viewRect.GetTop() + style.paddingTop_ + style.borderWidth_;
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+    if (gfxDstBuffer.virAddr == nullptr) {
+        return false;
+    }
+
+    ColorMode mode = gfxDstBuffer.mode;
+    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
+    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
+            posLeft;
+    destBuf += offset * destByteSize;
+    m_graphics->attach(destBuf,screenRect.GetWidth(),
+                       screenRect.GetHeight(),gfxDstBuffer.stride);
+    //绘制背景可以不绘制...
+    //m_graphics->clearAll(128, 128, 128);
+    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
+    m_graphics->viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
+                         screenRect.GetLeft(),screenRect.GetTop(), screenRect.GetRight(),
+                         screenRect.GetBottom(),
+                         BaseGfxExtendEngine::Anisotropic);
+                         //BaseGfxExtendEngine::XMidYMid);
+    return true;
+
+}
+
 void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
 {
     point.x = prePoint.x + rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
@@ -485,17 +518,11 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
         return;
     }
 
-    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
-    if(m_graphics==nullptr) {
-        return;
-    }
     LineParam* lineParam = static_cast<LineParam*>(param);
     Point start;
     Point end;
     GetAbsolutePosition(lineParam->start, rect, style, start);
     GetAbsolutePosition(lineParam->end, rect, style, end);
-    int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
-    int16_t posTop=rect.GetTop() + style.paddingTop_ + style.borderWidth_;
     Rect lineArea;
 
     if (start.x < end.x) {
@@ -515,38 +542,23 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     if (!fillArea.Intersect(lineArea, invalidatedArea)) {
         return;
     }
-    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-    if (gfxDstBuffer.virAddr == nullptr) {
-            return;
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    Rect worldRect(0,0,600,600), screenRect(0,0,rect.GetWidth(),rect.GetHeight());
+
+    if(!InitDrawEnvironment(gfxDstBuffer, m_graphics, worldRect,
+                           screenRect,rect,style)) {
+        return;
     }
-
-    ColorMode mode = gfxDstBuffer.mode;
-    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
-    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
-            posLeft;
-    destBuf += offset * destByteSize;
-    m_graphics->attach(destBuf,rect.GetWidth(),
-                       rect.GetHeight(),gfxDstBuffer.stride);
-    //绘制背景可以不绘制...
-    //m_graphics->clearAll(128, 128, 128);
-    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
-    m_graphics->viewport(0, 0, 600, 600,0,0, rect.GetWidth(),
-                         rect.GetHeight(),
-                         BaseGfxExtendEngine::Anisotropic);
-                         //BaseGfxExtendEngine::XMidYMid);
-
 
     // Rounded Rect
     m_graphics->lineColor(0, 255, 0);
     m_graphics->lineWidth(13.0);
     m_graphics->lineCap(BaseGfxExtendEngine::CapRound);
-
     m_graphics->noFill();
     m_graphics->line(10.5, 10.5, 500-0.5, 500-0.5);
 
     m_graphics->lineColor(0, 0, 255,128);
     m_graphics->lineCap(BaseGfxExtendEngine::CapButt);
-    //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
     m_graphics->line(210.5, 110.5, 200-0.5, 250-0.5);
 
     double xb1 = 400;
