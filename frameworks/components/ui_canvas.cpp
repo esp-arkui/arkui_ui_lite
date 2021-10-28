@@ -681,14 +681,16 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     startPoint.y=y0;
     const double eps = 1e-6;
     ColorType startColor;
-    for (ListNode<Paint::StopAndColor>* iter1 = stopAndColors.Begin(); iter1 != stopAndColors.End(); iter1 = iter1->next_) {
-        ColorType color = iter1->data_.color;
+    ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
+    uint16_t count=0;
+    for (; count <stopAndColors.Size(); count++) {
+        ColorType color = iter->data_.color;
         PointD stopPoint;
-        double stop = iter1->data_.stop;
-        stopPoint.x=x0+(x1-x0)*iter1->data_.stop;
-        stopPoint.y=y0+(y1-y0)*iter1->data_.stop;
+        stopPoint.x=x0+(x1-x0)*iter->data_.stop;
+        stopPoint.y=y0+(y1-y0)*iter->data_.stop;
         if(fabs(startPoint.x-stopPoint.x)<eps && fabs(startPoint.y-stopPoint.y)<eps){
             startColor=color;
+            iter = iter->next_;
             continue;
         }
         m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
@@ -696,6 +698,7 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
                                            BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
         startPoint = stopPoint;
         startColor=color;
+        iter = iter->next_;
     }
 //            color = iter->data_.color;
 //            double stop =iter->data_.stop;

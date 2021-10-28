@@ -249,7 +249,7 @@ public:
     }
 
 
-    void addColorStop(double stop,ColorType color){  
+    void addColorStop(double stop,ColorType color){
         StopAndColor stopAndColor;
         stopAndColor.stop = stop;
         stopAndColor.color = color;
@@ -258,7 +258,6 @@ public:
 
     List<StopAndColor> getStopAndColor() const
     {
-       stopAndColors.Size();
         return stopAndColors;
     }
 
