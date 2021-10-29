@@ -549,71 +549,7 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     if (!fillArea.Intersect(lineArea, invalidatedArea)) {
         return;
     }
-    // Rounded Rect
-    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
-    if(m_graphics==nullptr) {
-        return;
-    }
 
-    m_graphics->lineColor(0, 255, 0);
-    m_graphics->lineWidth(5.0);
-    m_graphics->lineCap(BaseGfxExtendEngine::CapRound);
-    m_graphics->noFill();
-    m_graphics->line(10.5, 10.5, rect.GetWidth()-5.5, rect.GetHeight()-5.5);
-
-    m_graphics->lineColor(0, 0, 255,128);
-    m_graphics->lineCap(BaseGfxExtendEngine::CapButt);
-    m_graphics->line(rect.GetWidth()/2.0, rect.GetHeight()/3.0, rect.GetWidth()/4.0-0.5, rect.GetHeight()/4-0.5);
-
-    double xb1 = rect.GetWidth()-100;
-    double yb1 = 80;
-    double xb2 = xb1 + 150;
-    double yb2 = yb1 + 36;
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,80, 255));
-    m_graphics->lineWidth(1.0);
-    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
-
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
-    m_graphics->fillLinearGradient(xb1, yb1, xb1, yb1+30,
-                                   BaseGfxExtendEngine::Color(100,200,255,255),
-                                   BaseGfxExtendEngine::Color(255,255,255,0));
-    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 200));
-    m_graphics->noLine();
-
-    m_graphics->fillLinearGradient(xb1, yb2-20, xb1, yb2-3,
-                                   BaseGfxExtendEngine::Color(0,  0,  255,0),
-                                   BaseGfxExtendEngine::Color(100,255,255,255));
-    m_graphics->roundedRect(xb1+3, yb2-20, xb2-3, yb2-2, 1, 1, 9, 18);
-
-
-    // Aqua Button Pressed
-    xb1 = 400;
-    yb1 = 30;
-    xb2 = xb1 + 150;
-    yb2 = yb1 + 36;
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,  255));
-    m_graphics->lineWidth(2.0);
-    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
-
-
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
-    m_graphics->fillLinearGradient(xb1, yb1+2, xb1, yb1+25,
-                                   BaseGfxExtendEngine::Color(60, 160,255,255),
-                                   BaseGfxExtendEngine::Color(100,255,255,0));
-    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 255));
-    m_graphics->noLine();
-    m_graphics->fillLinearGradient(xb1, yb2-25, xb1, yb2-5,
-                                   BaseGfxExtendEngine::Color(0,  180,255,0),
-                                   BaseGfxExtendEngine::Color(0,  200,255,255));
-    m_graphics->roundedRect(xb1+3, yb2-25, xb2-3, yb2-2, 1, 1, 9, 18);
     BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
                                            paint.GetStrokeColor(), paint.GetOpacity());
 }
