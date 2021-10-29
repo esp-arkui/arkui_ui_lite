@@ -19,7 +19,6 @@
 #include "draw/draw_image.h"
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/graphic_log.h"
-#include <engines/gfx/gfx_enginex_manager.h>
 
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
@@ -453,15 +452,29 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
     Rect rect = GetOrigRect();
 
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
+    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer,
+                                           rect, invalidatedArea,
+                                           *style_, opaScale_);
 
     void* param = nullptr;
     ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
     Rect coords = GetOrigRect();
     Rect trunc = invalidatedArea;
-    Rect worldRec(0,0,rect.GetWidth(),rect.GetHeight()),screenRect(0,0,rect.GetWidth(),rect.GetHeight());
-    InitDrawEnvironment(worldRec,screenRect);
+
     if (trunc.Intersect(trunc, coords)) {
+
+        int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
+        int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
+        int16_t paddingRight=style_->paddingRight_ + style_->borderWidth_;
+        int16_t paddingBottom=style_->paddingBottom_ + style_->borderWidth_;
+
+        int16_t realRight = rect.GetRight() - paddingRight;
+        int16_t realBottom = rect.GetBottom() - paddingBottom;
+        Rect worldRec(realLeft,realTop,realRight,realBottom),
+                screenRect(0,0,rect.GetWidth()-paddingRight - 1,
+                           rect.GetHeight()-paddingBottom - 1);
+        //
+        InitDrawEnvironment(invalidatedArea,worldRec,screenRect);
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
@@ -470,7 +483,8 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     }
 }
 
-bool UICanvas::InitDrawEnvironment(const Rect &worldRect,const Rect &screenRect)
+bool UICanvas::InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
+                                   const Rect &screenRect)
 {
     BufferInfo* gfxDstBuffer = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
     if (gfxDstBuffer == nullptr) {
@@ -481,9 +495,17 @@ bool UICanvas::InitDrawEnvironment(const Rect &worldRect,const Rect &screenRect)
     if(m_graphics==nullptr) {
         return false;
     }
-    Rect rect = GetOrigRect();
-    int16_t posLeft=rect.GetLeft() + this->GetStyleConst().paddingLeft_ + this->GetStyleConst().borderWidth_;
-    int16_t posTop=rect.GetTop() + this->GetStyleConst().paddingTop_ + this->GetStyleConst().borderWidth_;
+//    Rect worldRec(realLeft,realTop,realRight,realBottom),
+//            screenRect(0,0,rect.GetWidth()-paddingRight - 1,
+//                       rect.GetHeight()-paddingBottom - 1);
+//    int16_t width = fillArea.GetWidth();
+//    int16_t height = fillArea.GetHeight();
+//    uint8_t* dest = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+//    int32_t offset = static_cast<int32_t>(fillArea.GetTop()) * destWidth + fillArea.GetLeft();
+//    dest += offset * destByteSize;
+
+    int16_t posLeft=fillArea.GetLeft();//rect.GetLeft() + this->GetStyleConst().paddingLeft_ + this->GetStyleConst().borderWidth_;
+    int16_t posTop=fillArea.GetTop();//rect.GetTop() + this->GetStyleConst().paddingTop_ + this->GetStyleConst().borderWidth_;
     uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer->virAddr);
     if (gfxDstBuffer->virAddr == nullptr) {
         return false;
@@ -494,8 +516,8 @@ bool UICanvas::InitDrawEnvironment(const Rect &worldRect,const Rect &screenRect)
     int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer->width +
             posLeft;
     destBuf += offset * destByteSize;
-    m_graphics->attach(destBuf,screenRect.GetWidth(),
-                       screenRect.GetHeight(),gfxDstBuffer->stride);
+    m_graphics->attach(destBuf,fillArea.GetWidth(),
+                       fillArea.GetHeight(),gfxDstBuffer->stride);
 
 //    绘制背景可以不绘制...
 //    m_graphics->clearAll(128, 128, 128);
@@ -531,27 +553,53 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     Point end;
     GetAbsolutePosition(lineParam->start, rect, style, start);
     GetAbsolutePosition(lineParam->end, rect, style, end);
-    Rect lineArea;
 
-    if (start.x < end.x) {
-        lineArea.SetX(start.x);
-        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
-        lineArea.SetWidth(end.x - start.x + 1);
-        lineArea.SetHeight(paint.GetStrokeWidth());
-    } else {
-        lineArea.SetX(end.x);
-        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
-        lineArea.SetWidth(start.x - end.x + 1);
-        lineArea.SetHeight(paint.GetStrokeWidth());
-    }
+//    Rect lineArea;
 
-    Rect fillArea; //
-    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
+//    if (start.x < end.x) {
+//        lineArea.SetX(start.x);
+//        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
+//        lineArea.SetWidth(end.x - start.x + 1);
+//        lineArea.SetHeight(paint.GetStrokeWidth());
+//    } else {
+//        lineArea.SetX(end.x);
+//        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
+//        lineArea.SetWidth(start.x - end.x + 1);
+//        lineArea.SetHeight(paint.GetStrokeWidth());
+//    }
+
+//    Rect fillArea; //
+//    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
+//        return;
+//    }
+//    int16_t yTop;
+//    int16_t yBottom;
+
+//    if (start.y < end.y) {
+//        yTop = start.y - paint.GetStrokeWidth() / 2;  // 2: half
+//        yBottom = end.y + paint.GetStrokeWidth() / 2; // 2: half
+//    } else {
+//        yTop = end.y - paint.GetStrokeWidth() / 2;      // 2: half
+//        yBottom = start.y + paint.GetStrokeWidth() / 2; // 2: half
+//    }
+
+//    if ((yBottom < invalidatedArea.GetTop()) || (yTop > invalidatedArea.GetBottom())) {
+//        return;
+//    }
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    if(m_graphics==nullptr) {
         return;
     }
+    ColorType colorType=paint.GetStrokeColor();
+    m_graphics->lineColor(colorType.red, colorType.green, colorType.blue,colorType.alpha);
+    m_graphics->lineWidth(paint.GetStrokeWidth());
+    m_graphics->lineCap(paint.GetLineCap());
+    m_graphics->lineJoin(paint.GetLinejoin());
+    m_graphics->noFill();
+    m_graphics->line(start.x,start.y,end.x,end.y);
 
     BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
-                                           paint.GetStrokeColor(), paint.GetOpacity());
+                                       paint.GetStrokeColor(), paint.GetOpacity());
 }
 
 void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer,

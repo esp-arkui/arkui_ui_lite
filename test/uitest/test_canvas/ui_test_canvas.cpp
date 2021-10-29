@@ -134,9 +134,15 @@ void UITestCanvas::UIKitCanvasTestDrawLine002()
     UICanvas* canvas = CreateCanvas();
     Paint paint;
     // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
-    paint.SetStrokeWidth(5); // 5: line width
+    paint.SetStrokeWidth(15); // 5: line width
+    paint.SetStrokeColor(Color::Red());
     canvas->SetStartPosition({ 50, 10 }); // {50, 10}: Start point coordinates x, y;
     canvas->DrawLine({ 100, 50 }, paint); // {100, 50}: end point coordinates x, y
+//    paint.SetStrokeColor(Color::Green());
+//    paint.SetStrokeWidth(8);
+//    paint.SetLineCap(BaseGfxExtendEngine::CapRound);
+//    canvas->SetStartPosition({ 150, 80 });
+//    canvas->DrawLine({ 50, 100 }, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve001()
