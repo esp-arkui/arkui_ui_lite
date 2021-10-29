@@ -473,8 +473,12 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         Rect worldRec(realLeft,realTop,realRight,realBottom),
                 screenRect(0,0,rect.GetWidth()-paddingRight - 1,
                            rect.GetHeight()-paddingBottom - 1);
-        //
-        InitDrawEnvironment(invalidatedArea,worldRec,screenRect);
+        Rect outRect(MATH_ABS(coords.GetX()-trunc.GetX())
+                     +realLeft,MATH_ABS(coords.GetY()-trunc.GetY())
+                     +realTop,MATH_ABS(coords.GetRight()-trunc.GetRight())
+                     +paddingRight,MATH_ABS(coords.GetBottom()-trunc.GetBottom())
+                     +paddingBottom);
+        InitDrawEnvironment(outRect,worldRec,screenRect);
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
