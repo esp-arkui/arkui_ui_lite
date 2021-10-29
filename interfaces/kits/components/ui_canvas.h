@@ -529,6 +529,7 @@ public:
 
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
+    bool InitDrawEnvironment(const Rect& worldRect, const Rect& screenRect);
 protected:
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
@@ -658,10 +659,6 @@ protected:
         }
         delete pathParam;
     }
-
-    static bool InitDrawEnvironment(BufferInfo& gfxDstBuffer,BaseGfxExtendEngine* m_graphics,
-                                    const Rect& worldRect, const Rect& screenRect, const Rect &viewRect,
-                                    const Style &style);
 
     static void DoDrawLine(BufferInfo& gfxDstBuffer,
                            void* param,
