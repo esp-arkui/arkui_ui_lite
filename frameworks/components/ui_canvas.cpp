@@ -529,13 +529,27 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     xb1 = 100;
     yb1 = 30;
     xb2 = xb1 + 200;
-    yb2 = yb1 +30;
+    yb2 = yb1 +60;
 
     m_graphics->lineColor(BaseGfxExtendEngine::Color(220,220,220,  255));
-    m_graphics->fillLinearGradient(xb1, yb1, xb2, yb1,
-                                   BaseGfxExtendEngine::Color(255,  255,255,255),
-                                   BaseGfxExtendEngine::Color(0,  0,255,255));
-    m_graphics->rectangle(xb1, yb1, xb2, yb2+30);
+
+//    m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(Color::Yellow().red,Color::Yellow().green,Color::Yellow().blue,Color::Yellow().alpha),
+//                                   BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),0.0,0.5);
+
+//    m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),
+//                                   BaseGfxExtendEngine::Color(Color::Blue().red,Color::Blue().green,Color::Blue().blue,Color::Blue().alpha),0.5,1.0);
+
+//    m_graphics->fillLinearGradientAndStop(xb1, yb1, xb2, yb1);
+
+
+     m_graphics->fillRadialGradient(xb1+(xb2-xb1)*0.5,yb1+(yb2-yb1)*0.5,(xb2-xb1)*0.5,
+                                    BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),
+                                    BaseGfxExtendEngine::Color(Color::Blue().red,Color::Blue().green,Color::Blue().blue,Color::Blue().alpha));
+
+//     m_graphics->fillRadialGradient(xb1+(xb2-xb1)*0.5+20,yb1+(yb2-yb1)*0.5,20);
+
+
+    m_graphics->rectangle(xb1, yb1, xb2, yb2);
 }
 
 void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer,
@@ -633,21 +647,6 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
         return;
     }
-//    Point start;
-//    GetAbsolutePosition(rectParam->start, rect, style, start);
-
-//    Rect coords;
-//    coords.SetPosition(start.x + (lineWidth + 1) / 2, start.y + (lineWidth + 1) / 2); // 2: half
-//    coords.SetHeight(rectParam->height - lineWidth);
-//    coords.SetWidth(rectParam->width - lineWidth);
-
-//    Style drawStyle = StyleDefault::GetDefaultStyle();
-//    drawStyle.bgColor_ = paint.GetFillColor();
-//    drawStyle.bgOpa_ = paint.GetOpacity();
-//    drawStyle.borderRadius_ = 0;
-//    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-
-
     BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
 
     int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
@@ -674,53 +673,39 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
 
 
     const List<Paint::StopAndColor>&  stopAndColors= paint.getStopAndColor();
-//    auto iter= stopAndColors.Begin();
 
-    PointD startPoint;
-    startPoint.x=x0;
-    startPoint.y=y0;
     const double eps = 1e-6;
     ColorType startColor;
+    ColorType stopColor;
+    double start=0.0;
+    double stop=1.0;
+
     ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
     uint16_t count=0;
     for (; count <stopAndColors.Size(); count++) {
-        ColorType color = iter->data_.color;
-        PointD stopPoint;
-        stopPoint.x=x0+(x1-x0)*iter->data_.stop;
-        stopPoint.y=y0+(y1-y0)*iter->data_.stop;
-        if(fabs(startPoint.x-stopPoint.x)<eps && fabs(startPoint.y-stopPoint.y)<eps){
-            startColor=color;
+        stopColor = iter->data_.color;
+        stop =iter->data_.stop;
+        if(fabs(stop-0.0)<eps){
+            startColor=stopColor;
+            start = stop;
             iter = iter->next_;
             continue;
         }
-        m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
-                                           BaseGfxExtendEngine::Color(startColor.red,startColor.green,startColor.blue,startColor.alpha),
-                                           BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
-        startPoint = stopPoint;
-        startColor=color;
+        m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(startColor.red,  startColor.green,startColor.blue,startColor.alpha),
+                                       BaseGfxExtendEngine::Color(stopColor.red,stopColor.green,stopColor.blue,stopColor.alpha),start,stop);
+
+        startColor=stopColor;
+        start = stop;
         iter = iter->next_;
     }
-//            color = iter->data_.color;
-//            double stop =iter->data_.stop;
-//            GetLinePoint(x0,y0,x1,y1,stop,stopPoint);
-//            m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
-//                                               BaseGfxExtendEngine::Color(startColor.red,startColor.green,startColor.blue,startColor.alpha),
-//                                               BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
+//    m_graphics->fillLinearGradientAndStop(x0, y0, x1, y1);
 
-
-//            startColor = color;
-//            color = iter->next_->data_.color;
-//             stop =iter->next_->data_.stop;
-//            GetLinePoint(x0,y0,x1,y1,stop,stopPoint);
-//            m_graphics->fillLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y,
-//                                               BaseGfxExtendEngine::Color(startColor.red,startColor.green,startColor.blue,startColor.alpha),
-//                                               BaseGfxExtendEngine::Color(color.red,color.green,color.blue,color.alpha));
-
-
-            m_graphics->lineWidth(paint.GetStrokeWidth());
-           ColorType strokeColor = paint.GetStrokeColor();
-            m_graphics->lineColor(BaseGfxExtendEngine::Color(strokeColor.red,strokeColor.green,strokeColor.blue,strokeColor.alpha));
-                m_graphics->rectangle(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
+    m_graphics->fillRadialGradientAndStop(x0+(x1-x0)*0.5, y0+rectParam->width*0.25,rectParam->width*0.5);
+    m_graphics->fillRadialGradient(x0+(x1-x0)*0.5, y0+rectParam->width*0.5,rectParam->width);
+    m_graphics->lineWidth(paint.GetStrokeWidth());
+    ColorType strokeColor = paint.GetStrokeColor();
+    m_graphics->lineColor(BaseGfxExtendEngine::Color(strokeColor.red,strokeColor.green,strokeColor.blue,strokeColor.alpha));
+    m_graphics->rectangle(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
 //                m_graphics->rectangle(100,30,300,60);
 
 

@@ -270,7 +270,7 @@ public:
     Color fillColor() const;
     Color lineColor() const;
 
-    void fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
+    void fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0); 
     void lineLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
 
     void fillRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
@@ -281,6 +281,12 @@ public:
 
     void fillRadialGradient(double x, double y, double r);
     void lineRadialGradient(double x, double y, double r);
+
+
+    void fillGradientAndStop(Color c1, Color c2, double startscal=0.0,double endscal=1.0);
+    void fillLinearGradientAndStop(double x1, double y1, double x2, double y2);
+    void fillRadialGradientAndStop(double x, double y, double r);
+
 
     void lineWidth(double w);
     double lineWidth() const;

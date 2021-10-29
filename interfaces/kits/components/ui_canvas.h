@@ -487,6 +487,14 @@ public:
         const char* fontName;
     };
 
+    /** 点精度double */
+    struct PointD {
+
+        double x;
+
+        double y;
+    };
+
     /**
      * @brief Draws text.
      *

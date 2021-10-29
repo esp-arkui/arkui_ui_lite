@@ -81,6 +81,7 @@ public:
     void UIKitCanvasTestDrawPath033();
     void UIKitCanvasTestDrawPath034();
     void UIKitCanvasTestLinearGradient();//调试渐变
+    void UIKitCanvasTestLinearGradient2();//调试渐变
 
 
 

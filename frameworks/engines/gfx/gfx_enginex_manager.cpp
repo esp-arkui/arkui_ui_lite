@@ -441,6 +441,7 @@ BaseGfxExtendEngine::Color BaseGfxExtendEngine::lineColor() const
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile)
 {
+//    Color c3 = BaseGfxExtendEngine::Color(255,  0,255,255);
     int i;
     int startGradient = 128 - int(profile * 127.0);
     int endGradient   = 128 + int(profile * 127.0);
@@ -450,10 +451,22 @@ void BaseGfxExtendEngine::fillLinearGradient(double x1, double y1, double x2, do
     {
         m_fillGradient[i] = c1;
     }
+
+//    for (; i < 128; i++)
+//    {
+//        m_fillGradient[i] = c1.gradient(c3, double(i - startGradient) * k);
+//    }
+
+//    for (; i < endGradient; i++)
+//    {
+//        m_fillGradient[i] = c3.gradient(c2, double(i - 127) * k);
+//    }
+
     for (; i < endGradient; i++)
     {
         m_fillGradient[i] = c1.gradient(c2, double(i - startGradient) * k);
     }
+
     for (; i < 256; i++)
     {
         m_fillGradient[i] = c2;
@@ -469,7 +482,48 @@ void BaseGfxExtendEngine::fillLinearGradient(double x1, double y1, double x2, do
     m_fillGradientFlag = Linear;
     m_fillColor = Color(0,0,0);  // Set some real color
 }
+void BaseGfxExtendEngine::fillGradientAndStop(Color c1, Color c2, double startscal,double endscal)
+{
+    int i;
+    int startGradient = int(startscal * 255.0)==0? 1:int(startscal * 255.0);
+    int endGradient   = int(endscal * 255.0);
+    if (endGradient <= startGradient) endGradient = startGradient + 1;
 
+    double k = 1.0 / double(endGradient-startGradient);
+    m_fillGradient[startGradient] = c1;
+    for (i = startGradient; i < endGradient; i++)
+    {
+        m_fillGradient[i] = c1.gradient(c2, double(i - startGradient) *k);
+    }
+    m_fillGradient[endGradient] = c2;
+}
+
+void BaseGfxExtendEngine::fillLinearGradientAndStop(double x1, double y1, double x2, double y2)
+{
+
+    double angle = atan2(y2-y1, x2-x1);
+    m_fillGradientMatrix.reset();
+    m_fillGradientMatrix *= agg::trans_affine_rotation(angle);
+    m_fillGradientMatrix *= agg::trans_affine_translation(x1, y1);
+    m_fillGradientMatrix *= m_transform;
+    m_fillGradientMatrix.invert();
+    m_fillGradientD1 = 0.0;
+    m_fillGradientD2 = sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
+    m_fillGradientFlag = Linear;
+    m_fillColor = Color(0,0,0);  // Set some real color
+}
+
+void BaseGfxExtendEngine::fillRadialGradientAndStop(double x, double y, double r)
+{
+    m_fillGradientD2 = worldToScreen(r);
+    worldToScreen(x, y);
+    m_fillGradientMatrix.reset();
+    m_fillGradientMatrix *= agg::trans_affine_translation(x, y);
+    m_fillGradientMatrix.invert();
+    m_fillGradientD1 = 0;
+    m_fillGradientFlag = Radial;
+    m_fillColor = Color(0,0,0);  // Set some real color
+}
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::lineLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile)

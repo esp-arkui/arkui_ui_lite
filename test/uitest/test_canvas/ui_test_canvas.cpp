@@ -88,6 +88,7 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawPath033();
 //    UIKitCanvasTestDrawPath034();
     UIKitCanvasTestLinearGradient();
+    UIKitCanvasTestLinearGradient2();
 
     return container_;
 }
@@ -934,25 +935,48 @@ void UITestCanvas::UIKitCanvasTestLinearGradient(){
         return;
     }
 
-    CreateTitleLabel("调试渐变 ");
+    CreateTitleLabel("线性渐变水平 ");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-    paint.SetFillColor(Color::Yellow());
-    paint.SetStrokeWidth(5);
+//    paint.SetFillColor(Color::Yellow());
+    paint.SetStrokeWidth(2);
     paint.createLinearGradient(100,50,200,50);
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::White());
+    paint.addColorStop(0,Color::Yellow());
+    paint.addColorStop(0.3,Color::White());
+    paint.addColorStop(0.6,Color::Green());
     paint.addColorStop(1,Color::Blue());
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
     canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 
+}
+/**
+ * 调试线性渐变
+ */
+void UITestCanvas::UIKitCanvasTestLinearGradient2(){
+    if (container_ == nullptr) {
+        return;
+    }
 
+    CreateTitleLabel("线性渐变水平倾斜 ");
+    UICanvas* canvas = CreateCanvas();
 
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+//    paint.SetFillColor(Color::Yellow());
+    paint.SetStrokeWidth(2);
+    paint.createLinearGradient(100,50,200,150);
+    paint.SetStrokeColor(Color::White());
+    paint.addColorStop(0,Color::Yellow());
+    paint.addColorStop(0.3,Color::White());
+    paint.addColorStop(0.6,Color::Green());
+    paint.addColorStop(1,Color::Blue());
+    // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 
 }
-
 
 
 
