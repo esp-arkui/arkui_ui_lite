@@ -132,11 +132,17 @@ void UITestCanvas::UIKitCanvasTestDrawLine002()
     }
     CreateTitleLabel("绘制直线");
     UICanvas* canvas = CreateCanvas();
-
     Paint paint;
-    paint.SetStrokeWidth(5); // 5: line width
+    // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
+    paint.SetStrokeWidth(15); // 5: line width
+    paint.SetStrokeColor(Color::Red());
     canvas->SetStartPosition({ 50, 10 }); // {50, 10}: Start point coordinates x, y;
     canvas->DrawLine({ 100, 50 }, paint); // {100, 50}: end point coordinates x, y
+    paint.SetStrokeColor(Color::Green());
+    paint.SetStrokeWidth(8);
+    paint.SetLineCap(BaseGfxExtendEngine::CapRound);
+    canvas->SetStartPosition({ 150, 80 });
+    canvas->DrawLine({ 50, 100 }, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve001()
@@ -209,6 +215,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect003()
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeColor(Color::Blue());
     // {300, 10}: left corner coordinates point, 50: width, 50: rectangle style
+
     canvas->DrawRect({ 300, 10 }, 50, 50, paint);
 }
 

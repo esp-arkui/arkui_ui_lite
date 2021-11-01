@@ -19,7 +19,6 @@
 #include "draw/draw_image.h"
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/graphic_log.h"
-#include <engines/gfx/gfx_enginex_manager.h>
 
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
@@ -453,19 +452,87 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 {
     Rect rect = GetOrigRect();
 
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
+    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer,
+                                           rect, invalidatedArea,
+                                           *style_, opaScale_);
 
     void* param = nullptr;
     ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
     Rect coords = GetOrigRect();
     Rect trunc = invalidatedArea;
+
     if (trunc.Intersect(trunc, coords)) {
+
+        int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
+        int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
+        int16_t paddingRight=style_->paddingRight_ + style_->borderWidth_;
+        int16_t paddingBottom=style_->paddingBottom_ + style_->borderWidth_;
+
+        int16_t realRight = rect.GetRight() - paddingRight;
+        int16_t realBottom = rect.GetBottom() - paddingBottom;
+        Rect worldRec(realLeft,realTop,realRight,realBottom),
+                screenRect(0,0,rect.GetWidth()-paddingRight - 1,
+                           rect.GetHeight()-paddingBottom - 1);
+        Rect outRect(MATH_ABS(coords.GetX()-trunc.GetX())
+                     +realLeft,MATH_ABS(coords.GetY()-trunc.GetY())
+                     +realTop,MATH_ABS(coords.GetRight()-trunc.GetRight())
+                     +paddingRight,MATH_ABS(coords.GetBottom()-trunc.GetBottom())
+                     +paddingBottom);
+        InitDrawEnvironment(outRect,worldRec,screenRect);
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
             curDraw->data_.DrawGraphics(gfxDstBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
         }
     }
+}
+
+bool UICanvas::InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
+                                   const Rect &screenRect)
+{
+    BufferInfo* gfxDstBuffer = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
+    if (gfxDstBuffer == nullptr) {
+        return false;
+    }
+
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    if(m_graphics==nullptr) {
+        return false;
+    }
+//    Rect worldRec(realLeft,realTop,realRight,realBottom),
+//            screenRect(0,0,rect.GetWidth()-paddingRight - 1,
+//                       rect.GetHeight()-paddingBottom - 1);
+//    int16_t width = fillArea.GetWidth();
+//    int16_t height = fillArea.GetHeight();
+//    uint8_t* dest = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+//    int32_t offset = static_cast<int32_t>(fillArea.GetTop()) * destWidth + fillArea.GetLeft();
+//    dest += offset * destByteSize;
+
+    int16_t posLeft=fillArea.GetLeft();//rect.GetLeft() + this->GetStyleConst().paddingLeft_ + this->GetStyleConst().borderWidth_;
+    int16_t posTop=fillArea.GetTop();//rect.GetTop() + this->GetStyleConst().paddingTop_ + this->GetStyleConst().borderWidth_;
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer->virAddr);
+    if (gfxDstBuffer->virAddr == nullptr) {
+        return false;
+    }
+
+    ColorMode mode = gfxDstBuffer->mode;
+    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
+    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer->width +
+            posLeft;
+    destBuf += offset * destByteSize;
+    m_graphics->attach(destBuf,fillArea.GetWidth(),
+                       fillArea.GetHeight(),gfxDstBuffer->stride);
+
+//    绘制背景可以不绘制...
+//    m_graphics->clearAll(128, 128, 128);
+
+    m_graphics->viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
+                         screenRect.GetLeft(),screenRect.GetTop(), screenRect.GetRight(),
+                         screenRect.GetBottom(),
+                         BaseGfxExtendEngine::Anisotropic);
+                         //BaseGfxExtendEngine::XMidYMid);
+    return true;
+
 }
 
 void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
@@ -485,122 +552,58 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
         return;
     }
 
-    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
-    if(m_graphics==nullptr) {
-        return;
-    }
     LineParam* lineParam = static_cast<LineParam*>(param);
     Point start;
     Point end;
     GetAbsolutePosition(lineParam->start, rect, style, start);
     GetAbsolutePosition(lineParam->end, rect, style, end);
-    int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
-    int16_t posTop=rect.GetTop() + style.paddingTop_ + style.borderWidth_;
-    Rect lineArea;
 
-    if (start.x < end.x) {
-        lineArea.SetX(start.x);
-        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
-        lineArea.SetWidth(end.x - start.x + 1);
-        lineArea.SetHeight(paint.GetStrokeWidth());
-    } else {
-        lineArea.SetX(end.x);
-        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
-        lineArea.SetWidth(start.x - end.x + 1);
-        lineArea.SetHeight(paint.GetStrokeWidth());
-    }
-    //1.。。这个地方的重绘尤其要注意,重绘制的处理
-    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
-    Rect fillArea; //
-    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
+//    Rect lineArea;
+
+//    if (start.x < end.x) {
+//        lineArea.SetX(start.x);
+//        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
+//        lineArea.SetWidth(end.x - start.x + 1);
+//        lineArea.SetHeight(paint.GetStrokeWidth());
+//    } else {
+//        lineArea.SetX(end.x);
+//        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
+//        lineArea.SetWidth(start.x - end.x + 1);
+//        lineArea.SetHeight(paint.GetStrokeWidth());
+//    }
+
+//    Rect fillArea; //
+//    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
+//        return;
+//    }
+//    int16_t yTop;
+//    int16_t yBottom;
+
+//    if (start.y < end.y) {
+//        yTop = start.y - paint.GetStrokeWidth() / 2;  // 2: half
+//        yBottom = end.y + paint.GetStrokeWidth() / 2; // 2: half
+//    } else {
+//        yTop = end.y - paint.GetStrokeWidth() / 2;      // 2: half
+//        yBottom = start.y + paint.GetStrokeWidth() / 2; // 2: half
+//    }
+
+//    if ((yBottom < invalidatedArea.GetTop()) || (yTop > invalidatedArea.GetBottom())) {
+//        return;
+//    }
+    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    if(m_graphics==nullptr) {
         return;
     }
-    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-    if (gfxDstBuffer.virAddr == nullptr) {
-            return;
-    }
-
-    ColorMode mode = gfxDstBuffer.mode;
-    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
-    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
-            posLeft;
-    destBuf += offset * destByteSize;
-    m_graphics->attach(destBuf,rect.GetWidth(),
-                       rect.GetHeight(),gfxDstBuffer.stride);
-    //绘制背景可以不绘制...
-    //m_graphics->clearAll(128, 128, 128);
-    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
-    m_graphics->viewport(0, 0, 600, 600,0,0, rect.GetWidth(),
-                         rect.GetHeight(),
-                         BaseGfxExtendEngine::Anisotropic);
-                         //BaseGfxExtendEngine::XMidYMid);
-
-
-    // Rounded Rect
-    m_graphics->lineColor(0, 255, 0);
-    m_graphics->lineWidth(13.0);
-    m_graphics->lineCap(BaseGfxExtendEngine::CapRound);
-
+    ColorType colorType=paint.GetStrokeColor();
+    m_graphics->lineColor(colorType.red, colorType.green, colorType.blue,colorType.alpha);
+    m_graphics->lineWidth(paint.GetStrokeWidth());
+    m_graphics->lineCap(paint.GetLineCap());
+    m_graphics->lineJoin(paint.GetLinejoin());
     m_graphics->noFill();
-    m_graphics->line(10.5, 10.5, 500-0.5, 500-0.5);
+    m_graphics->line(start.x,start.y,end.x,end.y);
 
-    m_graphics->lineColor(0, 0, 255,128);
-    m_graphics->lineCap(BaseGfxExtendEngine::CapButt);
-    //m_graphics->line(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
-    m_graphics->line(210.5, 110.5, 200-0.5, 250-0.5);
-
-    double xb1 = 400;
-    double yb1 = 80;
-    double xb2 = xb1 + 150;
-    double yb2 = yb1 + 36;
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,80, 255));
-    m_graphics->lineWidth(1.0);
-    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
-
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
-    m_graphics->fillLinearGradient(xb1, yb1, xb1, yb1+30,
-                                   BaseGfxExtendEngine::Color(100,200,255,255),
-                                   BaseGfxExtendEngine::Color(255,255,255,0));
-    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 200));
-    m_graphics->noLine();
-
-    m_graphics->fillLinearGradient(xb1, yb2-20, xb1, yb2-3,
-                                   BaseGfxExtendEngine::Color(0,  0,  255,0),
-                                   BaseGfxExtendEngine::Color(100,255,255,255));
-    m_graphics->roundedRect(xb1+3, yb2-20, xb2-3, yb2-2, 1, 1, 9, 18);
-
-
-    // Aqua Button Pressed
-    xb1 = 400;
-    yb1 = 30;
-    xb2 = xb1 + 150;
-    yb2 = yb1 + 36;
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,50,180,180));
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,  255));
-    m_graphics->lineWidth(2.0);
-    m_graphics->roundedRect(xb1, yb1, xb2, yb2, 12, 18);
-
-
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(0,0,0,0));
-    m_graphics->fillLinearGradient(xb1, yb1+2, xb1, yb1+25,
-                                   BaseGfxExtendEngine::Color(60, 160,255,255),
-                                   BaseGfxExtendEngine::Color(100,255,255,0));
-    m_graphics->roundedRect(xb1+3, yb1+2.5, xb2-3, yb1+30, 9, 18, 1, 1);
-
-    m_graphics->fillColor(BaseGfxExtendEngine::Color(0,0,50, 255));
-    m_graphics->noLine();
-    m_graphics->fillLinearGradient(xb1, yb2-25, xb1, yb2-5,
-                                   BaseGfxExtendEngine::Color(0,  180,255,0),
-                                   BaseGfxExtendEngine::Color(0,  200,255,255));
-    m_graphics->roundedRect(xb1+3, yb2-25, xb2-3, yb2-2, 1, 1, 9, 18);
-    //rect, trunc,
     BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
-                                           paint.GetStrokeColor(), paint.GetOpacity());
+                                       paint.GetStrokeColor(), paint.GetOpacity());
 }
 
 void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer,

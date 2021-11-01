@@ -39,6 +39,7 @@
 #include "common/image.h"
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"
+#include "engines/gfx/gfx_enginex_manager.h"
 
 namespace OHOS {
 /**
@@ -47,6 +48,7 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
+
 class Paint : public HeapBase {
 public:
     /**
@@ -57,7 +59,9 @@ public:
      */
     Paint()
         : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
-          strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2) {}
+          strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
+          lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
+          lineJoin_(BaseGfxExtendEngine::LineJoin::JoinBevel), miterLimit_(0.0) {}
 
     /**
      * @brief A destructor used to delete the <b>Paint</b> instance.
@@ -214,12 +218,44 @@ public:
         return opacity_;
     }
 
+    void SetMiterLimit(double miterLimit)
+    {
+        miterLimit_ = miterLimit;
+    }
+
+    double GetMiterLimit() const
+    {
+        return miterLimit_;
+    }
+
+    void SetLineCap(BaseGfxExtendEngine::LineCap lineCap)
+    {
+        lineCap_ = lineCap;
+    }
+
+    BaseGfxExtendEngine::LineCap GetLineCap() const
+    {
+        return lineCap_;
+    }
+
+    void SetLinejoin(BaseGfxExtendEngine::LineJoin lineJoin)
+    {
+        lineJoin_ = lineJoin;
+    }
+
+    BaseGfxExtendEngine::LineJoin GetLinejoin() const
+    {
+        return lineJoin_;
+    }
 private:
     PaintStyle style_;
     ColorType fillColor_;
     ColorType strokeColor_;
     uint8_t opacity_;
     uint16_t strokeWidth_;
+    BaseGfxExtendEngine::LineCap lineCap_;
+    BaseGfxExtendEngine::LineJoin lineJoin_;
+    double miterLimit_;
 };
 
 /**
@@ -527,6 +563,8 @@ public:
 
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
+    bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
+                             const Rect &screenRect);
 protected:
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
