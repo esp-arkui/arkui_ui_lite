@@ -60,8 +60,8 @@ public:
     Paint()
         : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
           strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
-          lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
-          lineJoin_(BaseGfxExtendEngine::LineJoin::JoinBevel), miterLimit_(0.0) {}
+          lineCap_(BaseGfxExtendEngine::LineCap::CapNone),
+          lineJoin_(BaseGfxExtendEngine::LineJoin::joinNone), miterLimit_(0.0) {}
 
     /**
      * @brief A destructor used to delete the <b>Paint</b> instance.

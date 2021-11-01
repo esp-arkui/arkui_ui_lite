@@ -104,6 +104,7 @@ public:
 
     enum LineJoin
     {
+        joinNone  = -1,
         JoinMiter = agg::miter_join,
         JoinRound = agg::round_join,
         JoinBevel = agg::bevel_join
@@ -111,6 +112,7 @@ public:
 
     enum LineCap
     {
+        CapNone   = -1,
         CapButt   = agg::butt_cap,
         CapSquare = agg::square_cap,
         CapRound  = agg::round_cap
