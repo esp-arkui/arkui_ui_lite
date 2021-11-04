@@ -36,6 +36,7 @@
 #ifndef GRAPHIC_LITE_UI_CANVAS_H
 #define GRAPHIC_LITE_UI_CANVAS_H
 
+#include <memory>
 #include "common/image.h"
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"
@@ -60,16 +61,71 @@ public:
     Paint()
         : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
           strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
-          lineCap_(BaseGfxExtendEngine::LineCap::CapNone),
-          lineJoin_(BaseGfxExtendEngine::LineJoin::joinNone), miterLimit_(0.0) {}
+          lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
+          lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
+          miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
+          dashArray(nullptr),ndashes(0),isMemAlloc(false)
+    {
+        m_graphics= std::make_shared<BaseGfxExtendEngine>();
+    }
+    Paint(const Paint& paint)
+    {
+        Init(paint);
+    }
 
+    void Init(const Paint& paint) {
+        style_=paint.style_;
+        fillColor_=paint.fillColor_;
+        m_graphics= paint.m_graphics;
+        strokeColor_=paint.strokeColor_;
+        opacity_=paint.opacity_;
+        strokeWidth_=paint.strokeWidth_;
+        lineCap_=paint.lineCap_;
+        lineJoin_=paint.lineJoin_;
+        miterLimit_=paint.miterLimit_;
+        dashOffset=paint.dashOffset;
+        isDrawDash=paint.isDrawDash;
+        ndashes = (paint.ndashes+1)&~1;
+        if(isDrawDash && ndashes > 0) {
+            dashArray = new float[ndashes];
+            if (dashArray) {
+                memset(dashArray, 0, ndashes * sizeof(float));
+                for (unsigned int i = 0; i < ndashes; i++) {
+                    dashArray[i] = paint.dashArray[i];
+                }
+                isMemAlloc = true;
+            } else {
+                //memory alloc error, ignore this dash
+                //I think it is never happen.
+                ndashes = 0;
+                dashOffset = 0;
+                isDrawDash = false;
+            }
+        } else {
+            dashArray =nullptr;
+        }
+    }
+    const Paint& operator = (const Paint& paint)
+    {
+        if (dashArray!=nullptr && isMemAlloc) {
+            delete [] dashArray;
+            dashArray = nullptr;
+        }
+        Init(paint);
+        return *this;
+    }
     /**
      * @brief A destructor used to delete the <b>Paint</b> instance.
      *
      * @since 1.0
      * @version 1.0
      */
-    virtual ~Paint() {}
+    virtual ~Paint() {
+        if (dashArray!=nullptr && isMemAlloc) {
+            delete [] dashArray;
+            dashArray = nullptr;
+        }
+    }
 
     /**
      * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
@@ -238,14 +294,58 @@ public:
         return lineCap_;
     }
 
-    void SetLinejoin(BaseGfxExtendEngine::LineJoin lineJoin)
+    void SetLineJoin(BaseGfxExtendEngine::LineJoin lineJoin)
     {
         lineJoin_ = lineJoin;
     }
 
-    BaseGfxExtendEngine::LineJoin GetLinejoin() const
+    BaseGfxExtendEngine::LineJoin GetLineJoin() const
     {
         return lineJoin_;
+    }
+
+    void SetLineDashOffset(float dashOffset)
+    {
+        this->dashOffset = dashOffset;
+    }
+
+    float GetLineDashOffset() const
+    {
+        return dashOffset;
+    }
+    BaseGfxExtendEngine* GetDrawGraphicsContext() const
+    {
+        return m_graphics.get();
+    }
+    void SetLineDash(float* lineDashs, const unsigned int ndash)
+    {
+        ndashes = ndash;
+        isDrawDash = true;
+        dashArray = lineDashs;
+        isMemAlloc = false;
+    }
+
+    void ClearLineDash(void)
+    {
+        dashOffset = 0;
+        ndashes = 0;
+        isDrawDash = false;
+        dashArray = nullptr;
+    }
+
+    bool IsLineDash() const
+    {
+        return isDrawDash;
+    }
+
+    float* GetLineDash() const
+    {
+        return dashArray;
+    }
+
+    unsigned int GetLineDashCount() const
+    {
+        return ndashes;
     }
 private:
     PaintStyle style_;
@@ -256,6 +356,12 @@ private:
     BaseGfxExtendEngine::LineCap lineCap_;
     BaseGfxExtendEngine::LineJoin lineJoin_;
     double miterLimit_;
+    float dashOffset;
+    bool isDrawDash;
+    float* dashArray;
+    unsigned int ndashes;
+    std::shared_ptr<BaseGfxExtendEngine> m_graphics;
+    bool isMemAlloc;
 };
 
 /**
@@ -397,6 +503,10 @@ public:
      */
     void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
+    void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
+    void ClearRect(const Point &clearRect, int clearHeight,int clearWidth,
+                   const Paint &paint);
     /**
      * @brief Draws a circle.
      *
@@ -563,9 +673,27 @@ public:
 
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
-    bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
-                             const Rect &screenRect);
+    bool SetLineDash(float* dashArray, unsigned int ndash,Paint&);
+
+    float* GetLineDash(const Paint& paint,unsigned& nDashes)
+    {
+        nDashes = paint.GetLineDashCount();
+        return paint.GetLineDash();
+    }
+
+    void ClearLineDash(Paint&);
+
+    void LineDashOffset(float dashOffset,Paint& paint)
+    {
+        paint.SetLineDashOffset(dashOffset);
+    }
+    void LineWidth(uint16_t lineWidth,Paint& paint)
+    {
+        paint.SetStrokeWidth(lineWidth);
+    }
 protected:
+    bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
+                             const Rect &screenRect,const Paint& paint);
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
@@ -658,6 +786,13 @@ protected:
         delete rectParam;
     }
 
+    static void DeletePairRectParam(void* param)
+    {
+
+        RectParam* rectParam = static_cast<RectParam*>(param);
+        delete rectParam;
+    }
+
     static void DeleteCircleParam(void* param)
     {
         CircleParam* circleParam = static_cast<CircleParam*>(param);
@@ -707,6 +842,21 @@ protected:
                             const Rect& rect,
                             const Rect& invalidatedArea,
                             const Style& style);
+
+    static void DoClearRect(BufferInfo& gfxDstBuffer,
+                            void* param,
+                            const Paint& paint,
+                            const Rect& rect,
+                            const Rect& invalidatedArea,
+                            const Style& style);
+
+    static void DoStrokeRect(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style);
+
     static void DoDrawRect(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
