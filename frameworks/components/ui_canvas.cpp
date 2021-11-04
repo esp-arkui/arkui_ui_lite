@@ -813,14 +813,34 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
             posLeft;
     destBuf += offset * destByteSize;
-//    m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
+    m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
 
       fill(*m_graphics,paint);//填充颜色
    m_graphics->lineWidth(paint.GetStrokeWidth());
     ColorType strokeColor = paint.GetStrokeColor();
     m_graphics->lineColor(BaseGfxExtendEngine::Color(strokeColor.red,strokeColor.green,strokeColor.blue,strokeColor.alpha));
     m_graphics->rectangle(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
-//                m_graphics->rectangle(100,30,300,60);
+
+
+
+//    Style drawStyle = StyleDefault::GetDefaultStyle();
+//       drawStyle.bgColor_ = paint.GetFillColor();
+//       drawStyle.bgOpa_ = paint.GetOpacity();
+//       drawStyle.borderRadius_ = 0;
+//       if(paint.GetGlobalAlpha() == 1.0f) {
+//           BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+//       } else {
+//           BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+//           if(m_graphics==nullptr) {
+//               return;
+//           }
+//           m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+//           m_graphics->noLine();
+//           m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
+//                                 drawStyle.bgColor_.blue,drawStyle.bgOpa_);
+
+// m_graphics->rectangle(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
+//       }
 
 
 }
@@ -862,28 +882,6 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint){
         ColorType color=paint.GetFillColor();
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
-
-
-    Style drawStyle = StyleDefault::GetDefaultStyle();
-    drawStyle.bgColor_ = paint.GetFillColor();
-    drawStyle.bgOpa_ = paint.GetOpacity();
-    drawStyle.borderRadius_ = 0;
-    if(paint.GetGlobalAlpha() == 1.0f) {
-        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-    } else {
-        BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
-        if(m_graphics==nullptr) {
-            return;
-        }
-        m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
-        m_graphics->noLine();
-        m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
-                              drawStyle.bgColor_.blue,drawStyle.bgOpa_);
-
-        m_graphics->rectangle(start.x,start.y,start.x + rectParam->width -1,start.y+
-                              rectParam->height -1);
-    }
-
 }
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
