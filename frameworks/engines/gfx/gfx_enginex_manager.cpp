@@ -59,6 +59,7 @@ BaseGfxExtendEngine::BaseGfxExtendEngine() :
     m_lineGradientFlag(Solid),
     m_fillGradientMatrix(),
     m_lineGradientMatrix(),
+    m_fillRadialMatrix(),
     m_fillGradientD1(0.0),
     m_lineGradientD1(0.0),
     m_fillGradientD2(100.0),
@@ -70,6 +71,7 @@ BaseGfxExtendEngine::BaseGfxExtendEngine() :
 
     m_fillGradientInterpolator(m_fillGradientMatrix),
     m_lineGradientInterpolator(m_lineGradientMatrix),
+    m_interpolator_type(m_fillRadialMatrix),
 
     m_linearGradientFunction(),
     m_radialGradientFunction(),
@@ -439,64 +441,32 @@ BaseGfxExtendEngine::Color BaseGfxExtendEngine::lineColor() const
 }
 
 //------------------------------------------------------------------------
-void BaseGfxExtendEngine::fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile)
-{
-//    Color c3 = BaseGfxExtendEngine::Color(255,  0,255,255);
-    int i;
-    int startGradient = 128 - int(profile * 127.0);
-    int endGradient   = 128 + int(profile * 127.0);
-    if (endGradient <= startGradient) endGradient = startGradient + 1;
-    double k = 1.0 / double(endGradient - startGradient);
-    for (i = 0; i < startGradient; i++)
-    {
-        m_fillGradient[i] = c1;
-    }
 
-//    for (; i < 128; i++)
-//    {
-//        m_fillGradient[i] = c1.gradient(c3, double(i - startGradient) * k);
-//    }
 
-//    for (; i < endGradient; i++)
-//    {
-//        m_fillGradient[i] = c3.gradient(c2, double(i - 127) * k);
-//    }
-
-    for (; i < endGradient; i++)
-    {
-        m_fillGradient[i] = c1.gradient(c2, double(i - startGradient) * k);
-    }
-
-    for (; i < 256; i++)
-    {
-        m_fillGradient[i] = c2;
-    }
-    double angle = atan2(y2-y1, x2-x1);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= agg::trans_affine_rotation(angle);
-    m_fillGradientMatrix *= agg::trans_affine_translation(x1, y1);
-    m_fillGradientMatrix *= m_transform;
-    m_fillGradientMatrix.invert();
-    m_fillGradientD1 = 0.0;
-    m_fillGradientD2 = sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
-    m_fillGradientFlag = Linear;
-    m_fillColor = Color(0,0,0);  // Set some real color
-}
 void BaseGfxExtendEngine::fillGradientAndStop(Color c1, Color c2, double startscal,double endscal)
 {
-    int i;
-    int startGradient = int(startscal * 255.0)==0? 1:int(startscal * 255.0);
-    int endGradient   = int(endscal * 255.0);
-    if (endGradient <= startGradient) endGradient = startGradient + 1;
-
-    double k = 1.0 / double(endGradient-startGradient);
-    m_fillGradient[startGradient] = c1;
-    for (i = startGradient; i < endGradient; i++)
-    {
-        m_fillGradient[i] = c1.gradient(c2, double(i - startGradient) *k);
-    }
-    m_fillGradient[endGradient] = c2;
+    m_fillRadialGradient.remove_all();
+    m_fillRadialGradient.add_color(0.0, agg::srgba8(0, 255, 0,255));
+    m_fillRadialGradient.add_color(0.5, agg::srgba8(120, 0, 0,255));
+    m_fillRadialGradient.add_color(1.0, agg::srgba8(0, 0, 255,255));
+    m_fillRadialGradient.build_lut();
 }
+
+void BaseGfxExtendEngine::remove_all_color(){
+    m_fillRadialGradient.remove_all();
+}
+
+void BaseGfxExtendEngine::add_color(double offset,  Color c1){
+     m_fillRadialGradient.add_color(offset, c1);
+}
+
+void BaseGfxExtendEngine::build_lut(){
+    m_fillRadialGradient.build_lut();
+}
+
+
+
+
 
 void BaseGfxExtendEngine::fillLinearGradientAndStop(double x1, double y1, double x2, double y2)
 {
@@ -513,181 +483,32 @@ void BaseGfxExtendEngine::fillLinearGradientAndStop(double x1, double y1, double
     m_fillColor = Color(0,0,0);  // Set some real color
 }
 
-void BaseGfxExtendEngine::fillRadialGradientAndStop(double x, double y, double r)
+
+void BaseGfxExtendEngine::fillRadialGradient(double start_x, double start_y,double start_r, double end_x, double end_y,double end_r)
 {
-    m_fillGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= agg::trans_affine_translation(x, y);
-    m_fillGradientMatrix.invert();
-    m_fillGradientD1 = 0;
+    m_fillRadialMatrix.reset();
+    m_fillRadialMatrix *= agg::trans_affine_translation(end_x, end_y);
+    m_fillRadialMatrix.invert();
+    m_interpolator_type.transformer(m_fillRadialMatrix);
+    m_fillGradientD1 = start_r;
+    m_fillGradientD2 = end_r;
+    m_radialGradientFunction  = agg::gradient_radial_focus(end_r,start_x-end_x,start_y-end_y);
     m_fillGradientFlag = Radial;
-    m_fillColor = Color(0,0,0);  // Set some real color
+    m_fillColor = Color(0,0,0);
 }
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::lineLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile)
-{
-    int i;
-    int startGradient = 128 - int(profile * 128.0);
-    int endGradient   = 128 + int(profile * 128.0);
-    if (endGradient <= startGradient) endGradient = startGradient + 1;
-    double k = 1.0 / double(endGradient - startGradient);
-    for (i = 0; i < startGradient; i++)
-    {
-        m_lineGradient[i] = c1;
-    }
-    for (; i < endGradient; i++)
-    {
-        m_lineGradient[i] = c1.gradient(c2, double(i - startGradient) * k);
-    }
-    for (; i < 256; i++)
-    {
-        m_lineGradient[i] = c2;
-    }
-    double angle = atan2(y2-y1, x2-x1);
-    m_lineGradientMatrix.reset();
-    m_lineGradientMatrix *= agg::trans_affine_rotation(angle);
-    m_lineGradientMatrix *= agg::trans_affine_translation(x1, y1);
+void BaseGfxExtendEngine::fillLinearGradient(double start_x, double start_y,double end_x, double end_y){
+    double angle = atan2(end_y-start_y, end_x-start_x);
+    m_fillGradientMatrix.reset();
+    m_fillGradientMatrix *= agg::trans_affine_rotation(angle);
+    m_fillGradientMatrix *= agg::trans_affine_translation(start_x, start_y);
     m_fillGradientMatrix *= m_transform;
-    m_lineGradientMatrix.invert();
-    m_lineGradientD1 = 0;
-    m_lineGradientD2 = sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
-    m_lineGradientFlag = Linear;
-    m_lineColor = Color(0,0,0);  // Set some real color
-}
-
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::fillRadialGradient(double x, double y, double r, Color c1, Color c2, double profile)
-{
-    int i;
-    int startGradient = 128 - int(profile * 127.0);
-    int endGradient   = 128 + int(profile * 127.0);
-    if (endGradient <= startGradient) endGradient = startGradient + 1;
-    double k = 1.0 / double(endGradient - startGradient);
-    for (i = 0; i < startGradient; i++)
-    {
-        m_fillGradient[i] = c1;
-    }
-    for (; i < endGradient; i++)
-    {
-        m_fillGradient[i] = c1.gradient(c2, double(i - startGradient) * k);
-    }
-    for (; i < 256; i++)
-    {
-        m_fillGradient[i] = c2;
-    }
-    m_fillGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= agg::trans_affine_translation(x, y);
     m_fillGradientMatrix.invert();
-    m_fillGradientD1 = 0;
-    m_fillGradientFlag = Radial;
+    m_fillGradientD1 = 0.0;
+    m_fillGradientD2 = sqrt((end_x-start_x) * (end_x-start_x) + (end_y-start_y) * (end_y-start_y));
+    m_fillGradientFlag = Linear;
     m_fillColor = Color(0,0,0);  // Set some real color
 }
-
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::lineRadialGradient(double x, double y, double r, Color c1, Color c2, double profile)
-{
-    int i;
-    int startGradient = 128 - int(profile * 128.0);
-    int endGradient   = 128 + int(profile * 128.0);
-    if (endGradient <= startGradient) endGradient = startGradient + 1;
-    double k = 1.0 / double(endGradient - startGradient);
-    for (i = 0; i < startGradient; i++)
-    {
-        m_lineGradient[i] = c1;
-    }
-    for (; i < endGradient; i++)
-    {
-        m_lineGradient[i] = c1.gradient(c2, double(i - startGradient) * k);
-    }
-    for (; i < 256; i++)
-    {
-        m_lineGradient[i] = c2;
-    }
-    m_lineGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_lineGradientMatrix.reset();
-    m_lineGradientMatrix *= agg::trans_affine_translation(x, y);
-    m_lineGradientMatrix.invert();
-    m_lineGradientD1 = 0;
-    m_lineGradientFlag = Radial;
-    m_lineColor = Color(0,0,0);  // Set some real color
-}
-
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::fillRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3)
-{
-    int i;
-    for (i = 0; i < 128; i++)
-    {
-        m_fillGradient[i] = c1.gradient(c2, double(i) / 127.0);
-    }
-    for (; i < 256; i++)
-    {
-        m_fillGradient[i] = c2.gradient(c3, double(i - 128) / 127.0);
-    }
-    m_fillGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= agg::trans_affine_translation(x, y);
-    m_fillGradientMatrix.invert();
-    m_fillGradientD1 = 0;
-    m_fillGradientFlag = Radial;
-    m_fillColor = Color(0,0,0);  // Set some real color
-}
-
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::lineRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3)
-{
-    int i;
-    for (i = 0; i < 128; i++)
-    {
-        m_lineGradient[i] = c1.gradient(c2, double(i) / 127.0);
-    }
-    for (; i < 256; i++)
-    {
-        m_lineGradient[i] = c2.gradient(c3, double(i - 128) / 127.0);
-    }
-    m_lineGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_lineGradientMatrix.reset();
-    m_lineGradientMatrix *= agg::trans_affine_translation(x, y);
-    m_lineGradientMatrix.invert();
-    m_lineGradientD1 = 0;
-    m_lineGradientFlag = Radial;
-    m_lineColor = Color(0,0,0);  // Set some real color
-}
-
-
-void BaseGfxExtendEngine::fillRadialGradient(double x, double y, double r)
-{
-    m_fillGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= agg::trans_affine_translation(x, y);
-    m_fillGradientMatrix.invert();
-    m_fillGradientD1 = 0;
-}
-
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::lineRadialGradient(double x, double y, double r)
-{
-    m_lineGradientD2 = worldToScreen(r);
-    worldToScreen(x, y);
-    m_lineGradientMatrix.reset();
-    m_lineGradientMatrix *= agg::trans_affine_translation(x, y);
-    m_lineGradientMatrix.invert();
-    m_lineGradientD1 = 0;
-}
-
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::lineWidth(double w)
@@ -1283,7 +1104,7 @@ public:
                 BaseGfxExtendEngine::LinearGradientSpan span(/*gr.m_allocator, */
                                                gr.m_fillGradientInterpolator,
                                                gr.m_linearGradientFunction,
-                                               gr.m_fillGradient,
+                                               gr.m_fillRadialGradient,
                                                gr.m_fillGradientD1,
                                                gr.m_fillGradientD2);
 				//-RendererLinearGradient ren(renBase,span);
@@ -1295,7 +1116,7 @@ public:
                 BaseGfxExtendEngine::LinearGradientSpan span(/*gr.m_allocator,*/
                                                gr.m_lineGradientInterpolator,
                                                gr.m_linearGradientFunction,
-                                               gr.m_lineGradient,
+                                               gr.m_fillRadialGradient,
                                                gr.m_lineGradientD1,
                                                gr.m_lineGradientD2);
                 //- RendererLinearGradient ren(renBase, span);
@@ -1310,24 +1131,24 @@ public:
             {
                 if (fillColor)
                 {
-                    BaseGfxExtendEngine::RadialGradientSpan span(/*gr.m_allocator, */
-                                                   gr.m_fillGradientInterpolator,
-                                                   gr.m_radialGradientFunction,
-                                                   gr.m_fillGradient,
-                                                   gr.m_fillGradientD1,
-                                                   gr.m_fillGradientD2);
+                    BaseGfxExtendEngine::RadialGradientSpan span(
+                                                                gr.m_interpolator_type,
+                                                                gr.m_radialGradientFunction,
+                                                                gr.m_fillRadialGradient,
+                                                                gr.m_fillGradientD1,
+                                                                gr.m_fillGradientD2);
                     //-RendererRadialGradient ren(renBase, span);
                     RendererRadialGradient ren(renBase,gr.m_allocator,span);
                     agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
                 }
                 else
                 {
-                    BaseGfxExtendEngine::RadialGradientSpan span(/*gr.m_allocator,*/
-                                                   gr.m_lineGradientInterpolator,
-                                                   gr.m_radialGradientFunction,
-                                                   gr.m_lineGradient,
-                                                   gr.m_lineGradientD1,
-                                                   gr.m_lineGradientD2);
+                    BaseGfxExtendEngine::RadialGradientSpan span(
+                                                                gr.m_interpolator_type,
+                                                                gr.m_radialGradientFunction,
+                                                                gr.m_fillRadialGradient,
+                                                                gr.m_fillGradientD1,
+                                                                gr.m_fillGradientD2);
                     //-RendererRadialGradient ren(renBase, span);
                     RendererRadialGradient ren(renBase,gr.m_allocator,span);
                     agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
@@ -1410,7 +1231,7 @@ public:
             BaseGfxExtendEngine::LinearGradientSpan span(
                                            gr.m_fillGradientInterpolator,
                                            gr.m_linearGradientFunction,
-                                           gr.m_fillGradient,
+                                           gr.m_fillRadialGradient,
                                            gr.m_fillGradientD1,
                                            gr.m_fillGradientD2);
             RendererLinearGradient ren(renBase,gr.m_allocator,span);
@@ -1420,10 +1241,11 @@ public:
         {
             if(gr.m_fillGradientFlag == BaseGfxExtendEngine::Radial)
             {
+
                 BaseGfxExtendEngine::RadialGradientSpan span(
-                                               gr.m_fillGradientInterpolator,
+                                               gr.m_interpolator_type,
                                                gr.m_radialGradientFunction,
-                                               gr.m_fillGradient,
+                                               gr.m_fillRadialGradient,
                                                gr.m_fillGradientD1,
                                                gr.m_fillGradientD2);
                 RendererRadialGradient ren(renBase,gr.m_allocator,span);

@@ -20,6 +20,8 @@
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/graphic_log.h"
 
+#include <agg_gradient_lut.h>
+
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
 {
@@ -499,14 +501,6 @@ bool UICanvas::InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
     if(m_graphics==nullptr) {
         return false;
     }
-//    Rect worldRec(realLeft,realTop,realRight,realBottom),
-//            screenRect(0,0,rect.GetWidth()-paddingRight - 1,
-//                       rect.GetHeight()-paddingBottom - 1);
-//    int16_t width = fillArea.GetWidth();
-//    int16_t height = fillArea.GetHeight();
-//    uint8_t* dest = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-//    int32_t offset = static_cast<int32_t>(fillArea.GetTop()) * destWidth + fillArea.GetLeft();
-//    dest += offset * destByteSize;
 
     int16_t posLeft=fillArea.GetLeft();//rect.GetLeft() + this->GetStyleConst().paddingLeft_ + this->GetStyleConst().borderWidth_;
     int16_t posTop=fillArea.GetTop();//rect.GetTop() + this->GetStyleConst().paddingTop_ + this->GetStyleConst().borderWidth_;
@@ -547,6 +541,14 @@ void UICanvas::GetLinePoint(double x0,double y0,double x1,double y1,double scale
     pointd.y=y0+(y1-y0)*scale;
 }
 
+
+
+
+
+
+
+
+
 void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
                           void* param,
                           const Paint& paint,
@@ -564,38 +566,6 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     GetAbsolutePosition(lineParam->start, rect, style, start);
     GetAbsolutePosition(lineParam->end, rect, style, end);
 
-//    Rect lineArea;
-
-//    if (start.x < end.x) {
-//        lineArea.SetX(start.x);
-//        lineArea.SetY(start.y - paint.GetStrokeWidth() / 2); // 2: half
-//        lineArea.SetWidth(end.x - start.x + 1);
-//        lineArea.SetHeight(paint.GetStrokeWidth());
-//    } else {
-//        lineArea.SetX(end.x);
-//        lineArea.SetY(end.y - paint.GetStrokeWidth() / 2); // 2: half
-//        lineArea.SetWidth(start.x - end.x + 1);
-//        lineArea.SetHeight(paint.GetStrokeWidth());
-//    }
-
-//    Rect fillArea; //
-//    if (!fillArea.Intersect(lineArea, invalidatedArea)) {
-//        return;
-//    }
-//    int16_t yTop;
-//    int16_t yBottom;
-
-//    if (start.y < end.y) {
-//        yTop = start.y - paint.GetStrokeWidth() / 2;  // 2: half
-//        yBottom = end.y + paint.GetStrokeWidth() / 2; // 2: half
-//    } else {
-//        yTop = end.y - paint.GetStrokeWidth() / 2;      // 2: half
-//        yBottom = start.y + paint.GetStrokeWidth() / 2; // 2: half
-//    }
-
-//    if ((yBottom < invalidatedArea.GetTop()) || (yTop > invalidatedArea.GetBottom())) {
-//        return;
-//    }
     BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
     if(m_graphics==nullptr) {
         return;
@@ -615,17 +585,6 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
             posLeft;
     destBuf += offset * destByteSize;
     m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
-    //绘制背景可以不绘制...
-    //m_graphics->clearAll(128, 128, 128);
-    //2..这个地方的viewport也是尤其要注意的..映射的处理的..
-//    m_graphics->viewport(0, 0, 600, 600,0,0, rect.GetWidth(),
-//                         rect.GetHeight(),
-//                         BaseGfxExtendEngine::Anisotropic);
-                         //BaseGfxExtendEngine::XMidYMid);
-
-
-    // Rounded Rect
-
     double xb1 = 400;
     double yb1 = 80;
     double xb2 = xb1 + 150;
@@ -638,23 +597,15 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
 
     m_graphics->lineColor(BaseGfxExtendEngine::Color(220,220,220,  255));
 
-//    m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(Color::Yellow().red,Color::Yellow().green,Color::Yellow().blue,Color::Yellow().alpha),
-//                                   BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),0.0,0.5);
 
-//    m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),
-//                                   BaseGfxExtendEngine::Color(Color::Blue().red,Color::Blue().green,Color::Blue().blue,Color::Blue().alpha),0.5,1.0);
+    m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),
+                                   BaseGfxExtendEngine::Color(Color::Blue().red,Color::Blue().green,Color::Blue().blue,Color::Blue().alpha),0.5,1.0);
 
-//    m_graphics->fillLinearGradientAndStop(xb1, yb1, xb2, yb1);
+m_graphics->fillRadialGradient(200,60,10,220,80,40);
 
 
-     m_graphics->fillRadialGradient(xb1+(xb2-xb1)*0.5,yb1+(yb2-yb1)*0.5,(xb2-xb1)*0.5,
-                                    BaseGfxExtendEngine::Color(Color::White().red,  Color::White().green,Color::White().blue,Color::White().alpha),
-                                    BaseGfxExtendEngine::Color(Color::Blue().red,Color::Blue().green,Color::Blue().blue,Color::Blue().alpha));
 
-//     m_graphics->fillRadialGradient(xb1+(xb2-xb1)*0.5+20,yb1+(yb2-yb1)*0.5,20);
-
-
-    m_graphics->rectangle(xb1, yb1, xb2, yb2);
+    m_graphics->rectangle(xb1, yb1, xb2, yb2+40);
 
 }
 
@@ -770,45 +721,8 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     destBuf += offset * destByteSize;
     m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
 
-
-
-    double x0 = paint.getLinearGradientPoit().x0;
-    double y0 = paint.getLinearGradientPoit().y0;
-    double x1 = paint.getLinearGradientPoit().x1;
-    double y1 = paint.getLinearGradientPoit().y1;
-
-
-    const List<Paint::StopAndColor>&  stopAndColors= paint.getStopAndColor();
-
-    const double eps = 1e-6;
-    ColorType startColor;
-    ColorType stopColor;
-    double start=0.0;
-    double stop=1.0;
-
-    ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
-    uint16_t count=0;
-    for (; count <stopAndColors.Size(); count++) {
-        stopColor = iter->data_.color;
-        stop =iter->data_.stop;
-        if(fabs(stop-0.0)<eps){
-            startColor=stopColor;
-            start = stop;
-            iter = iter->next_;
-            continue;
-        }
-        m_graphics->fillGradientAndStop(BaseGfxExtendEngine::Color(startColor.red,  startColor.green,startColor.blue,startColor.alpha),
-                                       BaseGfxExtendEngine::Color(stopColor.red,stopColor.green,stopColor.blue,stopColor.alpha),start,stop);
-
-        startColor=stopColor;
-        start = stop;
-        iter = iter->next_;
-    }
-//    m_graphics->fillLinearGradientAndStop(x0, y0, x1, y1);
-
-    m_graphics->fillRadialGradientAndStop(x0+(x1-x0)*0.5, y0+rectParam->width*0.25,rectParam->width*0.5);
-    m_graphics->fillRadialGradient(x0+(x1-x0)*0.5, y0+rectParam->width*0.5,rectParam->width);
-    m_graphics->lineWidth(paint.GetStrokeWidth());
+      fill(*m_graphics,paint);//填充颜色
+   m_graphics->lineWidth(paint.GetStrokeWidth());
     ColorType strokeColor = paint.GetStrokeColor();
     m_graphics->lineColor(BaseGfxExtendEngine::Color(strokeColor.red,strokeColor.green,strokeColor.blue,strokeColor.alpha));
     m_graphics->rectangle(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
@@ -817,8 +731,45 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
 
 }
 
+void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::StopAndColor> & stopAndColors){
+    m_graphics.remove_all_color();
+    ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
+    uint16_t count=0;
+    for (; count <stopAndColors.Size(); count++) {
+       ColorType stopColor = iter->data_.color;
+        m_graphics.add_color(iter->data_.stop,BaseGfxExtendEngine::Color(stopColor.red,  stopColor.green,stopColor.blue,stopColor.alpha));
+        iter = iter->next_;
+    }
+    m_graphics.build_lut();
+}
 
+void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint){
 
+    List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
+    if(stopAndColors.Size()>0){
+          addColorGradient(m_graphics,stopAndColors);
+    }
+
+    if(paint.gradientfalg==paint.Linear){//线性渐变
+        double x0 = paint.getLinearGradientPoit().x0;
+        double y0 = paint.getLinearGradientPoit().y0;
+        double x1 = paint.getLinearGradientPoit().x1;
+        double y1 = paint.getLinearGradientPoit().y1;
+
+        m_graphics.fillLinearGradient(x0,y0,x1,y1);
+
+    }
+    if(paint.gradientfalg==paint.Radial){//放射渐变
+        Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
+        m_graphics.fillRadialGradient(rp.x0,rp.y0,rp.r0,rp.x1,rp.y1,rp.r1);
+    }
+
+    if(paint.gradientfalg==paint.Solid){//纯色渐变
+        ColorType color=paint.GetFillColor();
+        m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
+    }
+
+}
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
                             void* param,

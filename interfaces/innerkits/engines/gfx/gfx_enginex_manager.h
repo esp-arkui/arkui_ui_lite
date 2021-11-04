@@ -45,6 +45,9 @@
 #include "graphics/include/agg_pixfmt_rgba.h"
 #include "graphics/include/agg_image_accessors.h"
 #include "gfx_engine_manager.h"
+#include "graphics/include/agg_gradient_lut.h"
+
+
 
 namespace OHOS {
 class BaseGfxExtendEngine : public BaseGfxEngine
@@ -75,14 +78,23 @@ class BaseGfxExtendEngine : public BaseGfxEngine
 
     typedef agg::span_allocator<ColorType> SpanAllocator;
     typedef agg::pod_auto_array<ColorType, 256> GradientArray;
+    typedef agg::gradient_lut<agg::color_interpolator<agg::srgba8>, 1024> color_func_type;
 
-    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, agg::gradient_x,      GradientArray> LinearGradientSpan;
-    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, agg::gradient_circle, GradientArray> RadialGradientSpan;
+    typedef agg::gradient_radial_focus gradient_func_type;
+    typedef agg::span_interpolator_linear<> interpolator_type;
+
+    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, agg::gradient_x,      color_func_type> LinearGradientSpan;
+//    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, agg::gradient_circle, GradientArray> RadialGradientSpan;
+    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, gradient_func_type, color_func_type> RadialGradientSpan;
+
+//  typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
 
     typedef agg::conv_curve<agg::path_storage>    ConvCurve;
     typedef agg::conv_stroke<ConvCurve>           ConvStroke;
     typedef agg::conv_transform<ConvCurve>        PathTransform;
     typedef agg::conv_transform<ConvStroke>       StrokeTransform;
+
+
 
     enum Gradient
     {
@@ -270,22 +282,42 @@ public:
     Color fillColor() const;
     Color lineColor() const;
 
-    void fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0); 
-    void lineLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
+//    void fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
+//    void lineLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
 
-    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
-    void lineRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
+//    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
+//    void lineRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
 
-    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
-    void lineRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
+//    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
+//    void lineRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
 
-    void fillRadialGradient(double x, double y, double r);
-    void lineRadialGradient(double x, double y, double r);
+//    void fillRadialGradient(double x, double y, double r);
+//    void lineRadialGradient(double x, double y, double r);
 
+
+    void remove_all_color();
+    void add_color(double offset,  Color c1);
+    void build_lut();
 
     void fillGradientAndStop(Color c1, Color c2, double startscal=0.0,double endscal=1.0);
     void fillLinearGradientAndStop(double x1, double y1, double x2, double y2);
-    void fillRadialGradientAndStop(double x, double y, double r);
+
+
+
+
+    /**
+     * @brief fillRadialGradient 根据开始圆和结束圆控制放射渐变。
+     * @param start_x 开始圆圆心坐标x
+     * @param start_y 开始圆圆心坐标y
+     * @param start_r 开始圆半径
+     * @param end_x 结束圆圆心坐标x
+     * @param end_y 结束圆圆心坐标y
+     * @param end_r 结束圆半径
+     */
+    void fillRadialGradient(double start_x, double start_y,double start_r, double end_x, double end_y,double end_r);
+
+    void fillLinearGradient(double start_x, double start_y,double end_x, double end_y);
+
 
 
     void lineWidth(double w);
@@ -486,6 +518,8 @@ private:
     GradientArray                   m_fillGradient;
     GradientArray                   m_lineGradient;
 
+    color_func_type                 m_fillRadialGradient;//TODO:
+
     LineCap                         m_lineCap;
     LineJoin                        m_lineJoin;
 
@@ -493,6 +527,12 @@ private:
     Gradient                        m_lineGradientFlag;
     agg::trans_affine               m_fillGradientMatrix;
     agg::trans_affine               m_lineGradientMatrix;
+    agg::trans_affine               m_fillRadialMatrix;
+
+
+    interpolator_type               m_interpolator_type  ;
+
+
     double                          m_fillGradientD1;
     double                          m_lineGradientD1;
     double                          m_fillGradientD2;
@@ -506,7 +546,8 @@ private:
     agg::span_interpolator_linear<> m_lineGradientInterpolator;
 
     agg::gradient_x                 m_linearGradientFunction;
-    agg::gradient_circle            m_radialGradientFunction;
+//    agg::gradient_circle            m_radialGradientFunction;
+    gradient_func_type              m_radialGradientFunction;//TODO：m_fillRadialMatrix
 
     double                          m_lineWidth;
     bool                            m_evenOddFlag;

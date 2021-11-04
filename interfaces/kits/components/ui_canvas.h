@@ -97,12 +97,34 @@ public:
         double y1;
     };
 
+    struct RadialGradientPoint{
+        /**  开始圆点坐标x  */
+        double x0;
+        /**  开始圆点坐标y  */
+        double y0;
+        /**  开始圆半径r0  */
+        double r0;
+        /**  结束圆点坐标x  */
+        double x1;
+        /**  结束圆点坐标y  */
+        double y1;
+        /**  开始圆半径r0  */
+        double r1;
+    };
+
      struct StopAndColor{
         /** 介于 0.0 与 1.0 之间的值，表示渐变中开始与结束之间的位置。  */
         double stop;
         /** 在结束位置显示的颜色值 */
         ColorType color;
     };
+
+     enum Gradient
+     {
+         Solid,
+         Linear,
+         Radial
+     }gradientfalg;
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -195,6 +217,7 @@ public:
      */
     void SetFillColor(ColorType color)
     {
+        gradientfalg = Solid;
         fillColor_ = color;
     }
 
@@ -241,6 +264,7 @@ public:
 
 
     void createLinearGradient(double startx,double starty,double endx,double endy){
+        gradientfalg=Linear;
         linearGradientPoint.x0=startx;
         linearGradientPoint.y0=starty;
         linearGradientPoint.x1=endx;
@@ -253,12 +277,29 @@ public:
     }
 
 
+    void createRadialGradient(double start_x,double start_y,double start_r, double end_x,double end_y,double end_r){
+        gradientfalg=Radial;
+        radialGradientPoint.x0=start_x;
+        radialGradientPoint.y0=start_y;
+        radialGradientPoint.r0=start_r;
+        radialGradientPoint.x1=end_x;
+        radialGradientPoint.y1=end_y;
+        radialGradientPoint.r1=end_r;
+    }
+
+    RadialGradientPoint getRadialGradientPoint() const{
+        return radialGradientPoint;
+    }
+
+
     void addColorStop(double stop,ColorType color){
         StopAndColor stopAndColor;
         stopAndColor.stop = stop;
         stopAndColor.color = color;
         stopAndColors.PushBack(stopAndColor);
     }
+
+
 
     List<StopAndColor> getStopAndColor() const
     {
@@ -294,6 +335,9 @@ public:
     {
         return lineJoin_;
     }
+
+
+
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -301,6 +345,7 @@ private:
     uint8_t opacity_;
     uint16_t strokeWidth_;
     LinearGradientPoint linearGradientPoint;
+    RadialGradientPoint radialGradientPoint;
     List<StopAndColor> stopAndColors;
     BaseGfxExtendEngine::LineCap lineCap_;
     BaseGfxExtendEngine::LineJoin lineJoin_;
@@ -622,6 +667,9 @@ public:
 
     bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
                              const Rect &screenRect);
+
+
+
 protected:
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
@@ -812,6 +860,15 @@ protected:
                                const Point& center,
                                const Rect& invalidatedArea,
                                const Paint& paint);
+
+    static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
+//    static void fillRadialGradient(BaseGfxExtendEngine & m_graphics,Paint::RadialGradientPoint & radialGradientPoint);
+
+
+    static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint);
+
+
+
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H
