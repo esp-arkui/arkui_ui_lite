@@ -493,9 +493,20 @@ public:
             dashes = NULL;
         }
     }
+
     bool IsLineDash() const
     {
         return is_dash;
+    }
+
+    float* GetLineDash() const
+    {
+        return dashes;
+    }
+
+    unsigned int GetLineDashCount() const
+    {
+        return ndashes;
     }
 private:
     void render(bool fillColor);
