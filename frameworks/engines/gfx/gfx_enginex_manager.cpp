@@ -283,8 +283,10 @@ BaseGfxExtendEngine::Color BaseGfxExtendEngine::imageBlendColor() const
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::masterAlpha(double a)
 {
-    m_masterAlpha = a;
-    updateRasterizerGamma();
+    if(m_masterAlpha!=a) {
+        m_masterAlpha = a;
+        updateRasterizerGamma();
+    }
 }
 
 //------------------------------------------------------------------------
@@ -938,7 +940,6 @@ void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
     m_path.close_polygon();
     drawPath(FillAndStroke);
 }
-
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::arc(double cx, double cy, double rx, double ry, double start, double sweep)
