@@ -38,60 +38,89 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
+    UIKitCanvasTestDrawDashLine001();
+    UIKitCanvasTestLineJoin001();
     UIKitCanvasTestDrawLine001();
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
 //    UIKitCanvasTestDrawCurve002();
 //    UIKitCanvasTestDrawRect001();
+    UIKitCanvasTestLinearGradient();//线性渐变水平
+    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+    UIKitCanvasTestRadialGradient();//放射渐变
     UIKitCanvasTestDrawRect002();
-//    UIKitCanvasTestDrawRect003();
-//    UIKitCanvasTestDrawCircle001();
-//    UIKitCanvasTestDrawCircle002();
-//    UIKitCanvasTestDrawCircle003();
-//    UIKitCanvasTestDrawArc001();
-//    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
-//    UIKitCanvasTestDrawSector001();
-//    UIKitCanvasTestClear001();
-//    UIKitCanvasTestDrawPath001();
-//    UIKitCanvasTestDrawPath002();
-//    UIKitCanvasTestDrawPath003();
-//    UIKitCanvasTestDrawPath004();
-//    UIKitCanvasTestDrawPath005();
-//    UIKitCanvasTestDrawPath006();
-//    UIKitCanvasTestDrawPath007();
-//    UIKitCanvasTestDrawPath008();
-//    UIKitCanvasTestDrawPath009();
-//    UIKitCanvasTestDrawPath010();
-//    UIKitCanvasTestDrawPath011();
-//    UIKitCanvasTestDrawPath012();
-//    UIKitCanvasTestDrawPath013();
-//    UIKitCanvasTestDrawPath014();
-//    UIKitCanvasTestDrawPath015();
-//    UIKitCanvasTestDrawPath016();
-//    UIKitCanvasTestDrawPath017();
-//    UIKitCanvasTestDrawPath018();
-//    UIKitCanvasTestDrawPath019();
-//    UIKitCanvasTestDrawPath020();
-//    UIKitCanvasTestDrawPath021();
-//    UIKitCanvasTestDrawPath022();
-//    UIKitCanvasTestDrawPath023();
-//    UIKitCanvasTestDrawPath024();
-//    UIKitCanvasTestDrawPath025();
-//    UIKitCanvasTestDrawPath026();
-//    UIKitCanvasTestDrawPath027();
-//    UIKitCanvasTestDrawPath028();
-//    UIKitCanvasTestDrawPath029();
-//    UIKitCanvasTestDrawPath030();
-//    UIKitCanvasTestDrawPath031();
-//    UIKitCanvasTestDrawPath032();
-//    UIKitCanvasTestDrawPath033();
-//    UIKitCanvasTestDrawPath034();
-    UIKitCanvasTestLinearGradient();
-    UIKitCanvasTestLinearGradient2();
-    UIKitCanvasTestRadialGradient();
+    UIKitCanvasTestDrawRect003();
+    UIKitCanvasTestDrawRect004();
+    UIKitCanvasTestClearRect001();
+    UIKitCanvasTestDrawCircle001();
+    UIKitCanvasTestDrawCircle002();
+    UIKitCanvasTestDrawCircle003();
+    UIKitCanvasTestDrawArc001();
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawSector001();
+    UIKitCanvasTestClear001();
+    UIKitCanvasTestDrawPath001();
+    UIKitCanvasTestDrawPath002();
+    UIKitCanvasTestDrawPath003();
+    UIKitCanvasTestDrawPath004();
+    UIKitCanvasTestDrawPath005();
+    UIKitCanvasTestDrawPath006();
+    UIKitCanvasTestDrawPath007();
+    UIKitCanvasTestDrawPath008();
+    UIKitCanvasTestDrawPath009();
+    UIKitCanvasTestDrawPath010();
+    UIKitCanvasTestDrawPath011();
+    UIKitCanvasTestDrawPath012();
+    UIKitCanvasTestDrawPath013();
+    UIKitCanvasTestDrawPath014();
+    UIKitCanvasTestDrawPath015();
+    UIKitCanvasTestDrawPath016();
+    UIKitCanvasTestDrawPath017();
+    UIKitCanvasTestDrawPath018();
+    UIKitCanvasTestDrawPath019();
+    UIKitCanvasTestDrawPath020();
+    UIKitCanvasTestDrawPath021();
+    UIKitCanvasTestDrawPath022();
+    UIKitCanvasTestDrawPath023();
+    UIKitCanvasTestDrawPath024();
+    UIKitCanvasTestDrawPath025();
+    UIKitCanvasTestDrawPath026();
+    UIKitCanvasTestDrawPath027();
+    UIKitCanvasTestDrawPath028();
+    UIKitCanvasTestDrawPath029();
+    UIKitCanvasTestDrawPath030();
+    UIKitCanvasTestDrawPath031();
+    UIKitCanvasTestDrawPath032();
+    UIKitCanvasTestDrawPath033();
+    UIKitCanvasTestDrawPath034();
+
 
     return container_;
+}
+
+void UITestCanvas::UIKitCanvasTestDrawDashLine001()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("strokeRect() 绘制矩形（无填充）支持颜色和alpha");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
+    paint.SetStrokeColor(Color::Green());
+    paint.SetOpacity(255);//0 是完全透明 255 不透明
+
+    canvas->LineWidth(2,paint);
+    canvas->LineDashOffset(10,paint);
+    float ds[] = {5, 3.1f, 1.2f, 5.5f};
+    canvas->SetLineDash(ds, 4,paint);
+    canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
+    unsigned nDashes=0;
+    float* fLineDashes = canvas->GetLineDash(paint,nDashes);
+    canvas->ClearLineDash(paint);
+    canvas->StrokeRect({ 50, 50 }, 100, 80, paint);
 }
 
 void UITestCanvas::CreateTitleLabel(const char* title)
@@ -133,19 +162,56 @@ void UITestCanvas::UIKitCanvasTestDrawLine002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("绘制直线");
+    CreateTitleLabel("绘制直线，包括linecap,线条宽度");
     UICanvas* canvas = CreateCanvas();
     Paint paint;
     // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
-    paint.SetStrokeWidth(15); // 5: line width
+
+    canvas->LineWidth(15,paint);
     paint.SetStrokeColor(Color::Red());
     canvas->SetStartPosition({ 50, 10 }); // {50, 10}: Start point coordinates x, y;
     canvas->DrawLine({ 100, 50 }, paint); // {100, 50}: end point coordinates x, y
     paint.SetStrokeColor(Color::Green());
-    paint.SetStrokeWidth(8);
+    canvas->LineWidth(5,paint);
     paint.SetLineCap(BaseGfxExtendEngine::CapRound);
     canvas->SetStartPosition({ 150, 80 });
     canvas->DrawLine({ 50, 100 }, paint);
+}
+
+void UITestCanvas::UIKitCanvasTestLineJoin001()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("LineCap lineJoin miterlimit设置或返回两条线相交时，所创建的拐角类型度");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
+    canvas->LineWidth(10,paint);
+    paint.SetLineCap(BaseGfxExtendEngine::CapRound);
+    paint.SetLineJoin(BaseGfxExtendEngine::JoinBevel);
+    paint.SetStrokeColor(Color::Blue());
+
+    canvas->BeginPath();
+    canvas->MoveTo({ 50, 100 });
+    canvas->LineTo({ 150, 80 });
+    canvas->LineTo({ 75, 40 });
+    //canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    canvas->LineWidth(8,paint);
+    paint.SetLineCap(BaseGfxExtendEngine::CapSquare);
+    paint.SetLineJoin(BaseGfxExtendEngine::JoinMiter);
+    paint.SetMiterLimit(5);
+    paint.SetStrokeColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({ 5, 30 });
+    canvas->LineTo({ 40, 180 });
+    canvas->LineTo({ 105, 40 });
+    canvas->LineTo({ 15, 100 });
+    //canvas->ClosePath();
+    canvas->DrawPath(paint);
+
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve001()
@@ -222,6 +288,39 @@ void UITestCanvas::UIKitCanvasTestDrawRect003()
     canvas->DrawRect({ 300, 10 }, 50, 50, paint);
 }
 
+void UITestCanvas::UIKitCanvasTestDrawRect004()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("strokeRect() 绘制矩形（无填充）支持颜色和alpha");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
+    paint.SetStrokeColor(Color::Green());
+    paint.SetOpacity(255);//0 是完全透明 255 不透明
+    paint.SetStrokeWidth(2);
+    canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
+
+}
+
+void UITestCanvas::UIKitCanvasTestClearRect001()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("clearRect() 在给定的矩形内清除指定的像素");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetFillColor(Color::Red());
+    // {300, 10}: left corner coordinates point, 50: width, 50: rectangle style
+    canvas->DrawRect({ 5, 10 }, 250, 250, paint);
+    canvas->ClearRect({10,20},150,150,paint);
+}
+
 void UITestCanvas::UIKitCanvasTestDrawCircle001()
 {
     if (container_ == nullptr) {
@@ -286,7 +385,7 @@ void UITestCanvas::UIKitCanvasTestDrawArc001()
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Red());
-    paint.SetStrokeWidth(10); // 10: line width
+    canvas->LineWidth(10,paint);
     // {100, 150}: arc's center coordinates, 50: arc radius, 135: start angle, 270: end angle
     canvas->DrawArc({ 100, 150 }, 50, 135, 270, paint);
 }
@@ -743,7 +842,8 @@ void UITestCanvas::UIKitCanvasTestDrawPath025()
     canvas->LineTo({ LINE1_X, LINE1_Y });
     canvas->DrawPath(paint);
     paint.SetStrokeColor(Color::Blue());
-    paint.SetStrokeWidth(1);
+
+    canvas->LineWidth(1,paint);
     canvas->LineTo({ LINE2_X, LINE2_Y });
     canvas->DrawPath(paint);
 }

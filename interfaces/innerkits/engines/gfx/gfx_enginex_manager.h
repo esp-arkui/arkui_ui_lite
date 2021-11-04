@@ -29,6 +29,7 @@
 #include "graphics/include/agg_conv_stroke.h"
 #include "graphics/include/agg_conv_transform.h"
 #include "graphics/include/agg_conv_curve.h"
+#include "graphics/include/agg_conv_dash.h"
 #include "graphics/include/agg_rendering_buffer.h"
 #include "graphics/include/agg_renderer_base.h"
 #include "graphics/include/agg_renderer_scanline.h"
@@ -90,11 +91,13 @@ class BaseGfxExtendEngine : public BaseGfxEngine
 //  typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
 
     typedef agg::conv_curve<agg::path_storage>    ConvCurve;
+    typedef agg::conv_dash<ConvCurve>             ConvDashCurve;
     typedef agg::conv_stroke<ConvCurve>           ConvStroke;
+    typedef agg::conv_stroke<ConvDashCurve>       ConvDashStroke;
     typedef agg::conv_transform<ConvCurve>        PathTransform;
     typedef agg::conv_transform<ConvStroke>       StrokeTransform;
 
-
+    typedef agg::conv_transform<ConvDashStroke>   DashStrokeTransform;
 
     enum Gradient
     {
@@ -116,6 +119,7 @@ public:
 
     enum LineJoin
     {
+        JoinNone  = -1,
         JoinMiter = agg::miter_join,
         JoinRound = agg::round_join,
         JoinBevel = agg::bevel_join
@@ -123,6 +127,7 @@ public:
 
     enum LineCap
     {
+        CapNone   = -1,
         CapButt   = agg::butt_cap,
         CapSquare = agg::square_cap,
         CapRound  = agg::round_cap
@@ -229,7 +234,7 @@ public:
 
     ~BaseGfxExtendEngine();
     BaseGfxExtendEngine();
-
+    BaseGfxExtendEngine(const BaseGfxExtendEngine& o);
     // Setup
     //-----------------------
     void  attach(unsigned char* buf, unsigned width, unsigned height, int stride);
@@ -328,6 +333,8 @@ public:
 
     void lineJoin(LineJoin join);
     LineJoin lineJoin() const;
+    void MiterLimit(double limitValue);
+    double MiterLimit() const;
 
     void fillEvenOdd(bool evenOddFlag);
     bool fillEvenOdd() const;
@@ -477,10 +484,56 @@ public:
     static double pi() { return agg::pi; }
     static double deg2Rad(double v) { return v * agg::pi / 180.0; }
     static double rad2Deg(double v) { return v * 180.0 / agg::pi; }
-    static BaseGfxExtendEngine* GetInstance()
+//    static BaseGfxExtendEngine* GetInstance()
+//    {
+//        static BaseGfxExtendEngine instance;
+//        return &instance;
+//    }
+
+    void lineDashOffset(float dDashOffset)
     {
-        static BaseGfxExtendEngine instance;
-        return &instance;
+        this->dDashOffset = dDashOffset;
+    }
+
+    float lineDashOffset() const
+    {
+        return dDashOffset;
+    }
+
+    void SetLineDash(const float* dashArray, unsigned int ndash)
+    {
+        ClearLineDash();
+        is_dash = true;
+        //dDashOffset = dashOffset;
+        ndashes = (ndash+1)&~1;
+        dashes = new float[ndashes];
+        if (dashes) {
+            memset(dashes, 0, ndashes * sizeof(float));
+            for (unsigned int i = 0; i < ndash; i++) {
+                dashes[i] = dashArray[i];
+            }
+        } else {
+            //memory alloc error, ignore this dash
+            //I think it is never happen.
+            ndashes = 0;
+            dDashOffset = 0;
+            is_dash = false;
+        }
+    }
+
+    void ClearLineDash(void)
+    {
+        dDashOffset = 0;
+        ndashes = 0;
+        is_dash = false;
+        if (dashes) {
+            delete [] dashes;
+            dashes = NULL;
+        }
+    }
+    bool IsLineDash() const
+    {
+        return is_dash;
     }
 private:
     void render(bool fillColor);
@@ -522,7 +575,7 @@ private:
 
     LineCap                         m_lineCap;
     LineJoin                        m_lineJoin;
-
+    double                          m_miterLimit;
     Gradient                        m_fillGradientFlag;
     Gradient                        m_lineGradientFlag;
     agg::trans_affine               m_fillGradientMatrix;
@@ -556,11 +609,17 @@ private:
     agg::trans_affine               m_transform;
 
     ConvCurve                       m_convCurve;
+    ConvDashCurve                   m_convDashCurve;
     ConvStroke                      m_convStroke;
-
+    ConvDashStroke                  m_convDashStroke;
     PathTransform                   m_pathTransform;
     StrokeTransform                 m_strokeTransform;
-
+    DashStrokeTransform             m_dashStrokeTransform;
+    //dash
+    bool is_dash;
+    float* dashes;
+    unsigned int ndashes;
+    float dDashOffset;
 };
 
 inline bool operator == (const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
