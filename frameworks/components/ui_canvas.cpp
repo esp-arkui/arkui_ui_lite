@@ -540,14 +540,9 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     }
 }
 
-bool UICanvas::SetLineDash(float *dashArray, unsigned int ndash,Paint& paint)
+void UICanvas::SetLineDash(float *dashArray, unsigned int ndash,Paint& paint)
 {
     paint.SetLineDash(dashArray,ndash);
-}
-
-void UICanvas::ClearLineDash(Paint& paint)
-{
-   paint.ClearLineDash();
 }
 
 bool UICanvas::InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
@@ -868,6 +863,27 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint){
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
 
+
+    Style drawStyle = StyleDefault::GetDefaultStyle();
+    drawStyle.bgColor_ = paint.GetFillColor();
+    drawStyle.bgOpa_ = paint.GetOpacity();
+    drawStyle.borderRadius_ = 0;
+    if(paint.GetGlobalAlpha() == 1.0f) {
+        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+    } else {
+        BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+        if(m_graphics==nullptr) {
+            return;
+        }
+        m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+        m_graphics->noLine();
+        m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
+                              drawStyle.bgColor_.blue,drawStyle.bgOpa_);
+
+        m_graphics->rectangle(start.x,start.y,start.x + rectParam->width -1,start.y+
+                              rectParam->height -1);
+    }
+
 }
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
@@ -892,20 +908,47 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
     GetAbsolutePosition(circleParam->center, rect, style, arcInfo.center);
     uint8_t enableStroke = static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE;
     uint16_t halfLineWidth = enableStroke ? (paint.GetStrokeWidth() >> 1) : 0;
+    BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+    if(m_graphics==nullptr) {
+        return;
+    }
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
         arcInfo.radius = circleParam->radius - halfLineWidth;
         drawStyle.lineWidth_ = arcInfo.radius;
         drawStyle.lineColor_ = paint.GetFillColor();
-        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                              CapType::CAP_NONE);
+        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()) {
+            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+                                                  CapType::CAP_NONE);
+        } else {
+            m_graphics->noLine();
+            m_graphics->fillColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
+                              drawStyle.lineColor_.blue,drawStyle.bgOpa_);
+            m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
+                                arcInfo.radius,arcInfo.radius);
+        }
     }
 
     if (enableStroke) {
         arcInfo.radius = circleParam->radius + halfLineWidth - 1;
         drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
         drawStyle.lineColor_ = paint.GetStrokeColor();
-        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()) {
+            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                               CapType::CAP_NONE);
+        } else {
+            if(paint.IsLineDash()) {
+                m_graphics->lineDashOffset(paint.GetLineDashOffset());
+                m_graphics->SetLineDash(paint.GetLineDash(),paint.GetLineDashCount());
+            } else {
+                m_graphics->ClearLineDash();
+            }
+            m_graphics->lineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
+                                      drawStyle.lineColor_.blue,drawStyle.bgOpa_);
+            m_graphics->noFill();
+            m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
+                                arcInfo.radius-1,arcInfo.radius-1);
+
+        }
     }
 }
 

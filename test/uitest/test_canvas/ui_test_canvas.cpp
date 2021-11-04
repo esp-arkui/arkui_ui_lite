@@ -38,6 +38,7 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
+    UIKitCanvasTestGlobalAlpha001();
     UIKitCanvasTestDrawDashLine001();
     UIKitCanvasTestLineJoin001();
     UIKitCanvasTestDrawLine001();
@@ -99,6 +100,25 @@ const UIView* UITestCanvas::GetTestView()
     return container_;
 }
 
+void UITestCanvas::UIKitCanvasTestGlobalAlpha001()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("canvas globalAlpha全局ALPHA透明");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetFillColor(Color::Green());
+    canvas->GlobalAlpha(0.8f,paint);
+    canvas->DrawRect({ 50, 10 }, 50, 50, paint);
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    paint.SetStrokeColor(Color::Blue());
+    paint.SetFillColor(Color::Red());
+    canvas->DrawCircle({ 50, 50 }, 40, paint);
+}
+
 void UITestCanvas::UIKitCanvasTestDrawDashLine001()
 {
     if (container_ == nullptr) {
@@ -110,7 +130,7 @@ void UITestCanvas::UIKitCanvasTestDrawDashLine001()
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Green());
-    paint.SetOpacity(255);//0 是完全透明 255 不透明
+    paint.SetOpacity(128);//0 是完全透明 255 不透明
 
     canvas->LineWidth(2,paint);
     canvas->LineDashOffset(10,paint);
@@ -119,8 +139,12 @@ void UITestCanvas::UIKitCanvasTestDrawDashLine001()
     canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
     unsigned nDashes=0;
     float* fLineDashes = canvas->GetLineDash(paint,nDashes);
-    canvas->ClearLineDash(paint);
-    canvas->StrokeRect({ 50, 50 }, 100, 80, paint);
+    //canvas->SetLineDash(nullptr,0,paint);
+//    paint.SetStrokeColor(Color::Red());
+//    canvas->StrokeRect({ 50, 50 }, 100, 80, paint);
+    paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
+    paint.SetStrokeColor(Color::Blue());
+    canvas->DrawCircle({ 50, 50 }, 40, paint);
 }
 
 void UITestCanvas::CreateTitleLabel(const char* title)

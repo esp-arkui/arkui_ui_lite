@@ -64,7 +64,8 @@ public:
           lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
           lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
           miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
-          dashArray(nullptr),ndashes(0),isMemAlloc(false)
+          dashArray(nullptr),ndashes(0),isMemAlloc(false),
+          globalAlpha(1.0f)
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
     }
@@ -83,6 +84,7 @@ public:
         lineCap_=paint.lineCap_;
         lineJoin_=paint.lineJoin_;
         miterLimit_=paint.miterLimit_;
+        globalAlpha=paint.globalAlpha;
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
         ndashes = (paint.ndashes+1)&~1;
@@ -394,19 +396,29 @@ public:
 
     void SetLineDashOffset(float dashOffset)
     {
-        this->dashOffset = dashOffset;
+        m_graphics->lineDashOffset(dashOffset);
     }
 
     float GetLineDashOffset() const
     {
-        return dashOffset;
+        return m_graphics->lineDashOffset();
     }
     BaseGfxExtendEngine* GetDrawGraphicsContext() const
     {
         return m_graphics.get();
     }
+
     void SetLineDash(float* lineDashs, const unsigned int ndash)
     {
+        if(ndash < 0) {
+            GRAPHIC_LOGE("SetLineDash fail,because ndash < =0");
+            return;
+        }
+        if(lineDashs==nullptr || ndash==0) {
+            ClearLineDash();
+            return;
+        }
+
         ndashes = ndash;
         isDrawDash = true;
         dashArray = lineDashs;
@@ -436,6 +448,16 @@ public:
         return ndashes;
     }
 
+
+    void SetGlobalAlpha(float globalAlpha)
+    {
+        this->globalAlpha=globalAlpha;
+    }
+    float GetGlobalAlpha() const
+    {
+        return globalAlpha;
+    }
+
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -454,6 +476,7 @@ private:
     unsigned int ndashes;
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
     bool isMemAlloc;
+    float globalAlpha;
 };
 
 /**
@@ -773,15 +796,18 @@ public:
 
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
-    bool SetLineDash(float* dashArray, unsigned int ndash,Paint&);
+    void SetLineDash(float* dashArray, unsigned int ndash,Paint&);
+
+    void GlobalAlpha(float globalAlpha,Paint& paint)
+    {
+        paint.SetGlobalAlpha(globalAlpha);
+    }
 
     float* GetLineDash(const Paint& paint,unsigned& nDashes)
     {
         nDashes = paint.GetLineDashCount();
         return paint.GetLineDash();
     }
-
-    void ClearLineDash(Paint&);
 
     void LineDashOffset(float dashOffset,Paint& paint)
     {
