@@ -803,7 +803,7 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
         return;
     }
-    BaseGfxExtendEngine* m_graphics = BaseGfxExtendEngine::GetInstance();
+    BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
 
     int16_t posLeft=rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
     int16_t posTop=rect.GetTop() + style.paddingTop_ + style.borderWidth_;
@@ -818,7 +818,7 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
             posLeft;
     destBuf += offset * destByteSize;
-    m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
+//    m_graphics->attach(destBuf,rect.GetWidth(),rect.GetHeight(),gfxDstBuffer.stride);//初始化
 
       fill(*m_graphics,paint);//填充颜色
    m_graphics->lineWidth(paint.GetStrokeWidth());
