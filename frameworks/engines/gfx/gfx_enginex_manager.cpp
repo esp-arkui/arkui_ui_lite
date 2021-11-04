@@ -19,6 +19,10 @@ static const double g_approxScale = 2.0;
 namespace OHOS {
 BaseGfxExtendEngine::~BaseGfxExtendEngine()
 {
+    if (dashes) {
+        delete [] dashes;
+        dashes = NULL;
+    }
 }
 
 BaseGfxExtendEngine::BaseGfxExtendEngine() :
@@ -54,7 +58,7 @@ BaseGfxExtendEngine::BaseGfxExtendEngine() :
 
     m_lineCap(CapRound),
     m_lineJoin(JoinRound),
-
+    m_miterLimit(10),
     m_fillGradientFlag(Solid),
     m_lineGradientFlag(Solid),
     m_fillGradientMatrix(),
@@ -83,13 +87,105 @@ BaseGfxExtendEngine::BaseGfxExtendEngine() :
     m_transform(),
 
     m_convCurve(m_path),
+    m_convDashCurve(m_convCurve),
     m_convStroke(m_convCurve),
-
+    m_convDashStroke(m_convDashCurve),
     m_pathTransform(m_convCurve, m_transform),
-    m_strokeTransform(m_convStroke, m_transform)
+    m_strokeTransform(m_convStroke, m_transform),
+    m_dashStrokeTransform(m_convDashStroke,m_transform),
+    is_dash(false),
+    dashes(nullptr),
+    ndashes(0),
+    dDashOffset(0)
 {
     lineCap(m_lineCap);
     lineJoin(m_lineJoin);
+}
+
+BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine &o)
+    :m_scanline(),
+      m_rasterizer(),
+      m_fillGradientMatrix(o.m_fillGradientMatrix),
+      m_lineGradientMatrix(o.m_lineGradientMatrix),
+      m_imageFilterLut(agg::image_filter_bilinear(), true),
+      m_fillGradientInterpolator(m_fillGradientMatrix),
+      m_lineGradientInterpolator(m_lineGradientMatrix),
+      m_path(o.m_path),
+      m_convCurve(m_path),
+      m_convDashCurve(m_convCurve),
+      m_convStroke(m_convCurve),
+      m_convDashStroke(m_convDashCurve),
+      m_pathTransform(m_convCurve, m_transform),
+      m_strokeTransform(m_convStroke, m_transform),
+      m_dashStrokeTransform(m_convDashStroke,m_transform)
+{
+    m_rbuf=o.m_rbuf;
+    m_pixFormat=PixFormat(m_rbuf);
+    m_pixFormatComp=PixFormatComp(m_rbuf);
+    m_pixFormatPre=PixFormatPre(m_rbuf);
+    m_pixFormatCompPre=PixFormatCompPre(m_rbuf);
+    m_renBase=RendererBase(m_pixFormat);
+
+    m_renBaseComp=RendererBaseComp(m_pixFormatComp);
+    m_renBasePre=RendererBasePre(m_pixFormatPre);
+    m_renBaseCompPre=RendererBaseCompPre(m_pixFormatCompPre);
+    m_renSolid=RendererSolid(m_renBase);
+    m_renSolidComp=RendererSolidComp(m_renBaseComp);
+
+    m_allocator=o.m_allocator;
+    m_clipBox=o.m_clipBox;
+
+    m_blendMode=o.m_blendMode;
+    m_imageBlendMode=o.BlendDst;
+    m_imageBlendColor=o.m_imageBlendColor;
+
+    m_masterAlpha=o.m_masterAlpha;
+    m_antiAliasGamma=o.m_antiAliasGamma;
+
+    m_fillColor=o.m_fillColor;
+    m_lineColor=o.m_lineColor;
+    m_fillGradient=o.m_fillGradient;
+    m_lineGradient=o.m_lineGradient;
+
+    m_lineCap=o.m_lineCap;
+    m_lineJoin=o.m_lineJoin;
+    m_miterLimit=o.m_miterLimit;
+    m_fillGradientFlag=o.Solid;
+    m_lineGradientFlag=o.Solid;
+    m_fillGradientD1=o.m_fillGradientD1;
+    m_lineGradientD1=o.m_lineGradientD1;
+    m_fillGradientD2=o.m_fillGradientD2;
+    m_lineGradientD2=o.m_lineGradientD2;
+
+    m_imageFilter=o.m_imageFilter;
+    m_imageResample=o.m_imageResample;
+
+
+    m_linearGradientFunction=o.m_linearGradientFunction;
+    m_radialGradientFunction=o.m_radialGradientFunction;
+
+    m_lineWidth=o.m_lineWidth;
+    m_evenOddFlag=o.m_evenOddFlag;
+    m_transform=o.m_transform;
+
+    is_dash = o.is_dash;
+    // set dashes
+    if (is_dash) {
+        ndashes = o.ndashes;
+        dDashOffset = o.dDashOffset;
+        dashes = new float[ndashes];
+        if (dashes) {
+            for (unsigned int i = 0; i < ndashes; i++) {
+                dashes[i] = o.dashes[i];
+            }
+        } else {
+            //memory alloc error, ignore this dash
+            //I think it is never happen.
+            ndashes = 0;
+            dDashOffset = 0;
+            is_dash = false;
+        }
+    }
 }
 
 
@@ -189,8 +285,10 @@ BaseGfxExtendEngine::Color BaseGfxExtendEngine::imageBlendColor() const
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::masterAlpha(double a)
 {
-    m_masterAlpha = a;
-    updateRasterizerGamma();
+    if(m_masterAlpha!=a) {
+        m_masterAlpha = a;
+        updateRasterizerGamma();
+    }
 }
 
 //------------------------------------------------------------------------
@@ -313,7 +411,11 @@ void BaseGfxExtendEngine::transformations(const Transformations& tr)
 {
     m_transform.load_from(tr.affineMatrix);
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    if(!this->is_dash) {
+        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    } else {
+        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    }
 }
 
 
@@ -335,7 +437,11 @@ void BaseGfxExtendEngine::affine(const Affine& tr)
 {
     m_transform *= tr;
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    if(!this->is_dash) {
+        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    } else {
+        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    }
 }
 
 //------------------------------------------------------------------------
@@ -350,7 +456,11 @@ void BaseGfxExtendEngine::scale(double sx, double sy)
 {
     m_transform *= agg::trans_affine_scaling(sx, sy);
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    if(!this->is_dash) {
+        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    } else {
+        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    }
 }
 
 
@@ -359,7 +469,11 @@ void BaseGfxExtendEngine::parallelogram(double x1, double y1, double x2, double 
 {
     m_transform *= agg::trans_affine(x1, y1, x2, y2, para);
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    if(!this->is_dash) {
+        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    } else {
+        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    }
 }
 
 
@@ -386,7 +500,11 @@ void BaseGfxExtendEngine::viewport(double worldX1,  double worldY1,  double worl
     vp.device_viewport(screenX1, screenY1, screenX2, screenY2);
     m_transform *= vp.to_affine();
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    if(!this->is_dash) {
+        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    } else {
+        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+    }
 }
 
 
@@ -514,7 +632,12 @@ void BaseGfxExtendEngine::fillLinearGradient(double start_x, double start_y,doub
 void BaseGfxExtendEngine::lineWidth(double w)
 {
     m_lineWidth = w;
-    m_convStroke.width(w);
+    if(!this->is_dash) {
+       m_convStroke.width(w);
+    } else {
+        m_convDashStroke.width(w);
+    }
+
 }
 
 
@@ -544,7 +667,11 @@ bool BaseGfxExtendEngine::fillEvenOdd() const
 void BaseGfxExtendEngine::lineCap(LineCap cap)
 {
     m_lineCap = cap;
-    m_convStroke.line_cap((agg::line_cap_e)cap);
+    if(!this->is_dash) {
+        m_convStroke.line_cap((agg::line_cap_e)cap);
+    } else {
+        m_convDashStroke.line_cap((agg::line_cap_e)cap);
+    }
 }
 
 
@@ -559,7 +686,11 @@ BaseGfxExtendEngine::LineCap BaseGfxExtendEngine::lineCap() const
 void BaseGfxExtendEngine::lineJoin(LineJoin join)
 {
     m_lineJoin = join;
-    m_convStroke.line_join((agg::line_join_e)join);
+    if(!this->is_dash) {
+        m_convStroke.line_join((agg::line_join_e)join);
+    } else {
+        m_convDashStroke.line_join((agg::line_join_e)join);
+    }
 }
 
 
@@ -567,6 +698,21 @@ void BaseGfxExtendEngine::lineJoin(LineJoin join)
 BaseGfxExtendEngine::LineJoin BaseGfxExtendEngine::lineJoin() const
 {
     return m_lineJoin;
+}
+
+void BaseGfxExtendEngine::MiterLimit(double limitValue)
+{
+    m_miterLimit = limitValue;
+    if(!this->is_dash) {
+        m_convStroke.miter_limit(limitValue);
+    } else {
+        m_convDashStroke.miter_limit(limitValue);
+    }
+}
+
+double BaseGfxExtendEngine::MiterLimit() const
+{
+    return m_miterLimit;
 }
 
 
@@ -669,7 +815,6 @@ void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
     m_path.close_polygon();
     drawPath(FillAndStroke);
 }
-
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::arc(double cx, double cy, double rx, double ry, double start, double sweep)
@@ -1046,7 +1191,15 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case StrokeOnly:
         if (m_lineColor.a && m_lineWidth > 0.0)
         {
-            m_rasterizer.add_path(m_strokeTransform);
+            if(!this->is_dash) {
+                m_rasterizer.add_path(m_strokeTransform);
+            } else {
+                for (unsigned int i = 0; i < this->ndashes; i += 2) {
+                    m_convDashCurve.add_dash(dashes[i], dashes[i+1]);
+                }
+                m_convDashCurve.dash_start(dDashOffset);
+                m_rasterizer.add_path(m_dashStrokeTransform);
+            }
             render(false);
         }
         break;
@@ -1060,7 +1213,15 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
 
         if (m_lineColor.a && m_lineWidth > 0.0)
         {
-            m_rasterizer.add_path(m_strokeTransform);
+            if(!this->is_dash) {
+                m_rasterizer.add_path(m_strokeTransform);
+            } else {
+                for (unsigned int i = 0; i < this->ndashes; i += 2) {
+                    m_convDashCurve.add_dash(dashes[i], dashes[i+1]);
+                }
+                m_convDashCurve.dash_start(dDashOffset);
+                m_rasterizer.add_path(m_dashStrokeTransform);
+            }
             render(false);
         }
         break;
