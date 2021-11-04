@@ -699,6 +699,12 @@ public:
 
     void GlobalAlpha(float globalAlpha,Paint& paint)
     {
+        //blur range 0 ~ 1
+        if (globalAlpha < 0.0f) {
+            globalAlpha = 0.0f;
+        } else if (globalAlpha > 1.0f) {
+            globalAlpha = 1.0f;
+        }
         paint.SetGlobalAlpha(globalAlpha);
     }
 
