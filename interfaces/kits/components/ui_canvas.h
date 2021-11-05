@@ -41,6 +41,7 @@
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"
 #include "engines/gfx/gfx_enginex_manager.h"
+#include "ui_image_view.h"
 
 namespace OHOS {
 /**
@@ -112,7 +113,7 @@ public:
            linearGradientPoint = paint.linearGradientPoint;
            radialGradientPoint=paint.radialGradientPoint;
            isMemAlloc = paint.isMemAlloc;
-
+           patternRepeat = paint.patternRepeat;
 
     }
     const Paint& operator = (const Paint& paint)
@@ -147,6 +148,7 @@ public:
         FILL_STYLE,
         /** Stroke and fill */
         STROKE_FILL_STYLE,
+        PATTERN,
     };
 
     /**
@@ -184,6 +186,18 @@ public:
         /** 在结束位置显示的颜色值 */
         ColorType color;
     };
+
+     /**
+      * repeat|repeat-x|repeat-y|no-repeat
+      */
+     enum PatternRepeat {
+         REPEAT,
+         REPEAT_X,
+         REPEAT_Y,
+         NO_REPEAT,
+     }patternRepeat;
+
+     const char * image;
 
      enum Gradient
      {
@@ -464,6 +478,23 @@ public:
     float GetGlobalAlpha() const
     {
         return globalAlpha;
+    }
+
+
+    void createPattern(const char* img,const char* text)
+    {
+        image = img;
+        patternRepeat =NO_REPEAT;
+        if(text=="repeat"){
+            patternRepeat =REPEAT;
+        } else if (text=="repeat-x") {
+            patternRepeat =REPEAT_X;
+        } else if (text=="repeat-y") {
+            patternRepeat =REPEAT_Y;
+        } else if (text=="no-repeat") {
+            patternRepeat =NO_REPEAT;
+        }
+
     }
 
 private:
@@ -831,6 +862,9 @@ public:
         paint.SetStrokeWidth(lineWidth);
     }
 
+
+    void fill(const Paint& paint);
+
 protected:
     bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
                              const Rect &screenRect,const Paint& paint);
@@ -1051,6 +1085,7 @@ protected:
 
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
 
+    static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
 
 };
