@@ -142,8 +142,6 @@ void UITestCanvas::UIKitCanvasTestDrawDashLine001()
     unsigned nDashes=0;
     float* fLineDashes = canvas->GetLineDash(paint,nDashes);
     //canvas->SetLineDash(nullptr,0,paint);
-//    paint.SetStrokeColor(Color::Red());
-//    canvas->StrokeRect({ 50, 50 }, 100, 80, paint);
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Blue());
     canvas->DrawCircle({ 50, 50 }, 40, paint);

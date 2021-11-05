@@ -88,6 +88,7 @@ public:
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
         ndashes = (paint.ndashes+1)&~1;
+        isMemAlloc = paint.isMemAlloc;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
@@ -107,13 +108,10 @@ public:
             dashArray =nullptr;
         }
 
-           stopAndColors = paint.stopAndColors;
-           gradientfalg = paint.gradientfalg;
-           linearGradientPoint = paint.linearGradientPoint;
-           radialGradientPoint=paint.radialGradientPoint;
-           isMemAlloc = paint.isMemAlloc;
-
-
+        stopAndColors = paint.stopAndColors;
+        gradientfalg = paint.gradientfalg;
+        linearGradientPoint = paint.linearGradientPoint;
+        radialGradientPoint=paint.radialGradientPoint;
     }
     const Paint& operator = (const Paint& paint)
     {
