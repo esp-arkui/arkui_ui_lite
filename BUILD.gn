@@ -135,6 +135,7 @@ shared_library("ui") {
     "frameworks/draw/draw_rect.cpp",
     "frameworks/draw/draw_triangle.cpp",
     "frameworks/draw/draw_utils.cpp",
+    "frameworks/draw/draw_polygon.cpp",
     "frameworks/events/event.cpp",
     "frameworks/font/base_font.cpp",
     "frameworks/font/glyphs_manager.cpp",

@@ -20,6 +20,8 @@
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/graphic_log.h"
 
+#include <agg_gradient_lut.h>
+
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
 {
@@ -555,8 +557,10 @@ bool UICanvas::InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
         return false;
     }
 
+
     int16_t posLeft = fillArea.GetLeft();//rect.GetLeft() + this->GetStyleConst().paddingLeft_ + this->GetStyleConst().borderWidth_;
     int16_t posTop = fillArea.GetTop();//rect.GetTop() + this->GetStyleConst().paddingTop_ + this->GetStyleConst().borderWidth_;
+
     uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer->virAddr);
     if (gfxDstBuffer->virAddr == nullptr) {
         return false;
@@ -604,6 +608,7 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
     Point end;
     GetAbsolutePosition(lineParam->start, rect, style, start);
     GetAbsolutePosition(lineParam->end, rect, style, end);
+
     BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
     if(m_graphics==nullptr) {
         return;
@@ -760,6 +765,9 @@ void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
     coords.SetHeight(lineWidth);
     coords.SetWidth(rectParam->width);
     BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+
+
+
 }
 
 void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
@@ -778,32 +786,86 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
         return;
     }
+
+    BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+    if(m_graphics==nullptr) {
+        return;
+    }
+
     Point start;
     GetAbsolutePosition(rectParam->start, rect, style, start);
 
-    Rect coords;
-    coords.SetPosition(start.x + (lineWidth + 1) / 2, start.y + (lineWidth + 1) / 2); // 2: half
-    coords.SetHeight(rectParam->height - lineWidth);
-    coords.SetWidth(rectParam->width - lineWidth);
 
-    Style drawStyle = StyleDefault::GetDefaultStyle();
-    drawStyle.bgColor_ = paint.GetFillColor();
-    drawStyle.bgOpa_ = paint.GetOpacity();
-    drawStyle.borderRadius_ = 0;
-    if(paint.GetGlobalAlpha() == 1.0f) {
-        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-    } else {
-        BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
-        if(m_graphics==nullptr) {
-            return;
-        }
-        m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
-        m_graphics->noLine();
-        m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
-                              drawStyle.bgColor_.blue,drawStyle.bgOpa_);
+    m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+    m_graphics->noLine();
+    fill(*m_graphics,paint,rect,style);//填充颜色
+    m_graphics->rectangle(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
 
-        m_graphics->rectangle(start.x,start.y,start.x + rectParam->width -1,start.y+
-                              rectParam->height -1);
+}
+
+void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::StopAndColor> & stopAndColors){
+    m_graphics.remove_all_color();
+    ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
+    uint16_t count=0;
+    for (; count <stopAndColors.Size(); count++) {
+       ColorType stopColor = iter->data_.color;
+        m_graphics.add_color(iter->data_.stop,BaseGfxExtendEngine::Color(stopColor.red,  stopColor.green,stopColor.blue,stopColor.alpha));
+        iter = iter->next_;
+    }
+    m_graphics.build_lut();
+}
+
+void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
+
+    List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
+    if(stopAndColors.Size()>0){
+          addColorGradient(m_graphics,stopAndColors);
+    }
+
+    if(paint.gradientfalg==paint.Linear){//线性渐变
+        double x0 = paint.getLinearGradientPoit().x0;
+        double y0 = paint.getLinearGradientPoit().y0;
+        double x1 = paint.getLinearGradientPoit().x1;
+        double y1 = paint.getLinearGradientPoit().y1;
+
+        Point start;
+        Point orgstart;
+        orgstart.x=x0;
+        orgstart.y=y0;
+        GetAbsolutePosition(orgstart, rect, style, start);
+
+        Point end;
+        Point orgend;
+        orgend.x=x1;
+        orgend.y=y1;
+        GetAbsolutePosition(orgend, rect, style, end);
+
+        m_graphics.fillLinearGradient(start.x,start.y,end.x,end.y);
+
+    }
+    if(paint.gradientfalg==paint.Radial){//放射渐变
+        Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
+//        m_graphics.fillRadialGradient(rp.x0,rp.y0,rp.r0,rp.x1,rp.y1,rp.r1);
+
+        Point start;
+        Point orgstart;
+        orgstart.x=rp.x0;
+        orgstart.y=rp.y0;
+        GetAbsolutePosition(orgstart, rect, style, start);
+//        m_graphics.fillRadialGradient(start.x,start.y,rp.r0,rp.x1,rp.y1,rp.r1);
+
+        Point end;
+        Point orgend;
+        orgend.x=rp.x1;
+        orgend.y=rp.y1;
+        GetAbsolutePosition(orgend, rect, style, end);
+
+        m_graphics.fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
+    }
+
+    if(paint.gradientfalg==paint.Solid){//纯色渐变
+        ColorType color=paint.GetFillColor();
+        m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
 }
 
@@ -1100,4 +1162,6 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
         m_graphics->drawPath(BaseGfxExtendEngine::DrawPathFlag::StrokeOnly);
     }
 }
+
+
 } // namespace OHOS

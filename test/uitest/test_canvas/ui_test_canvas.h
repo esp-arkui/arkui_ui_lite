@@ -84,6 +84,11 @@ public:
     void UIKitCanvasTestDrawPath032();
     void UIKitCanvasTestDrawPath033();
     void UIKitCanvasTestDrawPath034();
+    void UIKitCanvasTestLinearGradient();//调试渐变
+    void UIKitCanvasTestLinearGradient2();//调试渐变
+    void UIKitCanvasTestRadialGradient();//放射渐变
+
+
 
 private:
     const static int16_t GAP = 10;

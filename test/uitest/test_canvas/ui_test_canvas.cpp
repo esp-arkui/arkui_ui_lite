@@ -45,7 +45,11 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawLine002();
     UIKitCanvasTestDrawCurve001();
     UIKitCanvasTestDrawCurve002();
-    UIKitCanvasTestDrawRect001();
+//    UIKitCanvasTestDrawRect001();
+
+    UIKitCanvasTestLinearGradient();//线性渐变水平
+    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+    UIKitCanvasTestRadialGradient();//放射渐变
     UIKitCanvasTestDrawRect002();
     UIKitCanvasTestDrawRect003();
     UIKitCanvasTestDrawRect004();
@@ -92,6 +96,8 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawPath032();
     UIKitCanvasTestDrawPath033();
     UIKitCanvasTestDrawPath034();
+
+
 
     return container_;
 }
@@ -273,7 +279,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect001()
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(30); // 30: line width
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
-    canvas->DrawRect({ 100, 10 }, 50, 50, paint);
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawRect002()
@@ -288,7 +294,7 @@ void UITestCanvas::UIKitCanvasTestDrawRect002()
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Blue());
     // {200, 10}: left corner coordinates point, 50: width, 50: rectangle style
-    canvas->DrawRect({ 200, 10 }, 50, 50, paint);
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawRect003()
@@ -1054,4 +1060,84 @@ void UITestCanvas::UIKitCanvasTestDrawPath034()
     paint.SetStrokeColor(Color::Red());
     canvas->DrawPath(paint);
 }
+
+/**
+ * 调试线性渐变
+ */
+void UITestCanvas::UIKitCanvasTestLinearGradient(){
+    if (container_ == nullptr) {
+        return;
+    }
+
+    CreateTitleLabel("线性渐变水平 ");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+//    paint.SetFillColor(Color::Blue());
+    paint.SetStrokeWidth(2);
+    paint.createLinearGradient(100,50,200,50);
+    paint.SetStrokeColor(Color::White());
+    paint.addColorStop(0,Color::Yellow());
+    paint.addColorStop(0.3,Color::White());
+    paint.addColorStop(0.6,Color::Green());
+    paint.addColorStop(1,Color::Blue());
+    // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
+    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
+
+}
+/**
+ * 调试线性渐变
+ */
+void UITestCanvas::UIKitCanvasTestLinearGradient2(){
+    if (container_ == nullptr) {
+        return;
+    }
+
+    CreateTitleLabel("线性渐变倾斜 ");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    paint.SetFillColor(Color::Yellow());
+    paint.SetStrokeWidth(2);
+    paint.createLinearGradient(100,50,200,150);
+    paint.SetStrokeColor(Color::White());
+    paint.addColorStop(0,Color::Yellow());
+    paint.addColorStop(0.3,Color::White());
+    paint.addColorStop(0.6,Color::Green());
+    paint.addColorStop(1,Color::Blue());
+    paint.SetGlobalAlpha(1.0);
+    // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
+    canvas->DrawRect({ 10, 10 }, 180, 300, paint);
+
+}
+
+
+/**
+ * 调试放射渐变
+ */
+void UITestCanvas::UIKitCanvasTestRadialGradient(){
+    if (container_ == nullptr) {
+        return;
+    }
+
+    CreateTitleLabel("调试放射渐变 ");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetStrokeWidth(2);
+    paint.createRadialGradient(180,140,10,150,100,80);
+    paint.SetStrokeColor(Color::White());
+    paint.addColorStop(0,Color::Yellow());
+    paint.addColorStop(0.4,Color::Gray());
+    paint.addColorStop(0.8,Color::Green());
+    paint.addColorStop(1,Color::Blue());
+    // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
+    canvas->DrawRect({ 10, 10 }, 180, 300, paint);
+
+}
+
+
 } // namespace OHOS
