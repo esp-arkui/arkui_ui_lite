@@ -111,6 +111,8 @@ public:
            gradientfalg = paint.gradientfalg;
            linearGradientPoint = paint.linearGradientPoint;
            radialGradientPoint=paint.radialGradientPoint;
+           isMemAlloc = paint.isMemAlloc;
+
 
     }
     const Paint& operator = (const Paint& paint)
@@ -400,7 +402,6 @@ public:
         return lineJoin_;
     }
 
-
     void SetLineDashOffset(float dashOffset)
     {
         m_graphics->lineDashOffset(dashOffset);
@@ -454,6 +455,7 @@ public:
     {
         return ndashes;
     }
+
 
     void SetGlobalAlpha(float globalAlpha)
     {

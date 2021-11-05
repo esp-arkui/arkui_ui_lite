@@ -47,57 +47,56 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawCurve002();
 //    UIKitCanvasTestDrawRect001();
 
-    UIKitCanvasTestLinearGradient();
-    UIKitCanvasTestLinearGradient2();
-    UIKitCanvasTestRadialGradient();
+    UIKitCanvasTestLinearGradient();//线性渐变水平
+    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+    UIKitCanvasTestRadialGradient();//放射渐变
+    UIKitCanvasTestDrawRect002();
+    UIKitCanvasTestDrawRect003();
+    UIKitCanvasTestDrawRect004();
+    UIKitCanvasTestClearRect001();
+    UIKitCanvasTestDrawCircle001();
+    UIKitCanvasTestDrawCircle002();
+    UIKitCanvasTestDrawCircle003();
+    UIKitCanvasTestDrawArc001();
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawSector001();
+    UIKitCanvasTestClear001();
+    UIKitCanvasTestDrawPath001();
+    UIKitCanvasTestDrawPath002();
+    UIKitCanvasTestDrawPath003();
+    UIKitCanvasTestDrawPath004();
+    UIKitCanvasTestDrawPath005();
+    UIKitCanvasTestDrawPath006();
+    UIKitCanvasTestDrawPath007();
+    UIKitCanvasTestDrawPath008();
+    UIKitCanvasTestDrawPath009();
+    UIKitCanvasTestDrawPath010();
+    UIKitCanvasTestDrawPath011();
+    UIKitCanvasTestDrawPath012();
+    UIKitCanvasTestDrawPath013();
+    UIKitCanvasTestDrawPath014();
+    UIKitCanvasTestDrawPath015();
+    UIKitCanvasTestDrawPath016();
+    UIKitCanvasTestDrawPath017();
+    UIKitCanvasTestDrawPath018();
+    UIKitCanvasTestDrawPath019();
+    UIKitCanvasTestDrawPath020();
+    UIKitCanvasTestDrawPath021();
+    UIKitCanvasTestDrawPath022();
+    UIKitCanvasTestDrawPath023();
+    UIKitCanvasTestDrawPath024();
+    UIKitCanvasTestDrawPath025();
+    UIKitCanvasTestDrawPath026();
+    UIKitCanvasTestDrawPath027();
+    UIKitCanvasTestDrawPath028();
+    UIKitCanvasTestDrawPath029();
+    UIKitCanvasTestDrawPath030();
+    UIKitCanvasTestDrawPath031();
+    UIKitCanvasTestDrawPath032();
+    UIKitCanvasTestDrawPath033();
+    UIKitCanvasTestDrawPath034();
 
-
-//    UIKitCanvasTestDrawRect002();
-//    UIKitCanvasTestDrawRect003();
-//    UIKitCanvasTestDrawRect004();
-//    UIKitCanvasTestClearRect001();
-//    UIKitCanvasTestDrawCircle001();
-//    UIKitCanvasTestDrawCircle002();
-//    UIKitCanvasTestDrawCircle003();
-//    UIKitCanvasTestDrawArc001();
-//    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
-//    UIKitCanvasTestDrawSector001();
-//    UIKitCanvasTestClear001();
-//    UIKitCanvasTestDrawPath001();
-//    UIKitCanvasTestDrawPath002();
-//    UIKitCanvasTestDrawPath003();
-//    UIKitCanvasTestDrawPath004();
-//    UIKitCanvasTestDrawPath005();
-//    UIKitCanvasTestDrawPath006();
-//    UIKitCanvasTestDrawPath007();
-//    UIKitCanvasTestDrawPath008();
-//    UIKitCanvasTestDrawPath009();
-//    UIKitCanvasTestDrawPath010();
-//    UIKitCanvasTestDrawPath011();
-//    UIKitCanvasTestDrawPath012();
-//    UIKitCanvasTestDrawPath013();
-//    UIKitCanvasTestDrawPath014();
-//    UIKitCanvasTestDrawPath015();
-//    UIKitCanvasTestDrawPath016();
-//    UIKitCanvasTestDrawPath017();
-//    UIKitCanvasTestDrawPath018();
-//    UIKitCanvasTestDrawPath019();
-//    UIKitCanvasTestDrawPath020();
-//    UIKitCanvasTestDrawPath021();
-//    UIKitCanvasTestDrawPath022();
-//    UIKitCanvasTestDrawPath023();
-//    UIKitCanvasTestDrawPath024();
-//    UIKitCanvasTestDrawPath025();
-//    UIKitCanvasTestDrawPath026();
-//    UIKitCanvasTestDrawPath027();
-//    UIKitCanvasTestDrawPath028();
-//    UIKitCanvasTestDrawPath029();
-//    UIKitCanvasTestDrawPath030();
-//    UIKitCanvasTestDrawPath031();
-//    UIKitCanvasTestDrawPath032();
-//    UIKitCanvasTestDrawPath033();
-//    UIKitCanvasTestDrawPath034();
 
 
     return container_;
@@ -1099,7 +1098,7 @@ void UITestCanvas::UIKitCanvasTestLinearGradient2(){
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(2);
     paint.createLinearGradient(100,50,200,150);
@@ -1108,8 +1107,9 @@ void UITestCanvas::UIKitCanvasTestLinearGradient2(){
     paint.addColorStop(0.3,Color::White());
     paint.addColorStop(0.6,Color::Green());
     paint.addColorStop(1,Color::Blue());
+    paint.SetGlobalAlpha(1.0);
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
-    canvas->DrawRect({ 10, 10 }, 500, 300, paint);
+    canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
 }
 
@@ -1138,11 +1138,6 @@ void UITestCanvas::UIKitCanvasTestRadialGradient(){
     canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
 }
-
-
-
-
-
 
 
 } // namespace OHOS

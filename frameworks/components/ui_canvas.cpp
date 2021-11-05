@@ -557,8 +557,10 @@ bool UICanvas::InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
         return false;
     }
 
+
     int16_t posLeft = fillArea.GetLeft();//rect.GetLeft() + this->GetStyleConst().paddingLeft_ + this->GetStyleConst().borderWidth_;
     int16_t posTop = fillArea.GetTop();//rect.GetTop() + this->GetStyleConst().paddingTop_ + this->GetStyleConst().borderWidth_;
+
     uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer->virAddr);
     if (gfxDstBuffer->virAddr == nullptr) {
         return false;
@@ -623,7 +625,6 @@ void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
         m_graphics->noFill();
         m_graphics->line(start.x,start.y,end.x,end.y);
     }
-
 }
 
 void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer,
@@ -785,20 +786,20 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
         return;
     }
-    BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
 
+    BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+    if(m_graphics==nullptr) {
+        return;
+    }
 
     Point start;
     GetAbsolutePosition(rectParam->start, rect, style, start);
 
 
-      fill(*m_graphics,paint,rect,style);//填充颜色
-   m_graphics->lineWidth(paint.GetStrokeWidth());
-    ColorType strokeColor = paint.GetStrokeColor();
-    m_graphics->lineColor(BaseGfxExtendEngine::Color(strokeColor.red,strokeColor.green,strokeColor.blue,strokeColor.alpha));
+    m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+    m_graphics->noLine();
+    fill(*m_graphics,paint,rect,style);//填充颜色
     m_graphics->rectangle(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
-
-
 
 }
 
@@ -815,8 +816,6 @@ void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::Sto
 }
 
 void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
-
-
 
     List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
     if(stopAndColors.Size()>0){
@@ -846,28 +845,28 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rec
     }
     if(paint.gradientfalg==paint.Radial){//放射渐变
         Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
-        m_graphics.fillRadialGradient(rp.x0,rp.y0,rp.r0,rp.x1,rp.y1,rp.r1);
+//        m_graphics.fillRadialGradient(rp.x0,rp.y0,rp.r0,rp.x1,rp.y1,rp.r1);
 
-//        Point start;
-//        Point orgstart;
-//        orgstart.x=rp.x0;
-//        orgstart.y=rp.y0;
-//        GetAbsolutePosition(orgstart, rect, style, start);
+        Point start;
+        Point orgstart;
+        orgstart.x=rp.x0;
+        orgstart.y=rp.y0;
+        GetAbsolutePosition(orgstart, rect, style, start);
+//        m_graphics.fillRadialGradient(start.x,start.y,rp.r0,rp.x1,rp.y1,rp.r1);
 
-//        Point end;
-//        Point orgend;
-//        orgend.x=rp.x1;
-//        orgend.y=rp.y1;
-//        GetAbsolutePosition(orgend, rect, style, end);
+        Point end;
+        Point orgend;
+        orgend.x=rp.x1;
+        orgend.y=rp.y1;
+        GetAbsolutePosition(orgend, rect, style, end);
 
-//        m_graphics.fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
+        m_graphics.fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
     }
 
     if(paint.gradientfalg==paint.Solid){//纯色渐变
         ColorType color=paint.GetFillColor();
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
-
 }
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,

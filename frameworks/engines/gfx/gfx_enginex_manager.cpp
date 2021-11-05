@@ -606,6 +606,7 @@ void BaseGfxExtendEngine::fillRadialGradient(double start_x, double start_y,doub
 {
     m_fillRadialMatrix.reset();
     m_fillRadialMatrix *= agg::trans_affine_translation(end_x, end_y);
+    m_fillRadialMatrix *= m_transform;
     m_fillRadialMatrix.invert();
     m_interpolator_type.transformer(m_fillRadialMatrix);
     m_fillGradientD1 = start_r;
