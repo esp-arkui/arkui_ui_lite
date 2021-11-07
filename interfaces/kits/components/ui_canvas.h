@@ -89,6 +89,7 @@ public:
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
         ndashes = (paint.ndashes+1)&~1;
+        isMemAlloc = paint.isMemAlloc;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
