@@ -856,6 +856,9 @@ void UICanvas::fill(const Paint& paint){
         cmd.DeleteParam = DeleteImageParam;
         cmd.DrawGraphics = FillImage;
         drawCmdList_.PushBack(cmd);
+
+        DrawPath(paint);
+
         Invalidate();
     }
 
@@ -938,8 +941,6 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
                 DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
         }
     }
-
-
 }
 
 

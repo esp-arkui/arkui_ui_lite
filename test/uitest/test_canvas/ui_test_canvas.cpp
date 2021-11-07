@@ -19,6 +19,7 @@
 #include "test_resource_config.h"
 
 #include <draw/clip_utils.h>
+#include <draw/draw_utils.h>
 
 namespace OHOS {
 void UITestCanvas::SetUp()
@@ -1147,18 +1148,83 @@ void UITestCanvas::UIKitCanvasTestcreatePattern1()
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("绘制图片");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.createPattern(RED_IMAGE_PATH,"repeat");
+       CreateTitleLabel("pattern-repeat");
+//       UICanvas* canvas = CreateCanvas();
+//       Paint paint;
+//       paint.SetStyle(Paint::PaintStyle::PATTERN);
+//       paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
+//       paint.SetStrokeColor(Color::Green());
+//       paint.SetStrokeWidth(3);
+//       paint.createPattern(RED_IMAGE_PATH,"repeat");
+//       canvas->AddRect({ 0, 0 },CANVAS_HEIGHT*0.5,CANVAS_WIDTH*0.5);
+//       ClipPath path;
+//       path.Circle({70, 50}, 50);
 
-       canvas->AddRect({ 0, 0 },CANVAS_HEIGHT*0.5,CANVAS_WIDTH*0.5);
+//       canvas->LineWidth(3,paint);
+//       canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
+//       canvas->fill(paint);
+
+//canvas->
+
+
+
+
+
+
+       UIViewGroup* viewGroup = new UIViewGroup();
+       viewGroup->SetHeight(BLOCK_HEIGHT);
+       viewGroup->SetWidth(BLOCK_WIDTH);
+       viewGroup->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, positionY_);
+       viewGroup->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
+       container_->Add(viewGroup);
+       positionY_ += BLOCK_HEIGHT + GAP;
+
+       UIImageView* imageVIew = new UIImageView();
+       imageVIew->SetPosition(0, 0);
+       imageVIew->SetSrc(RED_IMAGE_PATH);
+       viewGroup->Add(imageVIew);
+
+
+       UIImageView* imageVIew2 = new UIImageView();
+       imageVIew2->SetPosition(94,0);
+       imageVIew2->SetSrc(RED_IMAGE_PATH);
+       viewGroup->Add(imageVIew2);
+
+       UIImageView* imageVIew3 = new UIImageView();
+       imageVIew3->SetPosition(188,0);
+       imageVIew3->SetSrc(RED_IMAGE_PATH);
+       viewGroup->Add(imageVIew3);
 
        ClipPath path;
-       path.Circle({70, 50}, 50);
+       path.Circle({70, 50}, 30);
 
-       canvas->fill(paint);
+       ClipUtils clip;
+       ClipImageBlitter blitter(imageVIew->GetImageInfo());
+
+//       ClipImageBlitter blitter(viewGroup->GetViewType());
+       blitter.SetPattern(true);
+       blitter.SetImageInfo(imageVIew->GetImageInfo());
+       blitter.SetImageInfo(imageVIew2->GetImageInfo());
+       blitter.SetImageInfo(imageVIew3->GetImageInfo());
+       clip.PerformScan(path, blitter);
+
+
+
+
+
+//canvas->DrawPath(paint);
+
+
+//       paint.SetFillColor(Color::Red());
+//       canvas->BeginPath();
+//       canvas->MoveTo({ 50, 100 });
+//       canvas->LineTo({ 150, 80 });
+//       canvas->LineTo({ 75, 40 });
+//       canvas->LineTo({ 10, 90 });
+//       canvas->ClosePath();
+//       canvas->DrawPath(paint);
+
+
 }
 
 void UITestCanvas::UIKitCanvasTestcreatePattern2()
@@ -1166,7 +1232,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern2()
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("绘制图片");
+       CreateTitleLabel("pattern-repeat-x");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
@@ -1182,7 +1248,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern3()
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("绘制图片");
+       CreateTitleLabel("pattern-repeat-y");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
@@ -1194,7 +1260,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern4()
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("绘制图片");
+       CreateTitleLabel("pattern-no-repeat");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
