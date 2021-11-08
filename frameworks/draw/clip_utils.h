@@ -21,8 +21,6 @@
 #include "gfx_utils/list.h"
 #include "gfx_utils/vector.h"
 
-#include <components/ui_view_group.h>
-
 namespace OHOS {
 /* Indicates an interval with the same transparency */
 struct Span : public HeapBase {
@@ -177,22 +175,12 @@ public:
 
     void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
     void Finish() override;
-
-    void SetPattern(bool flag){
-        flag_ = flag;
-    }
-    void SetImageInfo(const ImageInfo* src){;
-        ImageInfos_.PushBack(src);
-    }
 private:
     void DrawPixel(int16_t x, int16_t y, uint8_t opa);
     void DrawHorLine(int16_t x, int16_t y, int16_t width, uint8_t opa);
 
     const ImageInfo* src_ = nullptr;
     int16_t iy_ = 0;
-    bool flag_ = false;
-    List<const ImageInfo*> ImageInfos_;
-//    ImageInfo test [10][10] ;
 };
 
 class ClipUtils : public HeapBase {

@@ -22,6 +22,8 @@
 
 #include <agg_gradient_lut.h>
 
+#include <components/ui_view_group.h>
+
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
 {
@@ -825,7 +827,7 @@ void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::Sto
 
 
 
-void UICanvas::fill(const Paint& paint){
+void UICanvas::fill(const Paint& paint,const PolygonPath * polygonPath){
     {
         if (paint.image == nullptr) {
             return;
@@ -843,27 +845,156 @@ void UICanvas::fill(const Paint& paint){
             return;
         }
 
+
         imageParam->image->SetSrc(paint.image);
         ImageHeader header = {0};
         imageParam->image->GetHeader(header);
         imageParam->start = {0,0};
         imageParam->height = header.height;
         imageParam->width = header.width;
+        imageParam->polygonPath = polygonPath;
 
         DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = imageParam;
         cmd.DeleteParam = DeleteImageParam;
-        cmd.DrawGraphics = FillImage;
+        cmd.DrawGraphics = FillImage2;
         drawCmdList_.PushBack(cmd);
 
-        DrawPath(paint);
+//        DrawPath(paint);
 
         Invalidate();
     }
 
 
 }
+
+
+void UICanvas::FillImage2(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style)
+{
+    if (param == nullptr) {
+        return;
+    }
+    ImageParam* imageParam = static_cast<ImageParam*>(param);
+
+    if (imageParam->image == nullptr) {
+        return;
+    }
+
+
+
+   PolygonUtils polygonUtils;
+   PolygonImageBlitter blitter(imageParam->image->GetImageInfo());
+   blitter.SetPattern(true);
+
+    //       blitter.SetImageInfo(imageVIew->GetImageInfo());
+    //       blitter.SetImageInfo(imageVIew2->GetImageInfo());
+    //       blitter.SetImageInfo(imageVIew3->GetImageInfo());
+    //       polygonUtils.PerformScan(path, blitter);
+
+
+
+    Point start;
+    GetAbsolutePosition(imageParam->start, rect, style, start);
+
+//           UIViewGroup* viewGroup = new UIViewGroup();
+//           viewGroup->SetHeight(canvas->GetHeight());
+//           viewGroup->SetWidth(canvas->GetWidth());
+//           viewGroup->SetPosition(canvas->GetStartPosition().x, canvas->GetStartPosition().y);
+//           viewGroup->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
+//           container_->Add(viewGroup);
+//           positionY_ += canvas->GetHeight() + GAP;
+
+
+    //       UIImageView* imageVIew = new UIImageView();
+    //       imageVIew->SetPosition(0, 0);
+    //       imageVIew->SetSrc(RED_IMAGE_PATH);
+    //       viewGroup->Add(imageVIew);
+
+
+
+
+
+    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::PATTERN)
+    {
+        if(paint.patternRepeat==paint.REPEAT){
+            for(;;){
+
+                if(start.x>invalidatedArea.GetRight()){
+                    break;
+                }
+                Point temp = start;
+                for(;;){
+                    if(temp.y>invalidatedArea.GetBottom()){
+                        break;
+                    }
+                    Rect cordsTmp;
+                    cordsTmp.SetPosition(temp.x, temp.y);
+                    cordsTmp.SetHeight(imageParam->height);
+                    cordsTmp.SetWidth(imageParam->width);
+//                    DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+
+                    blitter.SetImageInfo(imageParam->image->GetImageInfo(),&cordsTmp);
+
+                    temp.y+=imageParam->height;
+                }
+                blitter.SetImageInfoss(blitter.ImageInfos_);
+                start.x+=imageParam->width;
+            }
+
+
+
+
+
+
+
+            polygonUtils.PerformScan( *paint.polygonPath , blitter);
+
+
+        }else if(paint.patternRepeat==paint.REPEAT_X) {
+            for(;;){
+                if(start.x>invalidatedArea.GetRight()){
+                    break;
+                }
+                Rect cordsTmp;
+                cordsTmp.SetPosition(start.x, start.y);
+                cordsTmp.SetHeight(imageParam->height);
+                cordsTmp.SetWidth(imageParam->width);
+                DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+                start.x+=imageParam->width;
+            }
+        }else if(paint.patternRepeat==paint.REPEAT_Y) {
+            for(;;){
+                if(start.y>invalidatedArea.GetBottom()){
+                    break;
+                }
+                Rect cordsTmp;
+                cordsTmp.SetPosition(start.x, start.y);
+                cordsTmp.SetHeight(imageParam->height);
+                cordsTmp.SetWidth(imageParam->width);
+                DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+                start.y+=imageParam->height;
+            }
+
+        }else if(paint.patternRepeat==paint.NO_REPEAT) {
+                Rect cordsTmp;
+                cordsTmp.SetPosition(start.x, start.y);
+                cordsTmp.SetHeight(imageParam->height);
+                cordsTmp.SetWidth(imageParam->width);
+                DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+        }
+
+
+
+
+    }
+}
+
 
 
 
@@ -882,7 +1013,6 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
     if (imageParam->image == nullptr) {
         return;
     }
-
     Point start;
     GetAbsolutePosition(imageParam->start, rect, style, start);
 
@@ -1298,6 +1428,103 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
         m_graphics->drawPath(BaseGfxExtendEngine::DrawPathFlag::StrokeOnly);
     }
 }
+
+void PolygonImageBlitter::DrawHorSpan(const List<Span>& span, int16_t yCur)
+{
+    if (src_ == nullptr) {
+        return;
+    }
+
+    for (int16_t y = iy_; y < yCur; y++) {
+        DrawHorLine(0, y, src_->header.width * 3, OPA_TRANSPARENT);//透明
+    }
+    int16_t index = 0;
+    auto iter = span.Begin();
+    while (iter != span.End()) {
+        DrawHorLine(index, yCur, iter->data_.left - index, OPA_TRANSPARENT);//透明
+        DrawHorLine(iter->data_.left, yCur, iter->data_.right - iter->data_.left + 1, iter->data_.opa);//图形内
+        index = iter->data_.right + 1;
+        iter = iter->next_;
+    }
+    DrawHorLine(index, yCur, src_->header.width * 3 - index, OPA_TRANSPARENT);//透明
+    iy_ = yCur + 1;
+}
+
+void PolygonImageBlitter::Finish()
+{
+    if (src_ == nullptr) {
+        return;
+    }
+    for (int16_t y = iy_; y < src_->header.height; y++) {
+        DrawHorLine(0, y, src_->header.width*3, OPA_TRANSPARENT);
+    }
+}
+
+void PolygonImageBlitter::DrawPixel(int16_t x, int16_t y, uint8_t opa)
+{
+    if(ImageInfos_.Size()<=0){
+       return ;
+    }
+
+   auto imageinfoss = ImageInfoss_.Begin();
+
+   for(int16_t j = 0; j < ImageInfos_.Size();j++){
+
+       auto imageinfo = imageinfoss->data_;
+       auto imageinfo_x = imageinfo.Begin();
+
+       const ImgInfo* imgInfo= imageinfo_x->data_;
+       const ImageInfo* img = imgInfo->imginfo;
+
+       for(int16_t i = 0 ; i < imageinfo.Size() ;i++){
+
+           if (x < 0 || x > img->header.width*(i+1) - 1 || x < img->header.width * i || y < 0 || y > img->header.height*(j+1) - 1||y < img->header.height*j) {
+               imageinfo_x=imageinfo_x->next_;
+               continue;
+           }
+
+           int32_t offset = img->header.width * (y-(img->header.height*j)) + x- img->header.width * i;
+           switch (img->header.colorMode) {
+               case ARGB8888: {
+                   Color32* buffer = reinterpret_cast<Color32*>(const_cast<uint8_t*>(img->data));
+                   buffer[offset].alpha = buffer[offset].alpha * opa / OPA_OPAQUE;
+                   break;
+               }
+               default: {
+                   GRAPHIC_LOGE("Only images in ARGB8888 format are supported!");
+                   break;
+               }
+           }
+
+           imageinfo_x =imageinfo_x->next_;
+       }
+
+
+
+
+
+
+
+       imageinfoss=imageinfoss->next_;
+   }
+}
+
+void PolygonImageBlitter::DrawHorLine(int16_t x, int16_t y, int16_t width, uint8_t opa)
+{
+    if (width < 0 || opa == OPA_OPAQUE) {
+        return;
+    }
+
+    for (int16_t i = 0; i < width; i++) {
+        DrawPixel(x + i, y, opa);
+    }
+}
+
+
+
+
+
+
 
 
 } // namespace OHOS

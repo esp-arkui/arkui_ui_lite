@@ -1149,65 +1149,62 @@ void UITestCanvas::UIKitCanvasTestcreatePattern1()
            return;
        }
        CreateTitleLabel("pattern-repeat");
-//       UICanvas* canvas = CreateCanvas();
-//       Paint paint;
-//       paint.SetStyle(Paint::PaintStyle::PATTERN);
-//       paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
-//       paint.SetStrokeColor(Color::Green());
-//       paint.SetStrokeWidth(3);
-//       paint.createPattern(RED_IMAGE_PATH,"repeat");
-//       canvas->AddRect({ 0, 0 },CANVAS_HEIGHT*0.5,CANVAS_WIDTH*0.5);
-//       ClipPath path;
-//       path.Circle({70, 50}, 50);
+       UICanvas* canvas = CreateCanvas();
+       Paint paint;
+       paint.SetStyle(Paint::PaintStyle::PATTERN);
+       paint.SetStrokeColor(Color::Green());
+       paint.SetStrokeWidth(3);
+       paint.createPattern(RED_IMAGE_PATH,"repeat");
 
-//       canvas->LineWidth(3,paint);
-//       canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
-//       canvas->fill(paint);
+       PolygonPath polygonPath;
+       polygonPath.Circle({180, 80}, 70);
+//       paint.SetPolygonPath(polygonPath);
 
-//canvas->
+//       canvaspolygonPath = & polygonPath;
+//       canvas->polygonPath_ = & polygonPath;
+       canvas->fill(paint,&polygonPath);
 
-
+//canvas->add();
 
 
 
-
-       UIViewGroup* viewGroup = new UIViewGroup();
-       viewGroup->SetHeight(BLOCK_HEIGHT);
-       viewGroup->SetWidth(BLOCK_WIDTH);
-       viewGroup->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, positionY_);
-       viewGroup->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
-       container_->Add(viewGroup);
-       positionY_ += BLOCK_HEIGHT + GAP;
-
-       UIImageView* imageVIew = new UIImageView();
-       imageVIew->SetPosition(0, 0);
-       imageVIew->SetSrc(RED_IMAGE_PATH);
-       viewGroup->Add(imageVIew);
+//       UIViewGroup* viewGroup = new UIViewGroup();
+//       viewGroup->SetHeight(canvas->GetHeight());
+//       viewGroup->SetWidth(canvas->GetWidth());
+//       viewGroup->SetPosition(canvas->GetStartPosition().x, canvas->GetStartPosition().y);
+//       viewGroup->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
+//       container_->Add(viewGroup);
+//       positionY_ += canvas->GetHeight() + GAP;
 
 
-       UIImageView* imageVIew2 = new UIImageView();
-       imageVIew2->SetPosition(94,0);
-       imageVIew2->SetSrc(RED_IMAGE_PATH);
-       viewGroup->Add(imageVIew2);
 
-       UIImageView* imageVIew3 = new UIImageView();
-       imageVIew3->SetPosition(188,0);
-       imageVIew3->SetSrc(RED_IMAGE_PATH);
-       viewGroup->Add(imageVIew3);
+//       UIImageView* imageVIew = new UIImageView();
+//       imageVIew->SetPosition(0, 0);
+//       imageVIew->SetSrc(RED_IMAGE_PATH);
+//       viewGroup->Add(imageVIew);
 
-       ClipPath path;
-       path.Circle({70, 50}, 30);
 
-       ClipUtils clip;
-       ClipImageBlitter blitter(imageVIew->GetImageInfo());
+//       UIImageView* imageVIew2 = new UIImageView();
+//       imageVIew2->SetPosition(94,0);
+//       imageVIew2->SetSrc(RED_IMAGE_PATH);
+//       viewGroup->Add(imageVIew2);
 
-//       ClipImageBlitter blitter(viewGroup->GetViewType());
-       blitter.SetPattern(true);
-       blitter.SetImageInfo(imageVIew->GetImageInfo());
-       blitter.SetImageInfo(imageVIew2->GetImageInfo());
-       blitter.SetImageInfo(imageVIew3->GetImageInfo());
-       clip.PerformScan(path, blitter);
+//       UIImageView* imageVIew3 = new UIImageView();
+//       imageVIew3->SetPosition(188,0);
+//       imageVIew3->SetSrc(RED_IMAGE_PATH);
+//       viewGroup->Add(imageVIew3);
 
+//       PolygonPath path;
+//       path.Circle({180, 80}, 70);
+
+//       PolygonUtils polygonUtils;
+//       PolygonImageBlitter blitter(imageVIew->GetImageInfo());
+
+//       blitter.SetPattern(true);
+//       blitter.SetImageInfo(imageVIew->GetImageInfo());
+//       blitter.SetImageInfo(imageVIew2->GetImageInfo());
+//       blitter.SetImageInfo(imageVIew3->GetImageInfo());
+//       polygonUtils.PerformScan(path, blitter);
 
 
 
@@ -1241,7 +1238,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern2()
 
 
 
-       canvas->fill(paint);
+//       canvas->fill(paint);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern3()
 {
@@ -1253,7 +1250,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern3()
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
        paint.createPattern(RED_IMAGE_PATH,"repeat-y");
-       canvas->fill(paint);
+//       canvas->fill(paint);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern4()
 {
@@ -1265,7 +1262,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern4()
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
        paint.createPattern(RED_IMAGE_PATH,"no-repeat");
-       canvas->fill(paint);
+//       canvas->fill(paint);
 }
 
 

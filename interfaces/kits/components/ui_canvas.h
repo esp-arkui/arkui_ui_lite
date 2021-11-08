@@ -52,6 +52,13 @@ namespace OHOS {
  * @version 1.0
  */
 
+
+
+class PolygonPath : public ClipPath{
+
+};
+
+
 class Paint : public HeapBase {
 public:
     /**
@@ -116,6 +123,7 @@ public:
            radialGradientPoint=paint.radialGradientPoint;
            isMemAlloc = paint.isMemAlloc;
            patternRepeat = paint.patternRepeat;
+           polygonPath = paint.polygonPath;
 
     }
     const Paint& operator = (const Paint& paint)
@@ -207,6 +215,7 @@ public:
          Linear,
          Radial
      }gradientfalg;
+
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -864,8 +873,7 @@ public:
         paint.SetStrokeWidth(lineWidth);
     }
 
-
-    void fill(const Paint& paint);
+    void fill(const Paint& paint,const PolygonPath * polygonPath);
 
 protected:
     bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
@@ -908,6 +916,8 @@ protected:
         uint16_t height;
         uint16_t width;
         Image* image;
+        const PolygonPath* polygonPath;
+
     };
 
     enum PathCmd {
@@ -1088,8 +1098,54 @@ protected:
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
 
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
+    static void FillImage2(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
 
+};
+
+class PolygonUtils : public ClipUtils{
+
+
+};
+
+class PolygonImageBlitter : public Blitter {
+public:
+    explicit PolygonImageBlitter(const ImageInfo* src) : src_(src) {}
+    virtual ~PolygonImageBlitter() {}
+
+    void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
+    void Finish() override;
+
+
+    struct ImgInfo{
+        const ImageInfo* imginfo;
+        const Rect * cordsTmp;
+    }ImageInfo_;
+
+
+    List<ImgInfo*> ImageInfos_;
+
+    void SetPattern(bool flag){
+        flag_ = flag;
+    }
+    void SetImageInfo(const ImageInfo* src,const Rect * cordsTmp){
+          ImageInfo_.imginfo = src;
+          ImageInfo_.cordsTmp = cordsTmp;
+        ImageInfos_.PushBack(&ImageInfo_);
+    }
+    void SetImageInfoss(List<ImgInfo*> ImageInfos){;
+        ImageInfoss_.PushBack(ImageInfos);
+    }
+
+private:
+    void DrawPixel(int16_t x, int16_t y, uint8_t opa);
+    void DrawHorLine(int16_t x, int16_t y, int16_t width, uint8_t opa);
+
+    const ImageInfo* src_ = nullptr;
+    int16_t iy_ = 0;
+    bool flag_ = false;
+    List<List<ImgInfo*>> ImageInfoss_;
+//    ImageInfo ImageInfoArr_ [10][10] ;
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

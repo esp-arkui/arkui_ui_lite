@@ -18,7 +18,6 @@
 #include <cmath>
 #include "draw_utils.h"
 #include "gfx_utils/graphic_log.h"
-#include <components/ui_image_view.h>
 
 namespace OHOS {
 namespace {
@@ -313,64 +312,28 @@ void ClipImageBlitter::Finish()
     if (src_ == nullptr) {
         return;
     }
-if(!flag_){
+
     for (int16_t y = iy_; y < src_->header.height; y++) {
         DrawHorLine(0, y, src_->header.width, OPA_TRANSPARENT);
     }
 }
-}
 
 void ClipImageBlitter::DrawPixel(int16_t x, int16_t y, uint8_t opa)
 {
-    if(flag_){
-        if(ImageInfos_.Size()<=0){
-           return ;
+    if (x < 0 || x > src_->header.width - 1 || y < 0 || y > src_->header.height - 1) {
+        return;
+    }
+
+    int32_t offset = src_->header.width * y + x;
+    switch (src_->header.colorMode) {
+        case ARGB8888: {
+            Color32* buffer = reinterpret_cast<Color32*>(const_cast<uint8_t*>(src_->data));
+            buffer[offset].alpha = buffer[offset].alpha * opa / OPA_OPAQUE;
+            break;
         }
-
-       auto imageinfo = ImageInfos_.Begin();
-
-       for(int16_t i = 0;i<ImageInfos_.Size();i++){
-
-          const ImageInfo* img= imageinfo->data_;
-           if (x < 0 || x > img->header.width*(i+1) - 1 || x < img->header.width * i || y < 0 || y > img->header.height - 1) {
-               continue;
-           }
-
-           if(x>98){
-        int16_t j = x;
-           }
-
-           int32_t offset = img->header.width * y + x;
-           switch (img->header.colorMode) {
-               case ARGB8888: {
-                   Color32* buffer = reinterpret_cast<Color32*>(const_cast<uint8_t*>(img->data));
-                   buffer[offset].alpha = buffer[offset].alpha * opa / OPA_OPAQUE;
-                   break;
-               }
-               default: {
-                   GRAPHIC_LOGE("Only images in ARGB8888 format are supported!");
-                   break;
-               }
-           }
-
-           imageinfo=imageinfo->next_;
-       }
-    }else{
-        if (x < 0 || x > src_->header.width - 1 || y < 0 || y > src_->header.height - 1) {
-            return;
-        }
-
-        int32_t offset = src_->header.width * y + x;
-        switch (src_->header.colorMode) {
-            case ARGB8888: {
-                Color32* buffer = reinterpret_cast<Color32*>(const_cast<uint8_t*>(src_->data));
-                buffer[offset].alpha = buffer[offset].alpha * opa / OPA_OPAQUE;
-                break;
-            }
-            default: {
-                GRAPHIC_LOGE("Only images in ARGB8888 format are supported!");
-                break;
-            }
+        default: {
+            GRAPHIC_LOGE("Only images in ARGB8888 format are supported!");
+            break;
         }
     }
 }
