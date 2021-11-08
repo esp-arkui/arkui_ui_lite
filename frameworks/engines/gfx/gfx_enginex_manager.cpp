@@ -632,13 +632,15 @@ void BaseGfxExtendEngine::fillLinearGradient(double start_x, double start_y,doub
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::lineWidth(double w)
 {
+    if(w < 0.0) {
+        w = abs(w);
+    }
     m_lineWidth = w;
     if(!this->is_dash) {
-       m_convStroke.width(w);
+        m_convStroke.width(w);
     } else {
         m_convDashStroke.width(w);
     }
-
 }
 
 
