@@ -154,6 +154,7 @@ namespace {
 static constexpr uint8_t OPACITY_STEP_A1 = 255;
 static constexpr uint8_t OPACITY_STEP_A2 = 85;
 static constexpr uint8_t OPACITY_STEP_A4 = 17;
+static constexpr uint8_t FILL_RECT_SIZE_CPU = 25;
 } // namespace
 
 TriangleEdge::TriangleEdge(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
@@ -204,7 +205,12 @@ void DrawUtils::DrawColorArea(BufferInfo& gfxDstBuffer,
         return;
     }
 
-    BaseGfxEngine::GetInstance()->Fill(gfxDstBuffer, maskedArea, color, opa);
+    // using CPU to fill rect if size smaller than FILL_RECT_SIZE_CPU
+    if (maskedArea.GetSize() < FILL_RECT_SIZE_CPU) {
+        DrawUtils::GetInstance()->FillAreaWithSoftWare(gfxDstBuffer, maskedArea, color, opa);
+    } else {
+        BaseGfxEngine::GetInstance()->Fill(gfxDstBuffer, maskedArea, color, opa);
+    }
 }
 
 uint8_t DrawUtils::GetPxSizeByColorMode(uint8_t colorMode)
