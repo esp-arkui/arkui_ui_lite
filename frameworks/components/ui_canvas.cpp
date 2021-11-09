@@ -514,13 +514,13 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 
     if (trunc.Intersect(trunc, coords)) {
 
-        int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
-        int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
+        int16_t realLeft = trunc.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
+        int16_t realTop = trunc.GetTop() + style_->paddingTop_ + style_->borderWidth_;
         int16_t paddingRight=style_->paddingRight_ + style_->borderWidth_;
         int16_t paddingBottom=style_->paddingBottom_ + style_->borderWidth_;
 
-        int16_t realRight = rect.GetRight() - paddingRight;
-        int16_t realBottom = rect.GetBottom() - paddingBottom;
+        int16_t realRight = trunc.GetRight() - paddingRight;
+        int16_t realBottom = trunc.GetBottom() - paddingBottom;
         Rect worldRec(realLeft,realTop,realRight,realBottom),
                 screenRect(0,0,invalidatedArea.GetWidth()-paddingRight - 1,
                            invalidatedArea.GetHeight()-paddingBottom - 1);
@@ -531,7 +531,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 //                     +paddingRight,MATH_ABS(coords.GetBottom()-trunc.GetBottom())
 //                     +paddingBottom);
 
-        InitDrawEnvironment(rect,worldRec,screenRect,curDraw->data_.paint);
+        InitDrawEnvironment(trunc,worldRec,screenRect,curDraw->data_.paint);
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
