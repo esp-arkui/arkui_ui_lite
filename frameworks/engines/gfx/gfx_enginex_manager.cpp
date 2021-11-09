@@ -629,6 +629,26 @@ void BaseGfxExtendEngine::fillLinearGradient(double start_x, double start_y,doub
     m_fillColor = Color(0,0,0);  // Set some real color
 }
 
+void BaseGfxExtendEngine::fillRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3)
+{
+    int i;
+    for (i = 0; i < 128; i++)
+    {
+        m_fillGradient[i] = c1.gradient(c2, double(i) / 127.0);
+    }
+    for (; i < 256; i++)
+    {
+        m_fillGradient[i] = c2.gradient(c3, double(i - 128) / 127.0);
+    }
+    m_fillGradientD2 = worldToScreen(r);
+    worldToScreen(x, y);
+    m_fillGradientMatrix.reset();
+    m_fillGradientMatrix *= agg::trans_affine_translation(x, y);
+    m_fillGradientMatrix.invert();
+    m_fillGradientD1 = 0;
+    m_fillGradientFlag = Radial;
+    m_fillColor = Color(0,0,0);  // Set some real color
+}
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::lineWidth(double w)
 {

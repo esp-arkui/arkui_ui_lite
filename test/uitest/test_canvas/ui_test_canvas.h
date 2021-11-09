@@ -30,6 +30,7 @@ public:
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
+    void UIKitCanvasTestComposite001();
     void UIKitCanvasTestGlobalAlpha001();
     void UIKitCanvasTestDrawDashLine001();
     void UIKitCanvasTestDrawLine001();

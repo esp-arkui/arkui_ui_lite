@@ -308,8 +308,6 @@ public:
     void fillLinearGradientAndStop(double x1, double y1, double x2, double y2);
 
 
-
-
     /**
      * @brief fillRadialGradient 根据开始圆和结束圆控制放射渐变。
      * @param start_x 开始圆圆心坐标x
@@ -323,6 +321,7 @@ public:
 
     void fillLinearGradient(double start_x, double start_y,double end_x, double end_y);
 
+    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
 
 
     void lineWidth(double w);
@@ -503,6 +502,9 @@ public:
     void SetLineDash(const float* dashArray, unsigned int ndash)
     {
         ClearLineDash();
+        if(dashArray == nullptr || ndash == 0) {
+            return;
+        }
         is_dash = true;
         //dDashOffset = dashOffset;
         ndashes = (ndash+1)&~1;
@@ -521,17 +523,6 @@ public:
         }
     }
 
-    void ClearLineDash(void)
-    {
-        dDashOffset = 0;
-        ndashes = 0;
-        is_dash = false;
-        if (dashes) {
-            delete [] dashes;
-            dashes = NULL;
-        }
-    }
-
     bool IsLineDash() const
     {
         return is_dash;
@@ -546,12 +537,39 @@ public:
     {
         return ndashes;
     }
+    agg::rendering_buffer GetRenderBuffer() const
+    {
+        return m_rbuf;
+    }
+    void blend_from(const BaseGfxExtendEngine& baseGfxExtendEngine,int dx = 0,
+                    int dy = 0)
+    {
+        if(m_blendMode == BlendAlpha)
+        {
+            m_renBase.blend_from(m_pixFormat,0,dx,dy);
+        }
+        else
+        {
+            m_renBaseComp.blend_from(m_pixFormatComp,0,dx,dy);
+        }
+        this->render(false);
+    }
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
     void updateRasterizerGamma();
     void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
 
+    void ClearLineDash(void)
+    {
+        dDashOffset = 0;
+        ndashes = 0;
+        is_dash = false;
+        if (dashes) {
+            delete [] dashes;
+            dashes = NULL;
+        }
+    }
     agg::rendering_buffer           m_rbuf;
     PixFormat                       m_pixFormat;
     PixFormatComp                   m_pixFormatComp;
