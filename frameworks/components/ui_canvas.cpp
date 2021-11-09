@@ -514,13 +514,13 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 
     if (trunc.Intersect(trunc, coords)) {
 
-        int16_t realLeft = invalidatedArea.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
-        int16_t realTop = invalidatedArea.GetTop() + style_->paddingTop_ + style_->borderWidth_;
+        int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
+        int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
         int16_t paddingRight=style_->paddingRight_ + style_->borderWidth_;
         int16_t paddingBottom=style_->paddingBottom_ + style_->borderWidth_;
 
-        int16_t realRight = invalidatedArea.GetRight() - paddingRight;
-        int16_t realBottom = invalidatedArea.GetBottom() - paddingBottom;
+        int16_t realRight = rect.GetRight() - paddingRight;
+        int16_t realBottom = rect.GetBottom() - paddingBottom;
         Rect worldRec(realLeft,realTop,realRight,realBottom),
                 screenRect(0,0,invalidatedArea.GetWidth()-paddingRight - 1,
                            invalidatedArea.GetHeight()-paddingBottom - 1);
@@ -531,7 +531,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 //                     +paddingRight,MATH_ABS(coords.GetBottom()-trunc.GetBottom())
 //                     +paddingBottom);
 
-        InitDrawEnvironment(invalidatedArea,worldRec,screenRect,curDraw->data_.paint);
+        InitDrawEnvironment(rect,worldRec,screenRect,curDraw->data_.paint);
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
@@ -920,15 +920,15 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
 //        mmgraphics.attach(m_buf_img.get(), m_graphics->GetRenderBuffer().width(),
 //                m_graphics->GetRenderBuffer().height(),m_graphics->GetRenderBuffer().width()*destByteSize);
 
-////        m_graphics->clearAll(agg::srgba8(0,0,0,0));
-////        m_graphics->noLine();
-////        m_graphics->fillColor(255, 0, 0,255);
-////        m_graphics->blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
-////        m_graphics->ellipse(arcInfo.center.x+55,arcInfo.center.y+5, 30, 40);
+//        m_graphics->clearAll(agg::srgba8(0,0,0,0));
+//        m_graphics->noLine();
+//        m_graphics->fillColor(255, 0, 0,255);
+//        m_graphics->blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
+//        m_graphics->ellipse(arcInfo.center.x+55,arcInfo.center.y+5, 30, 40);
 
-////        m_graphics->blendMode(BaseGfxExtendEngine::BlendMode::BlendDstOver);//---显示蓝色
-////        m_graphics->fillColor(0, 0, 255,255);
-////        m_graphics->ellipse(arcInfo.center.x+70,arcInfo.center.y+20, 30, 50);
+//        m_graphics->blendMode(BaseGfxExtendEngine::BlendMode::BlendDstOver);
+//        m_graphics->fillColor(0, 0, 255,255);
+//        m_graphics->ellipse(arcInfo.center.x+70,arcInfo.center.y+20, 30, 50);
 
 //        mmgraphics.clearAll(agg::srgba8(0,0,0,0));//这个地方非常重要。。。
 //        mmgraphics.noLine();
