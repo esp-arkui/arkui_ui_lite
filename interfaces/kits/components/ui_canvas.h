@@ -830,8 +830,6 @@ public:
     }
 
 protected:
-    bool InitDrawEnvironment(const Rect& fillArea,const Rect &worldRect,
-                             const Rect &screenRect,const Paint& paint);
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
@@ -1044,8 +1042,6 @@ protected:
                                const Paint& paint);
 
     static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
-//    static void fillRadialGradient(BaseGfxExtendEngine & m_graphics,Paint::RadialGradientPoint & radialGradientPoint);
-
 
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
 
