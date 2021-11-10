@@ -64,7 +64,8 @@ public:
           lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
           lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
           miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
-          dashArray(nullptr),ndashes(0),globalAlpha(1.0f)
+          dashArray(nullptr),ndashes(0),isMemAlloc(false),
+          globalAlpha(1.0f)
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
     }
@@ -87,6 +88,7 @@ public:
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
         ndashes = (paint.ndashes+1)&~1;
+        isMemAlloc = paint.isMemAlloc;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
@@ -94,6 +96,7 @@ public:
                 for (unsigned int i = 0; i < ndashes; i++) {
                     dashArray[i] = paint.dashArray[i];
                 }
+                isMemAlloc = true;
             } else {
                 //memory alloc error, ignore this dash
                 //I think it is never happen.
@@ -112,7 +115,7 @@ public:
     }
     const Paint& operator = (const Paint& paint)
     {
-        if (dashArray!=nullptr) {
+        if (dashArray!=nullptr && isMemAlloc) {
             delete [] dashArray;
             dashArray = nullptr;
         }
@@ -126,7 +129,7 @@ public:
      * @version 1.0
      */
     virtual ~Paint() {
-        if (dashArray!=nullptr) {
+        if (dashArray!=nullptr && isMemAlloc) {
             delete [] dashArray;
             dashArray = nullptr;
         }
@@ -421,21 +424,11 @@ public:
             ClearLineDash();
             return;
         }
+
         ndashes = ndash;
         isDrawDash = true;
-        dashArray = new float[ndashes];
-        if (dashArray) {
-            memset(dashArray, 0, ndashes * sizeof(float));
-            for (unsigned int i = 0; i < ndashes; i++) {
-                dashArray[i] = lineDashs[i];
-            }
-        } else {
-            //memory alloc error, ignore this dash
-            //I think it is never happen.
-            ndashes = 0;
-            dashOffset = 0;
-            isDrawDash = false;
-        }
+        dashArray = lineDashs;
+        isMemAlloc = false;
     }
 
     void ClearLineDash(void)
@@ -443,10 +436,7 @@ public:
         dashOffset = 0;
         ndashes = 0;
         isDrawDash = false;
-        if (dashArray!=nullptr) {
-            delete [] dashArray;
-            dashArray = nullptr;
-        }
+        dashArray = nullptr;
     }
 
     bool IsLineDash() const
@@ -491,6 +481,7 @@ private:
     float* dashArray;
     unsigned int ndashes;
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
+    bool isMemAlloc;
     float globalAlpha;
 };
 

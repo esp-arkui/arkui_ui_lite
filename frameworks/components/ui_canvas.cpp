@@ -510,40 +510,19 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     Rect coords = GetOrigRect();
     Rect trunc = invalidatedArea;
     if (trunc.Intersect(trunc, coords)) {
-        int16_t posLeft= trunc.GetLeft();// + style_->paddingLeft_ + style_->borderWidth_;
-        int16_t posTop= trunc.GetTop();// + style_->paddingTop_ + style_->borderWidth_;
-
-        uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-        if (gfxDstBuffer.virAddr == nullptr) {
-                return;
-        }
-
-        ColorMode mode = gfxDstBuffer.mode;
-        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
-        int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
-                posLeft;
-        destBuf += offset * destByteSize;
-        BaseGfxExtendEngine* m_graphics = curDraw->data_.paint.GetDrawGraphicsContext();
-        m_graphics->attach(destBuf,trunc.GetWidth(),
-                           trunc.GetHeight(),gfxDstBuffer.stride);
-        //绘制背景可以不绘制...
-        //m_graphics->clearAll(128, 128, 128);
-        //2..这个地方的viewport也是尤其要注意的..映射的处理的..
         int16_t posViewLeft=rect.GetX()-trunc.GetX();
         int16_t posViewTop=rect.GetY()-trunc.GetY();
         int16_t realLeft=rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
         int16_t realTop=rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
-        m_graphics->viewport(realLeft,
-                             realTop,
-                             realLeft+trunc.GetWidth() - 1,
-                             realTop+trunc.GetHeight() - 1,
-                             posViewLeft,
-                             posViewTop,
-                             posViewLeft+trunc.GetWidth() - 1,
-                             posViewTop+trunc.GetHeight() - 1,
-                             BaseGfxExtendEngine::Anisotropic);
+        Rect worldRect(realLeft,realTop,
+                       realLeft+trunc.GetWidth() - 1,
+                       realTop+trunc.GetHeight() - 1);
+        Rect screenRect(posViewLeft,
+                        posViewTop,
+                        posViewLeft+trunc.GetWidth() - 1,
+                        posViewTop+trunc.GetHeight() - 1);
                              //BaseGfxExtendEngine::XMidYMid);
-
+        InitDrawEnvironment(trunc,worldRect,screenRect,curDraw->data_.paint);
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             param = curDraw->data_.param;
