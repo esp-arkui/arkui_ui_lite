@@ -417,8 +417,8 @@ public:
             GRAPHIC_LOGE("SetLineDash fail,because ndash < =0");
             return;
         }
+        ClearLineDash();
         if(lineDashs==nullptr || ndash==0) {
-            ClearLineDash();
             return;
         }
         ndashes = ndash;
