@@ -511,9 +511,6 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     Rect trunc = invalidatedArea;
     if (trunc.Intersect(trunc, coords)) {
 
-        //绘制背景可以不绘制...
-        //m_graphics->clearAll(128, 128, 128);
-        //2..这个地方的viewport也是尤其要注意的..映射的处理的..
         int16_t posViewLeft=rect.GetX()-trunc.GetX();
         int16_t posViewTop=rect.GetY()-trunc.GetY();
         int16_t realLeft=rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
