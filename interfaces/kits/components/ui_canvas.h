@@ -1047,6 +1047,8 @@ protected:
 
 
 
+private:
+    bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer, const Rect &fillArea, const Rect &worldRect, const Rect &screenRect, const Paint &paint);
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

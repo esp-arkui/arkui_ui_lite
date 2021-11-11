@@ -510,22 +510,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     Rect coords = GetOrigRect();
     Rect trunc = invalidatedArea;
     if (trunc.Intersect(trunc, coords)) {
-        int16_t posLeft= trunc.GetLeft();// + style_->paddingLeft_ + style_->borderWidth_;
-        int16_t posTop= trunc.GetTop();// + style_->paddingTop_ + style_->borderWidth_;
 
-        uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-        if (gfxDstBuffer.virAddr == nullptr) {
-                return;
-        }
-
-        ColorMode mode = gfxDstBuffer.mode;
-        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
-        int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
-                posLeft;
-        destBuf += offset * destByteSize;
-        BaseGfxExtendEngine* m_graphics = curDraw->data_.paint.GetDrawGraphicsContext();
-        m_graphics->attach(destBuf,trunc.GetWidth(),
-                           trunc.GetHeight(),gfxDstBuffer.stride);
         //绘制背景可以不绘制...
         //m_graphics->clearAll(128, 128, 128);
         //2..这个地方的viewport也是尤其要注意的..映射的处理的..
@@ -533,16 +518,15 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         int16_t posViewTop=rect.GetY()-trunc.GetY();
         int16_t realLeft=rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
         int16_t realTop=rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
-        m_graphics->viewport(realLeft,
-                             realTop,
-                             realLeft+trunc.GetWidth() - 1,
-                             realTop+trunc.GetHeight() - 1,
-                             posViewLeft,
-                             posViewTop,
-                             posViewLeft+trunc.GetWidth() - 1,
-                             posViewTop+trunc.GetHeight() - 1,
-                             BaseGfxExtendEngine::Anisotropic);
-                             //BaseGfxExtendEngine::XMidYMid);
+        InitDrawEnvironment(gfxDstBuffer,trunc,
+                            Rect(realLeft,
+                                 realTop,
+                                 realLeft+trunc.GetWidth() - 1,
+                                 realTop+trunc.GetHeight() - 1),
+                            Rect(posViewLeft,
+                                 posViewTop,
+                                 posViewLeft+trunc.GetWidth() - 1,
+                                 posViewTop+trunc.GetHeight() - 1),curDraw->data_.paint);
 
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -550,6 +534,40 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
             curDraw->data_.DrawGraphics(gfxDstBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
         }
     }
+}
+
+
+bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const Rect& fillArea,const Rect &worldRect,
+                                   const Rect &screenRect,const Paint& paint)
+{
+
+    BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+    if(m_graphics==nullptr) {
+        return false;
+    }
+
+    int16_t posLeft= fillArea.GetLeft();// + style_->paddingLeft_ + style_->borderWidth_;
+    int16_t posTop= fillArea.GetTop();// + style_->paddingTop_ + style_->borderWidth_;
+
+    uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+    if (gfxDstBuffer.virAddr == nullptr) {
+        return false;
+    }
+
+    ColorMode mode = gfxDstBuffer.mode;
+    uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
+    int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
+            posLeft;
+    destBuf += offset * destByteSize;
+    m_graphics->attach(destBuf,fillArea.GetWidth(),
+                       fillArea.GetHeight(),gfxDstBuffer.stride);
+
+    m_graphics->viewport(worldRect.GetLeft(),worldRect.GetTop(),worldRect.GetRight(),worldRect.GetBottom(),
+                         screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
+                         BaseGfxExtendEngine::Anisotropic);
+                         //BaseGfxExtendEngine::XMidYMid);
+    return true;
+
 }
 
 void UICanvas::SetLineDash(float *dashArray, unsigned int ndash,Paint& paint)
