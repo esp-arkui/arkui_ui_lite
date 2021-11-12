@@ -93,6 +93,7 @@ BaseGfxExtendEngine::BaseGfxExtendEngine() :
     m_pathTransform(m_convCurve, m_transform),
     m_strokeTransform(m_convStroke, m_transform),
     m_dashStrokeTransform(m_convDashStroke,m_transform),
+    m_shadow_ctrl(4),
     is_dash(false),
     dashes(nullptr),
     ndashes(0),
@@ -117,7 +118,8 @@ BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine &o)
       m_convDashStroke(m_convDashCurve),
       m_pathTransform(m_convCurve, m_transform),
       m_strokeTransform(m_convStroke, m_transform),
-      m_dashStrokeTransform(m_convDashStroke,m_transform)
+      m_dashStrokeTransform(m_convDashStroke,m_transform),
+      m_shadow_ctrl(4)
 {
     m_rbuf=o.m_rbuf;
     m_pixFormat=PixFormat(m_rbuf);
@@ -557,7 +559,15 @@ BaseGfxExtendEngine::Color BaseGfxExtendEngine::lineColor() const
 {
     return m_lineColor;
 }
-
+void BaseGfxExtendEngine::fillColor(const OHOS::ColorType& c)
+{
+    fillColor(Color(c.red, c.green, c.blue, c.alpha));
+}
+//------------------------------------------------------------------------
+void BaseGfxExtendEngine::lineColor(const OHOS::ColorType& c)
+{
+    lineColor(Color(c.red, c.green, c.blue, c.alpha));
+}
 //------------------------------------------------------------------------
 
 
@@ -1195,7 +1205,29 @@ void BaseGfxExtendEngine::transformImagePath(const Image& img, const double* par
     renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram);
 }
 
+void BaseGfxExtendEngine::drawShadow()
+{
+    m_rasterizer.reset();
+    agg::trans_affine transform(m_transform);
 
+    PathTransform shadow_trans(m_convCurve, transform);
+    transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
+    m_rasterizer.add_path(shadow_trans);
+    agg::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, m_shadow_ctrl.color());
+    if (m_shadow_ctrl.IsBlur()) {
+        RectD bbox;
+        bounding_rect_single(0, &bbox, shadow_trans);
+        bbox.x1 -= m_shadow_ctrl.GetRadius();
+        bbox.y1 -= m_shadow_ctrl.GetRadius();
+        bbox.x2 += m_shadow_ctrl.GetRadius();
+        bbox.y2 += m_shadow_ctrl.GetRadius();
+        RenderingBuffer m_rbuf_window;
+        PixFormat pixf2(m_rbuf_window);
+        pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
+
+        m_stack_blur.blur(pixf2, agg::uround(m_shadow_ctrl.GetRadius()));
+    }
+}
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
@@ -1206,6 +1238,9 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case FillOnly:
         if (m_fillColor.a)
         {
+            if (m_shadow_ctrl.GetRadius()) {
+                drawShadow();
+            }
             m_rasterizer.add_path(m_pathTransform);
             render(true);
         }
@@ -1230,6 +1265,9 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case FillAndStroke:
         if (m_fillColor.a)
         {
+            if (m_shadow_ctrl.GetRadius()) {
+                drawShadow();
+            }
             m_rasterizer.add_path(m_pathTransform);
             render(true);
         }
@@ -1671,6 +1709,11 @@ void BaseGfxExtendEngine::Image::demultiply()
 {
     PixFormat pixf(renBuf);
     pixf.demultiply();
+}
+
+bool BaseGfxExtendEngine::bounding_rect_single(unsigned int path_id, RectD* rect, PathTransform& path)
+{
+    agg::bounding_rect_single(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);
 }
 
 }

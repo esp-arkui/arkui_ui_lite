@@ -36,6 +36,7 @@ public:
     void UIKitCanvasTestDrawLine001();
     void UIKitCanvasTestDrawLine002();
     void UIKitCanvasTestLineJoin001();
+     void UIKitCanvasTestDrawShadow001();
     void UIKitCanvasTestDrawCurve001();
     void UIKitCanvasTestDrawCurve002();
     void UIKitCanvasTestDrawRect001();

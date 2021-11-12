@@ -86,6 +86,10 @@ public:
         globalAlpha=paint.globalAlpha;
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
+        shadowColor=paint.shadowColor;
+        shadowOffsetX=paint.shadowOffsetX;
+        shadowOffsetY=paint.shadowOffsetY;
+        shadowBlurRadius=paint.shadowBlurRadius;
         ndashes = (paint.ndashes+1)&~1;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
@@ -473,7 +477,38 @@ public:
     {
         return globalAlpha;
     }
-
+    double GetShadowBlurRadius() const
+    {
+        return shadowBlurRadius;
+    }
+    void SetShadowBlurRadius(double radius)
+    {
+        shadowBlurRadius=radius;
+    }
+    double GetShadowOffsetX() const
+    {
+        return shadowOffsetX;
+    }
+    void SetShadowOffsetX(double offset)
+    {
+        shadowOffsetX = offset;
+    }
+    double GetShadowOffsetY() const
+    {
+        return shadowOffsetY;
+    }
+    void SetShadowOffsetY(double offset)
+    {
+        shadowOffsetY = offset;
+    }
+    ColorType GetShadowColor() const
+    {
+        return shadowColor;
+    }
+    void SetShadowColor(ColorType color)
+    {
+        shadowColor = color;
+    }
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -492,6 +527,10 @@ private:
     unsigned int ndashes;
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
     float globalAlpha;
+    double shadowBlurRadius;
+    double shadowOffsetX;
+    double shadowOffsetY;
+    ColorType shadowColor;
 };
 
 /**
@@ -1041,6 +1080,12 @@ protected:
                             const Rect& invalidatedArea,
                             const Style& style);
     static void DoDrawPath(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style);
+    static void DoFillPath(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
                            const Rect& rect,

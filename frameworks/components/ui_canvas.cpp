@@ -480,7 +480,6 @@ void UICanvas::DrawPath(const Paint& paint)
     if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
         return;
     }
-
     path_->strokeCount_++;
     PathParam* param = new PathParam;
     if (param == nullptr) {
@@ -490,12 +489,25 @@ void UICanvas::DrawPath(const Paint& paint)
     param->path = path_;
     param->count = path_->cmd_.Size();
 
-    DrawCmd cmd;
-    cmd.paint = paint;
-    cmd.param = param;
-    cmd.DeleteParam = DeletePathParam;
-    cmd.DrawGraphics = DoDrawPath;
-    drawCmdList_.PushBack(cmd);
+
+    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
+        DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = param;
+        cmd.DeleteParam = DeletePathParam;
+        cmd.DrawGraphics = DoDrawPath;
+        drawCmdList_.PushBack(cmd);
+       }
+
+   if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
+       DrawCmd cmd;
+       cmd.paint = paint;
+       cmd.param = param;
+       cmd.DeleteParam = DeletePathParam;
+       cmd.DrawGraphics = DoFillPath;
+       drawCmdList_.PushBack(cmd);
+   }
+
     Invalidate();
 }
 
@@ -1180,6 +1192,149 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
         m_graphics->drawPath(BaseGfxExtendEngine::DrawPathFlag::StrokeOnly);
     }
 }
+void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
+                          void* param,
+                          const Paint& paint,
+                          const Rect& rect,
+                          const Rect& invalidatedArea,
+                          const Style& style)
+{
+    if (param == nullptr) {
+        return;
+    }
+    PathParam* pathParam = static_cast<PathParam*>(param);
+    const UICanvasPath* path = pathParam->path;
+    if (path == nullptr) {
+        return;
+    }
+    BaseGfxExtendEngine* m_graphics=
+        paint.GetDrawGraphicsContext();
+    if(m_graphics==nullptr) {
+        return;
+    }
+    Point pathEnd = {COORD_MIN, COORD_MIN};
 
+    ListNode<Point>* pointIter = path->points_.Begin();
+    ListNode<ArcParam>* arcIter = path->arcParam_.Begin();
+    ListNode<PathCmd>* iter = path->cmd_.Begin();
+    bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JoinNone);
+    bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CapNone);
+
+    if(!isLineJoin || !isLineCap) {
+        m_graphics->lineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
+                              paint.GetStrokeColor().blue,paint.GetStrokeColor().alpha);
+        m_graphics->lineWidth(paint.GetStrokeWidth());
+        m_graphics->lineCap(paint.GetLineCap());
+        m_graphics->lineJoin(paint.GetLineJoin());
+        if(paint.GetLineJoin()==BaseGfxExtendEngine::JoinMiter) {
+            m_graphics->MiterLimit(paint.GetMiterLimit());
+        }
+//        m_graphics->noFill();
+    }
+    if (paint.GetFillColor().alpha) {
+        m_graphics->fillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
+                              paint.GetFillColor().alpha);
+    }
+    m_graphics->resetPath();
+    for (uint16_t i = 0; (i < pathParam->count) && (iter != path->cmd_.End()); i++, iter = iter->next_) {
+        switch (iter->data_) {
+        case CMD_MOVE_TO: {
+            Point start;
+            GetAbsolutePosition(pointIter->data_, rect, style, start);
+            if(!isLineJoin || !isLineCap) {
+                m_graphics->moveTo(start.x,start.y);
+            }
+            pointIter = pointIter->next_;
+            break;
+        }
+        case CMD_LINE_TO: {
+            Point start = pointIter->prev_->data_;
+            Point end = pointIter->data_;
+            pointIter = pointIter->next_;
+            if ((start.x == end.x) && (start.y == end.y)) {
+                break;
+            }
+
+            GetAbsolutePosition(start, rect, style, start);
+            GetAbsolutePosition(end, rect, style, end);
+            if(isLineJoin&&isLineCap) {
+                BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
+                                                       paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+                if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
+                    DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
+                }
+            } else {
+                m_graphics->lineTo(end.x,end.y);
+            }
+            pathEnd = end;
+            break;
+        }
+        case CMD_ARC: {
+            ArcInfo arcInfo = {{0}};
+            arcInfo.imgPos = Point{0, 0};
+            arcInfo.startAngle = arcIter->data_.startAngle;
+            arcInfo.endAngle = arcIter->data_.endAngle;
+            Style drawStyle = StyleDefault::GetDefaultStyle();
+            drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
+            drawStyle.lineColor_ = paint.GetStrokeColor();
+            drawStyle.lineOpa_ = OPA_OPAQUE;
+            arcInfo.radius = arcIter->data_.radius + ((paint.GetStrokeWidth() + 1) >> 1);
+
+            GetAbsolutePosition(arcIter->data_.center, rect, style, arcInfo.center);
+            if(isLineJoin&&isLineCap) {
+                BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+                                                      CapType::CAP_NONE);
+                if (pointIter != path->points_.Begin()) {
+                    DoDrawLineJoin(gfxDstBuffer, pathEnd, invalidatedArea, paint);
+                }
+            } else {
+                m_graphics->arcTo(arcInfo.radius,arcInfo.radius,
+                                   BaseGfxExtendEngine::deg2Rad(arcInfo.endAngle-arcInfo.startAngle),
+                                   0, 1,arcInfo.center.x,arcInfo.center.y);
+            }
+            GetAbsolutePosition(pointIter->data_, rect, style, pathEnd);
+
+            pointIter = pointIter->next_;
+            arcIter = arcIter->next_;
+            break;
+        }
+        case CMD_CLOSE: {
+            Point start = pointIter->prev_->data_;
+            Point end = pointIter->data_;
+            GetAbsolutePosition(start, rect, style, start);
+            GetAbsolutePosition(end, rect, style, end);
+            if(!isLineJoin || !isLineCap) {
+                m_graphics->lineTo(end.x,end.y);
+            } else {
+                if ((start.x != end.x) || (start.y != end.y)) {
+                    BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
+                                                           paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+                    if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
+                        DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
+                    }
+                    pathEnd = end;
+                }
+
+                if ((pathEnd.x == end.x) && (pathEnd.y == end.y)) {
+                    DoDrawLineJoin(gfxDstBuffer, end, invalidatedArea, paint);
+                }
+            }
+            m_graphics->closePolygon();
+            pointIter = pointIter->next_;
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                       paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        }
+    m_graphics->drawPath(BaseGfxExtendEngine::FillOnly);
+
+}
 
 } // namespace OHOS

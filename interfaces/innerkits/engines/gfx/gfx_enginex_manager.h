@@ -47,9 +47,9 @@
 #include "graphics/include/agg_image_accessors.h"
 #include "gfx_engine_manager.h"
 #include "graphics/include/agg_gradient_lut.h"
-
-
-
+#include "graphics/include/agg_blur.h"
+#include "graphics/include/ctrl/agg_polygon_ctrl.h"
+#include "graphics/include/agg_bounding_rect.h"
 namespace OHOS {
 class BaseGfxExtendEngine : public BaseGfxEngine
 {
@@ -98,7 +98,10 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef agg::conv_transform<ConvStroke>       StrokeTransform;
 
     typedef agg::conv_transform<ConvDashStroke>   DashStrokeTransform;
-
+    typedef agg::shadow_ctrl<ColorType> ShadowCtrl;
+    typedef agg::stack_blur<ColorType, agg::stack_blur_calc_rgba<>> StackBlur;
+    typedef agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > RecursiveBlur;
+    typedef agg::rendering_buffer RenderingBuffer;
     enum Gradient
     {
         Solid,
@@ -277,10 +280,12 @@ public:
     double antiAliasGamma() const;
 
     void fillColor(Color c);
+    void fillColor(const OHOS::ColorType& c);
     void fillColor(unsigned r, unsigned g, unsigned b, unsigned a = 255);
     void noFill();
 
     void lineColor(Color c);
+    void lineColor(const OHOS::ColorType& c);
     void lineColor(unsigned r, unsigned g, unsigned b, unsigned a = 255);
     void noLine();
 
@@ -423,7 +428,7 @@ public:
 
     void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
     void closePolygon();
-
+    void drawShadow();
     void drawPath(DrawPathFlag flag = FillAndStroke);
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 
@@ -554,6 +559,28 @@ public:
         }
         this->render(false);
     }
+    void SetShadowColor(int r, int g, int b, int a){
+        m_shadow_ctrl.fill_color(Color(r, g, b, a));
+
+    }
+    void SetShadowOffsetX(double x){
+        m_shadow_ctrl.SetOffsetX(x);
+
+    }
+    void SetShadowOffsetY(double y){
+        m_shadow_ctrl.SetOffsetY(y);
+
+    }
+    void SetShadowOffset(double x,double y){
+        m_shadow_ctrl.SetOffsetX(x);
+        m_shadow_ctrl.SetOffsetY(y);
+
+    }
+    void SetShadowBlurRadius(double radius){
+        m_shadow_ctrl.SetRadius(radius);
+        m_shadow_ctrl.SetIsBlur(true);
+    }
+    bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
@@ -644,6 +671,10 @@ private:
     PathTransform                   m_pathTransform;
     StrokeTransform                 m_strokeTransform;
     DashStrokeTransform             m_dashStrokeTransform;
+
+    ShadowCtrl m_shadow_ctrl;
+    StackBlur m_stack_blur;
+    RecursiveBlur m_recursive_blur;
     //dash
     bool is_dash;
     float* dashes;
