@@ -123,7 +123,7 @@ public:
            radialGradientPoint=paint.radialGradientPoint;
            isMemAlloc = paint.isMemAlloc;
            patternRepeat = paint.patternRepeat;
-           polygonPath = paint.polygonPath;
+//           polygonPath = paint.polygonPath;
 
     }
     const Paint& operator = (const Paint& paint)
@@ -158,7 +158,7 @@ public:
         FILL_STYLE,
         /** Stroke and fill */
         STROKE_FILL_STYLE,
-        PATTERN,
+        PATTERN = 7,
     };
 
     /**
@@ -731,6 +731,18 @@ public:
      */
     void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
+
+    /**
+     * @brief Draws an image.
+     *
+     * @param startPoint Indicates the coordinates of the start point.
+     * @param image      Indicates the pointer to the image source.
+     * @param paint      Indicates the image style. For details, see {@link Paint}.
+     * @since 1.0
+     * @version 1.0
+     */
+    void DrawImage(const Point& startPoint, const ImageInfo* image, const Paint& paint);
+
     /**
      * @brief Defines the font style.
      */
@@ -873,6 +885,7 @@ public:
         paint.SetStrokeWidth(lineWidth);
     }
 
+    void fill(const Paint& paint);
     void fill(const Paint& paint,const PolygonPath * polygonPath);
 
 protected:
@@ -916,8 +929,6 @@ protected:
         uint16_t height;
         uint16_t width;
         Image* image;
-        const PolygonPath* polygonPath;
-
     };
 
     enum PathCmd {
@@ -1092,60 +1103,14 @@ protected:
                                const Paint& paint);
 
     static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
-//    static void fillRadialGradient(BaseGfxExtendEngine & m_graphics,Paint::RadialGradientPoint & radialGradientPoint);
-
-
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
-
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
-    static void FillImage2(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
 
 };
 
 class PolygonUtils : public ClipUtils{
-
-
 };
 
-class PolygonImageBlitter : public Blitter {
-public:
-    explicit PolygonImageBlitter(const ImageInfo* src) : src_(src) {}
-    virtual ~PolygonImageBlitter() {}
-
-    void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
-    void Finish() override;
-
-
-    struct ImgInfo{
-        const ImageInfo* imginfo;
-        const Rect * cordsTmp;
-    }ImageInfo_;
-
-
-    List<ImgInfo*> ImageInfos_;
-
-    void SetPattern(bool flag){
-        flag_ = flag;
-    }
-    void SetImageInfo(const ImageInfo* src,const Rect * cordsTmp){
-          ImageInfo_.imginfo = src;
-          ImageInfo_.cordsTmp = cordsTmp;
-        ImageInfos_.PushBack(&ImageInfo_);
-    }
-    void SetImageInfoss(List<ImgInfo*> ImageInfos){;
-        ImageInfoss_.PushBack(ImageInfos);
-    }
-
-private:
-    void DrawPixel(int16_t x, int16_t y, uint8_t opa);
-    void DrawHorLine(int16_t x, int16_t y, int16_t width, uint8_t opa);
-
-    const ImageInfo* src_ = nullptr;
-    int16_t iy_ = 0;
-    bool flag_ = false;
-    List<List<ImgInfo*>> ImageInfoss_;
-//    ImageInfo ImageInfoArr_ [10][10] ;
-};
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

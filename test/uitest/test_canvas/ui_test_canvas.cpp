@@ -53,9 +53,13 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestLinearGradient();//线性渐变水平
 //    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
 //    UIKitCanvasTestRadialGradient();//放射渐变
+    UIKitCanvasTestcreatePattern5();
     UIKitCanvasTestcreatePattern1();
+    UIKitCanvasTestcreatePattern6();
     UIKitCanvasTestcreatePattern2();
+    UIKitCanvasTestcreatePattern7();
     UIKitCanvasTestcreatePattern3();
+    UIKitCanvasTestcreatePattern8();
     UIKitCanvasTestcreatePattern4();
 //    UIKitCanvasTestDrawRect002();
 //    UIKitCanvasTestDrawRect003();
@@ -1145,82 +1149,18 @@ void UITestCanvas::UIKitCanvasTestRadialGradient(){
  */
 void UITestCanvas::UIKitCanvasTestcreatePattern1()
 {
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-repeat");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.SetStrokeColor(Color::Green());
-       paint.SetStrokeWidth(3);
-       paint.createPattern(RED_IMAGE_PATH,"repeat");
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("pattern-重复");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
 
-       PolygonPath polygonPath;
-       polygonPath.Circle({180, 80}, 70);
-//       paint.SetPolygonPath(polygonPath);
-
-//       canvaspolygonPath = & polygonPath;
-//       canvas->polygonPath_ = & polygonPath;
-       canvas->fill(paint,&polygonPath);
-
-//canvas->add();
-
-
-
-//       UIViewGroup* viewGroup = new UIViewGroup();
-//       viewGroup->SetHeight(canvas->GetHeight());
-//       viewGroup->SetWidth(canvas->GetWidth());
-//       viewGroup->SetPosition(canvas->GetStartPosition().x, canvas->GetStartPosition().y);
-//       viewGroup->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
-//       container_->Add(viewGroup);
-//       positionY_ += canvas->GetHeight() + GAP;
-
-
-
-//       UIImageView* imageVIew = new UIImageView();
-//       imageVIew->SetPosition(0, 0);
-//       imageVIew->SetSrc(RED_IMAGE_PATH);
-//       viewGroup->Add(imageVIew);
-
-
-//       UIImageView* imageVIew2 = new UIImageView();
-//       imageVIew2->SetPosition(94,0);
-//       imageVIew2->SetSrc(RED_IMAGE_PATH);
-//       viewGroup->Add(imageVIew2);
-
-//       UIImageView* imageVIew3 = new UIImageView();
-//       imageVIew3->SetPosition(188,0);
-//       imageVIew3->SetSrc(RED_IMAGE_PATH);
-//       viewGroup->Add(imageVIew3);
-
-//       PolygonPath path;
-//       path.Circle({180, 80}, 70);
-
-//       PolygonUtils polygonUtils;
-//       PolygonImageBlitter blitter(imageVIew->GetImageInfo());
-
-//       blitter.SetPattern(true);
-//       blitter.SetImageInfo(imageVIew->GetImageInfo());
-//       blitter.SetImageInfo(imageVIew2->GetImageInfo());
-//       blitter.SetImageInfo(imageVIew3->GetImageInfo());
-//       polygonUtils.PerformScan(path, blitter);
-
-
-
-
-//canvas->DrawPath(paint);
-
-
-//       paint.SetFillColor(Color::Red());
-//       canvas->BeginPath();
-//       canvas->MoveTo({ 50, 100 });
-//       canvas->LineTo({ 150, 80 });
-//       canvas->LineTo({ 75, 40 });
-//       canvas->LineTo({ 10, 90 });
-//       canvas->ClosePath();
-//       canvas->DrawPath(paint);
-
+    paint.createPattern(RED_IMAGE_PATH,"repeat");
+    PolygonPath path;
+    path.Circle({180, 80}, 70);
+    canvas->fill(paint,&path);
 
 }
 
@@ -1229,41 +1169,92 @@ void UITestCanvas::UIKitCanvasTestcreatePattern2()
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("pattern-repeat-x");
+       CreateTitleLabel("pattern-x轴重复");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
 
        paint.createPattern(RED_IMAGE_PATH,"repeat-x");
-
-
-
-//       canvas->fill(paint);
+       PolygonPath path;
+       path.Circle({300, 80}, 70);
+       canvas->fill(paint,&path);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern3()
 {
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("pattern-repeat-y");
+       CreateTitleLabel("pattern-y轴重复");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
        paint.createPattern(RED_IMAGE_PATH,"repeat-y");
-//       canvas->fill(paint);
+       PolygonPath path;
+       path.Circle({80, 80}, 70);
+       canvas->fill(paint,&path);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern4()
 {
        if (container_ == nullptr) {
            return;
        }
-       CreateTitleLabel("pattern-no-repeat");
+       CreateTitleLabel("pattern-不重复");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
        paint.SetStyle(Paint::PaintStyle::PATTERN);
        paint.createPattern(RED_IMAGE_PATH,"no-repeat");
-//       canvas->fill(paint);
+       PolygonPath path;
+       path.Circle({80, 80}, 70);
+       canvas->fill(paint,&path);
 }
+void UITestCanvas::UIKitCanvasTestcreatePattern5()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("pattern-重复");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
 
+    paint.createPattern(RED_IMAGE_PATH,"repeat");
+    canvas->fill(paint);
+}
+void UITestCanvas::UIKitCanvasTestcreatePattern6()
+{
+       if (container_ == nullptr) {
+           return;
+       }
+       CreateTitleLabel("pattern-x轴重复");
+       UICanvas* canvas = CreateCanvas();
+       Paint paint;
+       paint.SetStyle(Paint::PaintStyle::PATTERN);
+       paint.createPattern(RED_IMAGE_PATH,"repeat-x");
+       canvas->fill(paint);
+}
+void UITestCanvas::UIKitCanvasTestcreatePattern7()
+{
+       if (container_ == nullptr) {
+           return;
+       }
+       CreateTitleLabel("pattern-y轴重复");
+       UICanvas* canvas = CreateCanvas();
+       Paint paint;
+       paint.SetStyle(Paint::PaintStyle::PATTERN);
+       paint.createPattern(RED_IMAGE_PATH,"repeat-y");
+       canvas->fill(paint);
+}
+void UITestCanvas::UIKitCanvasTestcreatePattern8()
+{
+       if (container_ == nullptr) {
+           return;
+       }
+       CreateTitleLabel("pattern-不重复");
+       UICanvas* canvas = CreateCanvas();
+       Paint paint;
+       paint.SetStyle(Paint::PaintStyle::PATTERN);
+       paint.createPattern(RED_IMAGE_PATH,"no-repeat");
+       canvas->fill(paint);
+}
 
 } // namespace OHOS

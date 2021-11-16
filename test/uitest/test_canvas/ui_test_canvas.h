@@ -94,6 +94,10 @@ public:
     void UIKitCanvasTestcreatePattern2();
     void UIKitCanvasTestcreatePattern3();
     void UIKitCanvasTestcreatePattern4();
+    void UIKitCanvasTestcreatePattern5();
+    void UIKitCanvasTestcreatePattern6();
+    void UIKitCanvasTestcreatePattern7();
+    void UIKitCanvasTestcreatePattern8();
 
 
 private:
