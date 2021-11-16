@@ -1220,13 +1220,13 @@ void BaseGfxExtendEngine::drawShadow()
     if (m_shadow_ctrl.IsBlur()) {
         RectD bbox;
         bounding_rect_single(0, &bbox, shadow_trans);
-        bbox.x1 -= m_shadow_ctrl.GetRadius();
-        bbox.y1 -= m_shadow_ctrl.GetRadius();
-        bbox.x2 += m_shadow_ctrl.GetRadius();
-        bbox.y2 += m_shadow_ctrl.GetRadius();
-        RenderingBuffer m_rbuf_window;
-        PixFormat pixf2(m_rbuf_window);
-        pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
+        // bbox.x1 -= m_shadow_ctrl.GetRadius();
+        // bbox.y1 -= m_shadow_ctrl.GetRadius();
+        // bbox.x2 += m_shadow_ctrl.GetRadius();
+        // bbox.y2 += m_shadow_ctrl.GetRadius();
+        // RenderingBuffer m_rbuf_window;
+        // PixFormat pixf2(m_rbuf_window);
+        // pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
         // moveTo(bbox.x1,bbox.y1+50);
         // lineTo(bbox.x1+pixf2.width(),bbox.y1+50);
         // lineTo(bbox.x1+pixf2.width(),bbox.y1+50+pixf2.height());
