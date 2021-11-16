@@ -1227,7 +1227,6 @@ void BaseGfxExtendEngine::drawShadow()
         RenderingBuffer m_rbuf_window;
         PixFormat pixf2(m_rbuf_window);
         pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
-        resetPath();
         moveTo(bbox.x1,bbox.y1+50);
         lineTo(bbox.x1+pixf2.width(),bbox.y1+50);
         lineTo(bbox.x1+pixf2.width(),bbox.y1+50+pixf2.height());
