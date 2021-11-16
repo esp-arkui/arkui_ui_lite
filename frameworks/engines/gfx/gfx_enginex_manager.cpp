@@ -1214,8 +1214,8 @@ void BaseGfxExtendEngine::drawShadow()
     // m_transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
     transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
     m_rasterizer.add_path(shadow_trans);
-    // render(true);
-    agg::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, m_shadow_ctrl.color());
+    render(true);
+    // agg::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, m_shadow_ctrl.color());
     // m_transform.translate(-(m_shadow_ctrl.GetOffsetX()), -(m_shadow_ctrl.GetOffsetY()));
     // if (m_shadow_ctrl.IsBlur()) {
     //     RectD bbox;

@@ -283,11 +283,11 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
    // paint.SetStrokeColor(Color::Red());
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Green());
-    paint.SetShadowColor(Color::Green());
+    paint.SetShadowColor(Color::Black());
     paint.SetStrokeWidth(1);
     paint.SetShadowOffsetX(50);
     paint.SetShadowOffsetY(50);
-    // paint.SetShadowBlurRadius(0);
+    paint.SetShadowBlurRadius(0);
     canvas->BeginPath();
     canvas->MoveTo({60,60});
     canvas->LineTo({60,110});
