@@ -1244,7 +1244,7 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
         if (m_fillColor.a)
         {
             if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
-                // drawShadow();
+                drawShadow();
             }
             m_rasterizer.add_path(m_pathTransform);
             render(true);
