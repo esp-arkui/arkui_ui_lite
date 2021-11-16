@@ -64,7 +64,8 @@ public:
           lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
           lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
           miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
-          dashArray(nullptr),ndashes(0),globalAlpha(1.0f)
+          dashArray(nullptr),ndashes(0),globalAlpha(1.0f),shadowBlurRadius(0),shadowOffsetX(0),shadowOffsetY(0),
+          shadowColor(Color::Black())
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
     }

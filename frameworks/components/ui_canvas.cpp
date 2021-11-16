@@ -488,18 +488,19 @@ void UICanvas::DrawPath(const Paint& paint)
     }
     param->path = path_;
     param->count = path_->cmd_.Size();
-
-
-    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
+    if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE){
+        param->count =2*(path_->cmd_.Size());
+    }
+    if (static_cast<uint8_t>(paint.GetStyle()) ==Paint::PaintStyle::STROKE_STYLE||static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE) {
         DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = param;
         cmd.DeleteParam = DeletePathParam;
         cmd.DrawGraphics = DoDrawPath;
         drawCmdList_.PushBack(cmd);
-       }
+    }
 
-   if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
+   if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::FILL_STYLE||static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE) {
        DrawCmd cmd;
        cmd.paint = paint;
        cmd.param = param;

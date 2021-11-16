@@ -1211,22 +1211,27 @@ void BaseGfxExtendEngine::drawShadow()
     agg::trans_affine transform(m_transform);
 
     PathTransform shadow_trans(m_convCurve, transform);
+    // m_transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
     transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
     m_rasterizer.add_path(shadow_trans);
+    // render(true);
     agg::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, m_shadow_ctrl.color());
-    if (m_shadow_ctrl.IsBlur()) {
-        RectD bbox;
-        bounding_rect_single(0, &bbox, shadow_trans);
-        bbox.x1 -= m_shadow_ctrl.GetRadius();
-        bbox.y1 -= m_shadow_ctrl.GetRadius();
-        bbox.x2 += m_shadow_ctrl.GetRadius();
-        bbox.y2 += m_shadow_ctrl.GetRadius();
-        RenderingBuffer m_rbuf_window;
-        PixFormat pixf2(m_rbuf_window);
-        pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
+    // m_transform.translate(-(m_shadow_ctrl.GetOffsetX()), -(m_shadow_ctrl.GetOffsetY()));
+    // if (m_shadow_ctrl.IsBlur()) {
+    //     RectD bbox;
+    //     bounding_rect_single(0, &bbox, shadow_trans);
+    //     bbox.x1 -= m_shadow_ctrl.GetRadius();
+    //     bbox.y1 -= m_shadow_ctrl.GetRadius();
+    //     bbox.x2 += m_shadow_ctrl.GetRadius();
+    //     bbox.y2 += m_shadow_ctrl.GetRadius();
+    //     RenderingBuffer m_rbuf_window;
+    //     PixFormat pixf2(m_rbuf_window);
+    //     // pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
 
-        m_stack_blur.blur(pixf2, agg::uround(m_shadow_ctrl.GetRadius()));
-    }
+    //     // m_stack_blur.blur(pixf2, agg::uround(m_shadow_ctrl.GetRadius()));
+    //     // m_recursive_blur.blur(pixf2,m_shadow_ctrl.GetRadius());
+    // }
+    m_rasterizer.reset();
 }
 
 //------------------------------------------------------------------------
@@ -1238,8 +1243,8 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case FillOnly:
         if (m_fillColor.a)
         {
-            if (m_shadow_ctrl.GetRadius()) {
-                drawShadow();
+            if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
+                // drawShadow();
             }
             m_rasterizer.add_path(m_pathTransform);
             render(true);
@@ -1265,7 +1270,7 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case FillAndStroke:
         if (m_fillColor.a)
         {
-            if (m_shadow_ctrl.GetRadius()) {
+            if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
                 drawShadow();
             }
             m_rasterizer.add_path(m_pathTransform);
