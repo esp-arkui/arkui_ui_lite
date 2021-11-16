@@ -477,21 +477,22 @@ void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint
 
 void UICanvas::DrawPath(const Paint& paint)
 {
-    if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
-        return;
-    }
-    path_->strokeCount_++;
-    PathParam* param = new PathParam;
-    if (param == nullptr) {
-        GRAPHIC_LOGE("new PathParam fail");
-        return;
-    }
-    param->path = path_;
-    param->count = path_->cmd_.Size();
-    if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE){
-        param->count =2*(path_->cmd_.Size());
-    }
+    
     if (static_cast<uint8_t>(paint.GetStyle()) ==Paint::PaintStyle::STROKE_STYLE||static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE) {
+        if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
+            return;
+        }
+        path_->strokeCount_++;
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+           GRAPHIC_LOGE("new PathParam fail");
+          return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE){
+            param->count =2*(path_->cmd_.Size());
+        }
         DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = param;
@@ -501,6 +502,20 @@ void UICanvas::DrawPath(const Paint& paint)
     }
 
    if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::FILL_STYLE||static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE) {
+      if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
+            return;
+        }
+        path_->strokeCount_++;
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE){
+            param->count =2*(path_->cmd_.Size());
+        }
        DrawCmd cmd;
        cmd.paint = paint;
        cmd.param = param;
