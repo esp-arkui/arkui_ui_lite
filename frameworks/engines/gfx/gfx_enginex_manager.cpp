@@ -1724,7 +1724,7 @@ void BaseGfxExtendEngine::Image::demultiply()
 
 bool BaseGfxExtendEngine::bounding_rect_single(unsigned int path_id, RectD* rect, PathTransform& path)
 {
-    agg::bounding_rect_single(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);
+    return agg::bounding_rect_single(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);
 }
 
 }
