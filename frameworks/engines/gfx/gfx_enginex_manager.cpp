@@ -1228,7 +1228,7 @@ void BaseGfxExtendEngine::drawShadow()
         PixFormat pixf2(m_rbuf_window);
         // pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
 
-        m_stack_blur.blur(m_rbuf_window, agg::uround(m_shadow_ctrl.GetRadius()));
+        m_stack_blur.blur(pixf2, agg::uround(m_shadow_ctrl.GetRadius()));
         // m_recursive_blur.blur(pixf2,m_shadow_ctrl.GetRadius());
     }
     m_rasterizer.reset();
