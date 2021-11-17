@@ -287,19 +287,6 @@ public:
     Color fillColor() const;
     Color lineColor() const;
 
-//    void fillLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
-//    void lineLinearGradient(double x1, double y1, double x2, double y2, Color c1, Color c2, double profile=1.0);
-
-//    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
-//    void lineRadialGradient(double x, double y, double r, Color c1, Color c2, double profile=1.0);
-
-//    void fillRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
-//    void lineRadialGradient(double x, double y, double r, Color c1, Color c2, Color c3);
-
-//    void fillRadialGradient(double x, double y, double r);
-//    void lineRadialGradient(double x, double y, double r);
-
-
     void remove_all_color();
     void add_color(double offset,  Color c1);
     void build_lut();

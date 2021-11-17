@@ -22,6 +22,8 @@
 #include "layout/grid_layout.h"
 #include "ui_test.h"
 
+#include <components/ui_image_view.h>
+
 namespace OHOS {
 class UITestCanvas : public UITest {
 public:
@@ -30,6 +32,7 @@ public:
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
+
     void UIKitCanvasTestComposite001();
     void UIKitCanvasTestGlobalAlpha001();
     void UIKitCanvasTestDrawDashLine001();
@@ -88,7 +91,14 @@ public:
     void UIKitCanvasTestLinearGradient();//调试渐变
     void UIKitCanvasTestLinearGradient2();//调试渐变
     void UIKitCanvasTestRadialGradient();//放射渐变
-
+    void UIKitCanvasTestcreatePattern1();
+    void UIKitCanvasTestcreatePattern2();
+    void UIKitCanvasTestcreatePattern3();
+    void UIKitCanvasTestcreatePattern4();
+    void UIKitCanvasTestcreatePattern5();
+    void UIKitCanvasTestcreatePattern6();
+    void UIKitCanvasTestcreatePattern7();
+    void UIKitCanvasTestcreatePattern8();
 
 
 private:
@@ -114,10 +124,21 @@ private:
     static constexpr int16_t RECT_Y = 50;
     static constexpr int16_t RECT_WIDTH = 100;
     static constexpr int16_t RECT_HEIGHT = 50;
+
+
+    const static int32_t BUFFER_SIZE = 20;
+    const static uint16_t BLOCK_WIDTH = 454;
+    const static uint16_t BLOCK_HEIGHT = 200;
+    const static uint16_t IMAGE_POSITION_X = 20;
+    const static uint16_t IMAGE_POSITION_Y = 20;
+
     void CreateTitleLabel(const char* title);
     UICanvas* CreateCanvas();
-
     UIScrollView* container_ = nullptr;
+
+
+
+
 };
 } // namespace OHOS
 #endif // UI_TEST_CANVAS_H
