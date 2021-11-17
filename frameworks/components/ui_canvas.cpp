@@ -597,17 +597,35 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         }
         //const Image& img, int dstX1, int dstY1,
         //int dstX2, int dstY2
-        BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
-                                               gfxMapBuffer->width,gfxMapBuffer->height,
-                                               gfxMapBuffer->stride);
-        m_graphics_Image->blend_from(imageBuffer,BaseGfxExtendEngine::Rect(gfxMapBuffer->rect.GetLeft(),
-                                                                           gfxMapBuffer->rect.GetTop(),
-                                                                           gfxMapBuffer->rect.GetRight(),
-                                                                           gfxMapBuffer->rect.GetBottom()),
-                                     BaseGfxExtendEngine::Rect(gfxDstBuffer.rect.GetLeft(),
-                                                               gfxDstBuffer.rect.GetTop(),
-                                                               gfxDstBuffer.rect.GetRight(),
-                                                               gfxDstBuffer.rect.GetBottom()));
+        //BufferInfo& gfxDstBuffer, const Rect& coords, const Rect& mask,
+        //    const ImageInfo* img, const Style& style, uint8_t opaScale
+        ImageInfo imageInfo;
+        imageInfo.header.colorMode = ARGB8888;
+        imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
+                DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
+        imageInfo.header.width = gfxMapBuffer->width;
+        imageInfo.header.height = gfxMapBuffer->height;
+        imageInfo.header.reserved = 0;
+
+        imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
+
+        DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
+                                                 gfxDstBuffer.rect.GetTop(),
+                                                 gfxDstBuffer.rect.GetRight(),
+                                                 gfxDstBuffer.rect.GetBottom()),
+                              trunc, &imageInfo,*style_, opaScale_);
+        //BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
+        //                                       gfxMapBuffer->width,gfxMapBuffer->height,
+        //                                       gfxMapBuffer->stride);
+        //m_graphics_Image->blend_from(imageBuffer,BaseGfxExtendEngine::Rect(gfxMapBuffer->rect.GetLeft(),
+        //                                                                   gfxMapBuffer->rect.GetTop(),
+        //                                                                   gfxMapBuffer->rect.GetRight(),
+        //                                                                   gfxMapBuffer->rect.GetBottom()),
+        //                             BaseGfxExtendEngine::Rect(gfxDstBuffer.rect.GetLeft(),
+        //                                                       gfxDstBuffer.rect.GetTop(),
+        //                                                       gfxDstBuffer.rect.GetRight(),
+        //                                                       gfxDstBuffer.rect.GetBottom()));
+
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->phyAddr);
         delete gfxMapBuffer;
     }
@@ -1115,8 +1133,8 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         drawStyle.lineWidth_ = arcInfo.radius;
         drawStyle.lineColor_ = paint.GetFillColor();
         drawStyle.bgOpa_ = paint.GetOpacity();
-        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
-                paint.globalCompositeOperation()== BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
+        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
+                && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
         } else {
@@ -1135,8 +1153,8 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
         drawStyle.lineColor_ = paint.GetStrokeColor();
         drawStyle.lineOpa_= paint.GetOpacity();
-        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
-                paint.globalCompositeOperation()== BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
+        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
+                && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                               CapType::CAP_NONE);
         } else {

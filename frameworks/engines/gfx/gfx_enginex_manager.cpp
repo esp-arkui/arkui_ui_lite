@@ -1661,6 +1661,7 @@ void BaseGfxExtendEngine::copyImage(Image& img, double dstX, double dstY)
 
 void BaseGfxExtendEngine::blend_from(const Image& img,Rect srcRect,Rect dstRect)
 {
+    //blend_from
     imageFilter(BaseGfxExtendEngine::Bilinear);
     //m_graphics.imageResample(Agg2D::NoResample);
     //m_graphics.imageResample(Agg2D::ResampleAlways);
