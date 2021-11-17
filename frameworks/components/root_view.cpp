@@ -529,9 +529,7 @@ void RootView::Render()
         invalidateMap_.clear();
 #else
     if ( invalidateRects_.Size() > 0) {
-        for (ListNode<Rect>* iter = invalidateRects_.Begin(); iter != invalidateRects_.End(); iter = iter->next_) {
-            RenderManager::RenderRect(iter->data_, this);
-        }
+        RenderManager::RenderRect(GetScreenRect(), this); // draw all views
         invalidateRects_.Clear();
 #endif
 

@@ -28,22 +28,24 @@ config("graphic_define_config") {
   include_dirs = [
     "interfaces/kits",
     "interfaces/innerkits",
+    "frameworks",
+    "//third_party/freetype/include",
   ]
 
-  defines = [
-    "ENABLE_VECTOR_FONT=1",
-    "ENABLE_BITMAP_FONT=0",
-    "ENABLE_SHAPING=0",
-    "ENABLE_ICU=1",
-    "ENABLE_MULTI_FONT=0",
-    "DEFAULT_ANIMATION=1"
-  ]
+  # defines = [
+  #   "ENABLE_VECTOR_FONT=1",
+  #   "ENABLE_BITMAP_FONT=0",
+  #   "ENABLE_SHAPING=0",
+  #   "ENABLE_ICU=1",
+  #   "ENABLE_MULTI_FONT=0",
+  #   "DEFAULT_ANIMATION=1"
+  # ]
 
-  if (ohos_kernel_type == "linux") {
-    defines += [ "RESOURCE_DIR=\"/storage/data/\"" ]
-  } else {
-    defines += [ "RESOURCE_DIR=\"/user/data/\"" ]
-  }
+  # if (ohos_kernel_type == "linux") {
+  #   defines += [ "RESOURCE_DIR=\"/storage/data/\"" ]
+  # } else {
+  #   defines += [ "RESOURCE_DIR=\"/user/data/\"" ]
+  # }
 }
 
 if (enable_graphic_font) {
@@ -56,7 +58,7 @@ if (enable_graphic_font) {
   }
 }
 
-shared_library("ui") {
+lite_library("ui") {
   sources = [
     "frameworks/animator/animator.cpp",
     "frameworks/animator/animator_manager.cpp",
@@ -162,30 +164,53 @@ shared_library("ui") {
     "frameworks/engines/gfx/hi3516/hi3516_engine.cpp",
   ]
 
-  include_dirs = [ "//foundation/graphic/ui/frameworks" ]
-  deps = [
-    "//build/lite/config/component/cJSON:cjson_shared",
-    "//foundation/graphic/surface:lite_surface",
-    "//foundation/graphic/utils:lite_graphic_hals",
-    "//foundation/graphic/wms:lite_wms",
-    "//third_party/bounds_checking_function:libsec_shared",
-    "//third_party/freetype:freetype",
-    "//third_party/giflib:libgif",
-    "//third_party/icu/icu4c/source/common:icu_font",
-    "//third_party/libjpeg:libjpeg",
-    "//third_party/libpng:libpng",
-    "//third_party/qrcodegen:qrcodegen",
-  ]
+  if (ohos_kernel_type == "liteos_m") {
+    target_type = "static_library"
+    sources -= [
+      "frameworks/components/ui_surface_view.cpp",
+      "frameworks/dfx/ui_dump_dom_tree.cpp",
+      "frameworks/dfx/ui_screenshot.cpp",
+      "frameworks/engines/gfx/hi3516/hi3516_engine.cpp",
+      "frameworks/window/window.cpp",
+      "frameworks/window/window_impl.cpp",
+    ]
+    deps = [
+      "//build/lite/config/component/cJSON:cjson_static",
+      "//third_party/bounds_checking_function:libsec_static",
+      "//third_party/freetype:freetype",
+      "//third_party/giflib:libgif",
 
-  if (enable_video_component) {
-    defines += [ "ENABLE_VIDEO_COMPONENT=1" ]
-    source += [
-      "frameworks/components/ui_video.cpp",
+      # "//third_party/icu/icu4c/source/common:icu_font",
+      "//third_party/libjpeg:libjpeg",
+      "//third_party/libpng:libpng",
+      "//third_party/qrcodegen:qrcodegen",
+    ]
+  } else {
+    target_type = "shared_library"
+    deps = [
+      "//build/lite/config/component/cJSON:cjson_shared",
+      "//foundation/graphic/surface:lite_surface",
+      "//foundation/graphic/utils:lite_graphic_hals",
+      "//foundation/graphic/wms:lite_wms",
+      "//third_party/bounds_checking_function:libsec_shared",
+      "//third_party/freetype:freetype",
+      "//third_party/giflib:libgif",
+      "//third_party/icu/icu4c/source/common:icu_font",
+      "//third_party/libjpeg:libjpeg",
+      "//third_party/libpng:libpng",
+      "//third_party/qrcodegen:qrcodegen",
     ]
 
-    deps += [
-      "//foundation/multimedia/media_lite/frameworks/player_lite:player_lite",
-    ]
+    if (enable_video_component) {
+      defines += [ "ENABLE_VIDEO_COMPONENT=1" ]
+      source += [ "frameworks/components/ui_video.cpp" ]
+
+      deps += [
+        "//foundation/multimedia/media_lite/frameworks/player_lite:player_lite",
+      ]
+    }
+
+    ldflags = [ "-Wl,-rpath-link=$ohos_root_path/$root_out_dir" ]
   }
 
   public_deps = [ "//foundation/graphic/utils:lite_graphic_utils" ]
@@ -195,5 +220,4 @@ shared_library("ui") {
     "-fno-exceptions",
   ]
   cflags_cc = cflags
-  ldflags = [ "-Wl,-rpath-link=$ohos_root_path/$root_out_dir" ]
 }

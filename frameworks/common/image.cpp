@@ -387,7 +387,7 @@ bool Image::SetJPEGSrc(const char* src)
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_decompress(&cinfo);
     jpeg_stdio_src(&cinfo, infile);
-    jpeg_read_header(&cinfo, TRUE);
+    jpeg_read_header(&cinfo, (boolean)TRUE);
     jpeg_start_decompress(&cinfo);
 
     uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(ARGB8888) >> 3; // 3: Shift right 3 bits
