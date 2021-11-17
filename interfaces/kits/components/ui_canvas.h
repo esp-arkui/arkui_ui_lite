@@ -77,7 +77,7 @@ public:
           blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver)
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
-        m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
+        //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
     }
     Paint(const Paint& paint)
     {
@@ -88,7 +88,7 @@ public:
         style_=paint.style_;
         fillColor_=paint.fillColor_;
         m_graphics= paint.m_graphics;
-        m_graphics_Image = paint.m_graphics_Image;
+        //m_graphics_Image = paint.m_graphics_Image;
         strokeColor_=paint.strokeColor_;
         opacity_=paint.opacity_;
         strokeWidth_=paint.strokeWidth_;
@@ -440,10 +440,10 @@ public:
         return m_graphics.get();
     }
 
-    BaseGfxExtendEngine* GetImageBufferContext() const
-    {
-        return m_graphics_Image.get();
-    }
+//    BaseGfxExtendEngine* GetImageBufferContext() const
+//    {
+//        return m_graphics_Image.get();
+//    }
 
     void SetLineDash(float* lineDashs, const unsigned int ndash)
     {
@@ -553,7 +553,7 @@ private:
     float* dashArray;
     unsigned int ndashes;
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
-    std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
+    //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
     float globalAlpha;
     BaseGfxExtendEngine::BlendMode blendMode;
 };
@@ -918,8 +918,7 @@ public:
     void fill(const Paint& paint,const PolygonPath * polygonPath);
 
 protected:
-
-    bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer, const BufferInfo* gfxImageBuffer,
+    bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer,
                              const Rect &fillArea, const Rect &worldRect, const Rect &screenRect, const Paint &paint);
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;

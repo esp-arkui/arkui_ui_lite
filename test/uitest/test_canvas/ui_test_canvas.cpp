@@ -136,8 +136,9 @@ void UITestCanvas::UIKitCanvasTestComposite001()
     paint.SetFillColor(Color::Red());
     paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
     canvas->DrawCircle({ 50, 50 }, 40, paint);
-    paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOut);
-    paint.SetFillColor(Color::GetColorFromRGB(0,255,0));
+    //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOut);
+    paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
+    paint.SetFillColor(Color::GetColorFromRGBA(0,255,0,128));
     canvas->DrawCircle({ 70, 70 }, 40, paint);
 
 }
