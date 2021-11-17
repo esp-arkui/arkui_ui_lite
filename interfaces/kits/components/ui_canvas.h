@@ -118,9 +118,7 @@ public:
            gradientfalg = paint.gradientfalg;
            linearGradientPoint = paint.linearGradientPoint;
            radialGradientPoint=paint.radialGradientPoint;
-           isMemAlloc = paint.isMemAlloc;
            patternRepeat = paint.patternRepeat;
-//           polygonPath = paint.polygonPath;
 
     }
     const Paint& operator = (const Paint& paint)
