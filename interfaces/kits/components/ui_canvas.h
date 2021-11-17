@@ -848,7 +848,14 @@ public:
      * @version 5.0
      */
     void DrawPath(const Paint& paint);
-
+    /**
+     * @brief FIlls this path.
+     *
+     * @param paint Indicates the path style. For details, see {@link Paint}.
+     * @since 3.0
+     * @version 5.0
+     */
+    void FillPath(const Paint& paint);
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
     void SetLineDash(float* dashArray, unsigned int ndash,Paint&);

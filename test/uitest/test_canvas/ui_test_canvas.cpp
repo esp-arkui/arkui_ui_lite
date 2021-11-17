@@ -295,6 +295,7 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     canvas->LineTo({160,60});
     canvas->ClosePath();
     canvas->DrawPath(paint);
+    canvas->FillPath(paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve002()

@@ -475,6 +475,27 @@ void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint
     Invalidate();
 }
 
+void UICanvas::FillPath(const Paint& paint)
+{
+    if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
+        return;
+    }
+    path_->strokeCount_++;
+    PathParam* param = new PathParam;
+    if (param == nullptr) {
+        GRAPHIC_LOGE("new PathParam fail");
+        return;
+    }
+    param->path = path_;
+    param->count = path_->cmd_.Size();
+    DrawCmd cmd;
+    cmd.paint = paint;
+    cmd.param = param;
+    cmd.DeleteParam = DeletePathParam;
+    cmd.DrawGraphics = DoFillPath;
+    drawCmdList_.PushBack(cmd);
+    Invalidate();
+}
 void UICanvas::DrawPath(const Paint& paint)
 {
     
@@ -498,25 +519,25 @@ void UICanvas::DrawPath(const Paint& paint)
         drawCmdList_.PushBack(cmd);
     }
 
-   if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::FILL_STYLE||static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE) {
-      if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
-            return;
-        }
-        path_->strokeCount_++;
-        PathParam* param = new PathParam;
-        if (param == nullptr) {
-            GRAPHIC_LOGE("new PathParam fail");
-            return;
-        }
-        param->path = path_;
-        param->count = path_->cmd_.Size();
-        DrawCmd cmd;
-        cmd.paint = paint;
-        cmd.param = param;
-        cmd.DeleteParam = DeletePathParam;
-        cmd.DrawGraphics = DoFillPath;
-        drawCmdList_.PushBack(cmd);
-   }
+//    if (static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::FILL_STYLE||static_cast<uint8_t>(paint.GetStyle()) == Paint::PaintStyle::STROKE_FILL_STYLE) {
+//       if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
+//             return;
+//         }
+//         path_->strokeCount_++;
+//         PathParam* param = new PathParam;
+//         if (param == nullptr) {
+//             GRAPHIC_LOGE("new PathParam fail");
+//             return;
+//         }
+//         param->path = path_;
+//         param->count = path_->cmd_.Size();
+//         DrawCmd cmd;
+//         cmd.paint = paint;
+//         cmd.param = param;
+//         cmd.DeleteParam = DeletePathParam;
+//         cmd.DrawGraphics = DoFillPath;
+//         drawCmdList_.PushBack(cmd);
+//    }
 
     Invalidate();
 }
