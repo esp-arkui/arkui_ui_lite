@@ -537,23 +537,8 @@ public:
     {
         return ndashes;
     }
-    agg::rendering_buffer GetRenderBuffer() const
-    {
-        return m_rbuf;
-    }
-    void blend_from(const BaseGfxExtendEngine& baseGfxExtendEngine,int dx = 0,
-                    int dy = 0)
-    {
-        if(m_blendMode == BlendAlpha)
-        {
-            m_renBase.blend_from(m_pixFormat,0,dx,dy);
-        }
-        else
-        {
-            m_renBaseComp.blend_from(m_pixFormatComp,0,dx,dy);
-        }
-        this->render(false);
-    }
+
+    void blend_from(const Image& img, Rect srcRect,Rect dstRect);
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);

@@ -119,10 +119,10 @@ namespace agg
         scanline_storage_bin() :
             m_spans(256-2),         // Block increment size
             m_scanlines(),
-            m_min_x(std::numeric_limits<int>::max()),
-            m_min_y(std::numeric_limits<int>::max()),
-            m_max_x(std::numeric_limits<int>::min()),
-            m_max_y(std::numeric_limits<int>::min()),
+            m_min_x((std::numeric_limits<int>::max)()),
+            m_min_y((std::numeric_limits<int>::max)()),
+            m_max_x((std::numeric_limits<int>::min)()),
+            m_max_y((std::numeric_limits<int>::min)()),
             m_cur_scanline(0)
         {
             m_fake_scanline.y = 0;
@@ -138,10 +138,10 @@ namespace agg
         {
             m_scanlines.remove_all();
             m_spans.remove_all();
-            m_min_x = std::numeric_limits<int>::max();
-            m_min_y = std::numeric_limits<int>::max();
-            m_max_x = std::numeric_limits<int>::min();
-            m_max_y = std::numeric_limits<int>::min();
+            m_min_x = ((std::numeric_limits<int>::max)());
+            m_min_y = ((std::numeric_limits<int>::max)());
+            m_max_x = ((std::numeric_limits<int>::min)());
+            m_max_y = ((std::numeric_limits<int>::min)());
             m_cur_scanline = 0;
         }
 
@@ -446,10 +446,10 @@ namespace agg
             m_ptr(0),
             m_dx(0),
             m_dy(0),
-            m_min_x(std::numeric_limits<int>::max()),
-            m_min_y(std::numeric_limits<int>::max()),
-            m_max_x(std::numeric_limits<int>::min()),
-            m_max_y(std::numeric_limits<int>::min())
+            m_min_x((std::numeric_limits<int>::max)()),
+            m_min_y((std::numeric_limits<int>::max)()),
+            m_max_x((std::numeric_limits<int>::min)()),
+            m_max_y((std::numeric_limits<int>::min)())
         {}
 
         //--------------------------------------------------------------------
@@ -460,10 +460,10 @@ namespace agg
             m_ptr(data),
             m_dx(iround(dx)),
             m_dy(iround(dy)),
-            m_min_x(std::numeric_limits<int>::max()),
-            m_min_y(std::numeric_limits<int>::max()),
-            m_max_x(std::numeric_limits<int>::min()),
-            m_max_y(std::numeric_limits<int>::min())
+            m_min_x((std::numeric_limits<int>::max)()),
+            m_min_y((std::numeric_limits<int>::max)()),
+            m_max_x((std::numeric_limits<int>::min)()),
+            m_max_y((std::numeric_limits<int>::min)())
         {}
 
         //--------------------------------------------------------------------
@@ -474,10 +474,10 @@ namespace agg
             m_ptr   = data;
             m_dx    = iround(dx);
             m_dy    = iround(dy);
-            m_min_x = std::numeric_limits<int>::max();
-            m_min_y = std::numeric_limits<int>::max();
-            m_max_x = std::numeric_limits<int>::min();
-            m_max_y = std::numeric_limits<int>::min();
+            m_min_x = (std::numeric_limits<int>::max)();
+            m_min_y = (std::numeric_limits<int>::max)();
+            m_max_x = (std::numeric_limits<int>::min)();
+            m_max_y = (std::numeric_limits<int>::min)();
         }
 
     private:

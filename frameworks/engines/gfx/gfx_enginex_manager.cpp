@@ -1659,6 +1659,18 @@ void BaseGfxExtendEngine::copyImage(Image& img, double dstX, double dstY)
     m_renBase.copy_from(img.renBuf, 0, int(dstX), int(dstY));
 }
 
+void BaseGfxExtendEngine::blend_from(const Image& img,Rect srcRect,Rect dstRect)
+{
+    imageFilter(BaseGfxExtendEngine::Bilinear);
+    //m_graphics.imageResample(Agg2D::NoResample);
+    //m_graphics.imageResample(Agg2D::ResampleAlways);
+    imageResample(BaseGfxExtendEngine::ResampleOnZoomOut);
+    imageBlendMode(BaseGfxExtendEngine::BlendDst);
+
+    transformImage(img, srcRect.x1, srcRect.y1, srcRect.x2, srcRect.y2,
+                                          dstRect.x1, dstRect.y1, dstRect.x2, dstRect.y2);
+}
+
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::Image::premultiply()
 {
