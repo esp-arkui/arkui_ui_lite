@@ -591,15 +591,52 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
             curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
 
         }
-       ImageInfo imageInfo;
-       imageInfo.header.colorMode = gfxMapBuffer->mode;
-       imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
-               DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
-       imageInfo.header.width = gfxMapBuffer->width;
-       imageInfo.header.height = gfxMapBuffer->height;
-       imageInfo.header.reserved = 0;
+        BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
+                                                       gfxMapBuffer->width,gfxMapBuffer->height,
+                                                       gfxMapBuffer->stride);
+        BaseGfxExtendEngine m_graphics_Image;
+        int16_t posLeft= trunc.GetLeft();// + style_->paddingLeft_ + style_->borderWidth_;
+        int16_t posTop= trunc.GetTop();// + style_->paddingTop_ + style_->borderWidth_;
 
-       imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
+        uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
+        if (gfxDstBuffer.virAddr == nullptr) {
+            return;
+        }
+
+        ColorMode mode = gfxDstBuffer.mode;
+        int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
+                posLeft;
+        destBuf += offset * destByteSize;
+
+        m_graphics_Image.attach(destBuf,trunc.GetWidth(),
+                           trunc.GetHeight(),gfxDstBuffer.stride);
+        m_graphics_Image.viewport(realLeft,
+                                  realTop,
+                                  realLeft+trunc.GetWidth() - 1,
+                                  realTop+trunc.GetHeight() - 1,
+                                  posViewLeft,posViewTop,posViewLeft+trunc.GetWidth() - 1,
+                                  posViewTop+trunc.GetHeight() - 1,
+                             BaseGfxExtendEngine::Anisotropic);
+                             //BaseGfxExtendEngine::XMidYMid);
+
+        m_graphics_Image.blend_from(imageBuffer,BaseGfxExtendEngine::Rect(gfxMapBuffer->rect.GetLeft(),
+                                                                                   gfxMapBuffer->rect.GetTop(),
+                                                                                   gfxMapBuffer->rect.GetRight(),
+                                                                                   gfxMapBuffer->rect.GetBottom()),
+                                             BaseGfxExtendEngine::Rect(gfxDstBuffer.rect.GetLeft(),
+                                                                       gfxDstBuffer.rect.GetTop(),
+                                                                       gfxDstBuffer.rect.GetRight(),
+                                                                       gfxDstBuffer.rect.GetBottom()));
+
+//       ImageInfo imageInfo;
+//       imageInfo.header.colorMode = gfxMapBuffer->mode;
+//       imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
+//               DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
+//       imageInfo.header.width = gfxMapBuffer->width;
+//       imageInfo.header.height = gfxMapBuffer->height;
+//       imageInfo.header.reserved = 0;
+
+//       imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
 
 //       DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
 //                                                gfxDstBuffer.rect.GetTop(),
@@ -610,6 +647,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 //                                  gfxMapBuffer->rect.GetRight(),
 //                                  gfxMapBuffer->rect.GetBottom()),
 //                             &imageInfo,*style_, opaScale_);
+
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
 
     }
