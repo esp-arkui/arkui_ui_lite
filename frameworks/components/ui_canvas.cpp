@@ -566,10 +566,10 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
             return;
         }
         //BufferInfo* modeBuff = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
-        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxMapBuffer->mode);
         //uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
-        uint32_t destStride= gfxDstBuffer.width* destByteSize;
-        uint32_t buffSize = gfxDstBuffer.height * destStride;
+        uint32_t destStride= gfxMapBuffer->width* destByteSize;
+        uint32_t buffSize = gfxMapBuffer->height * destStride;
         //uint32_t buffSize = textRect.GetWidth() * textRect.GetHeight() * (pxSize >> 3);
         gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(
                     buffSize, BUFFER_MAP_SURFACE);
@@ -661,7 +661,7 @@ bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const BufferIn
                                screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
                                BaseGfxExtendEngine::Anisotropic);
 
-    m_graphics->clearAll(0,0,0,0);
+    m_graphics->clearAll(agg::srgba8(0,0,0,0));
     return true;
 
 }

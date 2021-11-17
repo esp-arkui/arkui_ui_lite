@@ -523,13 +523,13 @@ public:
     {
         image = img;
         patternRepeat =NO_REPEAT;
-        if(text=="repeat"){
+        if(strcmp(text,"repeat")==0){
             patternRepeat =REPEAT;
-        } else if (text=="repeat-x") {
+        } else if (strcmp(text,"repeat-x")==0) {
             patternRepeat =REPEAT_X;
-        } else if (text=="repeat-y") {
+        } else if (strcmp(text,"repeat-y")==0) {
             patternRepeat =REPEAT_Y;
-        } else if (text=="no-repeat") {
+        } else if (strcmp(text,"no-repeat")==0) {
             patternRepeat =NO_REPEAT;
         }
 
