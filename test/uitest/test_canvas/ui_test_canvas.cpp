@@ -48,11 +48,19 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
 //    UIKitCanvasTestDrawCurve002();
+    UIKitCanvasTestComposite001();
+    UIKitCanvasTestGlobalAlpha001();
+    UIKitCanvasTestDrawDashLine001();
+    UIKitCanvasTestLineJoin001();
+    UIKitCanvasTestDrawLine001();
+    UIKitCanvasTestDrawLine002();
+    UIKitCanvasTestDrawCurve001();
+    UIKitCanvasTestDrawCurve002();
 //    UIKitCanvasTestDrawRect001();
 
-//    UIKitCanvasTestLinearGradient();//线性渐变水平
-//    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
-//    UIKitCanvasTestRadialGradient();//放射渐变
+    UIKitCanvasTestLinearGradient();//线性渐变水平
+    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+    UIKitCanvasTestRadialGradient();//放射渐变
     UIKitCanvasTestcreatePattern5();
     UIKitCanvasTestcreatePattern1();
     UIKitCanvasTestcreatePattern6();
@@ -113,6 +121,22 @@ const UIView* UITestCanvas::GetTestView()
     return container_;
 }
 
+void UITestCanvas::UIKitCanvasTestComposite001()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("Composite 的处理模式");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    //canvas->GlobalAlpha(0.8f,paint);
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    paint.SetStrokeColor(Color::Blue());
+    paint.SetFillColor(Color::Red());
+    canvas->DrawCircle({ 50, 50 }, 40, paint);
+}
+
 void UITestCanvas::UIKitCanvasTestGlobalAlpha001()
 {
     if (container_ == nullptr) {
@@ -143,19 +167,24 @@ void UITestCanvas::UIKitCanvasTestDrawDashLine001()
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Green());
-    paint.SetOpacity(128);//0 是完全透明 255 不透明
+    paint.SetOpacity(200);//0 是完全透明 255 不透明
 
     canvas->LineWidth(2,paint);
     canvas->LineDashOffset(10,paint);
     float ds[] = {5, 3.1f, 1.2f, 5.5f};
     canvas->SetLineDash(ds, 4,paint);
-    canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
+    canvas->DrawCircle({ 50, 50 }, 40, paint);
     unsigned nDashes=0;
     float* fLineDashes = canvas->GetLineDash(paint,nDashes);
-    //canvas->SetLineDash(nullptr,0,paint);
+    float ds2[] = {3, 5.1f, 2.2f, 4.5f};
+    canvas->SetLineDash(ds2, 4,paint);
+    paint.SetOpacity(255);//0 是完全透明 255 不透明
+    canvas->StrokeRect({ 100, 100 }, 40,100, paint);
+
+    canvas->SetLineDash(nullptr,0,paint);
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Blue());
-    canvas->DrawCircle({ 50, 50 }, 40, paint);
+    canvas->StrokeRect({ 20, 20 }, 150, 100, paint);
 }
 
 void UITestCanvas::CreateTitleLabel(const char* title)
