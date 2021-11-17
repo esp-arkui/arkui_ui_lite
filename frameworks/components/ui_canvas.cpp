@@ -565,9 +565,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 //        //BufferInfo* modeBuff = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
         uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
 //        //uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
-//            gfxMapBuffer->rect=Rect(0,0,trunc.GetWidth()-1,trunc.GetHeight()-1);
-//            gfxMapBuffer->width=trunc.GetWidth();
-//            gfxMapBuffer->height=trunc.GetHeight();
+
 
         uint32_t destStride= gfxMapBuffer->width* destByteSize;
         uint32_t buffSize = gfxMapBuffer->height * destStride;
@@ -581,7 +579,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
             //应该是实现画布的处理机制..
             param = curDraw->data_.param;
 
-            InitDrawEnvironment(gfxDstBuffer,trunc,
+            InitDrawEnvironment(*gfxMapBuffer,trunc,
                                 Rect(realLeft,
                                      realTop,
                                      realLeft+trunc.GetWidth() - 1,
@@ -590,47 +588,29 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                      posViewTop,
                                      posViewLeft+trunc.GetWidth() - 1,
                                      posViewTop+trunc.GetHeight() - 1),curDraw->data_.paint);
-            curDraw->data_.DrawGraphics(gfxDstBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
+            curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
 
         }
-//        ImageInfo imageInfo;
-//        imageInfo.header.colorMode = gfxDstBuffer.mode;
-//        imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
-//                DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
-//        imageInfo.header.width = gfxMapBuffer->width;
-//        imageInfo.header.height = gfxMapBuffer->height;
-//        imageInfo.header.reserved = 0;
+        ImageInfo imageInfo;
+        imageInfo.header.colorMode = gfxMapBuffer->mode;
+        imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
+                DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
+        imageInfo.header.width = gfxMapBuffer->width;
+        imageInfo.header.height = gfxMapBuffer->height;
+        imageInfo.header.reserved = 0;
 
-//        imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
+        imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
 
-//        DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
-//                                                 gfxDstBuffer.rect.GetTop(),
-//                                                 gfxDstBuffer.rect.GetRight(),
-//                                                 gfxDstBuffer.rect.GetBottom()),
-//                              Rect(gfxMapBuffer->rect.GetLeft(),
-//                                   gfxMapBuffer->rect.GetTop(),
-//                                   gfxMapBuffer->rect.GetRight(),
-//                                   gfxMapBuffer->rect.GetBottom()),
-//                              &imageInfo,*style_, opaScale_);
-        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->phyAddr);
-        //delete gfxMapBuffer;
-        //const Image& img, int dstX1, int dstY1,
-        //int dstX2, int dstY2
-        //BufferInfo& gfxDstBuffer, const Rect& coords, const Rect& mask,
-        //    const ImageInfo* img, const Style& style, uint8_t opaScale
-
-        //BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
-        //                                       gfxMapBuffer->width,gfxMapBuffer->height,
-        //                                       gfxMapBuffer->stride);
-        //m_graphics_Image->blend_from(imageBuffer,BaseGfxExtendEngine::Rect(gfxMapBuffer->rect.GetLeft(),
-        //                                                                   gfxMapBuffer->rect.GetTop(),
-        //                                                                   gfxMapBuffer->rect.GetRight(),
-        //                                                                   gfxMapBuffer->rect.GetBottom()),
-        //                             BaseGfxExtendEngine::Rect(gfxDstBuffer.rect.GetLeft(),
-        //                                                       gfxDstBuffer.rect.GetTop(),
-        //                                                       gfxDstBuffer.rect.GetRight(),
-        //                                                       gfxDstBuffer.rect.GetBottom()));
-
+        DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
+                                                 gfxDstBuffer.rect.GetTop(),
+                                                 gfxDstBuffer.rect.GetRight(),
+                                                 gfxDstBuffer.rect.GetBottom()),
+                              Rect(gfxMapBuffer->rect.GetLeft(),
+                                   gfxMapBuffer->rect.GetTop(),
+                                   gfxMapBuffer->rect.GetRight(),
+                                   gfxMapBuffer->rect.GetBottom()),
+                              &imageInfo,*style_, opaScale_);
+        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
 
     }
 }
