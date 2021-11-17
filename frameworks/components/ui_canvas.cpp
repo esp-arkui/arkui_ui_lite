@@ -553,54 +553,51 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     Rect coords = GetOrigRect();
     Rect trunc = invalidatedArea;
     if (trunc.Intersect(trunc, coords)) {
-        //这个地方定义了一个
-        BufferInfo* gfxMapBuffer = new BufferInfo;
-        if (memcpy_s(gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
-            delete gfxMapBuffer;
-            gfxMapBuffer = nullptr;
-            return;
-        }
-        BaseGfxExtendEngine* m_graphics_Image = curDraw->data_.paint.GetImageBufferContext();
-        if(m_graphics_Image==nullptr) {
-            return;
-        }
-        //BufferInfo* modeBuff = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
-        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxMapBuffer->mode);
-        //uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
-        uint32_t destStride= gfxMapBuffer->width* destByteSize;
-        uint32_t buffSize = gfxMapBuffer->height * destStride;
-        //uint32_t buffSize = textRect.GetWidth() * textRect.GetHeight() * (pxSize >> 3);
-        gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(
-                    buffSize, BUFFER_MAP_SURFACE);
-
-        gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
 
         int16_t posViewLeft=rect.GetX()-trunc.GetX();
         int16_t posViewTop=rect.GetY()-trunc.GetY();
         int16_t realLeft=rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
         int16_t realTop=rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
+        std::unique_ptr<BufferInfo> gfxMapBuffer(new BufferInfo);
+        if (memcpy_s(gfxMapBuffer.get(), sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
+            return;
+        }
+        //BufferInfo* modeBuff = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
+        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+        //uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
+//            gfxMapBuffer->rect=Rect(0,0,trunc.GetWidth()-1,trunc.GetHeight()-1);
+//            gfxMapBuffer->width=trunc.GetWidth();
+//            gfxMapBuffer->height=trunc.GetHeight();
 
-        InitDrawEnvironment(gfxDstBuffer,gfxMapBuffer,trunc,
-                            Rect(realLeft,
-                                 realTop,
-                                 realLeft+trunc.GetWidth() - 1,
-                                 realTop+trunc.GetHeight() - 1),
-                            Rect(posViewLeft,
-                                 posViewTop,
-                                 posViewLeft+trunc.GetWidth() - 1,
-                                 posViewTop+trunc.GetHeight() - 1),curDraw->data_.paint);
-
+        uint32_t destStride= gfxMapBuffer->width* destByteSize;
+        uint32_t buffSize = gfxMapBuffer->height * destStride;
+        gfxMapBuffer->stride=destStride;
+        //uint32_t buffSize = textRect.GetWidth() * textRect.GetHeight() * (pxSize >> 3);
+        gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(
+                    buffSize, BUFFER_MAP_SURFACE);
+        memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
+        //memset(&m_buf_img[0], 0, rbuf_img(0).width()* rbuf_img(0).height() * 4);
+        gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
+
+            //应该是实现画布的处理机制..
             param = curDraw->data_.param;
+
+            InitDrawEnvironment(gfxDstBuffer,gfxMapBuffer.get(),trunc,
+                                Rect(realLeft,
+                                     realTop,
+                                     realLeft+trunc.GetWidth() - 1,
+                                     realTop+trunc.GetHeight() - 1),
+                                Rect(posViewLeft,
+                                     posViewTop,
+                                     posViewLeft+trunc.GetWidth() - 1,
+                                     posViewTop+trunc.GetHeight() - 1),curDraw->data_.paint);
             curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
+
         }
-        //const Image& img, int dstX1, int dstY1,
-        //int dstX2, int dstY2
-        //BufferInfo& gfxDstBuffer, const Rect& coords, const Rect& mask,
-        //    const ImageInfo* img, const Style& style, uint8_t opaScale
         ImageInfo imageInfo;
-        imageInfo.header.colorMode = ARGB8888;
+        imageInfo.header.colorMode = gfxDstBuffer.mode;
         imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
                 DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
         imageInfo.header.width = gfxMapBuffer->width;
@@ -613,7 +610,18 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                                  gfxDstBuffer.rect.GetTop(),
                                                  gfxDstBuffer.rect.GetRight(),
                                                  gfxDstBuffer.rect.GetBottom()),
-                              trunc, &imageInfo,*style_, opaScale_);
+                              Rect(gfxMapBuffer->rect.GetLeft(),
+                                   gfxMapBuffer->rect.GetTop(),
+                                   gfxMapBuffer->rect.GetRight(),
+                                   gfxMapBuffer->rect.GetBottom()),
+                              &imageInfo,*style_, opaScale_);
+        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->phyAddr);
+        //delete gfxMapBuffer;
+        //const Image& img, int dstX1, int dstY1,
+        //int dstX2, int dstY2
+        //BufferInfo& gfxDstBuffer, const Rect& coords, const Rect& mask,
+        //    const ImageInfo* img, const Style& style, uint8_t opaScale
+
         //BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
         //                                       gfxMapBuffer->width,gfxMapBuffer->height,
         //                                       gfxMapBuffer->stride);
@@ -626,8 +634,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         //                                                       gfxDstBuffer.rect.GetRight(),
         //                                                       gfxDstBuffer.rect.GetBottom()));
 
-        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->phyAddr);
-        delete gfxMapBuffer;
+
     }
 }
 
@@ -665,9 +672,9 @@ bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const BufferIn
                          BaseGfxExtendEngine::Anisotropic);
                          //BaseGfxExtendEngine::XMidYMid);
 
+    destBuf= static_cast<uint8_t*>(gfxImageBuffer->virAddr);
     offset = static_cast<int32_t>(posTop) * gfxImageBuffer->width +
                 posLeft;
-    destBuf= static_cast<uint8_t*>(gfxImageBuffer->virAddr);
     destBuf += offset * destByteSize;
 
     m_graphics->attach(destBuf,fillArea.GetWidth(),
@@ -678,7 +685,7 @@ bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const BufferIn
                                screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
                                BaseGfxExtendEngine::Anisotropic);
 
-    m_graphics->clearAll(agg::srgba8(0,0,0,0));
+    //m_graphics->clearAll(agg::srgba8(0,0,0,0));
     return true;
 
 }
