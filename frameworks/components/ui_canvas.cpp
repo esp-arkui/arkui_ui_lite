@@ -591,25 +591,25 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
             curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
 
         }
-        ImageInfo imageInfo;
-        imageInfo.header.colorMode = gfxMapBuffer->mode;
-        imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
-                DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
-        imageInfo.header.width = gfxMapBuffer->width;
-        imageInfo.header.height = gfxMapBuffer->height;
-        imageInfo.header.reserved = 0;
+       ImageInfo imageInfo;
+       imageInfo.header.colorMode = gfxMapBuffer->mode;
+       imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
+               DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
+       imageInfo.header.width = gfxMapBuffer->width;
+       imageInfo.header.height = gfxMapBuffer->height;
+       imageInfo.header.reserved = 0;
 
-        imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
+       imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
 
-        DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
-                                                 gfxDstBuffer.rect.GetTop(),
-                                                 gfxDstBuffer.rect.GetRight(),
-                                                 gfxDstBuffer.rect.GetBottom()),
-                              Rect(gfxMapBuffer->rect.GetLeft(),
-                                   gfxMapBuffer->rect.GetTop(),
-                                   gfxMapBuffer->rect.GetRight(),
-                                   gfxMapBuffer->rect.GetBottom()),
-                              &imageInfo,*style_, opaScale_);
+//       DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
+//                                                gfxDstBuffer.rect.GetTop(),
+//                                                gfxDstBuffer.rect.GetRight(),
+//                                                gfxDstBuffer.rect.GetBottom()),
+//                             Rect(gfxMapBuffer->rect.GetLeft(),
+//                                  gfxMapBuffer->rect.GetTop(),
+//                                  gfxMapBuffer->rect.GetRight(),
+//                                  gfxMapBuffer->rect.GetBottom()),
+//                             &imageInfo,*style_, opaScale_);
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
 
     }
