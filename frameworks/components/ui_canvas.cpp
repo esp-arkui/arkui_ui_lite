@@ -22,6 +22,8 @@
 
 #include <agg_gradient_lut.h>
 
+#include <components/ui_view_group.h>
+
 namespace OHOS {
 UICanvas::UICanvasPath::~UICanvasPath()
 {
@@ -475,6 +477,48 @@ void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint
     Invalidate();
 }
 
+void UICanvas::DrawImage(const Point& startPoint, const ImageInfo* image, const Paint& paint)
+{
+    if (image == nullptr) {
+        return;
+    }
+
+    ImageParam* imageParam = new ImageParam;
+    if (imageParam == nullptr) {
+        GRAPHIC_LOGE("new ImageParam fail");
+        return;
+    }
+    imageParam->image = new Image();
+    if (imageParam->image == nullptr) {
+        delete imageParam;
+        imageParam = nullptr;
+        return;
+    }
+
+    imageParam->image->SetSrc(image);
+    ImageHeader header = {0};
+    imageParam->image->GetHeader(header);
+    imageParam->start = startPoint;
+    imageParam->height = header.height;
+    imageParam->width = header.width;
+
+    DrawCmd cmd;
+    cmd.paint = paint;
+    cmd.param = imageParam;
+    cmd.DeleteParam = DeleteImageParam;
+    cmd.DrawGraphics = DoDrawImage;
+    drawCmdList_.PushBack(cmd);
+
+    Invalidate();
+}
+
+//void UICanvas::createPattern(UIImageView & image,Paint& paint)
+//{
+
+
+
+//}
+
 void UICanvas::DrawPath(const Paint& paint)
 {
     if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
@@ -853,6 +897,141 @@ void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::Sto
     m_graphics.build_lut();
 }
 
+
+void UICanvas::fill(const Paint& paint)
+{
+
+    if(!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::PATTERN)){
+        return ;
+    }
+
+    if (paint.image == nullptr) {
+        return;
+    }
+
+    ImageParam* imageParam = new ImageParam;
+    if (imageParam == nullptr) {
+        GRAPHIC_LOGE("new ImageParam fail");
+        return;
+    }
+    imageParam->image = new Image();
+    if (imageParam->image == nullptr) {
+        delete imageParam;
+        imageParam = nullptr;
+        return;
+    }
+
+
+    imageParam->image->SetSrc(paint.image);
+    ImageHeader header = {0};
+    imageParam->image->GetHeader(header);
+    imageParam->start = {0,0};
+    imageParam->height = header.height;
+    imageParam->width = header.width;
+
+    DrawCmd cmd;
+    cmd.paint = paint;
+    cmd.param = imageParam;
+    cmd.DeleteParam = DeleteImageParam;
+    cmd.DrawGraphics = FillImage;
+    drawCmdList_.PushBack(cmd);
+
+    Invalidate();
+}
+
+void UICanvas::fill(const Paint& paint,const PolygonPath * polygonPath)
+{
+
+    fill(paint);
+
+    if(polygonPath&&(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::PATTERN)){
+        ImageInfo imageInfo;
+        this->GetBitmap(imageInfo);
+        this->Clear();
+        PolygonUtils polygonUtils;
+        ClipImageBlitter blitter(&imageInfo);
+        polygonUtils.PerformScan(*polygonPath, blitter);
+        this->DrawImage(startPoint_,&imageInfo, paint);
+    }
+}
+
+void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style)
+{
+    if (param == nullptr) {
+        return;
+    }
+    ImageParam* imageParam = static_cast<ImageParam*>(param);
+
+    if (imageParam->image == nullptr) {
+        return;
+    }
+    Point start;
+    GetAbsolutePosition(imageParam->start, rect, style, start);
+
+    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::PATTERN)
+    {
+        if(paint.patternRepeat==paint.REPEAT){
+            for(;;){
+
+                if(start.x>invalidatedArea.GetRight()){
+                    break;
+                }
+                Point temp = start;
+                for(;;){
+                    if(temp.y>invalidatedArea.GetBottom()){
+                        break;
+                    }
+                    Rect cordsTmp;
+                    cordsTmp.SetPosition(temp.x, temp.y);
+                    cordsTmp.SetHeight(imageParam->height);
+                    cordsTmp.SetWidth(imageParam->width);
+                    DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+                    temp.y+=imageParam->height;
+                }
+                start.x+=imageParam->width;
+            }
+        }else if(paint.patternRepeat==paint.REPEAT_X) {
+            for(;;){
+                if(start.x>invalidatedArea.GetRight()){
+                    break;
+                }
+                Rect cordsTmp;
+                cordsTmp.SetPosition(start.x, start.y);
+                cordsTmp.SetHeight(imageParam->height);
+                cordsTmp.SetWidth(imageParam->width);
+                DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+                start.x+=imageParam->width;
+            }
+        }else if(paint.patternRepeat==paint.REPEAT_Y) {
+            for(;;){
+                if(start.y>invalidatedArea.GetBottom()){
+                    break;
+                }
+                Rect cordsTmp;
+                cordsTmp.SetPosition(start.x, start.y);
+                cordsTmp.SetHeight(imageParam->height);
+                cordsTmp.SetWidth(imageParam->width);
+                DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+                start.y+=imageParam->height;
+            }
+
+        }else if(paint.patternRepeat==paint.NO_REPEAT) {
+                Rect cordsTmp;
+                cordsTmp.SetPosition(start.x, start.y);
+                cordsTmp.SetHeight(imageParam->height);
+                cordsTmp.SetWidth(imageParam->width);
+                DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+        }
+    }
+}
+
+
+
 void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
 
     List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
@@ -1030,8 +1209,14 @@ void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
     cordsTmp.SetHeight(imageParam->height);
     cordsTmp.SetWidth(imageParam->width);
     DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-                          imageParam->image->GetPath(), style, paint.GetOpacity());
+        imageParam->image->GetImageInfo(), style, paint.GetOpacity());
 }
+
+
+
+
+
+
 
 void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
                            void* param,
@@ -1206,6 +1391,4 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
         m_graphics->drawPath(BaseGfxExtendEngine::DrawPathFlag::StrokeOnly);
     }
 }
-
-
 } // namespace OHOS

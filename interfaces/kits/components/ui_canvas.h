@@ -37,10 +37,12 @@
 #define GRAPHIC_LITE_UI_CANVAS_H
 
 #include <memory>
+#include <draw/clip_utils.h>
 #include "common/image.h"
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"
 #include "engines/gfx/gfx_enginex_manager.h"
+#include "ui_image_view.h"
 
 namespace OHOS {
 /**
@@ -49,6 +51,13 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
+
+
+
+class PolygonPath : public ClipPath{
+
+};
+
 
 class Paint : public HeapBase {
 public:
@@ -109,10 +118,12 @@ public:
             dashArray =nullptr;
         }
 
-        stopAndColors = paint.stopAndColors;
-        gradientfalg = paint.gradientfalg;
-        linearGradientPoint = paint.linearGradientPoint;
-        radialGradientPoint=paint.radialGradientPoint;
+           stopAndColors = paint.stopAndColors;
+           gradientfalg = paint.gradientfalg;
+           linearGradientPoint = paint.linearGradientPoint;
+           radialGradientPoint=paint.radialGradientPoint;
+           patternRepeat = paint.patternRepeat;
+
     }
     const Paint& operator = (const Paint& paint)
     {
@@ -146,6 +157,7 @@ public:
         FILL_STYLE,
         /** Stroke and fill */
         STROKE_FILL_STYLE,
+        PATTERN = 7,
     };
 
     /**
@@ -184,12 +196,25 @@ public:
         ColorType color;
     };
 
+     /**
+      * repeat|repeat-x|repeat-y|no-repeat
+      */
+     enum PatternRepeat {
+         REPEAT,
+         REPEAT_X,
+         REPEAT_Y,
+         NO_REPEAT,
+     }patternRepeat;
+
+     const char * image;
+
      enum Gradient
      {
          Solid,
          Linear,
          Radial
      }gradientfalg;
+
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -483,6 +508,7 @@ public:
         return globalAlpha;
     }
 
+
     void globalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
     {
         this->blendMode = blendMode;
@@ -491,6 +517,23 @@ public:
     BaseGfxExtendEngine::BlendMode globalCompositeOperation() const
     {
         return this->blendMode;
+    }
+
+    void createPattern(const char* img,const char* text)
+    {
+        image = img;
+        patternRepeat =NO_REPEAT;
+        if(text=="repeat"){
+            patternRepeat =REPEAT;
+        } else if (text=="repeat-x") {
+            patternRepeat =REPEAT_X;
+        } else if (text=="repeat-y") {
+            patternRepeat =REPEAT_Y;
+        } else if (text=="no-repeat") {
+            patternRepeat =NO_REPEAT;
+        }
+
+
     }
 
 private:
@@ -717,6 +760,18 @@ public:
      */
     void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
+
+    /**
+     * @brief Draws an image.
+     *
+     * @param startPoint Indicates the coordinates of the start point.
+     * @param image      Indicates the pointer to the image source.
+     * @param paint      Indicates the image style. For details, see {@link Paint}.
+     * @since 1.0
+     * @version 1.0
+     */
+    void DrawImage(const Point& startPoint, const ImageInfo* image, const Paint& paint);
+
     /**
      * @brief Defines the font style.
      */
@@ -858,6 +913,9 @@ public:
     {
         paint.SetStrokeWidth(lineWidth);
     }
+
+    void fill(const Paint& paint);
+    void fill(const Paint& paint,const PolygonPath * polygonPath);
 
 protected:
 
@@ -1077,8 +1135,12 @@ protected:
     static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
 
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
-
+    static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
 };
+
+class PolygonUtils : public ClipUtils{
+};
+
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H
