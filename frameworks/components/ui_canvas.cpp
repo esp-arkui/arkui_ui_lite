@@ -938,6 +938,7 @@ void UICanvas::fill(const Paint& paint,const PolygonPath * polygonPath)
                 imageList_.PushBack(images_);
         }
     }
+
     auto  images =imageList_.Begin();
     if(polygonPath!=nullptr){
         const ImageInfo *  imginfo= images->data_.img->GetImageInfo();
@@ -1468,24 +1469,32 @@ void PolygonImageBlitter::DrawPixel(int16_t x, int16_t y, uint8_t opa)
    for(int i=0;i<imageList_.Size();i++){
 
        int16_t h_r=i/x_size_;//第h_r行
-       int16_t w_r=i%x_size_;//d当前行第w_r个
+       int16_t w_r=i%x_size_;//当前行第w_r个
+
+       //处理repeat-y
+       if(images->data_.startp.x==0){
+        h_r=images->data_.startp.y/img_h_;
+        w_r=0;
+       }
 
        if (!((x>=img_w_*w_r&&x<img_w_*(w_r+1))&&(y>=img_h_*h_r&&y<img_h_*(h_r+1)))) {
            images = images->next_;
            continue;
        }
-           int32_t offset =(x-img_w_*w_r)+(y-img_h_*h_r)*img_w_;
-           switch (images->data_.img->GetImageInfo()->header.colorMode) {
-               case ARGB8888: {
-                   Color32* buffer = reinterpret_cast<Color32*>(const_cast<uint8_t*>(images->data_.img->GetImageInfo()->data));
-                   buffer[offset].alpha = buffer[offset].alpha * opa / OPA_OPAQUE;
-                   break;
-               }
-               default: {
-                   GRAPHIC_LOGE("Only images in ARGB8888 format are supported!");
-                   break;
-               }
+
+
+       int32_t offset =(x-img_w_*w_r)+(y-img_h_*h_r)*img_w_;
+       switch (images->data_.img->GetImageInfo()->header.colorMode) {
+           case ARGB8888: {
+               Color32* buffer = reinterpret_cast<Color32*>(const_cast<uint8_t*>(images->data_.img->GetImageInfo()->data));
+               buffer[offset].alpha = buffer[offset].alpha * opa / OPA_OPAQUE;
+               break;
            }
+           default: {
+               GRAPHIC_LOGE("Only images in ARGB8888 format are supported!");
+               break;
+           }
+       }
        images = images->next_;
    }
 }
