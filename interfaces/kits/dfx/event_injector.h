@@ -48,12 +48,18 @@ enum class EventDataType {
     POINT_TYPE,
     /** Key event */
     KEY_TYPE,
+#if ENABLE_ROTATE_INPUT
+    /** Rotate event */
+    ROTATE_TYPE,
+#endif
     /** Other events */
     OTHERS
 };
 class PointEventInjector;
 class KeyEventInjector;
-
+#if ENABLE_ROTATE_INPUT
+class RotateEventInjector;
+#endif
 /**
  * @brief Manages all types of simulated input events, registers and unregisters event injectors, and simulates
  * input events.
@@ -170,8 +176,24 @@ public:
      */
     void SetWindowId(uint8_t windowId);
 #endif
+
+#if ENABLE_ROTATE_INPUT
+    /**
+     * @brief Simulates a rotate event.
+     *
+     * @param rotateAngle Indicates the rotate angle.
+     * @return Returns <b>true</b> if the operation is successful; returns <b>false</b> otherwise.
+     * @since 3.0
+     * @version 5.0
+     */
+     bool SetRotateEvent(int16_t rotateAngle);
+#endif
 private:
-    EventInjector() : pointEventInjector_(nullptr), keyEventInjector_(nullptr) {}
+    EventInjector() : pointEventInjector_(nullptr),
+#if ENABLE_ROTATE_INPUT
+                      rotateEventInjector_(nullptr),
+#endif
+                      keyEventInjector_(nullptr) {}
     virtual ~EventInjector();
 
     EventInjector(const EventInjector&) = delete;
@@ -180,6 +202,9 @@ private:
     EventInjector& operator=(EventInjector&&) = delete;
 
     PointEventInjector* pointEventInjector_;
+#if ENABLE_ROTATE_INPUT
+    RotateEventInjector* rotateEventInjector_;
+#endif
     KeyEventInjector* keyEventInjector_;
 };
 } // namespace OHOS

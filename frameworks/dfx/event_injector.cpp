@@ -18,6 +18,9 @@
 #include "common/input_device_manager.h"
 #include "dfx/key_event_injector.h"
 #include "dfx/point_event_injector.h"
+#if ENABLE_ROTATE_INPUT
+#include "dfx/rotate_event_injector.h"
+#endif
 #include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
@@ -33,6 +36,13 @@ EventInjector::~EventInjector()
         delete keyEventInjector_;
         keyEventInjector_ = nullptr;
     }
+#if ENABLE_ROTATE_INPUT
+    if (rotateEventInjector_ != nullptr) {
+        InputDeviceManager::GetInstance()->Remove(rotateEventInjector_);
+        delete rotateEventInjector_;
+        rotateEventInjector_ = nullptr;
+    }
+#endif
 }
 
 EventInjector* EventInjector::GetInstance()
@@ -64,6 +74,18 @@ bool EventInjector::RegisterEventInjector(EventDataType type)
                 InputDeviceManager::GetInstance()->Add(keyEventInjector_);
             }
             return true;
+#if ENABLE_ROTATE_INPUT
+        case EventDataType::ROTATE_TYPE:
+            if (rotateEventInjector_ == nullptr) {
+                rotateEventInjector_ = new RotateEventInjector();
+                if (rotateEventInjector_ == nullptr) {
+                    GRAPHIC_LOGE("EventInjector::RegisterEventInjector register rotateEventInjector failed Err!\n");
+                    return false;
+                }
+                InputDeviceManager::GetInstance()->Add(rotateEventInjector_);
+            }
+            return true;
+#endif
         default:
             break;
     }
@@ -87,6 +109,15 @@ void EventInjector::UnregisterEventInjector(EventDataType type)
                 keyEventInjector_ = nullptr;
             }
             break;
+#if ENABLE_ROTATE_INPUT
+        case EventDataType::ROTATE_TYPE:
+            if (rotateEventInjector_ != nullptr) {
+                InputDeviceManager::GetInstance()->Remove(rotateEventInjector_);
+                delete rotateEventInjector_;
+                rotateEventInjector_ = nullptr;
+            }
+            break;
+#endif
         default:
             break;
     }
@@ -105,6 +136,13 @@ bool EventInjector::IsEventInjectorRegistered(EventDataType type) const
                 return true;
             }
             break;
+#if ENABLE_ROTATE_INPUT
+        case EventDataType::ROTATE_TYPE:
+            if (rotateEventInjector_ != nullptr) {
+                return true;
+            }
+            break;
+#endif
         default:
             break;
     }
@@ -137,6 +175,18 @@ bool EventInjector::SetInjectEvent(const DeviceData* dataArray, uint16_t arrayLe
                 }
             }
             break;
+#if ENABLE_ROTATE_INPUT
+        case EventDataType::ROTATE_TYPE:
+            if (rotateEventInjector_ == nullptr) {
+                return false;
+            }
+            for (uint16_t i = 0; i < arrayLength; i++) {
+                if (!rotateEventInjector_->SetRotateEvent(dataArray[i])) {
+                    return false;
+                }
+            }
+            break;
+#endif
         default:
             return false;
     }
@@ -269,6 +319,28 @@ void EventInjector::SetWindowId(uint8_t windowId)
     if (pointEventInjector_ != nullptr) {
         pointEventInjector_->SetWindowId(windowId);
     }
+}
+#endif
+
+#if ENABLE_ROTATE_INPUT
+bool EventInjector::SetRotateEvent(int16_t rotateAngle)
+{
+    uint16_t rotateArrayLen = 1;
+    if (rotateArrayLen > rotateEventInjector_->GetLeftSize()) {
+        GRAPHIC_LOGE("front rotate event need to be read.(left size in rotate event queue is not enough)");
+        return false;
+    }
+    bool setResult = true;
+    DeviceData* dataArray = new DeviceData[rotateArrayLen];
+    if (dataArray == nullptr) {
+        return false;
+    }
+    dataArray[0].rotate = rotateAngle;
+    if (!SetInjectEvent(dataArray, rotateArrayLen, EventDataType::ROTATE_TYPE)) {
+        setResult = false;
+    }
+    delete[] dataArray;
+    return setResult;
 }
 #endif
 }
