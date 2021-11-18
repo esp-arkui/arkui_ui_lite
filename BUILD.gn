@@ -187,6 +187,7 @@ shared_library("ui") {
     "frameworks/graphics/src/agg_vpgen_clip_polygon.cpp",
     "frameworks/graphics/src/agg_vpgen_clip_polyline.cpp",
     "frameworks/graphics/src/agg_vpgen_segmentator.cpp",
+    "frameworks/graphics/src/ctrl/agg_polygon_ctrl.cpp",
   ]
 
   include_dirs = [ "//foundation/graphic/ui/frameworks",
