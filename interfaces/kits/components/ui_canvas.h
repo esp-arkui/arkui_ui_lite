@@ -73,7 +73,8 @@ public:
           lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
           lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
           miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
-          dashArray(nullptr),ndashes(0),globalAlpha(1.0f),
+          dashArray(nullptr),ndashes(0),globalAlpha(1.0f),shadowBlurRadius(0),shadowOffsetX(0),shadowOffsetY(0),
+          shadowColor(Color::Black()),
           blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver)
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
@@ -98,6 +99,10 @@ public:
         globalAlpha=paint.globalAlpha;
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
+        shadowColor=paint.shadowColor;
+        shadowOffsetX=paint.shadowOffsetX;
+        shadowOffsetY=paint.shadowOffsetY;
+        shadowBlurRadius=paint.shadowBlurRadius;
         ndashes = (paint.ndashes+1)&~1;
         blendMode = paint.blendMode;
         if(isDrawDash && ndashes > 0) {
@@ -507,6 +512,38 @@ public:
     {
         return globalAlpha;
     }
+    double GetShadowBlurRadius() const
+    {
+        return shadowBlurRadius;
+    }
+    void SetShadowBlurRadius(double radius)
+    {
+        shadowBlurRadius=radius;
+    }
+    double GetShadowOffsetX() const
+    {
+        return shadowOffsetX;
+    }
+    void SetShadowOffsetX(double offset)
+    {
+        shadowOffsetX = offset;
+    }
+    double GetShadowOffsetY() const
+    {
+        return shadowOffsetY;
+    }
+    void SetShadowOffsetY(double offset)
+    {
+        shadowOffsetY = offset;
+    }
+    ColorType GetShadowColor() const
+    {
+        return shadowColor;
+    }
+    void SetShadowColor(ColorType color)
+    {
+        shadowColor = color;
+    }
 
 
     void globalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
@@ -555,6 +592,10 @@ private:
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
     //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
     float globalAlpha;
+    double shadowBlurRadius;
+    double shadowOffsetX;
+    double shadowOffsetY;
+    ColorType shadowColor;
     BaseGfxExtendEngine::BlendMode blendMode;
 };
 
@@ -884,7 +925,14 @@ public:
      * @version 5.0
      */
     void DrawPath(const Paint& paint);
-
+    /**
+     * @brief FIlls this path.
+     *
+     * @param paint Indicates the path style. For details, see {@link Paint}.
+     * @since 3.0
+     * @version 5.0
+     */
+    void FillPath(const Paint& paint);
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
     void SetLineDash(float* dashArray, unsigned int ndash,Paint&);
@@ -1120,6 +1168,12 @@ protected:
                             const Rect& invalidatedArea,
                             const Style& style);
     static void DoDrawPath(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style);
+    static void DoFillPath(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
                            const Rect& rect,

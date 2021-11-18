@@ -145,6 +145,7 @@ SOURCES += \
     ../../../../frameworks/graphics/src/agg_vpgen_clip_polygon.cpp \
     ../../../../frameworks/graphics/src/agg_vpgen_clip_polyline.cpp \
     ../../../../frameworks/graphics/src/agg_vpgen_segmentator.cpp \
+    ../../../../frameworks/graphics/src/ctrl/agg_polygon_ctrl.cpp \
     ../../../../frameworks/imgdecode/cache_manager.cpp \
     ../../../../frameworks/imgdecode/file_img_decoder.cpp \
     ../../../../frameworks/imgdecode/image_load.cpp \
@@ -318,6 +319,7 @@ HEADERS += \
     ../../../../frameworks/graphics/include/util/agg_color_conv.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv_rgb16.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv_rgb8.h \
+    ../../../../frameworks/graphics/include/ctrl/agg_polygon_ctrl.h \
     ../../../../frameworks/imgdecode/cache_manager.h \
     ../../../../frameworks/imgdecode/file_img_decoder.h \
     ../../../../frameworks/imgdecode/image_load.h \

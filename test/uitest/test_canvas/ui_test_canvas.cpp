@@ -261,12 +261,12 @@ void UITestCanvas::UIKitCanvasTestLineJoin001()
     paint.SetLineCap(BaseGfxExtendEngine::CapRound);
     paint.SetLineJoin(BaseGfxExtendEngine::JoinBevel);
     paint.SetStrokeColor(Color::Blue());
-
+    paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     canvas->BeginPath();
     canvas->MoveTo({ 50, 100 });
     canvas->LineTo({ 150, 80 });
     canvas->LineTo({ 75, 40 });
-    //canvas->ClosePath();
+    canvas->ClosePath();
     canvas->DrawPath(paint);
 
     canvas->LineWidth(8,paint);
@@ -279,11 +279,10 @@ void UITestCanvas::UIKitCanvasTestLineJoin001()
     canvas->LineTo({ 40, 180 });
     canvas->LineTo({ 105, 40 });
     canvas->LineTo({ 15, 100 });
-    //canvas->ClosePath();
+    canvas->ClosePath();
     canvas->DrawPath(paint);
 
 }
-
 void UITestCanvas::UIKitCanvasTestDrawCurve001()
 {
     if (container_ == nullptr) {
@@ -295,6 +294,31 @@ void UITestCanvas::UIKitCanvasTestDrawCurve001()
     Paint paint;
     paint.SetStrokeColor(Color::Red());
     canvas->DrawCurve({ 100, 50 }, { 150, 50 }, { 150, 50 }, { 150, 100 }, paint);
+}
+void UITestCanvas::UIKitCanvasTestDrawShadow001()
+{
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("绘制矩形和阴影");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+   // paint.SetStrokeColor(Color::Red());
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetFillColor(Color::Green());
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    paint.SetShadowBlurRadius(5);
+    canvas->BeginPath();
+    canvas->MoveTo({60,60});
+    canvas->LineTo({60,110});
+    canvas->LineTo({160,110});
+    canvas->LineTo({160,60});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+    canvas->FillPath(paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve002()
