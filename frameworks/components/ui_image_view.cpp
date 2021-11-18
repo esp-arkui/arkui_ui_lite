@@ -23,12 +23,12 @@
 #include "gfx_utils/image_info.h"
 #include "gfx_utils/mem_api.h"
 #include "imgdecode/cache_manager.h"
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
 #include "gif_lib.h"
 #endif
 
 namespace OHOS {
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
 class GifImageAnimator : public Animator, public AnimatorCallback {
 public:
     GifImageAnimator(UIView* view, const char* src)
@@ -231,7 +231,7 @@ UIImageView::UIImageView()
       reserve_(0)
 {
     style_ = &(StyleDefault::GetBackgroundTransparentStyle());
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
     gifImageAnimator_ = nullptr;
     gifFrameFlag_ = false;
 #endif
@@ -239,7 +239,7 @@ UIImageView::UIImageView()
 
 UIImageView::~UIImageView()
 {
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
     RemoveAndStopGifAnimator();
 #endif
     if (drawTransMap_ != nullptr) {
@@ -475,7 +475,7 @@ void UIImageView::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 
 void UIImageView::SetSrc(const char* src)
 {
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
     if (src == nullptr) {
         return;
     }
@@ -543,7 +543,7 @@ void UIImageView::ReMeasure()
 
 void UIImageView::SetSrc(const ImageInfo* src)
 {
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
     if (!gifFrameFlag_ && (gifImageAnimator_ != nullptr)) {
         RemoveAndStopGifAnimator();
     }
@@ -560,7 +560,7 @@ void UIImageView::SetSrc(const ImageInfo* src)
     Invalidate();
 }
 
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
 void UIImageView::AddAndStartGifAnimator()
 {
     if (gifImageAnimator_ != nullptr) {

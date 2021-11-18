@@ -38,7 +38,7 @@
 #include "common/image.h"
 #include "components/ui_view.h"
 #include "gfx_utils/graphic_types.h"
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
 #include "animator/animator.h"
 #endif
 
@@ -309,7 +309,7 @@ protected:
     bool transMapInvalid_ = true;
 private:
     void ReMeasure() override;
-#ifndef VERSION_LITE
+#ifdef ENABLE_GIF
     friend class GifImageAnimator;
     void AddAndStartGifAnimator();
     void RemoveAndStopGifAnimator();
