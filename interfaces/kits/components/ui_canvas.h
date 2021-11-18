@@ -362,7 +362,6 @@ public:
         return linearGradientPoint;
     }
 
-
     void createRadialGradient(double start_x,double start_y,double start_r, double end_x,double end_y,double end_r){
         gradientfalg=Radial;
         radialGradientPoint.x0=start_x;
@@ -895,6 +894,12 @@ public:
     void fill(const Paint& paint);
     void fill(const Paint& paint,const PolygonPath * polygonPath);
 
+
+    struct Images_ {
+        Point startp;
+        UIImageView* img;
+    };
+
 protected:
 
     bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer, const Rect &fillArea, const Rect &worldRect, const Rect &screenRect, const Paint &paint);
@@ -968,6 +973,9 @@ protected:
         void(*DeleteParam)(void *);
     };
 
+
+
+    List<Images_> imageList_;
     Point startPoint_;
     UICanvasPath* path_;
     List<DrawCmd> drawCmdList_;
@@ -1117,6 +1125,33 @@ protected:
 
 class PolygonUtils : public ClipUtils{
 };
+
+class PolygonImageBlitter: public Blitter {
+public:
+    explicit PolygonImageBlitter(List<UICanvas::Images_> src,
+                                 int16_t img_w,int16_t img_h,
+                                 int16_t x_size,int16_t y_size)
+        : imageList_(src),img_w_(img_w),img_h_(img_h),x_size_(x_size),y_size_(y_size) {}
+    virtual ~PolygonImageBlitter() {}
+
+    void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
+    void Finish() override;
+private:
+    void DrawPixel(int16_t x, int16_t y, uint8_t opa);
+    void DrawHorLine(int16_t x, int16_t y, int16_t width, uint8_t opa);
+
+    List<UICanvas::Images_> imageList_;
+
+    int16_t img_w_= 0;
+    int16_t img_h_= 0;
+    int16_t x_size_= 0;
+    int16_t y_size_= 0;
+
+
+    int16_t iy_ = 0;
+
+};
+
 
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

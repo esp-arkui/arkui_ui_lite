@@ -48,19 +48,19 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
 //    UIKitCanvasTestDrawCurve002();
-    UIKitCanvasTestComposite001();
-    UIKitCanvasTestGlobalAlpha001();
-    UIKitCanvasTestDrawDashLine001();
-    UIKitCanvasTestLineJoin001();
-    UIKitCanvasTestDrawLine001();
-    UIKitCanvasTestDrawLine002();
-    UIKitCanvasTestDrawCurve001();
-    UIKitCanvasTestDrawCurve002();
+//    UIKitCanvasTestComposite001();
+//    UIKitCanvasTestGlobalAlpha001();
+//    UIKitCanvasTestDrawDashLine001();
+//    UIKitCanvasTestLineJoin001();
+//    UIKitCanvasTestDrawLine001();
+//    UIKitCanvasTestDrawLine002();
+//    UIKitCanvasTestDrawCurve001();
+//    UIKitCanvasTestDrawCurve002();
 //    UIKitCanvasTestDrawRect001();
 
-    UIKitCanvasTestLinearGradient();//线性渐变水平
-    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
-    UIKitCanvasTestRadialGradient();//放射渐变
+//    UIKitCanvasTestLinearGradient();//线性渐变水平
+//    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+//    UIKitCanvasTestRadialGradient();//放射渐变
     UIKitCanvasTestcreatePattern5();
     UIKitCanvasTestcreatePattern1();
     UIKitCanvasTestcreatePattern6();
