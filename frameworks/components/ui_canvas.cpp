@@ -932,9 +932,9 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
 
 }
 
-void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::StopAndColor> & stopAndColors){
+void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<GradientControl::StopAndColor> & stopAndColors){
     m_graphics.remove_all_color();
-    ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
+    ListNode<GradientControl::StopAndColor>* iter = stopAndColors.Begin();
     uint16_t count=0;
     for (; count <stopAndColors.Size(); count++) {
        ColorType stopColor = iter->data_.color;
@@ -1145,17 +1145,17 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
 
 
 void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
-
-    List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
+    GradientControl gradientControl=paint.getGradientControl();
+    List<GradientControl::StopAndColor>  stopAndColors= gradientControl.getStopAndColor();
     if(stopAndColors.Size()>0){
           addColorGradient(m_graphics,stopAndColors);
     }
 
-    if(paint.gradientfalg==paint.Linear){//线性渐变
-        double x0 = paint.getLinearGradientPoit().x0;
-        double y0 = paint.getLinearGradientPoit().y0;
-        double x1 = paint.getLinearGradientPoit().x1;
-        double y1 = paint.getLinearGradientPoit().y1;
+    if(gradientControl.gradientflag==gradientControl.Linear){//线性渐变
+        double x0 = gradientControl.getLinearGradientPoint().x0;
+        double y0 = gradientControl.getLinearGradientPoint().y0;
+        double x1 = gradientControl.getLinearGradientPoint().x1;
+        double y1 = gradientControl.getLinearGradientPoint().y1;
 
         Point start;
         Point orgstart;
@@ -1172,8 +1172,8 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rec
         m_graphics.fillLinearGradient(start.x,start.y,end.x,end.y);
 
     }
-    if(paint.gradientfalg==paint.Radial){//放射渐变
-        Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
+    if(gradientControl.gradientflag==gradientControl.Radial){//放射渐变
+        GradientControl::RadialGradientPoint rp=gradientControl.getRadialGradientPoint();
 //        m_graphics.fillRadialGradient(rp.x0,rp.y0,rp.r0,rp.x1,rp.y1,rp.r1);
 
         Point start;
@@ -1192,7 +1192,7 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rec
         m_graphics.fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
     }
 
-    if(paint.gradientfalg==paint.Solid){//纯色渐变
+    if(gradientControl.gradientflag==gradientControl.Solid){//纯色渐变
         ColorType color=paint.GetFillColor();
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }

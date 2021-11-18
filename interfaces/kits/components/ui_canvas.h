@@ -58,6 +58,109 @@ class PolygonPath : public ClipPath{
 
 };
 
+class GradientControl{
+public:
+    struct LinearGradientPoint{
+        /**  开始点坐标x  */
+        double x0;
+        /**  开始点坐标y  */
+        double y0;
+        /**  结束点坐标x  */
+        double x1;
+        /**  结束点坐标y  */
+        double y1;
+    };
+    struct RadialGradientPoint{
+        /**  开始圆点坐标x  */
+        double x0;
+        /**  开始圆点坐标y  */
+        double y0;
+        /**  开始圆半径r0  */
+        double r0;
+        /**  结束圆点坐标x  */
+        double x1;
+        /**  结束圆点坐标y  */
+        double y1;
+        /**  开始圆半径r0  */
+        double r1;
+    };
+
+    struct StopAndColor{
+        /** 介于 0.0 与 1.0 之间的值，表示渐变中开始与结束之间的位置。  */
+        double stop;
+        /** 在结束位置显示的颜色值 */
+        ColorType color;
+    };
+
+    enum Gradient
+    {
+        Solid,
+        Linear,
+        Radial
+    }gradientflag;
+
+    void createLinearGradient(double startx,double starty,double endx,double endy){
+        gradientflag=Linear;
+        linearGradientPoint_.x0=startx;
+        linearGradientPoint_.y0=starty;
+        linearGradientPoint_.x1=endx;
+        linearGradientPoint_.y1=endy;
+    }
+
+    void addColorStop(double stop,ColorType color){
+        StopAndColor stopAndColor;
+        stopAndColor.stop = stop;
+        stopAndColor.color = color;
+        stopAndColors_.PushBack(stopAndColor);
+    }
+
+    void createRadialGradient(double start_x,double start_y,double start_r, double end_x,double end_y,double end_r){
+        gradientflag=Radial;
+        radialGradientPoint_.x0=start_x;
+        radialGradientPoint_.y0=start_y;
+        radialGradientPoint_.r0=start_r;
+        radialGradientPoint_.x1=end_x;
+        radialGradientPoint_.y1=end_y;
+        radialGradientPoint_.r1=end_r;
+    }
+
+    List<StopAndColor> getStopAndColor() const
+    {
+        return stopAndColors_;
+    } 
+
+    LinearGradientPoint getLinearGradientPoint() const{
+        return linearGradientPoint_;
+    }   
+
+    RadialGradientPoint getRadialGradientPoint() const{
+        return radialGradientPoint_;
+    }
+
+    GradientControl& operator = (GradientControl gradientControl)
+    {
+        gradientflag=gradientControl.gradientflag;
+        linearGradientPoint_=gradientControl.getLinearGradientPoint();
+        radialGradientPoint_=gradientControl.getRadialGradientPoint();
+        List<StopAndColor> stopAndColors=gradientControl.getStopAndColor();
+        stopAndColors_=stopAndColors;
+        // if(!stopAndColors_.IsEmpty()){
+        //     stopAndColors_.Clear();
+        // }
+        // ListNode<GradientControl::StopAndColor>* iter = stopAndColors.Begin();
+        // uint16_t count=0;
+        // for (; count <stopAndColors.Size(); count++) {
+        //     addColorStop(iter->data_.stop,iter->data_.color);
+        //     iter=iter->next_;
+        // }
+        
+        return *this;
+    }
+private:
+    LinearGradientPoint linearGradientPoint_;
+    RadialGradientPoint radialGradientPoint_;
+    List<StopAndColor> stopAndColors_;
+};
 
 class Paint : public HeapBase {
 public:
@@ -122,11 +225,7 @@ public:
         } else {
             dashArray =nullptr;
         }
-
-           stopAndColors = paint.stopAndColors;
-           gradientfalg = paint.gradientfalg;
-           linearGradientPoint = paint.linearGradientPoint;
-           radialGradientPoint=paint.radialGradientPoint;
+            gradientControl=paint.getGradientControl();
            patternRepeat = paint.patternRepeat;
 
     }
@@ -168,38 +267,8 @@ public:
     /**
      * @brief 线性渐变所需要的起止点
      */
-    struct LinearGradientPoint{
-        /**  开始点坐标x  */
-        double x0;
-        /**  开始点坐标y  */
-        double y0;
-        /**  结束点坐标x  */
-        double x1;
-        /**  结束点坐标y  */
-        double y1;
-    };
 
-    struct RadialGradientPoint{
-        /**  开始圆点坐标x  */
-        double x0;
-        /**  开始圆点坐标y  */
-        double y0;
-        /**  开始圆半径r0  */
-        double r0;
-        /**  结束圆点坐标x  */
-        double x1;
-        /**  结束圆点坐标y  */
-        double y1;
-        /**  开始圆半径r0  */
-        double r1;
-    };
-
-     struct StopAndColor{
-        /** 介于 0.0 与 1.0 之间的值，表示渐变中开始与结束之间的位置。  */
-        double stop;
-        /** 在结束位置显示的颜色值 */
-        ColorType color;
-    };
+ 
 
      /**
       * repeat|repeat-x|repeat-y|no-repeat
@@ -213,12 +282,6 @@ public:
 
      const char * image;
 
-     enum Gradient
-     {
-         Solid,
-         Linear,
-         Radial
-     }gradientfalg;
 
 
     /**
@@ -312,7 +375,7 @@ public:
      */
     void SetFillColor(ColorType color)
     {
-        gradientfalg = Solid;
+        gradientControl.gradientflag = GradientControl::Solid;
         fillColor_ = color;
     }
 
@@ -358,47 +421,15 @@ public:
     }
 
 
-    void createLinearGradient(double startx,double starty,double endx,double endy){
-        gradientfalg=Linear;
-        linearGradientPoint.x0=startx;
-        linearGradientPoint.y0=starty;
-        linearGradientPoint.x1=endx;
-        linearGradientPoint.y1=endy;
-    }
-
-
-    LinearGradientPoint getLinearGradientPoit() const{
-        return linearGradientPoint;
-    }
-
-    void createRadialGradient(double start_x,double start_y,double start_r, double end_x,double end_y,double end_r){
-        gradientfalg=Radial;
-        radialGradientPoint.x0=start_x;
-        radialGradientPoint.y0=start_y;
-        radialGradientPoint.r0=start_r;
-        radialGradientPoint.x1=end_x;
-        radialGradientPoint.y1=end_y;
-        radialGradientPoint.r1=end_r;
-    }
-
-    RadialGradientPoint getRadialGradientPoint() const{
-        return radialGradientPoint;
-    }
-
-
-    void addColorStop(double stop,ColorType color){
-        StopAndColor stopAndColor;
-        stopAndColor.stop = stop;
-        stopAndColor.color = color;
-        stopAndColors.PushBack(stopAndColor);
-    }
 
 
 
-    List<StopAndColor> getStopAndColor() const
-    {
-        return stopAndColors;
-    }
+
+
+
+
+
+
 
     void SetMiterLimit(double miterLimit)
     {
@@ -568,19 +599,19 @@ public:
         } else if (strcmp(text,"no-repeat")==0) {
             patternRepeat =NO_REPEAT;
         }
-
-
     }
-
+    void fillStyle(GradientControl& ctrl){
+        gradientControl=ctrl;
+    }
+    GradientControl getGradientControl() const{
+        return gradientControl;
+    }
 private:
     PaintStyle style_;
     ColorType fillColor_;
     ColorType strokeColor_;
     uint8_t opacity_;
     uint16_t strokeWidth_;
-    LinearGradientPoint linearGradientPoint;
-    RadialGradientPoint radialGradientPoint;
-    List<StopAndColor> stopAndColors;
     BaseGfxExtendEngine::LineCap lineCap_;
     BaseGfxExtendEngine::LineJoin lineJoin_;
     double miterLimit_;
@@ -596,6 +627,7 @@ private:
     double shadowOffsetY;
     ColorType shadowColor;
     BaseGfxExtendEngine::BlendMode blendMode;
+    GradientControl gradientControl;
 };
 
 /**
@@ -1193,7 +1225,7 @@ protected:
                                const Rect& invalidatedArea,
                                const Paint& paint);
 
-    static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
+    static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<GradientControl::StopAndColor> & stopAndColors);
 
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);

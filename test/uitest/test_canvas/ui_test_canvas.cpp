@@ -58,11 +58,11 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawCurve001();
     UIKitCanvasTestDrawCurve002();
     UIKitCanvasTestDrawShadow001();
-//    UIKitCanvasTestDrawRect001();
+    UIKitCanvasTestDrawRect001();
 
-//    UIKitCanvasTestLinearGradient();//线性渐变水平
-//    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
-//    UIKitCanvasTestRadialGradient();//放射渐变
+    UIKitCanvasTestLinearGradient();//线性渐变水平
+    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+    UIKitCanvasTestRadialGradient();//放射渐变
     UIKitCanvasTestcreatePattern5();
     UIKitCanvasTestcreatePattern1();
     UIKitCanvasTestcreatePattern6();
@@ -1143,14 +1143,16 @@ void UITestCanvas::UIKitCanvasTestLinearGradient(){
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
+    GradientControl gradientControl;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetStrokeWidth(2);
-    paint.createLinearGradient(100,50,200,50);
+    gradientControl.createLinearGradient(100,50,200,50);
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.3,Color::White());
-    paint.addColorStop(0.6,Color::Green());
-    paint.addColorStop(1,Color::Blue());
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->DrawRect({ 100, 50 }, 50, 100, paint);
 
 }
@@ -1166,15 +1168,17 @@ void UITestCanvas::UIKitCanvasTestLinearGradient2(){
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
+    GradientControl gradientControl;
     paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(2);
-    paint.createLinearGradient(100,50,200,150);
+    gradientControl.createLinearGradient(100,50,200,150);
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.3,Color::White());
-    paint.addColorStop(0.6,Color::Green());
-    paint.addColorStop(1,Color::Blue());
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
 }
@@ -1194,12 +1198,14 @@ void UITestCanvas::UIKitCanvasTestRadialGradient(){
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetStrokeWidth(2);
-    paint.createRadialGradient(180,140,10,150,100,80);
+    GradientControl gradientControl;
+    gradientControl.createRadialGradient(180,140,10,150,100,80);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.4,Color::Gray());
+    gradientControl.addColorStop(0.8,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.4,Color::Gray());
-    paint.addColorStop(0.8,Color::Green());
-    paint.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
 }
