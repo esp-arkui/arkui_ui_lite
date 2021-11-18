@@ -56,6 +56,7 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawLine002();
     UIKitCanvasTestDrawCurve001();
     UIKitCanvasTestDrawCurve002();
+    UIKitCanvasTestDrawShadow001();
 //    UIKitCanvasTestDrawRect001();
 
     UIKitCanvasTestLinearGradient();//线性渐变水平
