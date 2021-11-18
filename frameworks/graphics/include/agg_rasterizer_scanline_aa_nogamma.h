@@ -51,8 +51,8 @@ namespace agg
 
         void initial()
         {
-            x = std::numeric_limits<int>::max();
-            y = std::numeric_limits<int>::max();
+            x = (std::numeric_limits<int>::max)();
+            y = (std::numeric_limits<int>::max)();
             cover = 0;
             area  = 0;
         }

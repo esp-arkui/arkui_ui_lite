@@ -73,9 +73,11 @@ public:
           lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
           lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
           miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
-          dashArray(nullptr),ndashes(0),globalAlpha(1.0f)
+          dashArray(nullptr),ndashes(0),globalAlpha(1.0f),
+          blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver)
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
+        //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
     }
     Paint(const Paint& paint)
     {
@@ -86,6 +88,7 @@ public:
         style_=paint.style_;
         fillColor_=paint.fillColor_;
         m_graphics= paint.m_graphics;
+        //m_graphics_Image = paint.m_graphics_Image;
         strokeColor_=paint.strokeColor_;
         opacity_=paint.opacity_;
         strokeWidth_=paint.strokeWidth_;
@@ -96,6 +99,7 @@ public:
         dashOffset=paint.dashOffset;
         isDrawDash=paint.isDrawDash;
         ndashes = (paint.ndashes+1)&~1;
+        blendMode = paint.blendMode;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
@@ -435,6 +439,11 @@ public:
         return m_graphics.get();
     }
 
+//    BaseGfxExtendEngine* GetImageBufferContext() const
+//    {
+//        return m_graphics_Image.get();
+//    }
+
     void SetLineDash(float* lineDashs, const unsigned int ndash)
     {
         if(ndash < 0) {
@@ -499,19 +508,30 @@ public:
     }
 
 
+    void globalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
+    {
+        this->blendMode = blendMode;
+    }
+
+    BaseGfxExtendEngine::BlendMode globalCompositeOperation() const
+    {
+        return this->blendMode;
+    }
+
     void createPattern(const char* img,const char* text)
     {
         image = img;
         patternRepeat =NO_REPEAT;
-        if(text=="repeat"){
+        if(strcmp(text,"repeat")==0){
             patternRepeat =REPEAT;
-        } else if (text=="repeat-x") {
+        } else if (strcmp(text,"repeat-x")==0) {
             patternRepeat =REPEAT_X;
-        } else if (text=="repeat-y") {
+        } else if (strcmp(text,"repeat-y")==0) {
             patternRepeat =REPEAT_Y;
-        } else if (text=="no-repeat") {
+        } else if (strcmp(text,"no-repeat")==0) {
             patternRepeat =NO_REPEAT;
         }
+
 
     }
 
@@ -532,7 +552,9 @@ private:
     float* dashArray;
     unsigned int ndashes;
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
+    //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
     float globalAlpha;
+    BaseGfxExtendEngine::BlendMode blendMode;
 };
 
 /**
@@ -901,8 +923,8 @@ public:
     };
 
 protected:
-
-    bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer, const Rect &fillArea, const Rect &worldRect, const Rect &screenRect, const Paint &paint);
+    bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer,
+                             const Rect &fillArea, const Rect &worldRect, const Rect &screenRect, const Paint &paint);
 
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
@@ -1118,6 +1140,7 @@ protected:
                                const Paint& paint);
 
     static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
+
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
