@@ -595,8 +595,6 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                                        gfxMapBuffer->width,gfxMapBuffer->height,
                                                        gfxMapBuffer->stride);
         BaseGfxExtendEngine m_graphics_Image;
-        int16_t posLeft= trunc.GetLeft();// + style_->paddingLeft_ + style_->borderWidth_;
-        int16_t posTop= trunc.GetTop();// + style_->paddingTop_ + style_->borderWidth_;
 
         uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
         if (gfxDstBuffer.virAddr == nullptr) {
@@ -604,8 +602,8 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         }
 
         ColorMode mode = gfxDstBuffer.mode;
-        int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
-                posLeft;
+        int32_t offset = static_cast<int32_t>(trunc.GetTop()) * gfxDstBuffer.width +
+                trunc.GetLeft();
         destBuf += offset * destByteSize;
 
         m_graphics_Image.attach(destBuf,trunc.GetWidth(),
@@ -619,14 +617,11 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                              BaseGfxExtendEngine::Anisotropic);
                              //BaseGfxExtendEngine::XMidYMid);
 
-        m_graphics_Image.blend_from(imageBuffer,BaseGfxExtendEngine::Rect(gfxMapBuffer->rect.GetLeft(),
+        m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
                                                                                    gfxMapBuffer->rect.GetTop(),
                                                                                    gfxMapBuffer->rect.GetRight(),
-                                                                                   gfxMapBuffer->rect.GetBottom()),
-                                             BaseGfxExtendEngine::Rect(gfxDstBuffer.rect.GetLeft(),
-                                                                       gfxDstBuffer.rect.GetTop(),
-                                                                       gfxDstBuffer.rect.GetRight(),
-                                                                       gfxDstBuffer.rect.GetBottom()));
+                                                                                   gfxMapBuffer->rect.GetBottom(),
+                                             gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
 
 //       ImageInfo imageInfo;
 //       imageInfo.header.colorMode = gfxMapBuffer->mode;

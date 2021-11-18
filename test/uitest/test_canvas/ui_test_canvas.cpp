@@ -173,7 +173,7 @@ void UITestCanvas::UIKitCanvasTestDrawDashLine001()
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     paint.SetStrokeColor(Color::Green());
-    paint.SetOpacity(230);//0 是完全透明 255 不透明
+    paint.SetOpacity(200);//0 是完全透明 255 不透明
 
     canvas->LineWidth(2,paint);
     canvas->LineDashOffset(10,paint);
