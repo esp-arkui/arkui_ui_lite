@@ -924,6 +924,12 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
 
     Point start;
     GetAbsolutePosition(rectParam->start, rect, style, start);
+    if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+        m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+        m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+        m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                    paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+    }
 
     m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
     m_graphics->noLine();
@@ -1223,6 +1229,13 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
     if(m_graphics==nullptr) {
         return;
     }
+
+    if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+        m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+        m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+        m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                    paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+    }
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
         arcInfo.radius = circleParam->radius - halfLineWidth;
         drawStyle.lineWidth_ = arcInfo.radius;
@@ -1235,6 +1248,7 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         } else {
 
             m_graphics->noLine();
+            
             m_graphics->fillColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
                               drawStyle.lineColor_.blue,drawStyle.bgOpa_);
             m_graphics->blendMode(paint.globalCompositeOperation());
@@ -1730,6 +1744,7 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
             m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
         }
+    fill(*m_graphics,paint,rect,style);//填充颜色
     m_graphics->drawPath(BaseGfxExtendEngine::FillOnly);
 
 }

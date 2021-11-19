@@ -75,7 +75,7 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawRect003();
 //    UIKitCanvasTestDrawRect004();
 //    UIKitCanvasTestClearRect001();
-//    UIKitCanvasTestDrawCircle001();
+    UIKitCanvasTestDrawCircle001();
 //    UIKitCanvasTestDrawCircle002();
 //    UIKitCanvasTestDrawCircle003();
 //    UIKitCanvasTestDrawArc001();
@@ -116,7 +116,7 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawPath031();
 //    UIKitCanvasTestDrawPath032();
 //    UIKitCanvasTestDrawPath033();
-//    UIKitCanvasTestDrawPath034();
+   UIKitCanvasTestDrawPath034();
 
 
 
@@ -305,22 +305,30 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     CreateTitleLabel("绘制矩形和阴影");
     UICanvas* canvas = CreateCanvas();
     Paint paint;
+    GradientControl gradientControl;
    // paint.SetStrokeColor(Color::Red());
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-    paint.SetFillColor(Color::Green());
+    //paint.SetFillColor(Color::Green());
+    //paint.fillStyle(Color::White());
     paint.SetShadowColor(Color::Black());
     paint.SetStrokeWidth(1);
     paint.SetShadowOffsetX(10);
     paint.SetShadowOffsetY(10);
     paint.SetShadowBlurRadius(5);
+    gradientControl.createLinearGradient(60,60,160,110);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->BeginPath();
     canvas->MoveTo({60,60});
     canvas->LineTo({60,110});
     canvas->LineTo({160,110});
     canvas->LineTo({160,60});
     canvas->ClosePath();
-    canvas->DrawPath(paint);
     canvas->FillPath(paint);
+    canvas->DrawPath(paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve002()
@@ -346,6 +354,13 @@ void UITestCanvas::UIKitCanvasTestDrawRect001()
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    paint.SetShadowBlurRadius(5);
+
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(30); // 30: line width
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
@@ -427,6 +442,11 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    //paint.SetShadowBlurRadius(5);
     paint.SetStrokeColor(Color::Yellow());
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(10); // 10: line width
@@ -1153,8 +1173,14 @@ void UITestCanvas::UIKitCanvasTestLinearGradient(){
     gradientControl.addColorStop(0.6,Color::Green());
     gradientControl.addColorStop(1,Color::Blue());
     paint.fillStyle(gradientControl);
-    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
-
+    // canvas->DrawRect({ 100, 50 }, 50, 100, paint);
+    canvas->BeginPath();
+    canvas->MoveTo({100,50});
+    canvas->LineTo({100,100});
+    canvas->LineTo({200,100});
+    // canvas->LineTo({200,50});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
 }
 /**
  * 调试线性渐变

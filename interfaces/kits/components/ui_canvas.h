@@ -70,6 +70,7 @@ public:
         /**  结束点坐标y  */
         double y1;
     };
+
     struct RadialGradientPoint{
         /**  开始圆点坐标x  */
         double x0;
@@ -142,18 +143,7 @@ public:
         gradientflag=gradientControl.gradientflag;
         linearGradientPoint_=gradientControl.getLinearGradientPoint();
         radialGradientPoint_=gradientControl.getRadialGradientPoint();
-        List<StopAndColor> stopAndColors=gradientControl.getStopAndColor();
-        stopAndColors_=stopAndColors;
-        // if(!stopAndColors_.IsEmpty()){
-        //     stopAndColors_.Clear();
-        // }
-        // ListNode<GradientControl::StopAndColor>* iter = stopAndColors.Begin();
-        // uint16_t count=0;
-        // for (; count <stopAndColors.Size(); count++) {
-        //     addColorStop(iter->data_.stop,iter->data_.color);
-        //     iter=iter->next_;
-        // }
-        
+        stopAndColors_=gradientControl.getStopAndColor();
         return *this;
     }
 private:
@@ -419,18 +409,6 @@ public:
     {
         return opacity_;
     }
-
-
-
-
-
-
-
-
-
-
-
-
     void SetMiterLimit(double miterLimit)
     {
         miterLimit_ = miterLimit;
@@ -603,6 +581,29 @@ public:
     void fillStyle(GradientControl& ctrl){
         gradientControl=ctrl;
     }
+
+    void fillStyle(ColorType color){
+        // uint8_t array[6];
+        // uint8_t r,g,b;
+        // for(int count=1;count<=6;count++){
+        //     if(color[count]<48||color[count]>70||(color[count]>57&&color[count]<65)){
+        //         return;
+        //     }
+        //     if(color[count]<=57){
+        //         array[count-1]=color[count]-48;
+        //     }
+        //     if(color[count]>=65){
+        //         array[count-1]=color[count]-55;
+        //     }
+        // }
+        
+        // r=array[0]*16+array[1];
+        // g=array[2]*16+array[3];
+        // b=array[4]*16+array[5];
+        // printf("%d,%d,%d",r,g,b);
+        SetFillColor(color);
+    }
+
     GradientControl getGradientControl() const{
         return gradientControl;
     }
