@@ -100,6 +100,7 @@ public:
     void UIKitCanvasTestcreatePattern6();
     void UIKitCanvasTestcreatePattern7();
     void UIKitCanvasTestcreatePattern8();
+    void UIKitCanvasTestcreateStroke1();
 
 
 private:

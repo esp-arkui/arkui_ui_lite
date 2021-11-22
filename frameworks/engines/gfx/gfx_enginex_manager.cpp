@@ -15,6 +15,8 @@
 
 #include "engines/gfx/gfx_enginex_manager.h"
 
+#include <agg_scanline_p.h>
+
 static const double g_approxScale = 2.0;
 namespace OHOS {
 BaseGfxExtendEngine::~BaseGfxExtendEngine()
@@ -787,7 +789,7 @@ void BaseGfxExtendEngine::rectangle(double x1, double y1, double x2, double y2)
     m_path.line_to(x2, y2);
     m_path.line_to(x1, y2);
     m_path.close_polygon();
-    drawPath(FillAndStroke);
+//    drawPath(FillAndStroke);
 }
 
 
@@ -1297,6 +1299,20 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
 }
 
 
+void BaseGfxExtendEngine::stroke(){
+
+m_rasterizer.reset();
+m_rasterizer.add_path(m_convStroke);
+render(false);
+
+
+//agg::scanline_p8 m_sl;
+//RendererRadialGradient();
+//agg::render_scanlines_aa(m_rasterizer, m_sl, rb_pre, sa, RadialGradientSpan);
+
+}
+
+
 
 //------------------------------------------------------------------------
 class BaseGfxExtendEngineRenderer
@@ -1317,8 +1333,7 @@ public:
 										span_allocator_type,
                                         BaseGfxExtendEngine::RadialGradientSpan> RendererRadialGradient;
 
-        if ((fillColor && gr.m_fillGradientFlag == BaseGfxExtendEngine::Linear) ||
-           (!fillColor && gr.m_lineGradientFlag == BaseGfxExtendEngine::Linear))
+        if (gr.m_lineGradientFlag == BaseGfxExtendEngine::Linear)
         {
             if (fillColor)
             {
@@ -1345,10 +1360,7 @@ public:
                 agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
             }
         }
-        else
-        {
-            if ((fillColor && gr.m_fillGradientFlag == BaseGfxExtendEngine::Radial) ||
-               (!fillColor && gr.m_lineGradientFlag == BaseGfxExtendEngine::Radial))
+        else if (gr.m_fillGradientFlag == BaseGfxExtendEngine::Radial)
             {
                 if (fillColor)
                 {
@@ -1364,6 +1376,8 @@ public:
                 }
                 else
                 {
+
+
                     BaseGfxExtendEngine::RadialGradientSpan span(
                                                                 gr.m_interpolator_type,
                                                                 gr.m_radialGradientFunction,
@@ -1371,8 +1385,12 @@ public:
                                                                 gr.m_fillGradientD1,
                                                                 gr.m_fillGradientD2);
                     //-RendererRadialGradient ren(renBase, span);
-                    RendererRadialGradient ren(renBase,gr.m_allocator,span);
-                    agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
+//                    RendererRadialGradient ren(renBase,gr.m_allocator,span);
+//                    agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
+                    agg::scanline_p8 m_sl;
+                    agg::render_scanlines_aa(gr.m_rasterizer, m_sl, renBase, gr.m_allocator, span);
+
+
                 }
             }
             else
@@ -1380,7 +1398,7 @@ public:
                 renSolid.color(fillColor ? gr.m_fillColor : gr.m_lineColor);
                 agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, renSolid);
             }
-        }
+
     }
 
 

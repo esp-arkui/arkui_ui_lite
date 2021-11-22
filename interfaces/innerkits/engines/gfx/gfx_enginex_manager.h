@@ -102,6 +102,8 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef agg::stack_blur<ColorType, agg::stack_blur_calc_rgba<>> StackBlur;
     typedef agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > RecursiveBlur;
     typedef agg::rendering_buffer RenderingBuffer;
+
+
     enum Gradient
     {
         Solid,
@@ -228,6 +230,7 @@ public:
         BlendSoftLight  = agg::comp_op_soft_light,
         BlendDifference = agg::comp_op_difference,
         BlendExclusion  = agg::comp_op_exclusion,
+        BlendNone = -1,
     };
 
     enum Direction
@@ -419,6 +422,8 @@ public:
     void drawPath(DrawPathFlag flag = FillAndStroke);
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 
+
+    void stroke();
 
     // Image Transformations
     //-----------------------
@@ -651,6 +656,7 @@ private:
     bool                            m_evenOddFlag;
 
     agg::path_storage               m_path;
+//    typedef agg::conv_stroke<agg::path_storage> cs_ps(m_path);
     agg::trans_affine               m_transform;
 
     ConvCurve                       m_convCurve;
@@ -669,6 +675,7 @@ private:
     float* dashes;
     unsigned int ndashes;
     float dDashOffset;
+
 };
 
 inline bool operator == (const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)

@@ -163,6 +163,7 @@ public:
         /** Stroke and fill */
         STROKE_FILL_STYLE,
         PATTERN = 7,
+        STROKE_GRADIENT,
     };
 
     /**

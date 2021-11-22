@@ -75,6 +75,10 @@ void UICanvas::LineTo(const Point& point)
     } else {
         path_->cmd_.PushBack(CMD_LINE_TO);
     }
+
+//    BaseGfxExtendEngine* m_graphics = Paint::GetDrawGraphicsContext();
+
+//    m_graphics->lineTo(point.x,point.y);
 }
 
 void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle)
@@ -585,6 +589,8 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(
                     buffSize, BUFFER_MAP_SURFACE);
         memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
+        //BaseGfxEngine::GetInstance()->Fill(*gfxMapBuffer, invalidatedArea, Color::GetColorFromRGBA(0,0,0,0), opaScale_);
+
         gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -601,6 +607,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                      posViewTop,
                                      posViewLeft+trunc.GetWidth() - 1,
                                      posViewTop+trunc.GetHeight() - 1),curDraw->data_.paint);
+
             curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
 
         }
@@ -627,14 +634,14 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                   realTop+trunc.GetHeight() - 1,
                                   posViewLeft,posViewTop,posViewLeft+trunc.GetWidth() - 1,
                                   posViewTop+trunc.GetHeight() - 1,
-                             BaseGfxExtendEngine::Anisotropic);
+                             BaseGfxExtendEngine::XMinYMin);
                              //BaseGfxExtendEngine::XMidYMid);
 
         m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-                                                                                   gfxMapBuffer->rect.GetTop(),
-                                                                                   gfxMapBuffer->rect.GetRight(),
-                                                                                   gfxMapBuffer->rect.GetBottom(),
-                                             gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
+                                    gfxMapBuffer->rect.GetTop(),
+                                    gfxMapBuffer->rect.GetRight(),
+                                    gfxMapBuffer->rect.GetBottom(),
+                                    gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
 
 //       ImageInfo imageInfo;
 //       imageInfo.header.colorMode = gfxMapBuffer->mode;
@@ -660,7 +667,6 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
 
     }
 }
-
 
 bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const Rect& fillArea,const Rect &worldRect,
                                    const Rect &screenRect,const Paint& paint)
@@ -927,8 +933,8 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
 
     m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
     m_graphics->noLine();
-    fill(*m_graphics,paint,rect,style);//填充颜色
     m_graphics->rectangle(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
+    fill(*m_graphics,paint,rect,style);//填充颜色
 
 }
 
@@ -1150,7 +1156,7 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rec
     if(stopAndColors.Size()>0){
           addColorGradient(m_graphics,stopAndColors);
     }
-
+m_graphics.lineWidth(8);
     if(paint.gradientfalg==paint.Linear){//线性渐变
         double x0 = paint.getLinearGradientPoit().x0;
         double y0 = paint.getLinearGradientPoit().y0;
@@ -1196,6 +1202,8 @@ void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rec
         ColorType color=paint.GetFillColor();
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
+
+    m_graphics.stroke();
 }
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
@@ -1223,54 +1231,84 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
     if(m_graphics==nullptr) {
         return;
     }
+
+    arcInfo.radius = circleParam->radius + halfLineWidth - 1;
+
+    //int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
+    //int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
+
+//    Rect imgRect(posViewLeft, posViewLeft, posViewLeft+1, posViewLeft+1);
+//    TransformMap backwardMap;
+//    Vector2<float> pivot;
+//    pivot.x_ = arcInfo.center.x;
+//    pivot.y_ = arcInfo.center.y;
+
+////    /* Rotate the specified angle,  BaseGfxExtendEngine::deg2Rad()*/
+//    backwardMap.Rotate(30, pivot);
+////    Rect redraw = hand.target_;
+////    hand.target_ = backwardMap.GetBoxRect();
+////    hand.trans_ = backwardMap;
+////    hand.preAngle_ = hand.nextAngle_;
+//    Matrix4<float> mRotate=backwardMap.GetTransformMatrix();
+//    BaseGfxExtendEngine::Transformations mTransformations;
+//    const float* mfloat=mRotate.GetData();
+//    mTransformations.affineMatrix[0]=mfloat[0];
+//    mTransformations.affineMatrix[1]=mfloat[1];
+//    mTransformations.affineMatrix[2]=mfloat[2];
+//    mTransformations.affineMatrix[3]=mfloat[5];
+//    mTransformations.affineMatrix[4]=mfloat[8];
+//    mTransformations.affineMatrix[5]=mfloat[9];
+//    m_graphics->transformations(mTransformations);
+    int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
+    int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
+    m_graphics->translate(-posViewLeft,-posViewTop);
+
+    m_graphics->rotate(BaseGfxExtendEngine::deg2Rad(0));
+
+    m_graphics->translate(posViewLeft,posViewTop);
+
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
-        arcInfo.radius = circleParam->radius - halfLineWidth;
-        drawStyle.lineWidth_ = arcInfo.radius;
-        drawStyle.lineColor_ = paint.GetFillColor();
+        drawStyle.bgColor_ = paint.GetFillColor();
         drawStyle.bgOpa_ = paint.GetOpacity();
-        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
-                && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
-            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                                  CapType::CAP_NONE);
-        } else {
-
-            m_graphics->noLine();
-            m_graphics->fillColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
-                              drawStyle.lineColor_.blue,drawStyle.bgOpa_);
-            m_graphics->blendMode(paint.globalCompositeOperation());
-            m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
-                                arcInfo.radius,arcInfo.radius);
-        }
-        // Add/Sub/Contrast Blending Modes
+        m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
+                                  drawStyle.bgColor_.blue,drawStyle.bgOpa_);
     }
-
     if (enableStroke) {
-        arcInfo.radius = circleParam->radius + halfLineWidth - 1;
+
         drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
         drawStyle.lineColor_ = paint.GetStrokeColor();
         drawStyle.lineOpa_= paint.GetOpacity();
-        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
-                && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
-            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                              CapType::CAP_NONE);
+        if(paint.IsLineDash()) {
+            m_graphics->lineDashOffset(paint.GetLineDashOffset());
+            m_graphics->SetLineDash(paint.GetLineDash(),paint.GetLineDashCount());
         } else {
-            if(paint.IsLineDash()) {
-                m_graphics->lineDashOffset(paint.GetLineDashOffset());
-                m_graphics->SetLineDash(paint.GetLineDash(),paint.GetLineDashCount());
-            } else {
-                m_graphics->SetLineDash(nullptr,0);
-            }
-            m_graphics->lineWidth(drawStyle.lineWidth_);
-            m_graphics->blendMode(paint.globalCompositeOperation());
-            m_graphics->lineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
-                                      drawStyle.lineColor_.blue,drawStyle.lineOpa_);
-            m_graphics->noFill();
-            m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
-                                arcInfo.radius-1,arcInfo.radius-1);
-
+            m_graphics->SetLineDash(nullptr,0);
         }
+        m_graphics->lineWidth(drawStyle.lineWidth_);
+        m_graphics->lineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
+                                  drawStyle.lineColor_.blue,drawStyle.lineOpa_);
+    }
+
+    if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
+            && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendNone) {
+        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+                                          CapType::CAP_NONE);
+    } else {
+        if (!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)) {
+            m_graphics->noFill();
+        }
+        if (!enableStroke) {
+            m_graphics->noLine();
+        }
+        m_graphics->blendMode(paint.globalCompositeOperation());
+        //double xx=circleParam->center.x,yy=circleParam->center.y;
+        //m_graphics->screenToWorld(xx,yy);
+        m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
+                            arcInfo.radius,arcInfo.radius);
+
     }
 }
+
 
 void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer,
                          void* param,
@@ -1324,6 +1362,27 @@ void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
     cordsTmp.SetWidth(imageParam->width);
     DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
         imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+
+//    m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
+//                                                                               gfxMapBuffer->rect.GetTop(),
+//                                                                               gfxMapBuffer->rect.GetRight(),
+//                                                                               gfxMapBuffer->rect.GetBottom(),
+//                                         gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
+//imageParam->image->GetImageInfo()->userData
+//gfxDstBuffer.
+
+//   int16_t w= imageParam->image->GetImageInfo()->header.width;
+//    int16_t h=imageParam->image->GetImageInfo()->header.height;
+//    BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
+//                                                   imageParam->image->GetImageInfo()->header.width,imageParam->image->GetImageInfo()->header.height,
+//                                                   gfxDstBuffer.stride);
+
+
+//    paint.GetDrawGraphicsContext()->blendImage(imageBuffer,start.x, start.y,255);
+
+
+
+
 }
 
 
