@@ -1196,7 +1196,7 @@ protected:
 
     static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
 
-    static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
+    static void setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
 };

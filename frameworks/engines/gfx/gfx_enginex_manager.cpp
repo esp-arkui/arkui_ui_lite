@@ -789,7 +789,17 @@ void BaseGfxExtendEngine::rectangle(double x1, double y1, double x2, double y2)
     m_path.line_to(x2, y2);
     m_path.line_to(x1, y2);
     m_path.close_polygon();
-//    drawPath(FillAndStroke);
+    drawPath(FillAndStroke);
+}
+void BaseGfxExtendEngine::rectstroke(double x1, double y1, double x2, double y2)
+{
+    m_path.remove_all();
+    m_path.move_to(x1, y1);
+    m_path.line_to(x2, y1);
+    m_path.line_to(x2, y2);
+    m_path.line_to(x1, y2);
+    m_path.close_polygon();
+    stroke();
 }
 
 

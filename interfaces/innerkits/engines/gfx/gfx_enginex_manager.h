@@ -354,6 +354,7 @@ public:
     void line(double x1, double y1, double x2, double y2);
     void triangle(double x1, double y1, double x2, double y2, double x3, double y3);
     void rectangle(double x1, double y1, double x2, double y2);
+    void rectstroke(double x1, double y1, double x2, double y2);
     void roundedRect(double x1, double y1, double x2, double y2, double r);
     void roundedRect(double x1, double y1, double x2, double y2, double rx, double ry);
     void roundedRect(double x1, double y1, double x2, double y2,

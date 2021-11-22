@@ -1355,44 +1355,16 @@ void UITestCanvas::UIKitCanvasTestcreateStroke1()
        CreateTitleLabel("stroke-放射渐变");
        UICanvas* canvas = CreateCanvas();
        Paint paint;
-//       BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
-//       m_graphics->lineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
-//                           static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
-       paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-       paint.createRadialGradient(180,140,10,150,100,80);
-       paint.SetStrokeColor(Color::White());
+       paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
+       paint.createRadialGradient(180,140,10,150,100,180);
+       paint.SetStrokeColor(Color::Yellow());
+       paint.SetStrokeWidth(8);
        paint.addColorStop(0,Color::Yellow());
        paint.addColorStop(0.4,Color::Gray());
        paint.addColorStop(0.8,Color::Green());
        paint.addColorStop(1,Color::Blue());
        canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
-////canvas->BeginPath();
-//       int32_t rot = 0;
-//       int32_t outerR = 80;
-//       int32_t innerR = 40;
-//       int32_t x = 80;
-//       int32_t y = 80;
-//       float pi = 180.0;
-////       m_graphics
-//       for (int32_t i = 0; i < 5; i++) {
-////           m_graphics->lineTo();
-//           m_graphics->lineTo(static_cast<double>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
-//               static_cast<double>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y));
-//           m_graphics->lineTo(static_cast<double>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
-//               static_cast<double>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y));
-//       }
-
-//m_graphics->closePolygon();
-
-////canvas->ClosePath();
-
-
-////PolygonPath path;
-////path.LineTo()
-//m_graphics->lineWidth(8);
-////m_graphics->drawPath(BaseGfxExtendEngine::DrawPathFlag::FillAndStroke);
-//m_graphics->stroke();
 
 
 }

@@ -297,7 +297,7 @@ void UICanvas::ClearRect(const Point &clearRect, int clearHeight,int clearWidth,
 
 void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
 {
-    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
+    if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE)||(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT)) {
         RectParam* rectParam = new RectParam;
         if (rectParam == nullptr) {
             GRAPHIC_LOGE("new RectParam fail");
@@ -868,41 +868,51 @@ void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
     drawStyle.bgColor_ = paint.GetStrokeColor();
     drawStyle.bgOpa_ = paint.GetOpacity();
     drawStyle.borderRadius_ = 0;
-
     int16_t lineWidth = static_cast<int16_t>(paint.GetStrokeWidth());
-    Point start;
-    GetAbsolutePosition(rectParam->start, rect, style, start);
 
-    int16_t x = start.x - lineWidth / 2; // 2: half
-    int16_t y = start.y - lineWidth / 2; // 2: half
-    Rect coords;
-    if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
+    if(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE){
+        Point start;
+        GetAbsolutePosition(rectParam->start, rect, style, start);
+
+        int16_t x = start.x - lineWidth / 2; // 2: half
+        int16_t y = start.y - lineWidth / 2; // 2: half
+        Rect coords;
+        if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
+            coords.SetPosition(x, y);
+            coords.SetHeight(rectParam->height + lineWidth);
+            coords.SetWidth(rectParam->width + lineWidth);
+            BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+            return;
+        }
+
         coords.SetPosition(x, y);
-        coords.SetHeight(rectParam->height + lineWidth);
-        coords.SetWidth(rectParam->width + lineWidth);
+        coords.SetHeight(lineWidth);
+        coords.SetWidth(rectParam->width);
         BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-        return;
+
+        coords.SetPosition(x + rectParam->width, y);
+        coords.SetHeight(rectParam->height);
+        coords.SetWidth(lineWidth);
+        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+
+        coords.SetPosition(x, y + lineWidth);
+        coords.SetHeight(rectParam->height);
+        coords.SetWidth(lineWidth);
+        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+
+        coords.SetPosition(x + lineWidth, y + rectParam->height);
+        coords.SetHeight(lineWidth);
+        coords.SetWidth(rectParam->width);
+        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
+    }else{
+        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+        if(m_graphics==nullptr) {
+            return;
+        }
+        setGradient(*m_graphics,paint,rect,style);//填充颜色lineWidth
+        m_graphics->lineWidth(lineWidth);
+        m_graphics->rectstroke(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
     }
-
-    coords.SetPosition(x, y);
-    coords.SetHeight(lineWidth);
-    coords.SetWidth(rectParam->width);
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-
-    coords.SetPosition(x + rectParam->width, y);
-    coords.SetHeight(rectParam->height);
-    coords.SetWidth(lineWidth);
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-
-    coords.SetPosition(x, y + lineWidth);
-    coords.SetHeight(rectParam->height);
-    coords.SetWidth(lineWidth);
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-
-    coords.SetPosition(x + lineWidth, y + rectParam->height);
-    coords.SetHeight(lineWidth);
-    coords.SetWidth(rectParam->width);
-    BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
 
 }
 
@@ -933,8 +943,8 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
 
     m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
     m_graphics->noLine();
+    setGradient(*m_graphics,paint,rect,style);//填充颜色
     m_graphics->rectangle(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
-    fill(*m_graphics,paint,rect,style);//填充颜色
 
 }
 
@@ -1150,13 +1160,14 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
 
 
 
-void UICanvas::fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
+void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
 
     List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
     if(stopAndColors.Size()>0){
           addColorGradient(m_graphics,stopAndColors);
     }
-m_graphics.lineWidth(8);
+
+
     if(paint.gradientfalg==paint.Linear){//线性渐变
         double x0 = paint.getLinearGradientPoit().x0;
         double y0 = paint.getLinearGradientPoit().y0;
@@ -1203,7 +1214,13 @@ m_graphics.lineWidth(8);
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
 
-    m_graphics.stroke();
+
+//    if(!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT)){
+//        m_graphics.lineWidth(style.lineWidth_);
+//        m_graphics.stroke();
+//    }
+
+
 }
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
