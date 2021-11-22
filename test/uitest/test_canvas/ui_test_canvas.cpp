@@ -41,13 +41,13 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
-//    UIKitCanvasTestGlobalAlpha001();
-//    UIKitCanvasTestDrawDashLine001();
-//    UIKitCanvasTestLineJoin001();
-//    UIKitCanvasTestDrawLine001();
-//    UIKitCanvasTestDrawLine002();
-//    UIKitCanvasTestDrawCurve001();
-//    UIKitCanvasTestDrawCurve002();
+    UIKitCanvasTestGlobalAlpha001();
+    UIKitCanvasTestDrawDashLine001();
+    UIKitCanvasTestLineJoin001();
+    UIKitCanvasTestDrawLine001();
+    UIKitCanvasTestDrawLine002();
+    UIKitCanvasTestDrawCurve001();
+    UIKitCanvasTestDrawCurve002();
 
     UIKitCanvasTestComposite001();
     UIKitCanvasTestGlobalAlpha001();
@@ -71,55 +71,52 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestcreatePattern3();
     UIKitCanvasTestcreatePattern8();
     UIKitCanvasTestcreatePattern4();
-//    UIKitCanvasTestDrawRect002();
-//    UIKitCanvasTestDrawRect003();
-//    UIKitCanvasTestDrawRect004();
-//    UIKitCanvasTestClearRect001();
+    UIKitCanvasTestDrawRect002();
+    UIKitCanvasTestDrawRect003();
+    UIKitCanvasTestDrawRect004();
+    UIKitCanvasTestClearRect001();
     UIKitCanvasTestDrawCircle001();
-//    UIKitCanvasTestDrawCircle002();
-//    UIKitCanvasTestDrawCircle003();
-//    UIKitCanvasTestDrawArc001();
-//    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
-//    UIKitCanvasTestDrawSector001();
-//    UIKitCanvasTestClear001();
-//    UIKitCanvasTestDrawPath001();
-//    UIKitCanvasTestDrawPath002();
-//    UIKitCanvasTestDrawPath003();
-//    UIKitCanvasTestDrawPath004();
-//    UIKitCanvasTestDrawPath005();
-//    UIKitCanvasTestDrawPath006();
-//    UIKitCanvasTestDrawPath007();
-//    UIKitCanvasTestDrawPath008();
-//    UIKitCanvasTestDrawPath009();
-//    UIKitCanvasTestDrawPath010();
-//    UIKitCanvasTestDrawPath011();
-//    UIKitCanvasTestDrawPath012();
-//    UIKitCanvasTestDrawPath013();
-//    UIKitCanvasTestDrawPath014();
-//    UIKitCanvasTestDrawPath015();
-//    UIKitCanvasTestDrawPath016();
-//    UIKitCanvasTestDrawPath017();
-//    UIKitCanvasTestDrawPath018();
-//    UIKitCanvasTestDrawPath019();
-//    UIKitCanvasTestDrawPath020();
-//    UIKitCanvasTestDrawPath021();
-//    UIKitCanvasTestDrawPath022();
-//    UIKitCanvasTestDrawPath023();
-//    UIKitCanvasTestDrawPath024();
-//    UIKitCanvasTestDrawPath025();
-//    UIKitCanvasTestDrawPath026();
-//    UIKitCanvasTestDrawPath027();
-//    UIKitCanvasTestDrawPath028();
-//    UIKitCanvasTestDrawPath029();
-//    UIKitCanvasTestDrawPath030();
-//    UIKitCanvasTestDrawPath031();
-//    UIKitCanvasTestDrawPath032();
-//    UIKitCanvasTestDrawPath033();
-   UIKitCanvasTestDrawPath034();
-
-
-
+    UIKitCanvasTestDrawCircle002();
+    UIKitCanvasTestDrawCircle003();
+    UIKitCanvasTestDrawArc001();
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawSector001();
+    UIKitCanvasTestClear001();
+    UIKitCanvasTestDrawPath001();
+    UIKitCanvasTestDrawPath002();
+    UIKitCanvasTestDrawPath003();
+    UIKitCanvasTestDrawPath004();
+    UIKitCanvasTestDrawPath005();
+    UIKitCanvasTestDrawPath006();
+    UIKitCanvasTestDrawPath007();
+    UIKitCanvasTestDrawPath008();
+    UIKitCanvasTestDrawPath009();
+    UIKitCanvasTestDrawPath010();
+    UIKitCanvasTestDrawPath011();
+    UIKitCanvasTestDrawPath012();
+    UIKitCanvasTestDrawPath013();
+    UIKitCanvasTestDrawPath014();
+    UIKitCanvasTestDrawPath015();
+    UIKitCanvasTestDrawPath016();
+    UIKitCanvasTestDrawPath017();
+    UIKitCanvasTestDrawPath018();
+    UIKitCanvasTestDrawPath019();
+    UIKitCanvasTestDrawPath020();
+    UIKitCanvasTestDrawPath021();
+    UIKitCanvasTestDrawPath022();
+    UIKitCanvasTestDrawPath023();
+    UIKitCanvasTestDrawPath024();
+    UIKitCanvasTestDrawPath025();
+    UIKitCanvasTestDrawPath026();
+    UIKitCanvasTestDrawPath027();
+    UIKitCanvasTestDrawPath028();
+    UIKitCanvasTestDrawPath029();
+    UIKitCanvasTestDrawPath030();
+    UIKitCanvasTestDrawPath031();
+    UIKitCanvasTestDrawPath032();
+    UIKitCanvasTestDrawPath033();
+    UIKitCanvasTestDrawPath034();
     return container_;
 }
 
@@ -446,7 +443,7 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
     paint.SetStrokeWidth(1);
     paint.SetShadowOffsetX(10);
     paint.SetShadowOffsetY(10);
-    //paint.SetShadowBlurRadius(5);
+    paint.SetShadowBlurRadius(5);
     paint.SetStrokeColor(Color::Yellow());
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(10); // 10: line width

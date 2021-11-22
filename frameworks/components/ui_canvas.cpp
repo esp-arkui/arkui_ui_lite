@@ -1243,8 +1243,10 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         drawStyle.bgOpa_ = paint.GetOpacity();
         if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
                 && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
+            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius);
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
+            
         } else {
 
             m_graphics->noLine();

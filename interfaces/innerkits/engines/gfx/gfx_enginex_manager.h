@@ -416,6 +416,7 @@ public:
     void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
     void closePolygon();
     void drawShadow();
+    void drawShadow(double cx, double cy, double rx, double ry);
     void drawPath(DrawPathFlag flag = FillAndStroke);
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 

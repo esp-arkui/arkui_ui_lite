@@ -843,7 +843,6 @@ void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
 {
     m_path.remove_all();
     agg::bezier_arc arc(cx, cy, rx, ry, 0, 2*pi());
-    //m_path.add_path(arc, 0, false);
     m_path.concat_path(arc,0); // JME
     m_path.close_polygon();
     drawPath(FillAndStroke);
@@ -1227,7 +1226,14 @@ void BaseGfxExtendEngine::drawShadow()
     }
     m_rasterizer.reset();
 }
-
+void BaseGfxExtendEngine::drawShadow(double cx, double cy, double rx, double ry)
+{
+    m_path.remove_all();
+    agg::bezier_arc arc(cx, cy, rx, ry, 0, 2*pi());
+    m_path.concat_path(arc,0); // JME
+    m_path.close_polygon();
+    drawShadow();
+}
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
 {
