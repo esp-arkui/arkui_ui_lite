@@ -43,8 +43,13 @@
 #include "gfx_utils/list.h"
 #include "engines/gfx/gfx_enginex_manager.h"
 #include "ui_image_view.h"
+#include <io.h>
+#include <fcntl.h>
+#include "gfx_utils/file.h"
 
+#include "animator/gif_canvas_image_animator.h"
 namespace OHOS {
+
 /**
  * @brief Defines the basic styles of graphs drawn on canvases.
  *
@@ -77,7 +82,11 @@ public:
           shadowColor(Color::Black()),
           blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver)
     {
-        m_graphics= std::make_shared<BaseGfxExtendEngine>();
+        m_graphics = std::make_shared<BaseGfxExtendEngine>();
+        transEngine = std::make_shared<BaseGfxExtendEngine>();
+        angle_ = 0;
+        translate_ = {0,0};
+        scale_ = {1,1};
         //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
     }
     Paint(const Paint& paint)
@@ -105,6 +114,13 @@ public:
         shadowBlurRadius=paint.shadowBlurRadius;
         ndashes = (paint.ndashes+1)&~1;
         blendMode = paint.blendMode;
+        isDrawTrans_ = paint.isDrawTrans_;
+        angle_ = paint.angle_;
+        translate_ = paint.translate_;
+        scale_ = paint.scale_;
+        transEngine = paint.transEngine;
+        //trans_ = transEngine->transformations();
+        trans_ = paint.trans_;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
@@ -571,7 +587,69 @@ public:
 
 
     }
+	
+    void Save()
+    {
+    }
 
+    void Restore()
+    {
+    }
+
+    void Scale(float x, float y)
+    {
+        scale_ = {x, y};
+        isDrawTrans_ = true;
+        transEngine->scale(x,y);
+        trans_ =transEngine->transformations();
+    }
+
+    PointF GetScale() const{
+        return scale_;
+    }
+
+    void Rotate(float angle)
+    {
+        angle_ = angle;
+        isDrawTrans_ = true;
+        transEngine->rotate(BaseGfxExtendEngine::deg2Rad(angle));
+        trans_ =transEngine->transformations();
+    }
+
+    float GetRotate() const{
+        return angle_;
+    }
+
+    Point GetTranslate() const{
+        return translate_;
+    }
+
+    void Translate(int16_t x, int16_t y)
+    {
+        translate_ = {x,y};
+        isDrawTrans_ = true;
+        transEngine->translate(x,y);
+        trans_ = transEngine->transformations();
+    }
+
+    void Transform(float sx,float shy,float shx,float sy,float tx,float ty);
+
+    const BaseGfxExtendEngine::Transformations& GetTransform() const
+    {
+        return trans_;
+    }
+
+    void SetTransform(float sx,float shy,float shx,float sy,float tx,float ty);
+
+    bool IsTransform() const
+    {
+        return (angle_ !=0 || translate_.x!=0 || translate_.y != 0 || scale_.x != 1 || scale_.y != 1 );
+    }
+
+    const std::shared_ptr<BaseGfxExtendEngine> GetTransEngine() const
+    {
+        return transEngine;
+    }
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -589,6 +667,7 @@ private:
     float* dashArray;
     unsigned int ndashes;
     std::shared_ptr<BaseGfxExtendEngine> m_graphics;
+
     //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
     float globalAlpha;
     double shadowBlurRadius;
@@ -596,6 +675,13 @@ private:
     double shadowOffsetY;
     ColorType shadowColor;
     BaseGfxExtendEngine::BlendMode blendMode;
+
+    bool isDrawTrans_ = false;
+    float angle_;
+    Point translate_;
+    PointF scale_;
+    std::shared_ptr<BaseGfxExtendEngine> transEngine;//用于操作变换矩阵
+    BaseGfxExtendEngine::Transformations trans_;
 };
 
 /**
@@ -963,7 +1049,10 @@ public:
 
     void fill(const Paint& paint);
     void fill(const Paint& paint,const PolygonPath * polygonPath);
-
+    void FillText(const char *text,
+                            const Point &point,
+                            const FontStyle& fontStyle,
+                            const Paint& paint);
 
     struct Images_ {
         Point startp;
@@ -1006,13 +1095,41 @@ protected:
         int16_t endAngle;
     };
 
-    struct ImageParam : public HeapBase {
-        Point start;
-        uint16_t height;
-        uint16_t width;
-        Image* image;
-    };
+//    struct ImageParam : public HeapBase {
+//        Point start;
+//        uint16_t height;
+//        uint16_t width;
+//        Image* image;
+//    };
+    struct TextParam : public HeapBase {
+        const char* text;
+        Point position;
+        //uint8_t fontSize;
+        //const char* fontName;
+        Color32 fontColor;
+        uint8_t fontOpa;
+        //uint8_t textAlign;
+        //uint8_t textDirect;
 
+        FontStyle fontStyle;
+        Text* textComment;
+        TransformMap drawTransMap;
+         bool isDrawTrans;
+        //Rect origRect;
+        //Rect contentRect;
+
+        TextParam(){
+            textComment = new Text;
+        }
+
+        ~TextParam(){
+            if(textComment){
+                delete textComment;
+                textComment = nullptr;
+            }
+        };
+
+    };
     enum PathCmd {
         CMD_MOVE_TO,
         CMD_LINE_TO,
@@ -1049,7 +1166,11 @@ protected:
     Point startPoint_;
     UICanvasPath* path_;
     List<DrawCmd> drawCmdList_;
-
+  static void DeleteTextParam(void* param)
+    {
+        TextParam* textParam = static_cast<TextParam*>(param);
+        delete textParam;
+    }
     static void DeleteLineParam(void* param)
     {
         LineParam* lineParam = static_cast<LineParam*>(param);
@@ -1089,9 +1210,16 @@ protected:
 
     static void DeleteImageParam(void* param)
     {
-        ImageParam* imageParam = static_cast<ImageParam*>(param);
+         ImageParam* imageParam = static_cast<ImageParam*>(param);
         if (imageParam->image != nullptr) {
             delete imageParam->image;
+            imageParam->image = nullptr;
+        }
+        if(imageParam->gifImageAnimator != nullptr){
+            Animator* animator = reinterpret_cast<Animator*>(imageParam->gifImageAnimator) ;
+            animator->Stop();
+            delete animator;
+            imageParam->gifImageAnimator = nullptr;
         }
         delete imageParam;
     }
@@ -1163,18 +1291,34 @@ protected:
                           const Rect& rect,
                           const Rect& invalidatedArea,
                           const Style& style);
+//    static void DoDrawImage(BufferInfo& gfxDstBuffer,
+//                            void* param,
+//                            const Paint& paint,
+//                            const Rect& rect,
+//                            const Rect& invalidatedArea,
+//                            const Style& style);
     static void DoDrawImage(BufferInfo& gfxDstBuffer,
                             void* param,
                             const Paint& paint,
                             const Rect& rect,
                             const Rect& invalidatedArea,
                             const Style& style);
+    static void StartTransform(const Rect& rect,const Rect& invalidatedArea,const Paint& paint);
     static void DoDrawLabel(BufferInfo& gfxDstBuffer,
                             void* param,
                             const Paint& paint,
                             const Rect& rect,
                             const Rect& invalidatedArea,
                             const Style& style);
+	static void DoDrawText(BufferInfo& gfxDstBuffer,
+                            void* param,
+                            const Paint& paint,
+                            const Rect& rect,
+                            const Rect& invalidatedArea,
+                            const Style& style);
+    Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
+
+
     static void DoDrawPath(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
@@ -1197,7 +1341,9 @@ protected:
 
     static void fill(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
-
+	
+	 static void BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& curViewRect, TransformMap& transMap, const Rect& invalidatedArea);
+	 static bool IsGif(const char *src);
 };
 
 class PolygonUtils : public ClipUtils{

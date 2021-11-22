@@ -3,6 +3,7 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
+    third_party/giflib \
     third_party/freetype \
     third_party/harfbuzz \
     third_party/icu \

@@ -48,7 +48,8 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
 //    UIKitCanvasTestDrawCurve002();
-
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
     UIKitCanvasTestComposite001();
     UIKitCanvasTestGlobalAlpha001();
     UIKitCanvasTestDrawDashLine001();
@@ -497,7 +498,18 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     Paint paint;
 //    paint.SetOpacity(255); // 127: opacity
     // {200, 50}: start point coordinates
-    canvas->DrawImage({ 10, 50 }, GREEN_IMAGE_PATH, paint);
+    char * str = "D:\\workspace\\xvcheng\\third_party\\giflib\\pic\\fire.gif";
+    bool IsInvalid  = paint.IsTransform();
+    paint.Rotate(20);
+   // paint.Scale(2, 1.5);
+   // paint.Translate(100, 20);
+
+    IsInvalid  = paint.IsTransform();
+    canvas->DrawImage({ 20, 20 }, str, paint);
+    paint.Transform(1,0.5,-0.5,1,30,10);
+    canvas->DrawImage({ 60, 20 }, str, paint);
+    paint.SetTransform(1,0.5,-0.5,1,30,10);
+    canvas->DrawImage({ 80, 20 }, str, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
@@ -511,13 +523,15 @@ void UITestCanvas::UIKitCanvasTestDrawLabel001()
     Paint paint;
     paint.SetFillColor(Color::Blue());
     UICanvas::FontStyle fontStyle;
-    fontStyle.align = TEXT_ALIGNMENT_RIGHT;
-    fontStyle.direct = TEXT_DIRECT_RTL;
+    fontStyle.align = TEXT_ALIGNMENT_LEFT;
+    fontStyle.direct = TEXT_DIRECT_LTR;
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = 30;    // 30: font size
     fontStyle.letterSpace = 10; // 10 letter space
     // {50, 50}: start point coordinates, 100: max width
-    canvas->DrawLabel({ 50, 50 }, "canvas绘制字体", 100, fontStyle, paint);
+    //canvas->DrawLabel({ 50, 50 }, "canvas绘制字体", 100, fontStyle, paint);
+    paint.Rotate(30);
+    canvas->FillText("2121212",{20,10},fontStyle,paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawSector001()
