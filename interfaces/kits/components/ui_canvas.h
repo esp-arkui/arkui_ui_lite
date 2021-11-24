@@ -159,11 +159,12 @@ public:
         /** Stroke only */
         STROKE_STYLE = 1,
         /** Fill only */
-        FILL_STYLE,
+        FILL_STYLE = 2,
         /** Stroke and fill */
-        STROKE_FILL_STYLE,
-        PATTERN = 7,
-        STROKE_GRADIENT,
+        STROKE_FILL_STYLE = 3,
+        PATTERN  = 4 ,
+        STROKE_GRADIENT = 8,
+        FILL_GRADIENT = 16,
     };
 
     /**
@@ -569,8 +570,6 @@ public:
         } else if (strcmp(text,"no-repeat")==0) {
             patternRepeat =NO_REPEAT;
         }
-
-
     }
 
 private:
@@ -909,6 +908,7 @@ public:
      */
     void AddRect(const Point& point, int16_t height, int16_t width);
 
+    void AddRect(const Point& point, int16_t height, int16_t width,const Paint& paint);
     /**
      * @brief Closes this path.
      *
@@ -963,6 +963,8 @@ public:
     }
 
     void fill(const Paint& paint);
+    void stroke(const Paint& paint);
+
     void fill(const Paint& paint,const PolygonPath * polygonPath);
 
 
@@ -1170,6 +1172,19 @@ protected:
                             const Rect& rect,
                             const Rect& invalidatedArea,
                             const Style& style);
+
+    static void DoDrawPattern(BufferInfo& gfxDstBuffer,
+                            void* param,
+                            const Paint& paint,
+                            const Rect& rect,
+                            const Rect& invalidatedArea,
+                            const Style& style);
+    static void DoStrokePattern(BufferInfo& gfxDstBuffer,
+                            void* param,
+                            const Paint& paint,
+                            const Rect& rect,
+                            const Rect& invalidatedArea,
+                            const Style& style);
     static void DoDrawLabel(BufferInfo& gfxDstBuffer,
                             void* param,
                             const Paint& paint,
@@ -1197,6 +1212,12 @@ protected:
     static void addColorGradient(BaseGfxExtendEngine &m_graphics,List<Paint::StopAndColor> & stopAndColors);
 
     static void setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style);
+    static void DoGradient(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style);
     static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
 
 };

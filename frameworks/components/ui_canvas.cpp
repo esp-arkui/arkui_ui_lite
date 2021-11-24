@@ -75,10 +75,6 @@ void UICanvas::LineTo(const Point& point)
     } else {
         path_->cmd_.PushBack(CMD_LINE_TO);
     }
-
-//    BaseGfxExtendEngine* m_graphics = Paint::GetDrawGraphicsContext();
-
-//    m_graphics->lineTo(point.x,point.y);
 }
 
 void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle)
@@ -126,7 +122,6 @@ void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, i
     param.endAngle = end;
     path_->arcParam_.PushBack(param);
 }
-
 void UICanvas::AddRect(const Point& point, int16_t height, int16_t width)
 {
     if (path_ == nullptr) {
@@ -138,6 +133,14 @@ void UICanvas::AddRect(const Point& point, int16_t height, int16_t width)
     LineTo({static_cast<int16_t>(point.x + width), static_cast<int16_t>(point.y + height)});
     LineTo({point.x, static_cast<int16_t>(point.y + height)});
     ClosePath();
+}
+
+void UICanvas::AddRect(const Point& point, int16_t height, int16_t width,const Paint& paint)
+{
+    AddRect(point,height,width);
+
+    paint.GetDrawGraphicsContext()->rectangle(point.x,point.y,point.x+width,point.y+height);
+
 }
 
 void UICanvas::ClosePath()
@@ -315,7 +318,7 @@ void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, 
         drawCmdList_.PushBack(cmd);
     }
 
-    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
+    if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)||(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)) {
         RectParam* rectParam = new RectParam;
         if (rectParam == nullptr) {
             GRAPHIC_LOGE("new RectParam fail");
@@ -870,7 +873,18 @@ void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
     drawStyle.borderRadius_ = 0;
     int16_t lineWidth = static_cast<int16_t>(paint.GetStrokeWidth());
 
-    if(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE){
+    if(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT){
+
+        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+        if(m_graphics==nullptr) {
+            return;
+        }
+        Point start;
+        GetAbsolutePosition(rectParam->start, rect, style, start);
+        setGradient(*m_graphics,paint,rect,style);//填充颜色
+        m_graphics->lineWidth(lineWidth);
+        m_graphics->rectstroke(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
+    }else{
         Point start;
         GetAbsolutePosition(rectParam->start, rect, style, start);
 
@@ -904,14 +918,7 @@ void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
         coords.SetHeight(lineWidth);
         coords.SetWidth(rectParam->width);
         BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
-    }else{
-        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
-        if(m_graphics==nullptr) {
-            return;
-        }
-        setGradient(*m_graphics,paint,rect,style);//填充颜色lineWidth
-        m_graphics->lineWidth(lineWidth);
-        m_graphics->rectstroke(rectParam->start.x,rectParam->start.y,rectParam->start.x+rectParam->width,rectParam->start.y+rectParam->height);
+
     }
 
 }
@@ -938,14 +945,16 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
         return;
     }
 
-    Point start;
-    GetAbsolutePosition(rectParam->start, rect, style, start);
+    if((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)||(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)){
+        Point start;
+        GetAbsolutePosition(rectParam->start, rect, style, start);
 
-    m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
-    m_graphics->noLine();
-    setGradient(*m_graphics,paint,rect,style);//填充颜色
-    m_graphics->rectangle(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
+        m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+        m_graphics->noLine();
+        setGradient(*m_graphics,paint,rect,style);//填充颜色
+        m_graphics->rectangle(start.x,start.y,start.x+rectParam->width,start.y+rectParam->height);
 
+    }
 }
 
 void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::StopAndColor> & stopAndColors){
@@ -964,9 +973,150 @@ void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::Sto
 void UICanvas::fill(const Paint& paint)
 {
 
-fill(paint,nullptr);
+
+    if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)){
+
+        if (strcmp(paint.image,"")==0) {
+            return;
+        }
+
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
+        }
+
+        imageParam->image->SetSrc(paint.image);
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = {0,0};
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoDrawPath;
+        drawCmdList_.PushBack(cmd2);
+
+
+        DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = imageParam;
+        cmd.DeleteParam = DeleteImageParam;
+        cmd.DrawGraphics = DoDrawPattern;
+        drawCmdList_.PushBack(cmd);
+    }
+
+    if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)){
+
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoGradient;
+        drawCmdList_.PushBack(cmd2);
+
+    }
+
+    Invalidate();
+}
+
+void UICanvas::stroke(const Paint& paint)
+{
+    if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)){
+
+        if (strcmp(paint.image,"")==0) {
+            return;
+        }
+
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
+        }
+
+        imageParam->image->SetSrc(paint.image);
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = {0,0};
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoDrawPath;
+        drawCmdList_.PushBack(cmd2);
+
+
+        DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = imageParam;
+        cmd.DeleteParam = DeleteImageParam;
+        cmd.DrawGraphics = DoStrokePattern;
+        drawCmdList_.PushBack(cmd);
+
+    }
+
+    if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)){
+
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoGradient;
+        drawCmdList_.PushBack(cmd2);
+
+    }
+
+
+    Invalidate();
 
 }
+
 
 void UICanvas::fill(const Paint& paint,const PolygonPath * polygonPath)
 {
@@ -1073,10 +1223,10 @@ void UICanvas::fill(const Paint& paint,const PolygonPath * polygonPath)
         PolygonImageBlitter blitter(imageList_,w,h,img_w,img_h);
         polygonUtils.PerformScan(*polygonPath, blitter);
     }
-        for(int i=0;i<imageList_.Size();i++){
-             DrawImage(images->data_.startp,images->data_.img->GetImageInfo(), paint);
-            images = images->next_;
-        }
+    for(int i=0;i<imageList_.Size();i++){
+        DrawImage(images->data_.startp,images->data_.img->GetImageInfo(), paint);
+        images = images->next_;
+    }
 }
 
 void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
@@ -1114,10 +1264,6 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
                     cordsTmp.SetPosition(temp.x, temp.y);
                     cordsTmp.SetHeight(imageParam->height);
                     cordsTmp.SetWidth(imageParam->width);
-//                    Images_ images_;
-//                    images_.coord=cordsTmp;
-//                    images_.img=imageParam->image;
-//                    imageList_.p
                     DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
                     temp.y+=imageParam->height;
                 }
@@ -1160,7 +1306,8 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
 
 
 
-void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style){
+void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style)
+{
 
     List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
     if(stopAndColors.Size()>0){
@@ -1191,14 +1338,12 @@ void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,co
     }
     if(paint.gradientfalg==paint.Radial){//放射渐变
         Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
-//        m_graphics.fillRadialGradient(rp.x0,rp.y0,rp.r0,rp.x1,rp.y1,rp.r1);
 
         Point start;
         Point orgstart;
         orgstart.x=rp.x0;
         orgstart.y=rp.y0;
         GetAbsolutePosition(orgstart, rect, style, start);
-//        m_graphics.fillRadialGradient(start.x,start.y,rp.r0,rp.x1,rp.y1,rp.r1);
 
         Point end;
         Point orgend;
@@ -1213,14 +1358,6 @@ void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,co
         ColorType color=paint.GetFillColor();
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
-
-
-//    if(!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT)){
-//        m_graphics.lineWidth(style.lineWidth_);
-//        m_graphics.stroke();
-//    }
-
-
 }
 
 void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
@@ -1354,6 +1491,157 @@ void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer,
                                           CapType::CAP_NONE);
 }
 
+
+void UICanvas::DoDrawPattern(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style)
+{
+    if (param == nullptr) {
+        return;
+    }
+    ImageParam* imageParam = static_cast<ImageParam*>(param);
+
+    if (imageParam->image == nullptr) {
+        return;
+    }
+
+    Point start;
+    GetAbsolutePosition(imageParam->start, rect, style, start);
+
+    BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
+                                                   imageParam->image->GetImageInfo()->header.width,imageParam->image->GetImageInfo()->header.height,
+                                                   imageParam->image->GetImageInfo()->header.width*4);
+
+    if(paint.patternRepeat==paint.REPEAT){
+        paint.GetDrawGraphicsContext()->patternImageFill(imageBuffer,start.x, start.y,"repeat");
+    }else if(paint.patternRepeat==paint.REPEAT_X){
+        paint.GetDrawGraphicsContext()->patternImageFill(imageBuffer,start.x, start.y,"repeat-x");
+    }else if(paint.patternRepeat==paint.REPEAT_Y){
+        paint.GetDrawGraphicsContext()->patternImageFill(imageBuffer,start.x, start.y,"repeat-y");
+    }else{
+        paint.GetDrawGraphicsContext()->patternImageFill(imageBuffer,start.x, start.y,"no-repeat");
+    }
+}
+
+void UICanvas::DoStrokePattern(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style)
+{
+    if (param == nullptr) {
+        return;
+    }
+    ImageParam* imageParam = static_cast<ImageParam*>(param);
+
+    if (imageParam->image == nullptr) {
+        return;
+    }
+
+    Point start;
+    GetAbsolutePosition(imageParam->start, rect, style, start);
+
+    Rect cordsTmp;
+    cordsTmp.SetPosition(start.x, start.y);
+    cordsTmp.SetHeight(imageParam->height);
+    cordsTmp.SetWidth(imageParam->width);
+
+    BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
+                                                   imageParam->image->GetImageInfo()->header.width,imageParam->image->GetImageInfo()->header.height,
+                                                   imageParam->image->GetImageInfo()->header.width*4);
+
+
+    BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+    m_graphics->lineWidth(paint.GetStrokeWidth());
+    if(paint.patternRepeat==paint.REPEAT){
+        m_graphics->patternImageStroke(imageBuffer,start.x, start.y,"repeat");
+    }else if(paint.patternRepeat==paint.REPEAT_X){
+        m_graphics->patternImageStroke(imageBuffer,start.x, start.y,"repeat-x");
+    }else if(paint.patternRepeat==paint.REPEAT_Y){
+        m_graphics->patternImageStroke(imageBuffer,start.x, start.y,"repeat-y");
+    }else{
+        m_graphics->patternImageStroke(imageBuffer,start.x, start.y,"no-repeat");
+    }
+}
+
+void UICanvas::DoGradient(BufferInfo& gfxDstBuffer,
+                          void* param,
+                          const Paint& paint,
+                          const Rect& rect,
+                          const Rect& invalidatedArea,
+                          const Style& style)
+{
+
+
+    BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+    m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+    List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
+    if(stopAndColors.Size()>0){
+          addColorGradient(*m_graphics,stopAndColors);
+    }
+
+
+    if(paint.gradientfalg==paint.Linear){//线性渐变
+        double x0 = paint.getLinearGradientPoit().x0;
+        double y0 = paint.getLinearGradientPoit().y0;
+        double x1 = paint.getLinearGradientPoit().x1;
+        double y1 = paint.getLinearGradientPoit().y1;
+
+        Point start;
+        Point orgstart;
+        orgstart.x=x0;
+        orgstart.y=y0;
+        GetAbsolutePosition(orgstart, rect, style, start);
+
+        Point end;
+        Point orgend;
+        orgend.x=x1;
+        orgend.y=y1;
+        GetAbsolutePosition(orgend, rect, style, end);
+
+        m_graphics->fillLinearGradient(start.x,start.y,end.x,end.y);
+    }
+    if(paint.gradientfalg==paint.Radial){//放射渐变
+        Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
+
+        Point start;
+        Point orgstart;
+        orgstart.x=rp.x0;
+        orgstart.y=rp.y0;
+        GetAbsolutePosition(orgstart, rect, style, start);
+
+        Point end;
+        Point orgend;
+        orgend.x=rp.x1;
+        orgend.y=rp.y1;
+        GetAbsolutePosition(orgend, rect, style, end);
+
+        m_graphics->fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
+    }
+
+    if(paint.gradientfalg==paint.Solid){//纯色渐变
+        ColorType color=paint.GetFillColor();
+        m_graphics->fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
+    }
+
+    DoDrawPath(gfxDstBuffer,param,paint,rect,invalidatedArea,style);
+    m_graphics->closePolygon();
+    if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)){
+        m_graphics->noLine();
+        m_graphics->drawPath(BaseGfxExtendEngine::FillAndStroke);
+    }
+    if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)){
+        m_graphics->lineWidth(paint.GetStrokeWidth());
+       m_graphics->stroke();
+    }
+}
+
+
+
 void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
@@ -1377,25 +1665,14 @@ void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
     cordsTmp.SetPosition(start.x, start.y);
     cordsTmp.SetHeight(imageParam->height);
     cordsTmp.SetWidth(imageParam->width);
-    DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-        imageParam->image->GetImageInfo(), style, paint.GetOpacity());
-
-//    m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-//                                                                               gfxMapBuffer->rect.GetTop(),
-//                                                                               gfxMapBuffer->rect.GetRight(),
-//                                                                               gfxMapBuffer->rect.GetBottom(),
-//                                         gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
-//imageParam->image->GetImageInfo()->userData
-//gfxDstBuffer.
-
-//   int16_t w= imageParam->image->GetImageInfo()->header.width;
-//    int16_t h=imageParam->image->GetImageInfo()->header.height;
-//    BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
-//                                                   imageParam->image->GetImageInfo()->header.width,imageParam->image->GetImageInfo()->header.height,
-//                                                   gfxDstBuffer.stride);
+//    DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
+//        imageParam->image->GetImageInfo(), style, paint.GetOpacity());
 
 
-//    paint.GetDrawGraphicsContext()->blendImage(imageBuffer,start.x, start.y,255);
+    BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
+                                                   imageParam->image->GetImageInfo()->header.width,imageParam->image->GetImageInfo()->header.height,
+                                                   imageParam->image->GetImageInfo()->header.width*4);
+    paint.GetDrawGraphicsContext()->blendImage(imageBuffer,start.x, start.y,255);
 
 
 
@@ -1474,7 +1751,10 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
     ListNode<PathCmd>* iter = path->cmd_.Begin();
     bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JoinNone);
     bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CapNone);
-    if(!isLineJoin || !isLineCap) {
+    if((!isLineJoin || !isLineCap)
+            &&!(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT))
+            &&(!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT))
+            &&(!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
         m_graphics->lineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
                               paint.GetStrokeColor().blue,paint.GetStrokeColor().alpha);
         m_graphics->lineWidth(paint.GetStrokeWidth());
@@ -1577,9 +1857,17 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
             break;
         }
     }
-    if(!isLineJoin || !isLineCap) {
+    if((!isLineJoin || !isLineCap)
+            &&!(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT))
+            &&(!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT))
+            &&(!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
         m_graphics->drawPath(BaseGfxExtendEngine::DrawPathFlag::StrokeOnly);
     }
+
+//    if(!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT)){
+//        m_graphics->stroke();
+//    }
+
 }
 
 void PolygonImageBlitter::DrawHorSpan(const List<Span>& span, int16_t yCur)
