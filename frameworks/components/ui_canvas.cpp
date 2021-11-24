@@ -1503,6 +1503,7 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         if (!enableStroke) {
             m_graphics->noLine();
         }
+
         m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
         m_graphics->blendMode(paint.globalCompositeOperation());
         //double xx=circleParam->center.x,yy=circleParam->center.y;
