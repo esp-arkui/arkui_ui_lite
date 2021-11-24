@@ -843,7 +843,6 @@ void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
 {
     m_path.remove_all();
     agg::bezier_arc arc(cx, cy, rx, ry, 0, 2*pi());
-    //m_path.add_path(arc, 0, false);
     m_path.concat_path(arc,0); // JME
     m_path.close_polygon();
     drawPath(FillAndStroke);
@@ -1205,12 +1204,22 @@ void BaseGfxExtendEngine::transformImagePath(const Image& img, const double* par
     renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram);
 }
 
-void BaseGfxExtendEngine::drawShadow()
+void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double scaleX=0, double scaleY=0)
 {
     m_rasterizer.reset();
-    agg::trans_affine transform(m_transform);
+    agg::trans_affine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
     PathTransform shadow_trans(m_convCurve, transform);
     transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
+    if(a!=0){
+        transform *= agg::trans_affine_translation(-x, -y);
+        transform *= agg::trans_affine_rotation(a* 3.1415926 / 180.0);
+        transform *= agg::trans_affine_translation(x, y);
+    }
+    if(scaleX!=0||scaleY!=0){
+        transform *= agg::trans_affine_translation(-x, -y);
+        transform *= agg::trans_affine_scaling(scaleX,scaleY);
+        transform *= agg::trans_affine_translation(x, y);
+    }
     m_rasterizer.add_path(shadow_trans);
     agg::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, m_shadow_ctrl.color());
     if (m_shadow_ctrl.IsBlur()) {
@@ -1227,7 +1236,27 @@ void BaseGfxExtendEngine::drawShadow()
     }
     m_rasterizer.reset();
 }
-
+void BaseGfxExtendEngine::drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
+                                     double x=0, double y=0, double a=0,double scaleX=0, double scaleY=0)
+{
+    m_path.remove_all();
+    agg::bezier_arc arc(cx, cy, rx, ry, 0, 2*pi());
+    m_path.concat_path(arc,0); // JME
+    m_path.close_polygon();
+    drawShadow(x,y,a,scaleX,scaleY);
+}
+void BaseGfxExtendEngine::rotate(double x, double y, double a)
+{
+    m_transform *= agg::trans_affine_translation(-x, -y);
+    m_transform *= agg::trans_affine_rotation(a* 3.1415926 / 180.0);
+    m_transform *= agg::trans_affine_translation(x, y);
+}
+void BaseGfxExtendEngine::scale(double x, double y,double scaleX, double scaleY)
+{
+    m_transform *= agg::trans_affine_translation(-x, -y);
+    m_transform *= agg::trans_affine_scaling(scaleX,scaleY);
+    m_transform *= agg::trans_affine_translation(x, y);
+}
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
 {
@@ -1237,9 +1266,9 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case FillOnly:
         if (m_fillColor.a)
         {
-            if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
-                drawShadow();
-            }
+            // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
+            //     // drawShadow();
+            // }
             m_rasterizer.add_path(m_pathTransform);
             render(true);
         }
@@ -1264,9 +1293,9 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     case FillAndStroke:
         if (m_fillColor.a)
         {
-            if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
-                drawShadow();
-            }
+            // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
+            //     // drawShadow();
+            // }
             m_rasterizer.add_path(m_pathTransform);
             render(true);
         }

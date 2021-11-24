@@ -41,28 +41,28 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
-//    UIKitCanvasTestGlobalAlpha001();
-//    UIKitCanvasTestDrawDashLine001();
-//    UIKitCanvasTestLineJoin001();
-//    UIKitCanvasTestDrawLine001();
-//    UIKitCanvasTestDrawLine002();
-//    UIKitCanvasTestDrawCurve001();
-//    UIKitCanvasTestDrawCurve002();
+    // UIKitCanvasTestGlobalAlpha001();
+    // UIKitCanvasTestDrawDashLine001();
+    // UIKitCanvasTestLineJoin001();
+    // UIKitCanvasTestDrawLine001();
+    // UIKitCanvasTestDrawLine002();
+    // UIKitCanvasTestDrawCurve001();
+    // UIKitCanvasTestDrawCurve002();
 
-    UIKitCanvasTestComposite001();
-    UIKitCanvasTestGlobalAlpha001();
-    UIKitCanvasTestDrawDashLine001();
-    UIKitCanvasTestLineJoin001();
-    UIKitCanvasTestDrawLine001();
-    UIKitCanvasTestDrawLine002();
-    UIKitCanvasTestDrawCurve001();
-    UIKitCanvasTestDrawCurve002();
+    // UIKitCanvasTestComposite001();
+    // UIKitCanvasTestGlobalAlpha001();
+    // UIKitCanvasTestDrawDashLine001();
+    // UIKitCanvasTestLineJoin001();
+    // UIKitCanvasTestDrawLine001();
+    // UIKitCanvasTestDrawLine002();
+    // UIKitCanvasTestDrawCurve001();
+    // UIKitCanvasTestDrawCurve002();
     UIKitCanvasTestDrawShadow001();
-//    UIKitCanvasTestDrawRect001();
+    UIKitCanvasTestDrawRect001();
 
-//    UIKitCanvasTestLinearGradient();//线性渐变水平
-//    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
-//    UIKitCanvasTestRadialGradient();//放射渐变
+    UIKitCanvasTestLinearGradient();//线性渐变水平
+    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
+    UIKitCanvasTestRadialGradient();//放射渐变
     UIKitCanvasTestcreatePattern5();
     UIKitCanvasTestcreatePattern1();
     UIKitCanvasTestcreatePattern6();
@@ -71,55 +71,52 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestcreatePattern3();
     UIKitCanvasTestcreatePattern8();
     UIKitCanvasTestcreatePattern4();
-//    UIKitCanvasTestDrawRect002();
-//    UIKitCanvasTestDrawRect003();
-//    UIKitCanvasTestDrawRect004();
-//    UIKitCanvasTestClearRect001();
-//    UIKitCanvasTestDrawCircle001();
-//    UIKitCanvasTestDrawCircle002();
-//    UIKitCanvasTestDrawCircle003();
-//    UIKitCanvasTestDrawArc001();
-//    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
-//    UIKitCanvasTestDrawSector001();
-//    UIKitCanvasTestClear001();
-//    UIKitCanvasTestDrawPath001();
-//    UIKitCanvasTestDrawPath002();
-//    UIKitCanvasTestDrawPath003();
-//    UIKitCanvasTestDrawPath004();
-//    UIKitCanvasTestDrawPath005();
-//    UIKitCanvasTestDrawPath006();
-//    UIKitCanvasTestDrawPath007();
-//    UIKitCanvasTestDrawPath008();
-//    UIKitCanvasTestDrawPath009();
-//    UIKitCanvasTestDrawPath010();
-//    UIKitCanvasTestDrawPath011();
-//    UIKitCanvasTestDrawPath012();
-//    UIKitCanvasTestDrawPath013();
-//    UIKitCanvasTestDrawPath014();
-//    UIKitCanvasTestDrawPath015();
-//    UIKitCanvasTestDrawPath016();
-//    UIKitCanvasTestDrawPath017();
-//    UIKitCanvasTestDrawPath018();
-//    UIKitCanvasTestDrawPath019();
-//    UIKitCanvasTestDrawPath020();
-//    UIKitCanvasTestDrawPath021();
-//    UIKitCanvasTestDrawPath022();
-//    UIKitCanvasTestDrawPath023();
-//    UIKitCanvasTestDrawPath024();
-//    UIKitCanvasTestDrawPath025();
-//    UIKitCanvasTestDrawPath026();
-//    UIKitCanvasTestDrawPath027();
-//    UIKitCanvasTestDrawPath028();
-//    UIKitCanvasTestDrawPath029();
-//    UIKitCanvasTestDrawPath030();
-//    UIKitCanvasTestDrawPath031();
-//    UIKitCanvasTestDrawPath032();
-//    UIKitCanvasTestDrawPath033();
-//    UIKitCanvasTestDrawPath034();
-
-
-
+    UIKitCanvasTestDrawRect002();
+    UIKitCanvasTestDrawRect003();
+    UIKitCanvasTestDrawRect004();
+    UIKitCanvasTestClearRect001();
+    UIKitCanvasTestDrawCircle001();
+    UIKitCanvasTestDrawCircle002();
+    UIKitCanvasTestDrawCircle003();
+    UIKitCanvasTestDrawArc001();
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawSector001();
+    UIKitCanvasTestClear001();
+    UIKitCanvasTestDrawPath001();
+    UIKitCanvasTestDrawPath002();
+    UIKitCanvasTestDrawPath003();
+    UIKitCanvasTestDrawPath004();
+    UIKitCanvasTestDrawPath005();
+    UIKitCanvasTestDrawPath006();
+    UIKitCanvasTestDrawPath007();
+    UIKitCanvasTestDrawPath008();
+    UIKitCanvasTestDrawPath009();
+    UIKitCanvasTestDrawPath010();
+    UIKitCanvasTestDrawPath011();
+    UIKitCanvasTestDrawPath012();
+    UIKitCanvasTestDrawPath013();
+    UIKitCanvasTestDrawPath014();
+    UIKitCanvasTestDrawPath015();
+    UIKitCanvasTestDrawPath016();
+    UIKitCanvasTestDrawPath017();
+    UIKitCanvasTestDrawPath018();
+    UIKitCanvasTestDrawPath019();
+    UIKitCanvasTestDrawPath020();
+    UIKitCanvasTestDrawPath021();
+    UIKitCanvasTestDrawPath022();
+    UIKitCanvasTestDrawPath023();
+    UIKitCanvasTestDrawPath024();
+    UIKitCanvasTestDrawPath025();
+    UIKitCanvasTestDrawPath026();
+    UIKitCanvasTestDrawPath027();
+    UIKitCanvasTestDrawPath028();
+    UIKitCanvasTestDrawPath029();
+    UIKitCanvasTestDrawPath030();
+    UIKitCanvasTestDrawPath031();
+    UIKitCanvasTestDrawPath032();
+    UIKitCanvasTestDrawPath033();
+    UIKitCanvasTestDrawPath034();
     return container_;
 }
 
@@ -305,22 +302,33 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     CreateTitleLabel("绘制矩形和阴影");
     UICanvas* canvas = CreateCanvas();
     Paint paint;
-   // paint.SetStrokeColor(Color::Red());
-    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-    paint.SetFillColor(Color::Green());
+    GradientControl gradientControl;
+   paint.SetStrokeColor(Color::Red());
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    //paint.SetFillColor(Color::Green());
+    //paint.fillStyle(Color::White());
     paint.SetShadowColor(Color::Black());
     paint.SetStrokeWidth(1);
     paint.SetShadowOffsetX(10);
     paint.SetShadowOffsetY(10);
-    paint.SetShadowBlurRadius(5);
+    paint.SetRotateCenter(60,60);
+    paint.SetRotateAngle(10.0);
+    paint.SetScale(2.0,2.0);
+    // paint.SetShadowBlurRadius(5);
+    gradientControl.createLinearGradient(60,60,160,110);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->BeginPath();
     canvas->MoveTo({60,60});
     canvas->LineTo({60,110});
     canvas->LineTo({160,110});
     canvas->LineTo({160,60});
     canvas->ClosePath();
-    canvas->DrawPath(paint);
     canvas->FillPath(paint);
+    // canvas->DrawPath(paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve002()
@@ -346,6 +354,13 @@ void UITestCanvas::UIKitCanvasTestDrawRect001()
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    paint.SetShadowBlurRadius(5);
+
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(30); // 30: line width
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
@@ -422,15 +437,21 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("圆形填充");
+    CreateTitleLabel("圆形填充和阴影");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    paint.SetShadowBlurRadius(5);
     paint.SetStrokeColor(Color::Yellow());
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(10); // 10: line width
     paint.SetOpacity(127);    // 127: opacity
+    paint.SetGlobalAlpha(0.7f);
     // {100, 100}: circle center coordinates, 30: circle radius
     canvas->DrawCircle({ 100, 100 }, 30, paint);
 }
@@ -1143,16 +1164,24 @@ void UITestCanvas::UIKitCanvasTestLinearGradient(){
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
+    GradientControl gradientControl;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetStrokeWidth(2);
-    paint.createLinearGradient(100,50,200,50);
+    gradientControl.createLinearGradient(100,50,200,50);
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.3,Color::White());
-    paint.addColorStop(0.6,Color::Green());
-    paint.addColorStop(1,Color::Blue());
-    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
-
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
+    // canvas->DrawRect({ 100, 50 }, 50, 100, paint);
+    canvas->BeginPath();
+    canvas->MoveTo({100,50});
+    canvas->LineTo({100,100});
+    canvas->LineTo({200,100});
+    // canvas->LineTo({200,50});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
 }
 /**
  * 调试线性渐变
@@ -1166,15 +1195,17 @@ void UITestCanvas::UIKitCanvasTestLinearGradient2(){
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
+    GradientControl gradientControl;
     paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(2);
-    paint.createLinearGradient(100,50,200,150);
+    gradientControl.createLinearGradient(100,50,200,150);
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.3,Color::White());
-    paint.addColorStop(0.6,Color::Green());
-    paint.addColorStop(1,Color::Blue());
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
 }
@@ -1194,12 +1225,14 @@ void UITestCanvas::UIKitCanvasTestRadialGradient(){
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetStrokeWidth(2);
-    paint.createRadialGradient(180,140,10,150,100,80);
+    GradientControl gradientControl;
+    gradientControl.createRadialGradient(180,140,10,150,100,80);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.4,Color::Gray());
+    gradientControl.addColorStop(0.8,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.4,Color::Gray());
-    paint.addColorStop(0.8,Color::Green());
-    paint.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
 }
