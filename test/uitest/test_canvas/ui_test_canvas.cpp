@@ -304,7 +304,7 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     Paint paint;
     GradientControl gradientControl;
    // paint.SetStrokeColor(Color::Red());
-    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     //paint.SetFillColor(Color::Green());
     //paint.fillStyle(Color::White());
     paint.SetShadowColor(Color::Black());
@@ -328,7 +328,7 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     canvas->LineTo({160,60});
     canvas->ClosePath();
     canvas->FillPath(paint);
-    canvas->DrawPath(paint);
+    // canvas->DrawPath(paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve002()
