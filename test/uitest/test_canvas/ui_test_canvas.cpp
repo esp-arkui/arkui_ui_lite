@@ -525,11 +525,11 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
 //    canvas->DrawImage({ 80, 20 }, str, paint);
 
     //paint.Rotate(0);
-    canvas->DrawImage({ 200, 20 }, str, paint);
+    //canvas->DrawImage({ 200, 20 }, str, paint);
 
     paint.Rotate(10);
-    char* image1 = "C:\\Users\\Administrator\\Downloads\\222.gif";
-    canvas->DrawImage({ 200, 20 }, image1, paint);
+    //char* image1 = "C:\\Users\\Administrator\\Downloads\\222.gif";
+    canvas->DrawImage({ 200, 20 }, GIF_IMAGE_PATH, paint);
 
     paint.Rotate(-5);
     char* image = "C:\\Users\\Administrator\\Desktop\\1111.jpg";
