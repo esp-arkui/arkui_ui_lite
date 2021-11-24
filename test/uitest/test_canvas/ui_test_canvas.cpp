@@ -303,7 +303,7 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     UICanvas* canvas = CreateCanvas();
     Paint paint;
     GradientControl gradientControl;
-   // paint.SetStrokeColor(Color::Red());
+   paint.SetStrokeColor(Color::Red());
     paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     //paint.SetFillColor(Color::Green());
     //paint.fillStyle(Color::White());

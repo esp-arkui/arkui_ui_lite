@@ -1694,6 +1694,11 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
         m_graphics->fillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
                               paint.GetFillColor().alpha);
     }
+    if(paint.GetStrokeColor().alpha){
+        m_graphics->lineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green, paint.GetStrokeColor().blue,
+                              paint.GetStrokeColor().alpha);
+        m_graphics->lineWidth(paint.GetStrokeWidth());
+    }
     m_graphics->resetPath();
     for (uint16_t i = 0; (i < pathParam->count) && (iter != path->cmd_.End()); i++, iter = iter->next_) {
         switch (iter->data_) {
@@ -1806,7 +1811,7 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
         m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
     }
     fill(*m_graphics,paint,rect,style);//填充颜色
-    m_graphics->drawPath(BaseGfxExtendEngine::FillOnly);
+    m_graphics->drawPath(BaseGfxExtendEngine::FillAndStroke);
 
 }
 
