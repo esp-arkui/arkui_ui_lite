@@ -41,22 +41,22 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
-    UIKitCanvasTestGlobalAlpha001();
-    UIKitCanvasTestDrawDashLine001();
-    UIKitCanvasTestLineJoin001();
-    UIKitCanvasTestDrawLine001();
-    UIKitCanvasTestDrawLine002();
-    UIKitCanvasTestDrawCurve001();
-    UIKitCanvasTestDrawCurve002();
+    // UIKitCanvasTestGlobalAlpha001();
+    // UIKitCanvasTestDrawDashLine001();
+    // UIKitCanvasTestLineJoin001();
+    // UIKitCanvasTestDrawLine001();
+    // UIKitCanvasTestDrawLine002();
+    // UIKitCanvasTestDrawCurve001();
+    // UIKitCanvasTestDrawCurve002();
 
-    UIKitCanvasTestComposite001();
-    UIKitCanvasTestGlobalAlpha001();
-    UIKitCanvasTestDrawDashLine001();
-    UIKitCanvasTestLineJoin001();
-    UIKitCanvasTestDrawLine001();
-    UIKitCanvasTestDrawLine002();
-    UIKitCanvasTestDrawCurve001();
-    UIKitCanvasTestDrawCurve002();
+    // UIKitCanvasTestComposite001();
+    // UIKitCanvasTestGlobalAlpha001();
+    // UIKitCanvasTestDrawDashLine001();
+    // UIKitCanvasTestLineJoin001();
+    // UIKitCanvasTestDrawLine001();
+    // UIKitCanvasTestDrawLine002();
+    // UIKitCanvasTestDrawCurve001();
+    // UIKitCanvasTestDrawCurve002();
     UIKitCanvasTestDrawShadow001();
     UIKitCanvasTestDrawRect001();
 
@@ -311,7 +311,10 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     paint.SetStrokeWidth(1);
     paint.SetShadowOffsetX(10);
     paint.SetShadowOffsetY(10);
-    paint.SetShadowBlurRadius(5);
+    paint.SetRotateCenter(60,60);
+    paint.SetRotateAngle(10.0);
+    paint.SetScale(2.0,2.0);
+    // paint.SetShadowBlurRadius(5);
     gradientControl.createLinearGradient(60,60,160,110);
     gradientControl.addColorStop(0,Color::Yellow());
     gradientControl.addColorStop(0.3,Color::White());
@@ -434,7 +437,7 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("圆形填充");
+    CreateTitleLabel("圆形填充和阴影");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
@@ -448,6 +451,7 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(10); // 10: line width
     paint.SetOpacity(127);    // 127: opacity
+    paint.SetGlobalAlpha(0.7f);
     // {100, 100}: circle center coordinates, 30: circle radius
     canvas->DrawCircle({ 100, 100 }, 30, paint);
 }

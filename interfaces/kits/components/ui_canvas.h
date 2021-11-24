@@ -168,7 +168,8 @@ public:
           miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
           dashArray(nullptr),ndashes(0),globalAlpha(1.0f),shadowBlurRadius(0),shadowOffsetX(0),shadowOffsetY(0),
           shadowColor(Color::Black()),
-          blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver)
+          blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver),rotateCenterX(0),rotateCenterY(0),
+          rotateAngle(0),scaleX(0),scaleY(0)
     {
         m_graphics= std::make_shared<BaseGfxExtendEngine>();
         //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
@@ -198,6 +199,11 @@ public:
         shadowBlurRadius=paint.shadowBlurRadius;
         ndashes = (paint.ndashes+1)&~1;
         blendMode = paint.blendMode;
+        rotateCenterX=paint.rotateCenterX;
+        rotateCenterY=paint.rotateCenterY;
+        rotateAngle=paint.rotateAngle;
+        scaleX=paint.scaleX;
+        scaleY=paint.scaleY;
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
@@ -516,44 +522,113 @@ public:
     {
         this->globalAlpha=globalAlpha;
     }
+
     float GetGlobalAlpha() const
     {
         return globalAlpha;
     }
+
     double GetShadowBlurRadius() const
     {
         return shadowBlurRadius;
     }
+
     void SetShadowBlurRadius(double radius)
     {
         shadowBlurRadius=radius;
     }
+
     double GetShadowOffsetX() const
     {
         return shadowOffsetX;
     }
+
     void SetShadowOffsetX(double offset)
     {
         shadowOffsetX = offset;
     }
+
     double GetShadowOffsetY() const
     {
         return shadowOffsetY;
     }
+
     void SetShadowOffsetY(double offset)
     {
         shadowOffsetY = offset;
     }
+
     ColorType GetShadowColor() const
     {
         return shadowColor;
     }
+
     void SetShadowColor(ColorType color)
     {
         shadowColor = color;
     }
 
+    void SetRotateCenterX(double x)
+    {
+        rotateCenterX = x;
+    }
 
+    double GetRotateCenterX() const
+    {
+        return rotateCenterX;
+    }
+
+    void SetRotateCenterY(double y)
+    {
+        rotateCenterY = y;
+    }
+
+    double GetRotateCenterY() const
+    {
+        return rotateCenterY;
+    }
+
+    void SetRotateCenter(double x,double y)
+    {
+        rotateCenterX = x;
+        rotateCenterY = y;
+    }
+
+    void SetRotateAngle(double angle)
+    {
+        rotateAngle = angle;
+    }
+
+    double GetRotateAngle() const
+    {
+        return rotateAngle;
+    }
+
+    void SetScaleX(double x)
+    {
+        scaleX = x;
+    }
+
+    double GetScaleX() const
+    {
+        return scaleX;
+    }
+
+    void SetScaleY(double y)
+    {
+        scaleY = y;
+    }
+
+    double GetScaleY() const
+    {
+        return scaleY;
+    }
+
+    void SetScale(double x,double y)
+    {
+        scaleX = x;
+        scaleY = y;
+    }
     void globalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
     {
         this->blendMode = blendMode;
@@ -583,24 +658,6 @@ public:
     }
 
     void fillStyle(ColorType color){
-        // uint8_t array[6];
-        // uint8_t r,g,b;
-        // for(int count=1;count<=6;count++){
-        //     if(color[count]<48||color[count]>70||(color[count]>57&&color[count]<65)){
-        //         return;
-        //     }
-        //     if(color[count]<=57){
-        //         array[count-1]=color[count]-48;
-        //     }
-        //     if(color[count]>=65){
-        //         array[count-1]=color[count]-55;
-        //     }
-        // }
-        
-        // r=array[0]*16+array[1];
-        // g=array[2]*16+array[3];
-        // b=array[4]*16+array[5];
-        // printf("%d,%d,%d",r,g,b);
         SetFillColor(color);
     }
 
@@ -629,6 +686,11 @@ private:
     ColorType shadowColor;
     BaseGfxExtendEngine::BlendMode blendMode;
     GradientControl gradientControl;
+    double rotateCenterX;
+    double rotateCenterY;
+    double rotateAngle;
+    double scaleX;
+    double scaleY;
 };
 
 /**

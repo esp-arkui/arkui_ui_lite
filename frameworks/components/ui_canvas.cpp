@@ -1229,21 +1229,42 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
     if(m_graphics==nullptr) {
         return;
     }
-
-    if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
-        m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
-        m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
-        m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
-                                    paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-    }
+    double rotateCenterX=0,rotateCenterY=0,rotateAngle=0;
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
         arcInfo.radius = circleParam->radius - halfLineWidth;
         drawStyle.lineWidth_ = arcInfo.radius;
         drawStyle.lineColor_ = paint.GetFillColor();
         drawStyle.bgOpa_ = paint.GetOpacity();
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        }
+        if(paint.GetRotateAngle()!=0){
+            rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+            rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+            rotateAngle=paint.GetRotateAngle();
+        }
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
+                                rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+        }
+        if(paint.GetRotateAngle()!=0){
+            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+        }
+        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+        }
         if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
                 && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
-            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius);
+            // m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
+            //                        paint.GetRotateCenterX(),paint.GetRotateCenterY(),paint.GetRotateAngle(),
+            //                        paint.GetScaleX(),paint.GetScaleY());
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
             
@@ -1265,6 +1286,31 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
         drawStyle.lineColor_ = paint.GetStrokeColor();
         drawStyle.lineOpa_= paint.GetOpacity();
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        }
+        if(paint.GetRotateAngle()!=0){
+            rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+            rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+            rotateAngle=paint.GetRotateAngle();
+        }
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
+                                rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+        }
+        if(paint.GetRotateAngle()!=0){
+            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+        }
+        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+        }
         if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
                 && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
@@ -1740,12 +1786,25 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
             break;
         }
     }
+    double rotateCenterX=0,rotateCenterY=0,rotateAngle=0;
+    if(paint.GetRotateAngle()!=0){
+        rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+        rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+        rotateAngle=paint.GetRotateAngle();
+    }
     if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
-            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
-            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
-            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
-                                       paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-        }
+        m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+        m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+        m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                    paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        m_graphics->drawShadow(rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+    }
+    if(paint.GetRotateAngle()!=0){
+        m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+    }
+    if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+        m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+    }
     fill(*m_graphics,paint,rect,style);//填充颜色
     m_graphics->drawPath(BaseGfxExtendEngine::FillOnly);
 

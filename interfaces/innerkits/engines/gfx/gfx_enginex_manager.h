@@ -415,8 +415,10 @@ public:
 
     void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
     void closePolygon();
-    void drawShadow();
-    void drawShadow(double cx, double cy, double rx, double ry);
+    void drawShadow(double x, double y, double a,double scaleX, double scaleY);
+    void drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,double x, double y, double a,double scaleX, double scaleY);
+    void rotate(double x, double y, double a);
+    void scale(double x, double y,double scaleX, double scaleY);
     void drawPath(DrawPathFlag flag = FillAndStroke);
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 
