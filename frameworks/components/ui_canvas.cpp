@@ -1511,11 +1511,17 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         double x = start.x;
         double y = start.y;
         double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
-        StartTransform(rect,invalidatedArea, paint);
-        graphicsContext->transformImage(imageBuffer, parallelogram, false);
+        if(!paint.IsTransform()){
+            graphicsContext->BlendFromImage(imageBuffer, x, y, opa, false);
+        }else {
+            StartTransform(rect,invalidatedArea, paint);
+            graphicsContext->transformImage(imageBuffer, parallelogram, false);
+        }
+
         graphicsContext->resetTransformations();
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
         delete pGfxMapBuffer;
+
 }
 
 void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer,
