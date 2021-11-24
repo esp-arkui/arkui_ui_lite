@@ -585,6 +585,8 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(
                     buffSize, BUFFER_MAP_SURFACE);
         memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
+        //BaseGfxEngine::GetInstance()->Fill(*gfxMapBuffer, invalidatedArea, Color::GetColorFromRGBA(0,0,0,0), opaScale_);
+
         gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
         //添加的处理机制的。。。
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -601,6 +603,7 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                      posViewTop,
                                      posViewLeft+trunc.GetWidth() - 1,
                                      posViewTop+trunc.GetHeight() - 1),curDraw->data_.paint);
+
             curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
 
         }
@@ -627,14 +630,12 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                   realTop+trunc.GetHeight() - 1,
                                   posViewLeft,posViewTop,posViewLeft+trunc.GetWidth() - 1,
                                   posViewTop+trunc.GetHeight() - 1,
-                             BaseGfxExtendEngine::Anisotropic);
+                             BaseGfxExtendEngine::XMinYMin);
                              //BaseGfxExtendEngine::XMidYMid);
+        OpacityType opa = DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_);
 
-        m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-                                                                                   gfxMapBuffer->rect.GetTop(),
-                                                                                   gfxMapBuffer->rect.GetRight(),
-                                                                                   gfxMapBuffer->rect.GetBottom(),
-                                             gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
+        m_graphics_Image.BlendFromImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
+                                            gfxMapBuffer->rect.GetTop(),opa);
 
 //       ImageInfo imageInfo;
 //       imageInfo.header.colorMode = gfxMapBuffer->mode;
@@ -692,23 +693,8 @@ bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const Rect& fi
                        fillArea.GetHeight(),gfxDstBuffer.stride);
     m_graphics->viewport(worldRect.GetLeft(),worldRect.GetTop(),worldRect.GetRight(),worldRect.GetBottom(),
                          screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
-                         BaseGfxExtendEngine::Anisotropic);
+                         BaseGfxExtendEngine::XMinYMin);
                          //BaseGfxExtendEngine::XMidYMid);
-
-//    destBuf= static_cast<uint8_t*>(gfxImageBuffer->virAddr);
-//    offset = static_cast<int32_t>(posTop) * gfxImageBuffer->width +
-//                posLeft;
-//    destBuf += offset * destByteSize;
-
-//    m_graphics->attach(destBuf,fillArea.GetWidth(),
-//        fillArea.GetHeight(),gfxImageBuffer->stride);
-
-
-//    m_graphics->viewport(worldRect.GetLeft(),worldRect.GetTop(),worldRect.GetRight(),worldRect.GetBottom(),
-//                               screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
-//                               BaseGfxExtendEngine::Anisotropic);
-
-    //m_graphics->clearAll(agg::srgba8(0,0,0,0));
     return true;
 
 }
@@ -1089,6 +1075,10 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
 
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::PATTERN)
     {
+        BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+        if(m_graphics==nullptr) {
+            return;
+        }
         if(paint.patternRepeat==paint.REPEAT){
             for(;;){
 
@@ -1104,10 +1094,7 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
                     cordsTmp.SetPosition(temp.x, temp.y);
                     cordsTmp.SetHeight(imageParam->height);
                     cordsTmp.SetWidth(imageParam->width);
-//                    Images_ images_;
-//                    images_.coord=cordsTmp;
-//                    images_.img=imageParam->image;
-//                    imageList_.p
+
                     DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,imageParam->image->GetImageInfo(), style, paint.GetOpacity());
                     temp.y+=imageParam->height;
                 }
@@ -1229,12 +1216,34 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
     if(m_graphics==nullptr) {
         return;
     }
+
     double rotateCenterX=0,rotateCenterY=0,rotateAngle=0;
+
+    arcInfo.radius = circleParam->radius + halfLineWidth - 1;
+
+    //int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
+    //int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
+
+//    Rect imgRect(posViewLeft, posViewLeft, posViewLeft+1, posViewLeft+1);
+//    TransformMap backwardMap;
+//    Vector2<float> pivot;
+//    pivot.x_ = arcInfo.center.x;
+//    pivot.y_ = arcInfo.center.y;
+
+
+    int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
+    int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
+    m_graphics->translate(-posViewLeft,-posViewTop);
+
+    m_graphics->rotate(BaseGfxExtendEngine::deg2Rad(0));
+
+    m_graphics->translate(posViewLeft,posViewTop);
+
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
-        arcInfo.radius = circleParam->radius - halfLineWidth;
-        drawStyle.lineWidth_ = arcInfo.radius;
-        drawStyle.lineColor_ = paint.GetFillColor();
+        drawStyle.bgColor_ = paint.GetFillColor();
         drawStyle.bgOpa_ = paint.GetOpacity();
+        m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
+                                  drawStyle.bgColor_.blue,drawStyle.bgOpa_);
         if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
             m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
             m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -1260,32 +1269,21 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
             m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
         }
-        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
-                && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
-            // m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
-            //                        paint.GetRotateCenterX(),paint.GetRotateCenterY(),paint.GetRotateAngle(),
-            //                        paint.GetScaleX(),paint.GetScaleY());
-            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                                  CapType::CAP_NONE);
-            
-        } else {
-
-            m_graphics->noLine();
-            
-            m_graphics->fillColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
-                              drawStyle.lineColor_.blue,drawStyle.bgOpa_);
-            m_graphics->blendMode(paint.globalCompositeOperation());
-            m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
-                                arcInfo.radius,arcInfo.radius);
-        }
-        // Add/Sub/Contrast Blending Modes
     }
-
     if (enableStroke) {
-        arcInfo.radius = circleParam->radius + halfLineWidth - 1;
+
         drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
         drawStyle.lineColor_ = paint.GetStrokeColor();
         drawStyle.lineOpa_= paint.GetOpacity();
+        if(paint.IsLineDash()) {
+            m_graphics->lineDashOffset(paint.GetLineDashOffset());
+            m_graphics->SetLineDash(paint.GetLineDash(),paint.GetLineDashCount());
+        } else {
+            m_graphics->SetLineDash(nullptr,0);
+        }
+        m_graphics->lineWidth(drawStyle.lineWidth_);
+        m_graphics->lineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
+                                  drawStyle.lineColor_.blue,drawStyle.lineOpa_);
         if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
             m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
             m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -1311,26 +1309,25 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
             m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
         }
-        if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
-                && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendSrcOver) {
-            BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                              CapType::CAP_NONE);
-        } else {
-            if(paint.IsLineDash()) {
-                m_graphics->lineDashOffset(paint.GetLineDashOffset());
-                m_graphics->SetLineDash(paint.GetLineDash(),paint.GetLineDashCount());
-            } else {
-                m_graphics->SetLineDash(nullptr,0);
-            }
-            m_graphics->lineWidth(drawStyle.lineWidth_);
-            m_graphics->blendMode(paint.globalCompositeOperation());
-            m_graphics->lineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
-                                      drawStyle.lineColor_.blue,drawStyle.lineOpa_);
-            m_graphics->noFill();
-            m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
-                                arcInfo.radius-1,arcInfo.radius-1);
+    }
 
+    if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
+            && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendNone) {
+        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+                                          CapType::CAP_NONE);
+    } else {
+        if (!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)) {
+            m_graphics->noFill();
         }
+        if (!enableStroke) {
+            m_graphics->noLine();
+        }
+        m_graphics->blendMode(paint.globalCompositeOperation());
+        //double xx=circleParam->center.x,yy=circleParam->center.y;
+        //m_graphics->screenToWorld(xx,yy);
+        m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
+                            arcInfo.radius,arcInfo.radius);
+
     }
 }
 

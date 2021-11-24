@@ -52,8 +52,6 @@ namespace OHOS {
  * @version 1.0
  */
 
-
-
 class PolygonPath : public ClipPath{
 
 };
@@ -221,9 +219,8 @@ public:
         } else {
             dashArray =nullptr;
         }
-            gradientControl=paint.getGradientControl();
-           patternRepeat = paint.patternRepeat;
-
+        gradientControl=paint.getGradientControl();
+        patternRepeat = paint.patternRepeat;
     }
     const Paint& operator = (const Paint& paint)
     {

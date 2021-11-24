@@ -1123,7 +1123,7 @@ BaseGfxExtendEngine::ImageResample BaseGfxExtendEngine::imageResample() const
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::transformImage(const Image& img,    int imgX1,    int imgY1,    int imgX2,    int imgY2,
-                                             double dstX1, double dstY1, double dstX2, double dstY2)
+                                             double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias)
 {
     resetPath();
     moveTo(dstX1, dstY1);
@@ -1132,11 +1132,11 @@ void BaseGfxExtendEngine::transformImage(const Image& img,    int imgX1,    int 
     lineTo(dstX1, dstY2);
     closePolygon();
     double parallelogram[6] = { dstX1, dstY1, dstX2, dstY1, dstX2, dstY2 };
-    renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
+    renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram,isAntiAlias);
 }
 
 //------------------------------------------------------------------------
-void BaseGfxExtendEngine::transformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2)
+void BaseGfxExtendEngine::transformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias)
 {
     resetPath();
     moveTo(dstX1, dstY1);
@@ -1145,12 +1145,12 @@ void BaseGfxExtendEngine::transformImage(const Image& img, double dstX1, double 
     lineTo(dstX1, dstY2);
     closePolygon();
     double parallelogram[6] = { dstX1, dstY1, dstX2, dstY1, dstX2, dstY2 };
-    renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram);
+    renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram,isAntiAlias);
 }
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::transformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                           const double* parallelogram)
+                           const double* parallelogram,bool isAntiAlias)
 {
     resetPath();
     moveTo(parallelogram[0], parallelogram[1]);
@@ -1159,12 +1159,12 @@ void BaseGfxExtendEngine::transformImage(const Image& img, int imgX1, int imgY1,
     lineTo(parallelogram[0] + parallelogram[4] - parallelogram[2],
            parallelogram[1] + parallelogram[5] - parallelogram[3]);
     closePolygon();
-    renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
+    renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram,isAntiAlias);
 }
 
 
 //------------------------------------------------------------------------
-void BaseGfxExtendEngine::transformImage(const Image& img, const double* parallelogram)
+void BaseGfxExtendEngine::transformImage(const Image& img, const double* parallelogram,bool isAntiAlias)
 {
     resetPath();
     moveTo(parallelogram[0], parallelogram[1]);
@@ -1173,7 +1173,7 @@ void BaseGfxExtendEngine::transformImage(const Image& img, const double* paralle
     lineTo(parallelogram[0] + parallelogram[4] - parallelogram[2],
            parallelogram[1] + parallelogram[5] - parallelogram[3]);
     closePolygon();
-    renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram);
+    renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram,isAntiAlias);
 }
 
 //------------------------------------------------------------------------
@@ -1620,7 +1620,7 @@ void BaseGfxExtendEngine::render(bool fillColor)
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, int y2,
-                        const double* parl)
+                        const double* parl,bool isAntiAlias)
 {
     agg::trans_affine mtx((double)x1,
                           (double)y1,
@@ -1639,11 +1639,19 @@ void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, 
     if(m_blendMode == BlendAlpha)
     {
 		// JME audit -
-        BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBasePre, interpolator);
+        if(isAntiAlias) {
+            BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBasePre, interpolator);
+        } else {
+            BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBase, interpolator);
+        }
     }
     else
     {
-        BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBaseCompPre, interpolator);
+        if(isAntiAlias) {
+            BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBaseCompPre, interpolator);
+        } else {
+            BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBaseComp, interpolator);
+        }
     }
 }
 
@@ -1694,7 +1702,6 @@ void BaseGfxExtendEngine::blendImage(Image& img, double dstX, double dstY, unsig
 {
     worldToScreen(dstX, dstY);
     PixFormat pixF(img.renBuf);
-    m_renBasePre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
     if(m_blendMode == BlendAlpha)
     {
         m_renBasePre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
@@ -1725,17 +1732,56 @@ void BaseGfxExtendEngine::copyImage(Image& img, double dstX, double dstY)
     m_renBase.copy_from(img.renBuf, 0, int(dstX), int(dstY));
 }
 
-void BaseGfxExtendEngine::blend_from(const Image& img,Rect srcRect,Rect dstRect)
+void BaseGfxExtendEngine::BlendFromImage(Image& img,int imgX1, int imgY1, int imgX2, int imgY2,
+                                     double dstX, double dstY, unsigned alpha,bool isAntiAlias)
 {
-    //blend_from
-    imageFilter(BaseGfxExtendEngine::Bilinear);
-    //m_graphics.imageResample(Agg2D::NoResample);
-    //m_graphics.imageResample(Agg2D::ResampleAlways);
-    imageResample(BaseGfxExtendEngine::ResampleOnZoomOut);
-    imageBlendMode(BaseGfxExtendEngine::BlendDst);
+    worldToScreen(dstX, dstY);
+    PixFormat pixF(img.renBuf);
+    // JME
+    //agg::rect r(imgX1, imgY1, imgX2, imgY2);
+    Rect r(imgX1, imgY1, imgX2, imgY2);
+    if(m_blendMode == BlendAlpha)
+    {
+        if(isAntiAlias) {
+            m_renBasePre.blend_from(pixF, &r, int(dstX)-imgX1, int(dstY)-imgY1, alpha);
+        } else {
+            m_renBase.blend_from(pixF, &r, int(dstX)-imgX1, int(dstY)-imgY1, alpha);
+        }
+    }
+    else
+    {
+        if(isAntiAlias) {
+            this->m_renBaseCompPre.blend_from(pixF, &r, int(dstX)-imgX1, int(dstY)-imgY1, alpha);
+        } else {
+            this->m_renBaseComp.blend_from(pixF, &r, int(dstX)-imgX1, int(dstY)-imgY1, alpha);
+        }
+    }
+}
 
-    transformImage(img, srcRect.x1, srcRect.y1, srcRect.x2, srcRect.y2,
-                                          dstRect.x1, dstRect.y1, dstRect.x2, dstRect.y2);
+
+
+//------------------------------------------------------------------------
+void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha,bool isAntiAlias)
+{
+    worldToScreen(dstX, dstY);
+    PixFormat pixF(img.renBuf);
+
+    if(m_blendMode == BlendAlpha)
+    {
+        if(isAntiAlias) {
+            m_renBasePre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+        } else {
+            m_renBase.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+        }
+    }
+    else
+    {
+        if(isAntiAlias) {
+            m_renBaseCompPre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+        } else {
+            m_renBaseComp.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+        }
+    }
 }
 
 //------------------------------------------------------------------------

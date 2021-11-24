@@ -49,14 +49,14 @@ const UIView* UITestCanvas::GetTestView()
     // UIKitCanvasTestDrawCurve001();
     // UIKitCanvasTestDrawCurve002();
 
-    // UIKitCanvasTestComposite001();
-    // UIKitCanvasTestGlobalAlpha001();
-    // UIKitCanvasTestDrawDashLine001();
-    // UIKitCanvasTestLineJoin001();
-    // UIKitCanvasTestDrawLine001();
-    // UIKitCanvasTestDrawLine002();
-    // UIKitCanvasTestDrawCurve001();
-    // UIKitCanvasTestDrawCurve002();
+    UIKitCanvasTestComposite001();
+    UIKitCanvasTestGlobalAlpha001();
+    UIKitCanvasTestDrawDashLine001();
+    UIKitCanvasTestLineJoin001();
+    UIKitCanvasTestDrawLine001();
+    UIKitCanvasTestDrawLine002();
+    UIKitCanvasTestDrawCurve001();
+    UIKitCanvasTestDrawCurve002();
     UIKitCanvasTestDrawShadow001();
     UIKitCanvasTestDrawRect001();
 
@@ -130,14 +130,18 @@ void UITestCanvas::UIKitCanvasTestComposite001()
 
     Paint paint;
     //canvas->GlobalAlpha(0.8f,paint);
+    paint.SetStrokeWidth(5);
     paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint.SetStrokeColor(Color::Blue());
     paint.SetFillColor(Color::Red());
-    paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
+    //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
     canvas->DrawCircle({ 50, 50 }, 40, paint);
     paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOut);
+    //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
     //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
-    paint.SetFillColor(Color::GetColorFromRGBA(0,255,0,128));
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetStrokeColor(Color::Red());
+    paint.SetFillColor(Color::GetColorFromRGB(0,255,0));
     canvas->DrawCircle({ 70, 70 }, 40, paint);
 
 }

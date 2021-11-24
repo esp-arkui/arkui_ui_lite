@@ -203,6 +203,7 @@ public:
 
     enum BlendMode
     {
+        BlendNone       =-1,
         BlendAlpha      = agg::end_of_comp_op_e,
         BlendClear      = agg::comp_op_clear,
         BlendSrc        = agg::comp_op_src,
@@ -227,7 +228,7 @@ public:
         BlendHardLight  = agg::comp_op_hard_light,
         BlendSoftLight  = agg::comp_op_soft_light,
         BlendDifference = agg::comp_op_difference,
-        BlendExclusion  = agg::comp_op_exclusion,
+        BlendExclusion  = agg::comp_op_exclusion
     };
 
     enum Direction
@@ -433,16 +434,16 @@ public:
 
     void transformImage(const Image& img,
                            int imgX1,    int imgY1,    int imgX2,    int imgY2,
-                        double dstX1, double dstY1, double dstX2, double dstY2);
+                        double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
 
     void transformImage(const Image& img,
-                        double dstX1, double dstY1, double dstX2, double dstY2);
+                        double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
 
     void transformImage(const Image& img,
                         int imgX1, int imgY1, int imgX2, int imgY2,
-                        const double* parallelogram);
+                        const double* parallelogram,bool isAntiAlias=true);
 
-    void transformImage(const Image& img, const double* parallelogram);
+    void transformImage(const Image& img, const double* parallelogram,bool isAntiAlias=true);
 
 
     void transformImagePath(const Image& img,
@@ -572,12 +573,14 @@ public:
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
-    void blend_from(const Image& img, Rect srcRect,Rect dstRect);
+    void BlendFromImage(Image &img, int imgX1, int imgY1, int imgX2, int imgY2,
+                        double dstX, double dstY, unsigned alpha,bool isAntiAlias=true);
+    void BlendFromImage(Image &img, double dstX, double dstY, unsigned alpha,bool isAntiAlias=true);
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
     void updateRasterizerGamma();
-    void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
+    void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl,bool isAntiAlias=true);
 
     void ClearLineDash(void)
     {
