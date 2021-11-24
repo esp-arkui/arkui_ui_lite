@@ -48,6 +48,7 @@ Image::~Image()
         path_ = nullptr;
     }
     srcType_ = IMG_SRC_UNKNOWN;
+    imageType_ = ImageType::IMG_UNKNOWN;
 }
 
 void Image::GetHeader(ImageHeader& header) const
@@ -78,11 +79,18 @@ Image::ImageType Image::CheckImgType(const char* src)
     }
     close(fd);
     if (!png_sig_cmp(reinterpret_cast<png_const_bytep>(buf), 0, IMG_BYTES_TO_CHECK)) {
+        imageType_ = IMG_PNG;
         return IMG_PNG;
     // 0xFF 0xD8: JPEG file's header
     } else if ((static_cast<uint8_t>(buf[0]) == 0xFF) && (static_cast<uint8_t>(buf[1]) == 0xD8)) {
+        imageType_ = IMG_JPEG;
         return IMG_JPEG;
+    } else if ((static_cast<uint8_t>(buf[0]) == 0x47) && (static_cast<uint8_t>(buf[1]) == 0x49) &&
+          (static_cast<uint8_t>(buf[2]) == 0x46)) { // 2: array index of GIF file's header
+        imageType_ = IMG_GIF;
+        return IMG_GIF;
     }
+    imageType_ = IMG_UNKNOWN;
     return IMG_UNKNOWN;
 }
 #endif

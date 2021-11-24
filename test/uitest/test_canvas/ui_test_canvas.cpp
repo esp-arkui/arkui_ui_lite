@@ -49,6 +49,8 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawCurve001();
 //    UIKitCanvasTestDrawCurve002();
     UIKitCanvasTestDrawImage001();
+      UIKitCanvasTestDrawLabel001();
+      UIKitCanvasTestDrawLabel001();
     UIKitCanvasTestDrawLabel001();
     UIKitCanvasTestComposite001();
     UIKitCanvasTestGlobalAlpha001();
@@ -500,16 +502,27 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     // {200, 50}: start point coordinates
     char * str = "D:\\workspace\\xvcheng\\third_party\\giflib\\pic\\fire.gif";
     bool IsInvalid  = paint.IsTransform();
-    paint.Rotate(20);
+   // paint.Rotate(20);
    // paint.Scale(2, 1.5);
    // paint.Translate(100, 20);
 
-    IsInvalid  = paint.IsTransform();
-    canvas->DrawImage({ 20, 20 }, str, paint);
-    paint.Transform(1,0.5,-0.5,1,30,10);
-    canvas->DrawImage({ 60, 20 }, str, paint);
-    paint.SetTransform(1,0.5,-0.5,1,30,10);
-    canvas->DrawImage({ 80, 20 }, str, paint);
+//    IsInvalid  = paint.IsTransform();
+//    canvas->DrawImage({ 20, 20 }, str, paint);
+//    paint.Transform(1,0.5,-0.5,1,30,10);
+//    canvas->DrawImage({ 60, 20 }, str, paint);
+//    paint.SetTransform(1,0.5,-0.5,1,30,10);
+//    canvas->DrawImage({ 80, 20 }, str, paint);
+
+    paint.Rotate(0);
+    //canvas->DrawImage({ 200, 20 }, str, paint);
+
+    paint.Rotate(10);
+    char* image1 = "C:\\Users\\Administrator\\Downloads\\222.gif";
+    canvas->DrawImage({ 200, 20 }, image1, paint);
+
+    paint.Rotate(-5);
+    char* image = "C:\\Users\\Administrator\\Desktop\\1111.jpg";
+    canvas->DrawImage({ 100, 20 }, RED_IMAGE_PATH, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
@@ -521,17 +534,29 @@ void UITestCanvas::UIKitCanvasTestDrawLabel001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetFillColor(Color::Blue());
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     UICanvas::FontStyle fontStyle;
     fontStyle.align = TEXT_ALIGNMENT_LEFT;
     fontStyle.direct = TEXT_DIRECT_LTR;
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
-    fontStyle.fontSize = 30;    // 30: font size
+    fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 10; // 10 letter space
     // {50, 50}: start point coordinates, 100: max width
     //canvas->DrawLabel({ 50, 50 }, "canvas绘制字体", 100, fontStyle, paint);
-    paint.Rotate(30);
-    canvas->FillText("2121212",{20,10},fontStyle,paint);
+
+    canvas->StrokeText("正常画不transform",{20,10},fontStyle,paint);
+    paint.Rotate(0);
+    //canvas->StrokeText("中国",{20,10},fontStyle,paint);
+    canvas->StrokeText("0度",{20,10},fontStyle,paint);
+    paint.Rotate(10);
+    canvas->StrokeText("10度qwqwqwqwqwq",{20,10},fontStyle,paint);
+    paint.Rotate(5);
+    canvas->StrokeText("15度",{20,10},fontStyle,paint);
+    paint.Rotate(5);
+    paint.Scale(2,2);
+    paint.Translate(50,20);
+    paint.SetFillColor(Color::Green());
+    canvas->StrokeText("20度。放大",{20,10},fontStyle,paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawSector001()

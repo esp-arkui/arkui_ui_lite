@@ -405,7 +405,7 @@ void UICanvas::DrawArc(const Point& center, uint16_t radius, int16_t startAngle,
     }
 }
 
-void UICanvas::FillText(const char *text, const Point &point,const FontStyle& fontStyle, const Paint& paint)
+void UICanvas::StrokeText(const char *text, const Point &point,const FontStyle& fontStyle, const Paint& paint)
 {
     if (text == nullptr) {
         return;
@@ -423,7 +423,6 @@ void UICanvas::FillText(const char *text, const Point &point,const FontStyle& fo
         textParam->fontColor = paint.GetFillColor();
         textParam->position = point;
         textParam->isDrawTrans = paint.IsTransform();
-        // auto an =textParam->drawTransMap.GetRotateAngle();
         DrawCmd cmd;
         cmd.param = textParam;
         cmd.DeleteParam = DeleteTextParam;
@@ -439,16 +438,17 @@ Point UICanvas::MeasureText(const char* text, const FontStyle& fontStyle, const 
 {
     Text* textCompent = new Text;
     textCompent->SetText(text);
-    textCompent->SetFont(fontStyle.fontName,fontStyle.fontSize);
+    textCompent->SetFont(fontStyle.fontName, fontStyle.fontSize);
     textCompent->SetDirect(static_cast<UITextLanguageDirect>(fontStyle.direct));
     textCompent->SetAlign(static_cast<UITextLanguageAlignment>(fontStyle.align));
     Style drawStyle;
-    drawStyle.SetStyle(STYLE_LETTER_SPACE,fontStyle.letterSpace);
-    textCompent->ReMeasureTextSize(this->GetRect(),drawStyle);
+    drawStyle.SetStyle(STYLE_LETTER_SPACE, fontStyle.letterSpace);
+    textCompent->ReMeasureTextSize(this->GetRect(), drawStyle);
     Point textSize = textCompent->GetTextSize();
     delete textCompent;
     return textSize;
 }
+
 void UICanvas::DrawLabel(const Point& startPoint,
                          const char* text,
                          uint16_t maxWidth,
@@ -486,41 +486,6 @@ void UICanvas::DrawLabel(const Point& startPoint,
     }
 }
 
-//void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint)
-//{
-//    if (image == nullptr) {
-//        return;
-//    }
-
-//    ImageParam* imageParam = new ImageParam;
-//    if (imageParam == nullptr) {
-//        GRAPHIC_LOGE("new ImageParam fail");
-//        return;
-//    }
-//    imageParam->image = new Image();
-//    if (imageParam->image == nullptr) {
-//        delete imageParam;
-//        imageParam = nullptr;
-//        return;
-//    }
-//    imageParam->path = image;
-//    imageParam->image->SetSrc(image);
-//    ImageHeader header = {0};
-//    imageParam->image->GetHeader(header);
-//    imageParam->start = startPoint;
-//    imageParam->height = header.height;
-//    imageParam->width = header.width;
-
-//    DrawCmd cmd;
-//    cmd.paint = paint;
-//    cmd.param = imageParam;
-//    cmd.DeleteParam = DeleteImageParam;
-//    cmd.DrawGraphics = DoDrawImage;
-//    drawCmdList_.PushBack(cmd);
-
-//    Invalidate();
-//}
-
 void UICanvas::DrawImage(const Point &startPoint, const char *image, const Paint &paint)
 {
     if (image == nullptr) {
@@ -539,7 +504,7 @@ void UICanvas::DrawImage(const Point &startPoint, const char *image, const Paint
         return;
     }
     imageParam->path = image;
-   imageParam->image->SetSrc(image);
+    imageParam->image->SetSrc(image);
     ImageHeader header = {0};
     imageParam->image->GetHeader(header);
 
@@ -1384,33 +1349,6 @@ void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer,
                                           CapType::CAP_NONE);
 }
 
-//void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
-//                           void* param,
-//                           const Paint& paint,
-//                           const Rect& rect,
-//                           const Rect& invalidatedArea,
-//                           const Style& style)
-//{
-//    if (param == nullptr) {
-//        return;
-//    }
-//    ImageParam* imageParam = static_cast<ImageParam*>(param);
-
-//    if (imageParam->image == nullptr) {
-//        return;
-//    }
-
-//    Point start;
-//    GetAbsolutePosition(imageParam->start, rect, style, start);
-
-//    Rect cordsTmp;
-//    cordsTmp.SetPosition(start.x, start.y);
-//    cordsTmp.SetHeight(imageParam->height);
-//    cordsTmp.SetWidth(imageParam->width);
-//    DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-//        imageParam->image->GetImageInfo(), style, paint.GetOpacity());
-//}
-
 void UICanvas::DoDrawImage(BufferInfo &gfxDstBuffer, void *param, const Paint &paint, const Rect &rect, const Rect &invalidatedArea, const Style &style)
 {
     if (param == nullptr) {
@@ -1434,7 +1372,7 @@ void UICanvas::DoDrawImage(BufferInfo &gfxDstBuffer, void *param, const Paint &p
                                                    (int)imageParam->width, (int)imageParam->height,
                                                    (int)imageParam->width * (pxSize >>3));
     BaseGfxExtendEngine* graphics = paint.GetDrawGraphicsContext();
-    if (gfxDstBuffer.virAddr == nullptr) {
+    if(graphics == nullptr) {
         return;
     }
     Rect trunc(invalidatedArea);
@@ -1445,7 +1383,8 @@ void UICanvas::DoDrawImage(BufferInfo &gfxDstBuffer, void *param, const Paint &p
         double x = start.x;
         double y = start.y;
         double parallelogram[6] = {x, y, x+imageParam->width, y,x+imageParam->width, y+imageParam->height};
-        graphics->transformImage(imageBuffer,parallelogram);
+        uint8_t formatType = imageParam->image->GetImgType();
+        graphics->transformImage(imageBuffer,parallelogram,formatType != 0);
         graphics->resetTransformations();
     }
 }
@@ -1453,19 +1392,11 @@ void UICanvas::DoDrawImage(BufferInfo &gfxDstBuffer, void *param, const Paint &p
 void UICanvas::StartTransform(const Rect &rect, const Rect &invalidatedArea, const Paint &paint)
 {
     BaseGfxExtendEngine* graphics = paint.GetDrawGraphicsContext();
+    if(graphics==nullptr) {
+        return;
+    }
     int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
     int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
-//    graphics->translate(-posViewLeft,-posViewTop);
-
-//    float angle = paint.GetRotate();
-//    graphics->rotate(BaseGfxExtendEngine::deg2Rad(angle));
-//    PointF scale = paint.GetScale();
-//    graphics->scale(scale.x,scale.y);
-//    Point tr = paint.GetTranslate();
-//    graphics->translate(tr.x,tr.y);
-
-//    graphics->translate(posViewLeft,posViewTop);
-
     graphics->translate(-posViewLeft,-posViewTop);
     auto tr = paint.GetTransform();
     graphics->affine(tr);
@@ -1476,11 +1407,6 @@ void UICanvas::StartTransform(const Rect &rect, const Rect &invalidatedArea, con
     //  double sx, shy, shx, sy, tx, ty;
     //graphics->resetTransformations();不能在这使用
 }
-
-
-
-
-
 
 void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
                            void* param,
@@ -1505,10 +1431,7 @@ void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
 void UICanvas::BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& textRect, TransformMap& transMap, const Rect& invalidatedArea)
 {
     Rect invalidRect = textRect;
-    //transMap.SetTransMapRect(textRect);
-    //invalidRect.Join(invalidRect, transMap.GetBoxRect());
     if (invalidRect.Intersect(invalidRect, invalidatedArea))
-  //  if (invalidRect.Intersect(invalidRect, transMap.GetBoxRect()))
     {
         uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
         ImageInfo imageInfo;
@@ -1518,9 +1441,7 @@ void UICanvas::BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer,
         imageInfo.header.height = gfxMapBuffer.height;
        // imageInfo.header.reserved = 0;
         uint8_t* addr = reinterpret_cast<uint8_t*>(gfxMapBuffer.virAddr);
-
-        //uint32_t offset = textRect.GetX() * textRect.GetY() * (pxSize >> 3);
-        imageInfo.data = addr ;//+ offset;
+        imageInfo.data = addr ;
         TransformDataInfo imageTranDataInfo = {imageInfo.header, imageInfo.data, pxSize, LEVEL0, BILINEAR};
         BaseGfxEngine::GetInstance()->DrawTransform(gfxDstBuffer, invalidRect, {0, 0}, Color::Black(), OPA_OPAQUE,
                                                     transMap, imageTranDataInfo);
@@ -1529,86 +1450,72 @@ void UICanvas::BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer,
 
 void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &paint, const Rect &rect, const Rect &invalidatedArea, const Style &style)
 {
-    if(param == nullptr){
-        return;
-    }
-    TextParam* textParam = static_cast<TextParam*>(param);
-
-    Text* text = textParam->textComment;
-    text->SetText(textParam->text);
-    text->SetFont(textParam->fontStyle.fontName,textParam->fontStyle.fontSize);
-    text->SetDirect(static_cast<UITextLanguageDirect>(textParam->fontStyle.direct));
-    text->SetAlign(static_cast<UITextLanguageAlignment>(textParam->fontStyle.align));
-
-    Point start;
-    Rect textRect = invalidatedArea;
-    GetAbsolutePosition(textParam->position, rect, style, start);
-    textRect.SetPosition(start.x,start.y);
-
-    //textRect.SetRect(start.x,start.y, invalidatedArea.GetWidth()-1+start.x,invalidatedArea.GetHeight()-1 + start.y);
-    Style drawStyle = style;
-    drawStyle.textColor_ = textParam->fontColor;
-    drawStyle.SetStyle(STYLE_LETTER_SPACE,textParam->fontStyle.letterSpace);
-    text->ReMeasureTextSize(textRect,drawStyle);
-    textRect.SetWidth(text->GetTextSize().x);
-    textRect.SetHeight(text->GetTextSize().y);
-    static bool flag = true;
-    if(!textParam->isDrawTrans){
-         text->OnDraw(gfxDstBuffer, invalidatedArea, textRect,textRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, textParam->fontOpa);
-
-    }else
-    {
-
-        BufferInfo* gfxMapBuffer = new BufferInfo;
-        if (memcpy_s(gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
-            delete gfxMapBuffer;
-            gfxMapBuffer = nullptr;
+        TextParam* textParam = static_cast<TextParam*>(param);
+        if(textParam == nullptr){
             return;
         }
-        //BufferInfo* modeBuff = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
-        uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
-        uint32_t buffSize = gfxDstBuffer.width * gfxDstBuffer.height * (pxSize >> 3);
-        //uint32_t buffSize = textRect.GetWidth() * textRect.GetHeight() * (pxSize >> 3);
-        gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-        gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
-        memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
-//        gfxMapBuffer->rect = textRect;
-//        gfxMapBuffer->width = textRect.GetWidth();
-//        gfxMapBuffer->height = textRect.GetHeight();
-//        gfxMapBuffer->stride =textRect.GetWidth()* (pxSize >> 3);
-        //printf("textRect.GetTop():%d /n",textRect.GetTop());
-        // printf("textRect.GetBottom():%d /n",textRect.GetBottom());
-        //if(textRect.GetTop()>=0)
-        {
-            drawStyle.lineColor_ = Color::Red();
-            //BaseGfxEngine::GetInstance()->DrawRect(*gfxMapBuffer, invalidatedArea, invalidatedArea, style, OPA_OPAQUE);
-            text->OnDraw(*gfxMapBuffer, invalidatedArea, invalidatedArea, invalidatedArea, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, textParam->fontOpa);
-            textParam->drawTransMap.SetTransMapRect(textRect);
-            int ro = textParam->drawTransMap.GetRotateAngle();
-            //BlitMapBuffer(gfxDstBuffer,*gfxMapBuffer, textRect, textParam->drawTransMap, invalidatedArea);
-            BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
-                                                           (int)gfxMapBuffer->width, (int)gfxMapBuffer->height,
-                                                           (int)gfxMapBuffer->width * (pxSize >>3));
-            BaseGfxExtendEngine* graphics = paint.GetDrawGraphicsContext();
-            //
+        Text* text = textParam->textComment;
+        text->SetText(textParam->text);
+        text->SetFont(textParam->fontStyle.fontName,textParam->fontStyle.fontSize);
+        text->SetDirect(static_cast<UITextLanguageDirect>(textParam->fontStyle.direct));
+        text->SetAlign(static_cast<UITextLanguageAlignment>(textParam->fontStyle.align));
 
-            graphics->rotate(3.14/4);
-            graphics->blendImage(imageBuffer,textRect.GetLeft(),textRect.GetTop(),255);
-            double x = start.x;
-            double y = start.y;
-            double parallelogram[6] = {x, y, x+invalidatedArea.GetWidth(), y,x+invalidatedArea.GetWidth(), y+invalidatedArea.GetHeight()};
+        Point start;
+        Rect textRect = invalidatedArea;
+        GetAbsolutePosition(textParam->position, rect, style, start);
+        textRect.SetPosition(start.x, start.y);
+        Style drawStyle = style;
+        drawStyle.textColor_ = textParam->fontColor;
+        drawStyle.lineColor_ = textParam->fontColor;
+        drawStyle.bgColor_ = textParam->fontColor;
+        drawStyle.SetStyle(STYLE_LETTER_SPACE, textParam->fontStyle.letterSpace);
+        text->ReMeasureTextSize(textRect, drawStyle);
+        textRect.SetWidth(text->GetTextSize().x);
+        textRect.SetHeight(text->GetTextSize().y);
+        OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
+        //text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
+        BufferInfo* pGfxMapBuffer = new BufferInfo;
+        pGfxMapBuffer->rect = textRect;
+        pGfxMapBuffer->width = textRect.GetWidth();
+        pGfxMapBuffer->height = textRect.GetHeight();
 
-            //graphics->transformImage(imageBuffer,parallelogram);
+        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+        uint32_t destStride = pGfxMapBuffer->width * destByteSize;
+        pGfxMapBuffer->stride = destStride;
 
+        pGfxMapBuffer->mode = gfxDstBuffer.mode;
+        pGfxMapBuffer->color = gfxDstBuffer.color;
+        uint32_t buffSize = pGfxMapBuffer->height * pGfxMapBuffer->width * destByteSize;
+        pGfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
+        errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
+        if(err != EOK){
+            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
+            delete pGfxMapBuffer;
+            GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
+            return;
         }
-
-
-        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->phyAddr);
-        delete gfxMapBuffer;
-    }
-
-
-
+        pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
+        BaseGfxExtendEngine* graphicsContext = paint.GetDrawGraphicsContext();
+        if(graphicsContext == nullptr) {
+            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
+            delete pGfxMapBuffer;
+            return;
+        }
+        Rect textImageRect(0, 0, pGfxMapBuffer->width, pGfxMapBuffer->height);
+        text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
+        //text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, invalidatedArea, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, textParam->fontOpa);
+        BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
+                                               pGfxMapBuffer->width,
+                                               pGfxMapBuffer->height,
+                                               pGfxMapBuffer->stride);
+        double x = start.x;
+        double y = start.y;
+        double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
+        StartTransform(rect,invalidatedArea, paint);
+        graphicsContext->transformImage(imageBuffer, parallelogram, false);
+        graphicsContext->resetTransformations();
+        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
+        delete pGfxMapBuffer;
 }
 
 void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer,
@@ -1651,8 +1558,9 @@ bool UICanvas::IsGif(const char *src)
         (static_cast<uint8_t>(buf[2]) == 0x46)) { // 2: array index of GIF file's header
         return true;
     }
-     return false;
+    return false;
 }
+
 void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
                           void* param,
                           const Paint& paint,
@@ -2027,13 +1935,23 @@ void Paint::Transform(float sx, float shy, float shx, float sy, float tx, float 
     tr.affineMatrix[5] = ty;
     transEngine->transformations(tr);
     trans_ = transEngine->transformations();
-    isDrawTrans_ = true;
 }
 
 void Paint::SetTransform(float sx, float shy, float shx, float sy, float tx, float ty)
 {
     transEngine->resetTransformations();
     Transform(sx, shy, shx, sy, tx, ty);
+}
+
+bool Paint::IsTransform() const
+{
+    const double* affineMatrix = trans_.affineMatrix;
+    return !(affineMatrix[0] == 1.0
+            && affineMatrix[3] == 1.0
+            && affineMatrix[1] == 0
+            && affineMatrix[2] == 0
+            && affineMatrix[4] == 0
+            && affineMatrix[5] == 0);
 }
 
 } // namespace OHOS

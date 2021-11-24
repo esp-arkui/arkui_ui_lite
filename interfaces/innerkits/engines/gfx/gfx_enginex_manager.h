@@ -428,18 +428,31 @@ public:
     void imageResample(ImageResample f);
     ImageResample imageResample() const;
 
-    void transformImage(const Image& img,
-                           int imgX1,    int imgY1,    int imgX2,    int imgY2,
-                        double dstX1, double dstY1, double dstX2, double dstY2);
+//    void transformImage(const Image& img,
+//                           int imgX1,    int imgY1,    int imgX2,    int imgY2,
+//                        double dstX1, double dstY1, double dstX2, double dstY2);
+
+//    void transformImage(const Image& img,
+//                        double dstX1, double dstY1, double dstX2, double dstY2);
+
+//    void transformImage(const Image& img,
+//                        int imgX1, int imgY1, int imgX2, int imgY2,
+//                        const double* parallelogram);
+
+//    void transformImage(const Image& img, const double* parallelogram);
 
     void transformImage(const Image& img,
-                        double dstX1, double dstY1, double dstX2, double dstY2);
+                               int imgX1,    int imgY1,    int imgX2,    int imgY2,
+                            double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
+
+    void transformImage(const Image& img,
+                        double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
 
     void transformImage(const Image& img,
                         int imgX1, int imgY1, int imgX2, int imgY2,
-                        const double* parallelogram);
+                        const double* parallelogram,bool isAntiAlias=true);
 
-    void transformImage(const Image& img, const double* parallelogram);
+    void transformImage(const Image& img, const double* parallelogram,bool isAntiAlias=true);
 
 
     void transformImagePath(const Image& img,
@@ -570,11 +583,16 @@ public:
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
     void blend_from(const Image& img, Rect srcRect,Rect dstRect);
+
+    void BlendFromImage(Image &img, int imgX1, int imgY1, int imgX2, int imgY2,
+                            double dstX, double dstY, unsigned alpha,bool isAntiAlias=false);
+    void BlendFromImage(Image &img, double dstX, double dstY, unsigned alpha,bool isAntiAlias=false);
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
     void updateRasterizerGamma();
-    void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
+    //void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
+    void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl,bool isAntiAlias=true);
 
     void ClearLineDash(void)
     {
