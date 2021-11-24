@@ -89,9 +89,6 @@ public:
     void UIKitCanvasTestDrawPath032();
     void UIKitCanvasTestDrawPath033();
     void UIKitCanvasTestDrawPath034();
-    void UIKitCanvasTestLinearGradient();//调试渐变
-    void UIKitCanvasTestLinearGradient2();//调试渐变
-    void UIKitCanvasTestRadialGradient();//放射渐变
     void UIKitCanvasTestcreatePattern1();
     void UIKitCanvasTestcreatePattern2();
     void UIKitCanvasTestcreatePattern3();
@@ -100,6 +97,19 @@ public:
     void UIKitCanvasTestcreatePattern6();
     void UIKitCanvasTestcreatePattern7();
     void UIKitCanvasTestcreatePattern8();
+    void UIKitCanvasTestLinearGradient1();//调试渐变
+    void UIKitCanvasTestLinearGradient2();//调试渐变
+    void UIKitCanvasTestRadialGradient1();//调试渐变
+    void UIKitCanvasTestRadialGradient2();//调试渐变
+
+
+//    void UIKitCanvasTestLinearGradient();//调试渐变
+//    void UIKitCanvasTestLinearGradient2();//调试渐变
+//    void UIKitCanvasTestRadialGradient();//放射渐变
+
+
+    void UIKitCanvasTestcreateStrokeGradient1();
+    void UIKitCanvasTestcreateStrokePattern1();
 
 
 private:

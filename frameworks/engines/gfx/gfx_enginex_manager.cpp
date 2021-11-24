@@ -15,6 +15,8 @@
 
 #include "engines/gfx/gfx_enginex_manager.h"
 
+#include <agg_scanline_p.h>
+
 static const double g_approxScale = 2.0;
 namespace OHOS {
 BaseGfxExtendEngine::~BaseGfxExtendEngine()
@@ -608,7 +610,7 @@ void BaseGfxExtendEngine::fillLinearGradientAndStop(double x1, double y1, double
     m_fillGradientD1 = 0.0;
     m_fillGradientD2 = sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
     m_fillGradientFlag = Linear;
-    m_fillColor = Color(0,0,0);  // Set some real color
+    m_fillColor = Color(0,0,0,255);  // Set some real color
 }
 
 
@@ -623,7 +625,7 @@ void BaseGfxExtendEngine::fillRadialGradient(double start_x, double start_y,doub
     m_fillGradientD2 = end_r;
     m_radialGradientFunction  = agg::gradient_radial_focus(end_r,start_x-end_x,start_y-end_y);
     m_fillGradientFlag = Radial;
-    m_fillColor = Color(0,0,0);
+    m_fillColor = Color(0,0,0,255);
 }
 
 void BaseGfxExtendEngine::fillLinearGradient(double start_x, double start_y,double end_x, double end_y){
@@ -788,6 +790,16 @@ void BaseGfxExtendEngine::rectangle(double x1, double y1, double x2, double y2)
     m_path.line_to(x1, y2);
     m_path.close_polygon();
     drawPath(FillAndStroke);
+}
+void BaseGfxExtendEngine::rectstroke(double x1, double y1, double x2, double y2)
+{
+    m_path.remove_all();
+    m_path.move_to(x1, y1);
+    m_path.line_to(x2, y1);
+    m_path.line_to(x2, y2);
+    m_path.line_to(x1, y2);
+    m_path.close_polygon();
+    stroke();
 }
 
 
@@ -1326,6 +1338,11 @@ void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
 }
 
 
+void BaseGfxExtendEngine::stroke(){
+    m_rasterizer.reset();
+    m_rasterizer.add_path(m_strokeTransform);
+    render(false);
+}
 
 //------------------------------------------------------------------------
 class BaseGfxExtendEngineRenderer
@@ -1346,8 +1363,7 @@ public:
 										span_allocator_type,
                                         BaseGfxExtendEngine::RadialGradientSpan> RendererRadialGradient;
 
-        if ((fillColor && gr.m_fillGradientFlag == BaseGfxExtendEngine::Linear) ||
-           (!fillColor && gr.m_lineGradientFlag == BaseGfxExtendEngine::Linear))
+        if (gr.m_fillGradientFlag == BaseGfxExtendEngine::Linear)
         {
             if (fillColor)
             {
@@ -1364,20 +1380,17 @@ public:
             else
             {
                 BaseGfxExtendEngine::LinearGradientSpan span(/*gr.m_allocator,*/
-                                               gr.m_lineGradientInterpolator,
+                                               gr.m_fillGradientInterpolator,
                                                gr.m_linearGradientFunction,
                                                gr.m_fillRadialGradient,
-                                               gr.m_lineGradientD1,
-                                               gr.m_lineGradientD2);
-                //- RendererLinearGradient ren(renBase, span);
-                RendererLinearGradient ren(renBase,gr.m_allocator,span);
-                agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
+                                               gr.m_fillGradientD1,
+                                               gr.m_fillGradientD2);
+
+
+                agg::render_scanlines_aa(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
             }
         }
-        else
-        {
-            if ((fillColor && gr.m_fillGradientFlag == BaseGfxExtendEngine::Radial) ||
-               (!fillColor && gr.m_lineGradientFlag == BaseGfxExtendEngine::Radial))
+        else if (gr.m_fillGradientFlag == BaseGfxExtendEngine::Radial)
             {
                 if (fillColor)
                 {
@@ -1393,6 +1406,8 @@ public:
                 }
                 else
                 {
+
+
                     BaseGfxExtendEngine::RadialGradientSpan span(
                                                                 gr.m_interpolator_type,
                                                                 gr.m_radialGradientFunction,
@@ -1400,8 +1415,12 @@ public:
                                                                 gr.m_fillGradientD1,
                                                                 gr.m_fillGradientD2);
                     //-RendererRadialGradient ren(renBase, span);
-                    RendererRadialGradient ren(renBase,gr.m_allocator,span);
-                    agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
+//                    RendererRadialGradient ren(renBase,gr.m_allocator,span);
+//                    agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ren);
+//                    agg::scanline_p8 m_sl;
+                    agg::render_scanlines_aa(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
+
+
                 }
             }
             else
@@ -1409,7 +1428,7 @@ public:
                 renSolid.color(fillColor ? gr.m_fillColor : gr.m_lineColor);
                 agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, renSolid);
             }
-        }
+
     }
 
 
@@ -1702,13 +1721,61 @@ void BaseGfxExtendEngine::blendImage(Image& img, double dstX, double dstY, unsig
 {
     worldToScreen(dstX, dstY);
     PixFormat pixF(img.renBuf);
+    m_renBase.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
     if(m_blendMode == BlendAlpha)
     {
         m_renBasePre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
     }
-    else
-    {
-        m_renBaseCompPre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+}
+
+void BaseGfxExtendEngine::patternImageFill(Image& img, double dstX, double dstY,const char* pattternMode)
+{
+    worldToScreen(dstX, dstY);
+    m_rasterizer.add_path(m_pathTransform);
+    pixfmt          img_pixf(img.renBuf);//获取图片
+    if(strcmp(pattternMode,"repeat")==0){
+        img_source_type img_src(img_pixf);
+        span_pattern_type_repeat  m_spanPatternType(img_src, 0 - dstX,0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    } else if (strcmp(pattternMode,"repeat-x")==0) {
+        img_source_type_x img_src(img_pixf);
+        span_pattern_type_x  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    } else if (strcmp(pattternMode,"repeat-y")==0) {
+        img_source_type_y img_src(img_pixf);
+        span_pattern_type_y  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    } else if (strcmp(pattternMode,"no-repeat")==0) {
+        img_source_type_none img_src(img_pixf);
+        span_pattern_type_none  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    }
+}
+
+
+void BaseGfxExtendEngine::patternImageStroke(Image& img, double dstX, double dstY,const char* pattternMode)
+{
+    worldToScreen(dstX, dstY);
+    pixfmt          img_pixf(img.renBuf);//获取图片
+
+    m_rasterizer.add_path(m_strokeTransform);
+
+    if(strcmp(pattternMode,"repeat")==0){
+        img_source_type img_src(img_pixf);
+        span_pattern_type_repeat  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    } else if (strcmp(pattternMode,"repeat-x")==0) {
+        img_source_type_x img_src(img_pixf);
+        span_pattern_type_x  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    } else if (strcmp(pattternMode,"repeat-y")==0) {
+        img_source_type_y img_src(img_pixf);
+        span_pattern_type_y  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
+    } else if (strcmp(pattternMode,"no-repeat")==0) {
+        img_source_type_none img_src(img_pixf);
+        span_pattern_type_none  m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
+        agg::render_scanlines_aa(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
     }
 }
 
