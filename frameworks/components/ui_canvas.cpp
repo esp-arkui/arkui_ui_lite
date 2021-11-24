@@ -639,12 +639,10 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                   posViewTop+trunc.GetHeight() - 1,
                              BaseGfxExtendEngine::XMinYMin);
                              //BaseGfxExtendEngine::XMidYMid);
+        OpacityType opa = DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_);
 
-        m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-                                    gfxMapBuffer->rect.GetTop(),
-                                    gfxMapBuffer->rect.GetRight(),
-                                    gfxMapBuffer->rect.GetBottom(),
-                                    gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
+        m_graphics_Image.BlendFromImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
+                                            gfxMapBuffer->rect.GetTop(),opa);
 
 //       ImageInfo imageInfo;
 //       imageInfo.header.colorMode = gfxMapBuffer->mode;
@@ -701,23 +699,8 @@ bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer,const Rect& fi
                        fillArea.GetHeight(),gfxDstBuffer.stride);
     m_graphics->viewport(worldRect.GetLeft(),worldRect.GetTop(),worldRect.GetRight(),worldRect.GetBottom(),
                          screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
-                         BaseGfxExtendEngine::Anisotropic);
+                         BaseGfxExtendEngine::XMinYMin);
                          //BaseGfxExtendEngine::XMidYMid);
-
-//    destBuf= static_cast<uint8_t*>(gfxImageBuffer->virAddr);
-//    offset = static_cast<int32_t>(posTop) * gfxImageBuffer->width +
-//                posLeft;
-//    destBuf += offset * destByteSize;
-
-//    m_graphics->attach(destBuf,fillArea.GetWidth(),
-//        fillArea.GetHeight(),gfxImageBuffer->stride);
-
-
-//    m_graphics->viewport(worldRect.GetLeft(),worldRect.GetTop(),worldRect.GetRight(),worldRect.GetBottom(),
-//                               screenRect.GetLeft(),screenRect.GetTop(),screenRect.GetRight(),screenRect.GetBottom(),
-//                               BaseGfxExtendEngine::Anisotropic);
-
-    //m_graphics->clearAll(agg::srgba8(0,0,0,0));
     return true;
 
 }
@@ -945,9 +928,17 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
         return;
     }
 
+
     if((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)||(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)){
         Point start;
         GetAbsolutePosition(rectParam->start, rect, style, start);
+
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        }
 
         m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
         m_graphics->noLine();
@@ -957,9 +948,9 @@ void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
     }
 }
 
-void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<Paint::StopAndColor> & stopAndColors){
+void UICanvas::addColorGradient(BaseGfxExtendEngine & m_graphics,List<GradientControl::StopAndColor> & stopAndColors){
     m_graphics.remove_all_color();
-    ListNode<Paint::StopAndColor>* iter = stopAndColors.Begin();
+    ListNode<GradientControl::StopAndColor>* iter = stopAndColors.Begin();
     uint16_t count=0;
     for (; count <stopAndColors.Size(); count++) {
        ColorType stopColor = iter->data_.color;
@@ -1249,6 +1240,10 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
 
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::PATTERN)
     {
+        BaseGfxExtendEngine* m_graphics= paint.GetDrawGraphicsContext();
+        if(m_graphics==nullptr) {
+            return;
+        }
         if(paint.patternRepeat==paint.REPEAT){
             for(;;){
 
@@ -1306,20 +1301,19 @@ void UICanvas::FillImage(BufferInfo& gfxDstBuffer,
 
 
 
+
 void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,const Rect& rect,const Style& style)
 {
-
-    List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
+    GradientControl gradientControl=paint.getGradientControl();
+    List<GradientControl::StopAndColor>  stopAndColors= gradientControl.getStopAndColor();
     if(stopAndColors.Size()>0){
           addColorGradient(m_graphics,stopAndColors);
     }
-
-
-    if(paint.gradientfalg==paint.Linear){//线性渐变
-        double x0 = paint.getLinearGradientPoit().x0;
-        double y0 = paint.getLinearGradientPoit().y0;
-        double x1 = paint.getLinearGradientPoit().x1;
-        double y1 = paint.getLinearGradientPoit().y1;
+    if(gradientControl.gradientflag==gradientControl.Linear){//线性渐变
+        double x0 = gradientControl.getLinearGradientPoint().x0;
+        double y0 = gradientControl.getLinearGradientPoint().y0;
+        double x1 = gradientControl.getLinearGradientPoint().x1;
+        double y1 = gradientControl.getLinearGradientPoint().y1;
 
         Point start;
         Point orgstart;
@@ -1336,8 +1330,9 @@ void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,co
         m_graphics.fillLinearGradient(start.x,start.y,end.x,end.y);
 
     }
-    if(paint.gradientfalg==paint.Radial){//放射渐变
-        Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
+
+    if(gradientControl.gradientflag==gradientControl.Radial){//放射渐变
+        GradientControl::RadialGradientPoint rp=gradientControl.getRadialGradientPoint();
 
         Point start;
         Point orgstart;
@@ -1354,7 +1349,7 @@ void UICanvas::setGradient(BaseGfxExtendEngine &m_graphics,const Paint& paint,co
         m_graphics.fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
     }
 
-    if(paint.gradientfalg==paint.Solid){//纯色渐变
+    if(gradientControl.gradientflag==gradientControl.Solid){//纯色渐变
         ColorType color=paint.GetFillColor();
         m_graphics.fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
@@ -1386,6 +1381,8 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         return;
     }
 
+
+    double rotateCenterX=0,rotateCenterY=0,rotateAngle=0;
     arcInfo.radius = circleParam->radius + halfLineWidth - 1;
 
     //int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
@@ -1426,6 +1423,32 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         drawStyle.bgOpa_ = paint.GetOpacity();
         m_graphics->fillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
                                   drawStyle.bgColor_.blue,drawStyle.bgOpa_);
+
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        }
+        if(paint.GetRotateAngle()!=0){
+            rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+            rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+            rotateAngle=paint.GetRotateAngle();
+        }
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
+                                rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+        }
+        if(paint.GetRotateAngle()!=0){
+            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+        }
+        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+        }
     }
     if (enableStroke) {
 
@@ -1441,6 +1464,32 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         m_graphics->lineWidth(drawStyle.lineWidth_);
         m_graphics->lineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
                                   drawStyle.lineColor_.blue,drawStyle.lineOpa_);
+
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        }
+        if(paint.GetRotateAngle()!=0){
+            rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+            rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+            rotateAngle=paint.GetRotateAngle();
+        }
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
+                                rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+        }
+        if(paint.GetRotateAngle()!=0){
+            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+        }
+        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+        }
     }
 
     if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
@@ -1579,17 +1628,16 @@ void UICanvas::DoGradient(BufferInfo& gfxDstBuffer,
 
     BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
     m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
-    List<Paint::StopAndColor>  stopAndColors= paint.getStopAndColor();
+    GradientControl gradientControl=paint.getGradientControl();
+    List<GradientControl::StopAndColor>  stopAndColors= gradientControl.getStopAndColor();
     if(stopAndColors.Size()>0){
           addColorGradient(*m_graphics,stopAndColors);
     }
-
-
-    if(paint.gradientfalg==paint.Linear){//线性渐变
-        double x0 = paint.getLinearGradientPoit().x0;
-        double y0 = paint.getLinearGradientPoit().y0;
-        double x1 = paint.getLinearGradientPoit().x1;
-        double y1 = paint.getLinearGradientPoit().y1;
+    if(gradientControl.gradientflag==gradientControl.Linear){//线性渐变
+        double x0 = gradientControl.getLinearGradientPoint().x0;
+        double y0 = gradientControl.getLinearGradientPoint().y0;
+        double x1 = gradientControl.getLinearGradientPoint().x1;
+        double y1 = gradientControl.getLinearGradientPoint().y1;
 
         Point start;
         Point orgstart;
@@ -1604,9 +1652,11 @@ void UICanvas::DoGradient(BufferInfo& gfxDstBuffer,
         GetAbsolutePosition(orgend, rect, style, end);
 
         m_graphics->fillLinearGradient(start.x,start.y,end.x,end.y);
+
     }
-    if(paint.gradientfalg==paint.Radial){//放射渐变
-        Paint::RadialGradientPoint rp=paint.getRadialGradientPoint();
+
+    if(gradientControl.gradientflag==gradientControl.Radial){//放射渐变
+        GradientControl::RadialGradientPoint rp=gradientControl.getRadialGradientPoint();
 
         Point start;
         Point orgstart;
@@ -1623,13 +1673,13 @@ void UICanvas::DoGradient(BufferInfo& gfxDstBuffer,
         m_graphics->fillRadialGradient(start.x,start.y,rp.r0,end.x,end.y,rp.r1);
     }
 
-    if(paint.gradientfalg==paint.Solid){//纯色渐变
+    if(gradientControl.gradientflag==gradientControl.Solid){//纯色渐变
         ColorType color=paint.GetFillColor();
         m_graphics->fillColor(BaseGfxExtendEngine::Color(color.red,  color.green,color.blue,color.alpha));
     }
 
     DoDrawPath(gfxDstBuffer,param,paint,rect,invalidatedArea,style);
-    m_graphics->closePolygon();
+//    m_graphics->closePolygon();
     if(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)){
         m_graphics->noLine();
         m_graphics->drawPath(BaseGfxExtendEngine::FillAndStroke);
@@ -1996,6 +2046,11 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
         m_graphics->fillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
                               paint.GetFillColor().alpha);
     }
+    if(paint.GetStrokeColor().alpha){
+        m_graphics->lineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green, paint.GetStrokeColor().blue,
+                              paint.GetStrokeColor().alpha);
+        m_graphics->lineWidth(paint.GetStrokeWidth());
+    }
     m_graphics->resetPath();
     for (uint16_t i = 0; (i < pathParam->count) && (iter != path->cmd_.End()); i++, iter = iter->next_) {
         switch (iter->data_) {
@@ -2088,13 +2143,27 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
             break;
         }
     }
+    double rotateCenterX=0,rotateCenterY=0,rotateAngle=0;
+    if(paint.GetRotateAngle()!=0){
+        rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+        rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+        rotateAngle=paint.GetRotateAngle();
+    }
     if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
-            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
-            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
-            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
-                                       paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-        }
-    m_graphics->drawPath(BaseGfxExtendEngine::FillOnly);
+        m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+        m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+        m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                    paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+        m_graphics->drawShadow(rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+    }
+    if(paint.GetRotateAngle()!=0){
+        m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+    }
+    if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+        m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+    }
+     setGradient(*m_graphics,paint,rect,style);//填充颜色
+    m_graphics->drawPath(BaseGfxExtendEngine::FillAndStroke);
 
 }
 
