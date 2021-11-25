@@ -1180,9 +1180,8 @@ protected:
             imageParam->image = nullptr;
         }
         if(imageParam->gifImageAnimator != nullptr){
-            Animator* animator = reinterpret_cast<Animator*>(imageParam->gifImageAnimator) ;
-            animator->Stop();
-            delete animator;
+            imageParam->gifImageAnimator->Stop();
+            delete imageParam->gifImageAnimator;
             imageParam->gifImageAnimator = nullptr;
         }
         delete imageParam;

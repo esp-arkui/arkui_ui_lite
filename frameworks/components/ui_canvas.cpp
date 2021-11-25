@@ -1454,6 +1454,9 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         if(textParam == nullptr){
             return;
         }
+        if(textParam->fontStyle.fontSize <= 0 ){
+            return;
+        }
         Text* text = textParam->textComment;
         text->SetText(textParam->text);
         text->SetFont(textParam->fontStyle.fontName,textParam->fontStyle.fontSize);
@@ -1470,6 +1473,9 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         drawStyle.bgColor_ = textParam->fontColor;
         drawStyle.SetStyle(STYLE_LETTER_SPACE, textParam->fontStyle.letterSpace);
         text->ReMeasureTextSize(textRect, drawStyle);
+        if(text->GetTextSize().x == 0 || text->GetTextSize().y == 0){
+            return;
+        }
         textRect.SetWidth(text->GetTextSize().x + 1);
         textRect.SetHeight(text->GetTextSize().y + 1);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
