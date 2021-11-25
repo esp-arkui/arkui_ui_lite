@@ -49,19 +49,19 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawCurve001();
 //    UIKitCanvasTestDrawCurve002();
 
-     UIKitCanvasTestDrawText002();
-     UIKitCanvasTestDrawText003();
-     UIKitCanvasTestDrawText004();
-     UIKitCanvasTestDrawText005();
-     UIKitCanvasTestDrawText006();
+    UIKitCanvasTestDrawText002();
+    UIKitCanvasTestDrawText003();
+    UIKitCanvasTestDrawText004();
+    UIKitCanvasTestDrawText005();
+    UIKitCanvasTestDrawText006();
 
-     UIKitCanvasTestDrawMulitLangueText001();
-     UIKitCanvasTestDrawMulitLangueText002();
-     UIKitCanvasTestDrawMulitLangueText003();
+    UIKitCanvasTestDrawMulitLangueText001();
+    UIKitCanvasTestDrawMulitLangueText002();
+    UIKitCanvasTestDrawMulitLangueText003();
 
     UIKitCanvasTestDrawImage001();
-      UIKitCanvasTestDrawLabel001();
-      UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawLabel001();
     UIKitCanvasTestDrawLabel001();
     UIKitCanvasTestComposite001();
     UIKitCanvasTestGlobalAlpha001();
@@ -509,30 +509,10 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-//    paint.SetOpacity(255); // 127: opacity
-    // {200, 50}: start point coordinates
-    char * str = "D:\\workspace\\xvcheng\\third_party\\giflib\\pic\\fire.gif";
-    bool IsInvalid  = paint.IsTransform();
-   // paint.Rotate(20);
-   // paint.Scale(2, 1.5);
-   // paint.Translate(100, 20);
-
-//    IsInvalid  = paint.IsTransform();
-//    canvas->DrawImage({ 20, 20 }, str, paint);
-//    paint.Transform(1,0.5,-0.5,1,30,10);
-//    canvas->DrawImage({ 60, 20 }, str, paint);
-//    paint.SetTransform(1,0.5,-0.5,1,30,10);
-//    canvas->DrawImage({ 80, 20 }, str, paint);
-
-    //paint.Rotate(0);
-    //canvas->DrawImage({ 200, 20 }, str, paint);
-
     paint.Rotate(10);
-    //char* image1 = "C:\\Users\\Administrator\\Downloads\\222.gif";
     canvas->DrawImage({ 200, 20 }, GIF_IMAGE_PATH, paint);
 
     paint.Rotate(-5);
-    char* image = "C:\\Users\\Administrator\\Desktop\\1111.jpg";
     canvas->DrawImage({ 100, 20 }, RED_IMAGE_PATH, paint);
 }
 
