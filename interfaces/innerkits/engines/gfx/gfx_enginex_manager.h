@@ -50,6 +50,10 @@
 #include "graphics/include/agg_blur.h"
 #include "graphics/include/ctrl/agg_polygon_ctrl.h"
 #include "graphics/include/agg_bounding_rect.h"
+
+//#include <agg_rendering_buffer.h>
+
+#include "graphics/include/agg_span_pattern_rgba.h"
 namespace OHOS {
 class BaseGfxExtendEngine : public BaseGfxEngine
 {
@@ -68,6 +72,8 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef agg::pixfmt_custom_blend_rgba<BlenderComp, agg::rendering_buffer>    PixFormatComp;
     typedef agg::pixfmt_alpha_blend_rgba<BlenderPre, agg::rendering_buffer>      PixFormatPre;
     typedef agg::pixfmt_custom_blend_rgba<BlenderCompPre, agg::rendering_buffer> PixFormatCompPre;
+    typedef agg::pixfmt_bgra32 pixfmt;
+
 
     typedef agg::renderer_base<PixFormat>        RendererBase;
     typedef agg::renderer_base<PixFormatComp>    RendererBaseComp;
@@ -96,12 +102,30 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef agg::conv_stroke<ConvDashCurve>       ConvDashStroke;
     typedef agg::conv_transform<ConvCurve>        PathTransform;
     typedef agg::conv_transform<ConvStroke>       StrokeTransform;
+//    typedef agg::conv_stroke<agg::path_storage>       t_conv_stroke;
 
     typedef agg::conv_transform<ConvDashStroke>   DashStrokeTransform;
     typedef agg::shadow_ctrl<ColorType> ShadowCtrl;
     typedef agg::stack_blur<ColorType, agg::stack_blur_calc_rgba<>> StackBlur;
     typedef agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > RecursiveBlur;
     typedef agg::rendering_buffer RenderingBuffer;
+
+    typedef agg::image_accessor_wrap<pixfmt, agg::wrap_mode_repeat, agg::wrap_mode_repeat> img_source_type;
+
+    typedef agg::image_accessor_repeat_x<pixfmt, agg::wrap_mode_repeat> img_source_type_x;
+    typedef agg::image_accessor_repeat_y<pixfmt, agg::wrap_mode_repeat> img_source_type_y;
+    typedef agg::image_accessor_norepeat<pixfmt> img_source_type_none;
+
+    typedef agg::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
+    typedef agg::span_pattern_rgba<img_source_type_x> span_pattern_type_x;
+    typedef agg::span_pattern_rgba<img_source_type_y> span_pattern_type_y;
+    typedef agg::span_pattern_rgba<img_source_type_none> span_pattern_type_none;
+
+
+//    typedef AGG_INT8U  int8u;
+//    typedef row_accessor<int8u> rendering_buffer;
+
+
     enum Gradient
     {
         Solid,
@@ -180,6 +204,16 @@ public:
         void demultiply();
     };
 
+    /**
+     * repeat|repeat-x|repeat-y|no-repeat
+     */
+    enum PatternRepeat {
+        REPEAT,
+        REPEAT_X,
+        REPEAT_Y,
+        NO_REPEAT,
+    };
+
     enum ImageFilter
     {
         NoFilter,
@@ -203,6 +237,7 @@ public:
 
     enum BlendMode
     {
+        BlendNone       =-1,
         BlendAlpha      = agg::end_of_comp_op_e,
         BlendClear      = agg::comp_op_clear,
         BlendSrc        = agg::comp_op_src,
@@ -227,7 +262,7 @@ public:
         BlendHardLight  = agg::comp_op_hard_light,
         BlendSoftLight  = agg::comp_op_soft_light,
         BlendDifference = agg::comp_op_difference,
-        BlendExclusion  = agg::comp_op_exclusion,
+        BlendExclusion  = agg::comp_op_exclusion
     };
 
     enum Direction
@@ -351,6 +386,7 @@ public:
     void line(double x1, double y1, double x2, double y2);
     void triangle(double x1, double y1, double x2, double y2, double x3, double y3);
     void rectangle(double x1, double y1, double x2, double y2);
+    void rectstroke(double x1, double y1, double x2, double y2);
     void roundedRect(double x1, double y1, double x2, double y2, double r);
     void roundedRect(double x1, double y1, double x2, double y2, double rx, double ry);
     void roundedRect(double x1, double y1, double x2, double y2,
@@ -415,10 +451,15 @@ public:
 
     void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
     void closePolygon();
-    void drawShadow();
+    void drawShadow(double x, double y, double a,double scaleX, double scaleY);
+    void drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,double x, double y, double a,double scaleX, double scaleY);
+    void rotate(double x, double y, double a);
+    void scale(double x, double y,double scaleX, double scaleY);
     void drawPath(DrawPathFlag flag = FillAndStroke);
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 
+
+    void stroke();
 
     // Image Transformations
     //-----------------------
@@ -474,7 +515,8 @@ public:
                     int imgX1, int imgY1, int imgX2, int imgY2,
                     double dstX, double dstY, unsigned alpha=255);
     void blendImage(Image& img, double dstX, double dstY, unsigned alpha=255);
-
+    void patternImageFill(Image& img, double dstX, double dstY,const char* pattternMode);
+    void patternImageStroke(Image& img, double dstX, double dstY,const char* pattternMode);
 
     // Copy image directly, together with alpha-channel
     void copyImage(Image& img,
@@ -488,11 +530,7 @@ public:
     static double pi() { return agg::pi; }
     static double deg2Rad(double v) { return v * agg::pi / 180.0; }
     static double rad2Deg(double v) { return v * 180.0 / agg::pi; }
-//    static BaseGfxExtendEngine* GetInstance()
-//    {
-//        static BaseGfxExtendEngine instance;
-//        return &instance;
-//    }
+
 
     void lineDashOffset(float dDashOffset)
     {
@@ -546,19 +584,7 @@ public:
     {
         return m_rbuf;
     }
-    //void blend_from(const BaseGfxExtendEngine& baseGfxExtendEngine,int dx = 0,
-    //                int dy = 0)
-    //{
-    //   if(m_blendMode == BlendAlpha)
-    //    {
-    //        m_renBase.blend_from(m_pixFormat,0,dx,dy);
-    //    }
-    //    else
-    //    {
-    //        m_renBaseComp.blend_from(m_pixFormatComp,0,dx,dy);
-    //    }
-    //    this->render(false);
-    //}
+
     void SetShadowColor(int r, int g, int b, int a){
         m_shadow_ctrl.fill_color(Color(r, g, b, a));
 
@@ -582,16 +608,18 @@ public:
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
+
     void blend_from(const Image& img, Rect srcRect,Rect dstRect);
 
     void BlendFromImage(Image &img, int imgX1, int imgY1, int imgX2, int imgY2,
                             double dstX, double dstY, unsigned alpha,bool isAntiAlias=false);
     void BlendFromImage(Image &img, double dstX, double dstY, unsigned alpha,bool isAntiAlias=false);
+
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
     void updateRasterizerGamma();
-    //void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
+
     void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl,bool isAntiAlias=true);
 
     void ClearLineDash(void)
@@ -634,7 +662,7 @@ private:
     GradientArray                   m_fillGradient;
     GradientArray                   m_lineGradient;
 
-    color_func_type                 m_fillRadialGradient;//TODO:
+    color_func_type                 m_fillRadialGradient;
 
     LineCap                         m_lineCap;
     LineJoin                        m_lineJoin;
@@ -669,6 +697,7 @@ private:
     bool                            m_evenOddFlag;
 
     agg::path_storage               m_path;
+//    typedef agg::conv_stroke<agg::path_storage> cs_ps(m_path);
     agg::trans_affine               m_transform;
 
     ConvCurve                       m_convCurve;
@@ -678,7 +707,7 @@ private:
     PathTransform                   m_pathTransform;
     StrokeTransform                 m_strokeTransform;
     DashStrokeTransform             m_dashStrokeTransform;
-
+//    t_conv_stroke m_conv_stroke;
     ShadowCtrl m_shadow_ctrl;
     StackBlur m_stack_blur;
     RecursiveBlur m_recursive_blur;
@@ -687,6 +716,8 @@ private:
     float* dashes;
     unsigned int ndashes;
     float dDashOffset;
+
+
 };
 
 inline bool operator == (const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)

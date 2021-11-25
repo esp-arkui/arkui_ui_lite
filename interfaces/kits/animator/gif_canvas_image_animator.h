@@ -18,8 +18,6 @@ struct ImageParam : public HeapBase {
     Image* image = nullptr;
     GifCanvasImageAnimator *gifImageAnimator = nullptr;
     const char* path;
-    Rect contentRect;
-    Rect origRect;
 };
 
 class GifCanvasImageAnimator : public Animator, public AnimatorCallback {

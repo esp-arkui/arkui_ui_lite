@@ -178,8 +178,14 @@ namespace agg
             int y = m_y;
             if(x < 0) x = 0;
             if(y < 0) y = 0;
-            if(x >= (int)m_pixf->width())  x = m_pixf->width() - 1;
-            if(y >= (int)m_pixf->height()) y = m_pixf->height() - 1;
+
+            if (x >= (int)m_pixf->width()) {
+                x = m_pixf->width() - 1;
+            }
+            if (y >= (int)m_pixf->height()) {
+                y = m_pixf->height() - 1;
+            }
+
             return m_pixf->pix_ptr(x, y);
         }
 
@@ -224,6 +230,86 @@ namespace agg
     };
 
 
+
+//----------------------------------------------------image_accessor_clone
+template<class PixFmt> class image_accessor_norepeat
+{
+public:
+    typedef PixFmt   pixfmt_type;
+    typedef typename pixfmt_type::color_type color_type;
+    typedef typename pixfmt_type::order_type order_type;
+    typedef typename pixfmt_type::value_type value_type;
+    enum pix_width_e { pix_width = pixfmt_type::pix_width };
+
+    image_accessor_norepeat() {}
+    explicit image_accessor_norepeat(pixfmt_type& pixf) :
+        m_pixf(&pixf)
+    {}
+
+    void attach(pixfmt_type& pixf)
+    {
+        m_pixf = &pixf;
+    }
+
+private:
+    AGG_INLINE const int8u* pixel() const
+    {
+        int x = m_x;
+        int y = m_y;
+        if(x < 0) x = 0;
+        if(y < 0) y = 0;
+
+        if (x >= (int)m_pixf->width()) {
+            x = m_pixf->width() - 1;
+            return NULL;
+        }
+        if (y >= (int)m_pixf->height()) {
+            y = m_pixf->height() - 1;
+            return NULL;
+        }
+
+        return m_pixf->pix_ptr(x, y);
+    }
+
+public:
+    AGG_INLINE const int8u* span(int x, int y, unsigned len)
+    {
+        m_x = m_x0 = x;
+        m_y = y;
+        if(y >= 0 && y < (int)m_pixf->height() &&
+           x >= 0 && x+len <= (int)m_pixf->width())
+        {
+            return m_pix_ptr = m_pixf->pix_ptr(x, y);
+        }
+        m_pix_ptr = 0;
+        return pixel();
+    }
+
+    AGG_INLINE const int8u* next_x()
+    {
+        if(m_pix_ptr) return m_pix_ptr += pix_width;
+        ++m_x;
+        return pixel();
+    }
+
+    AGG_INLINE const int8u* next_y()
+    {
+        ++m_y;
+        m_x = m_x0;
+        if(m_pix_ptr &&
+           m_y >= 0 && m_y < (int)m_pixf->height())
+        {
+            return m_pix_ptr = m_pixf->pix_ptr(m_x, m_y);
+        }
+        m_pix_ptr = 0;
+        return pixel();
+    }
+
+private:
+    const pixfmt_type* m_pixf;
+    int                m_x, m_x0, m_y;
+    const int8u*       m_pix_ptr;
+};
 
 
 
@@ -277,6 +363,119 @@ namespace agg
     };
 
 
+
+
+//----------------------------------------------------image_accessor_repeat_x
+template<class PixFmt, class WrapX> class image_accessor_repeat_x
+{
+public:
+    typedef PixFmt   pixfmt_type;
+    typedef typename pixfmt_type::color_type color_type;
+    typedef typename pixfmt_type::order_type order_type;
+    typedef typename pixfmt_type::value_type value_type;
+    enum pix_width_e { pix_width = pixfmt_type::pix_width };
+
+    image_accessor_repeat_x() {}
+    explicit image_accessor_repeat_x(pixfmt_type& pixf) :
+        m_pixf(&pixf),
+        m_wrap_x(pixf.width())
+    {}
+
+    void attach(pixfmt_type& pixf)
+    {
+        m_pixf = &pixf;
+    }
+
+    AGG_INLINE const int8u* span(int x, int y, unsigned len)
+    {
+        m_x = x;
+        m_y = y;
+        if (y >= (int)m_pixf->height()){
+            y = m_pixf->height() - 1;
+            return NULL;
+        }
+        m_row_ptr = m_pixf->pix_ptr(0, y);
+        return m_row_ptr + m_wrap_x(x) * pix_width;
+    }
+
+    AGG_INLINE const int8u* next_x()
+    {
+        if (m_y >= (int)m_pixf->height()) {
+           return NULL;
+       }
+        int x = ++m_wrap_x;
+        return m_row_ptr + x * pix_width;
+    }
+
+    AGG_INLINE const int8u* next_y()
+    {
+        m_row_ptr = m_pixf->pix_ptr(0, m_y);
+        return m_row_ptr + m_wrap_x(m_x) * pix_width;
+
+    }
+
+private:
+    const pixfmt_type* m_pixf;
+    const int8u* m_row_ptr;
+    int                m_x;
+    int                m_y;
+    WrapX              m_wrap_x;
+};
+
+////-----------------------------------------------------image_accessor_wrap_y
+template<class PixFmt, class WrapY> class image_accessor_repeat_y
+{
+public:
+    typedef PixFmt   pixfmt_type;
+    typedef typename pixfmt_type::color_type color_type;
+    typedef typename pixfmt_type::order_type order_type;
+    typedef typename pixfmt_type::value_type value_type;
+    enum pix_width_e { pix_width = pixfmt_type::pix_width };
+
+    image_accessor_repeat_y() {}
+    explicit image_accessor_repeat_y(pixfmt_type& pixf) :
+        m_pixf(&pixf),
+        m_wrap_y(pixf.height())
+    {}
+
+    void attach(pixfmt_type& pixf)
+    {
+        m_pixf = &pixf;
+    }
+
+    AGG_INLINE const int8u* span(int x, int y, unsigned)
+    {
+        m_x = x;
+        if (x >= (int)m_pixf->width()){
+            x = m_pixf->width() - 1;
+        return NULL;
+        }
+        m_row_ptr = m_pixf->pix_ptr(0, m_wrap_y(y));
+        return m_row_ptr + x * pix_width;
+    }
+
+    AGG_INLINE const int8u* next_x()
+    {
+        int x = ++m_x;
+        if (x >= (int)m_pixf->width()) {
+            x = m_pixf->width() - 1;
+            return NULL;
+        }
+        return m_row_ptr + x * pix_width;
+    }
+
+    AGG_INLINE const int8u* next_y()
+    {
+        m_row_ptr = m_pixf->pix_ptr(0, ++m_wrap_y);
+        return m_row_ptr + m_x * pix_width;
+    }
+
+private:
+    const pixfmt_type* m_pixf;
+    const int8u* m_row_ptr;
+    int                m_x;
+    WrapY              m_wrap_y;
+};
 
 
     //--------------------------------------------------------wrap_mode_repeat
