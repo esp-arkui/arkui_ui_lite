@@ -41,13 +41,23 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
-//    UIKitCanvasTestGlobalAlpha001();
-//    UIKitCanvasTestDrawDashLine001();
-//    UIKitCanvasTestLineJoin001();
-//    UIKitCanvasTestDrawLine001();
-//    UIKitCanvasTestDrawLine002();
-//    UIKitCanvasTestDrawCurve001();
-//    UIKitCanvasTestDrawCurve002();
+    // UIKitCanvasTestGlobalAlpha001();
+    // UIKitCanvasTestDrawDashLine001();
+    // UIKitCanvasTestLineJoin001();
+    // UIKitCanvasTestDrawLine001();
+    // UIKitCanvasTestDrawLine002();
+    // UIKitCanvasTestDrawCurve001();
+    // UIKitCanvasTestDrawCurve002();
+
+
+    UIKitCanvasTestLinearGradient1();//调试渐变
+    UIKitCanvasTestLinearGradient2();//调试渐变
+    UIKitCanvasTestRadialGradient1();//调试渐变
+    UIKitCanvasTestRadialGradient2();//调试渐变
+
+//    UIKitCanvasTestcreateStrokeGradient1();
+//    UIKitCanvasTestcreateStrokePattern1();
+
 
     UIKitCanvasTestDrawText002();
     UIKitCanvasTestDrawText003();
@@ -72,68 +82,64 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawCurve001();
     UIKitCanvasTestDrawCurve002();
     UIKitCanvasTestDrawShadow001();
-//    UIKitCanvasTestDrawRect001();
+    UIKitCanvasTestDrawRect001();
 
-//    UIKitCanvasTestLinearGradient();//线性渐变水平
-//    UIKitCanvasTestLinearGradient2();//线性渐变倾斜
-//    UIKitCanvasTestRadialGradient();//放射渐变
-    UIKitCanvasTestcreatePattern5();
+
+
     UIKitCanvasTestcreatePattern1();
-    UIKitCanvasTestcreatePattern6();
     UIKitCanvasTestcreatePattern2();
-    UIKitCanvasTestcreatePattern7();
     UIKitCanvasTestcreatePattern3();
-    UIKitCanvasTestcreatePattern8();
     UIKitCanvasTestcreatePattern4();
-//    UIKitCanvasTestDrawRect002();
-//    UIKitCanvasTestDrawRect003();
-//    UIKitCanvasTestDrawRect004();
-//    UIKitCanvasTestClearRect001();
-//    UIKitCanvasTestDrawCircle001();
-//    UIKitCanvasTestDrawCircle002();
-//    UIKitCanvasTestDrawCircle003();
-//    UIKitCanvasTestDrawArc001();
-//    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
-//    UIKitCanvasTestDrawSector001();
-//    UIKitCanvasTestClear001();
-//    UIKitCanvasTestDrawPath001();
-//    UIKitCanvasTestDrawPath002();
-//    UIKitCanvasTestDrawPath003();
-//    UIKitCanvasTestDrawPath004();
-//    UIKitCanvasTestDrawPath005();
-//    UIKitCanvasTestDrawPath006();
-//    UIKitCanvasTestDrawPath007();
-//    UIKitCanvasTestDrawPath008();
-//    UIKitCanvasTestDrawPath009();
-//    UIKitCanvasTestDrawPath010();
-//    UIKitCanvasTestDrawPath011();
-//    UIKitCanvasTestDrawPath012();
-//    UIKitCanvasTestDrawPath013();
-//    UIKitCanvasTestDrawPath014();
-//    UIKitCanvasTestDrawPath015();
-//    UIKitCanvasTestDrawPath016();
-//    UIKitCanvasTestDrawPath017();
-//    UIKitCanvasTestDrawPath018();
-//    UIKitCanvasTestDrawPath019();
-//    UIKitCanvasTestDrawPath020();
-//    UIKitCanvasTestDrawPath021();
-//    UIKitCanvasTestDrawPath022();
-//    UIKitCanvasTestDrawPath023();
-//    UIKitCanvasTestDrawPath024();
-//    UIKitCanvasTestDrawPath025();
-//    UIKitCanvasTestDrawPath026();
-//    UIKitCanvasTestDrawPath027();
-//    UIKitCanvasTestDrawPath028();
-//    UIKitCanvasTestDrawPath029();
-//    UIKitCanvasTestDrawPath030();
-//    UIKitCanvasTestDrawPath031();
-//    UIKitCanvasTestDrawPath032();
-//    UIKitCanvasTestDrawPath033();
-//    UIKitCanvasTestDrawPath034();
-
-
-
+    UIKitCanvasTestcreatePattern5();
+    UIKitCanvasTestcreatePattern6();
+    UIKitCanvasTestcreatePattern7();
+    UIKitCanvasTestcreatePattern8();
+    UIKitCanvasTestDrawRect002();
+    UIKitCanvasTestDrawRect003();
+    UIKitCanvasTestDrawRect004();
+    UIKitCanvasTestClearRect001();
+    UIKitCanvasTestDrawCircle001();
+    UIKitCanvasTestDrawCircle002();
+    UIKitCanvasTestDrawCircle003();
+    UIKitCanvasTestDrawArc001();
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawSector001();
+    UIKitCanvasTestClear001();
+    UIKitCanvasTestDrawPath001();
+    UIKitCanvasTestDrawPath002();
+    UIKitCanvasTestDrawPath003();
+    UIKitCanvasTestDrawPath004();
+    UIKitCanvasTestDrawPath005();
+    UIKitCanvasTestDrawPath006();
+    UIKitCanvasTestDrawPath007();
+    UIKitCanvasTestDrawPath008();
+    UIKitCanvasTestDrawPath009();
+    UIKitCanvasTestDrawPath010();
+    UIKitCanvasTestDrawPath011();
+    UIKitCanvasTestDrawPath012();
+    UIKitCanvasTestDrawPath013();
+    UIKitCanvasTestDrawPath014();
+    UIKitCanvasTestDrawPath015();
+    UIKitCanvasTestDrawPath016();
+    UIKitCanvasTestDrawPath017();
+    UIKitCanvasTestDrawPath018();
+    UIKitCanvasTestDrawPath019();
+    UIKitCanvasTestDrawPath020();
+    UIKitCanvasTestDrawPath021();
+    UIKitCanvasTestDrawPath022();
+    UIKitCanvasTestDrawPath023();
+    UIKitCanvasTestDrawPath024();
+    UIKitCanvasTestDrawPath025();
+    UIKitCanvasTestDrawPath026();
+    UIKitCanvasTestDrawPath027();
+    UIKitCanvasTestDrawPath028();
+    UIKitCanvasTestDrawPath029();
+    UIKitCanvasTestDrawPath030();
+    UIKitCanvasTestDrawPath031();
+    UIKitCanvasTestDrawPath032();
+    UIKitCanvasTestDrawPath033();
+    UIKitCanvasTestDrawPath034();
     return container_;
 }
 
@@ -147,14 +153,18 @@ void UITestCanvas::UIKitCanvasTestComposite001()
 
     Paint paint;
     //canvas->GlobalAlpha(0.8f,paint);
+    paint.SetStrokeWidth(5);
     paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint.SetStrokeColor(Color::Blue());
     paint.SetFillColor(Color::Red());
-    paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
+    //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
     canvas->DrawCircle({ 50, 50 }, 40, paint);
     paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOut);
+    //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
     //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
-    paint.SetFillColor(Color::GetColorFromRGBA(0,255,0,128));
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetStrokeColor(Color::Red());
+    paint.SetFillColor(Color::GetColorFromRGB(0,255,0));
     canvas->DrawCircle({ 70, 70 }, 40, paint);
 
 }
@@ -319,22 +329,33 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     CreateTitleLabel("绘制矩形和阴影");
     UICanvas* canvas = CreateCanvas();
     Paint paint;
-   // paint.SetStrokeColor(Color::Red());
-    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-    paint.SetFillColor(Color::Green());
+    GradientControl gradientControl;
+   paint.SetStrokeColor(Color::Red());
+    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    //paint.SetFillColor(Color::Green());
+    //paint.fillStyle(Color::White());
     paint.SetShadowColor(Color::Black());
     paint.SetStrokeWidth(1);
     paint.SetShadowOffsetX(10);
     paint.SetShadowOffsetY(10);
-    paint.SetShadowBlurRadius(5);
+    paint.SetRotateCenter(60,60);
+    paint.SetRotateAngle(10.0);
+    paint.SetScale(2.0,2.0);
+    // paint.SetShadowBlurRadius(5);
+    gradientControl.createLinearGradient(60,60,160,110);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
     canvas->BeginPath();
     canvas->MoveTo({60,60});
     canvas->LineTo({60,110});
     canvas->LineTo({160,110});
     canvas->LineTo({160,60});
     canvas->ClosePath();
-    canvas->DrawPath(paint);
     canvas->FillPath(paint);
+    // canvas->DrawPath(paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawCurve002()
@@ -360,6 +381,13 @@ void UITestCanvas::UIKitCanvasTestDrawRect001()
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    paint.SetShadowBlurRadius(5);
+
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(30); // 30: line width
     // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
@@ -436,15 +464,21 @@ void UITestCanvas::UIKitCanvasTestDrawCircle001()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("圆形填充");
+    CreateTitleLabel("圆形填充和阴影");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetShadowColor(Color::Black());
+    paint.SetStrokeWidth(1);
+    paint.SetShadowOffsetX(10);
+    paint.SetShadowOffsetY(10);
+    paint.SetShadowBlurRadius(5);
     paint.SetStrokeColor(Color::Yellow());
     paint.SetFillColor(Color::Yellow());
     paint.SetStrokeWidth(10); // 10: line width
     paint.SetOpacity(127);    // 127: opacity
+    paint.SetGlobalAlpha(0.7f);
     // {100, 100}: circle center coordinates, 30: circle radius
     canvas->DrawCircle({ 100, 100 }, 30, paint);
 }
@@ -509,6 +543,7 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
+     canvas->DrawImage({ 100, 20 }, GIF_IMAGE_PATH, paint);
     paint.Rotate(10);
     canvas->DrawImage({ 200, 20 }, GIF_IMAGE_PATH, paint);
 
@@ -1309,28 +1344,301 @@ void UITestCanvas::UIKitCanvasTestDrawPath034()
 }
 
 /**
+ * pattern
+ */
+void UITestCanvas::UIKitCanvasTestcreatePattern1()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("repeat-五角星");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+
+    paint.createPattern(RED_IMAGE_PATH,"repeat");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->fill(paint);
+}
+
+void UITestCanvas::UIKitCanvasTestcreatePattern2()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("repeat-五角星-stroke");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.createPattern(RED_IMAGE_PATH,"repeat");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->stroke(paint);
+}
+void UITestCanvas::UIKitCanvasTestcreatePattern3()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("repeat-x-五角星");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+
+    paint.createPattern(RED_IMAGE_PATH,"repeat-x");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->fill(paint);
+}
+
+void UITestCanvas::UIKitCanvasTestcreatePattern4()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("repeat-x-五角星-stroke");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.createPattern(RED_IMAGE_PATH,"repeat-x");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->stroke(paint);
+}
+void UITestCanvas::UIKitCanvasTestcreatePattern5()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("repeat-y-五角星");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+
+    paint.createPattern(RED_IMAGE_PATH,"repeat-y");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->fill(paint);
+}
+
+void UITestCanvas::UIKitCanvasTestcreatePattern6()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("repeat-y-五角星-stroke");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.createPattern(RED_IMAGE_PATH,"repeat-y");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->stroke(paint);
+}
+void UITestCanvas::UIKitCanvasTestcreatePattern7()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("no-repeat-五角星");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+
+    paint.createPattern(RED_IMAGE_PATH,"no-repeat");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->fill(paint);
+}
+
+void UITestCanvas::UIKitCanvasTestcreatePattern8()
+{
+    if (container_ == nullptr) {
+       return;
+    }
+    CreateTitleLabel("no-repeat-五角星-stroke");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.createPattern(RED_IMAGE_PATH,"no-repeat");
+//----------------------------------------五角星----------------------------------------------------------------//
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+    }
+//----------------------------------------五角星----------------------------------------------------------------//
+//    canvas->DrawPath(paint);
+    canvas->stroke(paint);
+}
+
+
+
+
+
+
+/**
  * 调试线性渐变
  */
-void UITestCanvas::UIKitCanvasTestLinearGradient(){
+void UITestCanvas::UIKitCanvasTestLinearGradient1(){
     if (container_ == nullptr) {
         return;
     }
 
-    CreateTitleLabel("线性渐变水平 ");
+    CreateTitleLabel("线性渐变-fill ");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    GradientControl gradientControl;
+    paint.SetStyle(Paint::PaintStyle::FILL_GRADIENT);
     paint.SetStrokeWidth(2);
-    paint.createLinearGradient(100,50,200,50);
+    gradientControl.createLinearGradient(100,50,200,150);
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.3,Color::White());
-    paint.addColorStop(0.6,Color::Green());
-    paint.addColorStop(1,Color::Blue());
-    canvas->DrawRect({ 100, 50 }, 50, 100, paint);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
+    //----------------------------------------五角星----------------------------------------------------------------//
+        int32_t rot = 0;
+        int32_t outerR = 80;
+        int32_t innerR = 40;
+        int32_t x = 80;
+        int32_t y = 80;
+        float pi = 180.0;
+        canvas->BeginPath();
 
+        for (int32_t i = 0; i < 5; i++) {
+            canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+                static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+            canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+                static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+        }
+    //----------------------------------------五角星----------------------------------------------------------------//
+
+    canvas->ClosePath();
+    canvas->fill(paint);
 }
+
 /**
  * 调试线性渐变
  */
@@ -1339,160 +1647,180 @@ void UITestCanvas::UIKitCanvasTestLinearGradient2(){
         return;
     }
 
-    CreateTitleLabel("线性渐变倾斜 ");
+    CreateTitleLabel("线性渐变-stroke ");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
-    paint.SetFillColor(Color::Yellow());
-    paint.SetStrokeWidth(2);
-    paint.createLinearGradient(100,50,200,150);
-    paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.3,Color::White());
-    paint.addColorStop(0.6,Color::Green());
-    paint.addColorStop(1,Color::Blue());
-    canvas->DrawRect({ 10, 10 }, 180, 300, paint);
 
+    GradientControl gradientControl;
+    paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
+    paint.SetFillColor(Color::Yellow());
+    paint.SetStrokeWidth(8);
+    gradientControl.createLinearGradient(100,50,200,150);
+    paint.SetStrokeColor(Color::White());
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.3,Color::White());
+    gradientControl.addColorStop(0.6,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.fillStyle(gradientControl);
+    //----------------------------------------五角星----------------------------------------------------------------//
+        int32_t rot = 0;
+        int32_t outerR = 80;
+        int32_t innerR = 40;
+        int32_t x = 80;
+        int32_t y = 80;
+        float pi = 180.0;
+        canvas->BeginPath();
+
+        for (int32_t i = 0; i < 5; i++) {
+            canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+                static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+            canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+                static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+        }
+    //----------------------------------------五角星----------------------------------------------------------------//
+        canvas->ClosePath();
+        canvas->stroke(paint);
 }
 
 
 /**
  * 调试放射渐变
  */
-void UITestCanvas::UIKitCanvasTestRadialGradient(){
+void UITestCanvas::UIKitCanvasTestRadialGradient1(){
     if (container_ == nullptr) {
         return;
     }
 
-    CreateTitleLabel("调试放射渐变 ");
+    CreateTitleLabel("放射渐变-fill ");
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+
+    paint.SetStyle(Paint::PaintStyle::FILL_GRADIENT);
     paint.SetStrokeWidth(2);
-    paint.createRadialGradient(180,140,10,150,100,80);
+    GradientControl gradientControl;
+    gradientControl.createRadialGradient(180,140,10,150,100,80);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.4,Color::Gray());
+    gradientControl.addColorStop(0.8,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
     paint.SetStrokeColor(Color::White());
-    paint.addColorStop(0,Color::Yellow());
-    paint.addColorStop(0.4,Color::Gray());
-    paint.addColorStop(0.8,Color::Green());
-    paint.addColorStop(1,Color::Blue());
-    canvas->DrawRect({ 10, 10 }, 180, 300, paint);
+    paint.fillStyle(gradientControl);
+
+    //----------------------------------------五角星----------------------------------------------------------------//
+        int32_t rot = 0;
+        int32_t outerR = 80;
+        int32_t innerR = 40;
+        int32_t x = 80;
+        int32_t y = 80;
+        float pi = 180.0;
+        canvas->BeginPath();
+        for (int32_t i = 0; i < 5; i++) {
+            canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+                static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+            canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+                static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+        }
+    //----------------------------------------五角星----------------------------------------------------------------//
+        canvas->ClosePath();
+        canvas->fill(paint);
+
+}
+
+void UITestCanvas::UIKitCanvasTestRadialGradient2(){
+    if (container_ == nullptr) {
+        return;
+    }
+
+    CreateTitleLabel("放射渐变-stroke");
+    UICanvas* canvas = CreateCanvas();
+
+    Paint paint;
+    paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
+    paint.SetStrokeWidth(8);
+    GradientControl gradientControl;
+    gradientControl.createRadialGradient(180,140,10,150,100,80);
+    gradientControl.addColorStop(0,Color::Yellow());
+    gradientControl.addColorStop(0.4,Color::Gray());
+    gradientControl.addColorStop(0.8,Color::Green());
+    gradientControl.addColorStop(1,Color::Blue());
+    paint.SetStrokeColor(Color::White());
+    paint.fillStyle(gradientControl);
+
+    //----------------------------------------五角星----------------------------------------------------------------//
+        int32_t rot = 0;
+        int32_t outerR = 80;
+        int32_t innerR = 40;
+        int32_t x = 80;
+        int32_t y = 80;
+        float pi = 180.0;
+        canvas->BeginPath();
+
+        for (int32_t i = 0; i < 5; i++) {
+            canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+                static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+            canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+                static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
+        }
+    //----------------------------------------五角星----------------------------------------------------------------//
+
+        canvas->ClosePath();
+        canvas->stroke(paint);
 
 }
 
 
-/**
- * pattern
- */
-void UITestCanvas::UIKitCanvasTestcreatePattern1()
+
+
+void UITestCanvas::UIKitCanvasTestcreateStrokeGradient1()
+{
+//       if (container_ == nullptr) {
+//           return;
+//       }
+//       CreateTitleLabel("stroke-放射渐变");
+//       UICanvas* canvas = CreateCanvas();
+//       Paint paint;
+//       paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
+//       paint.createRadialGradient(180,140,10,150,100,180);
+////       paint.createLinearGradient(100,50,200,150);
+//       paint.SetStrokeWidth(8);
+//       paint.addColorStop(0,Color::Yellow());
+//       paint.addColorStop(0.4,Color::Gray());
+//       paint.addColorStop(0.8,Color::Green());
+//       paint.addColorStop(1,Color::Blue());
+//       canvas->DrawRect({ 10, 10 }, 180, 300, paint);
+}
+void UITestCanvas::UIKitCanvasTestcreateStrokePattern1()
 {
     if (container_ == nullptr) {
-       return;
+        return;
     }
     CreateTitleLabel("pattern-重复");
     UICanvas* canvas = CreateCanvas();
     Paint paint;
     paint.SetStyle(Paint::PaintStyle::PATTERN);
-
     paint.createPattern(RED_IMAGE_PATH,"repeat");
-    PolygonPath path;
-    path.Circle({180, 80}, 70);
-    canvas->fill(paint,&path);
 
-}
-
-void UITestCanvas::UIKitCanvasTestcreatePattern2()
-{
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-x轴重复");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-
-       paint.createPattern(RED_IMAGE_PATH,"repeat-x");
-       PolygonPath path;
-       path.Circle({300, 80}, 70);
-       canvas->fill(paint,&path);
-}
-void UITestCanvas::UIKitCanvasTestcreatePattern3()
-{
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-y轴重复");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.createPattern(RED_IMAGE_PATH,"repeat-y");
-       PolygonPath path;
-       path.Circle({80, 80}, 70);
-       canvas->fill(paint,&path);
-}
-void UITestCanvas::UIKitCanvasTestcreatePattern4()
-{
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-不重复");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.createPattern(RED_IMAGE_PATH,"no-repeat");
-       PolygonPath path;
-       path.Circle({80, 80}, 70);
-       canvas->fill(paint,&path);
-}
-void UITestCanvas::UIKitCanvasTestcreatePattern5()
-{
-    if (container_ == nullptr) {
-       return;
+    int32_t rot = 0;
+    int32_t outerR = 80;
+    int32_t innerR = 40;
+    int32_t x = 80;
+    int32_t y = 80;
+    float pi = 180.0;
+    canvas->BeginPath();
+    for (int32_t i = 0; i < 5; i++) {
+        canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
+            static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
+        canvas->LineTo({static_cast<int16_t>(cos((54 + 72 * i - rot) / pi * UI_PI) * innerR + x),
+            static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
-    CreateTitleLabel("pattern-重复");
-    UICanvas* canvas = CreateCanvas();
-    Paint paint;
-    paint.SetStyle(Paint::PaintStyle::PATTERN);
 
-    paint.createPattern(RED_IMAGE_PATH,"repeat");
-    canvas->fill(paint);
-}
-void UITestCanvas::UIKitCanvasTestcreatePattern6()
-{
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-x轴重复");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.createPattern(RED_IMAGE_PATH,"repeat-x");
-       canvas->fill(paint);
-}
-void UITestCanvas::UIKitCanvasTestcreatePattern7()
-{
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-y轴重复");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.createPattern(RED_IMAGE_PATH,"repeat-y");
-       canvas->fill(paint);
-}
-void UITestCanvas::UIKitCanvasTestcreatePattern8()
-{
-       if (container_ == nullptr) {
-           return;
-       }
-       CreateTitleLabel("pattern-不重复");
-       UICanvas* canvas = CreateCanvas();
-       Paint paint;
-       paint.SetStyle(Paint::PaintStyle::PATTERN);
-       paint.createPattern(RED_IMAGE_PATH,"no-repeat");
-       canvas->fill(paint);
+    canvas->ClosePath();
+    paint.SetStrokeWidth(8);
+    canvas->DrawPath(paint);
+    canvas->stroke(paint);
+//    canvas->fill(paint);
 }
 
 } // namespace OHOS
