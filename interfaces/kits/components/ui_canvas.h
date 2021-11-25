@@ -213,7 +213,6 @@ public:
         rotateAngle=paint.rotateAngle;
         scaleX=paint.scaleX;
         scaleY=paint.scaleY;
-
         if(isDrawDash && ndashes > 0) {
             dashArray = new float[ndashes];
             if (dashArray) {
@@ -634,7 +633,6 @@ public:
     {
         return scaleY;
     }
-
     void SetScale(double x,double y)
     {
         scaleX = x;
@@ -667,7 +665,6 @@ public:
     void fillStyle(GradientControl& ctrl){
         gradientControl=ctrl;
     }
-
     void fillStyle(ColorType color){
         SetFillColor(color);
     }
@@ -717,7 +714,6 @@ public:
 
     GradientControl getGradientControl() const{
         return gradientControl;
-
     }
 private:
     PaintStyle style_;
@@ -746,7 +742,6 @@ private:
     std::shared_ptr<BaseGfxExtendEngine> transEngine;
     /* 当前变换矩阵 */
     BaseGfxExtendEngine::Transformations trans_;
-
     GradientControl gradientControl;
     double rotateCenterX;
     double rotateCenterY;
@@ -1369,7 +1364,6 @@ protected:
 
     /*绘制图元时，开始执行变换操作*/
     static void StartTransform(const Rect& rect,const Rect& invalidatedArea,const Paint& paint);
-
 
     static void DoDrawPattern(BufferInfo& gfxDstBuffer,
                             void* param,

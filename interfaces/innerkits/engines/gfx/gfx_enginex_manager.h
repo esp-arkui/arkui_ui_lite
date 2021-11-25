@@ -608,7 +608,6 @@ public:
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
-
     void blend_from(const Image& img, Rect srcRect,Rect dstRect);
 
     void BlendFromImage(Image &img, int imgX1, int imgY1, int imgX2, int imgY2,
@@ -619,7 +618,6 @@ private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
     void updateRasterizerGamma();
-
     void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl,bool isAntiAlias=true);
 
     void ClearLineDash(void)

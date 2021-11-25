@@ -1172,7 +1172,6 @@ void BaseGfxExtendEngine::transformImage(const Image& img, int imgX1, int imgY1,
     lineTo(parallelogram[0] + parallelogram[4] - parallelogram[2],
            parallelogram[1] + parallelogram[5] - parallelogram[3]);
     closePolygon();
-
     renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram,isAntiAlias);
 
 }

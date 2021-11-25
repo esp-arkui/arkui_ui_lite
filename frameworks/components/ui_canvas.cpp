@@ -1540,6 +1540,46 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
         if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
             m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
         }
+        if(paint.GetRotateAngle()!=0){
+            rotateCenterX=paint.GetRotateCenterX()+rect.GetX()-invalidatedArea.GetX();
+            rotateCenterY=paint.GetRotateCenterY()+rect.GetY()-invalidatedArea.GetY();
+            rotateAngle=paint.GetRotateAngle();
+        }
+        if (paint.GetShadowOffsetX()!=0||paint.GetShadowOffsetY()!=0) {
+            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+            m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
+                                rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
+        }
+        if(paint.GetRotateAngle()!=0){
+            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+        }
+        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+        }
+    }
+
+    if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
+            && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendNone) {
+        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
+                                          CapType::CAP_NONE);
+    } else {
+        if (!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)) {
+            m_graphics->noFill();
+        }
+        if (!enableStroke) {
+            m_graphics->noLine();
+        }
+
+        m_graphics->masterAlpha((double)paint.GetGlobalAlpha());
+        m_graphics->blendMode(paint.globalCompositeOperation());
+        //double xx=circleParam->center.x,yy=circleParam->center.y;
+        //m_graphics->screenToWorld(xx,yy);
+        m_graphics->ellipse(arcInfo.center.x,arcInfo.center.y,
+                            arcInfo.radius,arcInfo.radius);
+
     }
 
     if(paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash()
@@ -2364,8 +2404,8 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
     }
      setGradient(*m_graphics,paint,rect,style);//填充颜色
     m_graphics->drawPath(BaseGfxExtendEngine::FillAndStroke);
-
 }
+
 
 void Paint::Transform(float sx, float shy, float shx, float sy, float tx, float ty)
 {
