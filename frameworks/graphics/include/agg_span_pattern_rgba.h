@@ -81,7 +81,7 @@ namespace agg
                     span->r = 0;
                     span->g = 0;
                     span->b = 0;
-                    span->a = 0;
+                    span->a = 255;
                 }
                 p = (const value_type*)m_src->next_x();
                 ++span;
