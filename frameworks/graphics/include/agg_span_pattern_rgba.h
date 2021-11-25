@@ -71,10 +71,18 @@ namespace agg
             const value_type* p = (const value_type*)m_src->span(x, y, len);
             do
             {
-                span->r = p[order_type::R];
-                span->g = p[order_type::G];
-                span->b = p[order_type::B];
-                span->a = p[order_type::A];
+                if (p) {
+                    span->r = p[order_type::R];
+                    span->g = p[order_type::G];
+                    span->b = p[order_type::B];
+                    span->a = p[order_type::A];
+                }
+                else {
+                    span->r = 0;
+                    span->g = 0;
+                    span->b = 0;
+                    span->a = 0;
+                }
                 p = (const value_type*)m_src->next_x();
                 ++span;
             }

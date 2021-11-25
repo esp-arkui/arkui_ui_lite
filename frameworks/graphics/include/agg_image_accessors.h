@@ -178,8 +178,16 @@ namespace agg
             int y = m_y;
             if(x < 0) x = 0;
             if(y < 0) y = 0;
-            if(x >= (int)m_pixf->width())  x = m_pixf->width() - 1;
-            if(y >= (int)m_pixf->height()) y = m_pixf->height() - 1;
+
+            if (x >= (int)m_pixf->width()) {
+                x = m_pixf->width() - 1;
+                return NULL;
+            }
+            if (y >= (int)m_pixf->height()) {
+                y = m_pixf->height() - 1;
+                return NULL;
+            }
+
             return m_pixf->pix_ptr(x, y);
         }
 
@@ -304,13 +312,19 @@ public:
     {
         m_x = x;
         m_y = y;
-        if (y >= (int)m_pixf->height()) y = m_pixf->height() - 1;
+        if (y >= (int)m_pixf->height()){
+            y = m_pixf->height() - 1;
+            return NULL;
+        }
         m_row_ptr = m_pixf->pix_ptr(0, y);
         return m_row_ptr + m_wrap_x(x) * pix_width;
     }
 
     AGG_INLINE const int8u* next_x()
     {
+        if (m_y >= (int)m_pixf->height()) {
+           return NULL;
+       }
         int x = ++m_wrap_x;
         return m_row_ptr + x * pix_width;
     }
@@ -354,7 +368,10 @@ public:
     AGG_INLINE const int8u* span(int x, int y, unsigned)
     {
         m_x = x;
-        if (x >= (int)m_pixf->width())  x = m_pixf->width() - 1;
+        if (x >= (int)m_pixf->width()){
+            x = m_pixf->width() - 1;
+        return NULL;
+        }
         m_row_ptr = m_pixf->pix_ptr(0, m_wrap_y(y));
         return m_row_ptr + x * pix_width;
     }
@@ -362,7 +379,10 @@ public:
     AGG_INLINE const int8u* next_x()
     {
         int x = ++m_x;
-        if (x >= (int)m_pixf->width())  x = m_pixf->width() - 1;
+        if (x >= (int)m_pixf->width()) {
+            x = m_pixf->width() - 1;
+            return NULL;
+        }
         return m_row_ptr + x * pix_width;
     }
 
