@@ -1470,8 +1470,8 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         drawStyle.bgColor_ = textParam->fontColor;
         drawStyle.SetStyle(STYLE_LETTER_SPACE, textParam->fontStyle.letterSpace);
         text->ReMeasureTextSize(textRect, drawStyle);
-        textRect.SetWidth(text->GetTextSize().x);
-        textRect.SetHeight(text->GetTextSize().y);
+        textRect.SetWidth(text->GetTextSize().x + 1);
+        textRect.SetHeight(text->GetTextSize().y + 1);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
         //text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
         BufferInfo* pGfxMapBuffer = new BufferInfo;
