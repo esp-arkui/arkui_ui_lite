@@ -174,8 +174,7 @@ public:
           rotateAngle(0),scaleX(0),scaleY(0)
     {
         m_graphics = std::make_shared<BaseGfxExtendEngine>();
-        transEngine = std::make_shared<BaseGfxExtendEngine>();
-        trans_ = transEngine->transformations();
+        m_transform.reset();
         //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
     }
     Paint(const Paint& paint)
@@ -203,9 +202,7 @@ public:
         shadowBlurRadius=paint.shadowBlurRadius;
         ndashes = (paint.ndashes+1)&~1;
         blendMode = paint.blendMode;
-
-        transEngine = paint.transEngine;
-        trans_ = paint.trans_;
+        m_transform=paint.m_transform;
 
         rotateCenterX=paint.rotateCenterX;
         rotateCenterY=paint.rotateCenterY;
@@ -286,8 +283,6 @@ public:
      }patternRepeat;
 
      const char * image;
-
-
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -467,11 +462,6 @@ public:
     {
         return m_graphics.get();
     }
-
-//    BaseGfxExtendEngine* GetImageBufferContext() const
-//    {
-//        return m_graphics_Image.get();
-//    }
 
     void SetLineDash(float* lineDashs, const unsigned int ndash)
     {
@@ -668,47 +658,48 @@ public:
         SetFillColor(color);
     }
 
-
     /* 缩放当前绘图至更大或更小 */
     void Scale(float x, float y)
     {
-        transEngine->scale(x,y);
-        trans_ =transEngine->transformations();
+        m_transform.scale(x,y);
     }
 
     /* 旋转当前绘图 */
     void Rotate(float angle)
     {
-        transEngine->rotate(BaseGfxExtendEngine::deg2Rad(angle));
-        trans_ = transEngine->transformations();
+        m_transform.rotate(BaseGfxExtendEngine::deg2Rad(angle));
     }
 
     /* 重新映射画布上的 (x,y) 位置 */
     void Translate(int16_t x, int16_t y)
     {
-        transEngine->translate(x,y);
-        trans_ = transEngine->transformations();
+        m_transform.translate(x,y);
     }
 
+
     /* 替换绘图的当前转换矩阵 */
-    void Transform(float sx,float shy,float shx,float sy,float tx,float ty);
+    void Transform(float sx,float shy,float shx,float sy,float tx,float ty)
+    {
+        m_transform=agg::trans_affine(sx, shy, shx, sy, tx, ty);
+
+    }
 
     /* 获取当前变换矩阵 */
-    const BaseGfxExtendEngine::Transformations& GetTransform() const
+    const agg::trans_affine& GetTransform() const
     {
-        return trans_;
+        return m_transform;
     }
 
     /* 将当前转换重置为单位矩阵。然后运行 transform() */
-    void SetTransform(float sx,float shy,float shx,float sy,float tx,float ty);
-
-    /* 是否经过变换，即是不是单位矩阵 */
-    bool IsTransform() const;
-
-    /*获取当前变换矩阵操作对象*/
-    const std::shared_ptr<BaseGfxExtendEngine> GetTransEngine() const
+    void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty)
     {
-        return transEngine;
+        m_transform.reset();
+        Transform(sx, shy, shx, sy, tx, ty);
+    }
+    /* 是否经过变换，即是不是单位矩阵 */
+    bool IsTransform() const
+    {
+        return !m_transform.is_identity();
     }
 
     GradientControl getGradientControl() const{
@@ -738,9 +729,7 @@ private:
     BaseGfxExtendEngine::BlendMode blendMode;
 
     /* 用于操作变换矩阵 */
-    std::shared_ptr<BaseGfxExtendEngine> transEngine;
-    /* 当前变换矩阵 */
-    BaseGfxExtendEngine::Transformations trans_;
+    agg::trans_affine               m_transform;
     GradientControl gradientControl;
     double rotateCenterX;
     double rotateCenterY;
@@ -1125,6 +1114,42 @@ public:
                             const FontStyle& fontStyle,
                             const Paint& paint);
 
+    /* 缩放当前绘图至更大或更小 */
+    void SetScale(float x, float y,Paint& paint)
+    {
+        paint.Scale(x,y);
+    }
+
+    /* 旋转当前绘图 */
+    void SetRotate(float angle,Paint& paint)
+    {
+        paint.Rotate(angle);
+    }
+
+    /* 重新映射画布上的 (x,y) 位置 */
+    void SetTranslate(int16_t x, int16_t y,Paint& paint)
+    {
+        paint.Translate(x,y);
+    }
+
+    /* 替换绘图的当前转换矩阵 */
+    void Transform(float sx,float shy,float shx,float sy,float tx,float ty,Paint& paint)
+    {
+        paint.Transform(sx, shy, shx, sy, tx, ty);
+    }
+
+    /* 获取当前变换矩阵 */
+    const agg::trans_affine& GetTransform(const Paint& paint) const
+    {
+        return paint.GetTransform();
+    }
+
+    /* 将当前转换重置为单位矩阵。然后运行 transform() */
+    void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty,Paint& paint)
+    {
+        paint.SetTransform(sx,  shy,  shx,  sy,  tx,  ty);
+    }
+
     struct Images_ {
         Point startp;
         UIImageView* img;
@@ -1230,7 +1255,8 @@ protected:
     Point startPoint_;
     UICanvasPath* path_;
     List<DrawCmd> drawCmdList_;
-  static void DeleteTextParam(void* param)
+
+    static void DeleteTextParam(void* param)
     {
         TextParam* textParam = static_cast<TextParam*>(param);
         delete textParam;
