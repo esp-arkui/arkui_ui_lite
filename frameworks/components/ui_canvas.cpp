@@ -1467,7 +1467,12 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
     int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
     m_graphics->translate(-posViewLeft,-posViewTop);
 
-    m_graphics->rotate(BaseGfxExtendEngine::deg2Rad(0));
+    if(paint.GetRotateAngle()!=0){
+        m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
+    }
+    if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
+        m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
+    }
 
     m_graphics->translate(posViewLeft,posViewTop);
 
@@ -1496,12 +1501,7 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
             m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
                                 rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
         }
-        if(paint.GetRotateAngle()!=0){
-            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
-        }
-        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
-            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
-        }
+
     }
     if (enableStroke) {
 
@@ -1536,12 +1536,6 @@ void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
                                         paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
             m_graphics->drawShadow(arcInfo.center.x,arcInfo.center.y,arcInfo.radius,arcInfo.radius,
                                 rotateCenterX,rotateCenterY,rotateAngle,paint.GetScaleX(),paint.GetScaleY());
-        }
-        if(paint.GetRotateAngle()!=0){
-            m_graphics->rotate(rotateCenterX,rotateCenterY,rotateAngle);
-        }
-        if(paint.GetScaleX()!=0||paint.GetScaleY()!=0){
-            m_graphics->scale(rotateCenterX,rotateCenterY,paint.GetScaleX(),paint.GetScaleY());
         }
     }
 
