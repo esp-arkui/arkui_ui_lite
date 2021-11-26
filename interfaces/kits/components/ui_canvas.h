@@ -37,7 +37,7 @@
 #define GRAPHIC_LITE_UI_CANVAS_H
 
 #include <memory>
-#include <draw/clip_utils.h>
+#include "draw/clip_utils.h"
 #include "common/image.h"
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"

@@ -103,12 +103,14 @@ static_library("framework") {
     "../../frameworks",
     "//foundation/multimedia/utils/lite/interfaces/kits",
     "//foundation/multimedia/media_lite/interfaces/kits/player_lite",
+    "//third_party/giflib",
   ]
 
   public_deps = [
     "//build/lite/config/component/cJSON:cjson_shared",
     "//foundation/graphic/ui:ui",
     "//foundation/graphic/wms:wms_client",
+    "//third_party/giflib:libgif",
   ]
   configs += [ "//foundation/graphic/ui:graphic_define_config" ]
   public_configs = [ ":graphic_test_config" ]
@@ -127,6 +129,7 @@ static_library("auto_framework") {
     "../../frameworks",
     "//foundation/multimedia/utils/lite/interfaces/kits",
     "//foundation/multimedia/media_lite/interfaces/kits/player_lite",
+    "//third_party/giflib",
   ]
   defines = [ "ENABEL_UI_AUTO_TEST=1" ]
   ldflags = [
