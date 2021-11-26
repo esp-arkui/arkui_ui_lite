@@ -59,6 +59,20 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestcreateStrokePattern1();
 
 
+    UIKitCanvasTestDrawText002();
+    UIKitCanvasTestDrawText003();
+    UIKitCanvasTestDrawText004();
+    UIKitCanvasTestDrawText005();
+    UIKitCanvasTestDrawText006();
+
+    UIKitCanvasTestDrawMulitLangueText001();
+    UIKitCanvasTestDrawMulitLangueText002();
+    UIKitCanvasTestDrawMulitLangueText003();
+
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawLabel001();
     UIKitCanvasTestComposite001();
     UIKitCanvasTestGlobalAlpha001();
     UIKitCanvasTestDrawDashLine001();
@@ -529,9 +543,12 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-//    paint.SetOpacity(255); // 127: opacity
-    // {200, 50}: start point coordinates
-    canvas->DrawImage({ 10, 50 }, GREEN_IMAGE_PATH, paint);
+     canvas->DrawImage({ 100, 20 }, GIF_IMAGE_PATH, paint);
+    paint.Rotate(10);
+    canvas->DrawImage({ 200, 20 }, GIF_IMAGE_PATH, paint);
+
+    paint.Rotate(-5);
+    canvas->DrawImage({ 100, 20 }, RED_IMAGE_PATH, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
@@ -543,15 +560,176 @@ void UITestCanvas::UIKitCanvasTestDrawLabel001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetFillColor(Color::Blue());
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     UICanvas::FontStyle fontStyle;
-    fontStyle.align = TEXT_ALIGNMENT_RIGHT;
-    fontStyle.direct = TEXT_DIRECT_RTL;
+    fontStyle.align = TEXT_ALIGNMENT_LEFT;
+    fontStyle.direct = TEXT_DIRECT_LTR;
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
-    fontStyle.fontSize = 30;    // 30: font size
+    fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 10; // 10 letter space
     // {50, 50}: start point coordinates, 100: max width
-    canvas->DrawLabel({ 50, 50 }, "canvas绘制字体", 100, fontStyle, paint);
+    //canvas->DrawLabel({ 50, 50 }, "canvas绘制字体", 100, fontStyle, paint);
+
+    canvas->StrokeText("正常画不transform",{20,10},fontStyle,paint);
+    paint.Rotate(0);
+    //canvas->StrokeText("中国",{20,10},fontStyle,paint);
+    canvas->StrokeText("0度",{20,10},fontStyle,paint);
+    paint.Rotate(10);
+    canvas->StrokeText("10度qwqwqwqwqwq",{20,10},fontStyle,paint);
+    paint.Rotate(5);
+    canvas->StrokeText("15度",{20,10},fontStyle,paint);
+    paint.Rotate(5);
+    paint.Scale(2,2);
+    paint.Translate(50,20);
+    paint.SetFillColor(Color::Green());
+    canvas->StrokeText("20度。放大",{20,10},fontStyle,paint);
+}
+
+void UITestCanvas::UIKitCanvasTestDrawText002()
+{
+    CreateTitleLabel("测试中文");
+    UICanvas* canvas = CreateCanvas();
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.Rotate(10);//设置旋转
+    paint.Scale(2, 2);
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("中国 你好，鸿蒙。。", {0,20}, fontStyle, paint);
+}
+
+void UITestCanvas::UIKitCanvasTestDrawText003()
+{
+    CreateTitleLabel("测试英文");
+    UICanvas* canvas = CreateCanvas();
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.Rotate(20);//设置旋转
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("hello word HMOS.", {0,20}, fontStyle, paint);
+}
+
+void UITestCanvas::UIKitCanvasTestDrawText004()
+{
+    CreateTitleLabel("测试日文");
+    UICanvas* canvas = CreateCanvas();
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("こんにちは、おーとり鴻もー蒙", {0,20}, fontStyle, paint);
+}
+
+void UITestCanvas::UIKitCanvasTestDrawText005()
+{
+    CreateTitleLabel("测试韩文");
+    UICanvas* canvas = CreateCanvas();
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("안녕하세요.", {0,20}, fontStyle, paint);
+}
+
+void UITestCanvas::UIKitCanvasTestDrawText006()
+{
+    CreateTitleLabel("测试越南语");
+    UICanvas* canvas = CreateCanvas();
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("Xin chào, Hồng Môn.", {0,20}, fontStyle, paint);
+}
+
+void UITestCanvas::UIKitCanvasTestDrawMulitLangueText001()
+{
+    CreateTitleLabel("绘制多国文字");
+
+    UICanvas* canvas = CreateCanvas();
+    //canvas->SetHeight(500);
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.Rotate(20);
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("英语：hello word HMOS.", {0,20}, fontStyle, paint);
+    canvas->StrokeText("日语：こんにちは、おーとり鴻もー蒙", {0,40}, fontStyle, paint);
+    canvas->StrokeText("韩语：안녕하세요.", {0,60}, fontStyle, paint);
+    canvas->StrokeText("越南语：Xin chào, Hồng Môn.", {0,80}, fontStyle, paint);
+    canvas->StrokeText("芬兰语：Hei, Hongmeng.", {0,100}, fontStyle, paint);
+}
+
+
+void UITestCanvas::UIKitCanvasTestDrawMulitLangueText002()
+{
+    CreateTitleLabel("绘制多国文字");
+
+    UICanvas* canvas = CreateCanvas();
+    //canvas->SetHeight(500);
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("سلام波斯语：", {0,0}, fontStyle, paint);
+    canvas->StrokeText("樊瓦什语：Кайалла", {0,20}, fontStyle, paint);
+    canvas->StrokeText("白俄罗斯语：Прывітанне", {0,40}, fontStyle, paint);
+    canvas->StrokeText("阿姆哈拉语：ሰላም", {0,60}, fontStyle, paint);
+    canvas->StrokeText("希腊语：Γεια.", {0,80}, fontStyle, paint);
+    canvas->StrokeText("瑞典语:Hej, Hongmeng.", {0,100}, fontStyle, paint);
+    canvas->StrokeText("俄语: Привет, hongmon ", {0,120}, fontStyle, paint);
+
+}
+
+void UITestCanvas::UIKitCanvasTestDrawMulitLangueText003()
+{
+    CreateTitleLabel("绘制多国文字");
+
+    UICanvas* canvas = CreateCanvas();
+    //canvas->SetHeight(500);
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;    // 30: font size
+    fontStyle.letterSpace = 2; // 10 letter space
+    Paint paint;
+    paint.Rotate(30);
+    paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
+    canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0,20}, fontStyle, paint);
+    canvas->StrokeText("西班牙语：Hong Meng, test", {0,40}, fontStyle, paint);
+    canvas->StrokeText("法语：HongMeng, test", {0,60}, fontStyle, paint);
+    canvas->StrokeText("瓜拉尼语：mitapoañda, pens", {0,80}, fontStyle, paint);
+    canvas->StrokeText("荷兰语：Hongmeng, kom op.", {0,100}, fontStyle, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawSector001()

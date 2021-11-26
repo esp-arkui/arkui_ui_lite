@@ -32,14 +32,25 @@ public:
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
-
+    void UIKitCanvasTestDrawText001();
     void UIKitCanvasTestComposite001();
     void UIKitCanvasTestGlobalAlpha001();
+
+    void UIKitCanvasTestDrawText002();
+    void UIKitCanvasTestDrawText003();
+    void UIKitCanvasTestDrawText004();
+    void UIKitCanvasTestDrawText005();
+    void UIKitCanvasTestDrawText006();
+
+    void UIKitCanvasTestDrawMulitLangueText001();
+    void UIKitCanvasTestDrawMulitLangueText002();
+    void UIKitCanvasTestDrawMulitLangueText003();
+
     void UIKitCanvasTestDrawDashLine001();
     void UIKitCanvasTestDrawLine001();
     void UIKitCanvasTestDrawLine002();
     void UIKitCanvasTestLineJoin001();
-     void UIKitCanvasTestDrawShadow001();
+    void UIKitCanvasTestDrawShadow001();
     void UIKitCanvasTestDrawCurve001();
     void UIKitCanvasTestDrawCurve002();
     void UIKitCanvasTestDrawRect001();

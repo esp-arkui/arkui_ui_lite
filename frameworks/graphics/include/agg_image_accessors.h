@@ -181,11 +181,9 @@ namespace agg
 
             if (x >= (int)m_pixf->width()) {
                 x = m_pixf->width() - 1;
-                return NULL;
             }
             if (y >= (int)m_pixf->height()) {
                 y = m_pixf->height() - 1;
-                return NULL;
             }
 
             return m_pixf->pix_ptr(x, y);
@@ -232,6 +230,86 @@ namespace agg
     };
 
 
+
+//----------------------------------------------------image_accessor_clone
+template<class PixFmt> class image_accessor_norepeat
+{
+public:
+    typedef PixFmt   pixfmt_type;
+    typedef typename pixfmt_type::color_type color_type;
+    typedef typename pixfmt_type::order_type order_type;
+    typedef typename pixfmt_type::value_type value_type;
+    enum pix_width_e { pix_width = pixfmt_type::pix_width };
+
+    image_accessor_norepeat() {}
+    explicit image_accessor_norepeat(pixfmt_type& pixf) :
+        m_pixf(&pixf)
+    {}
+
+    void attach(pixfmt_type& pixf)
+    {
+        m_pixf = &pixf;
+    }
+
+private:
+    AGG_INLINE const int8u* pixel() const
+    {
+        int x = m_x;
+        int y = m_y;
+        if(x < 0) x = 0;
+        if(y < 0) y = 0;
+
+        if (x >= (int)m_pixf->width()) {
+            x = m_pixf->width() - 1;
+            return NULL;
+        }
+        if (y >= (int)m_pixf->height()) {
+            y = m_pixf->height() - 1;
+            return NULL;
+        }
+
+        return m_pixf->pix_ptr(x, y);
+    }
+
+public:
+    AGG_INLINE const int8u* span(int x, int y, unsigned len)
+    {
+        m_x = m_x0 = x;
+        m_y = y;
+        if(y >= 0 && y < (int)m_pixf->height() &&
+           x >= 0 && x+len <= (int)m_pixf->width())
+        {
+            return m_pix_ptr = m_pixf->pix_ptr(x, y);
+        }
+        m_pix_ptr = 0;
+        return pixel();
+    }
+
+    AGG_INLINE const int8u* next_x()
+    {
+        if(m_pix_ptr) return m_pix_ptr += pix_width;
+        ++m_x;
+        return pixel();
+    }
+
+    AGG_INLINE const int8u* next_y()
+    {
+        ++m_y;
+        m_x = m_x0;
+        if(m_pix_ptr &&
+           m_y >= 0 && m_y < (int)m_pixf->height())
+        {
+            return m_pix_ptr = m_pixf->pix_ptr(m_x, m_y);
+        }
+        m_pix_ptr = 0;
+        return pixel();
+    }
+
+private:
+    const pixfmt_type* m_pixf;
+    int                m_x, m_x0, m_y;
+    const int8u*       m_pix_ptr;
+};
 
 
 

@@ -435,7 +435,6 @@ void BaseGfxExtendEngine::rotate(double angle)          { m_transform *= agg::tr
 void BaseGfxExtendEngine::skew(double sx, double sy)    { m_transform *= agg::trans_affine_skewing(sx, sy);   }
 void BaseGfxExtendEngine::translate(double x, double y) { m_transform *= agg::trans_affine_translation(x, y); }
 
-
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::affine(const Affine& tr)
 {
@@ -1157,7 +1156,9 @@ void BaseGfxExtendEngine::transformImage(const Image& img, double dstX1, double 
     lineTo(dstX1, dstY2);
     closePolygon();
     double parallelogram[6] = { dstX1, dstY1, dstX2, dstY1, dstX2, dstY2 };
+
     renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram,isAntiAlias);
+
 }
 
 //------------------------------------------------------------------------
@@ -1172,6 +1173,7 @@ void BaseGfxExtendEngine::transformImage(const Image& img, int imgX1, int imgY1,
            parallelogram[1] + parallelogram[5] - parallelogram[3]);
     closePolygon();
     renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram,isAntiAlias);
+
 }
 
 
@@ -1185,6 +1187,7 @@ void BaseGfxExtendEngine::transformImage(const Image& img, const double* paralle
     lineTo(parallelogram[0] + parallelogram[4] - parallelogram[2],
            parallelogram[1] + parallelogram[5] - parallelogram[3]);
     closePolygon();
+
     renderImage(img, 0, 0, img.renBuf.width(), img.renBuf.height(), parallelogram,isAntiAlias);
 }
 
@@ -1543,6 +1546,9 @@ public:
         typedef agg::image_accessor_clone<BaseGfxExtendEngine::PixFormat> img_source_type;
 		img_source_type source(img_pixf);
 
+//        typedef agg::span_allocator<ColorType> span_alloc;
+//        span_alloc spColor;
+
         SpanConvImageBlend blend(gr.m_imageBlendMode, gr.m_imageBlendColor);
         if (gr.m_imageFilter == BaseGfxExtendEngine::NoFilter)
         {
@@ -1554,7 +1560,8 @@ public:
 			SpanGenType sg(source,interpolator);
 			SpanConvType sc(sg, blend);
 			RendererType ri(renBase,gr.m_allocator,sg);
-			agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+            agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+            //agg::render_scanlines_aa(gr.m_rasterizer, gr.m_scanline, ri, gr.m_allocator, sc);
         }
         else
         {
@@ -1579,6 +1586,7 @@ public:
                 SpanConvType sc(sg, blend);
                 RendererType ri(renBase,gr.m_allocator,sg);
                 agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+                //agg::render_scanlines_aa_solid(gr.m_rasterizer, gr.m_scanline, ri, spColor);
             }
             else
             {
@@ -1592,7 +1600,8 @@ public:
 					SpanGenType sg(source,interpolator);
 					SpanConvType sc(sg, blend);
 					RendererType ri(renBase,gr.m_allocator,sg);
-					agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+                    agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+                    //agg::render_scanlines_aa_solid(gr.m_rasterizer, gr.m_scanline, ri, spColor);
                 }
                 else
                 {
@@ -1606,6 +1615,7 @@ public:
                         SpanConvType sc(sg,blend);
                         RendererType ri(renBase,gr.m_allocator,sg);
                         agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+                        //agg::render_scanlines_aa_solid(gr.m_rasterizer, gr.m_scanline, ri, spColor);
                     }
                     else
                     {
@@ -1616,6 +1626,7 @@ public:
                         SpanConvType sc(sg, blend);
 						RendererType ri(renBase,gr.m_allocator,sg);
                         agg::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+                        //agg::render_scanlines_aa_solid(gr.m_rasterizer, gr.m_scanline, ri, spColor);
                     }
                 }
             }
@@ -1657,7 +1668,7 @@ void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, 
 
     if(m_blendMode == BlendAlpha)
     {
-		// JME audit -
+
         if(isAntiAlias) {
             BaseGfxExtendEngineRenderer::renderImage(*this,img, m_renBasePre, interpolator);
         } else {
@@ -1850,6 +1861,7 @@ void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, u
         }
     }
 }
+
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::Image::premultiply()

@@ -31,6 +31,7 @@ DESTDIR = ../libs
 SOURCES += \
     ../../../../../utils/frameworks/graphic_timer.cpp \
     ../../../../frameworks/animator/animator.cpp \
+    ../../../../frameworks/animator/gif_canvas_image_animator.cpp \
     ../../../../frameworks/animator/animator_manager.cpp \
     ../../../../frameworks/animator/easing_equation.cpp \
     ../../../../frameworks/animator/interpolation.cpp \
@@ -334,6 +335,7 @@ HEADERS += \
     ../../../../interfaces/innerkits/font/ui_font_builder.h \
     ../../../../interfaces/innerkits/engines/gfx/gfx_engine_manager.h \
     ../../../../interfaces/kits/animator/animator.h \
+    ../../../../interfaces/kits/animator/gif_canvas_image_animator.h \
     ../../../../interfaces/kits/animator/easing_equation.h \
     ../../../../interfaces/kits/animator/interpolation.h \
     ../../../../interfaces/kits/common/image.h \
@@ -442,7 +444,8 @@ INCLUDEPATH += \
     ../../../../../../../third_party/cJSON \
     ../../../../../../../third_party/libjpeg \
     ../../../../../../../third_party/libpng \
-    ../../../../../../../third_party/qrcodegen/cpp
+    ../../../../../../../third_party/qrcodegen/cpp \
+    ../../../../../../../third_party/giflib
 
 LIBS += $$OUT_PWD/../libs/libpng.dll
 LIBS += $$OUT_PWD/../libs/libjpeg.dll
@@ -450,3 +453,4 @@ LIBS += $$OUT_PWD/../libs/qrcodegen.dll
 LIBS += $$OUT_PWD/../libs/freetype.dll
 LIBS += $$OUT_PWD/../libs/libharfbuzz.a
 LIBS += $$OUT_PWD/../libs/icu.dll
+LIBS += $$OUT_PWD/../libs/giflib.dll

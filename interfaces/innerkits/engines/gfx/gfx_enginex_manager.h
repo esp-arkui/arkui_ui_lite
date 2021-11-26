@@ -114,7 +114,7 @@ class BaseGfxExtendEngine : public BaseGfxEngine
 
     typedef agg::image_accessor_repeat_x<pixfmt, agg::wrap_mode_repeat> img_source_type_x;
     typedef agg::image_accessor_repeat_y<pixfmt, agg::wrap_mode_repeat> img_source_type_y;
-    typedef agg::image_accessor_clone<pixfmt> img_source_type_none;
+    typedef agg::image_accessor_norepeat<pixfmt> img_source_type_none;
 
     typedef agg::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
     typedef agg::span_pattern_rgba<img_source_type_x> span_pattern_type_x;
@@ -469,9 +469,22 @@ public:
     void imageResample(ImageResample f);
     ImageResample imageResample() const;
 
+//    void transformImage(const Image& img,
+//                           int imgX1,    int imgY1,    int imgX2,    int imgY2,
+//                        double dstX1, double dstY1, double dstX2, double dstY2);
+
+//    void transformImage(const Image& img,
+//                        double dstX1, double dstY1, double dstX2, double dstY2);
+
+//    void transformImage(const Image& img,
+//                        int imgX1, int imgY1, int imgX2, int imgY2,
+//                        const double* parallelogram);
+
+//    void transformImage(const Image& img, const double* parallelogram);
+
     void transformImage(const Image& img,
-                           int imgX1,    int imgY1,    int imgX2,    int imgY2,
-                        double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
+                               int imgX1,    int imgY1,    int imgX2,    int imgY2,
+                            double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
 
     void transformImage(const Image& img,
                         double dstX1, double dstY1, double dstX2, double dstY2,bool isAntiAlias=true);
@@ -595,9 +608,12 @@ public:
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
+    void blend_from(const Image& img, Rect srcRect,Rect dstRect);
+
     void BlendFromImage(Image &img, int imgX1, int imgY1, int imgX2, int imgY2,
-                        double dstX, double dstY, unsigned alpha,bool isAntiAlias=true);
-    void BlendFromImage(Image &img, double dstX, double dstY, unsigned alpha,bool isAntiAlias=true);
+                            double dstX, double dstY, unsigned alpha,bool isAntiAlias=false);
+    void BlendFromImage(Image &img, double dstX, double dstY, unsigned alpha,bool isAntiAlias=false);
+
 private:
     void render(bool fillColor);
     void addLine(double x1, double y1, double x2, double y2);
