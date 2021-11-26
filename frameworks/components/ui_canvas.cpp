@@ -1852,6 +1852,7 @@ void UICanvas::BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer,
     }
 }
 
+
 void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &paint, const Rect &rect, const Rect &invalidatedArea, const Style &style)
 {
         TextParam* textParam = static_cast<TextParam*>(param);
@@ -1884,9 +1885,10 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         if(text->GetTextSize().x == 0 || text->GetTextSize().y == 0){
             return;
         }
-        textRect.SetWidth(text->GetTextSize().x + 1);
-        textRect.SetHeight(text->GetTextSize().y + 1);
+        textRect.SetWidth(text->GetTextSize().x);
+        textRect.SetHeight(text->GetTextSize().y);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
+        Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
 
         std::unique_ptr<BufferInfo> pGfxMapBuffer(new BufferInfo);
         pGfxMapBuffer->rect = textRect;
@@ -1910,7 +1912,6 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         }
         pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
 
-        Rect textImageRect(0, 0, pGfxMapBuffer->width, pGfxMapBuffer->height);
         text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
 
         BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
