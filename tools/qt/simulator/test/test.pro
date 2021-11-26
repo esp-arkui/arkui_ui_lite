@@ -161,6 +161,7 @@ INCLUDEPATH += \
     ../../../../../../../third_party/freetype/include \
     ../../../../../../../third_party/cJSON \
     ../../../../../../../third_party/libjpeg \
-    ../../../../../../../third_party/libpng
+    ../../../../../../../third_party/libpng \
+    ../../../../../../../third_party/giflib
 LIBS += $$OUT_PWD/../libs/libui.dll
 
