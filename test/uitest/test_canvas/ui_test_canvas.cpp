@@ -676,7 +676,7 @@ void UITestCanvas::UIKitCanvasTestDrawMulitLangueText001()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    canvas->SetRotate(10,paint);
+    //canvas->SetRotate(10,paint);
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("英语：hello word HMOS.", {0,20}, fontStyle, paint);
     canvas->StrokeText("日语：こんにちは、おーとり鴻もー蒙", {0,40}, fontStyle, paint);
