@@ -700,10 +700,10 @@ void UITestCanvas::UIKitCanvasTestDrawMulitLangueText002()
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
-    canvas->StrokeText("سلام波斯语：", {0,0}, fontStyle, paint);
+
     canvas->StrokeText("樊瓦什语：Кайалла", {0,20}, fontStyle, paint);
     canvas->StrokeText("白俄罗斯语：Прывітанне", {0,40}, fontStyle, paint);
-    canvas->StrokeText("阿姆哈拉语：ሰላም", {0,60}, fontStyle, paint);
+
     canvas->StrokeText("希腊语：Γεια.", {0,80}, fontStyle, paint);
     canvas->StrokeText("瑞典语:Hej, Hongmeng.", {0,100}, fontStyle, paint);
     canvas->StrokeText("俄语: Привет, hongmon ", {0,120}, fontStyle, paint);
@@ -723,7 +723,7 @@ void UITestCanvas::UIKitCanvasTestDrawMulitLangueText003()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    canvas->SetRotate(10,paint);
+    //canvas->SetRotate(10,paint);
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0,20}, fontStyle, paint);
     canvas->StrokeText("西班牙语：Hong Meng, test", {0,40}, fontStyle, paint);
