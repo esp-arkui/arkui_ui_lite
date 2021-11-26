@@ -691,8 +691,11 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                              //BaseGfxExtendEngine::XMidYMid);
         OpacityType opa = DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_);
 
-        m_graphics_Image.BlendFromImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-                                            gfxMapBuffer->rect.GetTop(),opa);
+        m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
+                                            gfxMapBuffer->rect.GetTop(),
+                                            gfxMapBuffer->rect.GetRight(),
+                                            gfxMapBuffer->rect.GetBottom(),
+                                            gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),255);
 
 //       ImageInfo imageInfo;
 //       imageInfo.header.colorMode = gfxMapBuffer->mode;
