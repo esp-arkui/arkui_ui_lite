@@ -1736,6 +1736,8 @@ void BaseGfxExtendEngine::blendImage(Image& img, double dstX, double dstY, unsig
     if(m_blendMode == BlendAlpha)
     {
         m_renBasePre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+    } else {
+        m_renBaseCompPre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
     }
 }
 

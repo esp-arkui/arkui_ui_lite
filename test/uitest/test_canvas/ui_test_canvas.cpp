@@ -596,7 +596,7 @@ void UITestCanvas::UIKitCanvasTestDrawText002()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    paint.Rotate(10);//设置旋转
+    paint.Rotate(20);//设置旋转
     paint.Scale(2, 2);
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("中国 你好，鸿蒙。。", {0,20}, fontStyle, paint);
