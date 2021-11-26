@@ -571,16 +571,16 @@ void UITestCanvas::UIKitCanvasTestDrawLabel001()
     //canvas->DrawLabel({ 50, 50 }, "canvas绘制字体", 100, fontStyle, paint);
 
     canvas->StrokeText("正常画不transform",{20,10},fontStyle,paint);
-    paint.Rotate(0);
+    canvas->SetRotate(0,paint);
     //canvas->StrokeText("中国",{20,10},fontStyle,paint);
     canvas->StrokeText("0度",{20,10},fontStyle,paint);
-    paint.Rotate(10);
+    canvas->SetRotate(10,paint);
     canvas->StrokeText("10度qwqwqwqwqwq",{20,10},fontStyle,paint);
-    paint.Rotate(5);
+    canvas->SetRotate(5,paint);
     canvas->StrokeText("15度",{20,10},fontStyle,paint);
-    paint.Rotate(5);
-    paint.Scale(2,2);
-    paint.Translate(50,20);
+    canvas->SetRotate(5,paint);
+    canvas->SetScale(2,2,paint);
+    canvas->SetTranslate(50,20,paint);
     paint.SetFillColor(Color::Green());
     canvas->StrokeText("20度。放大",{20,10},fontStyle,paint);
 }
@@ -596,8 +596,8 @@ void UITestCanvas::UIKitCanvasTestDrawText002()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    paint.Rotate(20);//设置旋转
-    paint.Scale(2, 2);
+    canvas->SetRotate(10,paint);//设置旋转
+    canvas->SetScale(2, 2,paint);
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("中国 你好，鸿蒙。。", {0,20}, fontStyle, paint);
 }
@@ -613,7 +613,7 @@ void UITestCanvas::UIKitCanvasTestDrawText003()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    paint.Rotate(20);//设置旋转
+    canvas->SetRotate(20,paint);//设置旋转
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("hello word HMOS.", {0,20}, fontStyle, paint);
 }
@@ -676,7 +676,7 @@ void UITestCanvas::UIKitCanvasTestDrawMulitLangueText001()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    paint.Rotate(20);
+    canvas->SetRotate(10,paint);
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("英语：hello word HMOS.", {0,20}, fontStyle, paint);
     canvas->StrokeText("日语：こんにちは、おーとり鴻もー蒙", {0,40}, fontStyle, paint);
@@ -723,7 +723,7 @@ void UITestCanvas::UIKitCanvasTestDrawMulitLangueText003()
     fontStyle.fontSize = 15;    // 30: font size
     fontStyle.letterSpace = 2; // 10 letter space
     Paint paint;
-    paint.Rotate(30);
+    canvas->SetRotate(10,paint);
     paint.SetFillColor(Color::GetColorFromRGBA(255,255,0,255));
     canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0,20}, fontStyle, paint);
     canvas->StrokeText("西班牙语：Hong Meng, test", {0,40}, fontStyle, paint);

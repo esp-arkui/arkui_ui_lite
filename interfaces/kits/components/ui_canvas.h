@@ -658,7 +658,6 @@ public:
         SetFillColor(color);
     }
 
-
     /* 缩放当前绘图至更大或更小 */
     void Scale(float x, float y)
     {
@@ -1115,6 +1114,42 @@ public:
                             const FontStyle& fontStyle,
                             const Paint& paint);
 
+    /* 缩放当前绘图至更大或更小 */
+    void SetScale(float x, float y,Paint& paint)
+    {
+        paint.Scale(x,y);
+    }
+
+    /* 旋转当前绘图 */
+    void SetRotate(float angle,Paint& paint)
+    {
+        paint.Rotate(angle);
+    }
+
+    /* 重新映射画布上的 (x,y) 位置 */
+    void SetTranslate(int16_t x, int16_t y,Paint& paint)
+    {
+        paint.Translate(x,y);
+    }
+
+    /* 替换绘图的当前转换矩阵 */
+    void Transform(float sx,float shy,float shx,float sy,float tx,float ty,Paint& paint)
+    {
+        paint.Transform(sx, shy, shx, sy, tx, ty);
+    }
+
+    /* 获取当前变换矩阵 */
+    const agg::trans_affine& GetTransform(const Paint& paint) const
+    {
+        return paint.GetTransform();
+    }
+
+    /* 将当前转换重置为单位矩阵。然后运行 transform() */
+    void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty,Paint& paint)
+    {
+        paint.SetTransform(sx,  shy,  shx,  sy,  tx,  ty);
+    }
+
     struct Images_ {
         Point startp;
         UIImageView* img;
@@ -1220,7 +1255,8 @@ protected:
     Point startPoint_;
     UICanvasPath* path_;
     List<DrawCmd> drawCmdList_;
-  static void DeleteTextParam(void* param)
+
+    static void DeleteTextParam(void* param)
     {
         TextParam* textParam = static_cast<TextParam*>(param);
         delete textParam;

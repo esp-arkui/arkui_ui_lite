@@ -423,7 +423,6 @@ void UICanvas::StrokeText(const char *text, const Point &point,const FontStyle& 
             GRAPHIC_LOGE("new TextParam fail");
             return;
         }
-        Invalidate();
         textParam->text = text;
         textParam->fontStyle = fontStyle;
         textParam->fontOpa = paint.GetOpacity();
@@ -689,9 +688,14 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                              BaseGfxExtendEngine::XMinYMin);
                              //BaseGfxExtendEngine::XMidYMid);
         OpacityType opa = DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_);
-        m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),gfxMapBuffer->rect.GetTop(),opa);
+        m_graphics_Image.blendImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
+                                                    gfxMapBuffer->rect.GetTop(),
+                                                    gfxMapBuffer->rect.GetRight(),
+                                                    gfxMapBuffer->rect.GetBottom(),
+                                                    gfxDstBuffer.rect.GetLeft(),gfxDstBuffer.rect.GetTop(),opa);
+
         //m_graphics_Image.BlendFromImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-        //                                    gfxMapBuffer->rect.GetTop(),opa);
+        //                                    gfxMapBuffer->rect.GetTop(),255);
 
 //       ImageInfo imageInfo;
 //       imageInfo.header.colorMode = gfxMapBuffer->mode;
@@ -1857,6 +1861,10 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         if(textParam->fontStyle.fontSize <= 0 ){
             return;
         }
+        BaseGfxExtendEngine* graphicsContext = paint.GetDrawGraphicsContext();
+        if(graphicsContext == nullptr) {
+            return;
+        }
         Text* text = textParam->textComment;
         text->SetText(textParam->text);
         text->SetFont(textParam->fontStyle.fontName,textParam->fontStyle.fontSize);
@@ -1879,8 +1887,8 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         textRect.SetWidth(text->GetTextSize().x + 1);
         textRect.SetHeight(text->GetTextSize().y + 1);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
-        //text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
-        BufferInfo* pGfxMapBuffer = new BufferInfo;
+
+        std::unique_ptr<BufferInfo> pGfxMapBuffer(new BufferInfo);
         pGfxMapBuffer->rect = textRect;
         pGfxMapBuffer->width = textRect.GetWidth();
         pGfxMapBuffer->height = textRect.GetHeight();
@@ -1896,20 +1904,15 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
         errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
         if(err != EOK){
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
-            delete pGfxMapBuffer;
+
             GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
             return;
         }
         pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
-        BaseGfxExtendEngine* graphicsContext = paint.GetDrawGraphicsContext();
-//        if(graphicsContext == nullptr) {
-//            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
-//            delete pGfxMapBuffer;
-//            return;
-//        }
+
         Rect textImageRect(0, 0, pGfxMapBuffer->width, pGfxMapBuffer->height);
         text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
-        //text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, invalidatedArea, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, textParam->fontOpa);
+
         BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
                                                pGfxMapBuffer->width,
                                                pGfxMapBuffer->height,
@@ -1926,7 +1929,6 @@ void UICanvas::DoDrawText(BufferInfo &gfxDstBuffer, void *param, const Paint &pa
 
         graphicsContext->resetTransformations();
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
-        delete pGfxMapBuffer;
 
 }
 
