@@ -15,7 +15,6 @@
 
 #include "font/ui_font.h"
 #include "common/text.h"
-#include "font/ui_font_cache.h"
 #if ENABLE_VECTOR_FONT
 #include "font/ui_font_vector.h"
 #else

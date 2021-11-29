@@ -32,7 +32,6 @@
 #include "agg_rasterizer_cells_aa.h"
 #include "agg_rasterizer_sl_clip.h"
 #include "agg_rasterizer_scanline_aa_nogamma.h"
-#include "agg_gamma_functions.h"
 
 
 namespace agg
