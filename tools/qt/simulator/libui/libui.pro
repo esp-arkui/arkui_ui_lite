@@ -140,8 +140,6 @@ SOURCES += \
     ../../../../frameworks/graphics/src/agg_vcgen_markers_term.cpp \
     ../../../../frameworks/graphics/src/agg_vcgen_smooth_poly1.cpp \
     ../../../../frameworks/graphics/src/agg_vcgen_stroke.cpp \
-    ../../../../frameworks/graphics/src/agg_vpgen_clip_polygon.cpp \
-    ../../../../frameworks/graphics/src/agg_vpgen_clip_polyline.cpp \
     ../../../../frameworks/graphics/src/agg_vpgen_segmentator.cpp \
     ../../../../frameworks/graphics/src/ctrl/agg_polygon_ctrl.cpp \
     ../../../../frameworks/imgdecode/cache_manager.cpp \
@@ -199,16 +197,12 @@ HEADERS += \
     ../../../../frameworks/graphics/include/agg_color_rgba.h \
     ../../../../frameworks/graphics/include/agg_conv_adaptor_vpgen.h \
     ../../../../frameworks/graphics/include/agg_conv_bspline.h \
-    ../../../../frameworks/graphics/include/agg_conv_clip_polygon.h \
-    ../../../../frameworks/graphics/include/agg_conv_clip_polyline.h \
     ../../../../frameworks/graphics/include/agg_conv_close_polygon.h \
     ../../../../frameworks/graphics/include/agg_conv_concat.h \
     ../../../../frameworks/graphics/include/agg_conv_contour.h \
     ../../../../frameworks/graphics/include/agg_conv_curve.h \
     ../../../../frameworks/graphics/include/agg_conv_dash.h \
-    ../../../../frameworks/graphics/include/agg_conv_gpc.h \
     ../../../../frameworks/graphics/include/agg_conv_marker.h \
-    ../../../../frameworks/graphics/include/agg_conv_marker_adaptor.h \
     ../../../../frameworks/graphics/include/agg_conv_segmentator.h \
     ../../../../frameworks/graphics/include/agg_conv_smooth_poly1.h \
     ../../../../frameworks/graphics/include/agg_conv_stroke.h \
@@ -263,7 +257,6 @@ HEADERS += \
     ../../../../frameworks/graphics/include/agg_scanline_storage_bin.h \
     ../../../../frameworks/graphics/include/agg_scanline_u.h \
     ../../../../frameworks/graphics/include/agg_shorten_path.h \
-    ../../../../frameworks/graphics/include/agg_simul_eq.h \
     ../../../../frameworks/graphics/include/agg_span_allocator.h \
     ../../../../frameworks/graphics/include/agg_span_converter.h \
     ../../../../frameworks/graphics/include/agg_span_gouraud_gray.h \
@@ -279,7 +272,6 @@ HEADERS += \
     ../../../../frameworks/graphics/include/agg_span_solid.h \
     ../../../../frameworks/graphics/include/agg_span_subdiv_adaptor.h \
     ../../../../frameworks/graphics/include/agg_trans_affine.h \
-    ../../../../frameworks/graphics/include/agg_trans_bilinear.h \
     ../../../../frameworks/graphics/include/agg_trans_double_path.h \
     ../../../../frameworks/graphics/include/agg_trans_perspective.h \
     ../../../../frameworks/graphics/include/agg_trans_single_path.h \
@@ -290,10 +282,7 @@ HEADERS += \
     ../../../../frameworks/graphics/include/agg_vcgen_markers_term.h \
     ../../../../frameworks/graphics/include/agg_vcgen_smooth_poly1.h \
     ../../../../frameworks/graphics/include/agg_vcgen_stroke.h \
-    ../../../../frameworks/graphics/include/agg_vcgen_vertex_sequence.h \
     ../../../../frameworks/graphics/include/agg_vertex_sequence.h \
-    ../../../../frameworks/graphics/include/agg_vpgen_clip_polygon.h \
-    ../../../../frameworks/graphics/include/agg_vpgen_clip_polyline.h \
     ../../../../frameworks/graphics/include/agg_vpgen_segmentator.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv_rgb16.h \
