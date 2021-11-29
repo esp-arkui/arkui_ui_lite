@@ -65,18 +65,6 @@ namespace agg
             return value_type((55u * c.r + 184u * c.g + 18u * c.b) >> 8);
         }
 
-        static void convert(gray8T<linear>& dst, const gray8T<sRGB>& src)
-        {
-            dst.v = sRGB_conv<value_type>::rgb_from_sRGB(src.v);
-            dst.a = src.a;
-        }
-
-        static void convert(gray8T<sRGB>& dst, const gray8T<linear>& src)
-        {
-            dst.v = sRGB_conv<value_type>::rgb_to_sRGB(src.v);
-            dst.a = src.a;
-        }
-
         static void convert(gray8T<linear>& dst, const rgba8& src)
         {
             dst.v = luminance(src);
@@ -87,12 +75,6 @@ namespace agg
         {
             // The RGB weights are only valid for linear values.
             convert(dst, rgba8(src));
-        }
-
-        static void convert(gray8T<sRGB>& dst, const rgba8& src)
-        {
-            dst.v = sRGB_conv<value_type>::rgb_to_sRGB(luminance(src));
-            dst.a = src.a;
         }
 
         static void convert(gray8T<sRGB>& dst, const srgba8& src)
@@ -130,42 +112,15 @@ namespace agg
         {
             convert(*this, c);
         }
-
-        //--------------------------------------------------------------------
-        template<class T> 
-        T convert_from_sRGB() const 
-        {
-            typename T::value_type y = sRGB_conv<typename T::value_type>::rgb_from_sRGB(v);
-            return T(y, y, y, sRGB_conv<typename T::value_type>::alpha_from_sRGB(a));
-        }
-
-        template<class T> 
-        T convert_to_sRGB() const 
-        {
-            typename T::value_type y = sRGB_conv<typename T::value_type>::rgb_to_sRGB(v);
-            return T(y, y, y, sRGB_conv<typename T::value_type>::alpha_to_sRGB(a));
-        }
-
         //--------------------------------------------------------------------
         rgba8 make_rgba8(const linear&) const 
         {
             return rgba8(v, v, v, a);
         }
 
-        rgba8 make_rgba8(const sRGB&) const 
-        {
-            return convert_from_sRGB<srgba8>();
-        }
-
         operator rgba8() const 
         {
             return make_rgba8(Colorspace());
-        }
-
-        //--------------------------------------------------------------------
-        srgba8 make_srgba8(const linear&) const 
-        {
-            return convert_to_sRGB<rgba8>();
         }
 
         srgba8 make_srgba8(const sRGB&) const 
@@ -185,11 +140,6 @@ namespace agg
             return rgba16(rgb, rgb, rgb, (a << 8) | a);
         }
 
-        rgba16 make_rgba16(const sRGB&) const 
-        {
-            return convert_from_sRGB<rgba16>();
-        }
-
         operator rgba16() const 
         {
             return make_rgba16(Colorspace());
@@ -201,12 +151,6 @@ namespace agg
             rgba32::value_type v32 = v / 255.0f;
             return rgba32(v32, v32, v32, a / 255.0f);
         }
-
-        rgba32 make_rgba32(const sRGB&) const 
-        {
-            return convert_from_sRGB<rgba32>();
-        }
-
         operator rgba32() const 
         {
             return make_rgba32(Colorspace());
@@ -450,10 +394,6 @@ namespace agg
             return luminance(rgba16(c));
         }
 
-        static value_type luminance(const srgba8& c)
-        {
-            return luminance(rgba16(c));
-        }
 
         static value_type luminance(const rgba32& c)
         {
@@ -482,11 +422,6 @@ namespace agg
             a((value_type(c.a) << 8) | c.a) {}
 
         //--------------------------------------------------------------------
-        gray16(const srgba8& c) :
-            v(luminance(c)),
-            a((value_type(c.a) << 8) | c.a) {}
-
-        //--------------------------------------------------------------------
         gray16(const rgba16& c) :
             v(luminance(c)),
             a(c.a) {}
@@ -497,21 +432,9 @@ namespace agg
             a((value_type(c.a) << 8) | c.a) {}
 
         //--------------------------------------------------------------------
-        gray16(const sgray8& c) :
-            v(sRGB_conv<value_type>::rgb_from_sRGB(c.v)),
-            a(sRGB_conv<value_type>::alpha_from_sRGB(c.a)) {}
-
-        //--------------------------------------------------------------------
         operator rgba8() const 
         {
             return rgba8(v >> 8, v >> 8, v >> 8, a >> 8);
-        }
-
-        //--------------------------------------------------------------------
-        operator srgba8() const 
-        {
-            value_type y = sRGB_conv<value_type>::rgb_to_sRGB(v);
-            return srgba8(y, y, y, sRGB_conv<value_type>::alpha_to_sRGB(a));
         }
 
         //--------------------------------------------------------------------
@@ -531,14 +454,6 @@ namespace agg
         operator gray8() const 
         {
             return gray8(v >> 8, a >> 8);
-        }
-
-        //--------------------------------------------------------------------
-        operator sgray8() const 
-        {
-            return sgray8(
-                sRGB_conv<value_type>::rgb_to_sRGB(v), 
-                sRGB_conv<value_type>::alpha_to_sRGB(a));
         }
 
         //--------------------------------------------------------------------
@@ -799,12 +714,6 @@ namespace agg
         gray32(const rgba8& c) :
             v(luminance(c)),
             a(value_type(c.a / 255.0)) {}
-
-        //--------------------------------------------------------------------
-        gray32(const srgba8& c) :
-            v(luminance(rgba32(c))),
-            a(value_type(c.a / 255.0)) {}
-
         //--------------------------------------------------------------------
         gray32(const rgba16& c) :
             v(luminance(c)),
@@ -819,11 +728,6 @@ namespace agg
         gray32(const gray8& c) :
             v(value_type(c.v / 255.0)), 
             a(value_type(c.a / 255.0)) {}
-
-        //--------------------------------------------------------------------
-        gray32(const sgray8& c) :
-            v(sRGB_conv<value_type>::rgb_from_sRGB(c.v)), 
-            a(sRGB_conv<value_type>::alpha_from_sRGB(c.a)) {}
 
         //--------------------------------------------------------------------
         gray32(const gray16& c) :
@@ -843,15 +747,6 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        operator sgray8() const 
-        {
-            // Return (non-premultiplied) sRGB values.
-            return sgray8(
-                sRGB_conv<value_type>::rgb_to_sRGB(v), 
-                sRGB_conv<value_type>::alpha_to_sRGB(a));
-        }
-
-        //--------------------------------------------------------------------
         operator gray16() const 
         {
             return gray16(uround(v * 65535.0), uround(a * 65535.0));
@@ -862,13 +757,6 @@ namespace agg
         {
             rgba8::value_type y = uround(v * 255.0);
             return rgba8(y, y, y, uround(a * 255.0));
-        }
-
-        //--------------------------------------------------------------------
-        operator srgba8() const 
-        {
-            srgba8::value_type y = sRGB_conv<value_type>::rgb_to_sRGB(v);
-            return srgba8(y, y, y, sRGB_conv<value_type>::alpha_to_sRGB(a));
         }
 
 		//--------------------------------------------------------------------
