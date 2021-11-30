@@ -102,7 +102,8 @@ public:
         /** Pause */
         PAUSE,
         /** Running (reserved and not used currently) */
-        RUNNING
+        RUNNING,
+        BACKGROUND
     };
 
     /**
