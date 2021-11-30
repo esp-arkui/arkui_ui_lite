@@ -1732,7 +1732,7 @@ void BaseGfxExtendEngine::blendImage(Image& img, double dstX, double dstY, unsig
 {
     worldToScreen(dstX, dstY);
     PixFormat pixF(img.renBuf);
-    m_renBase.blend_from(pixF, 0, int(dstX), int(dstY), alpha);
+    m_renBase.blend_from(pixF, 0, int(dstX), int(dstY), alpha);/////?????????
     if(m_blendMode == BlendAlpha)
     {
         m_renBasePre.blend_from(pixF, 0, int(dstX), int(dstY), alpha);

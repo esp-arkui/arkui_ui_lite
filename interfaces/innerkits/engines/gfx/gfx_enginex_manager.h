@@ -22,38 +22,35 @@
 // With this define uncommented you can use floating-point pixel format
 //#define BaseGfxExtendEngine_USE_FLOAT_FORMAT
 
-#include "graphics/include/agg_basics.h"
-#include "graphics/include/agg_trans_affine.h"
-#include "graphics/include/agg_trans_viewport.h"
-#include "graphics/include/agg_path_storage.h"
-#include "graphics/include/agg_conv_stroke.h"
-#include "graphics/include/agg_conv_transform.h"
-#include "graphics/include/agg_conv_curve.h"
-#include "graphics/include/agg_conv_dash.h"
-#include "graphics/include/agg_rendering_buffer.h"
-#include "graphics/include/agg_renderer_base.h"
-#include "graphics/include/agg_renderer_scanline.h"
-#include "graphics/include/agg_span_gradient.h"
-#include "graphics/include/agg_span_image_filter_rgba.h"
-#include "graphics/include/agg_span_allocator.h"
-#include "graphics/include/agg_span_converter.h"
-#include "graphics/include/agg_span_interpolator_linear.h"
-#include "graphics/include/agg_rasterizer_scanline_aa.h"
-#include "graphics/include/agg_gamma_functions.h"
-#include "graphics/include/agg_scanline_u.h"
-#include "graphics/include/agg_bezier_arc.h"
-#include "graphics/include/agg_rounded_rect.h"
-#include "graphics/include/agg_pixfmt_rgba.h"
-#include "graphics/include/agg_image_accessors.h"
+
 #include "gfx_engine_manager.h"
-#include "graphics/include/agg_gradient_lut.h"
-#include "graphics/include/agg_blur.h"
-#include "graphics/include/ctrl/agg_polygon_ctrl.h"
-#include "graphics/include/agg_bounding_rect.h"
+//#include "graphics/include/ctrl/agg_polygon_ctrl.h"
 
 //#include <agg_rendering_buffer.h>
 
-#include "graphics/include/agg_span_pattern_rgba.h"
+
+
+#include <graphic_transform/agg_image_accessors.h>
+#include <graphic_transform/agg_trans_affine.h>
+
+#include <graphic_spancolor_fill/agg_gradient_lut.h>
+#include <graphic_spancolor_fill/agg_span_allocator.h>
+#include <graphic_spancolor_fill/agg_span_gradient.h>
+#include <graphic_spancolor_fill/agg_span_interpolator_linear.h>
+#include <graphic_spancolor_fill/agg_span_pattern_rgba.h>
+
+#include <graphic_depict/agg_conv_curve.h>
+#include <graphic_depict/agg_conv_dash.h>
+#include <graphic_depict/agg_conv_stroke.h>
+#include <graphic_depict/agg_conv_transform.h>
+
+#include <graphic_renderer/agg_renderer_base.h>
+#include <graphic_renderer/agg_renderer_scanline.h>
+
+#include <graphic_pixfmt/agg_pixfmt_rgba.h>
+#include <graphic_geometry/agg_path_storage.h>
+#include <graphic_color/agg_color_rgba.h>
+#include <graphic_filter/agg_blur.h>
 namespace OHOS {
 class BaseGfxExtendEngine : public BaseGfxEngine
 {
