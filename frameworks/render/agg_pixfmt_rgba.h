@@ -29,7 +29,7 @@
 #include "render/agg_pixfmt_base.h"
 #include "render/agg_rendering_buffer.h"
 
-namespace agg
+namespace OHOS
 {
     template<class T> inline T sd_min(T a, T b) { return (a < b) ? a : b; }
     template<class T> inline T sd_max(T a, T b) { return (a > b) ? a : b; }
