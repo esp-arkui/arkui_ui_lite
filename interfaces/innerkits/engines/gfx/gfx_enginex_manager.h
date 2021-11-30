@@ -24,33 +24,38 @@
 
 
 #include "gfx_engine_manager.h"
-//#include "graphics/include/ctrl/agg_polygon_ctrl.h"
 
-//#include <agg_rendering_buffer.h>
+#include <gfx_utils/graphics/graphic_color/agg_color_rgba.h>
+
+#include <render/agg_pixfmt_rgba.h>
+#include <render/agg_renderer_base.h>
+#include <render/agg_renderer_scanline.h>
+
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_gradient_lut.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_allocator.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_gradient.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_interpolator_linear.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_pattern_rgba.h>
+
+#include <gfx_utils/graphics/graphic_depict/agg_conv_curve.h>
+#include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
+#include <gfx_utils/graphics/graphic_depict/agg_conv_stroke.h>
+#include <gfx_utils/graphics/graphic_depict/agg_conv_transform.h>
+#include <gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h>
+#include <gfx_utils/graphics/graphic_filter/agg_blur.h>
+#include <gfx_utils/graphics/graphic_filter/agg_image_filters.h>
+#include <gfx_utils/graphics/graphic_geometry/agg_path_storage.h>
+#include <gfx_utils/graphics/graphic_transform/agg_image_accessors.h>
+#include <gfx_utils/graphics/graphic_scanline/agg_scanline_u.h>
+#include <gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_scanline_aa.h>
+
+#include <gfx_utils/graphics/graphic_transform/agg_trans_viewport.h>
+#include <gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_converter.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_image_filter_rgba.h>
+#include <gfx_utils/graphics/graphic_geometry/agg_bounding_rect.h>
 
 
-
-#include <graphic_transform/agg_image_accessors.h>
-#include <graphic_transform/agg_trans_affine.h>
-
-#include <graphic_spancolor_fill/agg_gradient_lut.h>
-#include <graphic_spancolor_fill/agg_span_allocator.h>
-#include <graphic_spancolor_fill/agg_span_gradient.h>
-#include <graphic_spancolor_fill/agg_span_interpolator_linear.h>
-#include <graphic_spancolor_fill/agg_span_pattern_rgba.h>
-
-#include <graphic_depict/agg_conv_curve.h>
-#include <graphic_depict/agg_conv_dash.h>
-#include <graphic_depict/agg_conv_stroke.h>
-#include <graphic_depict/agg_conv_transform.h>
-
-#include <graphic_renderer/agg_renderer_base.h>
-#include <graphic_renderer/agg_renderer_scanline.h>
-
-#include <graphic_pixfmt/agg_pixfmt_rgba.h>
-#include <graphic_geometry/agg_path_storage.h>
-#include <graphic_color/agg_color_rgba.h>
-#include <graphic_filter/agg_blur.h>
 namespace OHOS {
 class BaseGfxExtendEngine : public BaseGfxEngine
 {

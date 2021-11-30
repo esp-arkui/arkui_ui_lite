@@ -16,9 +16,9 @@
 #ifndef AGG_PIXFMT_BASE_INCLUDED
 #define AGG_PIXFMT_BASE_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_color_gray.h"
-#include "agg_color_rgba.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_color/agg_color_gray.h"
+#include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 
 namespace agg
 {
