@@ -16,13 +16,13 @@
 #define AGG_RENDERER_OUTLINE_AA_INCLUDED
 
 #include <cstdlib>
-#include "agg_array.h"
-#include "agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
 #include "agg_line_aa_basics.h"
-#include "agg_dda_line.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
 #include "agg_ellipse_bresenham.h"
-#include "agg_renderer_base.h"
-#include "agg_clip_liang_barsky.h"
+#include "render/agg_renderer_base.h"
+#include "gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h"
 
 namespace agg
 {

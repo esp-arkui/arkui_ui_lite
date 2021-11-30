@@ -19,7 +19,6 @@
 #include "draw/draw_image.h"
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/graphic_log.h"
-#include <agg_gradient_lut.h>
 #include <components/ui_view_group.h>
 #include "securec.h"
 #include "gif_lib.h"
