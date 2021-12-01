@@ -680,12 +680,12 @@ public:
     /* 替换绘图的当前转换矩阵 */
     void Transform(float sx,float shy,float shx,float sy,float tx,float ty)
     {
-        m_transform=agg::trans_affine(sx, shy, shx, sy, tx, ty);
+        m_transform=agg::TransAffine(sx, shy, shx, sy, tx, ty);
 
     }
 
     /* 获取当前变换矩阵 */
-    const agg::trans_affine& GetTransform() const
+    const agg::TransAffine& GetTransform() const
     {
         return m_transform;
     }
@@ -729,7 +729,7 @@ private:
     BaseGfxExtendEngine::BlendMode blendMode;
 
     /* 用于操作变换矩阵 */
-    agg::trans_affine               m_transform;
+    agg::TransAffine               m_transform;
     GradientControl gradientControl;
     double rotateCenterX;
     double rotateCenterY;
@@ -1139,7 +1139,7 @@ public:
     }
 
     /* 获取当前变换矩阵 */
-    const agg::trans_affine& GetTransform(const Paint& paint) const
+    const agg::TransAffine& GetTransform(const Paint& paint) const
     {
         return paint.GetTransform();
     }

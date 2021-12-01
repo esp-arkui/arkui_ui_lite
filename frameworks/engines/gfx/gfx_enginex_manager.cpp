@@ -450,7 +450,7 @@ void BaseGfxExtendEngine::affine(const Affine& tr)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::affine(const Transformations& tr)
 {
-    affine(agg::trans_affine(tr.affineMatrix[0], tr.affineMatrix[1], tr.affineMatrix[2],
+    affine(agg::TransAffine(tr.affineMatrix[0], tr.affineMatrix[1], tr.affineMatrix[2],
                              tr.affineMatrix[3], tr.affineMatrix[4], tr.affineMatrix[5]));
 }
 
@@ -470,7 +470,7 @@ void BaseGfxExtendEngine::scale(double sx, double sy)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::parallelogram(double x1, double y1, double x2, double y2, const double* para)
 {
-    m_transform *= agg::trans_affine(x1, y1, x2, y2, para);
+    m_transform *= agg::TransAffine(x1, y1, x2, y2, para);
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
     if(!this->is_dash) {
         m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
@@ -1222,7 +1222,7 @@ void BaseGfxExtendEngine::transformImagePath(const Image& img, const double* par
 void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double scaleX=0, double scaleY=0)
 {
     m_rasterizer.reset();
-    agg::trans_affine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
+    agg::TransAffine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
     PathTransform shadow_trans(m_convCurve, transform);
     transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
     if(a!=0){
@@ -1652,7 +1652,7 @@ void BaseGfxExtendEngine::render(bool fillColor)
 void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, int y2,
                         const double* parl,bool isAntiAlias)
 {
-    agg::trans_affine mtx((double)x1,
+    agg::TransAffine mtx((double)x1,
                           (double)y1,
                           (double)x2,
                           (double)y2,
@@ -1663,7 +1663,7 @@ void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, 
     m_rasterizer.reset();
     m_rasterizer.add_path(m_pathTransform);
 
-    typedef agg::span_interpolator_linear<agg::trans_affine> Interpolator;
+    typedef agg::span_interpolator_linear<agg::TransAffine> Interpolator;
     Interpolator interpolator(mtx);
 
     if(m_blendMode == BlendAlpha)

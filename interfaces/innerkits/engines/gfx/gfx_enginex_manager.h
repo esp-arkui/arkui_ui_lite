@@ -139,7 +139,7 @@ public:
     typedef agg::srgba8       Color;
     typedef agg::rect_i       Rect;
     typedef agg::rect_d       RectD;
-    typedef agg::trans_affine Affine;
+    typedef agg::TransAffine Affine;
 
     enum LineJoin
     {
@@ -664,9 +664,9 @@ private:
     double                          m_miterLimit;
     Gradient                        m_fillGradientFlag;
     Gradient                        m_lineGradientFlag;
-    agg::trans_affine               m_fillGradientMatrix;
-    agg::trans_affine               m_lineGradientMatrix;
-    agg::trans_affine               m_fillRadialMatrix;
+    agg::TransAffine               m_fillGradientMatrix;
+    agg::TransAffine               m_lineGradientMatrix;
+    agg::TransAffine               m_fillRadialMatrix;
 
 
     interpolator_type               m_interpolator_type  ;
@@ -693,7 +693,7 @@ private:
 
     agg::path_storage               m_path;
 //    typedef agg::conv_stroke<agg::path_storage> cs_ps(m_path);
-    agg::trans_affine               m_transform;
+    agg::TransAffine               m_transform;
 
     ConvCurve                       m_convCurve;
     ConvDashCurve                   m_convDashCurve;
