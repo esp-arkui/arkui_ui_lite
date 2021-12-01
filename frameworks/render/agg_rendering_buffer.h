@@ -68,24 +68,24 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE       T* buf()          { return m_buf;    }
-        AGG_INLINE const T* buf()    const { return m_buf;    }
-        AGG_INLINE unsigned width()  const { return m_width;  }
-        AGG_INLINE unsigned height() const { return m_height; }
-        AGG_INLINE int      stride() const { return m_stride; }
-        AGG_INLINE unsigned stride_abs() const 
+        GRAPTHIC_INLINE       T* buf()          { return m_buf;    }
+        GRAPTHIC_INLINE const T* buf()    const { return m_buf;    }
+        GRAPTHIC_INLINE unsigned width()  const { return m_width;  }
+        GRAPTHIC_INLINE unsigned height() const { return m_height; }
+        GRAPTHIC_INLINE int      stride() const { return m_stride; }
+        GRAPTHIC_INLINE unsigned stride_abs() const 
         {
             return (m_stride < 0) ? unsigned(-m_stride) : unsigned(m_stride); 
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE       T* row_ptr(int, int y, unsigned) 
+        GRAPTHIC_INLINE       T* row_ptr(int, int y, unsigned) 
         { 
             return m_start + y * (AGG_INT64)m_stride; 
         }
-        AGG_INLINE       T* row_ptr(int y)       { return m_start + y * (AGG_INT64)m_stride; }
-        AGG_INLINE const T* row_ptr(int y) const { return m_start + y * (AGG_INT64)m_stride; }
-        AGG_INLINE row_data row    (int y) const 
+        GRAPTHIC_INLINE       T* row_ptr(int y)       { return m_start + y * (AGG_INT64)m_stride; }
+        GRAPTHIC_INLINE const T* row_ptr(int y) const { return m_start + y * (AGG_INT64)m_stride; }
+        GRAPTHIC_INLINE row_data row    (int y) const 
         { 
             return row_data(0, m_width-1, row_ptr(y)); 
         }
@@ -195,24 +195,24 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE       T* buf()          { return m_buf;    }
-        AGG_INLINE const T* buf()    const { return m_buf;    }
-        AGG_INLINE unsigned width()  const { return m_width;  }
-        AGG_INLINE unsigned height() const { return m_height; }
-        AGG_INLINE int      stride() const { return m_stride; }
-        AGG_INLINE unsigned stride_abs() const 
+        GRAPTHIC_INLINE       T* buf()          { return m_buf;    }
+        GRAPTHIC_INLINE const T* buf()    const { return m_buf;    }
+        GRAPTHIC_INLINE unsigned width()  const { return m_width;  }
+        GRAPTHIC_INLINE unsigned height() const { return m_height; }
+        GRAPTHIC_INLINE int      stride() const { return m_stride; }
+        GRAPTHIC_INLINE unsigned stride_abs() const 
         {
             return (m_stride < 0) ? unsigned(-m_stride) : unsigned(m_stride); 
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE       T* row_ptr(int, int y, unsigned) 
+        GRAPTHIC_INLINE       T* row_ptr(int, int y, unsigned) 
         { 
             return m_rows[y]; 
         }
-        AGG_INLINE       T* row_ptr(int y)       { return m_rows[y]; }
-        AGG_INLINE const T* row_ptr(int y) const { return m_rows[y]; }
-        AGG_INLINE row_data row    (int y) const 
+        GRAPTHIC_INLINE       T* row_ptr(int y)       { return m_rows[y]; }
+        GRAPTHIC_INLINE const T* row_ptr(int y) const { return m_rows[y]; }
+        GRAPTHIC_INLINE row_data row    (int y) const 
         { 
             return row_data(0, m_width-1, m_rows[y]); 
         }

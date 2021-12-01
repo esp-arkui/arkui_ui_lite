@@ -107,11 +107,11 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > RecursiveBlur;
     typedef agg::rendering_buffer RenderingBuffer;
 
-    typedef agg::image_accessor_wrap<pixfmt, agg::wrap_mode_repeat, agg::wrap_mode_repeat> img_source_type;
+    typedef agg::ImageAccessorWrap<pixfmt, agg::WrapModeRepeat, agg::WrapModeRepeat> img_source_type;
 
-    typedef agg::image_accessor_repeat_x<pixfmt, agg::wrap_mode_repeat> img_source_type_x;
-    typedef agg::image_accessor_repeat_y<pixfmt, agg::wrap_mode_repeat> img_source_type_y;
-    typedef agg::image_accessor_norepeat<pixfmt> img_source_type_none;
+    typedef agg::ImageAccessorRepeatX<pixfmt, agg::WrapModeRepeat> img_source_type_x;
+    typedef agg::ImageAccessorRepeatY<pixfmt, agg::WrapModeRepeat> img_source_type_y;
+    typedef agg::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
 
     typedef agg::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
     typedef agg::span_pattern_rgba<img_source_type_x> span_pattern_type_x;

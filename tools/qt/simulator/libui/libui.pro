@@ -132,16 +132,8 @@ SOURCES += \
     ../../../../frameworks/graphics/src/agg_rounded_rect.cpp \
     ../../../../frameworks/graphics/src/agg_sqrt_tables.cpp \
     ../../../../frameworks/graphics/src/agg_trans_affine.cpp \
-    ../../../../frameworks/graphics/src/agg_trans_double_path.cpp \
-    ../../../../frameworks/graphics/src/agg_trans_single_path.cpp \
-    ../../../../frameworks/graphics/src/agg_trans_warp_magnifier.cpp \
-    ../../../../frameworks/graphics/src/agg_vcgen_contour.cpp \
     ../../../../frameworks/graphics/src/agg_vcgen_dash.cpp \
-    ../../../../frameworks/graphics/src/agg_vcgen_markers_term.cpp \
-    ../../../../frameworks/graphics/src/agg_vcgen_smooth_poly1.cpp \
     ../../../../frameworks/graphics/src/agg_vcgen_stroke.cpp \
-    ../../../../frameworks/graphics/src/agg_vpgen_segmentator.cpp \
-    ../../../../frameworks/graphics/src/ctrl/agg_polygon_ctrl.cpp \
     ../../../../frameworks/imgdecode/cache_manager.cpp \
     ../../../../frameworks/imgdecode/file_img_decoder.cpp \
     ../../../../frameworks/imgdecode/image_load.cpp \
@@ -239,16 +231,9 @@ HEADERS += \
     ../../../../frameworks/graphics/include/graphic_spancolor_fill/agg_span_pattern_rgba.h \
     ../../../../frameworks/graphics/include/graphic_transform/agg_image_accessors.h \
     ../../../../frameworks/graphics/include/graphic_transform/agg_trans_affine.h \
-    ../../../../frameworks/graphics/include/graphic_transform/agg_trans_double_path.h \
-    ../../../../frameworks/graphics/include/graphic_transform/agg_trans_single_path.h \
     ../../../../frameworks/graphics/include/graphic_transform/agg_trans_viewport.h \
-    ../../../../frameworks/graphics/include/graphic_transform/agg_trans_warp_magnifier.h \
-    ../../../../frameworks/graphics/include/graphic_vertex_generate/agg_vcgen_contour.h \
     ../../../../frameworks/graphics/include/graphic_vertex_generate/agg_vcgen_dash.h \
-    ../../../../frameworks/graphics/include/graphic_vertex_generate/agg_vcgen_markers_term.h \
-    ../../../../frameworks/graphics/include/graphic_vertex_generate/agg_vcgen_smooth_poly1.h \
     ../../../../frameworks/graphics/include/graphic_vertex_generate/agg_vcgen_stroke.h \
-    ../../../../frameworks/graphics/include/graphic_vertex_generate/agg_vpgen_segmentator.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv_rgb16.h \
     ../../../../frameworks/graphics/include/util/agg_color_conv_rgb8.h \

@@ -1543,7 +1543,7 @@ public:
 		// hence the cast.
         BaseGfxExtendEngine::Image& imgc = const_cast<BaseGfxExtendEngine::Image&>(img);
         BaseGfxExtendEngine::PixFormat img_pixf(imgc.renBuf);
-        typedef agg::image_accessor_clone<BaseGfxExtendEngine::PixFormat> img_source_type;
+        typedef agg::ImageAccessorClone<BaseGfxExtendEngine::PixFormat> img_source_type;
 		img_source_type source(img_pixf);
 
 //        typedef agg::span_allocator<ColorType> span_alloc;
