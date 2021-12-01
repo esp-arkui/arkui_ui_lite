@@ -19,8 +19,8 @@
 #include <limits>
 #include <cstdlib>
 #include <cstring>
-#include "agg_basics.h"
-#include "agg_renderer_base.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "render/agg_renderer_base.h"
 
 namespace agg
 {

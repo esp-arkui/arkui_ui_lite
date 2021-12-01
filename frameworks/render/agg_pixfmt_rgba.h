@@ -26,8 +26,8 @@
 
 #include <cstring>
 #include <cmath>
-#include "agg_pixfmt_base.h"
-#include "agg_rendering_buffer.h"
+#include "render/agg_pixfmt_base.h"
+#include "render/agg_rendering_buffer.h"
 
 namespace agg
 {

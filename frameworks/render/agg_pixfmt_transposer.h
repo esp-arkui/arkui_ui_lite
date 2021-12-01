@@ -16,7 +16,7 @@
 #ifndef AGG_PIXFMT_TRANSPOSER_INCLUDED
 #define AGG_PIXFMT_TRANSPOSER_INCLUDED
 
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

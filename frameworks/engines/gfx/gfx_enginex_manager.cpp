@@ -15,8 +15,6 @@
 
 #include "engines/gfx/gfx_enginex_manager.h"
 
-#include <agg_scanline_p.h>
-
 static const double g_approxScale = 2.0;
 namespace OHOS {
 BaseGfxExtendEngine::~BaseGfxExtendEngine()
