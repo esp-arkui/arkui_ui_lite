@@ -130,7 +130,6 @@ SOURCES += \
     ../../../../../utils/frameworks/graphics/graphic_common/agg_sqrt_tables.cpp \
     ../../../../../utils/frameworks/graphics/graphic_filter/agg_image_filters.cpp \
     ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_affine.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_double_path.cpp \
     ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_single_path.cpp \
     ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_warp_magnifier.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_contour.cpp \
@@ -239,7 +238,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_pattern_rgba.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_image_accessors.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_affine.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_double_path.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_single_path.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_viewport.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_warp_magnifier.h \
