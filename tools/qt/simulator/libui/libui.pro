@@ -189,14 +189,12 @@ HEADERS += \
     ../../../../frameworks/render/agg_pixfmt_rgba.h \
     ../../../../frameworks/render/agg_pixfmt_transposer.h \
     ../../../../frameworks/render/agg_renderer_base.h \
-    ../../../../frameworks/render/agg_renderer_outline_aa.h \
     ../../../../frameworks/render/agg_renderer_scanline.h \
     ../../../../frameworks/render/agg_rendering_buffer.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/agg_color_gray.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/agg_color_rgba.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_basics.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_embedded_raster_fonts.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_gamma_functions.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_gamma_lut.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_math.h \
@@ -250,7 +248,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_markers_term.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_smooth_poly1.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vpgen_segmentator.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb16.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb8.h \

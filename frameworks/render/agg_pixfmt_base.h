@@ -20,7 +20,7 @@
 #include "gfx_utils/graphics/graphic_color/agg_color_gray.h"
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 
-namespace agg
+namespace OHOS
 {
     struct pixfmt_gray_tag
     {
