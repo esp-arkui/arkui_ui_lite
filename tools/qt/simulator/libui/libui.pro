@@ -138,7 +138,6 @@ SOURCES += \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_markers_term.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_smooth_poly1.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_stroke.cpp \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_line_profile_aa.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vpgen_segmentator.cpp \
@@ -241,7 +240,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_single_path.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_viewport.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_warp_magnifier.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_ctrl.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_contour.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h \

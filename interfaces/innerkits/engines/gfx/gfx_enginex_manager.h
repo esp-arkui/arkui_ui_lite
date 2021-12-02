@@ -41,7 +41,6 @@
 #include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_stroke.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_transform.h>
-#include <gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h>
 #include <gfx_utils/graphics/graphic_filter/agg_blur.h>
 #include <gfx_utils/graphics/graphic_filter/agg_image_filters.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_path_storage.h>
@@ -107,7 +106,6 @@ class BaseGfxExtendEngine : public BaseGfxEngine
 //    typedef OHOS::conv_stroke<OHOS::path_storage>       t_conv_stroke;
 
     typedef OHOS::conv_transform<ConvDashStroke>   DashStrokeTransform;
-    typedef OHOS::shadow_ctrl<ColorType> ShadowCtrl;
     typedef OHOS::stack_blur<ColorType, OHOS::stack_blur_calc_rgba<>> StackBlur;
     typedef OHOS::recursive_blur<ColorType, OHOS::recursive_blur_calc_rgb<> > RecursiveBlur;
     typedef OHOS::rendering_buffer RenderingBuffer;
@@ -202,8 +200,6 @@ public:
         }
         int width()  const { return renBuf.width(); }
         int height() const { return renBuf.height(); }
-        void premultiply();
-        void demultiply();
     };
 
     /**
@@ -376,9 +372,9 @@ public:
     void affine(const Transformations& tr);
     void rotate(double angle);
     void scale(double sx, double sy);
-    void skew(double sx, double sy);
+    // void skew(double sx, double sy);
     void translate(double x, double y);
-    void parallelogram(double x1, double y1, double x2, double y2, const double* para);
+    // void parallelogram(double x1, double y1, double x2, double y2, const double* para);
     void viewport(double worldX1,  double worldY1,  double worldX2,  double worldY2,
                   double screenX1, double screenY1, double screenX2, double screenY2,
                   ViewportOption opt=XMidYMid);
@@ -588,25 +584,24 @@ public:
     }
 
     void SetShadowColor(int r, int g, int b, int a){
-        m_shadow_ctrl.fill_color(Color(r, g, b, a));
+        shadowColor_=Color(r, g, b, a);
 
     }
     void SetShadowOffsetX(double x){
-        m_shadow_ctrl.SetOffsetX(x);
+        shadowOffsetX_=x;
 
     }
     void SetShadowOffsetY(double y){
-        m_shadow_ctrl.SetOffsetY(y);
+        shadowOffsetY_=y;
 
     }
     void SetShadowOffset(double x,double y){
-        m_shadow_ctrl.SetOffsetX(x);
-        m_shadow_ctrl.SetOffsetY(y);
+        shadowOffsetX_=x;
+        shadowOffsetY_=y;
 
     }
     void SetShadowBlurRadius(double radius){
-        m_shadow_ctrl.SetRadius(radius);
-        m_shadow_ctrl.SetIsBlur(true);
+        shadowBlurRadius_=radius;
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
@@ -707,8 +702,7 @@ private:
     PathTransform                   m_pathTransform;
     StrokeTransform                 m_strokeTransform;
     DashStrokeTransform             m_dashStrokeTransform;
-//    t_conv_stroke m_conv_stroke;
-    ShadowCtrl m_shadow_ctrl;
+
     StackBlur m_stack_blur;
     RecursiveBlur m_recursive_blur;
     //dash
@@ -716,7 +710,10 @@ private:
     float* dashes;
     unsigned int ndashes;
     float dDashOffset;
-
+    double shadowOffsetY_;
+    double shadowOffsetX_;
+    double shadowBlurRadius_;
+    ColorType shadowColor_;
 
 };
 

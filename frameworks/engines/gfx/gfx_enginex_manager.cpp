@@ -93,11 +93,14 @@ BaseGfxExtendEngine::BaseGfxExtendEngine() :
     m_pathTransform(m_convCurve, m_transform),
     m_strokeTransform(m_convStroke, m_transform),
     m_dashStrokeTransform(m_convDashStroke,m_transform),
-    m_shadow_ctrl(4),
     is_dash(false),
     dashes(nullptr),
     ndashes(0),
-    dDashOffset(0)
+    dDashOffset(0),
+    shadowColor_(Color(255, 255, 255)),
+    shadowOffsetX_(0),
+    shadowOffsetY_(0),
+    shadowBlurRadius_(0)
 {
     lineCap(m_lineCap);
     lineJoin(m_lineJoin);
@@ -118,8 +121,7 @@ BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine &o)
       m_convDashStroke(m_convDashCurve),
       m_pathTransform(m_convCurve, m_transform),
       m_strokeTransform(m_convStroke, m_transform),
-      m_dashStrokeTransform(m_convDashStroke,m_transform),
-      m_shadow_ctrl(4)
+      m_dashStrokeTransform(m_convDashStroke,m_transform)
 {
     m_rbuf=o.m_rbuf;
     m_pixFormat=PixFormat(m_rbuf);
@@ -169,7 +171,10 @@ BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine &o)
     m_lineWidth=o.m_lineWidth;
     m_evenOddFlag=o.m_evenOddFlag;
     m_transform=o.m_transform;
-
+    shadowBlurRadius_=o.shadowBlurRadius_;
+    shadowColor_=o.shadowColor_;
+    shadowOffsetX_=o.shadowOffsetX_;
+    shadowOffsetY_=o.shadowOffsetY_;
     is_dash = o.is_dash;
     // set dashes
     if (is_dash) {
@@ -399,26 +404,26 @@ bool BaseGfxExtendEngine::inBox(double worldX, double worldY) const
 }
 
 
-//------------------------------------------------------------------------
-BaseGfxExtendEngine::Transformations BaseGfxExtendEngine::transformations() const
-{
-    Transformations tr;
-    m_transform.store_to(tr.affineMatrix);
-    return tr;
-}
+// //------------------------------------------------------------------------
+// BaseGfxExtendEngine::Transformations BaseGfxExtendEngine::transformations() const
+// {
+//     Transformations tr;
+//     m_transform.store_to(tr.affineMatrix);
+//     return tr;
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::transformations(const Transformations& tr)
-{
-    m_transform.load_from(tr.affineMatrix);
-    m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    if(!this->is_dash) {
-        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    } else {
-        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    }
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::transformations(const Transformations& tr)
+// {
+//     m_transform.load_from(tr.affineMatrix);
+//     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
+//     if(!this->is_dash) {
+//         m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+//     } else {
+//         m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+//     }
+// }
 
 
 //------------------------------------------------------------------------
@@ -430,7 +435,7 @@ void BaseGfxExtendEngine::resetTransformations()
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::rotate(double angle)          { m_transform *= OHOS::trans_affine_rotation(angle);   }
-void BaseGfxExtendEngine::skew(double sx, double sy)    { m_transform *= OHOS::trans_affine_skewing(sx, sy);   }
+// void BaseGfxExtendEngine::skew(double sx, double sy)    { m_transform *= OHOS::trans_affine_skewing(sx, sy);   }
 void BaseGfxExtendEngine::translate(double x, double y) { m_transform *= OHOS::trans_affine_translation(x, y); }
 
 //------------------------------------------------------------------------
@@ -465,17 +470,17 @@ void BaseGfxExtendEngine::scale(double sx, double sy)
 }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::parallelogram(double x1, double y1, double x2, double y2, const double* para)
-{
-    m_transform *= OHOS::trans_affine(x1, y1, x2, y2, para);
-    m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    if(!this->is_dash) {
-        m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    } else {
-        m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
-    }
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::parallelogram(double x1, double y1, double x2, double y2, const double* para)
+// {
+//     m_transform *= OHOS::trans_affine(x1, y1, x2, y2, para);
+//     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
+//     if(!this->is_dash) {
+//         m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+//     } else {
+//         m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+//     }
+// }
 
 
 //------------------------------------------------------------------------
@@ -1222,7 +1227,7 @@ void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double s
     m_rasterizer.reset();
     OHOS::trans_affine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
     PathTransform shadow_trans(m_convCurve, transform);
-    transform.translate(m_shadow_ctrl.GetOffsetX(), m_shadow_ctrl.GetOffsetY());
+    transform.translate(shadowOffsetX_, shadowOffsetY_);
     if(a!=0){
         transform *= OHOS::trans_affine_translation(-x, -y);
         transform *= OHOS::trans_affine_rotation(a* 3.1415926 / 180.0);
@@ -1234,18 +1239,18 @@ void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double s
         transform *= OHOS::trans_affine_translation(x, y);
     }
     m_rasterizer.add_path(shadow_trans);
-    OHOS::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, m_shadow_ctrl.color());
-    if (m_shadow_ctrl.IsBlur()) {
+    OHOS::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, shadowColor_);
+    if (shadowBlurRadius_ != 0) {
         RectD bbox;
         bounding_rect_single(0, &bbox, shadow_trans);
-        bbox.x1 -= m_shadow_ctrl.GetRadius();
-        bbox.y1 -= m_shadow_ctrl.GetRadius();
-        bbox.x2 += m_shadow_ctrl.GetRadius();
-        bbox.y2 += m_shadow_ctrl.GetRadius();
+        bbox.x1 -= shadowBlurRadius_;
+        bbox.y1 -= shadowBlurRadius_;
+        bbox.x2 += shadowBlurRadius_;
+        bbox.y2 += shadowBlurRadius_;
         RenderingBuffer m_rbuf_window;
         PixFormat pixf2(m_rbuf_window);
         pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
-        m_stack_blur.blur(pixf2, OHOS::uround(m_shadow_ctrl.GetRadius()));
+        m_stack_blur.blur(pixf2, OHOS::uround(shadowBlurRadius_));
     }
     m_rasterizer.reset();
 }
@@ -1863,19 +1868,6 @@ void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, u
 }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::Image::premultiply()
-{
-    PixFormat pixf(renBuf);
-    pixf.premultiply();
-}
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::Image::demultiply()
-{
-    PixFormat pixf(renBuf);
-    pixf.demultiply();
-}
 
 bool BaseGfxExtendEngine::bounding_rect_single(unsigned int path_id, RectD* rect, PathTransform& path)
 {
