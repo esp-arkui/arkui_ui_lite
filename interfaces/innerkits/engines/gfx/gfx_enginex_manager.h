@@ -110,10 +110,10 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef OHOS::recursive_blur<ColorType, OHOS::recursive_blur_calc_rgb<> > RecursiveBlur;
     typedef OHOS::rendering_buffer RenderingBuffer;
 
-    typedef OHOS::ImageAccessorWrap<pixfmt, agg::WrapModeRepeat, agg::WrapModeRepeat> img_source_type;
+    typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> img_source_type;
 
-    typedef OHOS::ImageAccessorRepeatX<pixfmt, agg::WrapModeRepeat> img_source_type_x;
-    typedef OHOS::ImageAccessorRepeatY<pixfmt, agg::WrapModeRepeat> img_source_type_y;
+    typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> img_source_type_x;
+    typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> img_source_type_y;
     typedef OHOS::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
 
     typedef OHOS::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
@@ -692,7 +692,7 @@ private:
     bool                            m_evenOddFlag;
 
     OHOS::path_storage               m_path;
-//    typedef agg::conv_stroke<agg::path_storage> cs_ps(m_path);
+//    typedef OHOS::conv_stroke<OHOS::path_storage> cs_ps(m_path);
     OHOS::TransAffine               m_transform;
 
     ConvCurve                       m_convCurve;

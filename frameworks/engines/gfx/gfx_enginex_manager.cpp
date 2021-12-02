@@ -453,7 +453,7 @@ void BaseGfxExtendEngine::affine(const Affine& tr)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::affine(const Transformations& tr)
 {
-    affine(agg::TransAffine(tr.affineMatrix[0], tr.affineMatrix[1], tr.affineMatrix[2],
+    affine(OHOS::TransAffine(tr.affineMatrix[0], tr.affineMatrix[1], tr.affineMatrix[2],
                              tr.affineMatrix[3], tr.affineMatrix[4], tr.affineMatrix[5]));
 }
 
@@ -1225,7 +1225,7 @@ void BaseGfxExtendEngine::transformImagePath(const Image& img, const double* par
 void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double scaleX=0, double scaleY=0)
 {
     m_rasterizer.reset();
-    agg::TransAffine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
+    OHOS::TransAffine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
     PathTransform shadow_trans(m_convCurve, transform);
     transform.translate(shadowOffsetX_, shadowOffsetY_);
     if(a!=0){
@@ -1546,7 +1546,7 @@ public:
 		// hence the cast.
         BaseGfxExtendEngine::Image& imgc = const_cast<BaseGfxExtendEngine::Image&>(img);
         BaseGfxExtendEngine::PixFormat img_pixf(imgc.renBuf);
-        typedef agg::ImageAccessorClone<BaseGfxExtendEngine::PixFormat> img_source_type;
+        typedef OHOS::ImageAccessorClone<BaseGfxExtendEngine::PixFormat> img_source_type;
 		img_source_type source(img_pixf);
 
 //        typedef OHOS::span_allocator<ColorType> span_alloc;
@@ -1655,7 +1655,7 @@ void BaseGfxExtendEngine::render(bool fillColor)
 void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, int y2,
                         const double* parl,bool isAntiAlias)
 {
-    agg::TransAffine mtx((double)x1,
+    OHOS::TransAffine mtx((double)x1,
                           (double)y1,
                           (double)x2,
                           (double)y2,
@@ -1666,7 +1666,7 @@ void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, 
     m_rasterizer.reset();
     m_rasterizer.add_path(m_pathTransform);
 
-    typedef agg::span_interpolator_linear<agg::TransAffine> Interpolator;
+    typedef OHOS::span_interpolator_linear<OHOS::TransAffine> Interpolator;
     Interpolator interpolator(mtx);
 
     if(m_blendMode == BlendAlpha)
