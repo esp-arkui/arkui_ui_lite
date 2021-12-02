@@ -13,8 +13,18 @@
  * limitations under the License.
  */
 
-#ifndef AGG_RENDERER_SCANLINE_INCLUDED
-#define AGG_RENDERER_SCANLINE_INCLUDED
+/**
+* @file agg_renderer_scanline.h
+*
+* @brief Defines 扫描线渲染器
+*
+* @since 1.0
+* @version 1.0
+*/
+
+
+#ifndef OHOS_RENDERER_SCANLINE_INCLUDED
+#define OHOS_RENDERER_SCANLINE_INCLUDED
 
 #include <limits>
 #include <cstdlib>
@@ -63,27 +73,16 @@ namespace OHOS
     {
         if(ras.rewind_scanlines())
         {
-            // Explicitly convert "color" to the BaseRenderer color type.
-            // For example, it can be called with color type "rgba", while
-            // "rgba8" is needed. Otherwise it will be implicitly 
-            // converted in the loop many times.
-            //----------------------
             typename BaseRenderer::color_type ren_color = color;
 
             sl.reset(ras.min_x(), ras.max_x());
             while(ras.sweep_scanline(sl))
             {
-                //render_scanline_aa_solid(sl, ren, ren_color);
-
-                // This code is equivalent to the above call (copy/paste). 
-                // It's just a "manual" optimization for old compilers,
-                // like Microsoft Visual C++ v6.0
-                //-------------------------------
                 int y = sl.y();
                 unsigned num_spans = sl.num_spans();
                 typename Scanline::const_iterator span = sl.begin();
 
-                for(;;)
+                while (true)
                 {
                     int x = span->x;
                     if(span->len > 0)
@@ -98,7 +97,10 @@ namespace OHOS
                                         ren_color, 
                                         *(span->covers));
                     }
-                    if(--num_spans == 0) break;
+                    if(--num_spans == 0)
+                    {
+                         break;
+                    }
                     ++span;
                 }
             }
@@ -138,18 +140,6 @@ namespace OHOS
         color_type m_color;
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
     //======================================================render_scanline_aa
     template<class Scanline, class BaseRenderer, 
              class SpanAllocator, class SpanGenerator> 
@@ -160,7 +150,7 @@ namespace OHOS
 
         unsigned num_spans = sl.num_spans();
         typename Scanline::const_iterator span = sl.begin();
-        for(;;)
+        while (true)
         {
             int x = span->x;
             int len = span->len;
@@ -172,7 +162,10 @@ namespace OHOS
             ren.blend_color_hspan(x, y, len, colors, 
                                   (span->len < 0) ? 0 : covers, *covers);
 
-            if(--num_spans == 0) break;
+            if(--num_spans == 0)
+            {
+                break;
+            }
             ++span;
         }
     }
@@ -236,11 +229,6 @@ namespace OHOS
         span_gen_type* m_span_gen;
     };
 
-
-
-
-
-
     //===============================================render_scanline_bin_solid
     template<class Scanline, class BaseRenderer, class ColorT> 
     void render_scanline_bin_solid(const Scanline& sl, 
@@ -271,22 +259,11 @@ namespace OHOS
     {
         if(ras.rewind_scanlines())
         {
-            // Explicitly convert "color" to the BaseRenderer color type.
-            // For example, it can be called with color type "rgba", while
-            // "rgba8" is needed. Otherwise it will be implicitly 
-            // converted in the loop many times.
-            //----------------------
             typename BaseRenderer::color_type ren_color(color);
 
             sl.reset(ras.min_x(), ras.max_x());
             while(ras.sweep_scanline(sl))
             {
-                //render_scanline_bin_solid(sl, ren, ren_color);
-
-                // This code is equivalent to the above call (copy/paste). 
-                // It's just a "manual" optimization for old compilers,
-                // like Microsoft Visual C++ v6.0
-                //-------------------------------
                 unsigned num_spans = sl.num_spans();
                 typename Scanline::const_iterator span = sl.begin();
                 for(;;)
@@ -328,7 +305,8 @@ namespace OHOS
         void prepare() {}
 
         //--------------------------------------------------------------------
-        template<class Scanline> void render(const Scanline& sl)
+        template<class Scanline>
+        void render(const Scanline& sl)
         {
             render_scanline_bin_solid(sl, *m_ren, m_color);
         }
@@ -337,13 +315,6 @@ namespace OHOS
         base_ren_type* m_ren;
         color_type m_color;
     };
-
-
-
-
-
-
-
 
     //======================================================render_scanline_bin
     template<class Scanline, class BaseRenderer, 
@@ -427,15 +398,6 @@ namespace OHOS
         span_gen_type* m_span_gen;
     };
 
-
-
-
-
-
-
-
-
-
     //========================================================render_scanlines
     template<class Rasterizer, class Scanline, class Renderer>
     void render_scanlines(Rasterizer& ras, Scanline& sl, Renderer& ren)
@@ -471,11 +433,6 @@ namespace OHOS
         }
     }
 
-
-
-
-
-
     //=============================================render_scanlines_compound
     template<class Rasterizer, 
              class ScanlineAA, 
@@ -510,21 +467,15 @@ namespace OHOS
                 typename ScanlineAA::const_iterator span_aa;
                 if(num_styles == 1)
                 {
-                    // Optimization for a single style. Happens often
-                    //-------------------------
                     if(ras.sweep_scanline(sl_aa, 0))
                     {
                         style = ras.style(0);
                         if(sh.is_solid(style))
                         {
-                            // Just solid fill
-                            //-----------------------
                             render_scanline_aa_solid(sl_aa, ren, sh.color(style));
                         }
                         else
                         {
-                            // Arbitrary span generator
-                            //-----------------------
                             span_aa   = sl_aa.begin();
                             num_spans = sl_aa.num_spans();
                             for(;;)
@@ -551,8 +502,6 @@ namespace OHOS
                 {
                     if(ras.sweep_scanline(sl_bin, -1))
                     {
-                        // Clear the spans of the mix_buffer
-                        //--------------------
                         typename ScanlineBin::const_iterator span_bin = sl_bin.begin();
                         num_spans = sl_bin.num_spans();
                         for(;;)
@@ -580,8 +529,6 @@ namespace OHOS
                                 num_spans = sl_aa.num_spans();
                                 if(solid)
                                 {
-                                    // Just solid fill
-                                    //-----------------------
                                     for(;;)
                                     {
                                         color_type c = sh.color(style);
@@ -608,8 +555,6 @@ namespace OHOS
                                 }
                                 else
                                 {
-                                    // Arbitrary span generator
-                                    //-----------------------
                                     for(;;)
                                     {
                                         len = span_aa->len;
@@ -642,9 +587,6 @@ namespace OHOS
                                 }
                             }
                         }
-
-                        // Emit the blended result as a color hspan
-                        //-------------------------
                         span_bin = sl_bin.begin();
                         num_spans = sl_bin.num_spans();
                         for(;;)
@@ -696,21 +638,15 @@ namespace OHOS
                 typename ScanlineAA::const_iterator span_aa;
                 if(num_styles == 1)
                 {
-                    // Optimization for a single style. Happens often
-                    //-------------------------
                     if(ras.sweep_scanline(sl_aa, 0))
                     {
                         style = ras.style(0);
                         if(sh.is_solid(style))
                         {
-                            // Just solid fill
-                            //-----------------------
                             render_scanline_aa_solid(sl_aa, ren, sh.color(style));
                         }
                         else
                         {
-                            // Arbitrary span generator
-                            //-----------------------
                             span_aa   = sl_aa.begin();
                             num_spans = sl_aa.num_spans();
                             for(;;)
@@ -767,8 +703,6 @@ namespace OHOS
                                 sl_y      = sl_aa.y();
                                 if(solid)
                                 {
-                                    // Just solid fill
-                                    //-----------------------
                                     for(;;)
                                     {
                                         color_type c = sh.color(style);
@@ -799,8 +733,6 @@ namespace OHOS
                                 }
                                 else
                                 {
-                                    // Arbitrary span generator
-                                    //-----------------------
                                     for(;;)
                                     {
                                         len = span_aa->len;
@@ -848,7 +780,6 @@ namespace OHOS
             } //while((num_styles = ras.sweep_styles()) > 0)
         } //if(ras.rewind_scanlines())
     }
-
 
 }
 

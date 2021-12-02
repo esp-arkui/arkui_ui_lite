@@ -1371,7 +1371,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern1()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->fill(paint);
 }
 
@@ -1402,7 +1402,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern2()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->stroke(paint);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern3()
@@ -1432,7 +1432,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern3()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->fill(paint);
 }
 
@@ -1463,7 +1463,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern4()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->stroke(paint);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern5()
@@ -1493,7 +1493,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern5()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->fill(paint);
 }
 
@@ -1524,7 +1524,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern6()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->stroke(paint);
 }
 void UITestCanvas::UIKitCanvasTestcreatePattern7()
@@ -1554,7 +1554,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern7()
             static_cast<int16_t>(-sin((54 + 72 * i - rot) / pi * UI_PI) * innerR + y)});
     }
 //----------------------------------------五角星----------------------------------------------------------------//
-//    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->fill(paint);
 }
 
@@ -1586,6 +1586,7 @@ void UITestCanvas::UIKitCanvasTestcreatePattern8()
     }
 //----------------------------------------五角星----------------------------------------------------------------//
 //    canvas->DrawPath(paint);
+    canvas->ClosePath();
     canvas->stroke(paint);
 }
 
@@ -1620,7 +1621,7 @@ void UITestCanvas::UIKitCanvasTestLinearGradient1(){
         int32_t rot = 0;
         int32_t outerR = 80;
         int32_t innerR = 40;
-        int32_t x = 80;
+        int32_t x = 180;
         int32_t y = 80;
         float pi = 180.0;
         canvas->BeginPath();
@@ -1665,7 +1666,7 @@ void UITestCanvas::UIKitCanvasTestLinearGradient2(){
         int32_t rot = 0;
         int32_t outerR = 80;
         int32_t innerR = 40;
-        int32_t x = 80;
+        int32_t x = 180;
         int32_t y = 80;
         float pi = 180.0;
         canvas->BeginPath();
@@ -1710,7 +1711,7 @@ void UITestCanvas::UIKitCanvasTestRadialGradient1(){
         int32_t rot = 0;
         int32_t outerR = 80;
         int32_t innerR = 40;
-        int32_t x = 80;
+        int32_t x = 180;
         int32_t y = 80;
         float pi = 180.0;
         canvas->BeginPath();
@@ -1750,7 +1751,7 @@ void UITestCanvas::UIKitCanvasTestRadialGradient2(){
         int32_t rot = 0;
         int32_t outerR = 80;
         int32_t innerR = 40;
-        int32_t x = 80;
+        int32_t x = 180;
         int32_t y = 80;
         float pi = 180.0;
         canvas->BeginPath();

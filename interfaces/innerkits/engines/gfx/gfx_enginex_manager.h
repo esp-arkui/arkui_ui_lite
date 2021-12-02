@@ -31,11 +31,11 @@
 #include <render/agg_renderer_base.h>
 #include <render/agg_renderer_scanline.h>
 
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_gradient_lut.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_allocator.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_gradient.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_interpolator_linear.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_pattern_rgba.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/gradient_lut.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/span_allocator_converter.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/span_gradient.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/span_interpolator.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/span_pattern_rgba.h>
 
 #include <gfx_utils/graphics/graphic_depict/agg_conv_curve.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
@@ -51,7 +51,6 @@
 
 #include <gfx_utils/graphics/graphic_transform/agg_trans_viewport.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_converter.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_image_filter_rgba.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_bounding_rect.h>
 
@@ -77,10 +76,10 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef OHOS::pixfmt_bgra32 pixfmt;
 
 
-    typedef OHOS::renderer_base<PixFormat>        RendererBase;
-    typedef OHOS::renderer_base<PixFormatComp>    RendererBaseComp;
-    typedef OHOS::renderer_base<PixFormatPre>     RendererBasePre;
-    typedef OHOS::renderer_base<PixFormatCompPre> RendererBaseCompPre;
+    typedef OHOS::RendererBase<PixFormat>        RendererBase;
+    typedef OHOS::RendererBase<PixFormatComp>    RendererBaseComp;
+    typedef OHOS::RendererBase<PixFormatPre>     RendererBasePre;
+    typedef OHOS::RendererBase<PixFormatCompPre> RendererBaseCompPre;
 
     typedef OHOS::renderer_scanline_aa_solid<RendererBase>     RendererSolid;
     typedef OHOS::renderer_scanline_aa_solid<RendererBaseComp> RendererSolidComp;
@@ -89,10 +88,10 @@ class BaseGfxExtendEngine : public BaseGfxEngine
     typedef OHOS::pod_auto_array<ColorType, 256> GradientArray;
     typedef OHOS::gradient_lut<OHOS::color_interpolator<OHOS::srgba8>, 1024> color_func_type;
 
-    typedef OHOS::gradient_radial_focus gradient_func_type;
+    typedef OHOS::GradientRadialCalculate gradient_func_type;
     typedef OHOS::span_interpolator_linear<> interpolator_type;
 
-    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::gradient_x,      color_func_type> LinearGradientSpan;
+    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::GradientLinearCalculate,      color_func_type> LinearGradientSpan;
 //    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::gradient_circle, GradientArray> RadialGradientSpan;
     typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, gradient_func_type, color_func_type> RadialGradientSpan;
 
@@ -460,7 +459,6 @@ public:
     void drawPath(DrawPathFlag flag = FillAndStroke);
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 
-
     void stroke();
 
     // Image Transformations
@@ -470,19 +468,6 @@ public:
 
     void imageResample(ImageResample f);
     ImageResample imageResample() const;
-
-//    void transformImage(const Image& img,
-//                           int imgX1,    int imgY1,    int imgX2,    int imgY2,
-//                        double dstX1, double dstY1, double dstX2, double dstY2);
-
-//    void transformImage(const Image& img,
-//                        double dstX1, double dstY1, double dstX2, double dstY2);
-
-//    void transformImage(const Image& img,
-//                        int imgX1, int imgY1, int imgX2, int imgY2,
-//                        const double* parallelogram);
-
-//    void transformImage(const Image& img, const double* parallelogram);
 
     void transformImage(const Image& img,
                                int imgX1,    int imgY1,    int imgX2,    int imgY2,
@@ -689,7 +674,7 @@ private:
     OHOS::span_interpolator_linear<> m_fillGradientInterpolator;
     OHOS::span_interpolator_linear<> m_lineGradientInterpolator;
 
-    OHOS::gradient_x                 m_linearGradientFunction;
+    OHOS::GradientLinearCalculate                 m_linearGradientFunction;
 //    OHOS::gradient_circle            m_radialGradientFunction;
     gradient_func_type              m_radialGradientFunction;//TODO：m_fillRadialMatrix
 

@@ -13,8 +13,18 @@
  * limitations under the License.
  */
 
-#ifndef AGG_RENDERER_BASE_INCLUDED
-#define AGG_RENDERER_BASE_INCLUDED
+
+/**
+* @file agg_renderer_base.h
+*
+* @brief Defines 基础渲染器
+*
+* @since 1.0
+* @version 1.0
+*/
+
+#ifndef OHOS_RENDERER_BASE_INCLUDED
+#define OHOS_RENDERER_BASE_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "render/agg_rendering_buffer.h"
@@ -22,8 +32,10 @@
 namespace OHOS
 {
 
-    //-----------------------------------------------------------renderer_base
-    template<class PixelFormat> class renderer_base
+    //-----------------------------------------------------------RendererBase
+    template<class PixelFormat>
+
+    class RendererBase
     {
     public:
         typedef PixelFormat pixfmt_type;
@@ -31,8 +43,8 @@ namespace OHOS
         typedef typename pixfmt_type::row_data row_data;
 
         //--------------------------------------------------------------------
-        renderer_base() : m_ren(0), m_clip_box(1, 1, 0, 0) {}
-        explicit renderer_base(pixfmt_type& ren) :
+        RendererBase() : m_ren(0), m_clip_box(1, 1, 0, 0) {}
+        explicit RendererBase(pixfmt_type& ren) :
             m_ren(&ren),
             m_clip_box(0, 0, ren.width() - 1, ren.height() - 1)
         {}
@@ -472,10 +484,6 @@ namespace OHOS
                 rsrc.y2 = rect_src_ptr->y2 + 1;
             }
 
-            // Version with xdst, ydst (absolute positioning)
-            //rect_i rdst(xdst, ydst, xdst + rsrc.x2 - rsrc.x1, ydst + rsrc.y2 - rsrc.y1);
-
-            // Version with dx, dy (relative positioning)
             rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
 
             rect_i rc = clip_rect_area(rdst, rsrc, src.width(), src.height());
@@ -519,10 +527,6 @@ namespace OHOS
                 rsrc.y2 = rect_src_ptr->y2 + 1;
             }
 
-            // Version with xdst, ydst (absolute positioning)
-            //rect_i rdst(xdst, ydst, xdst + rsrc.x2 - rsrc.x1, ydst + rsrc.y2 - rsrc.y1);
-
-            // Version with dx, dy (relative positioning)
             rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
             rect_i rc = clip_rect_area(rdst, rsrc, src.width(), src.height());
 
@@ -590,10 +594,6 @@ namespace OHOS
                 rsrc.y2 = rect_src_ptr->y2 + 1;
             }
 
-            // Version with xdst, ydst (absolute positioning)
-            //rect_i rdst(xdst, ydst, xdst + rsrc.x2 - rsrc.x1, ydst + rsrc.y2 - rsrc.y1);
-
-            // Version with dx, dy (relative positioning)
             rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
             rect_i rc = clip_rect_area(rdst, rsrc, src.width(), src.height());
 
@@ -662,10 +662,6 @@ namespace OHOS
                 rsrc.y2 = rect_src_ptr->y2 + 1;
             }
 
-            // Version with xdst, ydst (absolute positioning)
-            //rect_i rdst(xdst, ydst, xdst + rsrc.x2 - rsrc.x1, ydst + rsrc.y2 - rsrc.y1);
-
-            // Version with dx, dy (relative positioning)
             rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
             rect_i rc = clip_rect_area(rdst, rsrc, src.width(), src.height());
 

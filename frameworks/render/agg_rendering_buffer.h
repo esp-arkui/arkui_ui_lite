@@ -13,6 +13,17 @@
  * limitations under the License.
  */
 
+
+/**
+* @file agg_rendering_buffer.h
+*
+* @brief Defines 渲染器缓冲
+*
+* @since 1.0
+* @version 1.0
+*/
+
+
 #ifndef AGG_RENDERING_BUFFER_INCLUDED
 #define AGG_RENDERING_BUFFER_INCLUDED
 
@@ -23,7 +34,8 @@ namespace OHOS
 {
 
     //===========================================================row_accessor
-    template<class T> class row_accessor
+    template<class T>
+    class row_accessor
     {
     public:
         typedef const_row_info<T> row_data;

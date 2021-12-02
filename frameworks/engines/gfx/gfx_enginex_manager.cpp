@@ -620,7 +620,7 @@ void BaseGfxExtendEngine::fillRadialGradient(double start_x, double start_y,doub
     m_interpolator_type.transformer(m_fillRadialMatrix);
     m_fillGradientD1 = start_r;
     m_fillGradientD2 = end_r;
-    m_radialGradientFunction  = OHOS::gradient_radial_focus(end_r,start_x-end_x,start_y-end_y);
+    m_radialGradientFunction  = OHOS::GradientRadialCalculate(end_r,start_x-end_x,start_y-end_y);
     m_fillGradientFlag = Radial;
     m_fillColor = Color(0,0,0,255);
 }

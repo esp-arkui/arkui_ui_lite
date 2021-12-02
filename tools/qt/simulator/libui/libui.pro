@@ -165,6 +165,8 @@ SOURCES += \
 
 HEADERS += \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/gradient_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_gradient.h \
     ../../../../frameworks/common/typed_text.h \
     ../../../../frameworks/core/render_manager.h \
     ../../../../frameworks/default_resource/check_box_res.h \
@@ -223,18 +225,14 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_cells_aa.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_scanline_aa.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_scanline_aa_nogamma.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_sl_clip.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_scanline/agg_scanline_p.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_scanline/agg_scanline_u.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_gradient_lut.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_allocator.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_converter.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_gradient.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_allocator_converter.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_image_filter.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_image_filter_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_interpolator_linear.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/agg_span_pattern_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_pattern_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_interpolator.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_image_accessors.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_affine.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_double_path.h \
