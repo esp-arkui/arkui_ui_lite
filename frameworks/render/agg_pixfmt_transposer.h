@@ -18,7 +18,7 @@
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace agg
+namespace OHOS
 {
     //=======================================================pixfmt_transposer
     template<class PixFmt> class pixfmt_transposer

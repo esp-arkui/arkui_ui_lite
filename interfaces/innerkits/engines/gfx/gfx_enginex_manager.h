@@ -41,7 +41,6 @@
 #include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_stroke.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_transform.h>
-#include <gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h>
 #include <gfx_utils/graphics/graphic_filter/agg_blur.h>
 #include <gfx_utils/graphics/graphic_filter/agg_image_filters.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_path_storage.h>
@@ -60,68 +59,67 @@ namespace OHOS {
 class BaseGfxExtendEngine : public BaseGfxEngine
 {
 #ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
-    typedef agg::rgba32 ColorType;
+    typedef OHOS::rgba32 ColorType;
 #else
-    typedef agg::rgba8  ColorType;
+    typedef OHOS::rgba8  ColorType;
 #endif
-    typedef agg::order_bgra ComponentOrder; // Platform dependent!
-    typedef agg::blender_rgba<ColorType, ComponentOrder>             Blender;
-    typedef agg::comp_op_adaptor_rgba<ColorType, ComponentOrder>     BlenderComp;
-    typedef agg::blender_rgba_pre<ColorType, ComponentOrder>         BlenderPre;
-    typedef agg::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
+    typedef OHOS::order_bgra ComponentOrder; // Platform dependent!
+    typedef OHOS::blender_rgba<ColorType, ComponentOrder>             Blender;
+    typedef OHOS::comp_op_adaptor_rgba<ColorType, ComponentOrder>     BlenderComp;
+    typedef OHOS::blender_rgba_pre<ColorType, ComponentOrder>         BlenderPre;
+    typedef OHOS::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
 
-    typedef agg::pixfmt_alpha_blend_rgba<Blender, agg::rendering_buffer>         PixFormat;
-    typedef agg::pixfmt_custom_blend_rgba<BlenderComp, agg::rendering_buffer>    PixFormatComp;
-    typedef agg::pixfmt_alpha_blend_rgba<BlenderPre, agg::rendering_buffer>      PixFormatPre;
-    typedef agg::pixfmt_custom_blend_rgba<BlenderCompPre, agg::rendering_buffer> PixFormatCompPre;
-    typedef agg::pixfmt_bgra32 pixfmt;
+    typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::rendering_buffer>         PixFormat;
+    typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::rendering_buffer>    PixFormatComp;
+    typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::rendering_buffer>      PixFormatPre;
+    typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::rendering_buffer> PixFormatCompPre;
+    typedef OHOS::pixfmt_bgra32 pixfmt;
 
 
-    typedef agg::renderer_base<PixFormat>        RendererBase;
-    typedef agg::renderer_base<PixFormatComp>    RendererBaseComp;
-    typedef agg::renderer_base<PixFormatPre>     RendererBasePre;
-    typedef agg::renderer_base<PixFormatCompPre> RendererBaseCompPre;
+    typedef OHOS::renderer_base<PixFormat>        RendererBase;
+    typedef OHOS::renderer_base<PixFormatComp>    RendererBaseComp;
+    typedef OHOS::renderer_base<PixFormatPre>     RendererBasePre;
+    typedef OHOS::renderer_base<PixFormatCompPre> RendererBaseCompPre;
 
-    typedef agg::renderer_scanline_aa_solid<RendererBase>     RendererSolid;
-    typedef agg::renderer_scanline_aa_solid<RendererBaseComp> RendererSolidComp;
+    typedef OHOS::renderer_scanline_aa_solid<RendererBase>     RendererSolid;
+    typedef OHOS::renderer_scanline_aa_solid<RendererBaseComp> RendererSolidComp;
 
-    typedef agg::span_allocator<ColorType> SpanAllocator;
-    typedef agg::pod_auto_array<ColorType, 256> GradientArray;
-    typedef agg::gradient_lut<agg::color_interpolator<agg::srgba8>, 1024> color_func_type;
+    typedef OHOS::span_allocator<ColorType> SpanAllocator;
+    typedef OHOS::pod_auto_array<ColorType, 256> GradientArray;
+    typedef OHOS::gradient_lut<OHOS::color_interpolator<OHOS::srgba8>, 1024> color_func_type;
 
-    typedef agg::gradient_radial_focus gradient_func_type;
-    typedef agg::span_interpolator_linear<> interpolator_type;
+    typedef OHOS::gradient_radial_focus gradient_func_type;
+    typedef OHOS::span_interpolator_linear<> interpolator_type;
 
-    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, agg::gradient_x,      color_func_type> LinearGradientSpan;
-//    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, agg::gradient_circle, GradientArray> RadialGradientSpan;
-    typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>, gradient_func_type, color_func_type> RadialGradientSpan;
+    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::gradient_x,      color_func_type> LinearGradientSpan;
+//    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::gradient_circle, GradientArray> RadialGradientSpan;
+    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, gradient_func_type, color_func_type> RadialGradientSpan;
 
-//  typedef agg::span_gradient<ColorType, agg::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
+//  typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
 
-    typedef agg::conv_curve<agg::path_storage>    ConvCurve;
-    typedef agg::conv_dash<ConvCurve>             ConvDashCurve;
-    typedef agg::conv_stroke<ConvCurve>           ConvStroke;
-    typedef agg::conv_stroke<ConvDashCurve>       ConvDashStroke;
-    typedef agg::conv_transform<ConvCurve>        PathTransform;
-    typedef agg::conv_transform<ConvStroke>       StrokeTransform;
-//    typedef agg::conv_stroke<agg::path_storage>       t_conv_stroke;
+    typedef OHOS::conv_curve<OHOS::path_storage>    ConvCurve;
+    typedef OHOS::conv_dash<ConvCurve>             ConvDashCurve;
+    typedef OHOS::conv_stroke<ConvCurve>           ConvStroke;
+    typedef OHOS::conv_stroke<ConvDashCurve>       ConvDashStroke;
+    typedef OHOS::conv_transform<ConvCurve>        PathTransform;
+    typedef OHOS::conv_transform<ConvStroke>       StrokeTransform;
+//    typedef OHOS::conv_stroke<OHOS::path_storage>       t_conv_stroke;
 
-    typedef agg::conv_transform<ConvDashStroke>   DashStrokeTransform;
-    typedef agg::shadow_ctrl<ColorType> ShadowCtrl;
-    typedef agg::stack_blur<ColorType, agg::stack_blur_calc_rgba<>> StackBlur;
-    typedef agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > RecursiveBlur;
-    typedef agg::rendering_buffer RenderingBuffer;
+    typedef OHOS::conv_transform<ConvDashStroke>   DashStrokeTransform;
+    typedef OHOS::stack_blur<ColorType, OHOS::stack_blur_calc_rgba<>> StackBlur;
+    typedef OHOS::recursive_blur<ColorType, OHOS::recursive_blur_calc_rgb<> > RecursiveBlur;
+    typedef OHOS::rendering_buffer RenderingBuffer;
 
-    typedef agg::ImageAccessorWrap<pixfmt, agg::WrapModeRepeat, agg::WrapModeRepeat> img_source_type;
+    typedef OHOS::ImageAccessorWrap<pixfmt, agg::WrapModeRepeat, agg::WrapModeRepeat> img_source_type;
 
-    typedef agg::ImageAccessorRepeatX<pixfmt, agg::WrapModeRepeat> img_source_type_x;
-    typedef agg::ImageAccessorRepeatY<pixfmt, agg::WrapModeRepeat> img_source_type_y;
-    typedef agg::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
+    typedef OHOS::ImageAccessorRepeatX<pixfmt, agg::WrapModeRepeat> img_source_type_x;
+    typedef OHOS::ImageAccessorRepeatY<pixfmt, agg::WrapModeRepeat> img_source_type_y;
+    typedef OHOS::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
 
-    typedef agg::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
-    typedef agg::span_pattern_rgba<img_source_type_x> span_pattern_type_x;
-    typedef agg::span_pattern_rgba<img_source_type_y> span_pattern_type_y;
-    typedef agg::span_pattern_rgba<img_source_type_none> span_pattern_type_none;
+    typedef OHOS::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
+    typedef OHOS::span_pattern_rgba<img_source_type_x> span_pattern_type_x;
+    typedef OHOS::span_pattern_rgba<img_source_type_y> span_pattern_type_y;
+    typedef OHOS::span_pattern_rgba<img_source_type_none> span_pattern_type_none;
 
 
 //    typedef AGG_INT8U  int8u;
@@ -141,25 +139,25 @@ public:
     // Use srgba8 as the "user" color type, even though the underlying color type 
     // might be something else, such as rgba32. This allows code based on 
     // 8-bit sRGB values to carry on working as before.
-    typedef agg::srgba8       Color;
-    typedef agg::rect_i       Rect;
-    typedef agg::rect_d       RectD;
-    typedef agg::TransAffine Affine;
+    typedef OHOS::srgba8       Color;
+    typedef OHOS::rect_i       Rect;
+    typedef OHOS::rect_d       RectD;
+    typedef OHOS::TransAffine Affine;
 
     enum LineJoin
     {
         JoinNone  = -1,
-        JoinMiter = agg::miter_join,
-        JoinRound = agg::round_join,
-        JoinBevel = agg::bevel_join
+        JoinMiter = OHOS::miter_join,
+        JoinRound = OHOS::round_join,
+        JoinBevel = OHOS::bevel_join
     };
 
     enum LineCap
     {
         CapNone   = -1,
-        CapButt   = agg::butt_cap,
-        CapSquare = agg::square_cap,
-        CapRound  = agg::round_cap
+        CapButt   = OHOS::butt_cap,
+        CapSquare = OHOS::square_cap,
+        CapRound  = OHOS::round_cap
     };
 
     enum DrawPathFlag
@@ -192,7 +190,7 @@ public:
 
     struct Image
     {
-        agg::rendering_buffer renBuf;
+        OHOS::rendering_buffer renBuf;
         Image() {}
         Image(unsigned char* buf, unsigned width, unsigned height, int stride) :
             renBuf(buf, width, height, stride) {}
@@ -202,8 +200,6 @@ public:
         }
         int width()  const { return renBuf.width(); }
         int height() const { return renBuf.height(); }
-        void premultiply();
-        void demultiply();
     };
 
     /**
@@ -240,31 +236,31 @@ public:
     enum BlendMode
     {
         BlendNone       =-1,
-        BlendAlpha      = agg::end_of_comp_op_e,
-        BlendClear      = agg::comp_op_clear,
-        BlendSrc        = agg::comp_op_src,
-        BlendDst        = agg::comp_op_dst,
-        BlendSrcOver    = agg::comp_op_src_over,
-        BlendDstOver    = agg::comp_op_dst_over,
-        BlendSrcIn      = agg::comp_op_src_in,
-        BlendDstIn      = agg::comp_op_dst_in,
-        BlendSrcOut     = agg::comp_op_src_out,
-        BlendDstOut     = agg::comp_op_dst_out,
-        BlendSrcAtop    = agg::comp_op_src_atop,
-        BlendDstAtop    = agg::comp_op_dst_atop,
-        BlendXor        = agg::comp_op_xor,
-        BlendAdd        = agg::comp_op_plus,
-        BlendMultiply   = agg::comp_op_multiply,
-        BlendScreen     = agg::comp_op_screen,
-        BlendOverlay    = agg::comp_op_overlay,
-        BlendDarken     = agg::comp_op_darken,
-        BlendLighten    = agg::comp_op_lighten,
-        BlendColorDodge = agg::comp_op_color_dodge,
-        BlendColorBurn  = agg::comp_op_color_burn,
-        BlendHardLight  = agg::comp_op_hard_light,
-        BlendSoftLight  = agg::comp_op_soft_light,
-        BlendDifference = agg::comp_op_difference,
-        BlendExclusion  = agg::comp_op_exclusion
+        BlendAlpha      = OHOS::end_of_comp_op_e,
+        BlendClear      = OHOS::comp_op_clear,
+        BlendSrc        = OHOS::comp_op_src,
+        BlendDst        = OHOS::comp_op_dst,
+        BlendSrcOver    = OHOS::comp_op_src_over,
+        BlendDstOver    = OHOS::comp_op_dst_over,
+        BlendSrcIn      = OHOS::comp_op_src_in,
+        BlendDstIn      = OHOS::comp_op_dst_in,
+        BlendSrcOut     = OHOS::comp_op_src_out,
+        BlendDstOut     = OHOS::comp_op_dst_out,
+        BlendSrcAtop    = OHOS::comp_op_src_atop,
+        BlendDstAtop    = OHOS::comp_op_dst_atop,
+        BlendXor        = OHOS::comp_op_xor,
+        BlendAdd        = OHOS::comp_op_plus,
+        BlendMultiply   = OHOS::comp_op_multiply,
+        BlendScreen     = OHOS::comp_op_screen,
+        BlendOverlay    = OHOS::comp_op_overlay,
+        BlendDarken     = OHOS::comp_op_darken,
+        BlendLighten    = OHOS::comp_op_lighten,
+        BlendColorDodge = OHOS::comp_op_color_dodge,
+        BlendColorBurn  = OHOS::comp_op_color_burn,
+        BlendHardLight  = OHOS::comp_op_hard_light,
+        BlendSoftLight  = OHOS::comp_op_soft_light,
+        BlendDifference = OHOS::comp_op_difference,
+        BlendExclusion  = OHOS::comp_op_exclusion
     };
 
     enum Direction
@@ -376,9 +372,9 @@ public:
     void affine(const Transformations& tr);
     void rotate(double angle);
     void scale(double sx, double sy);
-    void skew(double sx, double sy);
+    // void skew(double sx, double sy);
     void translate(double x, double y);
-    void parallelogram(double x1, double y1, double x2, double y2, const double* para);
+    // void parallelogram(double x1, double y1, double x2, double y2, const double* para);
     void viewport(double worldX1,  double worldY1,  double worldX2,  double worldY2,
                   double screenX1, double screenY1, double screenX2, double screenY2,
                   ViewportOption opt=XMidYMid);
@@ -529,9 +525,9 @@ public:
 
     // Auxiliary
     //-----------------------
-    static double pi() { return agg::pi; }
-    static double deg2Rad(double v) { return v * agg::pi / 180.0; }
-    static double rad2Deg(double v) { return v * 180.0 / agg::pi; }
+    static double pi() { return OHOS::pi; }
+    static double deg2Rad(double v) { return v * OHOS::pi / 180.0; }
+    static double rad2Deg(double v) { return v * 180.0 / OHOS::pi; }
 
 
     void lineDashOffset(float dDashOffset)
@@ -582,31 +578,30 @@ public:
     {
         return ndashes;
     }
-    agg::rendering_buffer GetRenderBuffer() const
+    OHOS::rendering_buffer GetRenderBuffer() const
     {
         return m_rbuf;
     }
 
     void SetShadowColor(int r, int g, int b, int a){
-        m_shadow_ctrl.fill_color(Color(r, g, b, a));
+        shadowColor_=Color(r, g, b, a);
 
     }
     void SetShadowOffsetX(double x){
-        m_shadow_ctrl.SetOffsetX(x);
+        shadowOffsetX_=x;
 
     }
     void SetShadowOffsetY(double y){
-        m_shadow_ctrl.SetOffsetY(y);
+        shadowOffsetY_=y;
 
     }
     void SetShadowOffset(double x,double y){
-        m_shadow_ctrl.SetOffsetX(x);
-        m_shadow_ctrl.SetOffsetY(y);
+        shadowOffsetX_=x;
+        shadowOffsetY_=y;
 
     }
     void SetShadowBlurRadius(double radius){
-        m_shadow_ctrl.SetRadius(radius);
-        m_shadow_ctrl.SetIsBlur(true);
+        shadowBlurRadius_=radius;
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
@@ -632,7 +627,7 @@ private:
             dashes = NULL;
         }
     }
-    agg::rendering_buffer           m_rbuf;
+    OHOS::rendering_buffer           m_rbuf;
     PixFormat                       m_pixFormat;
     PixFormatComp                   m_pixFormatComp;
     PixFormatPre                    m_pixFormatPre;
@@ -651,8 +646,8 @@ private:
     BlendMode                       m_imageBlendMode;
     Color                           m_imageBlendColor;
 
-    agg::scanline_u8                m_scanline;
-    agg::rasterizer_scanline_aa<>   m_rasterizer;
+    OHOS::scanline_u8                m_scanline;
+    OHOS::rasterizer_scanline_aa<>   m_rasterizer;
 
     double                          m_masterAlpha;
     double                          m_antiAliasGamma;
@@ -669,9 +664,9 @@ private:
     double                          m_miterLimit;
     Gradient                        m_fillGradientFlag;
     Gradient                        m_lineGradientFlag;
-    agg::TransAffine               m_fillGradientMatrix;
-    agg::TransAffine               m_lineGradientMatrix;
-    agg::TransAffine               m_fillRadialMatrix;
+    OHOS::TransAffine               m_fillGradientMatrix;
+    OHOS::TransAffine               m_lineGradientMatrix;
+    OHOS::TransAffine               m_fillRadialMatrix;
 
 
     interpolator_type               m_interpolator_type  ;
@@ -684,21 +679,21 @@ private:
 
     ImageFilter                     m_imageFilter;
     ImageResample                   m_imageResample;
-    agg::image_filter_lut           m_imageFilterLut;
+    OHOS::image_filter_lut           m_imageFilterLut;
 
-    agg::span_interpolator_linear<> m_fillGradientInterpolator;
-    agg::span_interpolator_linear<> m_lineGradientInterpolator;
+    OHOS::span_interpolator_linear<> m_fillGradientInterpolator;
+    OHOS::span_interpolator_linear<> m_lineGradientInterpolator;
 
-    agg::gradient_x                 m_linearGradientFunction;
-//    agg::gradient_circle            m_radialGradientFunction;
+    OHOS::gradient_x                 m_linearGradientFunction;
+//    OHOS::gradient_circle            m_radialGradientFunction;
     gradient_func_type              m_radialGradientFunction;//TODO：m_fillRadialMatrix
 
     double                          m_lineWidth;
     bool                            m_evenOddFlag;
 
-    agg::path_storage               m_path;
+    OHOS::path_storage               m_path;
 //    typedef agg::conv_stroke<agg::path_storage> cs_ps(m_path);
-    agg::TransAffine               m_transform;
+    OHOS::TransAffine               m_transform;
 
     ConvCurve                       m_convCurve;
     ConvDashCurve                   m_convDashCurve;
@@ -707,8 +702,7 @@ private:
     PathTransform                   m_pathTransform;
     StrokeTransform                 m_strokeTransform;
     DashStrokeTransform             m_dashStrokeTransform;
-//    t_conv_stroke m_conv_stroke;
-    ShadowCtrl m_shadow_ctrl;
+
     StackBlur m_stack_blur;
     RecursiveBlur m_recursive_blur;
     //dash
@@ -716,7 +710,10 @@ private:
     float* dashes;
     unsigned int ndashes;
     float dDashOffset;
-
+    double shadowOffsetY_;
+    double shadowOffsetX_;
+    double shadowBlurRadius_;
+    ColorType shadowColor_;
 
 };
 
