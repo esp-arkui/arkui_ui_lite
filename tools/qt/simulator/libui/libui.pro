@@ -121,7 +121,6 @@ SOURCES += \
     ../../../../frameworks/font/ui_multi_font_manager.cpp \
     ../../../../frameworks/font/ui_text_shaping.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/agg_arc.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_arrowhead.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/agg_bezier_arc.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/agg_curves.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/agg_line_aa_basics.cpp \
@@ -135,7 +134,6 @@ SOURCES += \
     ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_warp_magnifier.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_contour.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_dash.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_markers_term.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_stroke.cpp \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
@@ -207,7 +205,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_filter/agg_image_filters.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_arc.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_arrowhead.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_bezier_arc.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_bounding_rect.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_curves.h \
@@ -244,7 +241,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_ctrl.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_contour.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_markers_term.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb16.h \
