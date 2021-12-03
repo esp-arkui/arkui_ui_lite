@@ -1,2801 +1,2735 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Adaptation for high precision colors has been sponsored by 
-// Liberty Technology Systems, Inc., visit http://lib-sys.com
-//
-// Liberty Technology Systems, Inc. is the provider of
-// PostScript and PDF technology for software developers.
-// 
-//----------------------------------------------------------------------------
+/*
+* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-#ifndef AGG_PIXFMT_RGBA_INCLUDED
-#define AGG_PIXFMT_RGBA_INCLUDED
+/**
+* @addtogroup GraphicGeometry
+* @{
+*
+* @brief Defines .
+*
+* @since 1.0
+* @version 1.0
+*/
+
+/**
+* @file graphic_geometry_pixfmt_rgba.h
+*
+* @brief Defines 颜色分量操作类.
+*
+* @since 1.0
+* @version 1.0
+*/
+
+#ifndef GRAPHIC_GEOMETRY_PIXFMT_RGBA_INCLUDED
+#define GRAPHIC_GEOMETRY_PIXFMT_RGBA_INCLUDED
 
 #include <cstring>
 #include <cmath>
 #include "render/agg_pixfmt_base.h"
 #include "render/agg_rendering_buffer.h"
 
-namespace agg
-{
-    template<class T> inline T sd_min(T a, T b) { return (a < b) ? a : b; }
-    template<class T> inline T sd_max(T a, T b) { return (a > b) ? a : b; }
+namespace OHOS {
+template<class T>
+inline T SdMin(T a, T b) 
+{ 
+    return (a < b) ? a : b;
+}
 
-    inline rgba & clip(rgba & c)
+template<class T>
+inline T SdMax(T a, T b) 
+{ 
+    return (a > b) ? a : b;
+}
+
+inline Rgba & Clip(Rgba & c)
+{
+    if (c.a > 1) {
+        c.a = 1;
+    } else if (c.a < 0) {
+        c.a = 0;
+    }
+           
+    if (c.r > c.a) {
+        c.r = c.a;
+    } else if (c.r < 0) {
+        c.r = 0;
+    }
+          
+    if (c.g > c.a) {
+        c.g = c.a;
+    } else if (c.g < 0) {
+        c.g = 0;
+    }
+          
+    if (c.b > c.a) {
+        c.b = c.a;
+    } else if (c.b < 0) {
+        c.b = 0;
+    }
+          
+    return c;
+}
+
+template<class ColorT, class Order> 
+struct MultiplierRgba {
+    using ColorType = ColorT ;
+    //using ValueType = typename ColorType::ValueType;
+    using ValueType = typename ColorType::ValueType;
+    //--------------------------------------------------------------------
+    static  GRAPHIC_GEOMETRY_INLINE void Premultiply(ValueType* p)
     {
-        if (c.a > 1) c.a = 1; else if (c.a < 0) c.a = 0;
-        if (c.r > c.a) c.r = c.a; else if (c.r < 0) c.r = 0;
-        if (c.g > c.a) c.g = c.a; else if (c.g < 0) c.g = 0;
-        if (c.b > c.a) c.b = c.a; else if (c.b < 0) c.b = 0;
-        return c;
+        ValueType a = p[Order::A];
+        p[Order::R] = ColorType::Multiply(p[Order::R], a);
+        p[Order::G] = ColorType::Multiply(p[Order::G], a);
+        p[Order::B] = ColorType::Multiply(p[Order::B], a);
     }
 
-    //=========================================================multiplier_rgba
-    template<class ColorT, class Order> 
-    struct multiplier_rgba
+
+    //--------------------------------------------------------------------
+    static  GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* p)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
+        ValueType a = p[Order::A];
+        p[Order::R] = ColorType::Demultiply(p[Order::R], a);
+        p[Order::G] = ColorType::Demultiply(p[Order::G], a);
+        p[Order::B] = ColorType::Demultiply(p[Order::B], a);
+    }
+};
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE void premultiply(value_type* p)
-        {
-            value_type a = p[Order::A];
-            p[Order::R] = color_type::multiply(p[Order::R], a);
-            p[Order::G] = color_type::multiply(p[Order::G], a);
-            p[Order::B] = color_type::multiply(p[Order::B], a);
-        }
+//=====================================================apply_gamma_dir_rgba
+template<class ColorT, class Order, class GammaLut> 
+class ApplyGammaDirRgba : public HeapBase {
+public:
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
 
+    ApplyGammaDirRgba(const GammaLut& gamma) : gamma_(gamma) {}
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE void demultiply(value_type* p)
-        {
-            value_type a = p[Order::A];
-            p[Order::R] = color_type::demultiply(p[Order::R], a);
-            p[Order::G] = color_type::demultiply(p[Order::G], a);
-            p[Order::B] = color_type::demultiply(p[Order::B], a);
-        }
-    };
-
-    //=====================================================apply_gamma_dir_rgba
-    template<class ColorT, class Order, class GammaLut> 
-    class apply_gamma_dir_rgba
+     GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* p)
     {
-    public:
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
+        p[Order::R] = gamma_.Dir(p[Order::R]);
+        p[Order::G] = gamma_.Dir(p[Order::G]);
+        p[Order::B] = gamma_.Dir(p[Order::B]);
+    }
 
-        apply_gamma_dir_rgba(const GammaLut& gamma) : m_gamma(gamma) {}
+private:
+    const GammaLut& gamma_;
+};
 
-        AGG_INLINE void operator () (value_type* p)
-        {
-            p[Order::R] = m_gamma.dir(p[Order::R]);
-            p[Order::G] = m_gamma.dir(p[Order::G]);
-            p[Order::B] = m_gamma.dir(p[Order::B]);
-        }
+//=====================================================apply_gamma_inv_rgba
+template<class ColorT, class Order, class GammaLut> 
+class ApplyGammaInvRgba : public HeapBase {
+public:
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
 
-    private:
-        const GammaLut& m_gamma;
-    };
+    ApplyGammaInvRgba(const GammaLut& gamma) : gamma_(gamma) {}
 
-    //=====================================================apply_gamma_inv_rgba
-    template<class ColorT, class Order, class GammaLut> class apply_gamma_inv_rgba
+     GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* p)
     {
-    public:
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
+        p[Order::R] = gamma_.Inv(p[Order::R]);
+        p[Order::G] = gamma_.Inv(p[Order::G]);
+        p[Order::B] = gamma_.Inv(p[Order::B]);
+    }
 
-        apply_gamma_inv_rgba(const GammaLut& gamma) : m_gamma(gamma) {}
-
-        AGG_INLINE void operator () (value_type* p)
-        {
-            p[Order::R] = m_gamma.inv(p[Order::R]);
-            p[Order::G] = m_gamma.inv(p[Order::G]);
-            p[Order::B] = m_gamma.inv(p[Order::B]);
-        }
-
-    private:
-        const GammaLut& m_gamma;
-    };
+private:
+    const GammaLut& gamma_;
+};
 
 
-    template<class ColorT, class Order> 
-    struct conv_rgba_pre
+template<class ColorT, class Order> 
+struct ConvRgbaPre {
+    //using ColorType = ColorT;
+    //using OrderType = Order;
+    //using ValueType = typename ColorType::ValueType;
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    
+    static  GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* p, ColorType c)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
+        c.Premultiply();
+        p[Order::R] = c.r;
+        p[Order::G] = c.g;
+        p[Order::B] = c.b;
+        p[Order::A] = c.a;
+    }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE void set_plain_color(value_type* p, color_type c)
-        {
-            c.premultiply();
-            p[Order::R] = c.r;
-            p[Order::G] = c.g;
-            p[Order::B] = c.b;
-            p[Order::A] = c.a;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE color_type get_plain_color(const value_type* p)
-        {
-            return color_type(
-                p[Order::R],
-                p[Order::G],
-                p[Order::B],
-                p[Order::A]).demultiply();
-        }
-    };
-
-    template<class ColorT, class Order> 
-    struct conv_rgba_plain
+    static  GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* p)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
+        return ColorType(
+            p[Order::R],
+            p[Order::G],
+            p[Order::B],
+            p[Order::A]).Demultiply();
+    }
+};
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE void set_plain_color(value_type* p, color_type c)
-        {
-            p[Order::R] = c.r;
-            p[Order::G] = c.g;
-            p[Order::B] = c.b;
-            p[Order::A] = c.a;
-        }
+template<class ColorT, class Order> 
+struct ConvRgbaPlain {
+    //using ColorType = ColorT;
+    //using OrderType = Order;
+    //using ValueType = typename ColorType::ValueType;
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE color_type get_plain_color(const value_type* p)
-        {
-            return color_type(
-                p[Order::R],
-                p[Order::G],
-                p[Order::B],
-                p[Order::A]);
-        }
-    };
-
-    //=============================================================blender_rgba
-    // Blends "plain" (i.e. non-premultiplied) colors into a premultiplied buffer.
-    template<class ColorT, class Order> 
-    struct blender_rgba : conv_rgba_pre<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* p, ColorType c)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
+        p[Order::R] = c.r;
+        p[Order::G] = c.g;
+        p[Order::B] = c.b;
+        p[Order::A] = c.a;
+    }
 
-        // Blend pixels using the non-premultiplied form of Alvy-Ray Smith's
-        // compositing function. Since the render buffer is in fact premultiplied
-        // we omit the initial premultiplication and final demultiplication.
+    static  GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* p)
+    {
+        return ColorType(
+            p[Order::R],
+            p[Order::G],
+            p[Order::B],
+            p[Order::A]);
+    }
+};
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type cr, value_type cg, value_type cb, value_type alpha, cover_type cover)
-        {
-            blend_pix(p, cr, cg, cb, color_type::mult_cover(alpha, cover));
-        }
+template<class ColorT, class Order> 
+struct BlenderRgba : ConvRgbaPre<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using OrderType = Order;
+    //using ValueType = typename ColorType::ValueType;
+    //using CalcType = typename ColorType::CalcType
+    //using LongType = typename ColorType::LongType
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType;
+    using LongType = typename ColorType::LongType;
+    
+    static  GRAPHIC_GEOMETRY_INLINE void
+        BlendPix(ValueType* p, 
+        ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+    {
+        BlendPix(p, cr, cg, cb, ColorType::MultCover(alpha, cover));
+    }
+    
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+    {
+        p[Order::R] = ColorType::Lerp(p[Order::R], cr, alpha);
+        p[Order::G] = ColorType::Lerp(p[Order::G], cg, alpha);
+        p[Order::B] = ColorType::Lerp(p[Order::B], cb, alpha);
+        p[Order::A] = ColorType::Prelerp(p[Order::A], alpha, alpha);
+    }
+};
+
+template<class ColorT, class Order> 
+struct BlenderRgbaPre : ConvRgbaPre<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using OrderType = Order;
+    //using ValueType = typename ColorType::ValueType;
+    //using CalcType = typename ColorType::CalcType
+    //using LongType = typename ColorType::LongType
+    using ColorType = ColorT ;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType;
+    using LongType = typename ColorType::LongType;
+
+    static  GRAPHIC_GEOMETRY_INLINE void
+        BlendPix(ValueType* p, 
+        ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+    {
+        BlendPix(p, 
+            ColorType::MultCover(cr, cover), 
+            ColorType::MultCover(cg, cover), 
+            ColorType::MultCover(cb, cover), 
+            ColorType::MultCover(alpha, cover));
+    }
         
-        //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type cr, value_type cg, value_type cb, value_type alpha)
-        {
-            p[Order::R] = color_type::lerp(p[Order::R], cr, alpha);
-            p[Order::G] = color_type::lerp(p[Order::G], cg, alpha);
-            p[Order::B] = color_type::lerp(p[Order::B], cb, alpha);
-            p[Order::A] = color_type::prelerp(p[Order::A], alpha, alpha);
-        }
-    };
-
-
-    //========================================================blender_rgba_pre
-    // Blends premultiplied colors into a premultiplied buffer.
-    template<class ColorT, class Order> 
-    struct blender_rgba_pre : conv_rgba_pre<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
+        p[Order::R] = ColorType::Prelerp(p[Order::R], cr, alpha);
+        p[Order::G] = ColorType::Prelerp(p[Order::G], cg, alpha);
+        p[Order::B] = ColorType::Prelerp(p[Order::B], cb, alpha);
+        p[Order::A] = ColorType::Prelerp(p[Order::A], alpha, alpha);
+    }
+};
 
-        // Blend pixels using the premultiplied form of Alvy-Ray Smith's
-        // compositing function. 
+template<class ColorT, class Order> 
+struct blenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using OrderType = Order;
+    //using ValueType = typename ColorType::ValueType;
+    //using CalcType = typename ColorType::CalcType
+    //using LongType = typename ColorType::LongType
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type cr, value_type cg, value_type cb, value_type alpha, cover_type cover)
-        {
-            blend_pix(p, 
-                color_type::mult_cover(cr, cover), 
-                color_type::mult_cover(cg, cover), 
-                color_type::mult_cover(cb, cover), 
-                color_type::mult_cover(alpha, cover));
-        }
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType;
+    using LongType = typename ColorType::LongType;
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+    {
+        BlendPix(p, cr, cg, cb, ColorType::MultCover(alpha, cover));
+    }
         
-        //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type cr, value_type cg, value_type cb, value_type alpha)
-        {
-            p[Order::R] = color_type::prelerp(p[Order::R], cr, alpha);
-            p[Order::G] = color_type::prelerp(p[Order::G], cg, alpha);
-            p[Order::B] = color_type::prelerp(p[Order::B], cb, alpha);
-            p[Order::A] = color_type::prelerp(p[Order::A], alpha, alpha);
-        }
-    };
-
-    //======================================================blender_rgba_plain
-    // Blends "plain" (non-premultiplied) colors into a plain (non-premultiplied) buffer.
-    template<class ColorT, class Order> 
-    struct blender_rgba_plain : conv_rgba_plain<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        // Blend pixels using the non-premultiplied form of Alvy-Ray Smith's
-        // compositing function. 
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type cr, value_type cg, value_type cb, value_type alpha, cover_type cover)
+        if (alpha > ColorType::EmptyValue())
         {
-            blend_pix(p, cr, cg, cb, color_type::mult_cover(alpha, cover));
+            CalcType a = p[Order::A];
+            CalcType r = ColorType::Multiply(p[Order::R], a);
+            CalcType g = ColorType::Multiply(p[Order::G], a);
+            CalcType b = ColorType::Multiply(p[Order::B], a);
+            p[Order::R] = ColorType::Lerp(r, cr, alpha);
+            p[Order::G] = ColorType::Lerp(g, cg, alpha);
+            p[Order::B] = ColorType::Lerp(b, cb, alpha);
+            p[Order::A] = ColorType::Prelerp(a, alpha, alpha);
+            MultiplierRgba<ColorT, Order>::Demultiply(p);
         }
-        
-        //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type cr, value_type cg, value_type cb, value_type alpha)
-        {
-            if (alpha > color_type::empty_value())
-            {
-                calc_type a = p[Order::A];
-                calc_type r = color_type::multiply(p[Order::R], a);
-                calc_type g = color_type::multiply(p[Order::G], a);
-                calc_type b = color_type::multiply(p[Order::B], a);
-                p[Order::R] = color_type::lerp(r, cr, alpha);
-                p[Order::G] = color_type::lerp(g, cg, alpha);
-                p[Order::B] = color_type::lerp(b, cb, alpha);
-                p[Order::A] = color_type::prelerp(a, alpha, alpha);
-                multiplier_rgba<ColorT, Order>::demultiply(p);
-            }
-        }
-    };
+    }
+};
 
-    // SVG compositing operations.
-    // For specifications, see http://www.w3.org/TR/SVGCompositing/
+template<class ColorT, class Order> 
+struct CompPpRgbaClear : BlenderBase<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using ValueType = typename ColorType::ValueType;
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
 
-    //=========================================================comp_op_rgba_clear
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_clear : blender_base<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType, ValueType, ValueType, ValueType, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = 0
-        // Da'  = 0
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type, value_type, value_type, value_type, cover_type cover)
+        if (cover >= COVER_FULL)
         {
-            if (cover >= cover_full)
-            {
-                p[0] = p[1] = p[2] = p[3] = color_type::empty_value(); 
-            }
-            else if (cover > cover_none)
-            {
-                set(p, get(p, cover_full - cover));
-            }
+            p[0] = p[1] = p[2] = p[3] = ColorType::EmptyValue(); 
         }
-    };
-
-    //===========================================================comp_op_rgba_src
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_src : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca
-        // Da'  = Sa
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        else if (cover > COVER_NONE)
         {
-            if (cover >= cover_full)
-            {
-                set(p, r, g, b, a);
-            }
-            else
-            {
-                rgba s = get(r, g, b, a, cover);
-                rgba d = get(p, cover_full - cover);
-                d.r += s.r;
-                d.g += s.g;
-                d.b += s.b;
-                d.a += s.a;
-                set(p, d);
-            }
+            Set(p, Get(p, COVER_FULL - cover));
         }
-    };
+    }
+};
 
-    //===========================================================comp_op_rgba_dst
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_dst : blender_base<ColorT, Order>
+template<class ColorT, class Order> 
+struct CompOpRgbaSrc : BlenderBase<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using ValueType = typename ColorType::ValueType;
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca
+    // Da'  = Sa
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-
-        // Dca' = Dca.Sa + Dca.(1 - Sa) = Dca
-        // Da'  = Da.Sa + Da.(1 - Sa) = Da
-        static AGG_INLINE void blend_pix(value_type*, 
-            value_type, value_type, value_type, value_type, cover_type)
+        if (cover >= COVER_FULL)
         {
-            // Well, that was easy!
+            Set(p, r, g, b, a);
         }
-    };
-
-    //======================================================comp_op_rgba_src_over
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_src_over : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca + Dca.(1 - Sa) = Dca + Sca - Dca.Sa
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        else
         {
+            Rgba s = Get(r, g, b, a, cover);
+            Rgba d = Get(p, COVER_FULL - cover);
+            d.r += s.r;
+            d.g += s.g;
+            d.b += s.b;
+            d.a += s.a;
+            Set(p, d);
+        }
+    }
+};
+
+template<class ColorT, class Order> 
+struct CompOpRgbaDst : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType*, 
+        ValueType, ValueType, ValueType, ValueType, CoverType)
+    {
+     
+    }
+};
+
+template<class ColorT, class Order> 
+struct CompOpRgbaSrcOver : BlenderBase<ColorT, Order> {
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
 #if 1
-            blender_rgba_pre<ColorT, Order>::blend_pix(p, r, g, b, a, cover);
+        BlenderRgbaPre<ColorT, Order>::BlendPix(p, r, g, b, a, cover);
 #else
-            rgba s = get(r, g, b, a, cover);
-            rgba d = get(p);
-            d.r += s.r - d.r * s.a;
-            d.g += s.g - d.g * s.a;
-            d.b += s.b - d.b * s.a;
-            d.a += s.a - d.a * s.a;
-            set(p, d);
+        Rgba s = Get(r, g, b, a, cover);
+        Rgba d = Get(p);
+        d.r += s.r - d.r * s.a;
+        d.g += s.g - d.g * s.a;
+        d.b += s.b - d.b * s.a;
+        d.a += s.a - d.a * s.a;
+        Set(p, d);
 #endif
-        }
-    };
+    }
+};
 
-    //======================================================comp_op_rgba_dst_over
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_dst_over : blender_base<ColorT, Order>
+template<class ColorT, class Order> 
+struct CompOpRgbaDstOver : BlenderBase<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using ValueType = typename ColorType::ValueType;
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
+        Rgba s = Get(r, g, b, a, cover);
+        Rgba d = Get(p);
+        double d1a = 1 - d.a;
+        d.r += s.r * d1a;
+        d.g += s.g * d1a;
+        d.b += s.b * d1a;
+        d.a += s.a * d1a;
+        Set(p, d);
+    }
+};
 
-        // Dca' = Dca + Sca.(1 - Da)
-        // Da'  = Sa + Da - Sa.Da = Da + Sa.(1 - Da)
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+template<class ColorT, class Order> 
+struct CompOpRgbaSrcIn : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        double da = ColorT::ToDouble(p[Order::A]);
+        if (da > 0)
         {
-            rgba s = get(r, g, b, a, cover);
-            rgba d = get(p);
+            Rgba s = Get(r, g, b, a, cover);
+            Rgba d = Get(p, COVER_FULL - cover);
+            d.r += s.r * da;
+            d.g += s.g * da;
+            d.b += s.b * da;
+            d.a += s.a * da;
+            Set(p, d);
+        }
+    }
+};
+
+template<class ColorT, class Order> 
+struct CompOpRgbaDstIn : BlenderBase<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using ValueType = typename ColorType::ValueType;
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Dca.Sa
+    // Da'  = Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType, ValueType, ValueType, ValueType a, CoverType cover)
+    {
+        double sa = ColorT::ToDouble(a);
+        Rgba d = Get(p, COVER_FULL - cover);
+        Rgba d2 = Get(p, cover);
+        d.r += d2.r * sa;
+        d.g += d2.g * sa;
+        d.b += d2.b * sa;
+        d.a += d2.a * sa;
+        Set(p, d);
+    }
+};
+
+//======================================================CompOpRgba_src_out
+template<class ColorT, class Order> 
+struct CompOpRgbaSrcOut : BlenderBase<ColorT, Order> {
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca.(1 - Da)
+    // Da'  = Sa.(1 - Da) 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        Rgba d = Get(p, COVER_FULL - cover);
+        double d1a = 1 - ColorT::ToDouble(p[Order::A]);
+        d.r += s.r * d1a;
+        d.g += s.g * d1a;
+        d.b += s.b * d1a;
+        d.a += s.a * d1a;
+        Set(p, d);
+    }
+};
+
+//======================================================CompOpRgba_dst_out
+template<class ColorT, class Order> 
+struct CompOpRgbaDstOut : BlenderBase<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using ValueType = typename ColorType::ValueType;
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Dca.(1 - Sa) 
+    // Da'  = Da.(1 - Sa) 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType, ValueType, ValueType, ValueType a, CoverType cover)
+    {
+        Rgba d = Get(p, COVER_FULL - cover);
+        Rgba dc = Get(p, cover);
+        double s1a = 1 - ColorT::ToDouble(a);
+        d.r += dc.r * s1a;
+        d.g += dc.g * s1a;
+        d.b += dc.b * s1a;
+        d.a += dc.a * s1a;
+        Set(p, d);
+    }
+};
+
+//=====================================================CompOpRgba_src_atop
+template<class ColorT, class Order> 
+struct CompOpRgbaSrcAtop : BlenderBase<ColorT, Order> {
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca.Da + Dca.(1 - Sa)
+    // Da'  = Da
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        Rgba d = Get(p);
+        double s1a = 1 - s.a;
+        d.r = s.r * d.a + d.r * s1a;
+        d.g = s.g * d.a + d.g * s1a;
+        d.b = s.b * d.a + d.g * s1a;
+        Set(p, d);
+    }
+};
+
+//=====================================================CompOpRgba_dst_atop
+template<class ColorT, class Order> 
+struct CompOpRgbaDstAtop : BlenderBase<ColorT, Order> {
+  /*  using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Dca.Sa + Sca.(1 - Da)
+    // Da'  = Sa 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba sc = Get(r, g, b, a, cover);
+        Rgba dc = Get(p, cover);
+        Rgba d = Get(p, COVER_FULL - cover);
+        double sa = ColorT::ToDouble(a);
+        double d1a = 1 - ColorT::ToDouble(p[Order::A]);
+        d.r += dc.r * sa + sc.r * d1a;
+        d.g += dc.g * sa + sc.g * d1a;
+        d.b += dc.b * sa + sc.b * d1a;
+        d.a += sc.a;
+        Set(p, d);
+    }
+};
+
+//=========================================================CompOpRgba_xor
+template<class ColorT, class Order> 
+struct CompOpRgbaXor : BlenderBase<ColorT, Order> {
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca.(1 - Da) + Dca.(1 - Sa)
+    // Da'  = Sa + Da - 2.Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        Rgba d = Get(p);
+        double s1a = 1 - s.a;
+        double d1a = 1 - ColorT::ToDouble(p[Order::A]);
+        d.r = s.r * d1a + d.r * s1a;
+        d.g = s.g * d1a + d.g * s1a;
+        d.b = s.b * d1a + d.b * s1a;
+        d.a = s.a + d.a - 2 * s.a * d.a;
+        Set(p, d);
+    }
+};
+
+//=========================================================CompOpRgba_plus
+template<class ColorT, class Order> 
+struct CompOpRgbaPlus : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca + Dca
+    // Da'  = Sa + Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
+        {
+            Rgba d = Get(p);
+            d.a = SdMin(d.a + s.a, 1.0);
+            d.r = SdMin(d.r + s.r, d.a);
+            d.g = SdMin(d.g + s.g, d.a);
+            d.b = SdMin(d.b + s.b, d.a);
+            Set(p, Clip(d));
+        }
+    }
+};
+
+//========================================================CompOpRgba_minus
+// Note: not included in SVG spec.
+template<class ColorT, class Order> 
+struct CompOpRgbaMinus : BlenderBase<ColorT, Order> {
+  /*  using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Dca - Sca
+    // Da' = 1 - (1 - Sa).(1 - Da) = Da + Sa - Sa.Da
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
+        {
+            Rgba d = Get(p);
+            d.a += s.a - s.a * d.a;
+            d.r = SdMax(d.r - s.r, 0.0);
+            d.g = SdMax(d.g - s.g, 0.0);
+            d.b = SdMax(d.b - s.b, 0.0);
+            Set(p, Clip(d));
+        }
+    }
+};
+
+//=====================================================CompOpRgba_multiply
+template<class ColorT, class Order> 
+struct CompOpRgbaMultiply : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca.Dca + Sca.(1 - Da) + Dca.(1 - Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
+        {
+            Rgba d = Get(p);
+            double s1a = 1 - s.a;
             double d1a = 1 - d.a;
-            d.r += s.r * d1a;
-            d.g += s.g * d1a;
-            d.b += s.b * d1a;
-            d.a += s.a * d1a;
-            set(p, d);
+            d.r = s.r * d.r + s.r * d1a + d.r * s1a;
+            d.g = s.g * d.g + s.g * d1a + d.g * s1a;
+            d.b = s.b * d.b + s.b * d1a + d.b * s1a;
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
         }
-    };
+    }
+};
 
-    //======================================================comp_op_rgba_src_in
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_src_in : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_screen
+template<class ColorT, class Order> 
+struct CompOpRgbaScreen : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca + Dca - Sca.Dca
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca.Da
-        // Da'  = Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            double da = ColorT::to_double(p[Order::A]);
-            if (da > 0)
-            {
-                rgba s = get(r, g, b, a, cover);
-                rgba d = get(p, cover_full - cover);
-                d.r += s.r * da;
-                d.g += s.g * da;
-                d.b += s.b * da;
-                d.a += s.a * da;
-                set(p, d);
-            }
+            Rgba d = Get(p);
+            d.r += s.r - s.r * d.r;
+            d.g += s.g - s.g * d.g;
+            d.b += s.b - s.b * d.b;
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
         }
-    };
+    }
+};
 
-    //======================================================comp_op_rgba_dst_in
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_dst_in : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_overlay
+template<class ColorT, class Order> 
+struct CompOpRgba_overlay : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // if 2.Dca <= Da
+    //   Dca' = 2.Sca.Dca + Sca.(1 - Da) + Dca.(1 - Sa)
+    // otherwise
+    //   Dca' = Sa.Da - 2.(Da - Dca).(Sa - Sca) + Sca.(1 - Da) + Dca.(1 - Sa)
+    // 
+    // Da' = Sa + Da - Sa.Da
+    static  GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
+        return (2 * dca <= da) ? 
+            2 * sca * dca + sca * d1a + dca * s1a : 
+            sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
+    }
 
-        // Dca' = Dca.Sa
-        // Da'  = Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type, value_type, value_type, value_type a, cover_type cover)
-        {
-            double sa = ColorT::to_double(a);
-            rgba d = get(p, cover_full - cover);
-            rgba d2 = get(p, cover);
-            d.r += d2.r * sa;
-            d.g += d2.g * sa;
-            d.b += d2.b * sa;
-            d.a += d2.a * sa;
-            set(p, d);
-        }
-    };
-
-    //======================================================comp_op_rgba_src_out
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_src_out : blender_base<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca.(1 - Da)
-        // Da'  = Sa.(1 - Da) 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            rgba s = get(r, g, b, a, cover);
-            rgba d = get(p, cover_full - cover);
-            double d1a = 1 - ColorT::to_double(p[Order::A]);
-            d.r += s.r * d1a;
-            d.g += s.g * d1a;
-            d.b += s.b * d1a;
-            d.a += s.a * d1a;
-            set(p, d);
-        }
-    };
-
-    //======================================================comp_op_rgba_dst_out
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_dst_out : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Dca.(1 - Sa) 
-        // Da'  = Da.(1 - Sa) 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type, value_type, value_type, value_type a, cover_type cover)
-        {
-            rgba d = get(p, cover_full - cover);
-            rgba dc = get(p, cover);
-            double s1a = 1 - ColorT::to_double(a);
-            d.r += dc.r * s1a;
-            d.g += dc.g * s1a;
-            d.b += dc.b * s1a;
-            d.a += dc.a * s1a;
-            set(p, d);
-        }
-    };
-
-    //=====================================================comp_op_rgba_src_atop
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_src_atop : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca.Da + Dca.(1 - Sa)
-        // Da'  = Da
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            rgba d = get(p);
+            Rgba d = Get(p);
+            double d1a = 1 - d.a;
             double s1a = 1 - s.a;
-            d.r = s.r * d.a + d.r * s1a;
-            d.g = s.g * d.a + d.g * s1a;
-            d.b = s.b * d.a + d.g * s1a;
-            set(p, d);
+            double sada = s.a * d.a;
+            d.r = Calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
+            d.g = Calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
+            d.b = Calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
         }
-    };
+    }
+};
 
-    //=====================================================comp_op_rgba_dst_atop
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_dst_atop : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_darken
+template<class ColorT, class Order> 
+struct CompOpRgbaDarken : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = min(Sca.Da, Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Dca.Sa + Sca.(1 - Da)
-        // Da'  = Sa 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            rgba sc = get(r, g, b, a, cover);
-            rgba dc = get(p, cover);
-            rgba d = get(p, cover_full - cover);
-            double sa = ColorT::to_double(a);
-            double d1a = 1 - ColorT::to_double(p[Order::A]);
-            d.r += dc.r * sa + sc.r * d1a;
-            d.g += dc.g * sa + sc.g * d1a;
-            d.b += dc.b * sa + sc.b * d1a;
-            d.a += sc.a;
-            set(p, d);
-        }
-    };
-
-    //=========================================================comp_op_rgba_xor
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_xor : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca.(1 - Da) + Dca.(1 - Sa)
-        // Da'  = Sa + Da - 2.Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            rgba d = get(p);
+            Rgba d = Get(p);
+            double d1a = 1 - d.a;
             double s1a = 1 - s.a;
-            double d1a = 1 - ColorT::to_double(p[Order::A]);
-            d.r = s.r * d1a + d.r * s1a;
-            d.g = s.g * d1a + d.g * s1a;
-            d.b = s.b * d1a + d.b * s1a;
-            d.a = s.a + d.a - 2 * s.a * d.a;
-            set(p, d);
+            d.r = sd_min(s.r * d.a, d.r * s.a) + s.r * d1a + d.r * s1a;
+            d.g = sd_min(s.g * d.a, d.g * s.a) + s.g * d1a + d.g * s1a;
+            d.b = sd_min(s.b * d.a, d.b * s.a) + s.b * d1a + d.b * s1a;
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
         }
-    };
+    }
+};
 
-    //=========================================================comp_op_rgba_plus
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_plus : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_lighten
+template<class ColorT, class Order> 
+struct CompOpRgbaLighten : BlenderBase<ColorT, Order> {
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = max(Sca.Da, Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca + Dca
-        // Da'  = Sa + Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                d.a = sd_min(d.a + s.a, 1.0);
-                d.r = sd_min(d.r + s.r, d.a);
-                d.g = sd_min(d.g + s.g, d.a);
-                d.b = sd_min(d.b + s.b, d.a);
-                set(p, clip(d));
-            }
+            Rgba d = Get(p);
+            double d1a = 1 - d.a;
+            double s1a = 1 - s.a;
+            d.r = sd_max(s.r * d.a, d.r * s.a) + s.r * d1a + d.r * s1a;
+            d.g = sd_max(s.g * d.a, d.g * s.a) + s.g * d1a + d.g * s1a;
+            d.b = sd_max(s.b * d.a, d.b * s.a) + s.b * d1a + d.b * s1a;
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
         }
-    };
+    }
+};
 
-    //========================================================comp_op_rgba_minus
-    // Note: not included in SVG spec.
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_minus : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_color_dodge
+template<class ColorT, class Order> 
+struct CompOpRgba_color_dodge : BlenderBase<ColorT, Order> {
+    /*using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
+        if (sca < sa) return sada * sd_min(1.0, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
+        if (dca > 0) return sada + sca * d1a + dca * s1a;
+        return sca * d1a;
+    }
 
-        // Dca' = Dca - Sca
-        // Da' = 1 - (1 - Sa).(1 - Da) = Da + Sa - Sa.Da
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                d.a += s.a - s.a * d.a;
-                d.r = sd_max(d.r - s.r, 0.0);
-                d.g = sd_max(d.g - s.g, 0.0);
-                d.b = sd_max(d.b - s.b, 0.0);
-                set(p, clip(d));
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_multiply
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_multiply : blender_base<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca.Dca + Sca.(1 - Da) + Dca.(1 - Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
+            Rgba d = Get(p);
+            if (d.a > 0)
             {
-                rgba d = get(p);
-                double s1a = 1 - s.a;
-                double d1a = 1 - d.a;
-                d.r = s.r * d.r + s.r * d1a + d.r * s1a;
-                d.g = s.g * d.g + s.g * d1a + d.g * s1a;
-                d.b = s.b * d.b + s.b * d1a + d.b * s1a;
-                d.a += s.a - s.a * d.a;
-                set(p, clip(d));
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_screen
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_screen : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca + Dca - Sca.Dca
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                d.r += s.r - s.r * d.r;
-                d.g += s.g - s.g * d.g;
-                d.b += s.b - s.b * d.b;
-                d.a += s.a - s.a * d.a;
-                set(p, clip(d));
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_overlay
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_overlay : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // if 2.Dca <= Da
-        //   Dca' = 2.Sca.Dca + Sca.(1 - Da) + Dca.(1 - Sa)
-        // otherwise
-        //   Dca' = Sa.Da - 2.(Da - Dca).(Sa - Sca) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // 
-        // Da' = Sa + Da - Sa.Da
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
-        {
-            return (2 * dca <= da) ? 
-                2 * sca * dca + sca * d1a + dca * s1a : 
-                sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
-        }
-
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                double d1a = 1 - d.a;
-                double s1a = 1 - s.a;
                 double sada = s.a * d.a;
-                d.r = calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
-                d.g = calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
-                d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
-                d.a += s.a - s.a * d.a;
-                set(p, clip(d));
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_darken
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_darken : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = min(Sca.Da, Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                double d1a = 1 - d.a;
                 double s1a = 1 - s.a;
-                d.r = sd_min(s.r * d.a, d.r * s.a) + s.r * d1a + d.r * s1a;
-                d.g = sd_min(s.g * d.a, d.g * s.a) + s.g * d1a + d.g * s1a;
-                d.b = sd_min(s.b * d.a, d.b * s.a) + s.b * d1a + d.b * s1a;
-                d.a += s.a - s.a * d.a;
-                set(p, clip(d));
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_lighten
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_lighten : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = max(Sca.Da, Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
                 double d1a = 1 - d.a;
-                double s1a = 1 - s.a;
-                d.r = sd_max(s.r * d.a, d.r * s.a) + s.r * d1a + d.r * s1a;
-                d.g = sd_max(s.g * d.a, d.g * s.a) + s.g * d1a + d.g * s1a;
-                d.b = sd_max(s.b * d.a, d.b * s.a) + s.b * d1a + d.b * s1a;
+                d.r = Calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
+                d.g = Calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
+                d.b = Calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
                 d.a += s.a - s.a * d.a;
-                set(p, clip(d));
+                Set(p, Clip(d));
             }
+            else Set(p, s);
         }
-    };
+    }
+};
 
-    //=====================================================comp_op_rgba_color_dodge
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_color_dodge : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_color_burn
+template<class ColorT, class Order> 
+struct CompOpRgbaColorBurn : BlenderBase<ColorT, Order> {
+ /*   using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
+        if (sca > 0) return sada * (1 - sd_min(1.0, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
+        if (dca > da) return sada + dca * s1a;
+        return dca * s1a;
+    }
 
-        // if Sca == Sa and Dca == 0
-        //     Dca' = Sca.(1 - Da) + Dca.(1 - Sa) = Sca.(1 - Da)
-        // otherwise if Sca == Sa
-        //     Dca' = Sa.Da + Sca.(1 - Da) + Dca.(1 - Sa)
-        // otherwise if Sca < Sa
-        //     Dca' = Sa.Da.min(1, Dca/Da.Sa/(Sa - Sca)) + Sca.(1 - Da) + Dca.(1 - Sa)
-        //
-        // Da'  = Sa + Da - Sa.Da
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
-        {
-            if (sca < sa) return sada * sd_min(1.0, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
-            if (dca > 0) return sada + sca * d1a + dca * s1a;
-            return sca * d1a;
-        }
-
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                if (d.a > 0)
-                {
-                    double sada = s.a * d.a;
-                    double s1a = 1 - s.a;
-                    double d1a = 1 - d.a;
-                    d.r = calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
-                    d.g = calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
-                    d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
-                    d.a += s.a - s.a * d.a;
-                    set(p, clip(d));
-                }
-                else set(p, s);
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_color_burn
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_color_burn : blender_base<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // if Sca == 0 and Dca == Da
-        //   Dca' = Sa.Da + Dca.(1 - Sa)
-        // otherwise if Sca == 0
-        //   Dca' = Dca.(1 - Sa)
-        // otherwise if Sca > 0
-        //   Dca' =  Sa.Da.(1 - min(1, (1 - Dca/Da).Sa/Sca)) + Sca.(1 - Da) + Dca.(1 - Sa)
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            if (sca > 0) return sada * (1 - sd_min(1.0, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
-            if (dca > da) return sada + dca * s1a;
-            return dca * s1a;
-        }
-
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
+            Rgba d = Get(p);
+            if (d.a > 0)
             {
-                rgba d = get(p);
-                if (d.a > 0)
-                {
-                    double sada = s.a * d.a;
-                    double s1a = 1 - s.a;
-                    double d1a = 1 - d.a;
-                    d.r = calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
-                    d.g = calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
-                    d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
-                    d.a += s.a - sada;
-                    set(p, clip(d));
-                }
-                else set(p, s);
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_hard_light
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_hard_light : blender_base<ColorT, Order>
-    {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // if 2.Sca < Sa
-        //    Dca' = 2.Sca.Dca + Sca.(1 - Da) + Dca.(1 - Sa)
-        // otherwise
-        //    Dca' = Sa.Da - 2.(Da - Dca).(Sa - Sca) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // 
-        // Da'  = Sa + Da - Sa.Da
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
-        {
-            return (2 * sca < sa) ? 
-                2 * sca * dca + sca * d1a + dca * s1a : 
-                sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
-        }
-
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                double d1a = 1 - d.a;
-                double s1a = 1 - s.a;
                 double sada = s.a * d.a;
-                d.r = calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
-                d.g = calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
-                d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
+                double s1a = 1 - s.a;
+                double d1a = 1 - d.a;
+                d.r = Calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
+                d.g = Calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
+                d.b = Calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
                 d.a += s.a - sada;
-                set(p, clip(d));
+                Set(p, Clip(d));
             }
+            else Set(p, s);
         }
-    };
+    }
+};
 
-    //=====================================================comp_op_rgba_soft_light
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_soft_light : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_hard_light
+template<class ColorT, class Order> 
+struct CompOpRgbaHardLight : BlenderBase<ColorT, Order> {
+    //using ColorType = ColorT;
+    //using ValueType = typename ColorType::ValueType;
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
+        return (2 * sca < sa) ? 
+            2 * sca * dca + sca * d1a + dca * s1a : 
+            sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
+    }
 
-        // if 2.Sca <= Sa
-        //   Dca' = Dca.Sa - (Sa.Da - 2.Sca.Da).Dca.Sa.(Sa.Da - Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // otherwise if 2.Sca > Sa and 4.Dca <= Da
-        //   Dca' = Dca.Sa + (2.Sca.Da - Sa.Da).((((16.Dsa.Sa - 12).Dsa.Sa + 4).Dsa.Da) - Dsa.Da) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // otherwise if 2.Sca > Sa and 4.Dca > Da
-        //   Dca' = Dca.Sa + (2.Sca.Da - Sa.Da).((Dca.Sa)^0.5 - Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // 
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
-        {
-            double dcasa = dca * sa;
-            if (2 * sca <= sa) return dcasa - (sada - 2 * sca * da) * dcasa * (sada - dcasa) + sca * d1a + dca * s1a;
-            if (4 * dca <= da) return dcasa + (2 * sca * da - sada) * ((((16 * dcasa - 12) * dcasa + 4) * dca * da) - dca * da) + sca * d1a + dca * s1a;
-            return dcasa + (2 * sca * da - sada) * (std::sqrt(dcasa) - dcasa) + sca * d1a + dca * s1a;
-        }
-
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                if (d.a > 0)
-                {
-                    double sada = s.a * d.a;
-                    double s1a = 1 - s.a;
-                    double d1a = 1 - d.a;
-                    d.r = calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
-                    d.g = calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
-                    d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
-                    d.a += s.a - sada;
-                    set(p, clip(d));
-                }
-                else set(p, s);
-            }
-        }
-    };
-
-    //=====================================================comp_op_rgba_difference
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_difference : blender_base<ColorT, Order>
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
-
-        // Dca' = Sca + Dca - 2.min(Sca.Da, Dca.Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
-                rgba d = get(p);
-                d.r += s.r - 2 * sd_min(s.r * d.a, d.r * s.a);
-                d.g += s.g - 2 * sd_min(s.g * d.a, d.g * s.a);
-                d.b += s.b - 2 * sd_min(s.b * d.a, d.b * s.a);
-                d.a += s.a - s.a * d.a;
-                set(p, clip(d));
-            }
+            Rgba d = Get(p);
+            double d1a = 1 - d.a;
+            double s1a = 1 - s.a;
+            double sada = s.a * d.a;
+            d.r = Calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
+            d.g = Calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
+            d.b = Calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
+            d.a += s.a - sada;
+            Set(p, Clip(d));
         }
-    };
+    }
+};
 
-    //=====================================================comp_op_rgba_exclusion
-    template<class ColorT, class Order> 
-    struct comp_op_rgba_exclusion : blender_base<ColorT, Order>
+//=====================================================CompOpRgba_soft_light
+template<class ColorT, class Order> 
+struct CompOpRgbaSoftLight : BlenderBase<ColorT, Order> {
+   /* using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;*/
+      using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    static  GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
     {
-        typedef ColorT color_type;
-        typedef typename color_type::value_type value_type;
-        using blender_base<ColorT, Order>::get;
-        using blender_base<ColorT, Order>::set;
+        double dcasa = dca * sa;
+        if (2 * sca <= sa) return dcasa - (sada - 2 * sca * da) * dcasa * (sada - dcasa) + sca * d1a + dca * s1a;
+        if (4 * dca <= da) return dcasa + (2 * sca * da - sada) * ((((16 * dcasa - 12) * dcasa + 4) * dca * da) - dca * da) + sca * d1a + dca * s1a;
+        return dcasa + (2 * sca * da - sada) * (std::sqrt(dcasa) - dcasa) + sca * d1a + dca * s1a;
+    }
 
-        // Dca' = (Sca.Da + Dca.Sa - 2.Sca.Dca) + Sca.(1 - Da) + Dca.(1 - Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
         {
-            rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
+            Rgba d = Get(p);
+            if (d.a > 0)
             {
-                rgba d = get(p);
-                double d1a = 1 - d.a;
+                double sada = s.a * d.a;
                 double s1a = 1 - s.a;
-                d.r = (s.r * d.a + d.r * s.a - 2 * s.r * d.r) + s.r * d1a + d.r * s1a;
-                d.g = (s.g * d.a + d.g * s.a - 2 * s.g * d.g) + s.g * d1a + d.g * s1a;
-                d.b = (s.b * d.a + d.b * s.a - 2 * s.b * d.b) + s.b * d1a + d.b * s1a;
-                d.a += s.a - s.a * d.a;
-                set(p, clip(d));
+                double d1a = 1 - d.a;
+                d.r = Calc(d.r, s.r, d.a, s.a, sada, d1a, s1a);
+                d.g = Calc(d.g, s.g, d.a, s.a, sada, d1a, s1a);
+                d.b = Calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
+                d.a += s.a - sada;
+                Set(p, Clip(d));
             }
+            else Set(p, s);
         }
-    };
+    }
+};
+
+//=====================================================CompOpRgba_difference
+template<class ColorT, class Order> 
+struct CompOpRgbaDifference : BlenderBase<ColorT, Order> {
+     using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = Sca + Dca - 2.min(Sca.Da, Dca.Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
+        {
+            Rgba d = Get(p);
+            d.r += s.r - 2 * sd_min(s.r * d.a, d.r * s.a);
+            d.g += s.g - 2 * sd_min(s.g * d.a, d.g * s.a);
+            d.b += s.b - 2 * sd_min(s.b * d.a, d.b * s.a);
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
+        }
+    }
+};
+
+//=====================================================CompOpRgba_exclusion
+template<class ColorT, class Order> 
+struct CompOpRgba_exclusion : BlenderBase<ColorT, Order> {
+    using ColorType = ColorT;
+    using ValueType = typename ColorType::ValueType;
+    using BlenderBase<ColorT, Order>::Get;
+    using BlenderBase<ColorT, Order>::Set;
+
+    // Dca' = (Sca.Da + Dca.Sa - 2.Sca.Dca) + Sca.(1 - Da) + Dca.(1 - Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        Rgba s = Get(r, g, b, a, cover);
+        if (s.a > 0)
+        {
+            Rgba d = Get(p);
+            double d1a = 1 - d.a;
+            double s1a = 1 - s.a;
+            d.r = (s.r * d.a + d.r * s.a - 2 * s.r * d.r) + s.r * d1a + d.r * s1a;
+            d.g = (s.g * d.a + d.g * s.a - 2 * s.g * d.g) + s.g * d1a + d.g * s1a;
+            d.b = (s.b * d.a + d.b * s.a - 2 * s.b * d.b) + s.b * d1a + d.b * s1a;
+            d.a += s.a - s.a * d.a;
+            Set(p, Clip(d));
+        }
+    }
+};
 
 #if 0
-    //=====================================================comp_op_rgba_contrast
-    template<class ColorT, class Order> struct comp_op_rgba_contrast
-    {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-        enum base_scale_e
-        { 
-            base_shift = color_type::base_shift,
-            base_mask  = color_type::base_mask
-        };
-
-
-        static AGG_INLINE void blend_pix(value_type* p, 
-                                         unsigned sr, unsigned sg, unsigned sb, 
-                                         unsigned sa, unsigned cover)
-        {
-            if (cover < 255)
-            {
-                sr = (sr * cover + 255) >> 8;
-                sg = (sg * cover + 255) >> 8;
-                sb = (sb * cover + 255) >> 8;
-                sa = (sa * cover + 255) >> 8;
-            }
-            long_type dr = p[Order::R];
-            long_type dg = p[Order::G];
-            long_type db = p[Order::B];
-            int       da = p[Order::A];
-            long_type d2a = da >> 1;
-            unsigned s2a = sa >> 1;
-
-            int r = (int)((((dr - d2a) * int((sr - s2a)*2 + base_mask)) >> base_shift) + d2a); 
-            int g = (int)((((dg - d2a) * int((sg - s2a)*2 + base_mask)) >> base_shift) + d2a); 
-            int b = (int)((((db - d2a) * int((sb - s2a)*2 + base_mask)) >> base_shift) + d2a); 
-
-            r = (r < 0) ? 0 : r;
-            g = (g < 0) ? 0 : g;
-            b = (b < 0) ? 0 : b;
-
-            p[Order::R] = (value_type)((r > da) ? da : r);
-            p[Order::G] = (value_type)((g > da) ? da : g);
-            p[Order::B] = (value_type)((b > da) ? da : b);
-        }
+//=====================================================CompOpRgba_contrast
+template<class ColorT, class Order>
+struct CompOpRgbaContrast {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+    enum BaseScaleE
+    { 
+        BASE_SHIFT = ColorType::BASE_SHIFT,
+        BASE_MASK  = ColorType::BASE_MASK
     };
 
-    //=====================================================comp_op_rgba_invert
-    template<class ColorT, class Order> struct comp_op_rgba_invert
-    {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-        enum base_scale_e
-        { 
-            base_shift = color_type::base_shift,
-            base_mask  = color_type::base_mask
-        };
 
-        // Dca' = (Da - Dca) * Sa + Dca.(1 - Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-                                         unsigned sr, unsigned sg, unsigned sb, 
-                                         unsigned sa, unsigned cover)
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+                                        unsigned sr, unsigned sg, unsigned sb, 
+                                        unsigned sa, unsigned cover)
+    {
+        if (cover < 255)
         {
+            sr = (sr * cover + 255) >> 8;
+            sg = (sg * cover + 255) >> 8;
+            sb = (sb * cover + 255) >> 8;
             sa = (sa * cover + 255) >> 8;
-            if (sa)
-            {
-                calc_type da = p[Order::A];
-                calc_type dr = ((da - p[Order::R]) * sa + base_mask) >> base_shift;
-                calc_type dg = ((da - p[Order::G]) * sa + base_mask) >> base_shift;
-                calc_type db = ((da - p[Order::B]) * sa + base_mask) >> base_shift;
-                calc_type s1a = base_mask - sa;
-                p[Order::R] = (value_type)(dr + ((p[Order::R] * s1a + base_mask) >> base_shift));
-                p[Order::G] = (value_type)(dg + ((p[Order::G] * s1a + base_mask) >> base_shift));
-                p[Order::B] = (value_type)(db + ((p[Order::B] * s1a + base_mask) >> base_shift));
-                p[Order::A] = (value_type)(sa + da - ((sa * da + base_mask) >> base_shift));
-            }
         }
+        LongType dr = p[Order::R];
+        LongType dg = p[Order::G];
+        LongType db = p[Order::B];
+        int       da = p[Order::A];
+        LongType d2a = da >> 1;
+        unsigned s2a = sa >> 1;
+
+        int r = (int)((((dr - d2a) * int((sr - s2a)*2 + BASE_MASK)) >> BASE_SHIFT) + d2a); 
+        int g = (int)((((dg - d2a) * int((sg - s2a)*2 + BASE_MASK)) >> BASE_SHIFT) + d2a); 
+        int b = (int)((((db - d2a) * int((sb - s2a)*2 + BASE_MASK)) >> BASE_SHIFT) + d2a); 
+
+        r = (r < 0) ? 0 : r;
+        g = (g < 0) ? 0 : g;
+        b = (b < 0) ? 0 : b;
+
+        p[Order::R] = (ValueType)((r > da) ? da : r);
+        p[Order::G] = (ValueType)((g > da) ? da : g);
+        p[Order::B] = (ValueType)((b > da) ? da : b);
+    }
+};
+
+//=====================================================CompOpRgba_invert
+template<class ColorT, class Order> 
+struct CompOpRgbaInvert {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+    enum BaseScaleE
+    { 
+        BASE_SHIFT = ColorType::BASE_SHIFT,
+        BASE_MASK  = ColorType::BASE_MASK
     };
 
-    //=================================================comp_op_rgba_invert_rgb
-    template<class ColorT, class Order> struct comp_op_rgba_invert_rgb
+    // Dca' = (Da - Dca) * Sa + Dca.(1 - Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+                                        unsigned sr, unsigned sg, unsigned sb, 
+                                        unsigned sa, unsigned cover)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-        enum base_scale_e
-        { 
-            base_shift = color_type::base_shift,
-            base_mask  = color_type::base_mask
-        };
-
-        // Dca' = (Da - Dca) * Sca + Dca.(1 - Sa)
-        // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
-                                         unsigned sr, unsigned sg, unsigned sb, 
-                                         unsigned sa, unsigned cover)
+        sa = (sa * cover + 255) >> 8;
+        if (sa)
         {
-            if (cover < 255)
-            {
-                sr = (sr * cover + 255) >> 8;
-                sg = (sg * cover + 255) >> 8;
-                sb = (sb * cover + 255) >> 8;
-                sa = (sa * cover + 255) >> 8;
-            }
-            if (sa)
-            {
-                calc_type da = p[Order::A];
-                calc_type dr = ((da - p[Order::R]) * sr + base_mask) >> base_shift;
-                calc_type dg = ((da - p[Order::G]) * sg + base_mask) >> base_shift;
-                calc_type db = ((da - p[Order::B]) * sb + base_mask) >> base_shift;
-                calc_type s1a = base_mask - sa;
-                p[Order::R] = (value_type)(dr + ((p[Order::R] * s1a + base_mask) >> base_shift));
-                p[Order::G] = (value_type)(dg + ((p[Order::G] * s1a + base_mask) >> base_shift));
-                p[Order::B] = (value_type)(db + ((p[Order::B] * s1a + base_mask) >> base_shift));
-                p[Order::A] = (value_type)(sa + da - ((sa * da + base_mask) >> base_shift));
-            }
+            CalcType da = p[Order::A];
+            CalcType dr = ((da - p[Order::R]) * sa + BASE_MASK) >> BASE_SHIFT;
+            CalcType dg = ((da - p[Order::G]) * sa + BASE_MASK) >> BASE_SHIFT;
+            CalcType db = ((da - p[Order::B]) * sa + BASE_MASK) >> BASE_SHIFT;
+            CalcType s1a = BASE_MASK - sa;
+            p[Order::R] = (ValueType)(dr + ((p[Order::R] * s1a + BASE_MASK) >> BASE_SHIFT));
+            p[Order::G] = (ValueType)(dg + ((p[Order::G] * s1a + BASE_MASK) >> BASE_SHIFT));
+            p[Order::B] = (ValueType)(db + ((p[Order::B] * s1a + BASE_MASK) >> BASE_SHIFT));
+            p[Order::A] = (ValueType)(sa + da - ((sa * da + BASE_MASK) >> BASE_SHIFT));
         }
+    }
+};
+
+//=================================================CompOpRgba_invert_rgb
+template<class ColorT, class Order> 
+struct CompOpRgbaInvertRgb {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+    enum BaseScaleE
+    { 
+        BASE_SHIFT = ColorType::BASE_SHIFT,
+        BASE_MASK  = ColorType::BASE_MASK
     };
+
+    // Dca' = (Da - Dca) * Sca + Dca.(1 - Sa)
+    // Da'  = Sa + Da - Sa.Da 
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* p, 
+                                        unsigned sr, unsigned sg, unsigned sb, 
+                                        unsigned sa, unsigned cover)
+    {
+        if (cover < 255)
+        {
+            sr = (sr * cover + 255) >> 8;
+            sg = (sg * cover + 255) >> 8;
+            sb = (sb * cover + 255) >> 8;
+            sa = (sa * cover + 255) >> 8;
+        }
+        if (sa)
+        {
+            CalcType da = p[Order::A];
+            CalcType dr = ((da - p[Order::R]) * sr + BASE_MASK) >> BASE_SHIFT;
+            CalcType dg = ((da - p[Order::G]) * sg + BASE_MASK) >> BASE_SHIFT;
+            CalcType db = ((da - p[Order::B]) * sb + BASE_MASK) >> BASE_SHIFT;
+            CalcType s1a = BASE_MASK - sa;
+            p[Order::R] = (ValueType)(dr + ((p[Order::R] * s1a + BASE_MASK) >> BASE_SHIFT));
+            p[Order::G] = (ValueType)(dg + ((p[Order::G] * s1a + BASE_MASK) >> BASE_SHIFT));
+            p[Order::B] = (ValueType)(db + ((p[Order::B] * s1a + BASE_MASK) >> BASE_SHIFT));
+            p[Order::A] = (ValueType)(sa + da - ((sa * da + BASE_MASK) >> BASE_SHIFT));
+        }
+    }
+};
 #endif
 
+template<class ColorT, class Order> 
+struct CompOpTableRgba {
+    using ValueType = typename ColorT::ValueType ValueType;
+    using CalcType = typename ColorT::CalcType;
+    //typedef void (*CompOpFuncType)(ValueType* p, 
+    //                                    ValueType cr, 
+    //                                    ValueType cg, 
+    //                                    ValueType cb,
+    //                                    ValueType ca,
+    //                                    CoverType cover);
+    using CompOpFuncType = void (*)(ValueType* p, ValueType cr, ValueType cg, ValueType cb, ValueType ca, CoverType cover);
+    static CompOpFuncType g_compOpFunc[];
+};
 
-    //======================================================comp_op_table_rgba
-    template<class ColorT, class Order> struct comp_op_table_rgba
+template<class ColorT, class Order> 
+typename CompOpTableRgba<ColorT, Order>::CompOpFuncType CompOpTableRgba<ColorT, Order>::g_compOpFunc[] = 
+{
+    CompOpRgbaClear      <ColorT,Order>::BlendPix,
+    CompOpRgbaSrc        <ColorT,Order>::BlendPix,
+    CompOpRgbaDst        <ColorT,Order>::BlendPix,
+    CompOpRgbaSrcOver   <ColorT,Order>::BlendPix,
+    CompOpRgbaDstOver   <ColorT,Order>::BlendPix,
+    CompOpRgbaSrcIn     <ColorT,Order>::BlendPix,
+    CompOpRgbaDstIn     <ColorT,Order>::BlendPix,
+    CompOpRgbaSrcOut    <ColorT,Order>::BlendPix,
+    CompOpRgbaDstOut    <ColorT,Order>::BlendPix,
+    CompOpRgbaSrcAtop   <ColorT,Order>::BlendPix,
+    CompOpRgbaDstAtop   <ColorT,Order>::BlendPix,
+    CompOpRgbaXor        <ColorT,Order>::BlendPix,
+    CompOpRgbaPlus       <ColorT,Order>::BlendPix,
+    //CompOpRgbaMinus      <ColorT,Order>::BlendPix,
+    CompOpRgbaMultiply   <ColorT,Order>::BlendPix,
+    CompOpRgbaScreen     <ColorT,Order>::BlendPix,
+    CompOpRgbaOverlay    <ColorT,Order>::BlendPix,
+    CompOpRgbaDarken     <ColorT,Order>::BlendPix,
+    CompOpRgbaLighten    <ColorT,Order>::BlendPix,
+    CompOpRgbaColorDodge<ColorT,Order>::BlendPix,
+    CompOpRgbaColorBurn <ColorT,Order>::BlendPix,
+    CompOpRgbaHardLight <ColorT,Order>::BlendPix,
+    CompOpRgbaSoftLight <ColorT,Order>::BlendPix,
+    CompOpRgbaDifference <ColorT,Order>::BlendPix,
+    CompOpRgbaExclusion  <ColorT,Order>::BlendPix,
+    //CompOpRgbaContrast   <ColorT,Order>::BlendPix,
+    //CompOpRgbaInvert     <ColorT,Order>::BlendPix,
+    //CompOpRgbaInvertRgb <ColorT,Order>::BlendPix,
+    0
+};
+
+
+//==============================================================comp_op_e
+enum CompOpE
+{
+    COMP_OP_CLEAR,         //----COMP_OP_CLEAR
+    COMP_OP_SRC,           //----COMP_OP_SRC
+    COMP_OP_DST,           //----COMP_OP_DST
+    COMP_OP_SRC_OVER,      //----COMP_OP_SRC_OVER
+    COMP_OP_DST_OVER,      //----COMP_OP_DST_OVER
+    COMP_OP_SRC_IN,        //----COMP_OP_SRC_IN
+    COMP_OP_DST_IN,        //----COMP_OP_DST_IN
+    COMP_OP_SRC_OUT,       //----COMP_OP_SRC_OUT
+    COMP_OP_DST_OUT,       //----COMP_OP_DST_OUT
+    COMP_OP_SRC_ATOP,      //----COMP_OP_SRC_ATOP
+    COMP_OP_DST_ATOP,      //----COMP_OP_DST_ATOP
+    COMP_OP_XOR,           //----COMP_OP_XOR
+    COMP_OP_PLUS,          //----COMP_OP_PLUS
+    //COMP_OP_MINUS,         //----COMP_OP_MINUS
+    COMP_OP_MULTIPLY,      //----COMP_OP_MULTIPLY
+    COMP_OP_SCREEN,        //----COMP_OP_SCREEN
+    COMP_OP_OVERLAY,       //----COMP_OP_OVERLAY
+    COMP_OP_DARKEN,        //----COMP_OP_DARKEN
+    COMP_OP_LIGHTEN,       //----COMP_OP_LIGHTEN
+    COMP_OP_COLOR_DODGE,   //----COMP_OP_COLOR_DODGE
+    COMP_OP_COLOR_BURN,    //----COMP_OP_COLOR_BURN
+    COMP_OP_HARD_LIGHT,    //----COMP_OP_HARD_LIGHT
+    COMP_OP_SOFT_LIGHT,    //----COMP_OP_SOFT_LIGHT
+    COMP_OP_DIFFERENCE,    //----COMP_OP_DIFFERENCE
+    COMP_OP_EXCLUSION,     //----COMP_OP_EXCLUSION
+    //COMP_OP_CONTRAST,      //----COMP_OP_CONTRAST
+    //COMP_OP_INVERT,        //----COMP_OP_INVERT
+    //COMP_OP_INVERT_RGB,    //----COMP_OP_INVERT_RGB
+
+    END_OF_COMP_OP_E
+};
+
+
+
+
+
+
+
+//====================================================CompOpAdaptor_rgba
+template<class ColorT, class Order> 
+struct CompOpAdaptorRgba {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
     {
-        typedef typename ColorT::value_type value_type;
-        typedef typename ColorT::calc_type calc_type;
-        typedef void (*comp_op_func_type)(value_type* p, 
-                                          value_type cr, 
-                                          value_type cg, 
-                                          value_type cb,
-                                          value_type ca,
-                                          cover_type cover);
-        static comp_op_func_type g_comp_op_func[];
+        CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](p, 
+            ColorType::Multiply(r, a), 
+            ColorType::Multiply(g, a), 
+            ColorType::Multiply(b, a), 
+            a, cover);
+    }
+};
+
+//=========================================CompOpAdaptor_clip_to_dst_rgba
+template<class ColorT, class Order> 
+struct CompOpAdaptorClipToDstRgba {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        r = ColorType::Multiply(r, a);
+        g = ColorType::Multiply(g, a);
+        b = ColorType::Multiply(b, a);
+        ValueType da = p[Order::A];
+        CompOpTableRgba<ColorT, Order>::gCompOpFunc[op](p, 
+            ColorType::Multiply(r, da), 
+            ColorType::Multiply(g, da), 
+            ColorType::Multiply(b, da), 
+            ColorType::Multiply(a, da), cover);
+    }
+};
+
+//================================================CompOpAdaptor_rgba_pre
+template<class ColorT, class Order> 
+struct CompOpAdaptorRgbaPre {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](p, r, g, b, a, cover);
+    }
+};
+
+//=====================================CompOpAdaptor_clip_to_dst_rgba_pre
+template<class ColorT, class Order> 
+struct CompOpAdaptorClipToDstRgbaPre {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        ValueType da = p[Order::A];
+        CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](p, 
+            ColorType::Multiply(r, da), 
+            ColorType::Multiply(g, da), 
+            ColorType::Multiply(b, da), 
+            ColorType::Multiply(a, da), cover);
+    }
+};
+
+//====================================================CompOpAdaptor_rgba_plain
+template<class ColorT, class Order> 
+struct CompOpAdaptorRgbaPlain {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        MultiplierRgba<ColorT, Order>::Premultiply(p);
+        CompOpAdaptorRgba<ColorT, Order>::BlendPix(op, p, r, g, b, a, cover);
+        MultiplierRgba<ColorT, Order>::Demultiply(p);
+    }
+};
+
+//=========================================CompOpAdaptor_clip_to_dst_rgba_plain
+template<class ColorT, class Order> 
+struct CompOpAdaptorClipToDstRgbaPlain {
+    using ColorType = ColorT;
+    using OrderType = Order;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        MultiplierRgba<ColorT, Order>::Premultiply(p);
+        CompOpAdaptorClipToDstRgba<ColorT, Order>::BlendPix(op, p, r, g, b, a, cover);
+        MultiplierRgba<ColorT, Order>::Demultiply(p);
+    }
+};
+
+//=======================================================CompAdaptorRgba
+template<class BlenderPre> 
+struct CompAdaptorRgba {
+    using ColorType = typename BlenderPre::ColorType;
+    using OrderType = typename BlenderPre::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        BlenderPre::BlendPix(p, 
+            ColorType::Multiply(r, a), 
+            ColorType::Multiply(g, a), 
+            ColorType::Multiply(b, a), 
+            a, cover);
+    }
+};
+
+//==========================================comp_adaptor_clip_to_dst_rgba
+template<class BlenderPre> 
+struct CompAdaptorClipToDstRgba {
+    using ColorType = typename BlenderPre::ColorType;
+    using OrderType = typename BlenderPre::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        r = ColorType::Multiply(r, a);
+        g = ColorType::Multiply(g, a);
+        b = ColorType::Multiply(b, a);
+        ValueType da = p[OrderType::A];
+        BlenderPre::BlendPix(p, 
+            ColorType::Multiply(r, da), 
+            ColorType::Multiply(g, da), 
+            ColorType::Multiply(b, da), 
+            ColorType::Multiply(a, da), cover);
+    }
+};
+
+//=======================================================CompAdaptorRgba_pre
+template<class BlenderPre> 
+struct CompAdaptorRgbaPre {
+    using ColorType = typename BlenderPre::ColorType;
+    using OrderType = typename BlenderPre::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        BlenderPre::BlendPix(p, r, g, b, a, cover);
+    }
+};
+
+//======================================comp_adaptor_clip_to_dst_rgba_pre
+template<class BlenderPre> 
+struct CompAdaptorClipToDstRgbaPre {
+    using ColorType = typename BlenderPre::ColorType;
+    using OrderType = typename BlenderPre::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        unsigned da = p[OrderType::A];
+        BlenderPre::BlendPix(p, 
+            ColorType::Multiply(r, da), 
+            ColorType::Multiply(g, da), 
+            ColorType::Multiply(b, da), 
+            ColorType::Multiply(a, da), 
+            cover);
+    }
+};
+
+//=======================================================CompAdaptorRgba_plain
+template<class BlenderPre> 
+struct CompAdaptorRgbaPlain {
+    using ColorType = typename BlenderPre::ColorType;
+    using OrderType = typename BlenderPre::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        MultiplierRgba<ColorType, OrderType>::Premultiply(p);
+        CompAdaptorRgba<BlenderPre>::BlendPix(op, p, r, g, b, a, cover);
+        MultiplierRgba<ColorType, OrderType>::Demultiply(p);
+    }
+};
+
+//==========================================comp_adaptor_clip_to_dst_rgba_plain
+template<class BlenderPre> 
+struct CompAdaptorClipToDstRgbaPlain {
+    using ColorType = typename BlenderPre::ColorType;
+    using OrderType = typename BlenderPre::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    using LongType = typename ColorType::LongType
+
+    static  GRAPHIC_GEOMETRY_INLINE void BlendPix(unsigned op, ValueType* p, 
+        ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+    {
+        MultiplierRgba<ColorType, OrderType>::Premultiply(p);
+        CompAdaptorClipToDstRgba<BlenderPre>::BlendPix(op, p, r, g, b, a, cover);
+        MultiplierRgba<ColorType, OrderType>::Demultiply(p);
+    }
+};
+
+
+//=================================================pixfmt_alpha_blend_rgba
+template<class Blender, class RenBuf> 
+class PixfmtAlphaBlendRgba : public HeapBase {
+public:
+    using PixfmtCategory = PixfmtRgbaTag;
+    using RbufType = RenBuf;
+    using RowData = typename RbufType::RowData;
+    using BlenderType = Blender;
+    using ColorType = typename BlenderType::ColorType;
+    using OrderType = typename BlenderType::OrderType ;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+
+    enum 
+    {
+        NUM_COMPONENTS = 4,
+        PIX_STEP = 4,
+        PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
     };
 
-    //==========================================================g_comp_op_func
-    template<class ColorT, class Order> 
-    typename comp_op_table_rgba<ColorT, Order>::comp_op_func_type
-    comp_op_table_rgba<ColorT, Order>::g_comp_op_func[] = 
-    {
-        comp_op_rgba_clear      <ColorT,Order>::blend_pix,
-        comp_op_rgba_src        <ColorT,Order>::blend_pix,
-        comp_op_rgba_dst        <ColorT,Order>::blend_pix,
-        comp_op_rgba_src_over   <ColorT,Order>::blend_pix,
-        comp_op_rgba_dst_over   <ColorT,Order>::blend_pix,
-        comp_op_rgba_src_in     <ColorT,Order>::blend_pix,
-        comp_op_rgba_dst_in     <ColorT,Order>::blend_pix,
-        comp_op_rgba_src_out    <ColorT,Order>::blend_pix,
-        comp_op_rgba_dst_out    <ColorT,Order>::blend_pix,
-        comp_op_rgba_src_atop   <ColorT,Order>::blend_pix,
-        comp_op_rgba_dst_atop   <ColorT,Order>::blend_pix,
-        comp_op_rgba_xor        <ColorT,Order>::blend_pix,
-        comp_op_rgba_plus       <ColorT,Order>::blend_pix,
-        //comp_op_rgba_minus      <ColorT,Order>::blend_pix,
-        comp_op_rgba_multiply   <ColorT,Order>::blend_pix,
-        comp_op_rgba_screen     <ColorT,Order>::blend_pix,
-        comp_op_rgba_overlay    <ColorT,Order>::blend_pix,
-        comp_op_rgba_darken     <ColorT,Order>::blend_pix,
-        comp_op_rgba_lighten    <ColorT,Order>::blend_pix,
-        comp_op_rgba_color_dodge<ColorT,Order>::blend_pix,
-        comp_op_rgba_color_burn <ColorT,Order>::blend_pix,
-        comp_op_rgba_hard_light <ColorT,Order>::blend_pix,
-        comp_op_rgba_soft_light <ColorT,Order>::blend_pix,
-        comp_op_rgba_difference <ColorT,Order>::blend_pix,
-        comp_op_rgba_exclusion  <ColorT,Order>::blend_pix,
-        //comp_op_rgba_contrast   <ColorT,Order>::blend_pix,
-        //comp_op_rgba_invert     <ColorT,Order>::blend_pix,
-        //comp_op_rgba_invert_rgb <ColorT,Order>::blend_pix,
-        0
-    };
+    struct PixelType {
+        ValueType c[NUM_COMPONENTS];
 
-
-    //==============================================================comp_op_e
-    enum comp_op_e
-    {
-        comp_op_clear,         //----comp_op_clear
-        comp_op_src,           //----comp_op_src
-        comp_op_dst,           //----comp_op_dst
-        comp_op_src_over,      //----comp_op_src_over
-        comp_op_dst_over,      //----comp_op_dst_over
-        comp_op_src_in,        //----comp_op_src_in
-        comp_op_dst_in,        //----comp_op_dst_in
-        comp_op_src_out,       //----comp_op_src_out
-        comp_op_dst_out,       //----comp_op_dst_out
-        comp_op_src_atop,      //----comp_op_src_atop
-        comp_op_dst_atop,      //----comp_op_dst_atop
-        comp_op_xor,           //----comp_op_xor
-        comp_op_plus,          //----comp_op_plus
-        //comp_op_minus,         //----comp_op_minus
-        comp_op_multiply,      //----comp_op_multiply
-        comp_op_screen,        //----comp_op_screen
-        comp_op_overlay,       //----comp_op_overlay
-        comp_op_darken,        //----comp_op_darken
-        comp_op_lighten,       //----comp_op_lighten
-        comp_op_color_dodge,   //----comp_op_color_dodge
-        comp_op_color_burn,    //----comp_op_color_burn
-        comp_op_hard_light,    //----comp_op_hard_light
-        comp_op_soft_light,    //----comp_op_soft_light
-        comp_op_difference,    //----comp_op_difference
-        comp_op_exclusion,     //----comp_op_exclusion
-        //comp_op_contrast,      //----comp_op_contrast
-        //comp_op_invert,        //----comp_op_invert
-        //comp_op_invert_rgb,    //----comp_op_invert_rgb
-
-        end_of_comp_op_e
-    };
-
-
-
-
-
-
-
-    //====================================================comp_op_adaptor_rgba
-    template<class ColorT, class Order> 
-    struct comp_op_adaptor_rgba
-    {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        void Set(ValueType r, ValueType g, ValueType b, ValueType a)
         {
-            comp_op_table_rgba<ColorT, Order>::g_comp_op_func[op](p, 
-                color_type::multiply(r, a), 
-                color_type::multiply(g, a), 
-                color_type::multiply(b, a), 
-                a, cover);
+            c[OrderType::R] = r;
+            c[OrderType::G] = g;
+            c[OrderType::B] = b;
+            c[OrderType::A] = a;
+        }
+
+        void Set(const ColorType& color)
+        {
+            Set(color.r, color.g, color.b, color.a);
+        }
+
+        void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
+        {
+            r = c[OrderType::R];
+            g = c[OrderType::G];
+            b = c[OrderType::B];
+            a = c[OrderType::A];
+        }
+
+        ColorType Get() const
+        {
+            return ColorType(
+                c[OrderType::R], 
+                c[OrderType::G], 
+                c[OrderType::B],
+                c[OrderType::A]);
+        }
+
+        PixelType* Next()
+        {
+            return (PixelType*)(c + PIX_STEP);
+        }
+
+        const PixelType* Next() const
+        {
+            return (const PixelType*)(c + PIX_STEP);
+        }
+
+        PixelType* Advance(int n)
+        {
+            return (PixelType*)(c + n * PIX_STEP);
+        }
+
+        const PixelType* Advance(int n) const
+        {
+            return (const PixelType*)(c + n * PIX_STEP);
         }
     };
 
-    //=========================================comp_op_adaptor_clip_to_dst_rgba
-    template<class ColorT, class Order> 
-    struct comp_op_adaptor_clip_to_dst_rgba
+private:
+    
+     GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
+        blender_.BlendPix(p->c, c.r, c.g, c.b, c.a, cover);
+    }
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            r = color_type::multiply(r, a);
-            g = color_type::multiply(g, a);
-            b = color_type::multiply(b, a);
-            value_type da = p[Order::A];
-            comp_op_table_rgba<ColorT, Order>::g_comp_op_func[op](p, 
-                color_type::multiply(r, da), 
-                color_type::multiply(g, da), 
-                color_type::multiply(b, da), 
-                color_type::multiply(a, da), cover);
-        }
-    };
-
-    //================================================comp_op_adaptor_rgba_pre
-    template<class ColorT, class Order> 
-    struct comp_op_adaptor_rgba_pre
+     GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
+        blender_.BlendPix(p->c, c.r, c.g, c.b, c.a);
+    }
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            comp_op_table_rgba<ColorT, Order>::g_comp_op_func[op](p, r, g, b, a, cover);
-        }
-    };
-
-    //=====================================comp_op_adaptor_clip_to_dst_rgba_pre
-    template<class ColorT, class Order> 
-    struct comp_op_adaptor_clip_to_dst_rgba_pre
+     GRAPHIC_GEOMETRY_INLINE void copy_or_BlendPix(PixelType* p, const ColorType& c, unsigned cover)
     {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
+        if (!c.IsTransparent())
         {
-            value_type da = p[Order::A];
-            comp_op_table_rgba<ColorT, Order>::g_comp_op_func[op](p, 
-                color_type::multiply(r, da), 
-                color_type::multiply(g, da), 
-                color_type::multiply(b, da), 
-                color_type::multiply(a, da), cover);
-        }
-    };
-
-    //====================================================comp_op_adaptor_rgba_plain
-    template<class ColorT, class Order> 
-    struct comp_op_adaptor_rgba_plain
-    {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            multiplier_rgba<ColorT, Order>::premultiply(p);
-            comp_op_adaptor_rgba<ColorT, Order>::blend_pix(op, p, r, g, b, a, cover);
-            multiplier_rgba<ColorT, Order>::demultiply(p);
-        }
-    };
-
-    //=========================================comp_op_adaptor_clip_to_dst_rgba_plain
-    template<class ColorT, class Order> 
-    struct comp_op_adaptor_clip_to_dst_rgba_plain
-    {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            multiplier_rgba<ColorT, Order>::premultiply(p);
-            comp_op_adaptor_clip_to_dst_rgba<ColorT, Order>::blend_pix(op, p, r, g, b, a, cover);
-            multiplier_rgba<ColorT, Order>::demultiply(p);
-        }
-    };
-
-    //=======================================================comp_adaptor_rgba
-    template<class BlenderPre> 
-    struct comp_adaptor_rgba
-    {
-        typedef typename BlenderPre::color_type color_type;
-        typedef typename BlenderPre::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            BlenderPre::blend_pix(p, 
-                color_type::multiply(r, a), 
-                color_type::multiply(g, a), 
-                color_type::multiply(b, a), 
-                a, cover);
-        }
-    };
-
-    //==========================================comp_adaptor_clip_to_dst_rgba
-    template<class BlenderPre> 
-    struct comp_adaptor_clip_to_dst_rgba
-    {
-        typedef typename BlenderPre::color_type color_type;
-        typedef typename BlenderPre::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            r = color_type::multiply(r, a);
-            g = color_type::multiply(g, a);
-            b = color_type::multiply(b, a);
-            value_type da = p[order_type::A];
-            BlenderPre::blend_pix(p, 
-                color_type::multiply(r, da), 
-                color_type::multiply(g, da), 
-                color_type::multiply(b, da), 
-                color_type::multiply(a, da), cover);
-        }
-    };
-
-    //=======================================================comp_adaptor_rgba_pre
-    template<class BlenderPre> 
-    struct comp_adaptor_rgba_pre
-    {
-        typedef typename BlenderPre::color_type color_type;
-        typedef typename BlenderPre::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            BlenderPre::blend_pix(p, r, g, b, a, cover);
-        }
-    };
-
-    //======================================comp_adaptor_clip_to_dst_rgba_pre
-    template<class BlenderPre> 
-    struct comp_adaptor_clip_to_dst_rgba_pre
-    {
-        typedef typename BlenderPre::color_type color_type;
-        typedef typename BlenderPre::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            unsigned da = p[order_type::A];
-            BlenderPre::blend_pix(p, 
-                color_type::multiply(r, da), 
-                color_type::multiply(g, da), 
-                color_type::multiply(b, da), 
-                color_type::multiply(a, da), 
-                cover);
-        }
-    };
-
-    //=======================================================comp_adaptor_rgba_plain
-    template<class BlenderPre> 
-    struct comp_adaptor_rgba_plain
-    {
-        typedef typename BlenderPre::color_type color_type;
-        typedef typename BlenderPre::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            multiplier_rgba<color_type, order_type>::premultiply(p);
-            comp_adaptor_rgba<BlenderPre>::blend_pix(op, p, r, g, b, a, cover);
-            multiplier_rgba<color_type, order_type>::demultiply(p);
-        }
-    };
-
-    //==========================================comp_adaptor_clip_to_dst_rgba_plain
-    template<class BlenderPre> 
-    struct comp_adaptor_clip_to_dst_rgba_plain
-    {
-        typedef typename BlenderPre::color_type color_type;
-        typedef typename BlenderPre::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
-
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
-            value_type r, value_type g, value_type b, value_type a, cover_type cover)
-        {
-            multiplier_rgba<color_type, order_type>::premultiply(p);
-            comp_adaptor_clip_to_dst_rgba<BlenderPre>::blend_pix(op, p, r, g, b, a, cover);
-            multiplier_rgba<color_type, order_type>::demultiply(p);
-        }
-    };
-
-
-    //=================================================pixfmt_alpha_blend_rgba
-    template<class Blender, class RenBuf> 
-    class pixfmt_alpha_blend_rgba
-    {
-    public:
-        typedef pixfmt_rgba_tag pixfmt_category;
-        typedef RenBuf   rbuf_type;
-        typedef typename rbuf_type::row_data row_data;
-        typedef Blender  blender_type;
-        typedef typename blender_type::color_type color_type;
-        typedef typename blender_type::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        enum 
-        {
-            num_components = 4,
-            pix_step = 4,
-            pix_width = sizeof(value_type) * pix_step,
-        };
-        struct pixel_type
-        {
-            value_type c[num_components];
-
-            void set(value_type r, value_type g, value_type b, value_type a)
+            if (c.IsOpaque() && cover == COVER_MASK)
             {
-                c[order_type::R] = r;
-                c[order_type::G] = g;
-                c[order_type::B] = b;
-                c[order_type::A] = a;
+                p->Set(c.r, c.g, c.b, c.a);
             }
-
-            void set(const color_type& color)
+            else
             {
-                set(color.r, color.g, color.b, color.a);
+                blender_.BlendPix(p->c, c.r, c.g, c.b, c.a, cover);
             }
-
-            void get(value_type& r, value_type& g, value_type& b, value_type& a) const
-            {
-                r = c[order_type::R];
-                g = c[order_type::G];
-                b = c[order_type::B];
-                a = c[order_type::A];
-            }
-
-            color_type get() const
-            {
-                return color_type(
-                    c[order_type::R], 
-                    c[order_type::G], 
-                    c[order_type::B],
-                    c[order_type::A]);
-            }
-
-            pixel_type* next()
-            {
-                return (pixel_type*)(c + pix_step);
-            }
-
-            const pixel_type* next() const
-            {
-                return (const pixel_type*)(c + pix_step);
-            }
-
-            pixel_type* advance(int n)
-            {
-                return (pixel_type*)(c + n * pix_step);
-            }
-
-            const pixel_type* advance(int n) const
-            {
-                return (const pixel_type*)(c + n * pix_step);
-            }
-        };
-
-    private:
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pix(pixel_type* p, const color_type& c, unsigned cover)
-        {
-            m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a, cover);
         }
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pix(pixel_type* p, const color_type& c)
+     GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c)
+    {
+        if (!c.IsTransparent())
         {
-            m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover)
-        {
-            if (!c.is_transparent())
+            if (c.IsOpaque())
             {
-                if (c.is_opaque() && cover == cover_mask)
+                p->Set(c.r, c.g, c.b, c.a);
+            }
+            else
+            {
+                blender_.BlendPix(p->c, c.r, c.g, c.b, c.a);
+            }
+        }
+    }
+
+public:
+    PixfmtAlphaBlendRgba() : rbuf_(0) {}
+    explicit PixfmtAlphaBlendRgba(RbufType& rb) : rbuf_(&rb) {}
+    void Attach(RbufType& rb)
+    {
+        rbuf_ = &rb;
+    }
+
+    template<class PixFmt>
+    bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
+    {
+        RectI r(x1, y1, x2, y2);
+        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1)))
+        {
+            int stride = pixf.Stride();
+            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), 
+                            (r.x2 - r.x1) + 1,
+                            (r.y2 - r.y1) + 1,
+                            stride);
+            return true;
+        }
+        return false;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE unsigned Width()  const { return rbuf_->Width();  }
+     GRAPHIC_GEOMETRY_INLINE unsigned Height() const { return rbuf_->Height(); }
+     GRAPHIC_GEOMETRY_INLINE int      Stride() const { return rbuf_->Stride(); }
+
+    GRAPHIC_GEOMETRY_INLINE       int8u* RowPtr(int y)       { return rbuf_->RowPtr(y); }
+     GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const { return rbuf_->RowPtr(y); }
+     GRAPHIC_GEOMETRY_INLINE row_data     Row(int y)     const { return rbuf_->Row(y); }
+
+     GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y) 
+    { 
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const 
+    { 
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
+    }
+
+    GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len) 
+    {
+        return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+    }
+
+     GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const 
+    {
+        int8u* p = rbuf_->RowPtr(y);
+        return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p) 
+    {
+        return (PixelType*)p;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p) 
+    {
+        return (const PixelType*)p;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static void WritePlainColor(void* p, ColorType c)
+    {
+        BlenderType::SetPlainColor(PixValuePtr(p)->c, c);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static ColorType ReadPlainColor(const void* p)
+    {
+        return BlenderType::GetPlainColor(PixValuePtr(p)->c);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+    {
+        ((PixelType*)p)->Set(c);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
+    {
+        if (const PixelType* p = PixValuePtr(x, y))
+        {
+            return p->Get();
+        }
+        return ColorType::NoColor();
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
+    {
+        PixValuePtr(x, y, 1)->Set(c);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
+    {
+        CopyOrBlendPix(PixValuePtr(x, y, 1), c, cover);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y, 
+                                unsigned len, 
+                                const ColorType& c)
+    {
+        PixelType v;
+        v.Set(c);
+        PixelType* p = PixValuePtr(x, y, len);
+        do
+        {
+            *p = v;
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
+                                unsigned len, 
+                                const ColorType& c)
+    {
+        PixelType v;
+        v.Set(c);
+        do
+        {
+            *PixValuePtr(x, y++, 1) = v;
+        }
+        while (--len);
+    }
+
+    void BlendHline(int x, int y,
+                        unsigned len, 
+                        const ColorType& c,
+                        int8u cover)
+    {
+        if (!c.IsTransparent())
+        {
+            PixelType* p = PixValuePtr(x, y, len);
+            if (c.IsOpaque() && cover == COVER_MASK)
+            {
+                PixelType v;
+                v.Set(c);
+                do
                 {
-                    p->set(c.r, c.g, c.b, c.a);
-                }
-                else
-                {
-                    m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a, cover);
-                }
-            }
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c)
-        {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque())
-                {
-                    p->set(c.r, c.g, c.b, c.a);
-                }
-                else
-                {
-                    m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a);
-                }
-            }
-        }
-
-    public:
-        //--------------------------------------------------------------------
-        pixfmt_alpha_blend_rgba() : m_rbuf(0) {}
-        explicit pixfmt_alpha_blend_rgba(rbuf_type& rb) : m_rbuf(&rb) {}
-        void attach(rbuf_type& rb) { m_rbuf = &rb; }
-
-        //--------------------------------------------------------------------
-        template<class PixFmt>
-        bool attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
-        {
-            rect_i r(x1, y1, x2, y2);
-            if (r.clip(rect_i(0, 0, pixf.width()-1, pixf.height()-1)))
-            {
-                int stride = pixf.stride();
-                m_rbuf->attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1), 
-                               (r.x2 - r.x1) + 1,
-                               (r.y2 - r.y1) + 1,
-                               stride);
-                return true;
-            }
-            return false;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE unsigned width()  const { return m_rbuf->width();  }
-        AGG_INLINE unsigned height() const { return m_rbuf->height(); }
-        AGG_INLINE int      stride() const { return m_rbuf->stride(); }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
-        AGG_INLINE const int8u* row_ptr(int y) const { return m_rbuf->row_ptr(y); }
-        AGG_INLINE row_data     row(int y)     const { return m_rbuf->row(y); }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE int8u* pix_ptr(int x, int y) 
-        { 
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
-        }
-
-        AGG_INLINE const int8u* pix_ptr(int x, int y) const 
-        { 
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
-        }
-
-        // Return pointer to pixel value, forcing row to be allocated.
-        AGG_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len) 
-        {
-            return (pixel_type*)(m_rbuf->row_ptr(x, y, len) + sizeof(value_type) * (x * pix_step));
-        }
-
-        // Return pointer to pixel value, or null if row not allocated.
-        AGG_INLINE const pixel_type* pix_value_ptr(int x, int y) const 
-        {
-            int8u* p = m_rbuf->row_ptr(y);
-            return p ? (pixel_type*)(p + sizeof(value_type) * (x * pix_step)) : 0;
-        }
-
-        // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static pixel_type* pix_value_ptr(void* p) 
-        {
-            return (pixel_type*)p;
-        }
-
-        // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static const pixel_type* pix_value_ptr(const void* p) 
-        {
-            return (const pixel_type*)p;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE static void write_plain_color(void* p, color_type c)
-        {
-            blender_type::set_plain_color(pix_value_ptr(p)->c, c);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE static color_type read_plain_color(const void* p)
-        {
-            return blender_type::get_plain_color(pix_value_ptr(p)->c);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE static void make_pix(int8u* p, const color_type& c)
-        {
-            ((pixel_type*)p)->set(c);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE color_type pixel(int x, int y) const
-        {
-            if (const pixel_type* p = pix_value_ptr(x, y))
-            {
-                return p->get();
-            }
-            return color_type::no_color();
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
-        {
-            pix_value_ptr(x, y, 1)->set(c);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pixel(int x, int y, const color_type& c, int8u cover)
-        {
-            copy_or_blend_pix(pix_value_ptr(x, y, 1), c, cover);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y, 
-                                   unsigned len, 
-                                   const color_type& c)
-        {
-            pixel_type v;
-            v.set(c);
-            pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
-                *p = v;
-                p = p->next();
-            }
-            while (--len);
-        }
-
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_vline(int x, int y,
-                                   unsigned len, 
-                                   const color_type& c)
-        {
-            pixel_type v;
-            v.set(c);
-            do
-            {
-                *pix_value_ptr(x, y++, 1) = v;
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_hline(int x, int y,
-                         unsigned len, 
-                         const color_type& c,
-                         int8u cover)
-        {
-            if (!c.is_transparent())
-            {
-                pixel_type* p = pix_value_ptr(x, y, len);
-                if (c.is_opaque() && cover == cover_mask)
-                {
-                    pixel_type v;
-                    v.set(c);
-                    do
-                    {
-                        *p = v;
-                        p = p->next();
-                    }
-                    while (--len);
-                }
-                else
-                {
-                    if (cover == cover_mask)
-                    {
-                        do
-                        {
-                            blend_pix(p, c);
-                            p = p->next();
-                        }
-                        while (--len);
-                    }
-                    else
-                    {
-                        do
-                        {
-                            blend_pix(p, c, cover);
-                            p = p->next();
-                        }
-                        while (--len);
-                    }
-                }
-            }
-        }
-
-
-        //--------------------------------------------------------------------
-        void blend_vline(int x, int y,
-                         unsigned len, 
-                         const color_type& c,
-                         int8u cover)
-        {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque() && cover == cover_mask)
-                {
-                    pixel_type v;
-                    v.set(c);
-                    do
-                    {
-                        *pix_value_ptr(x, y++, 1) = v;
-                    }
-                    while (--len);
-                }
-                else
-                {
-                    if (cover == cover_mask)
-                    {
-                        do
-                        {
-                            blend_pix(pix_value_ptr(x, y++, 1), c, c.a);
-                        }
-                        while (--len);
-                    }
-                    else
-                    {
-                        do
-                        {
-                            blend_pix(pix_value_ptr(x, y++, 1), c, cover);
-                        }
-                        while (--len);
-                    }
-                }
-            }
-        }
-
-
-        //--------------------------------------------------------------------
-        void blend_solid_hspan(int x, int y,
-                               unsigned len, 
-                               const color_type& c,
-                               const int8u* covers)
-        {
-            if (!c.is_transparent())
-            {
-                pixel_type* p = pix_value_ptr(x, y, len);
-                do 
-                {
-                    if (c.is_opaque() && *covers == cover_mask)
-                    {
-                        p->set(c);
-                    }
-                    else
-                    {
-                        blend_pix(p, c, *covers);
-                    }
-                    p = p->next();
-                    ++covers;
-                }
-                while (--len);
-            }
-        }
-
-
-        //--------------------------------------------------------------------
-        void blend_solid_vspan(int x, int y,
-                               unsigned len, 
-                               const color_type& c,
-                               const int8u* covers)
-        {
-            if (!c.is_transparent())
-            {
-                do 
-                {
-                    pixel_type* p = pix_value_ptr(x, y++, 1);
-                    if (c.is_opaque() && *covers == cover_mask)
-                    {
-                        p->set(c);
-                    }
-                    else
-                    {
-                        blend_pix(p, c, *covers);
-                    }
-                    ++covers;
-                }
-                while (--len);
-            }
-        }
-
-        //--------------------------------------------------------------------
-        void copy_color_hspan(int x, int y,
-                              unsigned len, 
-                              const color_type* colors)
-        {
-            pixel_type* p = pix_value_ptr(x, y, len);
-            do 
-            {
-                p->set(*colors++);
-                p = p->next();
-            }
-            while (--len);
-        }
-
-
-        //--------------------------------------------------------------------
-        void copy_color_vspan(int x, int y,
-                              unsigned len, 
-                              const color_type* colors)
-        {
-            do 
-            {
-                pix_value_ptr(x, y++, 1)->set(*colors++);
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_color_hspan(int x, int y,
-                               unsigned len, 
-                               const color_type* colors,
-                               const int8u* covers,
-                               int8u cover)
-        {
-            pixel_type* p = pix_value_ptr(x, y, len);
-            if (covers)
-            {
-                do 
-                {
-                    copy_or_blend_pix(p, *colors++, *covers++);
-                    p = p->next();
+                    *p = v;
+                    p = p->Next();
                 }
                 while (--len);
             }
             else
             {
-                if (cover == cover_mask)
+                if (cover == COVER_MASK)
                 {
-                    do 
+                    do
                     {
-                        copy_or_blend_pix(p, *colors++);
-                        p = p->next();
+                        BlendPix(p, c);
+                        p = p->Next();
                     }
                     while (--len);
                 }
                 else
                 {
-                    do 
+                    do
                     {
-                        copy_or_blend_pix(p, *colors++, cover);
-                        p = p->next();
+                        BlendPix(p, c, cover);
+                        p = p->Next();
                     }
                     while (--len);
                 }
             }
         }
+    }
 
-        //--------------------------------------------------------------------
-        void blend_color_vspan(int x, int y,
-                               unsigned len, 
-                               const color_type* colors,
-                               const int8u* covers,
-                               int8u cover)
+    void BlendVline(int x, int y,
+                        unsigned len, 
+                        const ColorType& c,
+                        int8u cover)
+    {
+        if (!c.IsTransparent())
         {
-            if (covers)
+            if (c.IsOpaque() && cover == COVER_MASK)
             {
-                do 
+                PixelType v;
+                v.Set(c);
+                do
                 {
-                    copy_or_blend_pix(pix_value_ptr(x, y++, 1), *colors++, *covers++);
+                    *PixValuePtr(x, y++, 1) = v;
                 }
                 while (--len);
             }
             else
             {
-                if (cover == cover_mask)
+                if (cover == COVER_MASK)
                 {
-                    do 
-                    {
-                        copy_or_blend_pix(pix_value_ptr(x, y++, 1), *colors++);
-                    }
-                    while (--len);
-                }
-                else
-                {
-                    do 
-                    {
-                        copy_or_blend_pix(pix_value_ptr(x, y++, 1), *colors++, cover);
-                    }
-                    while (--len);
-                }
-            }
-        }
-
-        //--------------------------------------------------------------------
-        template<class Function> void for_each_pixel(Function f)
-        {
-            for (unsigned y = 0; y < height(); ++y)
-            {
-                row_data r = m_rbuf->row(y);
-                if (r.ptr)
-                {
-                    unsigned len = r.x2 - r.x1 + 1;
-                    pixel_type* p = pix_value_ptr(r.x1, y, len);
                     do
                     {
-                        f(p->c);
-                        p = p->next();
-                    }
-                    while (--len);
-                }
-            }
-        }
-
-        //--------------------------------------------------------------------
-        void premultiply()
-        {
-            for_each_pixel(multiplier_rgba<color_type, order_type>::premultiply);
-        }
-
-        //--------------------------------------------------------------------
-        void demultiply()
-        {
-            for_each_pixel(multiplier_rgba<color_type, order_type>::demultiply);
-        }
-
-        //--------------------------------------------------------------------
-        template<class GammaLut> void apply_gamma_dir(const GammaLut& g)
-        {
-            for_each_pixel(apply_gamma_dir_rgba<color_type, order_type, GammaLut>(g));
-        }
-
-        //--------------------------------------------------------------------
-        template<class GammaLut> void apply_gamma_inv(const GammaLut& g)
-        {
-            for_each_pixel(apply_gamma_inv_rgba<color_type, order_type, GammaLut>(g));
-        }
-
-        //--------------------------------------------------------------------
-        template<class RenBuf2> void copy_from(const RenBuf2& from, 
-                                               int xdst, int ydst,
-                                               int xsrc, int ysrc,
-                                               unsigned len)
-        {
-            if (const int8u* p = from.row_ptr(ysrc))
-            {
-                std::memmove(m_rbuf->row_ptr(xdst, ydst, len) + xdst * pix_width, 
-                        p + xsrc * pix_width, 
-                        len * pix_width);
-            }
-        }
-
-        //--------------------------------------------------------------------
-        // Blend from another RGBA surface.
-        template<class SrcPixelFormatRenderer>
-        void blend_from(const SrcPixelFormatRenderer& from, 
-                        int xdst, int ydst,
-                        int xsrc, int ysrc,
-                        unsigned len,
-                        int8u cover)
-        {
-            typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
-
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
-                pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
-                int srcinc = 1;
-                int dstinc = 1;
-
-                if (xdst > xsrc)
-                {
-                    psrc = psrc->advance(len - 1);
-                    pdst = pdst->advance(len - 1);
-                    srcinc = -1;
-                    dstinc = -1;
-                }
-
-                if (cover == cover_mask)
-                {
-                    do 
-                    {
-                        copy_or_blend_pix(pdst, psrc->get());
-                        psrc = psrc->advance(srcinc);
-                        pdst = pdst->advance(dstinc);
+                        BlendPix(PixValuePtr(x, y++, 1), c, c.a);
                     }
                     while (--len);
                 }
                 else
                 {
-                    do 
+                    do
                     {
-                        copy_or_blend_pix(pdst, psrc->get(), cover);
-                        psrc = psrc->advance(srcinc);
-                        pdst = pdst->advance(dstinc);
+                        BlendPix(PixValuePtr(x, y++, 1), c, cover);
                     }
                     while (--len);
                 }
             }
         }
+    }
 
-        //--------------------------------------------------------------------
-        // Combine single color with grayscale surface and blend.
-        template<class SrcPixelFormatRenderer>
-        void blend_from_color(const SrcPixelFormatRenderer& from, 
-                              const color_type& color,
-                              int xdst, int ydst,
-                              int xsrc, int ysrc,
-                              unsigned len,
-                              int8u cover)
-        {
-            typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
-            typedef typename SrcPixelFormatRenderer::color_type src_color_type;
-
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
-                pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
-
-                do 
-                {
-                    copy_or_blend_pix(pdst, color, 
-                        src_color_type::scale_cover(cover, psrc->c[0]));
-                    psrc = psrc->next();
-                    pdst = pdst->next();
-                }
-                while (--len);
-            }
-        }
-
-        //--------------------------------------------------------------------
-        // Blend from color table, using grayscale surface as indexes into table.
-        // Obviously, this only works for integer value types.
-        template<class SrcPixelFormatRenderer>
-        void blend_from_lut(const SrcPixelFormatRenderer& from, 
-                            const color_type* color_lut,
-                            int xdst, int ydst,
-                            int xsrc, int ysrc,
-                            unsigned len,
-                            int8u cover)
-        {
-            typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
-
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
-                pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
-
-                if (cover == cover_mask)
-                {
-                    do 
-                    {
-                        copy_or_blend_pix(pdst, color_lut[psrc->c[0]]);
-                        psrc = psrc->next();
-                        pdst = pdst->next();
-                    }
-                    while (--len);
-                }
-                else
-                {
-                    do 
-                    {
-                        copy_or_blend_pix(pdst, color_lut[psrc->c[0]], cover);
-                        psrc = psrc->next();
-                        pdst = pdst->next();
-                    }
-                    while (--len);
-                }
-            }
-        }
-
-    private:
-        rbuf_type* m_rbuf;
-        Blender    m_blender;
-    };
-
-    //================================================pixfmt_custom_blend_rgba
-    template<class Blender, class RenBuf> class pixfmt_custom_blend_rgba
+    void BlendSolidHspan(int x, int y,
+                            unsigned len, 
+                            const ColorType& c,
+                            const int8u* covers)
     {
-    public:
-        typedef pixfmt_rgba_tag pixfmt_category;
-        typedef RenBuf   rbuf_type;
-        typedef typename rbuf_type::row_data row_data;
-        typedef Blender  blender_type;
-        typedef typename blender_type::color_type color_type;
-        typedef typename blender_type::order_type order_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        enum 
+        if (!c.IsTransparent())
         {
-            num_components = 4,
-            pix_step = 4,
-            pix_width  = sizeof(value_type) * pix_step,
-        };
-        struct pixel_type
-        {
-            value_type c[num_components];
-
-            void set(value_type r, value_type g, value_type b, value_type a)
+            PixelType* p = PixValuePtr(x, y, len);
+            do 
             {
-                c[order_type::R] = r;
-                c[order_type::G] = g;
-                c[order_type::B] = b;
-                c[order_type::A] = a;
-            }
-
-            void set(const color_type& color)
-            {
-                set(color.r, color.g, color.b, color.a);
-            }
-
-            void get(value_type& r, value_type& g, value_type& b, value_type& a) const
-            {
-                r = c[order_type::R];
-                g = c[order_type::G];
-                b = c[order_type::B];
-                a = c[order_type::A];
-            }
-
-            color_type get() const
-            {
-                return color_type(
-                    c[order_type::R], 
-                    c[order_type::G], 
-                    c[order_type::B],
-                    c[order_type::A]);
-            }
-
-            pixel_type* next()
-            {
-                return (pixel_type*)(c + pix_step);
-            }
-
-            const pixel_type* next() const
-            {
-                return (const pixel_type*)(c + pix_step);
-            }
-
-            pixel_type* advance(int n)
-            {
-                return (pixel_type*)(c + n * pix_step);
-            }
-
-            const pixel_type* advance(int n) const
-            {
-                return (const pixel_type*)(c + n * pix_step);
-            }
-        };
-
-
-    private:
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
-        {
-            m_blender.blend_pix(m_comp_op, p->c, c.r, c.g, c.b, c.a, cover);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
-        {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque() && cover == cover_mask)
+                if (c.IsOpaque() && *covers == cover_mask)
                 {
-                    p->set(c.r, c.g, c.b, c.a);
+                    p->Set(c);
                 }
                 else
                 {
-                    blend_pix(p, c, cover);
+                    BlendPix(p, c, *covers);
                 }
-            }
-        }
-
-    public:
-        //--------------------------------------------------------------------
-        pixfmt_custom_blend_rgba() : m_rbuf(0), m_comp_op(3) {}
-        explicit pixfmt_custom_blend_rgba(rbuf_type& rb, unsigned comp_op=3) : 
-            m_rbuf(&rb),
-            m_comp_op(comp_op)
-        {}
-        void attach(rbuf_type& rb) { m_rbuf = &rb; }
-
-        //--------------------------------------------------------------------
-        template<class PixFmt>
-        bool attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
-        {
-            rect_i r(x1, y1, x2, y2);
-            if (r.clip(rect_i(0, 0, pixf.width()-1, pixf.height()-1)))
-            {
-                int stride = pixf.stride();
-                m_rbuf->attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1), 
-                               (r.x2 - r.x1) + 1,
-                               (r.y2 - r.y1) + 1,
-                               stride);
-                return true;
-            }
-            return false;
-        }
-
-        //--------------------------------------------------------------------
-        void comp_op(unsigned op) { m_comp_op = op; }
-        unsigned comp_op() const  { return m_comp_op; }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE unsigned width()  const { return m_rbuf->width();  }
-        AGG_INLINE unsigned height() const { return m_rbuf->height(); }
-        AGG_INLINE int      stride() const { return m_rbuf->stride(); }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
-        AGG_INLINE const int8u* row_ptr(int y) const { return m_rbuf->row_ptr(y); }
-        AGG_INLINE row_data     row(int y)     const { return m_rbuf->row(y); }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE int8u* pix_ptr(int x, int y) 
-        { 
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
-        }
-
-        AGG_INLINE const int8u* pix_ptr(int x, int y) const 
-        { 
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
-        }
-
-        // Return pointer to pixel value, forcing row to be allocated.
-        AGG_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len) 
-        {
-            return (pixel_type*)(m_rbuf->row_ptr(x, y, len) + sizeof(value_type) * (x * pix_step));
-        }
-
-        // Return pointer to pixel value, or null if row not allocated.
-        AGG_INLINE const pixel_type* pix_value_ptr(int x, int y) const 
-        {
-            int8u* p = m_rbuf->row_ptr(y);
-            return p ? (pixel_type*)(p + sizeof(value_type) * (x * pix_step)) : 0;
-        }
-
-        // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static pixel_type* pix_value_ptr(void* p) 
-        {
-            return (pixel_type*)p;
-        }
-
-        // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static const pixel_type* pix_value_ptr(const void* p) 
-        {
-            return (const pixel_type*)p;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE static void make_pix(int8u* p, const color_type& c)
-        {
-            ((pixel_type*)p)->set(c);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE color_type pixel(int x, int y) const
-        {
-            if (const pixel_type* p = pix_value_ptr(x, y))
-            {
-                return p->get();
-            }
-            return color_type::no_color();
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
-        {
-            make_pix(pix_value_ptr(x, y, 1), c);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pixel(int x, int y, const color_type& c, int8u cover)
-        {
-            blend_pix(pix_value_ptr(x, y, 1), c, cover);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y, 
-                                   unsigned len, 
-                                   const color_type& c)
-        {
-            pixel_type v;
-            v.set(c);
-            pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
-                *p = v;
-                p = p->next();
+                p = p->Next();
+                ++covers;
             }
             while (--len);
         }
+    }
 
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_vline(int x, int y,
-                                   unsigned len, 
-                                   const color_type& c)
-        {
-            pixel_type v;
-            v.set(c);
-            do
-            {
-                *pix_value_ptr(x, y++, 1) = v;
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_hline(int x, int y, unsigned len, 
-                         const color_type& c, int8u cover)
-        {
-
-            pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
-                blend_pix(p, c, cover);
-                p = p->next();
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_vline(int x, int y, unsigned len, 
-                         const color_type& c, int8u cover)
-        {
-            do
-            {
-                blend_pix(pix_value_ptr(x, y++, 1), c, cover);
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_solid_hspan(int x, int y, unsigned len, 
-                               const color_type& c, const int8u* covers)
-        {
-            pixel_type* p = pix_value_ptr(x, y, len);
-
-            do 
-            {
-                blend_pix(p, c, *covers++);
-                p = p->next();
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_solid_vspan(int x, int y, unsigned len, 
-                               const color_type& c, const int8u* covers)
+    void BlendSolidVspan(int x, int y,
+                            unsigned len, 
+                            const ColorType& c,
+                            const int8u* covers)
+    {
+        if (!c.IsTransparent())
         {
             do 
             {
-                blend_pix(pix_value_ptr(x, y++, 1), c, *covers++);
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void copy_color_hspan(int x, int y,
-                              unsigned len, 
-                              const color_type* colors)
-        {
-            pixel_type* p = pix_value_ptr(x, y, len);
-
-            do 
-            {
-                p->set(*colors++);
-                p = p->next();
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void copy_color_vspan(int x, int y,
-                              unsigned len, 
-                              const color_type* colors)
-        {
-            do 
-            {
-                pix_value_ptr(x, y++, 1)->set(*colors++);
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_color_hspan(int x, int y, unsigned len, 
-                               const color_type* colors, 
-                               const int8u* covers,
-                               int8u cover)
-        {
-            pixel_type* p = pix_value_ptr(x, y, len);
-
-            do 
-            {
-                blend_pix(p, *colors++, covers ? *covers++ : cover);
-                p = p->next();
-            }
-            while (--len);
-        }
-
-        //--------------------------------------------------------------------
-        void blend_color_vspan(int x, int y, unsigned len, 
-                               const color_type* colors, 
-                               const int8u* covers,
-                               int8u cover)
-        {
-            do 
-            {
-                blend_pix(pix_value_ptr(x, y++, 1), *colors++, covers ? *covers++ : cover);
-            }
-            while (--len);
-
-        }
-
-        //--------------------------------------------------------------------
-        template<class Function> void for_each_pixel(Function f)
-        {
-            unsigned y;
-            for (y = 0; y < height(); ++y)
-            {
-                row_data r = m_rbuf->row(y);
-                if (r.ptr)
+                PixelType* p = PixValuePtr(x, y++, 1);
+                if (c.IsOpaque() && *covers == COVER_MASK)
                 {
-                    unsigned len = r.x2 - r.x1 + 1;
-                    pixel_type* p = pix_value_ptr(r.x1, y, len);
-                    do
-                    {
-                        f(p->c);
-                        p = p->next();
-                    }
-                    while (--len);
+                    p->Set(c);
                 }
-            }
-        }
-
-        //--------------------------------------------------------------------
-        void premultiply()
-        {
-            for_each_pixel(multiplier_rgba<color_type, order_type>::premultiply);
-        }
-
-        //--------------------------------------------------------------------
-        void demultiply()
-        {
-            for_each_pixel(multiplier_rgba<color_type, order_type>::demultiply);
-        }
-
-        //--------------------------------------------------------------------
-        template<class GammaLut> void apply_gamma_dir(const GammaLut& g)
-        {
-            for_each_pixel(apply_gamma_dir_rgba<color_type, order_type, GammaLut>(g));
-        }
-
-        //--------------------------------------------------------------------
-        template<class GammaLut> void apply_gamma_inv(const GammaLut& g)
-        {
-            for_each_pixel(apply_gamma_inv_rgba<color_type, order_type, GammaLut>(g));
-        }
-
-        //--------------------------------------------------------------------
-        template<class RenBuf2> void copy_from(const RenBuf2& from, 
-                                               int xdst, int ydst,
-                                               int xsrc, int ysrc,
-                                               unsigned len)
-        {
-            if (const int8u* p = from.row_ptr(ysrc))
-            {
-                std::memmove(m_rbuf->row_ptr(xdst, ydst, len) + xdst * pix_width, 
-                        p + xsrc * pix_width, 
-                        len * pix_width);
-            }
-        }
-
-        //--------------------------------------------------------------------
-        // Blend from another RGBA surface.
-        template<class SrcPixelFormatRenderer> 
-        void blend_from(const SrcPixelFormatRenderer& from, 
-                        int xdst, int ydst,
-                        int xsrc, int ysrc,
-                        unsigned len,
-                        int8u cover)
-        {
-            typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
-
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
-                pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
-                int srcinc = 1;
-                int dstinc = 1;
-
-                if (xdst > xsrc)
+                else
                 {
-                    psrc = psrc->advance(len - 1);
-                    pdst = pdst->advance(len - 1);
-                    srcinc = -1;
-                    dstinc = -1;
+                    BlendPix(p, c, *covers);
                 }
+                ++covers;
+            }
+            while (--len);
+        }
+    }
 
+    void CopyColorHspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors)
+    {
+        PixelType* p = PixValuePtr(x, y, len);
+        do 
+        {
+            p->Set(*colors++);
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+    void CopyColorVspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors)
+    {
+        do 
+        {
+            PixValuePtr(x, y++, 1)->Set(*colors++);
+        }
+        while (--len);
+    }
+
+    void BlendColorHspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors,
+                            const int8u* covers,
+                            int8u cover)
+    {
+        PixelType* p = PixValuePtr(x, y, len);
+        if (covers)
+        {
+            do 
+            {
+                CopyOrBlendPix(p, *colors++, *covers++);
+                p = p->Next();
+            }
+            while (--len);
+        }
+        else
+        {
+            if (cover == COVER_MASK)
+            {
                 do 
                 {
-                    blend_pix(pdst, psrc->get(), cover);
-                    psrc = psrc->advance(srcinc);
-                    pdst = pdst->advance(dstinc);
+                    CopyOrBlendPix(p, *colors++);
+                    p = p->Next();
+                }
+                while (--len);
+            }
+            else
+            {
+                do 
+                {
+                    CopyOrBlendPix(p, *colors++, cover);
+                    p = p->Next();
                 }
                 while (--len);
             }
         }
+    }
 
-        //--------------------------------------------------------------------
-        // Blend from single color, using grayscale surface as alpha channel.
-        template<class SrcPixelFormatRenderer>
-        void blend_from_color(const SrcPixelFormatRenderer& from, 
-                              const color_type& color,
-                              int xdst, int ydst,
-                              int xsrc, int ysrc,
-                              unsigned len,
-                              int8u cover)
+    void BlendColorVspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors,
+                            const int8u* covers,
+                            int8u cover)
+    {
+        if (covers)
         {
-            typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
-            typedef typename SrcPixelFormatRenderer::color_type src_color_type;
-
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
+            do 
             {
-                pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
-
+                CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, *covers++);
+            }
+            while (--len);
+        }
+        else
+        {
+            if (cover == COVER_MASK)
+            {
                 do 
                 {
-                    blend_pix(pdst, color,
-                        src_color_type::scale_cover(cover, psrc->c[0]));
-                    psrc = psrc->next();
-                    pdst = pdst->next();
+                    CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++);
+                }
+                while (--len);
+            }
+            else
+            {
+                do 
+                {
+                    CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, cover);
                 }
                 while (--len);
             }
         }
+    }
 
-        //--------------------------------------------------------------------
-        // Blend from color table, using grayscale surface as indexes into table.
-        // Obviously, this only works for integer value types.
-        template<class SrcPixelFormatRenderer>
-        void blend_from_lut(const SrcPixelFormatRenderer& from, 
-                            const color_type* color_lut,
+    template<class Function>
+    void ForEachPixel(Function f)
+    {
+        for (unsigned y = 0; y < height(); ++y)
+        {
+            RowData r = rbuf_->Row(y);
+            if (r.ptr)
+            {
+                unsigned len = r.x2 - r.x1 + 1;
+                PixelType* p = PixValuePtr(r.x1, y, len);
+                do
+                {
+                    f(p->c);
+                    p = p->Next();
+                }
+                while (--len);
+            }
+        }
+    }
+
+    void Premultiply()
+    {
+        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
+    }
+
+    void Demultiply()
+    {
+        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
+    }
+
+    template<class GammaLut> 
+    void ApplyGammaDir(const GammaLut& g)
+    {
+        ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
+    }
+
+    template<class GammaLut>
+    void ApplyGammaInv(const GammaLut& g)
+    {
+        ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
+    }
+
+    template<class RenBuf2>
+    void CopyFrom(const RenBuf2& from, 
+                                            int xdst, int ydst,
+                                            int xsrc, int ysrc,
+                                            unsigned len)
+    {
+        if (const int8u* p = from.RowPtr(ysrc))
+        {
+            std::memmove(rbuf_->RowPtr(xdst, ydst, len) + xdst * PIX_WIDTH, 
+                    p + xsrc * PIX_WIDTH, 
+                    len * PIX_WIDTH);
+        }
+    }
+
+    template<class SrcPixelFormatRenderer>
+    void BlendFrom(const SrcPixelFormatRenderer& from, 
+                    int xdst, int ydst,
+                    int xsrc, int ysrc,
+                    unsigned len,
+                    int8u cover)
+    {
+        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc))
+        {
+            PixelType* pdst = PixValuePtr(xdst, ydst, len);
+            int srcinc = 1;
+            int dstinc = 1;
+
+            if (xdst > xsrc)
+            {
+                psrc = psrc->Advance(len - 1);
+                pdst = pdst->Advance(len - 1);
+                srcinc = -1;
+                dstinc = -1;
+            }
+
+            if (cover == COVER_MASK)
+            {
+                do 
+                {
+                    CopyOrBlendPix(pdst, psrc->Get());
+                    psrc = psrc->Advance(srcinc);
+                    pdst = pdst->Advance(dstinc);
+                }
+                while (--len);
+            }
+            else
+            {
+                do 
+                {
+                    CopyOrBlendPix(pdst, psrc->Get(), cover);
+                    psrc = psrc->Advance(srcinc);
+                    pdst = pdst->Advance(dstinc);
+                }
+                while (--len);
+            }
+        }
+    }
+
+    template<class SrcPixelFormatRenderer>
+    void BlendFromColor(const SrcPixelFormatRenderer& from, 
+                            const ColorType& color,
                             int xdst, int ydst,
                             int xsrc, int ysrc,
                             unsigned len,
                             int8u cover)
+    {
+        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+        using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
+
+        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc))
         {
-            typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
+            PixelType* pdst = PixValuePtr(xdst, ydst, len);
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
+            do 
             {
-                pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
+                CopyOrBlendPix(pdst, color, 
+                    SrcColorType::ScaleCover(cover, psrc->c[0]));
+                psrc = psrc->Next();
+                pdst = pdst->Next();
+            }
+            while (--len);
+        }
+    }
 
+    template<class SrcPixelFormatRenderer>
+    void BlendFromLut(const SrcPixelFormatRenderer& from, 
+                        const ColorType* colorLut,
+                        int xdst, int ydst,
+                        int xsrc, int ysrc,
+                        unsigned len,
+                        int8u cover)
+    {
+        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc))
+        {
+            PixelType* pdst = PixValuePtr(xdst, ydst, len);
+
+            if (cover == COVER_MASK)
+            {
                 do 
                 {
-                    blend_pix(pdst, color_lut[psrc->c[0]], cover);
-                    psrc = psrc->next();
-                    pdst = pdst->next();
+                    CopyOrBlendPix(pdst, colorLut[psrc->c[0]]);
+                    psrc = psrc->Next();
+                    pdst = pdst->Next();
+                }
+                while (--len);
+            }
+            else
+            {
+                do 
+                {
+                    CopyOrBlendPix(pdst, colorLut[psrc->c[0]], cover);
+                    psrc = psrc->Next();
+                    pdst = pdst->Next();
                 }
                 while (--len);
             }
         }
+    }
 
-    private:
-        rbuf_type* m_rbuf;
-        Blender m_blender;
-        unsigned m_comp_op;
+private:
+    RbufType* rbuf_;
+    Blender    blender_;
+};
+
+template<class Blender, class RenBuf> 
+class PixfmtCustomBlendRgba public HeapBase{
+public:
+    using PixfmtCategory = PixfmtRgbaTag;
+    using RbufType = RenBuf;
+    using RowData = typename RbufType::RowData;
+    using BlenderType = Blender;
+    using ColorType = typename BlenderType::ColorType;
+    using OrderType = typename BlenderType::OrderType;
+    using ValueType = typename ColorType::ValueType;
+    using CalcType = typename ColorType::CalcType
+    enum 
+    {
+        NUM_COMPONENTS = 4,
+        PIX_STEP = 4,
+        PIX_WIDTH  = sizeof(ValueType) * PIX_STEP,
+    };
+    struct PixelType {
+        ValueType c[NUM_COMPONENTS];
+
+        void Set(ValueType r, ValueType g, ValueType b, ValueType a)
+        {
+            c[OrderType::R] = r;
+            c[OrderType::G] = g;
+            c[OrderType::B] = b;
+            c[OrderType::A] = a;
+        }
+
+        void Set(const ColorType& color)
+        {
+            Set(color.r, color.g, color.b, color.a);
+        }
+
+        void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
+        {
+            r = c[OrderType::R];
+            g = c[OrderType::G];
+            b = c[OrderType::B];
+            a = c[OrderType::A];
+        }
+
+        ColorType Get() const
+        {
+            return ColorType(
+                c[OrderType::R], 
+                c[OrderType::G], 
+                c[OrderType::B],
+                c[OrderType::A]);
+        }
+
+        PixelType* Next()
+        {
+            return (PixelType*)(c + PIX_STEP);
+        }
+
+        const PixelType* Next() const
+        {
+            return (const PixelType*)(c + PIX_STEP);
+        }
+
+        PixelType* Advance(int n)
+        {
+            return (PixelType*)(c + n * PIX_STEP);
+        }
+
+        const PixelType* Advance(int n) const
+        {
+            return (const PixelType*)(c + n * PIX_STEP);
+        }
     };
 
 
-    //-----------------------------------------------------------------------
-    typedef blender_rgba<rgba8, order_rgba> blender_rgba32;
-    typedef blender_rgba<rgba8, order_argb> blender_argb32;
-    typedef blender_rgba<rgba8, order_abgr> blender_abgr32;
-    typedef blender_rgba<rgba8, order_bgra> blender_bgra32;
+private:
+     GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
+    {
+        blender_.BlendPix(compOp_, p->c, c.r, c.g, c.b, c.a, cover);
+    }
 
-    typedef blender_rgba<srgba8, order_rgba> blender_srgba32;
-    typedef blender_rgba<srgba8, order_argb> blender_sargb32;
-    typedef blender_rgba<srgba8, order_abgr> blender_sabgr32;
-    typedef blender_rgba<srgba8, order_bgra> blender_sbgra32;
+     GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
+    {
+        if (!c.IsTransparent())
+        {
+            if (c.IsOpaque() && cover == COVER_MASK)
+            {
+                p->Set(c.r, c.g, c.b, c.a);
+            }
+            else
+            {
+                BlendPix(p, c, cover);
+            }
+        }
+    }
 
-    typedef blender_rgba_pre<rgba8, order_rgba> blender_rgba32_pre;
-    typedef blender_rgba_pre<rgba8, order_argb> blender_argb32_pre;
-    typedef blender_rgba_pre<rgba8, order_abgr> blender_abgr32_pre;
-    typedef blender_rgba_pre<rgba8, order_bgra> blender_bgra32_pre;
+public:
+    PixfmtCustomBlendRgba() : rbuf_(0), compOp_(3) {}
+    explicit PixfmtCustomBlendRgba(rbuf_type& rb, unsigned compOp = 3) : 
+        rbuf_(&rb), compOp_(compOp)
+    {}
+    void Attach(RbufType& rb) { rbuf_ = &rb; }
 
-    typedef blender_rgba_pre<srgba8, order_rgba> blender_srgba32_pre;
-    typedef blender_rgba_pre<srgba8, order_argb> blender_sargb32_pre;
-    typedef blender_rgba_pre<srgba8, order_abgr> blender_sabgr32_pre;
-    typedef blender_rgba_pre<srgba8, order_bgra> blender_sbgra32_pre;
+    template<class PixFmt>
+    bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
+    {
+        RectI r(x1, y1, x2, y2);
+        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1)))
+        {
+            int stride = pixf.Stride();
+            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), 
+                            (r.x2 - r.x1) + 1,
+                            (r.y2 - r.y1) + 1,
+                            stride);
+            return true;
+        }
+        return false;
+    }
 
-    typedef blender_rgba_plain<rgba8, order_rgba> blender_rgba32_plain;
-    typedef blender_rgba_plain<rgba8, order_argb> blender_argb32_plain;
-    typedef blender_rgba_plain<rgba8, order_abgr> blender_abgr32_plain;
-    typedef blender_rgba_plain<rgba8, order_bgra> blender_bgra32_plain;
+    void CompOp(unsigned op) 
+    { 
+        compOp_ = op;
+    }
 
-    typedef blender_rgba_plain<srgba8, order_rgba> blender_srgba32_plain;
-    typedef blender_rgba_plain<srgba8, order_argb> blender_sargb32_plain;
-    typedef blender_rgba_plain<srgba8, order_abgr> blender_sabgr32_plain;
-    typedef blender_rgba_plain<srgba8, order_bgra> blender_sbgra32_plain;
+    unsigned CompOp() const 
+    { 
+        return compOp_; 
+    }
 
-    typedef blender_rgba<rgba16, order_rgba> blender_rgba64;
-    typedef blender_rgba<rgba16, order_argb> blender_argb64;
-    typedef blender_rgba<rgba16, order_abgr> blender_abgr64;
-    typedef blender_rgba<rgba16, order_bgra> blender_bgra64;
+     GRAPHIC_GEOMETRY_INLINE unsigned Width() const
+    {
+        return rbuf_->Width();
+    }
 
-    typedef blender_rgba_pre<rgba16, order_rgba> blender_rgba64_pre;
-    typedef blender_rgba_pre<rgba16, order_argb> blender_argb64_pre;
-    typedef blender_rgba_pre<rgba16, order_abgr> blender_abgr64_pre;
-    typedef blender_rgba_pre<rgba16, order_bgra> blender_bgra64_pre;
+     GRAPHIC_GEOMETRY_INLINE unsigned Height() const
+    {
+        return rbuf_->Height();
+    }
 
-	typedef blender_rgba_plain<rgba16, order_rgba> blender_rgba64_plain;
-	typedef blender_rgba_plain<rgba16, order_argb> blender_argb64_plain;
-	typedef blender_rgba_plain<rgba16, order_abgr> blender_abgr64_plain;
-	typedef blender_rgba_plain<rgba16, order_bgra> blender_bgra64_plain;
+     GRAPHIC_GEOMETRY_INLINE int Stride() const
+    {
+        return rbuf_->Stride();
+    }
 
-	typedef blender_rgba<rgba32, order_rgba> blender_rgba128;
-    typedef blender_rgba<rgba32, order_argb> blender_argb128;
-    typedef blender_rgba<rgba32, order_abgr> blender_abgr128;
-    typedef blender_rgba<rgba32, order_bgra> blender_bgra128;
+     GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
+    {
+        return rbuf_->RowPtr(y);
+    }
+     GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
+    {
+        return rbuf_->RowPtr(y);
+    }
+     GRAPHIC_GEOMETRY_INLINE RowData     row(int y)     const
+    {
+        return rbuf_->Row(y);
+    }
 
-    typedef blender_rgba_pre<rgba32, order_rgba> blender_rgba128_pre;
-    typedef blender_rgba_pre<rgba32, order_argb> blender_argb128_pre;
-    typedef blender_rgba_pre<rgba32, order_abgr> blender_abgr128_pre;
-    typedef blender_rgba_pre<rgba32, order_bgra> blender_bgra128_pre;
+     GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y) 
+    { 
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
+    }
 
-    typedef blender_rgba_plain<rgba32, order_rgba> blender_rgba128_plain;
-    typedef blender_rgba_plain<rgba32, order_argb> blender_argb128_plain;
-    typedef blender_rgba_plain<rgba32, order_abgr> blender_abgr128_plain;
-    typedef blender_rgba_plain<rgba32, order_bgra> blender_bgra128_plain;
+     GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const 
+    { 
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len) 
+    {
+        return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+    }
+
+     GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const 
+    {
+        int8u* p = rbuf_->RowPtr(y);
+        return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p) 
+    {
+        return (PixelType*)p;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p) 
+    {
+        return (const PixelType*)p;
+    }
+
+     GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+    {
+        ((PixelType*)p)->Set(c);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
+    {
+        if (const PixelType* p = PixValuePtr(x, y))
+        {
+            return p->Get();
+        }
+        return ColorType::NoColor();
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
+    {
+        MakePix(PixValuePtr(x, y, 1), c);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
+    {
+        BlendPix(PixValuePtr(x, y, 1), c, cover);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y, 
+                                unsigned len, 
+                                const ColorType& c)
+    {
+        PixelType v;
+        v.Set(c);
+        PixelType* p = PixValuePtr(x, y, len);
+        do
+        {
+            *p = v;
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+     GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
+                                unsigned len, 
+                                const ColorType& c)
+    {
+        PixelType v;
+        v.Set(c);
+        do
+        {
+            *PixValuePtr(x, y++, 1) = v;
+        }
+        while (--len);
+    }
+
+    void BlendHline(int x, int y, unsigned len, 
+                        const ColorType& c, int8u cover)
+    {
+
+        PixelType* p = PixValuePtr(x, y, len);
+        do
+        {
+            BlendPix(p, c, cover);
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+    void BlendVline(int x, int y, unsigned len, 
+                        const ColorType& c, int8u cover)
+    {
+        do
+        {
+            BlendPix(PixValuePtr(x, y++, 1), c, cover);
+        }
+        while (--len);
+    }
+
+    void BlendSolidHspan(int x, int y, unsigned len, 
+                            const ColorType& c, const int8u* covers)
+    {
+        PixelType* p = PixValuePtr(x, y, len);
+
+        do 
+        {
+            BlendPix(p, c, *covers++);
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+    void BlendSolidVspan(int x, int y, unsigned len, 
+                            const ColorType& c, const int8u* covers)
+    {
+        do 
+        {
+            BlendPix(PixValuePtr(x, y++, 1), c, *covers++);
+        }
+        while (--len);
+    }
+
+    void CopyColorHspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors)
+    {
+        PixelType* p = PixValuePtr(x, y, len);
+
+        do 
+        {
+            p->Set(*colors++);
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+    void CopyColorVspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors)
+    {
+        do 
+        {
+            PixValuePtr(x, y++, 1)->Set(*colors++);
+        }
+        while (--len);
+    }
+
+    void BlendColorHspan(int x, int y, unsigned len, 
+                            const ColorType* colors, 
+                            const int8u* covers,
+                            int8u cover)
+    {
+        PixelType* p = PixValuePtr(x, y, len);
+
+        do 
+        {
+            BlendPix(p, *colors++, covers ? *covers++ : cover);
+            p = p->Next();
+        }
+        while (--len);
+    }
+
+    void BlendColorVspan(int x, int y, unsigned len, 
+                            const ColorType* colors, 
+                            const int8u* covers,
+                            int8u cover)
+    {
+        do 
+        {
+            BlendPix(PixValuePtr(x, y++, 1), *colors++, covers ? *covers++ : cover);
+        }
+        while (--len);
+
+    }
+
+    template<class Function> 
+    void ForEachPixel(Function f)
+    {
+        unsigned y;
+        for (y = 0; y < Height(); ++y)
+        {
+            row_data r = rbuf_->row(y);
+            if (r.ptr)
+            {
+                unsigned len = r.x2 - r.x1 + 1;
+                PixelType* p = PixValuePtr(r.x1, y, len);
+                do
+                {
+                    f(p->c);
+                    p = p->Next();
+                }
+                while (--len);
+            }
+        }
+    }
+
+    void Premultiply()
+    {
+        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
+    }
+
+    void Demultiply()
+    {
+        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
+    }
+
+    template<class GammaLut> 
+    void ApplyGammaDir(const GammaLut& g)
+    {
+        ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
+    }
+
+    template<class GammaLut> 
+    void ApplyGammaInv(const GammaLut& g)
+    {
+        ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
+    }
+
+    template<class RenBuf2> 
+    void CopyFrom(const RenBuf2& from, 
+                                            int xdst, int ydst,
+                                            int xsrc, int ysrc,
+                                            unsigned len)
+    {
+        if (const int8u* p = from.RowPtr(ysrc))
+        {
+            std::memmove(rbuf_->RowPtr(xdst, ydst, len) + xdst * PIX_IDTH, 
+                    p + xsrc * PIX_IDTH, 
+                    len * PIX_IDTH);
+        }
+    }
+
+    template<class SrcPixelFormatRenderer> 
+    void blend_from(const SrcPixelFormatRenderer& from, 
+                    int xdst, int ydst,
+                    int xsrc, int ysrc,
+                    unsigned len,
+                    int8u cover)
+    {
+        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc))
+        {
+            PixelType* pdst = PixValuePtr(xdst, ydst, len);
+            int srcinc = 1;
+            int dstinc = 1;
+
+            if (xdst > xsrc)
+            {
+                psrc = psrc->Advance(len - 1);
+                pdst = pdst->Advance(len - 1);
+                srcinc = -1;
+                dstinc = -1;
+            }
+
+            do 
+            {
+                BlendPix(pdst, psrc->Get(), cover);
+                psrc = psrc->Advance(srcinc);
+                pdst = pdst->Advance(dstinc);
+            }
+            while (--len);
+        }
+    }
+
+    template<class SrcPixelFormatRenderer>
+    void BlendFromColor(const SrcPixelFormatRenderer& from, 
+                            const ColorType& color,
+                            int xdst, int ydst,
+                            int xsrc, int ysrc,
+                            unsigned len,
+                            int8u cover)
+    {
+        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+        using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
+
+        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc))
+        {
+            PixelType* pdst = PixValuePtr(xdst, ydst, len);
+
+            do 
+            {
+                BlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
+                psrc = psrc->Next();
+                pdst = pdst->Next();
+            }
+            while (--len);
+        }
+    }
+
+    template<class SrcPixelFormatRenderer>
+    void BlendFromLut(const SrcPixelFormatRenderer& from, 
+                        const ColorType* colorLut,
+                        int xdst, int ydst,
+                        int xsrc, int ysrc,
+                        unsigned len,
+                        int8u cover)
+    {
+        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc))
+        {
+            PixelType* pdst = PixValuePtr(xdst, ydst, len);
+
+            do 
+            {
+                BlendPix(pdst, colorLut[psrc->c[0]], cover);
+                psrc = psrc->Next();
+                pdst = pdst->Next();
+            }
+            while (--len);
+        }
+    }
+
+private:
+    RbufType* rbuf_;
+    Blender blender_;
+    unsigned compOp_;
+};
+
+using BlenderRgba32 = BlenderRgba<Rgba8, OrderRgba>;
+using BlenderArgb32 = BlenderRgba<Rgba8, OrderArgb>;
+using BlenderAbgr32 = BlenderRgba<Rgba8, OrderAbgr>;
+using BlenderBgra32 = BlenderRgba<Rgba8, OrderBgra>;
+
+using BlenderSrgba32 = BlenderRgba<Srgba8, OrderRgba>;
+using BlenderSargb32 = BlenderRgba<Srgba8, OrderArgb>;
+using BlenderSabgr32 = BlenderRgba<Srgba8, OrderAbgr>;
+using BlenderSbgra32 = BlenderRgba<Srgba8, OrderBgra>;
+
+using BlenderRgba32Pre = BlenderRgbaPre<Rgba8, OrderRgba>;
+using BlenderArgb32Pre = BlenderRgbaPre<Rgba8, OrderArgb>;
+using BlenderAbgr32Pre = BlenderRgbaPre<Rgba8, OrderAbgr>;
+using BlenderBgra32Pre = BlenderRgbaPre<Rgba8, OrderBgra>;
+
+using BlenderSrgba32Pre = BlenderRgbaPre<Srgba8, OrderRgba>;
+using BlenderSargb32Pre = BlenderRgbaPre<Srgba8, OrderArgb>;
+using BlenderSabgr32Pre = BlenderRgbaPre<Srgba8, OrderAbgr>;
+using BlenderSbgra32Pre = BlenderRgbaPre<Srgba8, OrderBgra>;
+
+using BlenderRgba32Plain = BlenderRgbaPlain<Rgba8, OrderRgba>;
+using BlenderArgb32Plain = BlenderRgbaPlain<Rgba8, OrderArgb>;
+using BlenderAbgr32Plain = BlenderRgbaPlain<Rgba8, OrderAbgr> ;
+using BlenderBgra32Plain = BlenderRgbaPlain<Rgba8, OrderBgra>;
+
+using BlenderSrgba32Plain = BlenderRgbaPlain<Srgba8, OrderRgba>;
+using BlenderSargb32Plain = BlenderRgbaPlain<Srgba8, OrderArgb>;
+using BlenderSabgr32Plain = BlenderRgbaPlain<Srgba8, OrderAbgr>;
+using BlenderSbgra32Plain = BlenderRgbaPlain<Srgba8, OrderBgra>;
+
+using BlenderRgba64 = BlenderRgba<Rgba16, OrderRgba>;
+using BlenderArgb64 = BlenderRgba<Rgba16, OrderArgb>;
+using BlenderAbgr64 = BlenderRgba<Rgba16, OrderAbgr>;
+using BlenderBgra64 = BlenderRgba<Rgba16, OrderBgra>;
+
+using BlenderRgba64Pre = BlenderRgbaPre<Rgba16, OrderRgba>;
+using BlenderArgb64Pre = BlenderRgbaPre<Rgba16, OrderArgb>;
+using BlenderAbgr64Pre = BlenderRgbaPre<Rgba16, OrderAbgr>;
+using BlenderBgra64Pre = BlenderRgbaPre<Rgba16, OrderBgra>;
+
+using BlenderRgba64Plain = BlenderRgbaPlain<Rgba16, OrderRgba>;
+using BlenderArgb64Plain = BlenderRgbaPlain<Rgba16, OrderArgb>;
+using BlenderAbgr64Plain = BlenderRgbaPlain<Rgba16, OrderAbgr>;
+using BlenderBgra64Plain = BlenderRgbaPlain<Rgba16, OrderBgra>;
+
+using BlenderRgba128 = BlenderRgba<Rgba32, OrderRgba>;
+using BlenderArgb128 = BlenderRgba<Rgba32, OrderArgb>;
+using BlenderAbgr128 = BlenderRgba<Rgba32, OrderAbgr>;
+using BlenderBgra128 = BlenderRgba<Rgba32, OrderBgra>;
+
+using BlenderRgba128Pre = BlenderRgbaPre<Rgba32, OrderRgba>;
+using BlenderArgb128Pre = BlenderRgbaPre<Rgba32, OrderArgb>;
+using BlenderAbgr128Pre = BlenderRgbaPre<Rgba32, OrderAbgr>;
+using BlenderBgra128Pre = BlenderRgbaPre<Rgba32, OrderBgra>;
+
+using BlenderRgba128Plain = BlenderRgbaPlain<Rgba32, OrderRgba>;
+using BlenderArgb128Plain = BlenderRgbaPlain<Rgba32, OrderArgb>;
+using BlenderAbgr128Plain = BlenderRgbaPlain<Rgba32, OrderAbgr>;
+using BlenderBgra128Plain = BlenderRgbaPlain<Rgba32, OrderBgra>;
 
 
-    //-----------------------------------------------------------------------
-    typedef pixfmt_alpha_blend_rgba<blender_rgba32, rendering_buffer> pixfmt_rgba32;
-    typedef pixfmt_alpha_blend_rgba<blender_argb32, rendering_buffer> pixfmt_argb32;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr32, rendering_buffer> pixfmt_abgr32;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra32, rendering_buffer> pixfmt_bgra32;
+using PixfmtRgba32 = PixfmtAlphaBlendRgba<BlenderRgba32, RenderingBuffer>;
+using PixfmtArgb32 = PixfmtAlphaBlendRgba<BlenderArgb32, RenderingBuffer>;
+using PixfmtAbgr32 = PixfmtAlphaBlendRgba<BlenderAbgr32, RenderingBuffer>;
+using PixfmtBgra32 = PixfmtAlphaBlendRgba<BlenderBgra32, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_srgba32, rendering_buffer> pixfmt_srgba32;
-    typedef pixfmt_alpha_blend_rgba<blender_sargb32, rendering_buffer> pixfmt_sargb32;
-    typedef pixfmt_alpha_blend_rgba<blender_sabgr32, rendering_buffer> pixfmt_sabgr32;
-    typedef pixfmt_alpha_blend_rgba<blender_sbgra32, rendering_buffer> pixfmt_sbgra32;
+using PixfmtSrgba32 = PixfmtAlphaBlendRgba<BlenderSrgba32, RenderingBuffer>;
+using PixfmtSargb32 = PixfmtAlphaBlendRgba<BlenderSargb32, RenderingBuffer>;
+using PixfmtSabgr32 = PixfmtAlphaBlendRgba<BlenderSabgr32, RenderingBuffer>;
+using PixfmtSbgra32 = PixfmtAlphaBlendRgba<BlenderSbgra32, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba32_pre, rendering_buffer> pixfmt_rgba32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_argb32_pre, rendering_buffer> pixfmt_argb32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr32_pre, rendering_buffer> pixfmt_abgr32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra32_pre, rendering_buffer> pixfmt_bgra32_pre;
+using  PixfmtRgba32Pre = PixfmtAlphaBlendRgba<BlenderRgba32Pre, RenderingBuffer>;
+using  PixfmtArgb32Pre = PixfmtAlphaBlendRgba<BlenderArgb32Pre, RenderingBuffer>;
+using  PixfmtAbgr32Pre = PixfmtAlphaBlendRgba<BlenderAbgr32Pre, RenderingBuffer>;
+using  PixfmtBgra32Pre = PixfmtAlphaBlendRgba<BlenderBgra32Pre, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_srgba32_pre, rendering_buffer> pixfmt_srgba32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_sargb32_pre, rendering_buffer> pixfmt_sargb32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_sabgr32_pre, rendering_buffer> pixfmt_sabgr32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_sbgra32_pre, rendering_buffer> pixfmt_sbgra32_pre;
+using  PixfmtSrgba32Pre = PixfmtAlphaBlendRgba<BlenderSrgba32Pre, RenderingBuffer>;
+using  PixfmtSargb32Pre = PixfmtAlphaBlendRgba<BlenderSargb32Pre, RenderingBuffer>;
+using  PixfmtSabgr32Pre = PixfmtAlphaBlendRgba<BlenderSabgr32Pre, RenderingBuffer>;
+using  PixfmtSbgra32Pre = PixfmtAlphaBlendRgba<BlenderSbgra32Pre, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba32_plain, rendering_buffer> pixfmt_rgba32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_argb32_plain, rendering_buffer> pixfmt_argb32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr32_plain, rendering_buffer> pixfmt_abgr32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra32_plain, rendering_buffer> pixfmt_bgra32_plain;
+using PixfmtRgba32Plain = PixfmtAlphaBlendRgba<BlenderRgba32Plain, RenderingBuffer>;
+using PixfmtArgb32Plain = PixfmtAlphaBlendRgba<BlenderArgb32Plain, RenderingBuffer>;
+using PixfmtAbgr32Plain = PixfmtAlphaBlendRgba<BlenderAbgr32Plain, RenderingBuffer>;
+using PixfmtBgra32Plain = PixfmtAlphaBlendRgba<BlenderBgra32Plain, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_srgba32_plain, rendering_buffer> pixfmt_srgba32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_sargb32_plain, rendering_buffer> pixfmt_sargb32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_sabgr32_plain, rendering_buffer> pixfmt_sabgr32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_sbgra32_plain, rendering_buffer> pixfmt_sbgra32_plain;
+using PixfmtSrgba32Plain = PixfmtAlphaBlendRgba<BlenderSrgba32Plain, RenderingBuffer>;
+using PixfmtSargb32Plain = PixfmtAlphaBlendRgba<BlenderSargb32Plain, RenderingBuffer>;
+using PixfmtSabgr32Plain = PixfmtAlphaBlendRgba<BlenderSabgr32Plain, RenderingBuffer>;
+using PixfmtSbgra32Plain = PixfmtAlphaBlendRgba<BlenderSbgra32Plain, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba64, rendering_buffer> pixfmt_rgba64;
-    typedef pixfmt_alpha_blend_rgba<blender_argb64, rendering_buffer> pixfmt_argb64;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr64, rendering_buffer> pixfmt_abgr64;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra64, rendering_buffer> pixfmt_bgra64;
+using PixfmtRgba64 = PixfmtAlphaBlendRgba<BlenderRgba64, RenderingBuffer>;
+using PixfmtArgb64 = PixfmtAlphaBlendRgba<BlenderArgb64, RenderingBuffer>;
+using PixfmtAbgr64 = PixfmtAlphaBlendRgba<BlenderAbgr64, RenderingBuffer>;
+using PixfmtBgra64 = PixfmtAlphaBlendRgba<BlenderBgra64, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba64_pre, rendering_buffer> pixfmt_rgba64_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_argb64_pre, rendering_buffer> pixfmt_argb64_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr64_pre, rendering_buffer> pixfmt_abgr64_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra64_pre, rendering_buffer> pixfmt_bgra64_pre;
+using PixfmtRgba64Pre = PixfmtAlphaBlendRgba<BlenderRgba64Pre, RenderingBuffer>;
+using PixfmtArgb64Pre = PixfmtAlphaBlendRgba<BlenderArgb64Pre, RenderingBuffer>;
+using PixfmtAbgr64Pre = PixfmtAlphaBlendRgba<BlenderAbgr64Pre, RenderingBuffer>;
+using PixfmtBgra64Pre = PixfmtAlphaBlendRgba<BlenderBgra64Pre, RenderingBuffer>;
 
-	typedef pixfmt_alpha_blend_rgba<blender_rgba64_plain, rendering_buffer> pixfmt_rgba64_plain;
-	typedef pixfmt_alpha_blend_rgba<blender_argb64_plain, rendering_buffer> pixfmt_argb64_plain;
-	typedef pixfmt_alpha_blend_rgba<blender_abgr64_plain, rendering_buffer> pixfmt_abgr64_plain;
-	typedef pixfmt_alpha_blend_rgba<blender_bgra64_plain, rendering_buffer> pixfmt_bgra64_plain;
+using PixfmtRgba64Plain = PixfmtAlphaBlendRgba<BlenderRgba64Plain, RenderingBuffer>;
+using PixfmtArgb64Plain = PixfmtAlphaBlendRgba<BlenderArgb64Plain, RenderingBuffer>;
+using PixfmtAbgr64Plain = PixfmtAlphaBlendRgba<BlenderAbgr64Plain, RenderingBuffer>;
+using PixfmtBgra64Plain = PixfmtAlphaBlendRgba<BlenderBgra64Plain, RenderingBuffer>;
 
-	typedef pixfmt_alpha_blend_rgba<blender_rgba128, rendering_buffer> pixfmt_rgba128;
-    typedef pixfmt_alpha_blend_rgba<blender_argb128, rendering_buffer> pixfmt_argb128;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr128, rendering_buffer> pixfmt_abgr128;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra128, rendering_buffer> pixfmt_bgra128;
+using PixfmtRgba128 = PixfmtAlphaBlendRgba<BlenderRgba128, RenderingBuffer>;
+using PixfmtArgb128 = PixfmtAlphaBlendRgba<BlenderArgb128, RenderingBuffer>;
+using PixfmtAbgr128 = PixfmtAlphaBlendRgba<BlenderAbgr128, RenderingBuffer>;
+using PixfmtBgra128 = PixfmtAlphaBlendRgba<BlenderBgra128, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba128_pre, rendering_buffer> pixfmt_rgba128_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_argb128_pre, rendering_buffer> pixfmt_argb128_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr128_pre, rendering_buffer> pixfmt_abgr128_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra128_pre, rendering_buffer> pixfmt_bgra128_pre;
+using PixfmtRgba128Pre = PixfmtAlphaBlendRgba<BlenderRgba128Pre, RenderingBuffer>;
+using PixfmtArgb128Pre = PixfmtAlphaBlendRgba<BlenderArgb128Pre, RenderingBuffer>;
+using PixfmtAbgr128Pre = PixfmtAlphaBlendRgba<BlenderAbgr128Pre, RenderingBuffer>;
+using PixfmtBgra128Pre = PixfmtAlphaBlendRgba<BlenderBgra128Pre, RenderingBuffer>;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba128_plain, rendering_buffer> pixfmt_rgba128_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_argb128_plain, rendering_buffer> pixfmt_argb128_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr128_plain, rendering_buffer> pixfmt_abgr128_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra128_plain, rendering_buffer> pixfmt_bgra128_plain;
+using PixfmtRgba128Plain = PixfmtAlphaBlendRgba<BlenderRgba128Plain, RenderingBuffer>;
+using PixfmtArgb128Plain = PixfmtAlphaBlendRgba<BlenderArgb128Plain, RenderingBuffer>;
+using PixfmtAbgr128Plain = PixfmtAlphaBlendRgba<BlenderAbgr128Plain, RenderingBuffer>;
+using PixfmtBgra128Plain = PixfmtAlphaBlendRgba<BlenderBgra128Plain, RenderingBuffer>;
 
 }
 

@@ -1,155 +1,167 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/**
+* @addtogroup GraphicGeometry
+* @{
+*
+* @brief Defines PixfmtTransposer.
+*
+* @since 1.0
+* @version 1.0
+*/
+
+/**
+* @file graphic_geometry_pixfmt_transposer.h
+*
+* @brief Defines 像素格式转换类.
+*
+* @since 1.0
+* @version 1.0
+*/
 
 #ifndef AGG_PIXFMT_TRANSPOSER_INCLUDED
 #define AGG_PIXFMT_TRANSPOSER_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-
-namespace agg
+#include "gfx_utils/heap_base.h"
+namespace OHOS
 {
-    //=======================================================pixfmt_transposer
-    template<class PixFmt> class pixfmt_transposer
+template<class PixFmt>
+class PixfmtTransposer : public HeapBase{
+public:
+    typedef PixFmt PixfmtType;
+    typedef typename PixfmtType::ColorType ColorType;
+    typedef typename PixfmtType::RowData RowData;
+    typedef typename ColorType::ValueType ValueType;
+    typedef typename ColorType::CalcType CalcType;
+
+    PixfmtTransposer() : pixf_(0) {}
+    explicit PixfmtTransposer(PixfmtType& pixf) : pixf_(&pixf) {}
+    void Attach(PixfmtType& pixf)
     {
-    public:
-        typedef PixFmt pixfmt_type;
-        typedef typename pixfmt_type::color_type color_type;
-        typedef typename pixfmt_type::row_data row_data;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
+        pixf_ = &pixf;
+    }
 
-        //--------------------------------------------------------------------
-        pixfmt_transposer() : m_pixf(0) {}
-        explicit pixfmt_transposer(pixfmt_type& pixf) : m_pixf(&pixf) {}
-        void attach(pixfmt_type& pixf) { m_pixf = &pixf; }
+    AGG_INLINE unsigned Width()  const 
+    { 
+        return pixf_->Height();
+    }
+    AGG_INLINE unsigned Height() const 
+    {
+        return pixf_->Width();
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE unsigned width()  const { return m_pixf->height();  }
-        AGG_INLINE unsigned height() const { return m_pixf->width(); }
+    AGG_INLINE ColorType Pixel(int x, int y) const
+    {
+        return pixf_->Pixel(y, x);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE color_type pixel(int x, int y) const
-        {
-            return m_pixf->pixel(y, x);
-        }
+    AGG_INLINE void CopyPixel(int x, int y, const ColorType& c)
+    {
+        pixf_->CopyPixel(y, x, c);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
-        {
-            m_pixf->copy_pixel(y, x, c);
-        }
+    AGG_INLINE void BlendPixel(int x, int y, 
+                                const ColorType& c, 
+                                int8u cover)
+    {
+        pixf_->BlendPixel(y, x, c, cover);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pixel(int x, int y, 
-                                    const color_type& c, 
-                                    int8u cover)
-        {
-            m_pixf->blend_pixel(y, x, c, cover);
-        }
+    AGG_INLINE void CopyHline(int x, int y, 
+                                unsigned len, 
+                                const ColorType& c)
+    {
+        pixf_->copy_vline(y, x, len, c);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y, 
-                                   unsigned len, 
-                                   const color_type& c)
-        {
-            m_pixf->copy_vline(y, x, len, c);
-        }
+    AGG_INLINE void CopyVline(int x, int y,
+                                unsigned len, 
+                                const ColorType& c)
+    {
+        pixf_->CopyHline(y, x, len, c);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_vline(int x, int y,
-                                   unsigned len, 
-                                   const color_type& c)
-        {
-            m_pixf->copy_hline(y, x, len, c);
-        }
+    AGG_INLINE void BlendHline(int x, int y,
+                                unsigned len, 
+                                const ColorType& c, []
+                                int8u cover)
+    {
+        pixf_->BlendVline(y, x, len, c, cover);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_hline(int x, int y,
-                                    unsigned len, 
-                                    const color_type& c,
-                                    int8u cover)
-        {
-            m_pixf->blend_vline(y, x, len, c, cover);
-        }
+    AGG_INLINE void BlendVline(int x, int y,
+                                unsigned len, 
+                                const ColorType& c,
+                                int8u cover)
+    {
+        pixf_->BlendHline(y, x, len, c, cover);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_vline(int x, int y,
-                                    unsigned len, 
-                                    const color_type& c,
-                                    int8u cover)
-        {
-            m_pixf->blend_hline(y, x, len, c, cover);
-        }
+    AGG_INLINE void BlendSolidHspan(int x, int y,
+                                        unsigned len, 
+                                        const ColorType& c,
+                                        const int8u* covers)
+    {
+        pixf_->BlendSolidVspan(y, x, len, c, covers);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_solid_hspan(int x, int y,
-                                          unsigned len, 
-                                          const color_type& c,
-                                          const int8u* covers)
-        {
-            m_pixf->blend_solid_vspan(y, x, len, c, covers);
-        }
+    AGG_INLINE void BlendSolidVspan(int x, int y,
+                                        unsigned len, 
+                                        const ColorType& c,
+                                        const int8u* covers)
+    {
+        pixf_->BlendSolidHspan(y, x, len, c, covers);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_solid_vspan(int x, int y,
-                                          unsigned len, 
-                                          const color_type& c,
-                                          const int8u* covers)
-        {
-            m_pixf->blend_solid_hspan(y, x, len, c, covers);
-        }
+    AGG_INLINE void CopyColorHspan(int x, int y,
+                                        unsigned len, 
+                                        const ColorType* colors)
+    {
+        pixf_->CopyColorVspan(y, x, len, colors);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_color_hspan(int x, int y,
-                                         unsigned len, 
-                                         const color_type* colors)
-        {
-            m_pixf->copy_color_vspan(y, x, len, colors);
-        }
+    AGG_INLINE void CopyColorVspan(int x, int y,
+                                        unsigned len, 
+                                        const ColorType* colors)
+    {
+        pixf_->CopyColorHspan(y, x, len, colors);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_color_vspan(int x, int y,
-                                         unsigned len, 
-                                         const color_type* colors)
-        {
-            m_pixf->copy_color_hspan(y, x, len, colors);
-        }
+    AGG_INLINE void BlendColorHspan(int x, int y,
+                                        unsigned len, 
+                                        const ColorType* colors,
+                                        const int8u* covers,
+                                        int8u cover)
+    {
+        pixf_->BlendColorVspan(y, x, len, colors, covers, cover);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_color_hspan(int x, int y,
-                                          unsigned len, 
-                                          const color_type* colors,
-                                          const int8u* covers,
-                                          int8u cover)
-        {
-            m_pixf->blend_color_vspan(y, x, len, colors, covers, cover);
-        }
+    AGG_INLINE void BlendColorVspan(int x, int y,
+                            unsigned len, 
+                            const ColorType* colors,
+                            const int8u* covers,
+                            int8u cover)
+    {
+        pixf_->BlendColorHspan(y, x, len, colors, covers, cover);
+    }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_color_vspan(int x, int y,
-                               unsigned len, 
-                               const color_type* colors,
-                               const int8u* covers,
-                               int8u cover)
-        {
-            m_pixf->blend_color_hspan(y, x, len, colors, covers, cover);
-        }
-
-    private:
-        pixfmt_type* m_pixf;
-    };
+private:
+    PixfmtType* pixf_;
+};
 }
 
 #endif
