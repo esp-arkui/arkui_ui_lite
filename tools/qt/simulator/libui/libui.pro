@@ -136,7 +136,6 @@ SOURCES += \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_contour.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_dash.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_markers_term.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_smooth_poly1.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_stroke.cpp \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
@@ -246,7 +245,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_contour.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_markers_term.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_smooth_poly1.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb16.h \
