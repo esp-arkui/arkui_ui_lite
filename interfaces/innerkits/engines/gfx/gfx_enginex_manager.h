@@ -32,7 +32,7 @@
 #include <render/agg_renderer_scanline.h>
 
 #include <gfx_utils/graphics/graphic_spancolor_fill/gradient_lut.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/span_allocator_converter.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/span_base.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/span_gradient.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/span_interpolator.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/span_pattern_rgba.h>
@@ -43,7 +43,6 @@
 #include <gfx_utils/graphics/graphic_depict/agg_conv_transform.h>
 #include <gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h>
 #include <gfx_utils/graphics/graphic_filter/agg_blur.h>
-#include <gfx_utils/graphics/graphic_filter/agg_image_filters.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_path_storage.h>
 #include <gfx_utils/graphics/graphic_transform/agg_image_accessors.h>
 #include <gfx_utils/graphics/graphic_scanline/agg_scanline_u.h>
@@ -284,9 +283,6 @@ public:
 
     void  clearAll(Color c);
     void  clearAll(unsigned r, unsigned g, unsigned b, unsigned a = 255);
-
-    void  clearClipBox(Color c);
-    void  clearClipBox(unsigned r, unsigned g, unsigned b, unsigned a = 255);
 
     // Conversions
     //-----------------------

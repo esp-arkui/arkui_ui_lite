@@ -331,18 +331,6 @@ void BaseGfxExtendEngine::clearAll(unsigned r, unsigned g, unsigned b, unsigned 
 }
 
 //------------------------------------------------------------------------
-void BaseGfxExtendEngine::clearClipBox(Color c)
-{
-    m_renBase.copy_bar(0, 0, m_renBase.width(), m_renBase.height(), c);
-}
-
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::clearClipBox(unsigned r, unsigned g, unsigned b, unsigned a)
-{
-    clearClipBox(Color(r, g, b, a));
-}
-
-//------------------------------------------------------------------------
 void BaseGfxExtendEngine::worldToScreen(double& x, double& y) const
 {
     m_transform.transform(&x, &y);
