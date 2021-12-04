@@ -16,9 +16,7 @@
 
 /**
 * @file agg_rendering_buffer.h
-*
 * @brief Defines 渲染器缓冲
-*
 * @since 1.0
 * @version 1.0
 */
@@ -33,24 +31,21 @@
 namespace OHOS
 {
 
-    //===========================================================row_accessor
+    /**
+     * 行访问器
+     */
     template<class T>
     class row_accessor
     {
     public:
         typedef const_row_info<T> row_data;
-
-        //-------------------------------------------------------------------
         row_accessor() :
             m_buf(0),
             m_start(0),
             m_width(0),
             m_height(0),
             m_stride(0)
-        {
-        }
-
-        //--------------------------------------------------------------------
+        {}
         row_accessor(T* buf, unsigned width, unsigned height, int stride) :
             m_buf(0),
             m_start(0),
@@ -61,8 +56,9 @@ namespace OHOS
             attach(buf, width, height, stride);
         }
 
-
-        //--------------------------------------------------------------------
+        /**
+         * @brief attach 传入参数
+         */
         void attach(T* buf, unsigned width, unsigned height, int stride)
         {
             m_buf = m_start = buf;
@@ -74,10 +70,8 @@ namespace OHOS
                 m_start = m_buf - (AGG_INT64)(height - 1) * stride;
             }
         }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE       T* buf()          { return m_buf;    }
-        AGG_INLINE const T* buf()    const { return m_buf;    }
+        AGG_INLINE       T* Getbuf()          { return m_buf;    }
+        AGG_INLINE const T* Getbuf()    const { return m_buf;    }
         AGG_INLINE unsigned width()  const { return m_width;  }
         AGG_INLINE unsigned height() const { return m_height; }
         AGG_INLINE int      stride() const { return m_stride; }

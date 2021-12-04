@@ -220,7 +220,7 @@ void BaseGfxExtendEngine::attach(unsigned char* buf, unsigned width, unsigned he
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::attach(Image& img)
 {
-    attach(img.renBuf.buf(), img.renBuf.width(), img.renBuf.height(), img.renBuf.stride());
+    attach(img.renBuf.Getbuf(), img.renBuf.width(), img.renBuf.height(), img.renBuf.stride());
 }
 
 //------------------------------------------------------------------------

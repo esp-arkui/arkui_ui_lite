@@ -42,7 +42,7 @@ namespace OHOS
     template<class Rasterizer, class Scanline, 
              class BaseRenderer, class ColorT>
     void render_scanlines_aa_solid(Rasterizer& ras, Scanline& sl, 
-                                   BaseRenderer& ren, const ColorT& color)
+                                   BaseRenderer& renBase, const ColorT& color)
     {
         if(ras.rewind_scanlines())
         {
@@ -60,13 +60,13 @@ namespace OHOS
                     int x = span->x;
                     if(span->len > 0)
                     {
-                        ren.blend_solid_hspan(x, y, (unsigned)span->len, 
+                        renBase.blend_solid_hspan(x, y, (unsigned)span->len,
                                               ren_color, 
                                               span->covers);
                     }
                     else
                     {
-                        ren.blend_hline(x, y, (unsigned)(x - span->len - 1), 
+                        renBase.blend_hline(x, y, (unsigned)(x - span->len - 1),
                                         ren_color, 
                                         *(span->covers));
                     }
@@ -91,11 +91,11 @@ namespace OHOS
 
         renderer_scanline_aa_solid() : m_ren(0) {}
         //构造函数传入BaseRenderer
-        explicit renderer_scanline_aa_solid(base_ren_type& ren) : m_ren(&ren) {}
+        explicit renderer_scanline_aa_solid(base_ren_type& renBase) : m_ren(&renBase) {}
         //函数传入BaseRenderer
-        void attach(base_ren_type& ren)
+        void attach(base_ren_type& renBase)
         {
-            m_ren = &ren;
+            m_ren = &renBase;
         }
 
         /**
@@ -147,7 +147,7 @@ namespace OHOS
 
     template<class Rasterizer, class Scanline, class BaseRenderer, 
              class SpanAllocator, class SpanGenerator>
-    void render_scanlines_aa(Rasterizer& ras, Scanline& sl, BaseRenderer& ren, 
+    void render_scanlines_aa(Rasterizer& ras, Scanline& sl, BaseRenderer& renBase,
                              SpanAllocator& alloc, SpanGenerator& span_gen)
     {
         if(ras.rewind_scanlines())
@@ -169,7 +169,7 @@ namespace OHOS
                     if(len < 0) len = -len;
                     typename BaseRenderer::color_type* colors = alloc.allocate(len);
                     span_gen.generate(colors, x, y, len);
-                    ren.blend_color_hspan(x, y, len, colors,
+                    renBase.blend_color_hspan(x, y, len, colors,
                                           (span->len < 0) ? 0 : covers, *covers);
 
                     if(--num_spans == 0)
@@ -190,18 +190,18 @@ namespace OHOS
         typedef SpanAllocator alloc_type;
         typedef SpanGenerator span_gen_type;
         renderer_scanline_aa() : m_ren(0), m_alloc(0), m_span_gen(0) {}
-        renderer_scanline_aa(base_ren_type& ren, 
+        renderer_scanline_aa(base_ren_type& renBase,
                              alloc_type& alloc, 
                              span_gen_type& span_gen) :
-            m_ren(&ren),
+            m_ren(&renBase),
             m_alloc(&alloc),
             m_span_gen(&span_gen)
         {}
-        void attach(base_ren_type& ren, 
+        void attach(base_ren_type& renBase,
                     alloc_type& alloc, 
                     span_gen_type& span_gen)
         {
-            m_ren = &ren;
+            m_ren = &renBase;
             m_alloc = &alloc;
             m_span_gen = &span_gen;
         }
@@ -240,14 +240,14 @@ namespace OHOS
 
     template<class Scanline, class BaseRenderer, class ColorT> 
     void render_scanline_bin_solid(const Scanline& sl, 
-                                   BaseRenderer& ren, 
+                                   BaseRenderer& renBase,
                                    const ColorT& color)
     {
         unsigned num_spans = sl.num_spans();
         typename Scanline::const_iterator span = sl.begin();
         for(;;)
         {
-            ren.blend_hline(span->x, 
+            renBase.blend_hline(span->x,
                             sl.y(), 
                             span->x - 1 + ((span->len < 0) ? 
                                               -span->len : 
@@ -262,7 +262,7 @@ namespace OHOS
     template<class Rasterizer, class Scanline, 
              class BaseRenderer, class ColorT>
     void render_scanlines_bin_solid(Rasterizer& ras, Scanline& sl, 
-                                    BaseRenderer& ren, const ColorT& color)
+                                    BaseRenderer& renBase, const ColorT& color)
     {
         if(ras.rewind_scanlines())
         {
@@ -275,7 +275,7 @@ namespace OHOS
                 typename Scanline::const_iterator span = sl.begin();
                 for(;;)
                 {
-                    ren.blend_hline(span->x, 
+                    renBase.blend_hline(span->x,
                                     sl.y(), 
                                     span->x - 1 + ((span->len < 0) ? 
                                                       -span->len : 
@@ -296,15 +296,20 @@ namespace OHOS
         typedef BaseRenderer base_ren_type;
         typedef typename base_ren_type::color_type color_type;
         renderer_scanline_bin_solid() : m_ren(0) {}
-        explicit renderer_scanline_bin_solid(base_ren_type& ren) : m_ren(&ren) {}
-        void attach(base_ren_type& ren)
+        explicit renderer_scanline_bin_solid(base_ren_type& renBase) : m_ren(&renBase) {}
+        void attach(base_ren_type& renBase)
         {
-            m_ren = &ren;
+            m_ren = &renBase;
         }
         void color(const color_type& c) { m_color = c; }
         const color_type& color() const { return m_color; }
         void prepare() {}
         template<class Scanline>
+
+
+        /**
+         *开始渲染
+         */
         void render(const Scanline& sl)
         {
             unsigned num_spans = sl.num_spans();
@@ -333,7 +338,7 @@ namespace OHOS
      */
     template<class Rasterizer, class Scanline, class BaseRenderer,
              class SpanAllocator, class SpanGenerator>
-    void render_scanlines_bin(Rasterizer& ras, Scanline& sl, BaseRenderer& ren, 
+    void render_scanlines_bin(Rasterizer& ras, Scanline& sl, BaseRenderer& renBase,
                               SpanAllocator& alloc, SpanGenerator& span_gen)
     {
         if(ras.rewind_scanlines())
@@ -352,7 +357,7 @@ namespace OHOS
                     if(len < 0) len = -len;
                     typename BaseRenderer::color_type* colors = alloc.allocate(len);
                     span_gen.generate(colors, x, y, len);
-                    ren.blend_color_hspan(x, y, len, colors, 0, cover_full);
+                    renBase.blend_color_hspan(x, y, len, colors, 0, cover_full);
                     if(--num_spans == 0) break;
                     ++span;
                 }
@@ -360,6 +365,9 @@ namespace OHOS
         }
     }
 
+    /**
+     *渲染扫描线（不防走样）
+     */
     template<class BaseRenderer, class SpanAllocator, class SpanGenerator> 
     class renderer_scanline_bin
     {
@@ -368,22 +376,37 @@ namespace OHOS
         typedef SpanAllocator alloc_type;
         typedef SpanGenerator span_gen_type;
         renderer_scanline_bin() : m_ren(0), m_alloc(0), m_span_gen(0) {}
-        renderer_scanline_bin(base_ren_type& ren, 
+        renderer_scanline_bin(base_ren_type& renBase,
                               alloc_type& alloc, 
                               span_gen_type& span_gen) :
-            m_ren(&ren),
+            m_ren(&renBase),
             m_alloc(&alloc),
             m_span_gen(&span_gen)
         {}
-        void attach(base_ren_type& ren, 
+
+        /**
+         *传入参数
+         */
+        void attach(base_ren_type& renBase,
                     alloc_type& alloc, 
                     span_gen_type& span_gen)
         {
-            m_ren = &ren;
+            m_ren = &renBase;
             m_alloc = &alloc;
             m_span_gen = &span_gen;
         }
-        void prepare() { m_span_gen->prepare(); }
+
+        /**
+         * 准备
+         */
+        void prepare()
+        {
+            m_span_gen->prepare();
+        }
+
+        /**
+         *开始渲染
+         */
         template<class Scanline> void render(const Scanline& sl)
         {
             int y = sl.y();
@@ -409,15 +432,15 @@ namespace OHOS
     };
 
     template<class Rasterizer, class Scanline, class Renderer>
-    void render_scanlines(Rasterizer& ras, Scanline& sl, Renderer& ren)
+    void render_scanlines(Rasterizer& ras, Scanline& sl, Renderer& renBase)
     {
         if(ras.rewind_scanlines())
         {
             sl.reset(ras.min_x(), ras.max_x());
-            ren.prepare();
+            renBase.prepare();
             while(ras.sweep_scanline(sl))
             {
-                ren.render(sl);
+                renBase.render(sl);
             }
         }
     }
