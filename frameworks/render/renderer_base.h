@@ -15,7 +15,7 @@
 
 
 /**
-* @file agg_renderer_base.h
+* @file renderer_base.h
 * @brief Defines 基础渲染器
 * @since 1.0
 * @version 1.0
@@ -25,7 +25,7 @@
 #define RENDERER_BASE_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "render/agg_rendering_buffer.h"
+#include "render/rendering_buffer.h"
 
 namespace OHOS
 {
@@ -50,7 +50,7 @@ namespace OHOS
         void attach(pixfmt_type& ren)
         {
             pixfmtType = &ren;
-            clipBox = rect_i(0, 0, ren.width() - 1, ren.height() - 1);
+            clipBox = rect_i(0, 0, ren.GetWidth() - 1, ren.GetHeight() - 1);
         }
 
         /**
@@ -425,7 +425,7 @@ namespace OHOS
                        int dx = 0,
                        int dy = 0)
         {
-            rect_i rsrc(0, 0, src.width(), src.height());
+            rect_i rsrc(0, 0, src.GetWidth(), src.GetHeight());
             if(rect_src_ptr)
             {
                 rsrc.x1 = rect_src_ptr->x1;
@@ -436,7 +436,7 @@ namespace OHOS
 
             rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
 
-            rect_i rect = clip_rect_area(rdst, rsrc, src.width(), src.height());
+            rect_i rect = clip_rect_area(rdst, rsrc, src.GetWidth(), src.GetHeight());
 
             if(rect.x2 > 0)
             {

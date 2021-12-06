@@ -14,23 +14,21 @@
  */
 
 /**
-* @file agg_renderer_scanline.h
-*
+* @file renderer_scanline.h
 * @brief Defines 扫描线渲染器
-*
 * @since 1.0
 * @version 1.0
 */
 
 
-#ifndef OHOS_RENDERER_SCANLINE_INCLUDED
-#define OHOS_RENDERER_SCANLINE_INCLUDED
+#ifndef RENDERER_SCANLINE_INCLUDED
+#define RENDERER_SCANLINE_INCLUDED
 
 #include <limits>
 #include <cstdlib>
 #include <cstring>
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "render/agg_renderer_base.h"
+#include "render/renderer_base.h"
 
 namespace OHOS
 {

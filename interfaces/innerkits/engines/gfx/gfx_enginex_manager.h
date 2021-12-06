@@ -28,8 +28,8 @@
 #include <gfx_utils/graphics/graphic_color/agg_color_rgba.h>
 
 #include <render/agg_pixfmt_rgba.h>
-#include <render/agg_renderer_base.h>
-#include <render/agg_renderer_scanline.h>
+#include <render/renderer_base.h>
+#include <render/renderer_scanline.h>
 
 #include <gfx_utils/graphics/graphic_spancolor_fill/gradient_lut.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/span_base.h>
@@ -50,7 +50,7 @@
 
 #include <gfx_utils/graphics/graphic_transform/agg_trans_viewport.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/agg_span_image_filter_rgba.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/span_image_rgba.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_bounding_rect.h>
 
 
@@ -147,17 +147,17 @@ public:
     enum LineJoin
     {
         JoinNone  = -1,
-        JoinMiter = OHOS::miter_join,
-        JoinRound = OHOS::round_join,
-        JoinBevel = OHOS::bevel_join
+        JoinMiter = OHOS::MITER_JOIN,
+        JoinRound = OHOS::ROUND_JOIN,
+        JoinBevel = OHOS::BEVEL_JOIN
     };
 
     enum LineCap
     {
         CapNone   = -1,
-        CapButt   = OHOS::butt_cap,
-        CapSquare = OHOS::square_cap,
-        CapRound  = OHOS::round_cap
+        CapButt   = OHOS::BUTT_CAP,
+        CapSquare = OHOS::SQUARE_CAP,
+        CapRound  = OHOS::ROUND_CAP
     };
 
     enum DrawPathFlag
@@ -198,8 +198,8 @@ public:
         {
             renBuf.attach(buf, width, height, stride);
         }
-        int width()  const { return renBuf.width(); }
-        int height() const { return renBuf.height(); }
+        int width()  const { return renBuf.GetWidth(); }
+        int height() const { return renBuf.GetHeight(); }
         void premultiply();
         void demultiply();
     };
@@ -663,22 +663,18 @@ private:
     double                          m_fillGradientD2;
     double                          m_lineGradientD2;
 
-    ImageFilter                     m_imageFilter;
-    ImageResample                   m_imageResample;
-    OHOS::image_filter_lut           m_imageFilterLut;
-
     OHOS::span_interpolator_linear<> m_fillGradientInterpolator;
     OHOS::span_interpolator_linear<> m_lineGradientInterpolator;
 
     OHOS::GradientLinearCalculate                 m_linearGradientFunction;
-//    OHOS::gradient_circle            m_radialGradientFunction;
+
     gradient_func_type              m_radialGradientFunction;//TODO：m_fillRadialMatrix
 
     double                          m_lineWidth;
     bool                            m_evenOddFlag;
 
     OHOS::path_storage               m_path;
-//    typedef OHOS::conv_stroke<OHOS::path_storage> cs_ps(m_path);
+
     OHOS::trans_affine               m_transform;
 
     ConvCurve                       m_convCurve;
@@ -688,7 +684,7 @@ private:
     PathTransform                   m_pathTransform;
     StrokeTransform                 m_strokeTransform;
     DashStrokeTransform             m_dashStrokeTransform;
-//    t_conv_stroke m_conv_stroke;
+
     ShadowCtrl m_shadow_ctrl;
     StackBlur m_stack_blur;
     RecursiveBlur m_recursive_blur;
