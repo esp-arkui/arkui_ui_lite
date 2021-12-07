@@ -20,11 +20,11 @@
 * @version 1.0
 */
 
-
 #ifndef RENDERING_BUFFER_INCLUDED
 #define RENDERING_BUFFER_INCLUDED
 
 #include <cstring>
+
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
 namespace OHOS
@@ -32,7 +32,7 @@ namespace OHOS
     /**
      * 行访问器
      */
-    template<class T>
+    template <class T>
     class row_accessor
     {
     public:
@@ -43,7 +43,8 @@ namespace OHOS
             width(0),
             height(0),
             bufStride(0)
-        {}
+        {
+        }
         row_accessor(T* buf, unsigned areaWidth, unsigned areaHeight, int stride) :
             buf(0),
             start(0),
@@ -63,15 +64,15 @@ namespace OHOS
             width = areaWidth;
             height = areaHeight;
             bufStride = stride;
-            if(stride < 0) 
-            { 
+            if (stride < 0)
+            {
                 start = buf - (AGG_INT64)(areaHeight - 1) * stride;
             }
         }
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE       T* GetBuf()
+        AGG_INLINE T* GetBuf()
         {
             return buf;
         }
@@ -108,14 +109,14 @@ namespace OHOS
         /**
          * @brief row_ptr 获取行首地址
          */
-        AGG_INLINE       T* row_ptr(int, int y, unsigned) 
-        { 
+        AGG_INLINE T* row_ptr(int, int y, unsigned)
+        {
             return start + y * (AGG_INT64)bufStride;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE       T* row_ptr(int y)
+        AGG_INLINE T* row_ptr(int y)
         {
             return start + y * (AGG_INT64)bufStride;
         }
@@ -129,23 +130,25 @@ namespace OHOS
         /**
          * @brief row 获取行数据
          */
-        AGG_INLINE row_data row (int y) const
-        { 
-            return row_data(0, width-1, row_ptr(y));
+        AGG_INLINE row_data row(int y) const
+        {
+            return row_data(0, width - 1, row_ptr(y));
         }
 
         /**
          *从另一rendering_buffer中复制数据
          */
-        template<class RenBuf>
+        template <class RenBuf>
         void copy_from(const RenBuf& src)
         {
             unsigned h = GetHeight();
-            if(src.height() < h) h = src.height();
-        
+            if (src.height() < h)
+                h = src.height();
+
             unsigned l = GetStrideAbs();
-            if(src.stride_abs() < l) l = src.stride_abs();
-        
+            if (src.stride_abs() < l)
+                l = src.stride_abs();
+
             l *= sizeof(T);
 
             unsigned y;
@@ -156,7 +159,6 @@ namespace OHOS
             }
         }
 
-
         /**
          * @brief clear 以value值填充整个内存块
          * @param value
@@ -166,11 +168,11 @@ namespace OHOS
             unsigned y;
             unsigned w = GetWidth();
             unsigned stride = GetStrideAbs();
-            for(y = 0; y < GetHeight(); y++)
+            for (y = 0; y < GetHeight(); y++)
             {
                 T* p = row_ptr(0, y, w);
                 unsigned x;
-                for(x = 0; x < stride; x++)
+                for (x = 0; x < stride; x++)
                 {
                     *p++ = value;
                 }
@@ -178,11 +180,11 @@ namespace OHOS
         }
 
     private:
-        T*            buf;    // 指向渲染缓冲区的指针
-        T*            start;  // 根据步幅指向第一个像素
-        unsigned      width;  // 区域宽度
-        unsigned      height; // 区域高度
-        int           bufStride; // 每行字节数。
+        T* buf;          // 指向渲染缓冲区的指针
+        T* start;        // 根据步幅指向第一个像素
+        unsigned width;  // 区域宽度
+        unsigned height; // 区域高度
+        int bufStride;   // 每行字节数。
     };
 
 #ifdef RENDERING_BUFFER
@@ -191,7 +193,6 @@ namespace OHOS
     typedef row_accessor<int8u> rendering_buffer;
 #endif
 
-}
-
+} // namespace OHOS
 
 #endif
