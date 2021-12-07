@@ -27,7 +27,7 @@
 #include <cstring>
 #include <cmath>
 #include "render/agg_pixfmt_base.h"
-#include "render/agg_rendering_buffer.h"
+#include "render/rendering_buffer.h"
 
 namespace OHOS
 {
@@ -1643,9 +1643,9 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE unsigned width()  const { return m_rbuf->width();  }
-        AGG_INLINE unsigned height() const { return m_rbuf->height(); }
-        AGG_INLINE int      stride() const { return m_rbuf->stride(); }
+        AGG_INLINE unsigned width()  const { return m_rbuf->GetWidth();  }
+        AGG_INLINE unsigned height() const { return m_rbuf->GetHeight(); }
+        AGG_INLINE int      stride() const { return m_rbuf->GetStride(); }
 
         //--------------------------------------------------------------------
         AGG_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
@@ -2307,9 +2307,9 @@ namespace OHOS
         unsigned comp_op() const  { return m_comp_op; }
 
         //--------------------------------------------------------------------
-        AGG_INLINE unsigned width()  const { return m_rbuf->width();  }
-        AGG_INLINE unsigned height() const { return m_rbuf->height(); }
-        AGG_INLINE int      stride() const { return m_rbuf->stride(); }
+        AGG_INLINE unsigned width()  const { return m_rbuf->GetWidth();  }
+        AGG_INLINE unsigned height() const { return m_rbuf->GetHeight(); }
+        AGG_INLINE int      stride() const { return m_rbuf->GetStride(); }
 
         //--------------------------------------------------------------------
         AGG_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
