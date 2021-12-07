@@ -170,7 +170,7 @@ public:
           rotateAngle(0),scaleX(0),scaleY(0)
     {
         m_graphics = std::make_shared<BaseGfxExtendEngine>();
-        m_transform.reset();
+        m_transform.Reset();
         //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
     }
     Paint(const Paint& paint)
@@ -657,31 +657,31 @@ public:
     /* 缩放当前绘图至更大或更小 */
     void Scale(float x, float y)
     {
-        m_transform.scale(x,y);
+        m_transform.Scale(x,y);
     }
 
     /* 旋转当前绘图 */
     void Rotate(float angle)
     {
-        m_transform.rotate(BaseGfxExtendEngine::deg2Rad(angle));
+        m_transform.Rotate(BaseGfxExtendEngine::deg2Rad(angle));
     }
 
     /* 重新映射画布上的 (x,y) 位置 */
     void Translate(int16_t x, int16_t y)
     {
-        m_transform.translate(x,y);
+        m_transform.Translate(x,y);
     }
 
 
     /* 替换绘图的当前转换矩阵 */
     void Transform(float sx,float shy,float shx,float sy,float tx,float ty)
     {
-        m_transform=OHOS::trans_affine(sx, shy, shx, sy, tx, ty);
+        m_transform=OHOS::TransAffine(sx, shy, shx, sy, tx, ty);
 
     }
 
     /* 获取当前变换矩阵 */
-    const OHOS::trans_affine& GetTransform() const
+    const OHOS::TransAffine& GetTransform() const
     {
         return m_transform;
     }
@@ -689,13 +689,13 @@ public:
     /* 将当前转换重置为单位矩阵。然后运行 transform() */
     void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty)
     {
-        m_transform.reset();
+        m_transform.Reset();
         Transform(sx, shy, shx, sy, tx, ty);
     }
     /* 是否经过变换，即是不是单位矩阵 */
     bool IsTransform() const
     {
-        return !m_transform.is_identity();
+        return !m_transform.IsIdentity();
     }
 
     GradientControl getGradientControl() const{
@@ -725,7 +725,7 @@ private:
     BaseGfxExtendEngine::BlendMode blendMode;
 
     /* 用于操作变换矩阵 */
-    OHOS::trans_affine               m_transform;
+    OHOS::TransAffine               m_transform;
     GradientControl gradientControl;
     double rotateCenterX;
     double rotateCenterY;
@@ -1133,7 +1133,7 @@ public:
     }
 
     /* 获取当前变换矩阵 */
-    const OHOS::trans_affine& GetTransform(const Paint& paint) const
+    const OHOS::TransAffine& GetTransform(const Paint& paint) const
     {
         return paint.GetTransform();
     }

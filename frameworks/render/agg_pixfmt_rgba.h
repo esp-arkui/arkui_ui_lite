@@ -51,7 +51,7 @@ namespace OHOS
         typedef typename color_type::value_type value_type;
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void premultiply(value_type* p)
+        static GRAPTHIC_INLINE void premultiply(value_type* p)
         {
             value_type a = p[Order::A];
             p[Order::R] = color_type::multiply(p[Order::R], a);
@@ -61,7 +61,7 @@ namespace OHOS
 
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void demultiply(value_type* p)
+        static GRAPTHIC_INLINE void demultiply(value_type* p)
         {
             value_type a = p[Order::A];
             p[Order::R] = color_type::demultiply(p[Order::R], a);
@@ -80,7 +80,7 @@ namespace OHOS
 
         apply_gamma_dir_rgba(const GammaLut& gamma) : m_gamma(gamma) {}
 
-        AGG_INLINE void operator () (value_type* p)
+        GRAPTHIC_INLINE void operator () (value_type* p)
         {
             p[Order::R] = m_gamma.dir(p[Order::R]);
             p[Order::G] = m_gamma.dir(p[Order::G]);
@@ -100,7 +100,7 @@ namespace OHOS
 
         apply_gamma_inv_rgba(const GammaLut& gamma) : m_gamma(gamma) {}
 
-        AGG_INLINE void operator () (value_type* p)
+        GRAPTHIC_INLINE void operator () (value_type* p)
         {
             p[Order::R] = m_gamma.inv(p[Order::R]);
             p[Order::G] = m_gamma.inv(p[Order::G]);
@@ -120,7 +120,7 @@ namespace OHOS
         typedef typename color_type::value_type value_type;
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void set_plain_color(value_type* p, color_type c)
+        static GRAPTHIC_INLINE void set_plain_color(value_type* p, color_type c)
         {
             c.premultiply();
             p[Order::R] = c.r;
@@ -130,7 +130,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE color_type get_plain_color(const value_type* p)
+        static GRAPTHIC_INLINE color_type get_plain_color(const value_type* p)
         {
             return color_type(
                 p[Order::R],
@@ -148,7 +148,7 @@ namespace OHOS
         typedef typename color_type::value_type value_type;
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void set_plain_color(value_type* p, color_type c)
+        static GRAPTHIC_INLINE void set_plain_color(value_type* p, color_type c)
         {
             p[Order::R] = c.r;
             p[Order::G] = c.g;
@@ -157,7 +157,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE color_type get_plain_color(const value_type* p)
+        static GRAPTHIC_INLINE color_type get_plain_color(const value_type* p)
         {
             return color_type(
                 p[Order::R],
@@ -183,14 +183,14 @@ namespace OHOS
         // we omit the initial premultiplication and final demultiplication.
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type cr, value_type cg, value_type cb, value_type alpha, cover_type cover)
         {
             blend_pix(p, cr, cg, cb, color_type::mult_cover(alpha, cover));
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type cr, value_type cg, value_type cb, value_type alpha)
         {
             p[Order::R] = color_type::lerp(p[Order::R], cr, alpha);
@@ -216,7 +216,7 @@ namespace OHOS
         // compositing function. 
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type cr, value_type cg, value_type cb, value_type alpha, cover_type cover)
         {
             blend_pix(p, 
@@ -227,7 +227,7 @@ namespace OHOS
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type cr, value_type cg, value_type cb, value_type alpha)
         {
             p[Order::R] = color_type::prelerp(p[Order::R], cr, alpha);
@@ -252,14 +252,14 @@ namespace OHOS
         // compositing function. 
 
         //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type cr, value_type cg, value_type cb, value_type alpha, cover_type cover)
         {
             blend_pix(p, cr, cg, cb, color_type::mult_cover(alpha, cover));
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type cr, value_type cg, value_type cb, value_type alpha)
         {
             if (alpha > color_type::empty_value())
@@ -291,7 +291,7 @@ namespace OHOS
 
         // Dca' = 0
         // Da'  = 0
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type, value_type, value_type, value_type, cover_type cover)
         {
             if (cover >= cover_full)
@@ -316,7 +316,7 @@ namespace OHOS
 
         // Dca' = Sca
         // Da'  = Sa
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             if (cover >= cover_full)
@@ -345,7 +345,7 @@ namespace OHOS
 
         // Dca' = Dca.Sa + Dca.(1 - Sa) = Dca
         // Da'  = Da.Sa + Da.(1 - Sa) = Da
-        static AGG_INLINE void blend_pix(value_type*, 
+        static GRAPTHIC_INLINE void blend_pix(value_type*, 
             value_type, value_type, value_type, value_type, cover_type)
         {
             // Well, that was easy!
@@ -363,7 +363,7 @@ namespace OHOS
 
         // Dca' = Sca + Dca.(1 - Sa) = Dca + Sca - Dca.Sa
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
 #if 1
@@ -391,7 +391,7 @@ namespace OHOS
 
         // Dca' = Dca + Sca.(1 - Da)
         // Da'  = Sa + Da - Sa.Da = Da + Sa.(1 - Da)
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -416,7 +416,7 @@ namespace OHOS
 
         // Dca' = Sca.Da
         // Da'  = Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             double da = ColorT::to_double(p[Order::A]);
@@ -444,7 +444,7 @@ namespace OHOS
 
         // Dca' = Dca.Sa
         // Da'  = Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type, value_type, value_type, value_type a, cover_type cover)
         {
             double sa = ColorT::to_double(a);
@@ -469,7 +469,7 @@ namespace OHOS
 
         // Dca' = Sca.(1 - Da)
         // Da'  = Sa.(1 - Da) 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -494,7 +494,7 @@ namespace OHOS
 
         // Dca' = Dca.(1 - Sa) 
         // Da'  = Da.(1 - Sa) 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type, value_type, value_type, value_type a, cover_type cover)
         {
             rgba d = get(p, cover_full - cover);
@@ -519,7 +519,7 @@ namespace OHOS
 
         // Dca' = Sca.Da + Dca.(1 - Sa)
         // Da'  = Da
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -543,7 +543,7 @@ namespace OHOS
 
         // Dca' = Dca.Sa + Sca.(1 - Da)
         // Da'  = Sa 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba sc = get(r, g, b, a, cover);
@@ -570,7 +570,7 @@ namespace OHOS
 
         // Dca' = Sca.(1 - Da) + Dca.(1 - Sa)
         // Da'  = Sa + Da - 2.Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -596,7 +596,7 @@ namespace OHOS
 
         // Dca' = Sca + Dca
         // Da'  = Sa + Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -624,7 +624,7 @@ namespace OHOS
 
         // Dca' = Dca - Sca
         // Da' = 1 - (1 - Sa).(1 - Da) = Da + Sa - Sa.Da
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -651,7 +651,7 @@ namespace OHOS
 
         // Dca' = Sca.Dca + Sca.(1 - Da) + Dca.(1 - Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -680,7 +680,7 @@ namespace OHOS
 
         // Dca' = Sca + Dca - Sca.Dca
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -711,14 +711,14 @@ namespace OHOS
         //   Dca' = Sa.Da - 2.(Da - Dca).(Sa - Sca) + Sca.(1 - Da) + Dca.(1 - Sa)
         // 
         // Da' = Sa + Da - Sa.Da
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPTHIC_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             return (2 * dca <= da) ? 
                 2 * sca * dca + sca * d1a + dca * s1a : 
                 sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
         }
 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -748,7 +748,7 @@ namespace OHOS
 
         // Dca' = min(Sca.Da, Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -777,7 +777,7 @@ namespace OHOS
 
         // Dca' = max(Sca.Da, Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -812,14 +812,14 @@ namespace OHOS
         //     Dca' = Sa.Da.min(1, Dca/Da.Sa/(Sa - Sca)) + Sca.(1 - Da) + Dca.(1 - Sa)
         //
         // Da'  = Sa + Da - Sa.Da
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPTHIC_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             if (sca < sa) return sada * sd_min(1.0, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
             if (dca > 0) return sada + sca * d1a + dca * s1a;
             return sca * d1a;
         }
 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -857,14 +857,14 @@ namespace OHOS
         //   Dca' = Dca.(1 - Sa)
         // otherwise if Sca > 0
         //   Dca' =  Sa.Da.(1 - min(1, (1 - Dca/Da).Sa/Sca)) + Sca.(1 - Da) + Dca.(1 - Sa)
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPTHIC_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             if (sca > 0) return sada * (1 - sd_min(1.0, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
             if (dca > da) return sada + dca * s1a;
             return dca * s1a;
         }
 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -902,14 +902,14 @@ namespace OHOS
         //    Dca' = Sa.Da - 2.(Da - Dca).(Sa - Sca) + Sca.(1 - Da) + Dca.(1 - Sa)
         // 
         // Da'  = Sa + Da - Sa.Da
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPTHIC_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             return (2 * sca < sa) ? 
                 2 * sca * dca + sca * d1a + dca * s1a : 
                 sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
         }
 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -945,7 +945,7 @@ namespace OHOS
         //   Dca' = Dca.Sa + (2.Sca.Da - Sa.Da).((Dca.Sa)^0.5 - Dca.Sa) + Sca.(1 - Da) + Dca.(1 - Sa)
         // 
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPTHIC_INLINE double calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             double dcasa = dca * sa;
             if (2 * sca <= sa) return dcasa - (sada - 2 * sca * da) * dcasa * (sada - dcasa) + sca * d1a + dca * s1a;
@@ -953,7 +953,7 @@ namespace OHOS
             return dcasa + (2 * sca * da - sada) * (std::sqrt(dcasa) - dcasa) + sca * d1a + dca * s1a;
         }
 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -987,7 +987,7 @@ namespace OHOS
 
         // Dca' = Sca + Dca - 2.min(Sca.Da, Dca.Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -1014,7 +1014,7 @@ namespace OHOS
 
         // Dca' = (Sca.Da + Dca.Sa - 2.Sca.Dca) + Sca.(1 - Da) + Dca.(1 - Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
@@ -1048,7 +1048,7 @@ namespace OHOS
         };
 
 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
                                          unsigned sr, unsigned sg, unsigned sb, 
                                          unsigned sa, unsigned cover)
         {
@@ -1096,7 +1096,7 @@ namespace OHOS
 
         // Dca' = (Da - Dca) * Sa + Dca.(1 - Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
                                          unsigned sr, unsigned sg, unsigned sb, 
                                          unsigned sa, unsigned cover)
         {
@@ -1132,7 +1132,7 @@ namespace OHOS
 
         // Dca' = (Da - Dca) * Sca + Dca.(1 - Sa)
         // Da'  = Sa + Da - Sa.Da 
-        static AGG_INLINE void blend_pix(value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(value_type* p, 
                                          unsigned sr, unsigned sg, unsigned sb, 
                                          unsigned sa, unsigned cover)
         {
@@ -1262,7 +1262,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             comp_op_table_rgba<ColorT, Order>::g_comp_op_func[op](p, 
@@ -1283,7 +1283,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             r = color_type::multiply(r, a);
@@ -1308,7 +1308,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             comp_op_table_rgba<ColorT, Order>::g_comp_op_func[op](p, r, g, b, a, cover);
@@ -1325,7 +1325,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             value_type da = p[Order::A];
@@ -1347,7 +1347,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             multiplier_rgba<ColorT, Order>::premultiply(p);
@@ -1366,7 +1366,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             multiplier_rgba<ColorT, Order>::premultiply(p);
@@ -1385,7 +1385,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             BlenderPre::blend_pix(p, 
@@ -1406,7 +1406,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             r = color_type::multiply(r, a);
@@ -1431,7 +1431,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             BlenderPre::blend_pix(p, r, g, b, a, cover);
@@ -1448,7 +1448,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             unsigned da = p[order_type::A];
@@ -1471,7 +1471,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             multiplier_rgba<color_type, order_type>::premultiply(p);
@@ -1490,7 +1490,7 @@ namespace OHOS
         typedef typename color_type::calc_type calc_type;
         typedef typename color_type::long_type long_type;
 
-        static AGG_INLINE void blend_pix(unsigned op, value_type* p, 
+        static GRAPTHIC_INLINE void blend_pix(unsigned op, value_type* p, 
             value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             multiplier_rgba<color_type, order_type>::premultiply(p);
@@ -1576,19 +1576,19 @@ namespace OHOS
 
     private:
         //--------------------------------------------------------------------
-        AGG_INLINE void blend_pix(pixel_type* p, const color_type& c, unsigned cover)
+        GRAPTHIC_INLINE void blend_pix(pixel_type* p, const color_type& c, unsigned cover)
         {
             m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a, cover);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void blend_pix(pixel_type* p, const color_type& c)
+        GRAPTHIC_INLINE void blend_pix(pixel_type* p, const color_type& c)
         {
             m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover)
+        GRAPTHIC_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover)
         {
             if (!c.is_transparent())
             {
@@ -1604,7 +1604,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c)
+        GRAPTHIC_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c)
         {
             if (!c.is_transparent())
             {
@@ -1648,66 +1648,66 @@ namespace OHOS
         AGG_INLINE int      stride() const { return m_rbuf->GetStride(); }
 
         //--------------------------------------------------------------------
-        AGG_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
-        AGG_INLINE const int8u* row_ptr(int y) const { return m_rbuf->row_ptr(y); }
-        AGG_INLINE row_data     row(int y)     const { return m_rbuf->row(y); }
+        GRAPTHIC_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
+        GRAPTHIC_INLINE const int8u* row_ptr(int y) const { return m_rbuf->row_ptr(y); }
+        GRAPTHIC_INLINE row_data     row(int y)     const { return m_rbuf->row(y); }
 
         //--------------------------------------------------------------------
-        AGG_INLINE int8u* pix_ptr(int x, int y) 
+        GRAPTHIC_INLINE int8u* pix_ptr(int x, int y) 
         { 
             return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
         }
 
-        AGG_INLINE const int8u* pix_ptr(int x, int y) const 
+        GRAPTHIC_INLINE const int8u* pix_ptr(int x, int y) const 
         { 
             return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
         }
 
         // Return pointer to pixel value, forcing row to be allocated.
-        AGG_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len) 
+        GRAPTHIC_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len) 
         {
             return (pixel_type*)(m_rbuf->row_ptr(x, y, len) + sizeof(value_type) * (x * pix_step));
         }
 
         // Return pointer to pixel value, or null if row not allocated.
-        AGG_INLINE const pixel_type* pix_value_ptr(int x, int y) const 
+        GRAPTHIC_INLINE const pixel_type* pix_value_ptr(int x, int y) const 
         {
             int8u* p = m_rbuf->row_ptr(y);
             return p ? (pixel_type*)(p + sizeof(value_type) * (x * pix_step)) : 0;
         }
 
         // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static pixel_type* pix_value_ptr(void* p) 
+        GRAPTHIC_INLINE static pixel_type* pix_value_ptr(void* p) 
         {
             return (pixel_type*)p;
         }
 
         // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static const pixel_type* pix_value_ptr(const void* p) 
+        GRAPTHIC_INLINE static const pixel_type* pix_value_ptr(const void* p) 
         {
             return (const pixel_type*)p;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE static void write_plain_color(void* p, color_type c)
+        GRAPTHIC_INLINE static void write_plain_color(void* p, color_type c)
         {
             blender_type::set_plain_color(pix_value_ptr(p)->c, c);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE static color_type read_plain_color(const void* p)
+        GRAPTHIC_INLINE static color_type read_plain_color(const void* p)
         {
             return blender_type::get_plain_color(pix_value_ptr(p)->c);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE static void make_pix(int8u* p, const color_type& c)
+        GRAPTHIC_INLINE static void make_pix(int8u* p, const color_type& c)
         {
             ((pixel_type*)p)->set(c);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE color_type pixel(int x, int y) const
+        GRAPTHIC_INLINE color_type pixel(int x, int y) const
         {
             if (const pixel_type* p = pix_value_ptr(x, y))
             {
@@ -1717,19 +1717,19 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
+        GRAPTHIC_INLINE void copy_pixel(int x, int y, const color_type& c)
         {
             pix_value_ptr(x, y, 1)->set(c);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void blend_pixel(int x, int y, const color_type& c, int8u cover)
+        GRAPTHIC_INLINE void blend_pixel(int x, int y, const color_type& c, int8u cover)
         {
             copy_or_blend_pix(pix_value_ptr(x, y, 1), c, cover);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y, 
+        GRAPTHIC_INLINE void copy_hline(int x, int y, 
                                    unsigned len, 
                                    const color_type& c)
         {
@@ -1746,7 +1746,7 @@ namespace OHOS
 
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_vline(int x, int y,
+        GRAPTHIC_INLINE void copy_vline(int x, int y,
                                    unsigned len, 
                                    const color_type& c)
         {
@@ -2255,13 +2255,13 @@ namespace OHOS
 
     private:
         //--------------------------------------------------------------------
-        AGG_INLINE void blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
+        GRAPTHIC_INLINE void blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
         {
             m_blender.blend_pix(m_comp_op, p->c, c.r, c.g, c.b, c.a, cover);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
+        GRAPTHIC_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
         {
             if (!c.is_transparent())
             {
@@ -2307,59 +2307,59 @@ namespace OHOS
         unsigned comp_op() const  { return m_comp_op; }
 
         //--------------------------------------------------------------------
-        AGG_INLINE unsigned width()  const { return m_rbuf->GetWidth();  }
-        AGG_INLINE unsigned height() const { return m_rbuf->GetHeight(); }
-        AGG_INLINE int      stride() const { return m_rbuf->GetStride(); }
+        GRAPHIC_INLINE unsigned width()  const { return m_rbuf->GetWidth();  }
+        GRAPHIC_INLINE unsigned height() const { return m_rbuf->GetHeight(); }
+        GRAPHIC_INLINE int      stride() const { return m_rbuf->GetStride(); }
 
         //--------------------------------------------------------------------
-        AGG_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
-        AGG_INLINE const int8u* row_ptr(int y) const { return m_rbuf->row_ptr(y); }
-        AGG_INLINE row_data     row(int y)     const { return m_rbuf->row(y); }
+        GRAPTHIC_INLINE       int8u* row_ptr(int y)       { return m_rbuf->row_ptr(y); }
+        GRAPTHIC_INLINE const int8u* row_ptr(int y) const { return m_rbuf->row_ptr(y); }
+        GRAPTHIC_INLINE row_data     row(int y)     const { return m_rbuf->row(y); }
 
         //--------------------------------------------------------------------
-        AGG_INLINE int8u* pix_ptr(int x, int y) 
+        GRAPTHIC_INLINE int8u* pix_ptr(int x, int y) 
         { 
             return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
         }
 
-        AGG_INLINE const int8u* pix_ptr(int x, int y) const 
+        GRAPTHIC_INLINE const int8u* pix_ptr(int x, int y) const 
         { 
             return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
         }
 
         // Return pointer to pixel value, forcing row to be allocated.
-        AGG_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len) 
+        GRAPTHIC_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len) 
         {
             return (pixel_type*)(m_rbuf->row_ptr(x, y, len) + sizeof(value_type) * (x * pix_step));
         }
 
         // Return pointer to pixel value, or null if row not allocated.
-        AGG_INLINE const pixel_type* pix_value_ptr(int x, int y) const 
+        GRAPTHIC_INLINE const pixel_type* pix_value_ptr(int x, int y) const 
         {
             int8u* p = m_rbuf->row_ptr(y);
             return p ? (pixel_type*)(p + sizeof(value_type) * (x * pix_step)) : 0;
         }
 
         // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static pixel_type* pix_value_ptr(void* p) 
+        GRAPTHIC_INLINE static pixel_type* pix_value_ptr(void* p) 
         {
             return (pixel_type*)p;
         }
 
         // Get pixel pointer from raw buffer pointer.
-        AGG_INLINE static const pixel_type* pix_value_ptr(const void* p) 
+        GRAPTHIC_INLINE static const pixel_type* pix_value_ptr(const void* p) 
         {
             return (const pixel_type*)p;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE static void make_pix(int8u* p, const color_type& c)
+        GRAPTHIC_INLINE static void make_pix(int8u* p, const color_type& c)
         {
             ((pixel_type*)p)->set(c);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE color_type pixel(int x, int y) const
+        GRAPTHIC_INLINE color_type pixel(int x, int y) const
         {
             if (const pixel_type* p = pix_value_ptr(x, y))
             {
@@ -2369,19 +2369,19 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
+        GRAPTHIC_INLINE void copy_pixel(int x, int y, const color_type& c)
         {
             make_pix(pix_value_ptr(x, y, 1), c);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void blend_pixel(int x, int y, const color_type& c, int8u cover)
+        GRAPTHIC_INLINE void blend_pixel(int x, int y, const color_type& c, int8u cover)
         {
             blend_pix(pix_value_ptr(x, y, 1), c, cover);
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y, 
+        GRAPTHIC_INLINE void copy_hline(int x, int y, 
                                    unsigned len, 
                                    const color_type& c)
         {
@@ -2398,7 +2398,7 @@ namespace OHOS
 
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_vline(int x, int y,
+        GRAPTHIC_INLINE void copy_vline(int x, int y,
                                    unsigned len, 
                                    const color_type& c)
         {
