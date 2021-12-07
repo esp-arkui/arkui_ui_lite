@@ -1481,7 +1481,7 @@ public:
 		// hence the cast.
         BaseGfxExtendEngine::Image& imgc = const_cast<BaseGfxExtendEngine::Image&>(img);
         BaseGfxExtendEngine::PixFormat img_pixf(imgc.renBuf);
-        typedef OHOS::image_accessor_clone<BaseGfxExtendEngine::PixFormat> img_source_type;
+        typedef OHOS::ImageAccessorClone<BaseGfxExtendEngine::PixFormat> img_source_type;
         img_source_type source(img_pixf);
 
         SpanConvImageBlend blend(gr.m_imageBlendMode, gr.m_imageBlendColor);

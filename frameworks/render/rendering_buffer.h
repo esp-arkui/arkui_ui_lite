@@ -72,36 +72,36 @@ namespace OHOS
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE T* GetBuf()
+        GRAPHIC_INLINE T* GetBuf()
         {
             return buf;
         }
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE const T* GetBuf() const
+        GRAPHIC_INLINE const T* GetBuf() const
         {
             return buf;
         }
         /**
          * @brief GetBuf 获取区域宽度
          */
-        AGG_INLINE unsigned GetWidth() const
+        GRAPHIC_INLINE unsigned GetWidth() const
         {
             return width;
         }
         /**
          * @brief GetBuf 获取区域高度
          */
-        AGG_INLINE unsigned GetHeight() const
+        GRAPHIC_INLINE unsigned GetHeight() const
         {
             return height;
         }
-        AGG_INLINE int GetStride() const
+        GRAPHIC_INLINE int GetStride() const
         {
             return bufStride;
         }
-        AGG_INLINE unsigned GetStrideAbs() const
+        GRAPHIC_INLINE unsigned GetStrideAbs() const
         {
             return (bufStride < 0) ? unsigned(-bufStride) : unsigned(bufStride);
         }
@@ -109,28 +109,28 @@ namespace OHOS
         /**
          * @brief row_ptr 获取行首地址
          */
-        AGG_INLINE T* row_ptr(int, int y, unsigned)
+        GRAPHIC_INLINE T* row_ptr(int, int y, unsigned)
         {
             return start + y * (AGG_INT64)bufStride;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE T* row_ptr(int y)
+        GRAPHIC_INLINE T* row_ptr(int y)
         {
             return start + y * (AGG_INT64)bufStride;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE const T* row_ptr(int y) const
+        GRAPHIC_INLINE const T* row_ptr(int y) const
         {
             return start + y * (AGG_INT64)bufStride;
         }
         /**
          * @brief row 获取行数据
          */
-        AGG_INLINE row_data row(int y) const
+        GRAPHIC_INLINE row_data row(int y) const
         {
             return row_data(0, width - 1, row_ptr(y));
         }

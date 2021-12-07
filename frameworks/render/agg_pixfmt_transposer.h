@@ -36,23 +36,23 @@ namespace OHOS
         void attach(pixfmt_type& pixf) { m_pixf = &pixf; }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE unsigned width()  const { return m_pixf->height();  }
-        GRAPTHIC_INLINE unsigned height() const { return m_pixf->width(); }
+        AGG_INLINE unsigned width()  const { return m_pixf->height();  }
+        AGG_INLINE unsigned height() const { return m_pixf->width(); }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE color_type pixel(int x, int y) const
+        AGG_INLINE color_type pixel(int x, int y) const
         {
             return m_pixf->pixel(y, x);
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void copy_pixel(int x, int y, const color_type& c)
+        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
         {
             m_pixf->copy_pixel(y, x, c);
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_pixel(int x, int y, 
+        AGG_INLINE void blend_pixel(int x, int y, 
                                     const color_type& c, 
                                     int8u cover)
         {
@@ -60,7 +60,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void copy_hline(int x, int y, 
+        AGG_INLINE void copy_hline(int x, int y, 
                                    unsigned len, 
                                    const color_type& c)
         {
@@ -68,7 +68,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void copy_vline(int x, int y,
+        AGG_INLINE void copy_vline(int x, int y,
                                    unsigned len, 
                                    const color_type& c)
         {
@@ -76,7 +76,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_hline(int x, int y,
+        AGG_INLINE void blend_hline(int x, int y,
                                     unsigned len, 
                                     const color_type& c,
                                     int8u cover)
@@ -85,7 +85,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_vline(int x, int y,
+        AGG_INLINE void blend_vline(int x, int y,
                                     unsigned len, 
                                     const color_type& c,
                                     int8u cover)
@@ -94,7 +94,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_solid_hspan(int x, int y,
+        AGG_INLINE void blend_solid_hspan(int x, int y,
                                           unsigned len, 
                                           const color_type& c,
                                           const int8u* covers)
@@ -103,7 +103,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_solid_vspan(int x, int y,
+        AGG_INLINE void blend_solid_vspan(int x, int y,
                                           unsigned len, 
                                           const color_type& c,
                                           const int8u* covers)
@@ -112,7 +112,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void copy_color_hspan(int x, int y,
+        AGG_INLINE void copy_color_hspan(int x, int y,
                                          unsigned len, 
                                          const color_type* colors)
         {
@@ -120,7 +120,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void copy_color_vspan(int x, int y,
+        AGG_INLINE void copy_color_vspan(int x, int y,
                                          unsigned len, 
                                          const color_type* colors)
         {
@@ -128,7 +128,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_color_hspan(int x, int y,
+        AGG_INLINE void blend_color_hspan(int x, int y,
                                           unsigned len, 
                                           const color_type* colors,
                                           const int8u* covers,
@@ -138,7 +138,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE void blend_color_vspan(int x, int y,
+        AGG_INLINE void blend_color_vspan(int x, int y,
                                unsigned len, 
                                const color_type* colors,
                                const int8u* covers,
