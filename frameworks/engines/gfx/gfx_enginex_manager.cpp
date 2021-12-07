@@ -350,13 +350,13 @@ void BaseGfxExtendEngine::clearClipBox(unsigned r, unsigned g, unsigned b, unsig
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::worldToScreen(double& x, double& y) const
 {
-    m_transform.transform(&x, &y);
+    m_transform.Transform(&x, &y);
 }
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::screenToWorld(double& x, double& y) const
 {
-    m_transform.inverse_transform(&x, &y);
+    m_transform.InverseTransform(&x, &y);
 }
 
 
@@ -429,14 +429,14 @@ bool BaseGfxExtendEngine::inBox(double worldX, double worldY) const
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::resetTransformations()
 {
-    m_transform.reset();
+    m_transform.Reset();
 }
 
 
 //------------------------------------------------------------------------
-void BaseGfxExtendEngine::rotate(double angle)          { m_transform *= OHOS::trans_affine_rotation(angle);   }
+void BaseGfxExtendEngine::rotate(double angle)          { m_transform *= OHOS::TransAffineRotation(angle);   }
 // void BaseGfxExtendEngine::skew(double sx, double sy)    { m_transform *= OHOS::trans_affine_skewing(sx, sy);   }
-void BaseGfxExtendEngine::translate(double x, double y) { m_transform *= OHOS::trans_affine_translation(x, y); }
+void BaseGfxExtendEngine::translate(double x, double y) { m_transform *= OHOS::TransAffineTranslation(x, y); }
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::affine(const Affine& tr)
@@ -460,7 +460,7 @@ void BaseGfxExtendEngine::affine(const Transformations& tr)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::scale(double sx, double sy)
 {
-    m_transform *= OHOS::trans_affine_scaling(sx, sy);
+    m_transform *= OHOS::TransAffineScaling(sx, sy);
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
     if(!this->is_dash) {
         m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
@@ -473,7 +473,7 @@ void BaseGfxExtendEngine::scale(double sx, double sy)
 // //------------------------------------------------------------------------
 // void BaseGfxExtendEngine::parallelogram(double x1, double y1, double x2, double y2, const double* para)
 // {
-//     m_transform *= OHOS::trans_affine(x1, y1, x2, y2, para);
+//     m_transform *= OHOS::TransAffine(x1, y1, x2, y2, para);
 //     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
 //     if(!this->is_dash) {
 //         m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
@@ -488,23 +488,23 @@ void BaseGfxExtendEngine::viewport(double worldX1,  double worldY1,  double worl
                      double screenX1, double screenY1, double screenX2, double screenY2,
                      ViewportOption opt)
 {
-    OHOS::trans_viewport vp;
+    OHOS::TransViewPort vp;
     switch(opt)
     {
-        case Anisotropic: vp.preserve_aspect_ratio(0.0, 0.0, OHOS::aspect_ratio_stretch); break;
-        case XMinYMin:    vp.preserve_aspect_ratio(0.0, 0.0, OHOS::aspect_ratio_meet);    break;
-        case XMidYMin:    vp.preserve_aspect_ratio(0.5, 0.0, OHOS::aspect_ratio_meet);    break;
-        case XMaxYMin:    vp.preserve_aspect_ratio(1.0, 0.0, OHOS::aspect_ratio_meet);    break;
-        case XMinYMid:    vp.preserve_aspect_ratio(0.0, 0.5, OHOS::aspect_ratio_meet);    break;
-        case XMidYMid:    vp.preserve_aspect_ratio(0.5, 0.5, OHOS::aspect_ratio_meet);    break;
-        case XMaxYMid:    vp.preserve_aspect_ratio(1.0, 0.5, OHOS::aspect_ratio_meet);    break;
-        case XMinYMax:    vp.preserve_aspect_ratio(0.0, 1.0, OHOS::aspect_ratio_meet);    break;
-        case XMidYMax:    vp.preserve_aspect_ratio(0.5, 1.0, OHOS::aspect_ratio_meet);    break;
-        case XMaxYMax:    vp.preserve_aspect_ratio(1.0, 1.0, OHOS::aspect_ratio_meet);    break;
+        case Anisotropic: vp.PreserveAspectRatio(0.0, 0.0, OHOS::ASPECT_RATIO_STRETCH); break;
+        case XMinYMin:    vp.PreserveAspectRatio(0.0, 0.0, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMidYMin:    vp.PreserveAspectRatio(0.5, 0.0, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMaxYMin:    vp.PreserveAspectRatio(1.0, 0.0, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMinYMid:    vp.PreserveAspectRatio(0.0, 0.5, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMidYMid:    vp.PreserveAspectRatio(0.5, 0.5, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMaxYMid:    vp.PreserveAspectRatio(1.0, 0.5, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMinYMax:    vp.PreserveAspectRatio(0.0, 1.0, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMidYMax:    vp.PreserveAspectRatio(0.5, 1.0, OHOS::ASPECT_RATIO_MEET);    break;
+        case XMaxYMax:    vp.PreserveAspectRatio(1.0, 1.0, OHOS::ASPECT_RATIO_MEET);    break;
     }
-    vp.world_viewport(worldX1,   worldY1,  worldX2,  worldY2);
-    vp.device_viewport(screenX1, screenY1, screenX2, screenY2);
-    m_transform *= vp.to_affine();
+    vp.WorldViewPort(worldX1,   worldY1,  worldX2,  worldY2);
+    vp.DeviceViewPort(screenX1, screenY1, screenX2, screenY2);
+    m_transform *= vp.ToAffine();
     m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
     if(!this->is_dash) {
         m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
@@ -604,11 +604,11 @@ void BaseGfxExtendEngine::fillLinearGradientAndStop(double x1, double y1, double
 {
 
     double angle = atan2(y2-y1, x2-x1);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= OHOS::trans_affine_rotation(angle);
-    m_fillGradientMatrix *= OHOS::trans_affine_translation(x1, y1);
+    m_fillGradientMatrix.Reset();
+    m_fillGradientMatrix *= OHOS::TransAffineRotation(angle);
+    m_fillGradientMatrix *= OHOS::TransAffineTranslation(x1, y1);
     m_fillGradientMatrix *= m_transform;
-    m_fillGradientMatrix.invert();
+    m_fillGradientMatrix.Invert();
     m_fillGradientD1 = 0.0;
     m_fillGradientD2 = sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
     m_fillGradientFlag = Linear;
@@ -618,10 +618,10 @@ void BaseGfxExtendEngine::fillLinearGradientAndStop(double x1, double y1, double
 
 void BaseGfxExtendEngine::fillRadialGradient(double start_x, double start_y,double start_r, double end_x, double end_y,double end_r)
 {
-    m_fillRadialMatrix.reset();
-    m_fillRadialMatrix *= OHOS::trans_affine_translation(end_x, end_y);
+    m_fillRadialMatrix.Reset();
+    m_fillRadialMatrix *= OHOS::TransAffineTranslation(end_x, end_y);
     m_fillRadialMatrix *= m_transform;
-    m_fillRadialMatrix.invert();
+    m_fillRadialMatrix.Invert();
     m_interpolator_type.transformer(m_fillRadialMatrix);
     m_fillGradientD1 = start_r;
     m_fillGradientD2 = end_r;
@@ -632,11 +632,11 @@ void BaseGfxExtendEngine::fillRadialGradient(double start_x, double start_y,doub
 
 void BaseGfxExtendEngine::fillLinearGradient(double start_x, double start_y,double end_x, double end_y){
     double angle = atan2(end_y-start_y, end_x-start_x);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= OHOS::trans_affine_rotation(angle);
-    m_fillGradientMatrix *= OHOS::trans_affine_translation(start_x, start_y);
+    m_fillGradientMatrix.Reset();
+    m_fillGradientMatrix *= OHOS::TransAffineRotation(angle);
+    m_fillGradientMatrix *= OHOS::TransAffineTranslation(start_x, start_y);
     m_fillGradientMatrix *= m_transform;
-    m_fillGradientMatrix.invert();
+    m_fillGradientMatrix.Invert();
     m_fillGradientD1 = 0.0;
     m_fillGradientD2 = sqrt((end_x-start_x) * (end_x-start_x) + (end_y-start_y) * (end_y-start_y));
     m_fillGradientFlag = Linear;
@@ -656,9 +656,9 @@ void BaseGfxExtendEngine::fillRadialGradient(double x, double y, double r, Color
     }
     m_fillGradientD2 = worldToScreen(r);
     worldToScreen(x, y);
-    m_fillGradientMatrix.reset();
-    m_fillGradientMatrix *= OHOS::trans_affine_translation(x, y);
-    m_fillGradientMatrix.invert();
+    m_fillGradientMatrix.Reset();
+    m_fillGradientMatrix *= OHOS::TransAffineTranslation(x, y);
+    m_fillGradientMatrix.Invert();
     m_fillGradientD1 = 0;
     m_fillGradientFlag = Radial;
     m_fillColor = Color(0,0,0);  // Set some real color
@@ -756,15 +756,15 @@ double BaseGfxExtendEngine::MiterLimit() const
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::addLine(double x1, double y1, double x2, double y2)
 {
-    m_path.move_to(x1, y1);
-    m_path.line_to(x2, y2);
+    m_path.MoveTo(x1, y1);
+    m_path.LineTo(x2, y2);
 }
 
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::line(double x1, double y1, double x2, double y2)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     addLine(x1, y1, x2, y2);
     drawPath(StrokeOnly);
 }
@@ -773,11 +773,11 @@ void BaseGfxExtendEngine::line(double x1, double y1, double x2, double y2)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::triangle(double x1, double y1, double x2, double y2, double x3, double y3)
 {
-    m_path.remove_all();
-    m_path.move_to(x1, y1);
-    m_path.line_to(x2, y2);
-    m_path.line_to(x3, y3);
-    m_path.close_polygon();
+    m_path.RemoveAll();
+    m_path.MoveTo(x1, y1);
+    m_path.LineTo(x2, y2);
+    m_path.LineTo(x3, y3);
+    m_path.ClosePolygon();
     drawPath(FillAndStroke);
 }
 
@@ -785,22 +785,22 @@ void BaseGfxExtendEngine::triangle(double x1, double y1, double x2, double y2, d
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::rectangle(double x1, double y1, double x2, double y2)
 {
-    m_path.remove_all();
-    m_path.move_to(x1, y1);
-    m_path.line_to(x2, y1);
-    m_path.line_to(x2, y2);
-    m_path.line_to(x1, y2);
-    m_path.close_polygon();
+    m_path.RemoveAll();
+    m_path.MoveTo(x1, y1);
+    m_path.LineTo(x2, y1);
+    m_path.LineTo(x2, y2);
+    m_path.LineTo(x1, y2);
+    m_path.ClosePolygon();
     drawPath(FillAndStroke);
 }
 void BaseGfxExtendEngine::rectstroke(double x1, double y1, double x2, double y2)
 {
-    m_path.remove_all();
-    m_path.move_to(x1, y1);
-    m_path.line_to(x2, y1);
-    m_path.line_to(x2, y2);
-    m_path.line_to(x1, y2);
-    m_path.close_polygon();
+    m_path.RemoveAll();
+    m_path.MoveTo(x1, y1);
+    m_path.LineTo(x2, y1);
+    m_path.LineTo(x2, y2);
+    m_path.LineTo(x1, y2);
+    m_path.ClosePolygon();
     stroke();
 }
 
@@ -808,13 +808,13 @@ void BaseGfxExtendEngine::rectstroke(double x1, double y1, double x2, double y2)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2, double r)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     OHOS::rounded_rect rc(x1, y1, x2, y2, r);
     rc.normalize_radius();
     rc.approximation_scale(worldToScreen(1.0) * g_approxScale);
     // JME audit
     //m_path.add_path(rc, 0, false);
-    m_path.concat_path(rc,0);
+    m_path.ConcatPath(rc,0);
     drawPath(FillAndStroke);
 }
 
@@ -823,13 +823,13 @@ void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2, double rx, double ry)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     OHOS::rounded_rect rc;
     rc.rect(x1, y1, x2, y2);
     rc.radius(rx, ry);
     rc.normalize_radius();
     //m_path.add_path(rc, 0, false);
-    m_path.concat_path(rc,0); // JME
+    m_path.ConcatPath(rc,0); // JME
     drawPath(FillAndStroke);
 }
 
@@ -840,14 +840,14 @@ void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2
                         double rx_bottom, double ry_bottom,
                         double rx_top,    double ry_top)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     OHOS::rounded_rect rc;
     rc.rect(x1, y1, x2, y2);
     rc.radius(rx_bottom, ry_bottom, rx_top, ry_top);
     rc.normalize_radius();
     rc.approximation_scale(worldToScreen(1.0) * g_approxScale);
     //m_path.add_path(rc, 0, false);
-    m_path.concat_path(rc,0); // JME
+    m_path.ConcatPath(rc,0); // JME
     drawPath(FillAndStroke);
 }
 
@@ -855,20 +855,20 @@ void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     OHOS::bezier_arc arc(cx, cy, rx, ry, 0, 2*pi());
-    m_path.concat_path(arc,0); // JME
-    m_path.close_polygon();
+    m_path.ConcatPath(arc,0); // JME
+    m_path.ClosePolygon();
     drawPath(FillAndStroke);
 }
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::arc(double cx, double cy, double rx, double ry, double start, double sweep)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     OHOS::bezier_arc arc(cx, cy, rx, ry, start, sweep);
     //m_path.add_path(arc, 0, false);
-    m_path.concat_path(arc,0); // JME
+    m_path.ConcatPath(arc,0); // JME
     drawPath(StrokeOnly);
 }
 
@@ -876,7 +876,7 @@ void BaseGfxExtendEngine::arc(double cx, double cy, double rx, double ry, double
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::star(double cx, double cy, double r1, double r2, double startAngle, int numRays)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     double da = OHOS::pi / double(numRays);
     double a = startAngle;
     int i;
@@ -884,10 +884,10 @@ void BaseGfxExtendEngine::star(double cx, double cy, double r1, double r2, doubl
     {
         double x = cos(a) * r2 + cx;
         double y = sin(a) * r2 + cy;
-        if (i) m_path.line_to(x, y);
-        else   m_path.move_to(x, y);
+        if (i) m_path.LineTo(x, y);
+        else   m_path.MoveTo(x, y);
         a += da;
-        m_path.line_to(cos(a) * r1 + cx, sin(a) * r1 + cy);
+        m_path.LineTo(cos(a) * r1 + cx, sin(a) * r1 + cy);
         a += da;
     }
     closePolygon();
@@ -895,32 +895,32 @@ void BaseGfxExtendEngine::star(double cx, double cy, double r1, double r2, doubl
 }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::curve(double x1, double y1, double x2, double y2, double x3, double y3)
-{
-    m_path.remove_all();
-    m_path.move_to(x1, y1);
-    m_path.curve3(x2, y2, x3, y3);
-    drawPath(StrokeOnly);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::curve(double x1, double y1, double x2, double y2, double x3, double y3)
+// {
+//     m_path.RemoveAll();
+//     m_path.MoveTo(x1, y1);
+//     m_path.curve3(x2, y2, x3, y3);
+//     drawPath(StrokeOnly);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
-{
-    m_path.remove_all();
-    m_path.move_to(x1, y1);
-    m_path.curve4(x2, y2, x3, y3, x4, y4);
-    drawPath(StrokeOnly);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+// {
+//     m_path.RemoveAll();
+//     m_path.MoveTo(x1, y1);
+//     m_path.curve4(x2, y2, x3, y3, x4, y4);
+//     drawPath(StrokeOnly);
+// }
 
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::polygon(double* xy, int numPoints)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     //m_path.add_poly(xy, numPoints);
-    m_path.concat_poly(xy,0,true); // JME
+    m_path.ConcatPoly(xy,0,true); // JME
     closePolygon();
     drawPath(FillAndStroke);
 }
@@ -929,68 +929,68 @@ void BaseGfxExtendEngine::polygon(double* xy, int numPoints)
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::polyline(double* xy, int numPoints)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     //m_path.add_poly(xy, numPoints);
-	m_path.concat_poly(xy,0,true); // JME
+    m_path.ConcatPoly(xy,0,true); // JME
     drawPath(StrokeOnly);
 }
 
 //------------------------------------------------------------------------
-void BaseGfxExtendEngine::resetPath() { m_path.remove_all(); }
+void BaseGfxExtendEngine::resetPath() { m_path.RemoveAll(); }
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::moveTo(double x, double y)
 {
-    m_path.move_to(x, y);
+    m_path.MoveTo(x, y);
 }
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::moveRel(double dx, double dy)
-{
-    m_path.move_rel(dx, dy);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::moveRel(double dx, double dy)
+// {
+//     m_path.move_rel(dx, dy);
+// }
 
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::lineTo(double x, double y)
 {
-    m_path.line_to(x, y);
+    m_path.LineTo(x, y);
 }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::lineRel(double dx, double dy)
-{
-    m_path.line_rel(dx, dy);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::lineRel(double dx, double dy)
+// {
+//     m_path.line_rel(dx, dy);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::horLineTo(double x)
-{
-    m_path.hline_to(x);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::horLineTo(double x)
+// {
+//     m_path.hline_to(x);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::horLineRel(double dx)
-{
-    m_path.hline_rel(dx);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::horLineRel(double dx)
+// {
+//     m_path.hline_rel(dx);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::verLineTo(double y)
-{
-    m_path.vline_to(y);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::verLineTo(double y)
+// {
+//     m_path.vline_to(y);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::verLineRel(double dy)
-{
-    m_path.vline_rel(dy);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::verLineRel(double dy)
+// {
+//     m_path.vline_rel(dy);
+// }
 
 
 //------------------------------------------------------------------------
@@ -1000,97 +1000,97 @@ void BaseGfxExtendEngine::arcTo(double rx, double ry,
                   bool sweepFlag,
                   double x, double y)
 {
-    m_path.arc_to(rx, ry, angle, largeArcFlag, sweepFlag, x, y);
+    m_path.ArcTo(rx, ry, angle, largeArcFlag, sweepFlag, x, y);
 }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::arcRel(double rx, double ry,
-                   double angle,
-                   bool largeArcFlag,
-                   bool sweepFlag,
-                   double dx, double dy)
-{
-    m_path.arc_rel(rx, ry, angle, largeArcFlag, sweepFlag, dx, dy);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::arcRel(double rx, double ry,
+//                    double angle,
+//                    bool largeArcFlag,
+//                    bool sweepFlag,
+//                    double dx, double dy)
+// {
+//     m_path.arc_rel(rx, ry, angle, largeArcFlag, sweepFlag, dx, dy);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::quadricCurveTo(double xCtrl, double yCtrl,
-                           double xTo,   double yTo)
-{
-    m_path.curve3(xCtrl, yCtrl, xTo, yTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::quadricCurveTo(double xCtrl, double yCtrl,
+//                            double xTo,   double yTo)
+// {
+//     m_path.curve3(xCtrl, yCtrl, xTo, yTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::quadricCurveRel(double dxCtrl, double dyCtrl,
-                            double dxTo,   double dyTo)
-{
-    m_path.curve3_rel(dxCtrl, dyCtrl, dxTo, dyTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::quadricCurveRel(double dxCtrl, double dyCtrl,
+//                             double dxTo,   double dyTo)
+// {
+//     m_path.curve3_rel(dxCtrl, dyCtrl, dxTo, dyTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::quadricCurveTo(double xTo, double yTo)
-{
-    m_path.curve3(xTo, yTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::quadricCurveTo(double xTo, double yTo)
+// {
+//     m_path.curve3(xTo, yTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::quadricCurveRel(double dxTo, double dyTo)
-{
-    m_path.curve3_rel(dxTo, dyTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::quadricCurveRel(double dxTo, double dyTo)
+// {
+//     m_path.curve3_rel(dxTo, dyTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::cubicCurveTo(double xCtrl1, double yCtrl1,
-                         double xCtrl2, double yCtrl2,
-                         double xTo,    double yTo)
-{
-    m_path.curve4(xCtrl1, yCtrl1, xCtrl2, yCtrl2, xTo, yTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::cubicCurveTo(double xCtrl1, double yCtrl1,
+//                          double xCtrl2, double yCtrl2,
+//                          double xTo,    double yTo)
+// {
+//     m_path.curve4(xCtrl1, yCtrl1, xCtrl2, yCtrl2, xTo, yTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::cubicCurveRel(double dxCtrl1, double dyCtrl1,
-                          double dxCtrl2, double dyCtrl2,
-                          double dxTo,    double dyTo)
-{
-    m_path.curve4_rel(dxCtrl1, dyCtrl1, dxCtrl2, dyCtrl2, dxTo, dyTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::cubicCurveRel(double dxCtrl1, double dyCtrl1,
+//                           double dxCtrl2, double dyCtrl2,
+//                           double dxTo,    double dyTo)
+// {
+//     m_path.curve4_rel(dxCtrl1, dyCtrl1, dxCtrl2, dyCtrl2, dxTo, dyTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::cubicCurveTo(double xCtrl2, double yCtrl2,
-                         double xTo,    double yTo)
-{
-    m_path.curve4(xCtrl2, yCtrl2, xTo, yTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::cubicCurveTo(double xCtrl2, double yCtrl2,
+//                          double xTo,    double yTo)
+// {
+//     m_path.curve4(xCtrl2, yCtrl2, xTo, yTo);
+// }
 
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::cubicCurveRel(double xCtrl2, double yCtrl2,
-                          double xTo,    double yTo)
-{
-    m_path.curve4_rel(xCtrl2, yCtrl2, xTo, yTo);
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::cubicCurveRel(double xCtrl2, double yCtrl2,
+//                           double xTo,    double yTo)
+// {
+//     m_path.curve4_rel(xCtrl2, yCtrl2, xTo, yTo);
+// }
 
-//------------------------------------------------------------------------
-void BaseGfxExtendEngine::addEllipse(double cx, double cy, double rx, double ry, Direction dir)
-{
-    OHOS::bezier_arc arc(cx, cy, rx, ry, 0, (dir == CCW) ? 2*pi() : -2*pi());
-    //m_path.add_path(arc, 0, false);
-	m_path.concat_path(arc,0); // JME
-    m_path.close_polygon();
-}
+// //------------------------------------------------------------------------
+// void BaseGfxExtendEngine::addEllipse(double cx, double cy, double rx, double ry, Direction dir)
+// {
+//     OHOS::bezier_arc arc(cx, cy, rx, ry, 0, (dir == CCW) ? 2*pi() : -2*pi());
+//     //m_path.add_path(arc, 0, false);
+// 	m_path.concat_path(arc,0); // JME
+//     m_path.close_polygon();
+// }
 
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::closePolygon()
 {
-   m_path.close_polygon();
+   m_path.ClosePolygon();
 }
 
 
@@ -1225,18 +1225,18 @@ void BaseGfxExtendEngine::transformImagePath(const Image& img, const double* par
 void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double scaleX=0, double scaleY=0)
 {
     m_rasterizer.reset();
-    OHOS::TransAffine transform(m_transform.sx,m_transform.shy,m_transform.shx,m_transform.sy,m_transform.tx,m_transform.ty);
+    OHOS::TransAffine transform(m_transform.scaleX,m_transform.shearY,m_transform.shearX,m_transform.scaleY,m_transform.translateX,m_transform.translateY);
     PathTransform shadow_trans(m_convCurve, transform);
-    transform.translate(shadowOffsetX_, shadowOffsetY_);
+    transform.Translate(shadowOffsetX_, shadowOffsetY_);
     if(a!=0){
-        transform *= OHOS::trans_affine_translation(-x, -y);
-        transform *= OHOS::trans_affine_rotation(a* 3.1415926 / 180.0);
-        transform *= OHOS::trans_affine_translation(x, y);
+        transform *= OHOS::TransAffineTranslation(-x, -y);
+        transform *= OHOS::TransAffineRotation(a* 3.1415926 / 180.0);
+        transform *= OHOS::TransAffineTranslation(x, y);
     }
     if(scaleX!=0||scaleY!=0){
-        transform *= OHOS::trans_affine_translation(-x, -y);
-        transform *= OHOS::trans_affine_scaling(scaleX,scaleY);
-        transform *= OHOS::trans_affine_translation(x, y);
+        transform *= OHOS::TransAffineTranslation(-x, -y);
+        transform *= OHOS::TransAffineScaling(scaleX,scaleY);
+        transform *= OHOS::TransAffineTranslation(x, y);
     }
     m_rasterizer.add_path(shadow_trans);
     OHOS::render_scanlines_aa_solid(m_rasterizer, m_scanline, m_renBase, shadowColor_);
@@ -1250,30 +1250,30 @@ void BaseGfxExtendEngine::drawShadow(double x=0, double y=0, double a=0,double s
         RenderingBuffer m_rbuf_window;
         PixFormat pixf2(m_rbuf_window);
         pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
-        m_stack_blur.blur(pixf2, OHOS::uround(shadowBlurRadius_));
+        m_stack_blur.Blur(pixf2, OHOS::uround(shadowBlurRadius_));
     }
     m_rasterizer.reset();
 }
 void BaseGfxExtendEngine::drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
                                      double x=0, double y=0, double a=0,double scaleX=0, double scaleY=0)
 {
-    m_path.remove_all();
+    m_path.RemoveAll();
     OHOS::bezier_arc arc(cx, cy, rx, ry, 0, 2*pi());
-    m_path.concat_path(arc,0); // JME
-    m_path.close_polygon();
+    m_path.ConcatPath(arc,0); // JME
+    m_path.ClosePolygon();
     drawShadow(x,y,a,scaleX,scaleY);
 }
 void BaseGfxExtendEngine::rotate(double x, double y, double a)
 {
-    m_transform *= OHOS::trans_affine_translation(-x, -y);
-    m_transform *= OHOS::trans_affine_rotation(a* 3.1415926 / 180.0);
-    m_transform *= OHOS::trans_affine_translation(x, y);
+    m_transform *= OHOS::TransAffineTranslation(-x, -y);
+    m_transform *= OHOS::TransAffineRotation(a* 3.1415926 / 180.0);
+    m_transform *= OHOS::TransAffineTranslation(x, y);
 }
 void BaseGfxExtendEngine::scale(double x, double y,double scaleX, double scaleY)
 {
-    m_transform *= OHOS::trans_affine_translation(-x, -y);
-    m_transform *= OHOS::trans_affine_scaling(scaleX,scaleY);
-    m_transform *= OHOS::trans_affine_translation(x, y);
+    m_transform *= OHOS::TransAffineTranslation(-x, -y);
+    m_transform *= OHOS::TransAffineScaling(scaleX,scaleY);
+    m_transform *= OHOS::TransAffineTranslation(x, y);
 }
 //------------------------------------------------------------------------
 void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
@@ -1572,7 +1572,7 @@ public:
             if(gr.m_imageResample == BaseGfxExtendEngine::ResampleOnZoomOut)
             {
                 double sx, sy;
-                interpolator.transformer().scaling_abs(&sx,&sy);
+                interpolator.transformer().ScalingAbs(&sx,&sy);
                 if (sx > 1.125 || sy > 1.125)
                 {
 					resample = true;
@@ -1661,7 +1661,7 @@ void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, 
                           (double)y2,
                           parl);
     mtx *= m_transform;
-    mtx.invert();
+    mtx.Invert();
 
     m_rasterizer.reset();
     m_rasterizer.add_path(m_pathTransform);
