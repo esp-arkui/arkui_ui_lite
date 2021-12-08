@@ -39,7 +39,7 @@
 #include <cstring>
 
 #include "render/agg_pixfmt_base.h"
-#include "render/agg_rendering_buffer.h"
+#include "render/rendering_buffer.h"
 
 namespace OHOS {
 
@@ -120,7 +120,7 @@ struct MultiplierRgba {
      */
     static GRAPHIC_GEOMETRY_INLINE void Premultiply(ValueType* pColor)
     {
-        ValueType a = p[Order::A];
+        ValueType a = pColor[Order::A];
         pColor[Order::B] = ColorType::Multiply(p[Order::B], a);
         pColor[Order::R] = ColorType::Multiply(p[Order::R], a);
         pColor[Order::G] = ColorType::Multiply(p[Order::G], a);
@@ -200,11 +200,7 @@ struct ConvRgbaPre {
 
     static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* p)
     {
-        return ColorType(
-                   p[Order::R],
-                   p[Order::G],
-                   p[Order::B],
-                   p[Order::A])
+        return ColorType(p[Order::R], p[Order::G], p[Order::B], p[Order::A])
             .Demultiply();
     }
 };
@@ -340,7 +336,6 @@ struct BlenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
         }
     }
 };
-
 
 //TODO  没有被用到
 template <class ColorT, class Order>
@@ -760,7 +755,7 @@ struct CompOpRgbaColorDodge : BlenderBase<ColorT, Order> {
     static GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
     {
         if (sca < sa) {
-            return sada * sd_min(1.0, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
+            return sada * SdMin(1.0, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
         }
         if (dca > 0) {
             return sada + sca * d1a + dca * s1a;
@@ -987,30 +982,30 @@ typename CompOpTableRgba<ColorT, Order>::CompOpFuncType CompOpTableRgba<ColorT, 
 
 enum CompOpEnum
 {
-    COMP_OP_CLEAR,    
-    COMP_OP_SRC,      
-    COMP_OP_DST,      
-    COMP_OP_SRC_OVER, 
-    COMP_OP_DST_OVER, 
-    COMP_OP_SRC_IN,   
-    COMP_OP_DST_IN,   
-    COMP_OP_SRC_OUT,  
-    COMP_OP_DST_OUT,  
-    COMP_OP_SRC_ATOP, 
-    COMP_OP_DST_ATOP, 
-    COMP_OP_XOR,      
-    COMP_OP_PLUS,        
-    COMP_OP_MULTIPLY,   
-    COMP_OP_SCREEN,     
-    COMP_OP_OVERLAY,    
-    COMP_OP_DARKEN,     
-    COMP_OP_LIGHTEN,    
+    COMP_OP_CLEAR,
+    COMP_OP_SRC,
+    COMP_OP_DST,
+    COMP_OP_SRC_OVER,
+    COMP_OP_DST_OVER,
+    COMP_OP_SRC_IN,
+    COMP_OP_DST_IN,
+    COMP_OP_SRC_OUT,
+    COMP_OP_DST_OUT,
+    COMP_OP_SRC_ATOP,
+    COMP_OP_DST_ATOP,
+    COMP_OP_XOR,
+    COMP_OP_PLUS,
+    COMP_OP_MULTIPLY,
+    COMP_OP_SCREEN,
+    COMP_OP_OVERLAY,
+    COMP_OP_DARKEN,
+    COMP_OP_LIGHTEN,
     COMP_OP_COLOR_DODGE,
-    COMP_OP_COLOR_BURN, 
-    COMP_OP_HARD_LIGHT, 
-    COMP_OP_SOFT_LIGHT, 
-    COMP_OP_DIFFERENCE, 
-    COMP_OP_EXCLUSION, 
+    COMP_OP_COLOR_BURN,
+    COMP_OP_HARD_LIGHT,
+    COMP_OP_SOFT_LIGHT,
+    COMP_OP_DIFFERENCE,
+    COMP_OP_EXCLUSION,
     END_OF_COMP_OP_E
 };
 

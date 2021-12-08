@@ -115,12 +115,7 @@ struct Blenderbase
      */
     static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
     {
-        return Get(
-            pColor[OrderType::R], 
-            pColor[OrderType::G], 
-            pColor[OrderType::B], 
-            pColor[OrderType::A], 
-            cover);
+        return Get(pColor[OrderType::R], pColor[OrderType::G], pColor[OrderType::B], pColor[OrderType::A], cover);
     }
 
 };
