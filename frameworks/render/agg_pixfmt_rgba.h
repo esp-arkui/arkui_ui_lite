@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_pixfmt_rgba.h
 *
-* @brief Defines ÑÕÉ«·ÖÁ¿²Ù×÷Àà.
+* @brief Defines é¢œè‰²åˆ†é‡æ“ä½œç±».
 *
 * @since 1.0
 * @version 1.0
@@ -44,7 +44,7 @@
 namespace OHOS {
 
 /**
- * @brief ÇóÁ½¸öÊıµÄ×îĞ¡Öµ.
+ * @brief æ±‚ä¸¤ä¸ªæ•°çš„æœ€å°å€¼.
  *
  * @since 1.0
  * @version 1.0
@@ -56,7 +56,7 @@ inline T SdMin(T val1, T val2)
 }
 
 /**
- * @brief ÇóÁ½¸öÊıµÄ×î´óÖµ.
+ * @brief æ±‚ä¸¤ä¸ªæ•°çš„æœ€å¤§å€¼.
  *
  * @since 1.0
  * @version 1.0
@@ -67,7 +67,7 @@ inline T SdMax(T val1, T val2)
     return (val1 > val2) ? val1 : val2;
 }
 /**
- * @brief ÑÕÉ«·ÖÁ¿²Ã¼ô.
+ * @brief é¢œè‰²åˆ†é‡è£å‰ª.
  *
  * @since 1.0
  * @version 1.0
@@ -103,7 +103,7 @@ inline Rgba& Clip(Rgba& color)
 /**
  * @file graphic_geometry_pixfmt_rgba.h
  *
- * @brief Defines ÑÕÉ«·ÖÁ¿±¶ÔöÆ÷.
+ * @brief Defines é¢œè‰²åˆ†é‡å€å¢å™¨.
  *
  * @since 1.0
  * @version 1.0
@@ -113,7 +113,7 @@ struct MultiplierRgba {
     using ColorType = ColorT;
     using ValueType = typename ColorType::ValueType;
     /**
-     * @brief ÑÕÉ«·ÖÁ¿ÓëAlphaÏà³Ë.
+     * @brief é¢œè‰²åˆ†é‡ä¸Alphaç›¸ä¹˜.
      *
      * @since 1.0
      * @version 1.0
@@ -127,7 +127,7 @@ struct MultiplierRgba {
     }
 
     /**
-     * @brief ÑÕÉ«·ÖÁ¿ÓëAlpha½â¸´ÓÃ.
+     * @brief é¢œè‰²åˆ†é‡ä¸Alphaè§£å¤ç”¨.
      *
      * @since 1.0
      * @version 1.0
@@ -238,7 +238,7 @@ struct BlenderRgba : ConvRgbaPre<ColorT, Order> {
     using LongType = typename ColorType::LongType;
 
     /**
-     * @brief ÓÃÑÕÉ«·ÖÁ¿»ìºÏÏñËØ.
+     * @brief ç”¨é¢œè‰²åˆ†é‡æ··åˆåƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -249,7 +249,7 @@ struct BlenderRgba : ConvRgbaPre<ColorT, Order> {
         BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
     }
     /**
-     * @brief ÓÃÑÕÉ«·ÖÁ¿»ìºÏÏñËØ.
+     * @brief ç”¨é¢œè‰²åˆ†é‡æ··åˆåƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -273,7 +273,7 @@ struct BlenderRgbaPre : ConvRgbaPre<ColorT, Order> {
     using LongType = typename ColorType::LongType;
 
     /**
-     * @brief ÓÃÑÕÉ«·ÖÁ¿»ìºÏÏñËØ.
+     * @brief ç”¨é¢œè‰²åˆ†é‡æ··åˆåƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -289,7 +289,7 @@ struct BlenderRgbaPre : ConvRgbaPre<ColorT, Order> {
                  ColorType::MultCover(alpha, cover));
     }
     /**
-     * @brief ÓÃÑÕÉ«·ÖÁ¿»ìºÏÏñËØ.
+     * @brief ç”¨é¢œè‰²åˆ†é‡æ··åˆåƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -313,7 +313,7 @@ struct BlenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
     using LongType = typename ColorType::LongType;
 
     /**
-     * @brief ÓÃÑÕÉ«·ÖÁ¿»ìºÏÏñËØ.
+     * @brief ç”¨é¢œè‰²åˆ†é‡æ··åˆåƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -342,7 +342,7 @@ struct BlenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
 };
 
 
-//TODO  Ã»ÓĞ±»ÓÃµ½
+//TODO  æ²¡æœ‰è¢«ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompPpRgbaClear : BlenderBase<ColorT, Order> {
     using ColorType = ColorT;
@@ -429,7 +429,7 @@ struct CompOpRgbaDstOver : BlenderBase<ColorT, Order> {
         Set(pColor, d);
     }
 };
-// TODO  Ã»ÓĞÓÃµ½
+// TODO  æ²¡æœ‰ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompOpRgbaSrcIn : BlenderBase<ColorT, Order> {
     using ColorType = ColorT;
@@ -602,7 +602,7 @@ struct CompOpRgbaPlus : BlenderBase<ColorT, Order> {
         }
     }
 };
-//TODO Ã»ÓĞÓÃµ½
+//TODO æ²¡æœ‰ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompOpRgbaMinus : BlenderBase<ColorT, Order> {
     using ColorType = ColorT;
@@ -671,7 +671,7 @@ struct CompOpRgbaScreen : BlenderBase<ColorT, Order> {
     }
 };
 
-//TODO Ã»ÓĞÓÃµ½
+//TODO æ²¡æœ‰ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompOpRgba_overlay : BlenderBase<ColorT, Order> {
     using ColorType = ColorT;
@@ -1058,7 +1058,7 @@ struct CompOpAdaptorClipToDstRgba {
     }
 };
 
-// TODO Ã»ÓĞÓÃµ½
+// TODO æ²¡æœ‰ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompOpAdaptorRgbaPre {
     using ColorType = ColorT;
@@ -1074,7 +1074,7 @@ struct CompOpAdaptorRgbaPre {
         CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](pColor, r, g, b, a, cover);
     }
 };
-// TODO Ã»ÓĞÓÃµ½
+// TODO æ²¡æœ‰ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompOpAdaptorClipToDstRgbaPre {
     using ColorType = ColorT;
@@ -1096,7 +1096,7 @@ struct CompOpAdaptorClipToDstRgbaPre {
     }
 };
 
-//TODO Ã»ÓĞÓÃµ½
+//TODO æ²¡æœ‰ç”¨åˆ°
 template <class ColorT, class Order>
 struct CompOpAdaptorRgbaPlain {
     using ColorType = ColorT;
@@ -1377,7 +1377,7 @@ public:
     }
 
     /**
-     * @brief ·µ»Ø´°¿ÚµÄ¿í.
+     * @brief è¿”å›çª—å£çš„å®½.
      *
      * @since 1.0
      * @version 1.0
@@ -1388,7 +1388,7 @@ public:
     }
 
     /**
-      * @brief ·µ»Ø´°¿ÚµÄ¸ß.
+      * @brief è¿”å›çª—å£çš„é«˜.
       *
       * @since 1.0
       * @version 1.0
@@ -1399,7 +1399,7 @@ public:
     }
 
     /**
-      * @brief ·µ»Ø´°¿ÚÒ»ĞĞµÄ×Ö½ÚÊı.
+      * @brief è¿”å›çª—å£ä¸€è¡Œçš„å­—èŠ‚æ•°.
       *
       * @since 1.0
       * @version 1.0
@@ -1410,7 +1410,7 @@ public:
     }
 
     /**
-      * @brief ·µ»Ø´°¿ÚÒ»ĞĞµÄĞĞµØÖ·.
+      * @brief è¿”å›çª—å£ä¸€è¡Œçš„è¡Œåœ°å€.
       *
       * @since 1.0
       * @version 1.0
@@ -1421,7 +1421,7 @@ public:
     }
 
     /**
-      * @brief ·µ»Ø´°¿ÚÒ»ĞĞµÄĞĞµØÖ·.
+      * @brief è¿”å›çª—å£ä¸€è¡Œçš„è¡Œåœ°å€.
       *
       * @since 1.0
       * @version 1.0
@@ -1432,7 +1432,7 @@ public:
     }
 
     /**
-      * @brief ·µ»Ø´°¿ÚÒ»ĞĞµÄĞĞÊı¾İ.
+      * @brief è¿”å›çª—å£ä¸€è¡Œçš„è¡Œæ•°æ®.
       *
       * @since 1.0
       * @version 1.0
@@ -1443,7 +1443,7 @@ public:
     }
 
     /**
-      * @brief Ö¸Õë×ªÎªÏñËØÀàĞÍÖ¸Õë.
+      * @brief æŒ‡é’ˆè½¬ä¸ºåƒç´ ç±»å‹æŒ‡é’ˆ.
       *
       * @since 1.0
       * @version 1.0
@@ -1454,7 +1454,7 @@ public:
     }
 
     /**
-     * @brief Ö¸Õë×ªÎªÏñËØÀàĞÍÖ¸Õë.
+     * @brief æŒ‡é’ˆè½¬ä¸ºåƒç´ ç±»å‹æŒ‡é’ˆ.
      *
      * @since 1.0
      * @version 1.0
@@ -1465,7 +1465,7 @@ public:
     }
 
     /**
-     * @brief Ö¸Õë×ªÎªÏñËØÀàĞÍÖ¸Õë.
+     * @brief æŒ‡é’ˆè½¬ä¸ºåƒç´ ç±»å‹æŒ‡é’ˆ.
      *
      * @since 1.0
      * @version 1.0
@@ -1476,7 +1476,7 @@ public:
     }
 
     /**
-     * @brief »ñÈ¡Ö¸¶¨×ó±ßµÄÏñËØµØÖ·.
+     * @brief è·å–æŒ‡å®šå·¦è¾¹çš„åƒç´ åœ°å€.
      *
      * @since 1.0
      * @version 1.0
@@ -1488,7 +1488,7 @@ public:
     }
 
     /**
-     * @brief Ö¸Õë×ªÎªÏñËØÀàĞÍÖ¸Õë.
+     * @brief æŒ‡é’ˆè½¬ä¸ºåƒç´ ç±»å‹æŒ‡é’ˆ.
      *
      * @since 1.0
      * @version 1.0
@@ -1499,7 +1499,7 @@ public:
     }
 
     /**
-     * @brief Ö¸Õë×ªÎªÏñËØÀàĞÍÖ¸Õë.
+     * @brief æŒ‡é’ˆè½¬ä¸ºåƒç´ ç±»å‹æŒ‡é’ˆ.
      *
      * @since 1.0
      * @version 1.0
@@ -1510,7 +1510,7 @@ public:
     }
 
     /**
-     * @brief °Ñ´¿É«Ğ´ÈëÒ»¸öµØÖ·.
+     * @brief æŠŠçº¯è‰²å†™å…¥ä¸€ä¸ªåœ°å€.
      *
      * @since 1.0
      * @version 1.0
@@ -1521,7 +1521,7 @@ public:
     }
 
     /**
-     * @brief »ñÈ¡Ò»¸öµØÖ·µÄ´¿É«.
+     * @brief è·å–ä¸€ä¸ªåœ°å€çš„çº¯è‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1532,7 +1532,7 @@ public:
     }
 
     /**
-     * @brief ¸øÒ»¸öµØÖ·ÉèÖÃÑÕÉ«.
+     * @brief ç»™ä¸€ä¸ªåœ°å€è®¾ç½®é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1543,7 +1543,7 @@ public:
     }
 
     /**
-     * @brief »ñÈ¡Ò»¸öÏñËØµÄÑÕÉ«.
+     * @brief è·å–ä¸€ä¸ªåƒç´ çš„é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1557,7 +1557,7 @@ public:
     }
 
     /**
-     * @brief ¿½±´ÑÕÉ«µ½ÏñËØ.
+     * @brief æ‹·è´é¢œè‰²åˆ°åƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -1568,7 +1568,7 @@ public:
     }
 
     /**
-    * @brief ÓÃÑÕÉ«cÒÔcover£¨¸²¸ÇÂÊ = Í¸Ã÷¶È£©µÄÍ¸Ã÷¶È»ìºÏÏñËØ(x, y).
+    * @brief ç”¨é¢œè‰²cä»¥coverï¼ˆè¦†ç›–ç‡ = é€æ˜åº¦ï¼‰çš„é€æ˜åº¦æ··åˆåƒç´ (x, y).
     *
     * @since 1.0
     * @version 1.0
@@ -1578,7 +1578,7 @@ public:
         CopyOrBlendPix(PixValuePtr(x, y, 1), c, cover);
     }
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òºáË³ĞòÉèÖÃlen³¤¶ÈµÄÏñËØ.
+     * @brief ä»(x, y)å¼€å§‹æ‰“æ¨ªé¡ºåºè®¾ç½®lené•¿åº¦çš„åƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -1597,7 +1597,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òÊúË³ĞòÉèÖÃlen³¤¶ÈµÄÏñËØ.
+     * @brief ä»(x, y)å¼€å§‹æ‰“ç«–é¡ºåºè®¾ç½®lené•¿åº¦çš„åƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -1614,7 +1614,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òºáË³Ğò»ìºÏlen³¤¶ÈµÄÏñËØ.
+     * @brief ä»(x, y)å¼€å§‹æ‰“æ¨ªé¡ºåºæ··åˆlené•¿åº¦çš„åƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -1650,7 +1650,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òÊúË³Ğò»ìºÏlen³¤¶ÈµÄÏñËØ.
+     * @brief ä»(x, y)å¼€å§‹æ‰“ç«–é¡ºåºæ··åˆlené•¿åº¦çš„åƒç´ .
      *
      * @since 1.0
      * @version 1.0
@@ -1682,7 +1682,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òºáË³Ğò»ìºÏlen³¤¶ÈµÄÒ»ÏµÁĞÑÕÉ«.
+     * @brief ä»(x, y)å¼€å§‹æ‰“æ¨ªé¡ºåºæ··åˆlené•¿åº¦çš„ä¸€ç³»åˆ—é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1706,7 +1706,7 @@ public:
         }
     }
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òÊúË³Ğò»ìºÏlen³¤¶ÈµÄÒ»ÏµÁĞÑÕÉ«.
+     * @brief ä»(x, y)å¼€å§‹æ‰“ç«–é¡ºåºæ··åˆlené•¿åº¦çš„ä¸€ç³»åˆ—é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1730,7 +1730,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òºáË³ĞòÉèÖÃlen³¤¶ÈµÄÑÕÉ«.
+     * @brief ä»(x, y)å¼€å§‹æ‰“æ¨ªé¡ºåºè®¾ç½®lené•¿åº¦çš„é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1747,7 +1747,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òÊúË³ĞòÉèÖÃlen³¤¶ÈµÄÑÕÉ«.
+     * @brief ä»(x, y)å¼€å§‹æ‰“ç«–é¡ºåºè®¾ç½®lené•¿åº¦çš„é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1762,7 +1762,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òºáË³Ğò»ìºÏlen³¤¶ÈµÄÒ»ÏµÁĞÑÕÉ«.
+     * @brief ä»(x, y)å¼€å§‹æ‰“æ¨ªé¡ºåºæ··åˆlené•¿åº¦çš„ä¸€ç³»åˆ—é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1795,7 +1795,7 @@ public:
     }
 
     /**
-     * @brief ´Ó(x, y)¿ªÊ¼´òÊúË³Ğò»ìºÏlen³¤¶ÈµÄÒ»ÏµÁĞÑÕÉ«.
+     * @brief ä»(x, y)å¼€å§‹æ‰“ç«–é¡ºåºæ··åˆlené•¿åº¦çš„ä¸€ç³»åˆ—é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -1824,7 +1824,7 @@ public:
     }
 
     /**
-     * @brief Ã¿Ò»ÏñËØÖ´ĞĞÒ»±éFunctionº¯Êı.
+     * @brief æ¯ä¸€åƒç´ æ‰§è¡Œä¸€éFunctionå‡½æ•°.
      *
      * @since 1.0
      * @version 1.0
@@ -2282,7 +2282,7 @@ public:
     }
 
     /**
-     * @brief Ã¿Ò»ÏñËØÖ´ĞĞÒ»±éFunctionº¯Êı.
+     * @brief æ¯ä¸€åƒç´ æ‰§è¡Œä¸€éFunctionå‡½æ•°.
      *
      * @since 1.0
      * @version 1.0

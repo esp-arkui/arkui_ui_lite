@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_pixfmt_base.h
  *
- * @brief Defines ¶¨ÒåÁËÏñËØÓëÑÕÉ«·ÖÁ¿×ª»»µÄ²Ù×÷·½·¨.
+ * @brief Defines å®šä¹‰äº†åƒç´ ä¸é¢œè‰²åˆ†é‡è½¬æ¢çš„æ“ä½œæ–¹æ³•.
  *
  * @since 1.0
  * @version 1.0
@@ -54,7 +54,7 @@ struct Blenderbase
     using ValueType = typename ColorType::ValueType ValueType;
 
     /**
-     * @brief °ÑÑÕÉ«·ÖÁ¿ÉèÖÃ¸øÑÕÉ«.
+     * @brief æŠŠé¢œè‰²åˆ†é‡è®¾ç½®ç»™é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -68,7 +68,7 @@ struct Blenderbase
     }
 
     /**
-     * @brief °ÑÑÕÉ«·ÖÁ¿ÉèÖÃ¸øÑÕÉ«.
+     * @brief æŠŠé¢œè‰²åˆ†é‡è®¾ç½®ç»™é¢œè‰².
      *
      * @since 1.0
      * @version 1.0
@@ -82,8 +82,8 @@ struct Blenderbase
     }
 
     /**
-     * @brief Í¨¹ıÑÕÉ«·ÖÁ¿»ñÈ¡ÑÕÉ«.
-     * @return ·µ»ØÑÕÉ«
+     * @brief é€šè¿‡é¢œè‰²åˆ†é‡è·å–é¢œè‰².
+     * @return è¿”å›é¢œè‰²
      * @since 1.0
      * @version 1.0
      */
@@ -108,8 +108,8 @@ struct Blenderbase
     }
 
     /**
-     * @brief Í¨¹ıÑÕÉ«·ÖÁ¿»ñÈ¡ÑÕÉ«.
-     * @return ·µ»ØÑÕÉ«
+     * @brief é€šè¿‡é¢œè‰²åˆ†é‡è·å–é¢œè‰².
+     * @return è¿”å›é¢œè‰²
      * @since 1.0
      * @version 1.0
      */
