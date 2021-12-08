@@ -110,10 +110,10 @@ namespace OHOS
         typedef OHOS::image_accessor_repeat_y<pixfmt, OHOS::wrap_mode_repeat> img_source_type_y;
         typedef OHOS::image_accessor_norepeat<pixfmt> img_source_type_none;
 
-        typedef OHOS::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
-        typedef OHOS::span_pattern_rgba<img_source_type_x> span_pattern_type_x;
-        typedef OHOS::span_pattern_rgba<img_source_type_y> span_pattern_type_y;
-        typedef OHOS::span_pattern_rgba<img_source_type_none> span_pattern_type_none;
+        typedef OHOS::SpanPatternRgba<img_source_type> span_pattern_type_repeat;
+        typedef OHOS::SpanPatternRgba<img_source_type_x> span_pattern_type_x;
+        typedef OHOS::SpanPatternRgba<img_source_type_y> span_pattern_type_y;
+        typedef OHOS::SpanPatternRgba<img_source_type_none> span_pattern_type_none;
 
         //    typedef AGG_INT8U  int8u;
         //    typedef row_accessor<int8u> rendering_buffer;

@@ -1460,17 +1460,9 @@ namespace OHOS
             BaseGfxExtendEngine::PixFormat img_pixf(imgc.renBuf);
             typedef OHOS::image_accessor_clone<BaseGfxExtendEngine::PixFormat> img_source_type;
             img_source_type source(img_pixf);
-
-            SpanConvImageBlend blend(gr.m_imageBlendMode, gr.m_imageBlendColor);
-
             typedef OHOS::spanImageRgba<img_source_type, Interpolator> SpanGenType;
-            typedef OHOS::span_converter<SpanGenType, SpanConvImageBlend> SpanConvType;
-            typedef OHOS::renderer_scanline_aa<BaseRenderer, BaseGfxExtendEngine::SpanAllocator, SpanGenType> RendererType;
-
             SpanGenType sg(source, interpolator);
-            SpanConvType sc(sg, blend);
-            RendererType ri(renBase, gr.m_allocator, sg);
-            OHOS::render_scanlines(gr.m_rasterizer, gr.m_scanline, ri);
+            OHOS::render_scanlines_aa(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, sg);
         }
     };
 
