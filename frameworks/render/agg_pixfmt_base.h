@@ -13,6 +13,25 @@
  * limitations under the License.
  */
 
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines Blenderbase.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+/**
+ * @file graphic_geometry_pixfmt_base.h
+ *
+ * @brief Defines 定义了像素与颜色分量转换的操作方法.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 #define GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 
@@ -21,52 +40,59 @@
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 
 namespace OHOS {
-struct PixfmtGrayTag
-{
-};
-
-struct PixfmtRgbTag
-{
-};
-
-struct PixfmtRgbaRag
-{
-};
-
+ /**
+ *
+ * @brief Defines Blenderbase.
+ * @since 1.0
+ * @version 1.0
+ */
 template<class ColorT, class Order = void> 
-struct blenderbase
+struct Blenderbase
 {
     using ColorType = ColorT;
     using OrderType = Order;
-    typedef typename ColorType::ValueType ValueType;
+    using ValueType = typename ColorType::ValueType ValueType;
 
-    static void Set(ValueType* p, ValueType r, ValueType g, ValueType b, ValueType a)
+    /**
+     * @brief 把颜色分量设置给颜色.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    static void Set(ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a)
     {
-        p[OrderType::R] = r;
-        p[OrderType::G] = g;
-        p[OrderType::B] = b;
-        p[OrderType::A] = a;
+        pColor[OrderType::R] = r;
+        pColor[OrderType::G] = g;
+        pColor[OrderType::B] = b;
+        pColor[OrderType::A] = a;
     }
 
-    static void set(value_type* p, const rgba& c)
+    /**
+     * @brief 把颜色分量设置给颜色.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    static void Set(ValueType* pColor, const Rgba& c)
     {
-        p[OrderType::R] = ColorType::fromDouble(c.r);
-        p[OrderType::G] = ColorType::fromDouble(c.g);
-        p[OrderType::B] = ColorType::fromDouble(c.b);
-        p[OrderType::A] = ColorType::fromDouble(c.a);
+        pColor[OrderType::R] = ColorType::fromDouble(c.r);
+        pColor[OrderType::G] = ColorType::fromDouble(c.g);
+        pColor[OrderType::B] = ColorType::fromDouble(c.b);
+        pColor[OrderType::A] = ColorType::fromDouble(c.a);
     }
 
+    /**
+     * @brief 通过颜色分量获取颜色.
+     * @return 返回颜色
+     * @since 1.0
+     * @version 1.0
+     */
     static Rgba Get(ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover = COVER_FULL)
     {
-        if (cover > COVER_NONE)
-        {
-            Rgba c(ColorType::toDouble(r), 
-                ColorType::toDouble(g), 
-                ColorType::toDouble(b), 
-                ColorType::toDouble(a));
+        if (cover > COVER_NONE) {
+            Rgba c(ColorType::ToDouble(r), ColorType::ToDouble(g), ColorType::ToDouble(b), ColorType::ToDouble(a));
 
-            if (cover < COVER_FULL)
-            {
+            if (cover < COVER_FULL) {
                 double x = double(cover) / COVER_FULL;
                 c.r *= x;
                 c.g *= x;
@@ -81,13 +107,19 @@ struct blenderbase
                 
     }
 
-    static rgba Get(const ValueType* p, CoverType cover = COVER_FULL)
+    /**
+     * @brief 通过颜色分量获取颜色.
+     * @return 返回颜色
+     * @since 1.0
+     * @version 1.0
+     */
+    static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
     {
         return Get(
-            p[OrderType::R], 
-            p[OrderType::G], 
-            p[OrderType::B], 
-            p[OrderType::A], 
+            pColor[OrderType::R], 
+            pColor[OrderType::G], 
+            pColor[OrderType::B], 
+            pColor[OrderType::A], 
             cover);
     }
 
