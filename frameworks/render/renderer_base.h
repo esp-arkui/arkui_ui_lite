@@ -35,7 +35,7 @@ namespace OHOS
     public:
         typedef PixelFormat pixfmt_type;
         typedef typename pixfmt_type::color_type color_type;
-        typedef typename pixfmt_type::row_data row_data;
+        typedef typename pixfmt_type::rowData rowData;
 
         RendererBase() :
             pixfmtType(0), clipBox(1, 1, 0, 0)
@@ -235,10 +235,14 @@ namespace OHOS
                 return;
             }
             if (x1 < GetXmin())
+            {
                 x1 = GetXmin();
-            if (x2 > GetXmax())
-                x2 = GetXmax();
+            }
 
+            if (x2 > GetXmax())
+            {
+                x2 = GetXmax();
+            }
             pixfmtType->blend_hline(x1, y, x2 - x1 + 1, c, cover);
         }
 
@@ -260,7 +264,9 @@ namespace OHOS
             {
                 len -= GetXmin() - x;
                 if (len <= 0)
+                {
                     return;
+                }
                 covers += GetXmin() - x;
                 x = GetXmin();
             }
@@ -268,7 +274,9 @@ namespace OHOS
             {
                 len = GetXmax() - x + 1;
                 if (len <= 0)
+                {
                     return;
+                }
             }
             pixfmtType->blend_solid_hspan(x, y, len, c, covers);
         }
@@ -292,7 +300,9 @@ namespace OHOS
             {
                 len -= GetYmin() - y;
                 if (len <= 0)
+                {
                     return;
+                }
                 covers += GetYmin() - y;
                 y = GetYmin();
             }
@@ -300,7 +310,9 @@ namespace OHOS
             {
                 len = GetYmax() - y + 1;
                 if (len <= 0)
+                {
                     return;
+                }
             }
             pixfmtType->blend_solid_vspan(x, y, len, c, covers);
         }
@@ -323,7 +335,9 @@ namespace OHOS
                 int d = GetXmin() - x;
                 len -= d;
                 if (len <= 0)
+                {
                     return;
+                }
                 colors += d;
                 x = GetXmin();
             }
@@ -331,7 +345,9 @@ namespace OHOS
             {
                 len = GetXmax() - x + 1;
                 if (len <= 0)
+                {
                     return;
+                }
             }
             pixfmtType->copy_color_hspan(x, y, len, colors);
         }
@@ -357,9 +373,13 @@ namespace OHOS
                 int d = GetXmin() - x;
                 len -= d;
                 if (len <= 0)
+                {
                     return;
+                }
                 if (covers)
+                {
                     covers += d;
+                }
                 colors += d;
                 x = GetXmin();
             }
@@ -367,7 +387,9 @@ namespace OHOS
             {
                 len = GetXmax() - x + 1;
                 if (len <= 0)
+                {
                     return;
+                }
             }
             pixfmtType->blend_color_hspan(x, y, len, colors, covers, cover);
         }
@@ -406,7 +428,6 @@ namespace OHOS
             {
                 src.y2 = hsrc;
             }
-
             if (dst.x1 < cb.x1)
             {
                 src.x1 += cb.x1 - dst.x1;
@@ -510,7 +531,7 @@ namespace OHOS
                 }
                 while (rect.y2 > 0)
                 {
-                    typename SrcPixelFormatRenderer::row_data rw = src.row(rsrc.y1);
+                    typename SrcPixelFormatRenderer::rowData rw = src.row(rsrc.y1);
                     if (rw.ptr)
                     {
                         int x1src = rsrc.x1;

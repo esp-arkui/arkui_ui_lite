@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -16,9 +16,9 @@
 #ifndef AGG_PIXFMT_BASE_INCLUDED
 #define AGG_PIXFMT_BASE_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_color/agg_color_gray.h"
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace OHOS
 {
@@ -35,7 +35,7 @@ namespace OHOS
     };
 
     //--------------------------------------------------------------blender_base
-    template<class ColorT, class Order = void> 
+    template <class ColorT, class Order = void>
     struct blender_base
     {
         typedef ColorT color_type;
@@ -47,9 +47,9 @@ namespace OHOS
             if (cover > cover_none)
             {
                 rgba c(
-                    color_type::to_double(r), 
-                    color_type::to_double(g), 
-                    color_type::to_double(b), 
+                    color_type::to_double(r),
+                    color_type::to_double(g),
+                    color_type::to_double(b),
                     color_type::to_double(a));
 
                 if (cover < cover_full)
@@ -63,16 +63,17 @@ namespace OHOS
 
                 return c;
             }
-            else return rgba::no_color();
+            else
+                return rgba::no_color();
         }
 
         static rgba get(const value_type* p, cover_type cover = cover_full)
         {
             return get(
-                p[order_type::R], 
-                p[order_type::G], 
-                p[order_type::B], 
-                p[order_type::A], 
+                p[order_type::R],
+                p[order_type::G],
+                p[order_type::B],
+                p[order_type::A],
                 cover);
         }
 
@@ -92,6 +93,6 @@ namespace OHOS
             p[order_type::A] = color_type::from_double(c.a);
         }
     };
-}
+} // namespace OHOS
 
 #endif
