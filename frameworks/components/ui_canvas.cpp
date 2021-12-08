@@ -1250,7 +1250,8 @@ namespace OHOS {
                                   drawStyle.lineColor_.blue, drawStyle.lineOpa_);
         }
 
-        if (paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() && paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendNone) {
+        if (paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
+            paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BlendNone) {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
         } else {
@@ -1289,6 +1290,7 @@ namespace OHOS {
             m_graphics->drawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
                                    rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
         }
+        m_graphics->resetTransformations();
     }
 
     void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer,
@@ -1639,7 +1641,6 @@ namespace OHOS {
             StartTransform(rect, invalidatedArea, paint);
             graphicsContext->transformImage(imageBuffer, parallelogram, false);
         }
-
         graphicsContext->resetTransformations();
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
     }
