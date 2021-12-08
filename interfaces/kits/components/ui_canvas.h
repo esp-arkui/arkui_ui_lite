@@ -56,10 +56,6 @@ namespace OHOS {
  * @version 1.0
  */
 
-class PolygonPath : public ClipPath{
-
-};
-
 class GradientControl{
 public:
     struct LinearGradientPoint{
@@ -680,12 +676,12 @@ public:
     /* 替换绘图的当前转换矩阵 */
     void Transform(float sx,float shy,float shx,float sy,float tx,float ty)
     {
-        m_transform=agg::trans_affine(sx, shy, shx, sy, tx, ty);
+        m_transform=OHOS::trans_affine(sx, shy, shx, sy, tx, ty);
 
     }
 
     /* 获取当前变换矩阵 */
-    const agg::trans_affine& GetTransform() const
+    const OHOS::trans_affine& GetTransform() const
     {
         return m_transform;
     }
@@ -729,7 +725,7 @@ private:
     BaseGfxExtendEngine::BlendMode blendMode;
 
     /* 用于操作变换矩阵 */
-    agg::trans_affine               m_transform;
+    OHOS::trans_affine               m_transform;
     GradientControl gradientControl;
     double rotateCenterX;
     double rotateCenterY;
@@ -1106,8 +1102,6 @@ public:
     void fill(const Paint& paint);
     void stroke(const Paint& paint);
 
-    void fill(const Paint& paint,const PolygonPath * polygonPath);
-
     /*  在画布上绘制文本 */
     void StrokeText(const char *text,
                             const Point &point,
@@ -1139,7 +1133,7 @@ public:
     }
 
     /* 获取当前变换矩阵 */
-    const agg::trans_affine& GetTransform(const Paint& paint) const
+    const OHOS::trans_affine& GetTransform(const Paint& paint) const
     {
         return paint.GetTransform();
     }
@@ -1444,41 +1438,9 @@ protected:
                            const Rect& rect,
                            const Rect& invalidatedArea,
                            const Style& style);
-    static void FillImage(BufferInfo& gfxDstBuffer,void* param,const Paint& paint,const Rect& rect,const Rect& invalidatedArea,const Style& style);
-	
+
 	 static void BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& curViewRect, TransformMap& transMap, const Rect& invalidatedArea);
 	 static bool IsGif(const char *src);
 };
-
-class PolygonUtils : public ClipUtils{
-};
-
-class PolygonImageBlitter: public Blitter {
-public:
-    explicit PolygonImageBlitter(List<UICanvas::Images_> src,
-                                 int16_t img_w,int16_t img_h,
-                                 int16_t x_size,int16_t y_size)
-        : imageList_(src),img_w_(img_w),img_h_(img_h),x_size_(x_size),y_size_(y_size) {}
-    virtual ~PolygonImageBlitter() {}
-
-    void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
-    void Finish() override;
-private:
-    void DrawPixel(int16_t x, int16_t y, uint8_t opa);
-    void DrawHorLine(int16_t x, int16_t y, int16_t width, uint8_t opa);
-
-    List<UICanvas::Images_> imageList_;
-
-    int16_t img_w_= 0;
-    int16_t img_h_= 0;
-    int16_t x_size_= 0;
-    int16_t y_size_= 0;
-
-
-    int16_t iy_ = 0;
-
-};
-
-
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H
