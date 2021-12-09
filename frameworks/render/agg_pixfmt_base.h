@@ -47,11 +47,11 @@ namespace OHOS {
  * @version 1.0
  */
 template<class ColorT, class Order = void> 
-struct Blenderbase
+struct BlenderBase
 {
     using ColorType = ColorT;
     using OrderType = Order;
-    using ValueType = typename ColorType::ValueType ValueType;
+    using ValueType = typename ColorType::ValueType;
 
     /**
      * @brief 把颜色分量设置给颜色.
@@ -73,12 +73,12 @@ struct Blenderbase
      * @since 1.0
      * @version 1.0
      */
-    static void Set(ValueType* pColor, const Rgba& c)
+    static void Set(ValueType* pColor, const Rgba& color)
     {
-        pColor[OrderType::R] = ColorType::fromDouble(c.r);
-        pColor[OrderType::G] = ColorType::fromDouble(c.g);
-        pColor[OrderType::B] = ColorType::fromDouble(c.b);
-        pColor[OrderType::A] = ColorType::fromDouble(c.a);
+        pColor[OrderType::R] = ColorType::fromDouble(color.r);
+        pColor[OrderType::G] = ColorType::fromDouble(color.g);
+        pColor[OrderType::B] = ColorType::fromDouble(color.b);
+        pColor[OrderType::A] = ColorType::fromDouble(color.a);
     }
 
     /**
