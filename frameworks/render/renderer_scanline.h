@@ -30,45 +30,43 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "render/renderer_base.h"
 
-namespace OHOS
-{
+namespace OHOS {
+
     /**
-     *渲染实线的反走样扫描线
-     *
+     * @brief 渲染实线的反走样扫描线
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过renBase调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
+     * @param raster 光栅
+     * @param scanline 扫描线
+     * @param renBase 渲染器
+     * @param color 颜色
      */
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
-    void render_scanlines_aa_solid(Rasterizer& raster, Scanline& scanline,
-                                   BaseRenderer& renBase, const ColorT& color)
+    void RenderScanlinesAntiAliasSolid(Rasterizer& raster, Scanline& scanline,
+                                       BaseRenderer& renBase, const ColorT& color)
     {
-        if (raster.rewind_scanlines())
-        {
+        if (raster.rewind_scanlines()) {
             typename BaseRenderer::color_type ren_color = color;
 
             scanline.reset(raster.min_x(), raster.max_x());
-            while (raster.sweep_scanline(scanline))
-            {
+            while (raster.sweep_scanline(scanline)) {
                 int y = scanline.y();
                 unsigned num_spans = scanline.num_spans();
                 typename Scanline::const_iterator span = scanline.begin();
 
-                while (true)
-                {
+                while (true) {
                     int x = span->x;
-                    if (span->len > 0)
-                    {
-                        renBase.blend_solid_hspan(x, y, (unsigned)span->len,
-                                                  ren_color,
-                                                  span->covers);
+                    if (span->len > 0) {
+                        renBase.BlendSolidHspan(x, y, (unsigned)span->len,
+                                                ren_color,
+                                                span->covers);
+                    } else {
+                        renBase.BlendHline(x, y, (unsigned)(x - span->len - 1),
+                                           ren_color,
+                                           *(span->covers));
                     }
-                    else
-                    {
-                        renBase.blend_hline(x, y, (unsigned)(x - span->len - 1),
-                                            ren_color,
-                                            *(span->covers));
-                    }
-                    if (--num_spans == 0)
-                    {
+                    if (--num_spans == 0) {
                         break;
                     }
                     ++span;
@@ -78,34 +76,38 @@ namespace OHOS
     }
 
     /**
-     *渲染防走样的实线扫描线
+     * @brief Render 开始渲染
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过renBase_调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
+     * @param scanline 扫描线
      */
     template <class BaseRenderer>
-    class renderer_scanline_aa_solid
-    {
+    class RendererScanlineAntiAliasSolid {
     public:
-        typedef BaseRenderer base_ren_type;
-        typedef typename base_ren_type::color_type color_type;
+        using BaseRenType = BaseRenderer;
+        using color_type = typename BaseRenType::color_type;
 
-        renderer_scanline_aa_solid() :
+        RendererScanlineAntiAliasSolid() :
             renBase_(0)
         {
         }
         //构造函数传入BaseRenderer
-        explicit renderer_scanline_aa_solid(base_ren_type& renBase) :
+        explicit RendererScanlineAntiAliasSolid(BaseRenType& renBase) :
             renBase_(&renBase)
         {
         }
-        //函数传入BaseRenderer
-        void attach(base_ren_type& renBase)
+        /**
+         * @brief 设置渲染器
+         */
+        void Attach(BaseRenType& renBase)
         {
             renBase_ = &renBase;
         }
 
         /**
-         * @brief color 传入颜色
+         * @brief color 设置颜色
          */
-        void color(const color_type& c)
+        void SetColor(const color_type& c)
         {
             color_ = c;
         }
@@ -114,42 +116,39 @@ namespace OHOS
          * @brief color 获取当前颜色
          * @return
          */
-        const color_type& color() const
+        const color_type& GetColor() const
         {
             return color_;
         }
 
-        void prepare()
-        {
-        }
+        void Prepare()
+        {}
 
         /**
-         *开始渲染
+         * @brief Render 开始渲染
+         * 通过scanline.begin获取第一个span,++span获取下一个span
+         * 通过renBase_调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
+         * @param scanline 扫描线
          */
         template <class Scanline>
-        void render(const Scanline& scanline)
+        void Render(const Scanline& scanline)
         {
             int y = scanline.y();
             unsigned num_spans = scanline.num_spans();
             typename Scanline::const_iterator span = scanline.begin();
 
-            for (;;)
-            {
+            for (;;) {
                 int x = span->x;
-                if (span->len > 0)
-                {
-                    renBase_->blend_solid_hspan(x, y, (unsigned)span->len,
-                                                color_,
-                                                span->covers);
+                if (span->len > 0) {
+                    renBase_->BlendSolidHspan(x, y, (unsigned)span->len,
+                                              color_,
+                                              span->covers);
+                } else {
+                    renBase_->BlendHline(x, y, (unsigned)(x - span->len - 1),
+                                         color_,
+                                         *(span->covers));
                 }
-                else
-                {
-                    renBase_->blend_hline(x, y, (unsigned)(x - span->len - 1),
-                                          color_,
-                                          *(span->covers));
-                }
-                if (--num_spans == 0)
-                {
+                if (--num_spans == 0) {
                     break;
                 }
                 ++span;
@@ -157,42 +156,49 @@ namespace OHOS
         }
 
     private:
-        base_ren_type* renBase_;
+        BaseRenType* renBase_;
         color_type color_;
     };
 
+    /**
+     * @brief 渲染抗锯齿的扫描线
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过allocat_->Resize(spanLen)分配一个和span一样长度的颜色数组（color_type）
+     * 通过线段生成器spanGenerat_->Generate(colors, x, y, len);将颜色数组填满得到和扫描线span对应的有数值的颜色数组
+     * 最后通过renBase_调用对应的函数实现将颜色数组绘制到对应span所在的画布位置
+     * @param raster 光栅
+     * @param scanline 扫描线
+     * @param renBase 渲染器
+     * @param alloc 分配器
+     * @param spanGen 线段生成器
+     */
     template <class Rasterizer, class Scanline, class BaseRenderer,
               class SpanAllocator, class SpanGenerator>
-    void render_scanlines_aa(Rasterizer& raster, Scanline& scanline, BaseRenderer& renBase,
-                             SpanAllocator& alloc, SpanGenerator& span_gen)
+    void RenderScanlinesAntiAlias(Rasterizer& raster, Scanline& scanline, BaseRenderer& renBase,
+                                  SpanAllocator& alloc, SpanGenerator& spanGen)
     {
-        if (raster.rewind_scanlines())
-        {
+        if (raster.rewind_scanlines()) {
             scanline.reset(raster.min_x(), raster.max_x());
-            span_gen.prepare();
-            while (raster.sweep_scanline(scanline))
-            {
+            spanGen.Prepare(); //线段生成器预备
+            while (raster.sweep_scanline(scanline)) {
                 int y = scanline.y();
 
                 unsigned num_spans = scanline.num_spans();
                 typename Scanline::const_iterator span = scanline.begin();
-                while (true)
-                {
+                while (true) {
                     int x = span->x;
                     int len = span->len;
                     const typename Scanline::cover_type* covers = span->covers;
 
-                    if (len < 0)
-                    {
+                    if (len < 0) {
                         len = -len;
                     }
-                    typename BaseRenderer::color_type* colors = alloc.allocate(len);
-                    span_gen.generate(colors, x, y, len);
-                    renBase.blend_color_hspan(x, y, len, colors,
-                                              (span->len < 0) ? 0 : covers, *covers);
+                    typename BaseRenderer::color_type* colors = alloc.Resize(len);
+                    spanGen.Generate(colors, x, y, len);
+                    renBase.BlendColorHspan(x, y, len, colors,
+                                            (span->len < 0) ? 0 : covers, *covers);
 
-                    if (--num_spans == 0)
-                    {
+                    if (--num_spans == 0) {
                         break;
                     }
                     ++span;
@@ -201,61 +207,74 @@ namespace OHOS
         }
     }
 
+    /**
+     * @brief 渲染抗锯齿的扫描线
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过allocat_->Resize(spanLen)分配一个和span一样长度的颜色数组（color_type）
+     * 通过线段生成器spanGenerat_->Generate(colors, x, y, len);将颜色数组填满得到和扫描线span对应的有数值的颜色数组
+     * 最后通过renBase_调用对应的函数实现将颜色数组绘制到对应span所在的画布位置
+     * @param BaseRenderer 渲染器
+     * @param SpanAllocator 分配器
+     * @param SpanGenerator 线段生成器
+     */
     template <class BaseRenderer, class SpanAllocator, class SpanGenerator>
-    class renderer_scanline_aa
-    {
+    class RendererScanlineAntiAlias {
     public:
-        typedef BaseRenderer base_ren_type;
-        typedef SpanAllocator alloc_type;
-        typedef SpanGenerator span_gen_type;
-        renderer_scanline_aa() :
+        using BaseRenType = BaseRenderer;
+        using AllocType = SpanAllocator;
+        using SpanGenType = SpanGenerator;
+        RendererScanlineAntiAlias() :
             renBase_(0), allocat_(0), spanGenerat_(0)
         {
         }
-        renderer_scanline_aa(base_ren_type& renBase,
-                             alloc_type& alloc,
-                             span_gen_type& span_gen) :
+        RendererScanlineAntiAlias(BaseRenType& renBase,
+                                  AllocType& alloc,
+                                  SpanGenType& span_gen) :
             renBase_(&renBase),
-            allocat_(&alloc),
-            spanGenerat_(&span_gen)
+            allocat_(&alloc), spanGenerat_(&span_gen)
         {
         }
-        void attach(base_ren_type& renBase,
-                    alloc_type& alloc,
-                    span_gen_type& span_gen)
+        void Attach(BaseRenType& renBase,
+                    AllocType& alloc,
+                    SpanGenType& span_gen)
         {
             renBase_ = &renBase;
             allocat_ = &alloc;
             spanGenerat_ = &span_gen;
         }
-        void prepare()
+        void Prepare()
         {
-            spanGenerat_->prepare();
+            spanGenerat_->Prepare(); //线段生成器预备
         }
+        /**
+         * @brief Render 开始渲染
+         * 通过scanline.begin获取第一个span,++span获取下一个span
+         * 通过allocat_->Resize(spanLen)分配一个和span一样长度的颜色数组（color_type）
+         * 通过线段生成器spanGenerat_->Generate(colors, x, y, len);将颜色数组填满得到和扫描线span对应的有数值的颜色数组
+         * 最后通过renBase_调用对应的函数实现将颜色数组绘制到对应span所在的画布位置
+         * @param scanline 扫描线
+         */
         template <class Scanline>
-        void render(const Scanline& scanline)
+        void Render(const Scanline& scanline)
         {
             int y = scanline.y();
 
             unsigned num_spans = scanline.num_spans();
             typename Scanline::const_iterator span = scanline.begin();
-            while (true)
-            {
+            while (true) {
                 int x = span->x;
                 int len = span->len;
                 const typename Scanline::cover_type* covers = span->covers;
 
-                if (len < 0)
-                {
+                if (len < 0) {
                     len = -len;
                 }
-                typename BaseRenderer::color_type* colors = allocat_->allocate(len);
-                spanGenerat_->generate(colors, x, y, len);
-                renBase_->blend_color_hspan(x, y, len, colors,
-                                            (span->len < 0) ? 0 : covers, *covers);
+                typename BaseRenderer::color_type* colors = allocat_->Resize(len);
+                spanGenerat_->Generate(colors, x, y, len);
+                renBase_->BlendColorHspan(x, y, len, colors,
+                                          (span->len < 0) ? 0 : covers, *covers);
 
-                if (--num_spans == 0)
-                {
+                if (--num_spans == 0) {
                     break;
                 }
                 ++span;
@@ -263,20 +282,27 @@ namespace OHOS
         }
 
     private:
-        base_ren_type* renBase_;
-        alloc_type* allocat_;
-        span_gen_type* spanGenerat_;
+        BaseRenType* renBase_;
+        AllocType* allocat_;
+        SpanGenType* spanGenerat_;
     };
 
+    /**
+     * @brief 开始渲染
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过renBase_调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
+     * @param scanline 扫描线
+     * @param renBase 渲染器
+     * @param color 颜色
+     */
     template <class Scanline, class BaseRenderer, class ColorT>
-    void render_scanline_bin_solid(const Scanline& scanline,
-                                   BaseRenderer& renBase,
-                                   const ColorT& color)
+    void RenderScanlineBinSolid(const Scanline& scanline,
+                                BaseRenderer& renBase,
+                                const ColorT& color)
     {
         unsigned num_spans = scanline.num_spans();
         typename Scanline::const_iterator span = scanline.begin();
-        for (;;)
-        {
+        for (;;) {
             renBase.blend_hline(span->x,
                                 scanline.y(),
                                 span->x - 1 + ((span->len < 0) ? -span->len : span->len),
@@ -288,27 +314,33 @@ namespace OHOS
         }
     }
 
+    /**
+     * @brief 渲染不带抗锯齿扫描线（单色）
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过renBase_调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
+     * @param raster 光栅
+     * @param scanline 扫描线
+     * @param renBase 渲染
+     * @param color 颜色
+     */
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
-    void render_scanlines_bin_solid(Rasterizer& raster, Scanline& scanline,
-                                    BaseRenderer& renBase, const ColorT& color)
+    void RenderScanlinesBinSolid(Rasterizer& raster, Scanline& scanline,
+                                 BaseRenderer& renBase, const ColorT& color)
     {
-        if (raster.rewind_scanlines())
-        {
+        if (raster.rewind_scanlines()) {
             typename BaseRenderer::color_type ren_color(color);
 
             scanline.reset(raster.min_x(), raster.max_x());
-            while (raster.sweep_scanline(scanline))
-            {
+            while (raster.sweep_scanline(scanline)) {
                 unsigned num_spans = scanline.num_spans();
                 typename Scanline::const_iterator span = scanline.begin();
-                for (;;)
-                {
-                    renBase.blend_hline(span->x,
-                                        scanline.y(),
-                                        span->x - 1 + ((span->len < 0) ? -span->len : span->len),
-                                        ren_color,
-                                        cover_full);
+                for (;;) {
+                    renBase.BlendHline(span->x,
+                                       scanline.y(),
+                                       span->x - 1 + ((span->len < 0) ? -span->len : span->len),
+                                       ren_color,
+                                       cover_full);
                     if (--num_spans == 0)
                         break;
                     ++span;
@@ -318,50 +350,50 @@ namespace OHOS
     }
 
     template <class BaseRenderer>
-    class renderer_scanline_bin_solid
-    {
+    class RendererScanlineBinSolid {
     public:
-        typedef BaseRenderer base_ren_type;
-        typedef typename base_ren_type::color_type color_type;
-        renderer_scanline_bin_solid() :
+        using BaseRenType = BaseRenderer;
+        using color_type = typename BaseRenType::color_type;
+        RendererScanlineBinSolid() :
             renBase_(0)
         {
         }
-        explicit renderer_scanline_bin_solid(base_ren_type& renBase) :
+        explicit RendererScanlineBinSolid(BaseRenType& renBase) :
             renBase_(&renBase)
         {
         }
-        void attach(base_ren_type& renBase)
+        void Attach(BaseRenType& renBase)
         {
             renBase_ = &renBase;
         }
-        void color(const color_type& c)
+        void SetColor(const color_type& c)
         {
             color_ = c;
         }
-        const color_type& color() const
+        const color_type& GetColor() const
         {
             return color_;
         }
-        void prepare()
-        {
-        }
-        template <class Scanline>
+        void Prepare()
+        {}
 
         /**
-         *开始渲染
+         * @brief Render 开始渲染
+         * 通过scanline.begin获取第一个span,++span获取下一个span
+         * 通过renBase_调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
+         * @param scanline 扫描线
          */
-        void render(const Scanline& scanline)
+        template <class Scanline>
+        void Render(const Scanline& scanline)
         {
             unsigned num_spans = scanline.num_spans();
             typename Scanline::const_iterator span = scanline.begin();
-            for (;;)
-            {
-                renBase_->blend_hline(span->x,
-                                      scanline.y(),
-                                      span->x - 1 + ((span->len < 0) ? -span->len : span->len),
-                                      color_,
-                                      cover_full);
+            for (;;) {
+                renBase_->BlendHline(span->x,
+                                     scanline.y(),
+                                     span->x - 1 + ((span->len < 0) ? -span->len : span->len),
+                                     color_,
+                                     cover_full);
                 if (--num_spans == 0)
                     break;
                 ++span;
@@ -369,36 +401,43 @@ namespace OHOS
         }
 
     private:
-        base_ren_type* renBase_;
+        BaseRenType* renBase_;
         color_type color_;
     };
 
     /**
-     *渲染扫描线不带防走样
+     * @brief 渲染不防走样的扫描线
+     * 通过scanline.begin获取第一个span,++span获取下一个span
+     * 通过allocat_->Resize(spanLen)分配一个和span一样长度的颜色数组（color_type）
+     * 通过线段生成器spanGenerat_->Generate(colors, x, y, len);将颜色数组填满得到和扫描线span对应的有数值的颜色数组
+     * 最后通过renBase_调用对应的函数实现将颜色数组绘制到对应span所在的画布位置
+     * @param raster 光栅
+     * @param scanline 扫描线
+     * @param renBase 渲染器
+     * @param alloc 分配器
+     * @param spanGen 线段生成器
      */
     template <class Rasterizer, class Scanline, class BaseRenderer,
               class SpanAllocator, class SpanGenerator>
-    void render_scanlines_bin(Rasterizer& raster, Scanline& scanline, BaseRenderer& renBase,
-                              SpanAllocator& alloc, SpanGenerator& span_gen)
+    void RenderScanlinesBin(Rasterizer& raster, Scanline& scanline, BaseRenderer& renBase,
+                            SpanAllocator& alloc, SpanGenerator& spanGen)
     {
-        if (raster.rewind_scanlines())
-        {
+        if (raster.rewind_scanlines()) {
             scanline.reset(raster.min_x(), raster.max_x());
-            span_gen.prepare();
-            while (raster.sweep_scanline(scanline))
-            {
+            spanGen.Prepare(); //线段生成器预备
+            while (raster.sweep_scanline(scanline)) {
                 int y = scanline.y();
                 unsigned num_spans = scanline.num_spans();
                 typename Scanline::const_iterator span = scanline.begin();
-                for (;;)
-                {
+                for (;;) {
                     int x = span->x;
                     int len = span->len;
-                    if (len < 0)
+                    if (len < 0) {
                         len = -len;
-                    typename BaseRenderer::color_type* colors = alloc.allocate(len);
-                    span_gen.generate(colors, x, y, len);
-                    renBase.blend_color_hspan(x, y, len, colors, 0, cover_full);
+                    }
+                    typename BaseRenderer::color_type* colors = alloc.Resize(len);
+                    spanGen.Generate(colors, x, y, len);
+                    renBase.BlendColorHspan(x, y, len, colors, 0, cover_full);
                     if (--num_spans == 0)
                         break;
                     ++span;
@@ -408,34 +447,35 @@ namespace OHOS
     }
 
     /**
-     *渲染扫描线（不防走样）
+     * @brief 渲染不防走样的扫描线
+     * @param BaseRenderer 渲染器
+     * @param SpanAllocator 分配器
+     * @param SpanGenerator 线段生成器
      */
     template <class BaseRenderer, class SpanAllocator, class SpanGenerator>
-    class renderer_scanline_bin
-    {
+    class RendererScanlineBin {
     public:
-        typedef BaseRenderer base_ren_type;
-        typedef SpanAllocator alloc_type;
-        typedef SpanGenerator span_gen_type;
-        renderer_scanline_bin() :
+        using BaseRenType = BaseRenderer;
+        using AllocType = SpanAllocator;
+        using SpanGenType = SpanGenerator;
+        RendererScanlineBin() :
             renBase_(0), allocat_(0), spanGenerat_(0)
         {
         }
-        renderer_scanline_bin(base_ren_type& renBase,
-                              alloc_type& alloc,
-                              span_gen_type& span_gen) :
+        RendererScanlineBin(BaseRenType& renBase,
+                            AllocType& alloc,
+                            SpanGenType& span_gen) :
             renBase_(&renBase),
-            allocat_(&alloc),
-            spanGenerat_(&span_gen)
+            allocat_(&alloc), spanGenerat_(&span_gen)
         {
         }
 
         /**
          *传入参数
          */
-        void attach(base_ren_type& renBase,
-                    alloc_type& alloc,
-                    span_gen_type& span_gen)
+        void Attach(BaseRenType& renBase,
+                    AllocType& alloc,
+                    SpanGenType& span_gen)
         {
             renBase_ = &renBase;
             allocat_ = &alloc;
@@ -445,29 +485,33 @@ namespace OHOS
         /**
          * 准备
          */
-        void prepare()
+        void Prepare()
         {
-            spanGenerat_->prepare();
+            spanGenerat_->Prepare(); //线段生成器预备
         }
 
         /**
-         *开始渲染
+         * @brief Render 开始渲染
+         * 通过scanline.begin获取第一个span,++span获取下一个span
+         * 通过allocat_->Resize(spanLen)分配一个和span一样长度的颜色数组（color_type）
+         * 通过线段生成器spanGenerat_->Generate(colors, x, y, len);将颜色数组填满得到和扫描线span对应的有数值的颜色数组
+         * 最后通过renBase_调用对应的函数实现将颜色数组绘制到对应span所在的画布位置
+         * @param scanline 扫描线
          */
         template <class Scanline>
-        void render(const Scanline& scanline)
+        void Render(const Scanline& scanline)
         {
             int y = scanline.y();
             unsigned num_spans = scanline.num_spans();
             typename Scanline::const_iterator span = scanline.begin();
-            for (;;)
-            {
+            for (;;) {
                 int x = span->x;
                 int len = span->len;
                 if (len < 0)
                     len = -len;
-                typename BaseRenderer::color_type* colors = allocat_->allocate(len);
-                spanGenerat_->generate(colors, x, y, len);
-                renBase_->blend_color_hspan(x, y, len, colors, 0, cover_full);
+                typename BaseRenderer::color_type* colors = allocat_->Resize(len);
+                spanGenerat_->Generate(colors, x, y, len);
+                renBase_->BlendColorHspan(x, y, len, colors, 0, cover_full);
                 if (--num_spans == 0)
                     break;
                 ++span;
@@ -475,43 +519,29 @@ namespace OHOS
         }
 
     private:
-        base_ren_type* renBase_;
-        alloc_type* allocat_;
-        span_gen_type* spanGenerat_;
+        BaseRenType* renBase_;
+        AllocType* allocat_;
+        SpanGenType* spanGenerat_;
     };
 
+    /**
+     * @brief 渲染扫描线
+     * @param raster 光栅
+     * @param scanline 扫描线
+     * @param renBase 渲染器
+     */
     template <class Rasterizer, class Scanline, class Renderer>
-    void render_scanlines(Rasterizer& raster, Scanline& scanline, Renderer& renBase)
+    void RenderScanlines(Rasterizer& raster, Scanline& scanline, Renderer& renBase)
     {
-        if (raster.rewind_scanlines())
-        {
+        if (raster.rewind_scanlines()) {
             scanline.reset(raster.min_x(), raster.max_x());
-            renBase.prepare();
-            while (raster.sweep_scanline(scanline))
-            {
-                renBase.render(scanline);
+            renBase.Prepare(); //线段生成器预备
+            while (raster.sweep_scanline(scanline)) {
+                renBase.Render(scanline);
             }
         }
     }
 
-    template <class Rasterizer, class Scanline, class Renderer,
-              class VertexSource, class ColorStorage, class PathId>
-    void render_all_paths(Rasterizer& raster,
-                          Scanline& scanline,
-                          Renderer& renBase,
-                          VertexSource& vs,
-                          const ColorStorage& as,
-                          const PathId& path_id,
-                          unsigned num_paths)
-    {
-        for (unsigned i = 0; i < num_paths; i++)
-        {
-            raster.reset();
-            raster.add_path(vs, path_id[i]);
-            renBase.color(as[i]);
-            render_scanlines(raster, scanline, renBase);
-        }
-    }
 } // namespace OHOS
 
 #endif
