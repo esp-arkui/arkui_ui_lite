@@ -30,8 +30,7 @@
 #include "render/agg_pixfmt_base.h"
 #include "render/rendering_buffer.h"
 
-namespace OHOS
-{
+namespace OHOS {
     template <class T>
     inline T sd_min(T a, T b)
     {
@@ -66,8 +65,7 @@ namespace OHOS
 
     //=========================================================multiplier_rgba
     template <class ColorT, class Order>
-    struct multiplier_rgba
-    {
+    struct multiplier_rgba {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
 
@@ -92,8 +90,7 @@ namespace OHOS
 
     //=====================================================apply_gamma_dir_rgba
     template <class ColorT, class Order, class GammaLut>
-    class apply_gamma_dir_rgba
-    {
+    class apply_gamma_dir_rgba {
     public:
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
@@ -116,8 +113,7 @@ namespace OHOS
 
     //=====================================================apply_gamma_inv_rgba
     template <class ColorT, class Order, class GammaLut>
-    class apply_gamma_inv_rgba
-    {
+    class apply_gamma_inv_rgba {
     public:
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
@@ -139,8 +135,7 @@ namespace OHOS
     };
 
     template <class ColorT, class Order>
-    struct conv_rgba_pre
-    {
+    struct conv_rgba_pre {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -168,8 +163,7 @@ namespace OHOS
     };
 
     template <class ColorT, class Order>
-    struct conv_rgba_plain
-    {
+    struct conv_rgba_plain {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -197,8 +191,7 @@ namespace OHOS
     //=============================================================blender_rgba
     // Blends "plain" (i.e. non-premultiplied) colors into a premultiplied buffer.
     template <class ColorT, class Order>
-    struct blender_rgba : conv_rgba_pre<ColorT, Order>
-    {
+    struct blender_rgba : conv_rgba_pre<ColorT, Order> {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -230,8 +223,7 @@ namespace OHOS
     //========================================================blender_rgba_pre
     // Blends premultiplied colors into a premultiplied buffer.
     template <class ColorT, class Order>
-    struct blender_rgba_pre : conv_rgba_pre<ColorT, Order>
-    {
+    struct blender_rgba_pre : conv_rgba_pre<ColorT, Order> {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -266,8 +258,7 @@ namespace OHOS
     //======================================================blender_rgba_plain
     // Blends "plain" (non-premultiplied) colors into a plain (non-premultiplied) buffer.
     template <class ColorT, class Order>
-    struct blender_rgba_plain : conv_rgba_plain<ColorT, Order>
-    {
+    struct blender_rgba_plain : conv_rgba_plain<ColorT, Order> {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -288,8 +279,7 @@ namespace OHOS
         static AGG_INLINE void blend_pix(value_type* p,
                                          value_type cr, value_type cg, value_type cb, value_type alpha)
         {
-            if (alpha > color_type::empty_value())
-            {
+            if (alpha > color_type::empty_value()) {
                 calc_type a = p[Order::A];
                 calc_type r = color_type::multiply(p[Order::R], a);
                 calc_type g = color_type::multiply(p[Order::G], a);
@@ -308,8 +298,7 @@ namespace OHOS
 
     //=========================================================comp_op_rgba_clear
     template <class ColorT, class Order>
-    struct comp_op_rgba_clear : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_clear : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -320,12 +309,9 @@ namespace OHOS
         static AGG_INLINE void blend_pix(value_type* p,
                                          value_type, value_type, value_type, value_type, cover_type cover)
         {
-            if (cover >= cover_full)
-            {
+            if (cover >= cover_full) {
                 p[0] = p[1] = p[2] = p[3] = color_type::empty_value();
-            }
-            else if (cover > cover_none)
-            {
+            } else if (cover > cover_none) {
                 set(p, get(p, cover_full - cover));
             }
         }
@@ -333,8 +319,7 @@ namespace OHOS
 
     //===========================================================comp_op_rgba_src
     template <class ColorT, class Order>
-    struct comp_op_rgba_src : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_src : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -345,12 +330,9 @@ namespace OHOS
         static AGG_INLINE void blend_pix(value_type* p,
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
-            if (cover >= cover_full)
-            {
+            if (cover >= cover_full) {
                 set(p, r, g, b, a);
-            }
-            else
-            {
+            } else {
                 rgba s = get(r, g, b, a, cover);
                 rgba d = get(p, cover_full - cover);
                 d.r += s.r;
@@ -364,8 +346,7 @@ namespace OHOS
 
     //===========================================================comp_op_rgba_dst
     template <class ColorT, class Order>
-    struct comp_op_rgba_dst : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_dst : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
 
@@ -380,8 +361,7 @@ namespace OHOS
 
     //======================================================comp_op_rgba_src_over
     template <class ColorT, class Order>
-    struct comp_op_rgba_src_over : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_src_over : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -408,8 +388,7 @@ namespace OHOS
 
     //======================================================comp_op_rgba_dst_over
     template <class ColorT, class Order>
-    struct comp_op_rgba_dst_over : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_dst_over : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -433,8 +412,7 @@ namespace OHOS
 
     //======================================================comp_op_rgba_src_in
     template <class ColorT, class Order>
-    struct comp_op_rgba_src_in : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_src_in : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -446,8 +424,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             double da = ColorT::to_double(p[Order::A]);
-            if (da > 0)
-            {
+            if (da > 0) {
                 rgba s = get(r, g, b, a, cover);
                 rgba d = get(p, cover_full - cover);
                 d.r += s.r * da;
@@ -461,8 +438,7 @@ namespace OHOS
 
     //======================================================comp_op_rgba_dst_in
     template <class ColorT, class Order>
-    struct comp_op_rgba_dst_in : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_dst_in : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -486,8 +462,7 @@ namespace OHOS
 
     //======================================================comp_op_rgba_src_out
     template <class ColorT, class Order>
-    struct comp_op_rgba_src_out : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_src_out : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -511,8 +486,7 @@ namespace OHOS
 
     //======================================================comp_op_rgba_dst_out
     template <class ColorT, class Order>
-    struct comp_op_rgba_dst_out : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_dst_out : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -536,8 +510,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_src_atop
     template <class ColorT, class Order>
-    struct comp_op_rgba_src_atop : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_src_atop : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -560,8 +533,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_dst_atop
     template <class ColorT, class Order>
-    struct comp_op_rgba_dst_atop : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_dst_atop : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -587,8 +559,7 @@ namespace OHOS
 
     //=========================================================comp_op_rgba_xor
     template <class ColorT, class Order>
-    struct comp_op_rgba_xor : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_xor : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -613,8 +584,7 @@ namespace OHOS
 
     //=========================================================comp_op_rgba_plus
     template <class ColorT, class Order>
-    struct comp_op_rgba_plus : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_plus : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -626,8 +596,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 d.a = sd_min(d.a + s.a, 1.0);
                 d.r = sd_min(d.r + s.r, d.a);
@@ -641,8 +610,7 @@ namespace OHOS
     //========================================================comp_op_rgba_minus
     // Note: not included in SVG spec.
     template <class ColorT, class Order>
-    struct comp_op_rgba_minus : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_minus : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -654,8 +622,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 d.a += s.a - s.a * d.a;
                 d.r = sd_max(d.r - s.r, 0.0);
@@ -668,8 +635,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_multiply
     template <class ColorT, class Order>
-    struct comp_op_rgba_multiply : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_multiply : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -681,8 +647,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 double s1a = 1 - s.a;
                 double d1a = 1 - d.a;
@@ -697,8 +662,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_screen
     template <class ColorT, class Order>
-    struct comp_op_rgba_screen : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_screen : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -710,8 +674,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 d.r += s.r - s.r * d.r;
                 d.g += s.g - s.g * d.g;
@@ -724,8 +687,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_overlay
     template <class ColorT, class Order>
-    struct comp_op_rgba_overlay : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_overlay : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -748,8 +710,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 double d1a = 1 - d.a;
                 double s1a = 1 - s.a;
@@ -765,8 +726,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_darken
     template <class ColorT, class Order>
-    struct comp_op_rgba_darken : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_darken : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -778,8 +738,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 double d1a = 1 - d.a;
                 double s1a = 1 - s.a;
@@ -794,8 +753,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_lighten
     template <class ColorT, class Order>
-    struct comp_op_rgba_lighten : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_lighten : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -807,8 +765,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 double d1a = 1 - d.a;
                 double s1a = 1 - s.a;
@@ -823,8 +780,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_color_dodge
     template <class ColorT, class Order>
-    struct comp_op_rgba_color_dodge : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_color_dodge : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -851,11 +807,9 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
-                if (d.a > 0)
-                {
+                if (d.a > 0) {
                     double sada = s.a * d.a;
                     double s1a = 1 - s.a;
                     double d1a = 1 - d.a;
@@ -864,8 +818,7 @@ namespace OHOS
                     d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
                     d.a += s.a - s.a * d.a;
                     set(p, clip(d));
-                }
-                else
+                } else
                     set(p, s);
             }
         }
@@ -873,8 +826,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_color_burn
     template <class ColorT, class Order>
-    struct comp_op_rgba_color_burn : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_color_burn : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -899,11 +851,9 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
-                if (d.a > 0)
-                {
+                if (d.a > 0) {
                     double sada = s.a * d.a;
                     double s1a = 1 - s.a;
                     double d1a = 1 - d.a;
@@ -912,8 +862,7 @@ namespace OHOS
                     d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
                     d.a += s.a - sada;
                     set(p, clip(d));
-                }
-                else
+                } else
                     set(p, s);
             }
         }
@@ -921,8 +870,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_hard_light
     template <class ColorT, class Order>
-    struct comp_op_rgba_hard_light : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_hard_light : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -945,8 +893,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 double d1a = 1 - d.a;
                 double s1a = 1 - s.a;
@@ -962,8 +909,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_soft_light
     template <class ColorT, class Order>
-    struct comp_op_rgba_soft_light : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_soft_light : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -991,11 +937,9 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
-                if (d.a > 0)
-                {
+                if (d.a > 0) {
                     double sada = s.a * d.a;
                     double s1a = 1 - s.a;
                     double d1a = 1 - d.a;
@@ -1004,8 +948,7 @@ namespace OHOS
                     d.b = calc(d.b, s.b, d.a, s.a, sada, d1a, s1a);
                     d.a += s.a - sada;
                     set(p, clip(d));
-                }
-                else
+                } else
                     set(p, s);
             }
         }
@@ -1013,8 +956,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_difference
     template <class ColorT, class Order>
-    struct comp_op_rgba_difference : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_difference : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -1026,8 +968,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 d.r += s.r - 2 * sd_min(s.r * d.a, d.r * s.a);
                 d.g += s.g - 2 * sd_min(s.g * d.a, d.g * s.a);
@@ -1040,8 +981,7 @@ namespace OHOS
 
     //=====================================================comp_op_rgba_exclusion
     template <class ColorT, class Order>
-    struct comp_op_rgba_exclusion : blender_base<ColorT, Order>
-    {
+    struct comp_op_rgba_exclusion : blender_base<ColorT, Order> {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         using blender_base<ColorT, Order>::get;
@@ -1053,8 +993,7 @@ namespace OHOS
                                          value_type r, value_type g, value_type b, value_type a, cover_type cover)
         {
             rgba s = get(r, g, b, a, cover);
-            if (s.a > 0)
-            {
+            if (s.a > 0) {
                 rgba d = get(p);
                 double d1a = 1 - d.a;
                 double s1a = 1 - s.a;
@@ -1196,8 +1135,7 @@ namespace OHOS
 
     //======================================================comp_op_table_rgba
     template <class ColorT, class Order>
-    struct comp_op_table_rgba
-    {
+    struct comp_op_table_rgba {
         typedef typename ColorT::value_type value_type;
         typedef typename ColorT::calc_type calc_type;
         typedef void (*comp_op_func_type)(value_type* p,
@@ -1281,8 +1219,7 @@ namespace OHOS
 
     //====================================================comp_op_adaptor_rgba
     template <class ColorT, class Order>
-    struct comp_op_adaptor_rgba
-    {
+    struct comp_op_adaptor_rgba {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -1302,8 +1239,7 @@ namespace OHOS
 
     //=========================================comp_op_adaptor_clip_to_dst_rgba
     template <class ColorT, class Order>
-    struct comp_op_adaptor_clip_to_dst_rgba
-    {
+    struct comp_op_adaptor_clip_to_dst_rgba {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -1327,8 +1263,7 @@ namespace OHOS
 
     //================================================comp_op_adaptor_rgba_pre
     template <class ColorT, class Order>
-    struct comp_op_adaptor_rgba_pre
-    {
+    struct comp_op_adaptor_rgba_pre {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -1344,8 +1279,7 @@ namespace OHOS
 
     //=====================================comp_op_adaptor_clip_to_dst_rgba_pre
     template <class ColorT, class Order>
-    struct comp_op_adaptor_clip_to_dst_rgba_pre
-    {
+    struct comp_op_adaptor_clip_to_dst_rgba_pre {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -1366,8 +1300,7 @@ namespace OHOS
 
     //====================================================comp_op_adaptor_rgba_plain
     template <class ColorT, class Order>
-    struct comp_op_adaptor_rgba_plain
-    {
+    struct comp_op_adaptor_rgba_plain {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -1385,8 +1318,7 @@ namespace OHOS
 
     //=========================================comp_op_adaptor_clip_to_dst_rgba_plain
     template <class ColorT, class Order>
-    struct comp_op_adaptor_clip_to_dst_rgba_plain
-    {
+    struct comp_op_adaptor_clip_to_dst_rgba_plain {
         typedef ColorT color_type;
         typedef Order order_type;
         typedef typename color_type::value_type value_type;
@@ -1404,8 +1336,7 @@ namespace OHOS
 
     //=======================================================comp_adaptor_rgba
     template <class BlenderPre>
-    struct comp_adaptor_rgba
-    {
+    struct comp_adaptor_rgba {
         typedef typename BlenderPre::color_type color_type;
         typedef typename BlenderPre::order_type order_type;
         typedef typename color_type::value_type value_type;
@@ -1425,8 +1356,7 @@ namespace OHOS
 
     //==========================================comp_adaptor_clip_to_dst_rgba
     template <class BlenderPre>
-    struct comp_adaptor_clip_to_dst_rgba
-    {
+    struct comp_adaptor_clip_to_dst_rgba {
         typedef typename BlenderPre::color_type color_type;
         typedef typename BlenderPre::order_type order_type;
         typedef typename color_type::value_type value_type;
@@ -1450,8 +1380,7 @@ namespace OHOS
 
     //=======================================================comp_adaptor_rgba_pre
     template <class BlenderPre>
-    struct comp_adaptor_rgba_pre
-    {
+    struct comp_adaptor_rgba_pre {
         typedef typename BlenderPre::color_type color_type;
         typedef typename BlenderPre::order_type order_type;
         typedef typename color_type::value_type value_type;
@@ -1467,8 +1396,7 @@ namespace OHOS
 
     //======================================comp_adaptor_clip_to_dst_rgba_pre
     template <class BlenderPre>
-    struct comp_adaptor_clip_to_dst_rgba_pre
-    {
+    struct comp_adaptor_clip_to_dst_rgba_pre {
         typedef typename BlenderPre::color_type color_type;
         typedef typename BlenderPre::order_type order_type;
         typedef typename color_type::value_type value_type;
@@ -1490,8 +1418,7 @@ namespace OHOS
 
     //=======================================================comp_adaptor_rgba_plain
     template <class BlenderPre>
-    struct comp_adaptor_rgba_plain
-    {
+    struct comp_adaptor_rgba_plain {
         typedef typename BlenderPre::color_type color_type;
         typedef typename BlenderPre::order_type order_type;
         typedef typename color_type::value_type value_type;
@@ -1509,8 +1436,7 @@ namespace OHOS
 
     //==========================================comp_adaptor_clip_to_dst_rgba_plain
     template <class BlenderPre>
-    struct comp_adaptor_clip_to_dst_rgba_plain
-    {
+    struct comp_adaptor_clip_to_dst_rgba_plain {
         typedef typename BlenderPre::color_type color_type;
         typedef typename BlenderPre::order_type order_type;
         typedef typename color_type::value_type value_type;
@@ -1528,8 +1454,7 @@ namespace OHOS
 
     //=================================================pixfmt_alpha_blend_rgba
     template <class Blender, class RenBuf>
-    class pixfmt_alpha_blend_rgba
-    {
+    class pixfmt_alpha_blend_rgba {
     public:
         typedef pixfmt_rgba_tag pixfmt_category;
         typedef RenBuf rbuf_type;
@@ -1545,8 +1470,7 @@ namespace OHOS
             pix_step = 4,
             pix_width = sizeof(value_type) * pix_step,
         };
-        struct pixel_type
-        {
+        struct pixel_type {
             value_type c[num_components];
 
             void set(value_type r, value_type g, value_type b, value_type a)
@@ -1616,14 +1540,10 @@ namespace OHOS
         //--------------------------------------------------------------------
         AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover)
         {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque() && cover == cover_mask)
-                {
+            if (!c.is_transparent()) {
+                if (c.is_opaque() && cover == cover_mask) {
                     p->set(c.r, c.g, c.b, c.a);
-                }
-                else
-                {
+                } else {
                     m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a, cover);
                 }
             }
@@ -1632,14 +1552,10 @@ namespace OHOS
         //--------------------------------------------------------------------
         AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c)
         {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque())
-                {
+            if (!c.is_transparent()) {
+                if (c.is_opaque()) {
                     p->set(c.r, c.g, c.b, c.a);
-                }
-                else
-                {
+                } else {
                     m_blender.blend_pix(p->c, c.r, c.g, c.b, c.a);
                 }
             }
@@ -1665,10 +1581,9 @@ namespace OHOS
         bool attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
         {
             rect_i r(x1, y1, x2, y2);
-            if (r.clip(rect_i(0, 0, pixf.width() - 1, pixf.height() - 1)))
-            {
+            if (r.clip(rect_i(0, 0, pixf.width() - 1, pixf.height() - 1))) {
                 int stride = pixf.stride();
-                m_rbuf->attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1),
+                m_rbuf->Attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1),
                                (r.x2 - r.x1) + 1,
                                (r.y2 - r.y1) + 1,
                                stride);
@@ -1702,30 +1617,30 @@ namespace OHOS
         }
         AGG_INLINE rowData row(int y) const
         {
-            return m_rbuf->row(y);
+            return m_rbuf->Row(y);
         }
 
         //--------------------------------------------------------------------
         AGG_INLINE int8u* pix_ptr(int x, int y)
         {
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
+            return m_rbuf->RowPtr(y) + sizeof(value_type) * (x * pix_step);
         }
 
         AGG_INLINE const int8u* pix_ptr(int x, int y) const
         {
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
+            return m_rbuf->RowPtr(y) + sizeof(value_type) * (x * pix_step);
         }
 
         // Return pointer to pixel value, forcing row to be allocated.
         AGG_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len)
         {
-            return (pixel_type*)(m_rbuf->row_ptr(x, y, len) + sizeof(value_type) * (x * pix_step));
+            return (pixel_type*)(m_rbuf->RowPtr(x, y, len) + sizeof(value_type) * (x * pix_step));
         }
 
         // Return pointer to pixel value, or null if row not allocated.
         AGG_INLINE const pixel_type* pix_value_ptr(int x, int y) const
         {
-            int8u* p = m_rbuf->row_ptr(y);
+            int8u* p = m_rbuf->RowPtr(y);
             return p ? (pixel_type*)(p + sizeof(value_type) * (x * pix_step)) : 0;
         }
 
@@ -1762,8 +1677,7 @@ namespace OHOS
         //--------------------------------------------------------------------
         AGG_INLINE color_type pixel(int x, int y) const
         {
-            if (const pixel_type* p = pix_value_ptr(x, y))
-            {
+            if (const pixel_type* p = pix_value_ptr(x, y)) {
                 return p->get();
             }
             return color_type::no_color();
@@ -1789,8 +1703,7 @@ namespace OHOS
             pixel_type v;
             v.set(c);
             pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
+            do {
                 *p = v;
                 p = p->next();
             } while (--len);
@@ -1803,8 +1716,7 @@ namespace OHOS
         {
             pixel_type v;
             v.set(c);
-            do
-            {
+            do {
                 *pix_value_ptr(x, y++, 1) = v;
             } while (--len);
         }
@@ -1815,33 +1727,23 @@ namespace OHOS
                          const color_type& c,
                          int8u cover)
         {
-            if (!c.is_transparent())
-            {
+            if (!c.is_transparent()) {
                 pixel_type* p = pix_value_ptr(x, y, len);
-                if (c.is_opaque() && cover == cover_mask)
-                {
+                if (c.is_opaque() && cover == cover_mask) {
                     pixel_type v;
                     v.set(c);
-                    do
-                    {
+                    do {
                         *p = v;
                         p = p->next();
                     } while (--len);
-                }
-                else
-                {
-                    if (cover == cover_mask)
-                    {
-                        do
-                        {
+                } else {
+                    if (cover == cover_mask) {
+                        do {
                             blend_pix(p, c);
                             p = p->next();
                         } while (--len);
-                    }
-                    else
-                    {
-                        do
-                        {
+                    } else {
+                        do {
                             blend_pix(p, c, cover);
                             p = p->next();
                         } while (--len);
@@ -1856,30 +1758,20 @@ namespace OHOS
                          const color_type& c,
                          int8u cover)
         {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque() && cover == cover_mask)
-                {
+            if (!c.is_transparent()) {
+                if (c.is_opaque() && cover == cover_mask) {
                     pixel_type v;
                     v.set(c);
-                    do
-                    {
+                    do {
                         *pix_value_ptr(x, y++, 1) = v;
                     } while (--len);
-                }
-                else
-                {
-                    if (cover == cover_mask)
-                    {
-                        do
-                        {
+                } else {
+                    if (cover == cover_mask) {
+                        do {
                             blend_pix(pix_value_ptr(x, y++, 1), c, c.a);
                         } while (--len);
-                    }
-                    else
-                    {
-                        do
-                        {
+                    } else {
+                        do {
                             blend_pix(pix_value_ptr(x, y++, 1), c, cover);
                         } while (--len);
                     }
@@ -1893,17 +1785,12 @@ namespace OHOS
                                const color_type& c,
                                const int8u* covers)
         {
-            if (!c.is_transparent())
-            {
+            if (!c.is_transparent()) {
                 pixel_type* p = pix_value_ptr(x, y, len);
-                do
-                {
-                    if (c.is_opaque() && *covers == cover_mask)
-                    {
+                do {
+                    if (c.is_opaque() && *covers == cover_mask) {
                         p->set(c);
-                    }
-                    else
-                    {
+                    } else {
                         blend_pix(p, c, *covers);
                     }
                     p = p->next();
@@ -1918,17 +1805,12 @@ namespace OHOS
                                const color_type& c,
                                const int8u* covers)
         {
-            if (!c.is_transparent())
-            {
-                do
-                {
+            if (!c.is_transparent()) {
+                do {
                     pixel_type* p = pix_value_ptr(x, y++, 1);
-                    if (c.is_opaque() && *covers == cover_mask)
-                    {
+                    if (c.is_opaque() && *covers == cover_mask) {
                         p->set(c);
-                    }
-                    else
-                    {
+                    } else {
                         blend_pix(p, c, *covers);
                     }
                     ++covers;
@@ -1942,8 +1824,7 @@ namespace OHOS
                               const color_type* colors)
         {
             pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
+            do {
                 p->set(*colors++);
                 p = p->next();
             } while (--len);
@@ -1954,8 +1835,7 @@ namespace OHOS
                               unsigned len,
                               const color_type* colors)
         {
-            do
-            {
+            do {
                 pix_value_ptr(x, y++, 1)->set(*colors++);
             } while (--len);
         }
@@ -1968,28 +1848,19 @@ namespace OHOS
                                int8u cover)
         {
             pixel_type* p = pix_value_ptr(x, y, len);
-            if (covers)
-            {
-                do
-                {
+            if (covers) {
+                do {
                     copy_or_blend_pix(p, *colors++, *covers++);
                     p = p->next();
                 } while (--len);
-            }
-            else
-            {
-                if (cover == cover_mask)
-                {
-                    do
-                    {
+            } else {
+                if (cover == cover_mask) {
+                    do {
                         copy_or_blend_pix(p, *colors++);
                         p = p->next();
                     } while (--len);
-                }
-                else
-                {
-                    do
-                    {
+                } else {
+                    do {
                         copy_or_blend_pix(p, *colors++, cover);
                         p = p->next();
                     } while (--len);
@@ -2004,26 +1875,17 @@ namespace OHOS
                                const int8u* covers,
                                int8u cover)
         {
-            if (covers)
-            {
-                do
-                {
+            if (covers) {
+                do {
                     copy_or_blend_pix(pix_value_ptr(x, y++, 1), *colors++, *covers++);
                 } while (--len);
-            }
-            else
-            {
-                if (cover == cover_mask)
-                {
-                    do
-                    {
+            } else {
+                if (cover == cover_mask) {
+                    do {
                         copy_or_blend_pix(pix_value_ptr(x, y++, 1), *colors++);
                     } while (--len);
-                }
-                else
-                {
-                    do
-                    {
+                } else {
+                    do {
                         copy_or_blend_pix(pix_value_ptr(x, y++, 1), *colors++, cover);
                     } while (--len);
                 }
@@ -2034,15 +1896,12 @@ namespace OHOS
         template <class Function>
         void for_each_pixel(Function f)
         {
-            for (unsigned y = 0; y < height(); ++y)
-            {
-                rowData r = m_rbuf->row(y);
-                if (r.ptr)
-                {
+            for (unsigned y = 0; y < height(); ++y) {
+                rowData r = m_rbuf->Row(y);
+                if (r.ptr) {
                     unsigned len = r.x2 - r.x1 + 1;
                     pixel_type* p = pix_value_ptr(r.x1, y, len);
-                    do
-                    {
+                    do {
                         f(p->c);
                         p = p->next();
                     } while (--len);
@@ -2083,9 +1942,8 @@ namespace OHOS
                        int xsrc, int ysrc,
                        unsigned len)
         {
-            if (const int8u* p = from.row_ptr(ysrc))
-            {
-                std::memmove(m_rbuf->row_ptr(xdst, ydst, len) + xdst * pix_width,
+            if (const int8u* p = from.RowPtr(ysrc)) {
+                std::memmove(m_rbuf->RowPtr(xdst, ydst, len) + xdst * pix_width,
                              p + xsrc * pix_width,
                              len * pix_width);
             }
@@ -2102,33 +1960,26 @@ namespace OHOS
         {
             typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
+            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc)) {
                 pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
                 int srcinc = 1;
                 int dstinc = 1;
 
-                if (xdst > xsrc)
-                {
+                if (xdst > xsrc) {
                     psrc = psrc->advance(len - 1);
                     pdst = pdst->advance(len - 1);
                     srcinc = -1;
                     dstinc = -1;
                 }
 
-                if (cover == cover_mask)
-                {
-                    do
-                    {
+                if (cover == cover_mask) {
+                    do {
                         copy_or_blend_pix(pdst, psrc->get());
                         psrc = psrc->advance(srcinc);
                         pdst = pdst->advance(dstinc);
                     } while (--len);
-                }
-                else
-                {
-                    do
-                    {
+                } else {
+                    do {
                         copy_or_blend_pix(pdst, psrc->get(), cover);
                         psrc = psrc->advance(srcinc);
                         pdst = pdst->advance(dstinc);
@@ -2150,12 +2001,10 @@ namespace OHOS
             typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
             typedef typename SrcPixelFormatRenderer::color_type src_color_type;
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
+            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc)) {
                 pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
 
-                do
-                {
+                do {
                     copy_or_blend_pix(pdst, color,
                                       src_color_type::scale_cover(cover, psrc->c[0]));
                     psrc = psrc->next();
@@ -2177,23 +2026,17 @@ namespace OHOS
         {
             typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
+            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc)) {
                 pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
 
-                if (cover == cover_mask)
-                {
-                    do
-                    {
+                if (cover == cover_mask) {
+                    do {
                         copy_or_blend_pix(pdst, color_lut[psrc->c[0]]);
                         psrc = psrc->next();
                         pdst = pdst->next();
                     } while (--len);
-                }
-                else
-                {
-                    do
-                    {
+                } else {
+                    do {
                         copy_or_blend_pix(pdst, color_lut[psrc->c[0]], cover);
                         psrc = psrc->next();
                         pdst = pdst->next();
@@ -2209,8 +2052,7 @@ namespace OHOS
 
     //================================================pixfmt_custom_blend_rgba
     template <class Blender, class RenBuf>
-    class pixfmt_custom_blend_rgba
-    {
+    class pixfmt_custom_blend_rgba {
     public:
         typedef pixfmt_rgba_tag pixfmt_category;
         typedef RenBuf rbuf_type;
@@ -2226,8 +2068,7 @@ namespace OHOS
             pix_step = 4,
             pix_width = sizeof(value_type) * pix_step,
         };
-        struct pixel_type
-        {
+        struct pixel_type {
             value_type c[num_components];
 
             void set(value_type r, value_type g, value_type b, value_type a)
@@ -2291,14 +2132,10 @@ namespace OHOS
         //--------------------------------------------------------------------
         AGG_INLINE void copy_or_blend_pix(pixel_type* p, const color_type& c, unsigned cover = cover_full)
         {
-            if (!c.is_transparent())
-            {
-                if (c.is_opaque() && cover == cover_mask)
-                {
+            if (!c.is_transparent()) {
+                if (c.is_opaque() && cover == cover_mask) {
                     p->set(c.r, c.g, c.b, c.a);
-                }
-                else
-                {
+                } else {
                     blend_pix(p, c, cover);
                 }
             }
@@ -2325,10 +2162,9 @@ namespace OHOS
         bool attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
         {
             rect_i r(x1, y1, x2, y2);
-            if (r.clip(rect_i(0, 0, pixf.width() - 1, pixf.height() - 1)))
-            {
+            if (r.clip(rect_i(0, 0, pixf.width() - 1, pixf.height() - 1))) {
                 int stride = pixf.stride();
-                m_rbuf->attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1),
+                m_rbuf->Attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1),
                                (r.x2 - r.x1) + 1,
                                (r.y2 - r.y1) + 1,
                                stride);
@@ -2364,38 +2200,38 @@ namespace OHOS
         //--------------------------------------------------------------------
         AGG_INLINE int8u* row_ptr(int y)
         {
-            return m_rbuf->row_ptr(y);
+            return m_rbuf->RowPtr(y);
         }
         AGG_INLINE const int8u* row_ptr(int y) const
         {
-            return m_rbuf->row_ptr(y);
+            return m_rbuf->RowPtr(y);
         }
         AGG_INLINE rowData row(int y) const
         {
-            return m_rbuf->row(y);
+            return m_rbuf->Row(y);
         }
 
         //--------------------------------------------------------------------
         AGG_INLINE int8u* pix_ptr(int x, int y)
         {
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
+            return m_rbuf->RowPtr(y) + sizeof(value_type) * (x * pix_step);
         }
 
         AGG_INLINE const int8u* pix_ptr(int x, int y) const
         {
-            return m_rbuf->row_ptr(y) + sizeof(value_type) * (x * pix_step);
+            return m_rbuf->RowPtr(y) + sizeof(value_type) * (x * pix_step);
         }
 
         // Return pointer to pixel value, forcing row to be allocated.
         AGG_INLINE pixel_type* pix_value_ptr(int x, int y, unsigned len)
         {
-            return (pixel_type*)(m_rbuf->row_ptr(x, y, len) + sizeof(value_type) * (x * pix_step));
+            return (pixel_type*)(m_rbuf->RowPtr(x, y, len) + sizeof(value_type) * (x * pix_step));
         }
 
         // Return pointer to pixel value, or null if row not allocated.
         AGG_INLINE const pixel_type* pix_value_ptr(int x, int y) const
         {
-            int8u* p = m_rbuf->row_ptr(y);
+            int8u* p = m_rbuf->RowPtr(y);
             return p ? (pixel_type*)(p + sizeof(value_type) * (x * pix_step)) : 0;
         }
 
@@ -2420,8 +2256,7 @@ namespace OHOS
         //--------------------------------------------------------------------
         AGG_INLINE color_type pixel(int x, int y) const
         {
-            if (const pixel_type* p = pix_value_ptr(x, y))
-            {
+            if (const pixel_type* p = pix_value_ptr(x, y)) {
                 return p->get();
             }
             return color_type::no_color();
@@ -2447,8 +2282,7 @@ namespace OHOS
             pixel_type v;
             v.set(c);
             pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
+            do {
                 *p = v;
                 p = p->next();
             } while (--len);
@@ -2461,8 +2295,7 @@ namespace OHOS
         {
             pixel_type v;
             v.set(c);
-            do
-            {
+            do {
                 *pix_value_ptr(x, y++, 1) = v;
             } while (--len);
         }
@@ -2472,8 +2305,7 @@ namespace OHOS
                          const color_type& c, int8u cover)
         {
             pixel_type* p = pix_value_ptr(x, y, len);
-            do
-            {
+            do {
                 blend_pix(p, c, cover);
                 p = p->next();
             } while (--len);
@@ -2483,8 +2315,7 @@ namespace OHOS
         void blend_vline(int x, int y, unsigned len,
                          const color_type& c, int8u cover)
         {
-            do
-            {
+            do {
                 blend_pix(pix_value_ptr(x, y++, 1), c, cover);
             } while (--len);
         }
@@ -2495,8 +2326,7 @@ namespace OHOS
         {
             pixel_type* p = pix_value_ptr(x, y, len);
 
-            do
-            {
+            do {
                 blend_pix(p, c, *covers++);
                 p = p->next();
             } while (--len);
@@ -2506,8 +2336,7 @@ namespace OHOS
         void blend_solid_vspan(int x, int y, unsigned len,
                                const color_type& c, const int8u* covers)
         {
-            do
-            {
+            do {
                 blend_pix(pix_value_ptr(x, y++, 1), c, *covers++);
             } while (--len);
         }
@@ -2519,8 +2348,7 @@ namespace OHOS
         {
             pixel_type* p = pix_value_ptr(x, y, len);
 
-            do
-            {
+            do {
                 p->set(*colors++);
                 p = p->next();
             } while (--len);
@@ -2531,8 +2359,7 @@ namespace OHOS
                               unsigned len,
                               const color_type* colors)
         {
-            do
-            {
+            do {
                 pix_value_ptr(x, y++, 1)->set(*colors++);
             } while (--len);
         }
@@ -2545,8 +2372,7 @@ namespace OHOS
         {
             pixel_type* p = pix_value_ptr(x, y, len);
 
-            do
-            {
+            do {
                 blend_pix(p, *colors++, covers ? *covers++ : cover);
                 p = p->next();
             } while (--len);
@@ -2558,8 +2384,7 @@ namespace OHOS
                                const int8u* covers,
                                int8u cover)
         {
-            do
-            {
+            do {
                 blend_pix(pix_value_ptr(x, y++, 1), *colors++, covers ? *covers++ : cover);
             } while (--len);
         }
@@ -2569,15 +2394,12 @@ namespace OHOS
         void for_each_pixel(Function f)
         {
             unsigned y;
-            for (y = 0; y < height(); ++y)
-            {
-                rowData r = m_rbuf->row(y);
-                if (r.ptr)
-                {
+            for (y = 0; y < height(); ++y) {
+                rowData r = m_rbuf->Row(y);
+                if (r.ptr) {
                     unsigned len = r.x2 - r.x1 + 1;
                     pixel_type* p = pix_value_ptr(r.x1, y, len);
-                    do
-                    {
+                    do {
                         f(p->c);
                         p = p->next();
                     } while (--len);
@@ -2618,9 +2440,8 @@ namespace OHOS
                        int xsrc, int ysrc,
                        unsigned len)
         {
-            if (const int8u* p = from.row_ptr(ysrc))
-            {
-                std::memmove(m_rbuf->row_ptr(xdst, ydst, len) + xdst * pix_width,
+            if (const int8u* p = from.row_ptr(ysrc)) {
+                std::memmove(m_rbuf->RowPtr(xdst, ydst, len) + xdst * pix_width,
                              p + xsrc * pix_width,
                              len * pix_width);
             }
@@ -2637,22 +2458,19 @@ namespace OHOS
         {
             typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
+            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc)) {
                 pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
                 int srcinc = 1;
                 int dstinc = 1;
 
-                if (xdst > xsrc)
-                {
+                if (xdst > xsrc) {
                     psrc = psrc->advance(len - 1);
                     pdst = pdst->advance(len - 1);
                     srcinc = -1;
                     dstinc = -1;
                 }
 
-                do
-                {
+                do {
                     blend_pix(pdst, psrc->get(), cover);
                     psrc = psrc->advance(srcinc);
                     pdst = pdst->advance(dstinc);
@@ -2673,12 +2491,10 @@ namespace OHOS
             typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
             typedef typename SrcPixelFormatRenderer::color_type src_color_type;
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
+            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc)) {
                 pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
 
-                do
-                {
+                do {
                     blend_pix(pdst, color,
                               src_color_type::scale_cover(cover, psrc->c[0]));
                     psrc = psrc->next();
@@ -2700,12 +2516,10 @@ namespace OHOS
         {
             typedef typename SrcPixelFormatRenderer::pixel_type src_pixel_type;
 
-            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc))
-            {
+            if (const src_pixel_type* psrc = from.pix_value_ptr(xsrc, ysrc)) {
                 pixel_type* pdst = pix_value_ptr(xdst, ydst, len);
 
-                do
-                {
+                do {
                     blend_pix(pdst, color_lut[psrc->c[0]], cover);
                     psrc = psrc->next();
                     pdst = pdst->next();
@@ -2781,65 +2595,65 @@ namespace OHOS
     typedef blender_rgba_plain<rgba32, order_bgra> blender_bgra128_plain;
 
     //-----------------------------------------------------------------------
-    typedef pixfmt_alpha_blend_rgba<blender_rgba32, rendering_buffer> pixfmt_rgba32;
-    typedef pixfmt_alpha_blend_rgba<blender_argb32, rendering_buffer> pixfmt_argb32;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr32, rendering_buffer> pixfmt_abgr32;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra32, rendering_buffer> pixfmt_bgra32;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba32, RenderingBuffer> pixfmt_rgba32;
+    typedef pixfmt_alpha_blend_rgba<blender_argb32, RenderingBuffer> pixfmt_argb32;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr32, RenderingBuffer> pixfmt_abgr32;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra32, RenderingBuffer> pixfmt_bgra32;
 
-    typedef pixfmt_alpha_blend_rgba<blender_srgba32, rendering_buffer> pixfmt_srgba32;
-    typedef pixfmt_alpha_blend_rgba<blender_sargb32, rendering_buffer> pixfmt_sargb32;
-    typedef pixfmt_alpha_blend_rgba<blender_sabgr32, rendering_buffer> pixfmt_sabgr32;
-    typedef pixfmt_alpha_blend_rgba<blender_sbgra32, rendering_buffer> pixfmt_sbgra32;
+    typedef pixfmt_alpha_blend_rgba<blender_srgba32, RenderingBuffer> pixfmt_srgba32;
+    typedef pixfmt_alpha_blend_rgba<blender_sargb32, RenderingBuffer> pixfmt_sargb32;
+    typedef pixfmt_alpha_blend_rgba<blender_sabgr32, RenderingBuffer> pixfmt_sabgr32;
+    typedef pixfmt_alpha_blend_rgba<blender_sbgra32, RenderingBuffer> pixfmt_sbgra32;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba32_pre, rendering_buffer> pixfmt_rgba32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_argb32_pre, rendering_buffer> pixfmt_argb32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr32_pre, rendering_buffer> pixfmt_abgr32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra32_pre, rendering_buffer> pixfmt_bgra32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba32_pre, RenderingBuffer> pixfmt_rgba32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_argb32_pre, RenderingBuffer> pixfmt_argb32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr32_pre, RenderingBuffer> pixfmt_abgr32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra32_pre, RenderingBuffer> pixfmt_bgra32_pre;
 
-    typedef pixfmt_alpha_blend_rgba<blender_srgba32_pre, rendering_buffer> pixfmt_srgba32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_sargb32_pre, rendering_buffer> pixfmt_sargb32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_sabgr32_pre, rendering_buffer> pixfmt_sabgr32_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_sbgra32_pre, rendering_buffer> pixfmt_sbgra32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_srgba32_pre, RenderingBuffer> pixfmt_srgba32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_sargb32_pre, RenderingBuffer> pixfmt_sargb32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_sabgr32_pre, RenderingBuffer> pixfmt_sabgr32_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_sbgra32_pre, RenderingBuffer> pixfmt_sbgra32_pre;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba32_plain, rendering_buffer> pixfmt_rgba32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_argb32_plain, rendering_buffer> pixfmt_argb32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr32_plain, rendering_buffer> pixfmt_abgr32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra32_plain, rendering_buffer> pixfmt_bgra32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba32_plain, RenderingBuffer> pixfmt_rgba32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_argb32_plain, RenderingBuffer> pixfmt_argb32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr32_plain, RenderingBuffer> pixfmt_abgr32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra32_plain, RenderingBuffer> pixfmt_bgra32_plain;
 
-    typedef pixfmt_alpha_blend_rgba<blender_srgba32_plain, rendering_buffer> pixfmt_srgba32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_sargb32_plain, rendering_buffer> pixfmt_sargb32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_sabgr32_plain, rendering_buffer> pixfmt_sabgr32_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_sbgra32_plain, rendering_buffer> pixfmt_sbgra32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_srgba32_plain, RenderingBuffer> pixfmt_srgba32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_sargb32_plain, RenderingBuffer> pixfmt_sargb32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_sabgr32_plain, RenderingBuffer> pixfmt_sabgr32_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_sbgra32_plain, RenderingBuffer> pixfmt_sbgra32_plain;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba64, rendering_buffer> pixfmt_rgba64;
-    typedef pixfmt_alpha_blend_rgba<blender_argb64, rendering_buffer> pixfmt_argb64;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr64, rendering_buffer> pixfmt_abgr64;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra64, rendering_buffer> pixfmt_bgra64;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba64, RenderingBuffer> pixfmt_rgba64;
+    typedef pixfmt_alpha_blend_rgba<blender_argb64, RenderingBuffer> pixfmt_argb64;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr64, RenderingBuffer> pixfmt_abgr64;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra64, RenderingBuffer> pixfmt_bgra64;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba64_pre, rendering_buffer> pixfmt_rgba64_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_argb64_pre, rendering_buffer> pixfmt_argb64_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr64_pre, rendering_buffer> pixfmt_abgr64_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra64_pre, rendering_buffer> pixfmt_bgra64_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba64_pre, RenderingBuffer> pixfmt_rgba64_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_argb64_pre, RenderingBuffer> pixfmt_argb64_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr64_pre, RenderingBuffer> pixfmt_abgr64_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra64_pre, RenderingBuffer> pixfmt_bgra64_pre;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba64_plain, rendering_buffer> pixfmt_rgba64_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_argb64_plain, rendering_buffer> pixfmt_argb64_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr64_plain, rendering_buffer> pixfmt_abgr64_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra64_plain, rendering_buffer> pixfmt_bgra64_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba64_plain, RenderingBuffer> pixfmt_rgba64_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_argb64_plain, RenderingBuffer> pixfmt_argb64_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr64_plain, RenderingBuffer> pixfmt_abgr64_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra64_plain, RenderingBuffer> pixfmt_bgra64_plain;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba128, rendering_buffer> pixfmt_rgba128;
-    typedef pixfmt_alpha_blend_rgba<blender_argb128, rendering_buffer> pixfmt_argb128;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr128, rendering_buffer> pixfmt_abgr128;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra128, rendering_buffer> pixfmt_bgra128;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba128, RenderingBuffer> pixfmt_rgba128;
+    typedef pixfmt_alpha_blend_rgba<blender_argb128, RenderingBuffer> pixfmt_argb128;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr128, RenderingBuffer> pixfmt_abgr128;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra128, RenderingBuffer> pixfmt_bgra128;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba128_pre, rendering_buffer> pixfmt_rgba128_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_argb128_pre, rendering_buffer> pixfmt_argb128_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr128_pre, rendering_buffer> pixfmt_abgr128_pre;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra128_pre, rendering_buffer> pixfmt_bgra128_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba128_pre, RenderingBuffer> pixfmt_rgba128_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_argb128_pre, RenderingBuffer> pixfmt_argb128_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr128_pre, RenderingBuffer> pixfmt_abgr128_pre;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra128_pre, RenderingBuffer> pixfmt_bgra128_pre;
 
-    typedef pixfmt_alpha_blend_rgba<blender_rgba128_plain, rendering_buffer> pixfmt_rgba128_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_argb128_plain, rendering_buffer> pixfmt_argb128_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_abgr128_plain, rendering_buffer> pixfmt_abgr128_plain;
-    typedef pixfmt_alpha_blend_rgba<blender_bgra128_plain, rendering_buffer> pixfmt_bgra128_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_rgba128_plain, RenderingBuffer> pixfmt_rgba128_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_argb128_plain, RenderingBuffer> pixfmt_argb128_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_abgr128_plain, RenderingBuffer> pixfmt_abgr128_plain;
+    typedef pixfmt_alpha_blend_rgba<blender_bgra128_plain, RenderingBuffer> pixfmt_bgra128_plain;
 
 } // namespace OHOS
 

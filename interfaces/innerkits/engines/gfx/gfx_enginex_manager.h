@@ -60,10 +60,10 @@ namespace OHOS {
         typedef OHOS::blender_rgba_pre<ColorType, ComponentOrder> BlenderPre;
         typedef OHOS::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
 
-        typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::rendering_buffer> PixFormat;
-        typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::rendering_buffer> PixFormatComp;
-        typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::rendering_buffer> PixFormatPre;
-        typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::rendering_buffer> PixFormatCompPre;
+        typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::RenderingBuffer> PixFormat;
+        typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
+        typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
+        typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
         typedef OHOS::pixfmt_bgra32 pixfmt;
 
         typedef OHOS::RendererBase<PixFormat> RendererBase;
@@ -96,7 +96,7 @@ namespace OHOS {
 
         typedef OHOS::conv_transform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
-        typedef OHOS::rendering_buffer RenderingBuffer;
+        typedef OHOS::RenderingBuffer RenderingBuffer;
 
         typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> img_source_type;
 
@@ -173,7 +173,7 @@ namespace OHOS {
         };
 
         struct Image {
-            OHOS::rendering_buffer renBuf;
+            OHOS::RenderingBuffer renBuf;
             Image()
             {}
             Image(unsigned char* buf, unsigned width, unsigned height, int stride) :
@@ -181,7 +181,7 @@ namespace OHOS {
             {}
             void attach(unsigned char* buf, unsigned width, unsigned height, int stride)
             {
-                renBuf.attach(buf, width, height, stride);
+                renBuf.Attach(buf, width, height, stride);
             }
             int width() const
             {
@@ -554,7 +554,7 @@ namespace OHOS {
         {
             return ndashes;
         }
-        OHOS::rendering_buffer GetRenderBuffer() const
+        OHOS::RenderingBuffer GetRenderBuffer() const
         {
             return m_rbuf;
         }
@@ -604,7 +604,7 @@ namespace OHOS {
                 dashes = NULL;
             }
         }
-        OHOS::rendering_buffer m_rbuf;
+        OHOS::RenderingBuffer m_rbuf;
         PixFormat m_pixFormat;
         PixFormatComp m_pixFormatComp;
         PixFormatPre m_pixFormatPre;

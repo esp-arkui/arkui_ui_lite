@@ -189,7 +189,7 @@ namespace OHOS {
     //------------------------------------------------------------------------
     void BaseGfxExtendEngine::attach(unsigned char* buf, unsigned width, unsigned height, int stride)
     {
-        m_rbuf.attach(buf, width, height, stride);
+        m_rbuf.Attach(buf, width, height, stride);
 
         m_renBase.ResetClipping(true);
         m_renBaseComp.ResetClipping(true);
