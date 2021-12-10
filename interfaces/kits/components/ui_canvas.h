@@ -171,6 +171,7 @@ public:
     {
         m_graphics = std::make_shared<BaseGfxExtendEngine>();
         m_transform.Reset();
+        this->save();
         //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
     }
     Paint(const Paint& paint)
@@ -701,6 +702,21 @@ public:
     GradientControl getGradientControl() const{
         return gradientControl;
     }
+    /* 保存历史状态 */
+    void save()
+    {
+        m_stack.push(*this);
+    }
+    /* 恢复到上次历史状态 */
+    void restore()
+    {
+        if (m_stack.empty())
+        {
+            return;
+        }
+        Init(m_stack.top());
+        m_stack.pop();
+    }
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -732,6 +748,9 @@ private:
     double rotateAngle;
     double scaleX;
     double scaleY;
+
+    //保存历史修改信息
+    std::stack<Paint> m_stack;
 
 };
 
