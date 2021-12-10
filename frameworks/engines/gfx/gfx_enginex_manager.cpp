@@ -531,7 +531,7 @@ namespace OHOS {
         m_fillRadialMatrix *= OHOS::TransAffineTranslation(end_x, end_y);
         m_fillRadialMatrix *= m_transform;
         m_fillRadialMatrix.Invert();
-        m_interpolator_type.transformer(m_fillRadialMatrix);
+        m_interpolator_type.SetTransformer(m_fillRadialMatrix);
         m_fillGradientD1 = start_r;
         m_fillGradientD2 = end_r;
         m_radialGradientFunction = OHOS::GradientRadialCalculate(end_r, start_x - end_x, start_y - end_y);
