@@ -341,7 +341,7 @@ void UITestCanvas::UIKitCanvasTestDrawShadow001()
     paint.SetRotateCenter(60,60);
     paint.SetRotateAngle(10.0);
     paint.SetScale(2.0,2.0);
-    // paint.SetShadowBlurRadius(5);
+    paint.SetShadowBlurRadius(5);
     gradientControl.createLinearGradient(60,60,160,110);
     gradientControl.addColorStop(0,Color::Yellow());
     gradientControl.addColorStop(0.3,Color::White());
