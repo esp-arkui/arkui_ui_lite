@@ -36,7 +36,7 @@ namespace OHOS
     class row_accessor
     {
     public:
-        typedef const_row_info<T> row_data;
+        using rowData = const_row_info<T>;
         row_accessor() :
             buf(0),
             start(0),
@@ -130,9 +130,9 @@ namespace OHOS
         /**
          * @brief row 获取行数据
          */
-        AGG_INLINE row_data row(int y) const
+        AGG_INLINE rowData row(int y) const
         {
-            return row_data(0, width - 1, row_ptr(y));
+            return rowData(0, width - 1, row_ptr(y));
         }
 
         /**
@@ -143,14 +143,15 @@ namespace OHOS
         {
             unsigned h = GetHeight();
             if (src.height() < h)
+            {
                 h = src.height();
-
+            }
             unsigned l = GetStrideAbs();
             if (src.stride_abs() < l)
+            {
                 l = src.stride_abs();
-
+            }
             l *= sizeof(T);
-
             unsigned y;
             unsigned w = GetWidth();
             for (y = 0; y < h; y++)
@@ -188,9 +189,9 @@ namespace OHOS
     };
 
 #ifdef RENDERING_BUFFER
-    typedef RENDERING_BUFFER rendering_buffer;
+    using rendering_buffer = RENDERING_BUFFER;
 #else
-    typedef row_accessor<int8u> rendering_buffer;
+    using rendering_buffer = row_accessor<int8u>;
 #endif
 
 } // namespace OHOS
