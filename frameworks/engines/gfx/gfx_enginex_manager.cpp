@@ -37,25 +37,19 @@ namespace OHOS {
         m_renBaseCompPre(m_pixFormatCompPre),
         m_renSolid(m_renBase),
         m_renSolidComp(m_renBaseComp),
-
         m_allocator(),
         m_clipBox(0, 0, 0, 0),
-
         m_blendMode(BlendAlpha),
         m_imageBlendMode(BlendDst),
         m_imageBlendColor(0, 0, 0),
-
         m_scanline(),
         m_rasterizer(),
-
         m_masterAlpha(1.0),
         m_antiAliasGamma(1.0),
-
         m_fillColor(255, 255, 255),
         m_lineColor(0, 0, 0),
         m_fillGradient(),
         m_lineGradient(),
-
         m_lineCap(CapRound),
         m_lineJoin(JoinRound),
         m_miterLimit(10),
@@ -68,20 +62,15 @@ namespace OHOS {
         m_lineGradientD1(0.0),
         m_fillGradientD2(100.0),
         m_lineGradientD2(100.0),
-
         m_fillGradientInterpolator(m_fillGradientMatrix),
         m_lineGradientInterpolator(m_lineGradientMatrix),
         m_interpolator_type(m_fillRadialMatrix),
-
         m_linearGradientFunction(),
         m_radialGradientFunction(),
-
         m_lineWidth(1),
         m_evenOddFlag(false),
-
         m_path(),
         m_transform(),
-
         m_convCurve(m_path),
         m_convDashCurve(m_convCurve),
         m_convStroke(m_convCurve),
@@ -124,28 +113,22 @@ namespace OHOS {
         m_pixFormatPre = PixFormatPre(m_rbuf);
         m_pixFormatCompPre = PixFormatCompPre(m_rbuf);
         m_renBase = RendererBase(m_pixFormat);
-
         m_renBaseComp = RendererBaseComp(m_pixFormatComp);
         m_renBasePre = RendererBasePre(m_pixFormatPre);
         m_renBaseCompPre = RendererBaseCompPre(m_pixFormatCompPre);
         m_renSolid = RendererSolid(m_renBase);
         m_renSolidComp = RendererSolidComp(m_renBaseComp);
-
         m_allocator = o.m_allocator;
         m_clipBox = o.m_clipBox;
-
         m_blendMode = o.m_blendMode;
         m_imageBlendMode = o.BlendDst;
         m_imageBlendColor = o.m_imageBlendColor;
-
         m_masterAlpha = o.m_masterAlpha;
         m_antiAliasGamma = o.m_antiAliasGamma;
-
         m_fillColor = o.m_fillColor;
         m_lineColor = o.m_lineColor;
         m_fillGradient = o.m_fillGradient;
         m_lineGradient = o.m_lineGradient;
-
         m_lineCap = o.m_lineCap;
         m_lineJoin = o.m_lineJoin;
         m_miterLimit = o.m_miterLimit;
@@ -155,10 +138,8 @@ namespace OHOS {
         m_lineGradientD1 = o.m_lineGradientD1;
         m_fillGradientD2 = o.m_fillGradientD2;
         m_lineGradientD2 = o.m_lineGradientD2;
-
         m_linearGradientFunction = o.m_linearGradientFunction;
         m_radialGradientFunction = o.m_radialGradientFunction;
-
         m_lineWidth = o.m_lineWidth;
         m_evenOddFlag = o.m_evenOddFlag;
         m_transform = o.m_transform;
@@ -167,7 +148,6 @@ namespace OHOS {
         shadowOffsetX_ = o.shadowOffsetX_;
         shadowOffsetY_ = o.shadowOffsetY_;
         is_dash = o.is_dash;
-        // set dashes
         if (is_dash) {
             ndashes = o.ndashes;
             dDashOffset = o.dDashOffset;
@@ -177,8 +157,6 @@ namespace OHOS {
                     dashes[i] = o.dashes[i];
                 }
             } else {
-                //memory alloc error, ignore this dash
-                //I think it is never happen.
                 ndashes = 0;
                 dDashOffset = 0;
                 is_dash = false;
@@ -186,16 +164,13 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::attach(unsigned char* buf, unsigned width, unsigned height, int stride)
     {
         m_rbuf.Attach(buf, width, height, stride);
-
         m_renBase.ResetClipping(true);
         m_renBaseComp.ResetClipping(true);
         m_renBasePre.ResetClipping(true);
         m_renBaseCompPre.ResetClipping(true);
-
         resetTransformations();
         lineWidth(1.0),
             lineColor(0, 0, 0);
@@ -209,13 +184,11 @@ namespace OHOS {
         m_blendMode = BlendAlpha;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::attach(Image& img)
     {
         attach(img.renBuf.GetBuf(), img.renBuf.GetWidth(), img.renBuf.GetHeight(), img.renBuf.GetStride());
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::clipBox(double x1, double y1, double x2, double y2)
     {
         m_clipBox = RectD(x1, y1, x2, y2);
@@ -232,7 +205,6 @@ namespace OHOS {
         m_rasterizer.clip_box(x1, y1, x2, y2);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::blendMode(BlendMode m)
     {
         m_blendMode = m;
@@ -240,43 +212,36 @@ namespace OHOS {
         m_pixFormatCompPre.comp_op(m);
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::BlendMode BaseGfxExtendEngine::blendMode() const
     {
         return m_blendMode;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::imageBlendMode(BlendMode m)
     {
         m_imageBlendMode = m;
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::BlendMode BaseGfxExtendEngine::imageBlendMode() const
     {
         return m_imageBlendMode;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::imageBlendColor(Color c)
     {
         m_imageBlendColor = c;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::imageBlendColor(unsigned r, unsigned g, unsigned b, unsigned a)
     {
         imageBlendColor(Color(r, g, b, a));
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::Color BaseGfxExtendEngine::imageBlendColor() const
     {
         return m_imageBlendColor;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::masterAlpha(double a)
     {
         if (m_masterAlpha != a) {
@@ -285,56 +250,47 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     double BaseGfxExtendEngine::masterAlpha() const
     {
         return m_masterAlpha;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::antiAliasGamma(double g)
     {
         m_antiAliasGamma = g;
         updateRasterizerGamma();
     }
 
-    //------------------------------------------------------------------------
     double BaseGfxExtendEngine::antiAliasGamma() const
     {
         return m_antiAliasGamma;
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::RectD BaseGfxExtendEngine::clipBox() const
     {
         return m_clipBox;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::clearAll(Color c)
     {
         m_renBase.Clear(c);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::clearAll(unsigned r, unsigned g, unsigned b, unsigned a)
     {
         clearAll(Color(r, g, b, a));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::worldToScreen(double& x, double& y) const
     {
         m_transform.Transform(&x, &y);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::screenToWorld(double& x, double& y) const
     {
         m_transform.InverseTransform(&x, &y);
     }
 
-    //------------------------------------------------------------------------
     double BaseGfxExtendEngine::worldToScreen(double scalar) const
     {
         double x1 = 0;
@@ -346,7 +302,6 @@ namespace OHOS {
         return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) * 0.7071068;
     }
 
-    //------------------------------------------------------------------------
     double BaseGfxExtendEngine::screenToWorld(double scalar) const
     {
         double x1 = 0;
@@ -358,7 +313,6 @@ namespace OHOS {
         return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) * 0.7071068;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::alignPoint(double& x, double& y) const
     {
         worldToScreen(x, y);
@@ -367,20 +321,17 @@ namespace OHOS {
         screenToWorld(x, y);
     }
 
-    //------------------------------------------------------------------------
     bool BaseGfxExtendEngine::inBox(double worldX, double worldY) const
     {
         worldToScreen(worldX, worldY);
         return m_renBase.Inbox(int(worldX), int(worldY));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::resetTransformations()
     {
         m_transform.Reset();
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::rotate(double angle)
     {
         m_transform *= OHOS::TransAffineRotation(angle);
@@ -391,7 +342,6 @@ namespace OHOS {
         m_transform *= OHOS::TransAffineTranslation(x, y);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::affine(const Affine& tr)
     {
         m_transform *= tr;
@@ -403,14 +353,12 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::affine(const Transformations& tr)
     {
         affine(OHOS::TransAffine(tr.affineMatrix[0], tr.affineMatrix[1], tr.affineMatrix[2],
                                  tr.affineMatrix[3], tr.affineMatrix[4], tr.affineMatrix[5]));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::scale(double sx, double sy)
     {
         m_transform *= OHOS::TransAffineScaling(sx, sy);
@@ -422,7 +370,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::viewport(double worldX1, double worldY1, double worldX2, double worldY2,
                                        double screenX1, double screenY1, double screenX2, double screenY2,
                                        ViewportOption opt)
@@ -451,51 +398,43 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::fillColor(Color c)
     {
         m_fillColor = c;
         m_fillGradientFlag = Solid;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::fillColor(unsigned r, unsigned g, unsigned b, unsigned a)
     {
         fillColor(Color(r, g, b, a));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::noFill()
     {
         fillColor(Color(0, 0, 0, 0));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::lineColor(Color c)
     {
         m_lineColor = c;
         m_lineGradientFlag = Solid;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::lineColor(unsigned r, unsigned g, unsigned b, unsigned a)
     {
         lineColor(Color(r, g, b, a));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::noLine()
     {
         lineColor(Color(0, 0, 0, 0));
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::Color BaseGfxExtendEngine::fillColor() const
     {
         return m_fillColor;
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::Color BaseGfxExtendEngine::lineColor() const
     {
         return m_lineColor;
@@ -504,7 +443,7 @@ namespace OHOS {
     {
         fillColor(Color(c.red, c.green, c.blue, c.alpha));
     }
-    //------------------------------------------------------------------------
+
     void BaseGfxExtendEngine::lineColor(const OHOS::ColorType& c)
     {
         lineColor(Color(c.red, c.green, c.blue, c.alpha));
@@ -550,9 +489,9 @@ namespace OHOS {
         m_fillGradientD1 = 0.0;
         m_fillGradientD2 = sqrt((end_x - start_x) * (end_x - start_x) + (end_y - start_y) * (end_y - start_y));
         m_fillGradientFlag = Linear;
-        m_fillColor = Color(0, 0, 0); // Set some real color
+        m_fillColor = Color(0, 0, 0);
     }
-    //------------------------------------------------------------------------
+
     void BaseGfxExtendEngine::lineWidth(double w)
     {
         if (w < 0.0) {
@@ -566,26 +505,22 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     double BaseGfxExtendEngine::lineWidth() const
     {
         return m_lineWidth;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::fillEvenOdd(bool evenOddFlag)
     {
         m_evenOddFlag = evenOddFlag;
         m_rasterizer.filling_rule(evenOddFlag ? OHOS::fill_even_odd : OHOS::fill_non_zero);
     }
 
-    //------------------------------------------------------------------------
     bool BaseGfxExtendEngine::fillEvenOdd() const
     {
         return m_evenOddFlag;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::lineCap(LineCap cap)
     {
         m_lineCap = cap;
@@ -596,13 +531,11 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::LineCap BaseGfxExtendEngine::lineCap() const
     {
         return m_lineCap;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::lineJoin(LineJoin join)
     {
         m_lineJoin = join;
@@ -613,7 +546,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     BaseGfxExtendEngine::LineJoin BaseGfxExtendEngine::lineJoin() const
     {
         return m_lineJoin;
@@ -634,14 +566,12 @@ namespace OHOS {
         return m_miterLimit;
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::addLine(double x1, double y1, double x2, double y2)
     {
         m_path.MoveTo(x1, y1);
         m_path.LineTo(x2, y2);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::line(double x1, double y1, double x2, double y2)
     {
         m_path.RemoveAll();
@@ -649,7 +579,6 @@ namespace OHOS {
         drawPath(StrokeOnly);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::triangle(double x1, double y1, double x2, double y2, double x3, double y3)
     {
         m_path.RemoveAll();
@@ -660,7 +589,6 @@ namespace OHOS {
         drawPath(FillAndStroke);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::rectangle(double x1, double y1, double x2, double y2)
     {
         m_path.RemoveAll();
@@ -682,20 +610,16 @@ namespace OHOS {
         stroke();
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2, double r)
     {
         m_path.RemoveAll();
         OHOS::rounded_rect rc(x1, y1, x2, y2, r);
         rc.normalize_radius();
         rc.SetApproximationScale(worldToScreen(1.0) * g_approxScale);
-        // JME audit
-        //m_path.add_path(rc, 0, false);
         m_path.ConcatPath(rc, 0);
         drawPath(FillAndStroke);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2, double rx, double ry)
     {
         m_path.RemoveAll();
@@ -708,7 +632,6 @@ namespace OHOS {
         drawPath(FillAndStroke);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2,
                                           double rx_bottom, double ry_bottom,
                                           double rx_top, double ry_top)
@@ -719,12 +642,10 @@ namespace OHOS {
         rc.radius(rx_bottom, ry_bottom, rx_top, ry_top);
         rc.normalize_radius();
         rc.SetApproximationScale(worldToScreen(1.0) * g_approxScale);
-        //m_path.add_path(rc, 0, false);
-        m_path.ConcatPath(rc, 0); // JME
+        m_path.ConcatPath(rc, 0);
         drawPath(FillAndStroke);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
     {
         m_path.RemoveAll();
@@ -734,7 +655,6 @@ namespace OHOS {
         drawPath(FillAndStroke);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::arc(double cx, double cy, double rx, double ry, double start, double sweep)
     {
         m_path.RemoveAll();
@@ -744,7 +664,6 @@ namespace OHOS {
         drawPath(StrokeOnly);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::star(double cx, double cy, double r1, double r2, double startAngle, int numRays)
     {
         m_path.RemoveAll();
@@ -765,44 +684,37 @@ namespace OHOS {
         closePolygon();
         drawPath(FillAndStroke);
     }
-    //------------------------------------------------------------------------
+
     void BaseGfxExtendEngine::polygon(double* xy, int numPoints)
     {
         m_path.RemoveAll();
-        //m_path.add_poly(xy, numPoints);
-        m_path.ConcatPoly(xy, 0, true); // JME
+        m_path.ConcatPoly(xy, 0, true);
         closePolygon();
         drawPath(FillAndStroke);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::polyline(double* xy, int numPoints)
     {
         m_path.RemoveAll();
-        //m_path.add_poly(xy, numPoints);
-        m_path.ConcatPoly(xy, 0, true); // JME
+        m_path.ConcatPoly(xy, 0, true);
         drawPath(StrokeOnly);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::resetPath()
     {
         m_path.RemoveAll();
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::moveTo(double x, double y)
     {
         m_path.MoveTo(x, y);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::lineTo(double x, double y)
     {
         m_path.LineTo(x, y);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::arcTo(double rx, double ry,
                                     double angle,
                                     bool largeArcFlag,
@@ -812,13 +724,11 @@ namespace OHOS {
         m_path.ArcTo(rx, ry, angle, largeArcFlag, sweepFlag, x, y);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::closePolygon()
     {
         m_path.ClosePolygon();
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
                                              double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias)
     {
@@ -832,7 +742,6 @@ namespace OHOS {
         renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias)
     {
         resetPath();
@@ -846,7 +755,6 @@ namespace OHOS {
         renderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
                                              const double* parallelogram, bool isAntiAlias)
     {
@@ -860,7 +768,6 @@ namespace OHOS {
         renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImage(const Image& img, const double* parallelogram, bool isAntiAlias)
     {
         resetPath();
@@ -874,7 +781,6 @@ namespace OHOS {
         renderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImagePath(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
                                                  double dstX1, double dstY1, double dstX2, double dstY2)
     {
@@ -882,21 +788,18 @@ namespace OHOS {
         renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImagePath(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2)
     {
         double parallelogram[6] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
         renderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImagePath(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
                                                  const double* parallelogram)
     {
         renderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::transformImagePath(const Image& img, const double* parallelogram)
     {
         renderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
@@ -955,7 +858,7 @@ namespace OHOS {
         m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
         m_transform *= OHOS::TransAffineTranslation(x, y);
     }
-    //------------------------------------------------------------------------
+
     void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     {
         m_rasterizer.reset();
@@ -1024,21 +927,16 @@ namespace OHOS {
         render(false);
     }
 
-    //------------------------------------------------------------------------
     class BaseGfxExtendEngineRenderer {
     public:
-        //--------------------------------------------------------------------
         template <class BaseRenderer, class SolidRenderer>
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, bool fillColor)
         {
-            // JME
             typedef OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType> span_allocator_type;
-            //- typedef OHOS::RenderScanlinesAntiAlias<BaseRenderer, BaseGfxExtendEngine::LinearGradientSpan> RendererLinearGradient;
             typedef OHOS::RendererScanlineAntiAlias<BaseRenderer,
                                                     span_allocator_type,
                                                     BaseGfxExtendEngine::LinearGradientSpan>
                 RendererLinearGradient;
-            //- typedef OHOS::RenderScanlinesAntiAlias<BaseRenderer, BaseGfxExtendEngine::RadialGradientSpan> RendererRadialGradient;
             typedef OHOS::RendererScanlineAntiAlias<BaseRenderer,
                                                     span_allocator_type,
                                                     BaseGfxExtendEngine::RadialGradientSpan>
@@ -1046,18 +944,15 @@ namespace OHOS {
 
             if (gr.m_fillGradientFlag == BaseGfxExtendEngine::Linear) {
                 if (fillColor) {
-                    BaseGfxExtendEngine::LinearGradientSpan span(/*gr.m_allocator, */
-                                                                 gr.m_fillGradientInterpolator,
+                    BaseGfxExtendEngine::LinearGradientSpan span(gr.m_fillGradientInterpolator,
                                                                  gr.m_linearGradientFunction,
                                                                  gr.m_fillRadialGradient,
                                                                  gr.m_fillGradientD1,
                                                                  gr.m_fillGradientD2);
-                    //-RendererLinearGradient ren(renBase,span);
                     RendererLinearGradient ren(renBase, gr.m_allocator, span);
                     OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, ren);
                 } else {
-                    BaseGfxExtendEngine::LinearGradientSpan span(/*gr.m_allocator,*/
-                                                                 gr.m_fillGradientInterpolator,
+                    BaseGfxExtendEngine::LinearGradientSpan span(gr.m_fillGradientInterpolator,
                                                                  gr.m_linearGradientFunction,
                                                                  gr.m_fillRadialGradient,
                                                                  gr.m_fillGradientD1,
@@ -1073,7 +968,6 @@ namespace OHOS {
                         gr.m_fillRadialGradient,
                         gr.m_fillGradientD1,
                         gr.m_fillGradientD2);
-                    //-RendererRadialGradient ren(renBase, span);
                     RendererRadialGradient ren(renBase, gr.m_allocator, span);
                     OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, ren);
                 } else {
@@ -1083,10 +977,6 @@ namespace OHOS {
                         gr.m_fillRadialGradient,
                         gr.m_fillGradientD1,
                         gr.m_fillGradientD2);
-                    //-RendererRadialGradient ren(renBase, span);
-                    //                    RendererRadialGradient ren(renBase,gr.m_allocator,span);
-                    //                    OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, ren);
-                    //                    OHOS::scanline_p8 m_sl;
                     OHOS::RenderScanlinesAntiAlias(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
                 }
             } else {
@@ -1095,7 +985,6 @@ namespace OHOS {
             }
         }
 
-        //--------------------------------------------------------------------
         class SpanConvImageBlend {
         public:
             SpanConvImageBlend(BaseGfxExtendEngine::BlendMode m, BaseGfxExtendEngine::Color c) :
@@ -1139,7 +1028,6 @@ namespace OHOS {
             BaseGfxExtendEngine::Color m_color;
         };
 
-        //--------------------------------------------------------------------
         template <class BaseRenderer, class SolidRenderer, class Rasterizer, class Scanline>
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
@@ -1174,14 +1062,10 @@ namespace OHOS {
             }
         }
 
-        //--------------------------------------------------------------------
-        //! JME - this is where the bulk of the changes have taken place.
         template <class BaseRenderer, class Interpolator>
         static void renderImage(BaseGfxExtendEngine& gr, const BaseGfxExtendEngine::Image& img,
                                 BaseRenderer& renBase, Interpolator& interpolator)
         {
-            //! JME - have not quite figured which part of this is not const-correct
-            // hence the cast.
             BaseGfxExtendEngine::Image& imgc = const_cast<BaseGfxExtendEngine::Image&>(img);
             BaseGfxExtendEngine::PixFormat img_pixf(imgc.renBuf);
             typedef OHOS::ImageAccessorClone<BaseGfxExtendEngine::PixFormat> img_source_type;
@@ -1192,7 +1076,6 @@ namespace OHOS {
         }
     };
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::render(bool fillColor)
     {
         if (m_blendMode == BlendAlpha) {
@@ -1202,7 +1085,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::renderImage(const Image& img, int x1, int y1, int x2, int y2,
                                           const double* parl, bool isAntiAlias)
     {
@@ -1235,7 +1117,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     struct BaseGfxExtendEngineRasterizerGamma {
         BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) :
             m_alpha(alpha), m_gamma(gamma)
@@ -1249,13 +1130,11 @@ namespace OHOS {
         OHOS::gamma_power m_gamma;
     };
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::updateRasterizerGamma()
     {
         m_rasterizer.gamma(BaseGfxExtendEngineRasterizerGamma(m_masterAlpha, m_antiAliasGamma));
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::blendImage(Image& img,
                                          int imgX1, int imgY1, int imgX2, int imgY2,
                                          double dstX, double dstY, unsigned alpha)
@@ -1272,7 +1151,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::blendImage(Image& img, double dstX, double dstY, unsigned alpha)
     {
         worldToScreen(dstX, dstY);
@@ -1314,9 +1192,7 @@ namespace OHOS {
     {
         worldToScreen(dstX, dstY);
         pixfmt img_pixf(img.renBuf); //获取图片
-
         m_rasterizer.add_path(m_strokeTransform);
-
         if (strcmp(pattternMode, "repeat") == 0) {
             img_source_type img_src(img_pixf);
             span_pattern_type_repeat m_spanPatternType(img_src, 0 - dstX, 0 - dstY);
@@ -1336,19 +1212,15 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::copyImage(Image& img,
                                         int imgX1, int imgY1, int imgX2, int imgY2,
                                         double dstX, double dstY)
     {
         worldToScreen(dstX, dstY);
-        // JME
-        //OHOS::rect r(imgX1, imgY1, imgX2, imgY2);
         Rect r(imgX1, imgY1, imgX2, imgY2);
         m_renBase.CopyFrom(img.renBuf, &r, int(dstX) - imgX1, int(dstY) - imgY1);
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::copyImage(Image& img, double dstX, double dstY)
     {
         worldToScreen(dstX, dstY);
@@ -1360,8 +1232,6 @@ namespace OHOS {
     {
         worldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
-        // JME
-        //OHOS::rect r(imgX1, imgY1, imgX2, imgY2);
         Rect r(imgX1, imgY1, imgX2, imgY2);
         if (m_blendMode == BlendAlpha) {
             if (isAntiAlias) {
@@ -1378,7 +1248,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias)
     {
         worldToScreen(dstX, dstY);
@@ -1401,14 +1270,12 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::Image::premultiply()
     {
         PixFormat pixf(renBuf);
         pixf.premultiply();
     }
 
-    //------------------------------------------------------------------------
     void BaseGfxExtendEngine::Image::demultiply()
     {
         PixFormat pixf(renBuf);

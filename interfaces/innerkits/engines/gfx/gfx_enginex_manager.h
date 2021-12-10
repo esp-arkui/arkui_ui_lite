@@ -16,12 +16,6 @@
 #ifndef GFX_GRAPGICS_MANAGER_INCLUDED
 #define GFX_GRAPGICS_MANAGER_INCLUDED
 
-// With this define uncommented you can use FreeType font engine
-//#define BaseGfxExtendEngine_USE_FREETYPE
-
-// With this define uncommented you can use floating-point pixel format
-//#define BaseGfxExtendEngine_USE_FLOAT_FORMAT
-
 #include <gfx_utils/graphics/graphic_color/agg_color_rgba.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_curve.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
@@ -54,63 +48,49 @@ namespace OHOS {
 #else
         typedef OHOS::rgba8 ColorType;
 #endif
-        typedef OHOS::order_bgra ComponentOrder; // Platform dependent!
+        typedef OHOS::order_bgra ComponentOrder;
         typedef OHOS::blender_rgba<ColorType, ComponentOrder> Blender;
         typedef OHOS::comp_op_adaptor_rgba<ColorType, ComponentOrder> BlenderComp;
         typedef OHOS::blender_rgba_pre<ColorType, ComponentOrder> BlenderPre;
         typedef OHOS::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
-
         typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::RenderingBuffer> PixFormat;
         typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
         typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
         typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
         typedef OHOS::pixfmt_bgra32 pixfmt;
-
         typedef OHOS::RendererBase<PixFormat> RendererBase;
         typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
         typedef OHOS::RendererBase<PixFormatPre> RendererBasePre;
         typedef OHOS::RendererBase<PixFormatCompPre> RendererBaseCompPre;
-
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBase> RendererSolid;
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
-
         typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
         typedef OHOS::pod_auto_array<ColorType, 256> GradientArray;
         typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::srgba8>, 1024> color_func_type;
-
         typedef OHOS::GradientRadialCalculate gradient_func_type;
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate, color_func_type> LinearGradientSpan;
-        //    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::gradient_circle, GradientArray> RadialGradientSpan;
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type> RadialGradientSpan;
-
-        //  typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
-
         typedef OHOS::conv_curve<OHOS::PathStorage> ConvCurve;
         typedef OHOS::conv_dash<ConvCurve> ConvDashCurve;
         typedef OHOS::conv_stroke<ConvCurve> ConvStroke;
         typedef OHOS::conv_stroke<ConvDashCurve> ConvDashStroke;
         typedef OHOS::conv_transform<ConvCurve> PathTransform;
         typedef OHOS::conv_transform<ConvStroke> StrokeTransform;
-        //    typedef OHOS::conv_stroke<OHOS::path_storage>       t_conv_stroke;
-
         typedef OHOS::conv_transform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
         typedef OHOS::RenderingBuffer RenderingBuffer;
-
         typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> img_source_type;
-
         typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> img_source_type_x;
         typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> img_source_type_y;
         typedef OHOS::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
-
         typedef OHOS::SpanPatternRgba<img_source_type> span_pattern_type_repeat;
         typedef OHOS::SpanPatternRgba<img_source_type_x> span_pattern_type_x;
         typedef OHOS::SpanPatternRgba<img_source_type_y> span_pattern_type_y;
         typedef OHOS::SpanPatternRgba<img_source_type_none> span_pattern_type_none;
 
-        //    typedef AGG_INT8U  int8u;
-        //    typedef row_accessor<int8u> rendering_buffer;
+    public:
+        friend class BaseGfxExtendEngineRenderer;
 
         enum Gradient
         {
@@ -118,17 +98,6 @@ namespace OHOS {
             Linear,
             Radial
         };
-
-    public:
-        friend class BaseGfxExtendEngineRenderer;
-
-        // Use srgba8 as the "user" color type, even though the underlying color type
-        // might be something else, such as rgba32. This allows code based on
-        // 8-bit sRGB values to carry on working as before.
-        typedef OHOS::srgba8 Color;
-        typedef OHOS::rect_i Rect;
-        typedef OHOS::rect_d RectD;
-        typedef OHOS::TransAffine Affine;
 
         enum LineJoin
         {
@@ -263,6 +232,10 @@ namespace OHOS {
             CCW
         };
 
+        typedef OHOS::srgba8 Color;
+        typedef OHOS::rect_i Rect;
+        typedef OHOS::rect_d RectD;
+        typedef OHOS::TransAffine Affine;
         ~BaseGfxExtendEngine();
         BaseGfxExtendEngine();
         BaseGfxExtendEngine(const BaseGfxExtendEngine& o);
@@ -378,61 +351,17 @@ namespace OHOS {
         void ellipse(double cx, double cy, double rx, double ry);
         void arc(double cx, double cy, double rx, double ry, double start, double sweep);
         void star(double cx, double cy, double r1, double r2, double startAngle, int numRays);
-        // void curve(double x1, double y1, double x2, double y2, double x3, double y3);
-        // void curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
         void polygon(double* xy, int numPoints);
         void polyline(double* xy, int numPoints);
-
-        // Path commands
-        //-----------------------
         void resetPath();
 
         void moveTo(double x, double y);
-        // void moveRel(double dx, double dy);
-
         void lineTo(double x, double y);
-        // void lineRel(double dx, double dy);
-
-        // void horLineTo(double x);
-        // void horLineRel(double dx);
-
-        // void verLineTo(double y);
-        // void verLineRel(double dy);
-
         void arcTo(double rx, double ry,
                    double angle,
                    bool largeArcFlag,
                    bool sweepFlag,
                    double x, double y);
-
-        // void arcRel(double rx, double ry,
-        //             double angle,
-        //             bool largeArcFlag,
-        //             bool sweepFlag,
-        //             double dx, double dy);
-
-        // void quadricCurveTo(double xCtrl, double yCtrl,
-        //                      double xTo,   double yTo);
-        // void quadricCurveRel(double dxCtrl, double dyCtrl,
-        //                      double dxTo,   double dyTo);
-        // void quadricCurveTo(double xTo, double yTo);
-        // void quadricCurveRel(double dxTo, double dyTo);
-
-        // void cubicCurveTo(double xCtrl1, double yCtrl1,
-        //                   double xCtrl2, double yCtrl2,
-        //                   double xTo,    double yTo);
-
-        // void cubicCurveRel(double dxCtrl1, double dyCtrl1,
-        //                    double dxCtrl2, double dyCtrl2,
-        //                    double dxTo,    double dyTo);
-
-        // void cubicCurveTo(double xCtrl2, double yCtrl2,
-        //                   double xTo,    double yTo);
-
-        // void cubicCurveRel(double xCtrl2, double yCtrl2,
-        //                    double xTo,    double yTo);
-
-        // void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
         void closePolygon();
         void drawShadow(double x, double y, double a, double scaleX, double scaleY);
         void drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX, double scaleY);
@@ -440,16 +369,7 @@ namespace OHOS {
         void scale(double x, double y, double scaleX, double scaleY);
         void drawPath(DrawPathFlag flag = FillAndStroke);
         void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
-
         void stroke();
-
-        // Image Transformations
-        //-----------------------
-        void imageFilter(ImageFilter f);
-        ImageFilter imageFilter() const;
-
-        void imageResample(ImageResample f);
-        ImageResample imageResample() const;
 
         void transformImage(const Image& img,
                             int imgX1, int imgY1, int imgX2, int imgY2,
@@ -476,23 +396,17 @@ namespace OHOS {
                                 const double* parallelogram);
 
         void transformImagePath(const Image& img, const double* parallelogram);
-
-        // Image Blending (no transformations available)
         void blendImage(Image& img,
                         int imgX1, int imgY1, int imgX2, int imgY2,
                         double dstX, double dstY, unsigned alpha = 255);
         void blendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
         void patternImageFill(Image& img, double dstX, double dstY, const char* pattternMode);
         void patternImageStroke(Image& img, double dstX, double dstY, const char* pattternMode);
-
-        // Copy image directly, together with alpha-channel
         void copyImage(Image& img,
                        int imgX1, int imgY1, int imgX2, int imgY2,
                        double dstX, double dstY);
         void copyImage(Image& img, double dstX, double dstY);
 
-        // Auxiliary
-        //-----------------------
         static double pi()
         {
             return OHOS::pi;

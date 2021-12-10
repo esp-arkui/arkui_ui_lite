@@ -96,13 +96,6 @@ namespace OHOS {
             renBase_(&renBase)
         {
         }
-        /**
-         * @brief 设置渲染器
-         */
-        void Attach(BaseRenType& renBase)
-        {
-            renBase_ = &renBase;
-        }
 
         /**
          * @brief color 设置颜色
@@ -234,14 +227,7 @@ namespace OHOS {
             allocat_(&alloc), spanGenerat_(&span_gen)
         {
         }
-        void Attach(BaseRenType& renBase,
-                    AllocType& alloc,
-                    SpanGenType& span_gen)
-        {
-            renBase_ = &renBase;
-            allocat_ = &alloc;
-            spanGenerat_ = &span_gen;
-        }
+
         void Prepare()
         {
             spanGenerat_->Prepare(); //线段生成器预备
@@ -362,10 +348,6 @@ namespace OHOS {
             renBase_(&renBase)
         {
         }
-        void Attach(BaseRenType& renBase)
-        {
-            renBase_ = &renBase;
-        }
         void SetColor(const color_type& c)
         {
             color_ = c;
@@ -468,18 +450,6 @@ namespace OHOS {
             renBase_(&renBase),
             allocat_(&alloc), spanGenerat_(&span_gen)
         {
-        }
-
-        /**
-         *传入参数
-         */
-        void Attach(BaseRenType& renBase,
-                    AllocType& alloc,
-                    SpanGenType& span_gen)
-        {
-            renBase_ = &renBase;
-            allocat_ = &alloc;
-            spanGenerat_ = &span_gen;
         }
 
         /**

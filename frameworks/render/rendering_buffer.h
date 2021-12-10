@@ -43,27 +43,27 @@ namespace OHOS {
             bufStride_(0)
         {
         }
-        RowAccessor(T* buf, unsigned areaWidth, unsigned areaHeight, int stride) :
+        RowAccessor(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride) :
             renBuf_(0),
             start_(0),
             width_(0),
             height_(0),
             bufStride_(0)
         {
-            Attach(buf, areaWidth, areaHeight, stride);
+            Attach(renBuf, areaWidth, areaHeight, stride);
         }
 
         /**
          * @brief attach 传入参数
          */
-        void Attach(T* buf, unsigned areaWidth, unsigned areaHeight, int stride)
+        void Attach(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride)
         {
-            buf = start_ = buf;
+            renBuf = start_ = renBuf;
             width_ = areaWidth;
             height_ = areaHeight;
             bufStride_ = stride;
             if (stride < 0) {
-                start_ = buf - (AGG_INT64)(areaHeight - 1) * stride;
+                start_ = renBuf - (AGG_INT64)(areaHeight - 1) * stride;
             }
         }
         /**
@@ -155,7 +155,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief clear 以value值填充整个内存块
+         * @brief Clear 以value值填充整个内存块
          * @param value
          */
         void Clear(T value)
