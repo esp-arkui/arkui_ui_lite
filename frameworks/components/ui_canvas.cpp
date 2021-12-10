@@ -1278,18 +1278,19 @@ namespace OHOS {
             m_graphics->blendMode(paint.globalCompositeOperation());
             //double xx=circleParam->center.x,yy=circleParam->center.y;
             //m_graphics->screenToWorld(xx,yy);
+            if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
+                m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
+                m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+                m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
+                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+                m_graphics->drawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
+                                        rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+            }
             m_graphics->ellipse(arcInfo.center.x, arcInfo.center.y,
                                 arcInfo.radius, arcInfo.radius);
         }
 
-        if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
-            m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
-            m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
-            m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
-                                       paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-            m_graphics->drawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
-                                   rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
-        }
+       
         m_graphics->resetTransformations();
     }
 
