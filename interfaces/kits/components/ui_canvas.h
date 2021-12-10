@@ -45,6 +45,7 @@
 #include "ui_image_view.h"
 #include <fcntl.h>
 #include "gfx_utils/file.h"
+#include "stack"
 
 #include "animator/gif_canvas_image_animator.h"
 namespace OHOS {
