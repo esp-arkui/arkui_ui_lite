@@ -41,7 +41,6 @@
 #include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_stroke.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_transform.h>
-#include <gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h>
 #include <gfx_utils/graphics/graphic_filter/agg_blur.h>
 #include <gfx_utils/graphics/graphic_geometry/agg_path_storage.h>
 #include <gfx_utils/graphics/graphic_transform/agg_image_accessors.h>
@@ -96,7 +95,7 @@ class BaseGfxExtendEngine : public BaseGfxEngine
 
 //  typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
 
-    typedef OHOS::conv_curve<OHOS::path_storage>    ConvCurve;
+    typedef OHOS::conv_curve<OHOS::PathStorage>    ConvCurve;
     typedef OHOS::conv_dash<ConvCurve>             ConvDashCurve;
     typedef OHOS::conv_stroke<ConvCurve>           ConvStroke;
     typedef OHOS::conv_stroke<ConvDashCurve>       ConvDashStroke;
@@ -105,16 +104,14 @@ class BaseGfxExtendEngine : public BaseGfxEngine
 //    typedef OHOS::conv_stroke<OHOS::path_storage>       t_conv_stroke;
 
     typedef OHOS::conv_transform<ConvDashStroke>   DashStrokeTransform;
-    typedef OHOS::shadow_ctrl<ColorType> ShadowCtrl;
-    typedef OHOS::stack_blur<ColorType, OHOS::stack_blur_calc_rgba<>> StackBlur;
-    typedef OHOS::recursive_blur<ColorType, OHOS::recursive_blur_calc_rgb<> > RecursiveBlur;
+    typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
     typedef OHOS::rendering_buffer RenderingBuffer;
 
-    typedef OHOS::image_accessor_wrap<pixfmt, OHOS::wrap_mode_repeat, OHOS::wrap_mode_repeat> img_source_type;
+    typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> img_source_type;
 
-    typedef OHOS::image_accessor_repeat_x<pixfmt, OHOS::wrap_mode_repeat> img_source_type_x;
-    typedef OHOS::image_accessor_repeat_y<pixfmt, OHOS::wrap_mode_repeat> img_source_type_y;
-    typedef OHOS::image_accessor_norepeat<pixfmt> img_source_type_none;
+    typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> img_source_type_x;
+    typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> img_source_type_y;
+    typedef OHOS::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
 
     typedef OHOS::span_pattern_rgba<img_source_type> span_pattern_type_repeat;
     typedef OHOS::span_pattern_rgba<img_source_type_x> span_pattern_type_x;
@@ -142,7 +139,7 @@ public:
     typedef OHOS::srgba8       Color;
     typedef OHOS::rect_i       Rect;
     typedef OHOS::rect_d       RectD;
-    typedef OHOS::trans_affine Affine;
+    typedef OHOS::TransAffine Affine;
 
     enum LineJoin
     {
@@ -371,9 +368,9 @@ public:
     void affine(const Transformations& tr);
     void rotate(double angle);
     void scale(double sx, double sy);
-    void skew(double sx, double sy);
+    // void skew(double sx, double sy);
     void translate(double x, double y);
-    void parallelogram(double x1, double y1, double x2, double y2, const double* para);
+    // void parallelogram(double x1, double y1, double x2, double y2, const double* para);
     void viewport(double worldX1,  double worldY1,  double worldX2,  double worldY2,
                   double screenX1, double screenY1, double screenX2, double screenY2,
                   ViewportOption opt=XMidYMid);
@@ -392,8 +389,8 @@ public:
     void ellipse(double cx, double cy, double rx, double ry);
     void arc(double cx, double cy, double rx, double ry, double start, double sweep);
     void star(double cx, double cy, double r1, double r2, double startAngle, int numRays);
-    void curve(double x1, double y1, double x2, double y2, double x3, double y3);
-    void curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
+    // void curve(double x1, double y1, double x2, double y2, double x3, double y3);
+    // void curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
     void polygon(double* xy, int numPoints);
     void polyline(double* xy, int numPoints);
 
@@ -402,16 +399,16 @@ public:
     void resetPath();
 
     void moveTo(double x, double y);
-    void moveRel(double dx, double dy);
+    // void moveRel(double dx, double dy);
 
     void lineTo(double x, double y);
-    void lineRel(double dx, double dy);
+    // void lineRel(double dx, double dy);
 
-    void horLineTo(double x);
-    void horLineRel(double dx);
+    // void horLineTo(double x);
+    // void horLineRel(double dx);
 
-    void verLineTo(double y);
-    void verLineRel(double dy);
+    // void verLineTo(double y);
+    // void verLineRel(double dy);
 
     void arcTo(double rx, double ry,
                double angle,
@@ -419,34 +416,34 @@ public:
                bool sweepFlag,
                double x, double y);
 
-    void arcRel(double rx, double ry,
-                double angle,
-                bool largeArcFlag,
-                bool sweepFlag,
-                double dx, double dy);
+    // void arcRel(double rx, double ry,
+    //             double angle,
+    //             bool largeArcFlag,
+    //             bool sweepFlag,
+    //             double dx, double dy);
 
-    void quadricCurveTo(double xCtrl, double yCtrl,
-                         double xTo,   double yTo);
-    void quadricCurveRel(double dxCtrl, double dyCtrl,
-                         double dxTo,   double dyTo);
-    void quadricCurveTo(double xTo, double yTo);
-    void quadricCurveRel(double dxTo, double dyTo);
+    // void quadricCurveTo(double xCtrl, double yCtrl,
+    //                      double xTo,   double yTo);
+    // void quadricCurveRel(double dxCtrl, double dyCtrl,
+    //                      double dxTo,   double dyTo);
+    // void quadricCurveTo(double xTo, double yTo);
+    // void quadricCurveRel(double dxTo, double dyTo);
 
-    void cubicCurveTo(double xCtrl1, double yCtrl1,
-                      double xCtrl2, double yCtrl2,
-                      double xTo,    double yTo);
+    // void cubicCurveTo(double xCtrl1, double yCtrl1,
+    //                   double xCtrl2, double yCtrl2,
+    //                   double xTo,    double yTo);
 
-    void cubicCurveRel(double dxCtrl1, double dyCtrl1,
-                       double dxCtrl2, double dyCtrl2,
-                       double dxTo,    double dyTo);
+    // void cubicCurveRel(double dxCtrl1, double dyCtrl1,
+    //                    double dxCtrl2, double dyCtrl2,
+    //                    double dxTo,    double dyTo);
 
-    void cubicCurveTo(double xCtrl2, double yCtrl2,
-                      double xTo,    double yTo);
+    // void cubicCurveTo(double xCtrl2, double yCtrl2,
+    //                   double xTo,    double yTo);
 
-    void cubicCurveRel(double xCtrl2, double yCtrl2,
-                       double xTo,    double yTo);
+    // void cubicCurveRel(double xCtrl2, double yCtrl2,
+    //                    double xTo,    double yTo);
 
-    void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
+    // void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
     void closePolygon();
     void drawShadow(double x, double y, double a,double scaleX, double scaleY);
     void drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,double x, double y, double a,double scaleX, double scaleY);
@@ -569,25 +566,24 @@ public:
     }
 
     void SetShadowColor(int r, int g, int b, int a){
-        m_shadow_ctrl.fill_color(Color(r, g, b, a));
+        shadowColor_=Color(r, g, b, a);
 
     }
     void SetShadowOffsetX(double x){
-        m_shadow_ctrl.SetOffsetX(x);
+        shadowOffsetX_=x;
 
     }
     void SetShadowOffsetY(double y){
-        m_shadow_ctrl.SetOffsetY(y);
+        shadowOffsetY_=y;
 
     }
     void SetShadowOffset(double x,double y){
-        m_shadow_ctrl.SetOffsetX(x);
-        m_shadow_ctrl.SetOffsetY(y);
+        shadowOffsetX_=x;
+        shadowOffsetY_=y;
 
     }
     void SetShadowBlurRadius(double radius){
-        m_shadow_ctrl.SetRadius(radius);
-        m_shadow_ctrl.SetIsBlur(true);
+        shadowBlurRadius_=radius;
     }
     bool bounding_rect_single(unsigned int path_id,RectD* rect ,PathTransform &path);
 
@@ -650,9 +646,9 @@ private:
     double                          m_miterLimit;
     Gradient                        m_fillGradientFlag;
     Gradient                        m_lineGradientFlag;
-    OHOS::trans_affine               m_fillGradientMatrix;
-    OHOS::trans_affine               m_lineGradientMatrix;
-    OHOS::trans_affine               m_fillRadialMatrix;
+    OHOS::TransAffine               m_fillGradientMatrix;
+    OHOS::TransAffine               m_lineGradientMatrix;
+    OHOS::TransAffine               m_fillRadialMatrix;
 
 
     interpolator_type               m_interpolator_type  ;
@@ -673,9 +669,9 @@ private:
     double                          m_lineWidth;
     bool                            m_evenOddFlag;
 
-    OHOS::path_storage               m_path;
+    OHOS::PathStorage               m_path;
 
-    OHOS::trans_affine               m_transform;
+    OHOS::TransAffine               m_transform;
 
     ConvCurve                       m_convCurve;
     ConvDashCurve                   m_convDashCurve;
@@ -685,15 +681,16 @@ private:
     StrokeTransform                 m_strokeTransform;
     DashStrokeTransform             m_dashStrokeTransform;
 
-    ShadowCtrl m_shadow_ctrl;
     StackBlur m_stack_blur;
-    RecursiveBlur m_recursive_blur;
     //dash
     bool is_dash;
     float* dashes;
     unsigned int ndashes;
     float dDashOffset;
-
+    double shadowOffsetY_;
+    double shadowOffsetX_;
+    double shadowBlurRadius_;
+    ColorType shadowColor_;
 
 };
 

@@ -176,18 +176,11 @@ shared_library("ui") {
     "frameworks/graphics/src/agg_rounded_rect.cpp",
     "frameworks/graphics/src/agg_sqrt_tables.cpp",
     "frameworks/graphics/src/agg_trans_affine.cpp",
-    "frameworks/graphics/src/agg_trans_double_path.cpp",
-    "frameworks/graphics/src/agg_trans_single_path.cpp",
-    "frameworks/graphics/src/agg_trans_warp_magnifier.cpp",
     "frameworks/graphics/src/agg_vcgen_bspline.cpp",
-    "frameworks/graphics/src/agg_vcgen_contour.cpp",
     "frameworks/graphics/src/agg_vcgen_dash.cpp",
-    "frameworks/graphics/src/agg_vcgen_markers_term.cpp",
-    "frameworks/graphics/src/agg_vcgen_smooth_poly1.cpp",
     "frameworks/graphics/src/agg_vcgen_stroke.cpp",
     "frameworks/graphics/src/agg_vpgen_clip_polygon.cpp",
     "frameworks/graphics/src/agg_vpgen_clip_polyline.cpp",
-    "frameworks/graphics/src/agg_vpgen_segmentator.cpp",
     "frameworks/graphics/src/ctrl/agg_polygon_ctrl.cpp",
   ]
 
