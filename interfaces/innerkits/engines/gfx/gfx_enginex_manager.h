@@ -50,21 +50,21 @@
 namespace OHOS {
     class BaseGfxExtendEngine : public BaseGfxEngine {
 #ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
-        typedef OHOS::rgba32 ColorType;
+        typedef OHOS::Rgba32 ColorType;
 #else
-        typedef OHOS::rgba8 ColorType;
+        typedef OHOS::Rgba8 ColorType;
 #endif
-        typedef OHOS::order_bgra ComponentOrder; // Platform dependent!
-        typedef OHOS::blender_rgba<ColorType, ComponentOrder> Blender;
-        typedef OHOS::comp_op_adaptor_rgba<ColorType, ComponentOrder> BlenderComp;
-        typedef OHOS::blender_rgba_pre<ColorType, ComponentOrder> BlenderPre;
-        typedef OHOS::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
+        typedef OHOS::OrderBgra ComponentOrder; // Platform dependent!
+        typedef OHOS::BlenderRgba<ColorType, ComponentOrder> Blender;
+        typedef OHOS::CompOpAdaptorRgba<ColorType, ComponentOrder> BlenderComp;
+        typedef OHOS::BlenderRgbaPre<ColorType, ComponentOrder> BlenderPre;
+        typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
 
-        typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::rendering_buffer> PixFormat;
-        typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::rendering_buffer> PixFormatComp;
-        typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::rendering_buffer> PixFormatPre;
-        typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::rendering_buffer> PixFormatCompPre;
-        typedef OHOS::pixfmt_bgra32 pixfmt;
+        typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::rendering_buffer> PixFormat;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::rendering_buffer> PixFormatComp;
+        typedef OHOS::PixfmtAlphaBlendRgba<BlenderPre, OHOS::rendering_buffer> PixFormatPre;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::rendering_buffer> PixFormatCompPre;
+        typedef OHOS::PixfmtBgra32 pixfmt;
 
         typedef OHOS::RendererBase<PixFormat> RendererBase;
         typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
@@ -75,8 +75,8 @@ namespace OHOS {
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
 
         typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
-        typedef OHOS::pod_auto_array<ColorType, 256> GradientArray;
-        typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::srgba8>, 1024> color_func_type;
+        typedef OHOS::PodAutoArray<ColorType, 256> GradientArray;
+        typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
 
         typedef OHOS::GradientRadialCalculate gradient_func_type;
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
@@ -125,9 +125,9 @@ namespace OHOS {
         // Use srgba8 as the "user" color type, even though the underlying color type
         // might be something else, such as rgba32. This allows code based on
         // 8-bit sRGB values to carry on working as before.
-        typedef OHOS::srgba8 Color;
-        typedef OHOS::rect_i Rect;
-        typedef OHOS::rect_d RectD;
+        typedef OHOS::Srgba8 Color;
+        typedef OHOS::RectI Rect;
+        typedef OHOS::RectD RectD;
         typedef OHOS::TransAffine Affine;
 
         enum LineJoin
@@ -230,31 +230,31 @@ namespace OHOS {
         enum BlendMode
         {
             BlendNone = -1,
-            BlendAlpha = OHOS::end_of_comp_op_e,
-            BlendClear = OHOS::comp_op_clear,
-            BlendSrc = OHOS::comp_op_src,
-            BlendDst = OHOS::comp_op_dst,
-            BlendSrcOver = OHOS::comp_op_src_over,
-            BlendDstOver = OHOS::comp_op_dst_over,
-            BlendSrcIn = OHOS::comp_op_src_in,
-            BlendDstIn = OHOS::comp_op_dst_in,
-            BlendSrcOut = OHOS::comp_op_src_out,
-            BlendDstOut = OHOS::comp_op_dst_out,
-            BlendSrcAtop = OHOS::comp_op_src_atop,
-            BlendDstAtop = OHOS::comp_op_dst_atop,
-            BlendXor = OHOS::comp_op_xor,
-            BlendAdd = OHOS::comp_op_plus,
-            BlendMultiply = OHOS::comp_op_multiply,
-            BlendScreen = OHOS::comp_op_screen,
-            BlendOverlay = OHOS::comp_op_overlay,
-            BlendDarken = OHOS::comp_op_darken,
-            BlendLighten = OHOS::comp_op_lighten,
-            BlendColorDodge = OHOS::comp_op_color_dodge,
-            BlendColorBurn = OHOS::comp_op_color_burn,
-            BlendHardLight = OHOS::comp_op_hard_light,
-            BlendSoftLight = OHOS::comp_op_soft_light,
-            BlendDifference = OHOS::comp_op_difference,
-            BlendExclusion = OHOS::comp_op_exclusion
+            BlendAlpha = OHOS::END_OF_COMP_OP_E,
+            BlendClear = OHOS::COMP_OP_CLEAR,
+            BlendSrc = OHOS::COMP_OP_SRC,
+            BlendDst = OHOS::COMP_OP_DST,
+            BlendSrcOver = OHOS::COMP_OP_SRC_OVER,
+            BlendDstOver = OHOS::COMP_OP_DST_OVER,
+            BlendSrcIn = OHOS::COMP_OP_SRC_IN,
+            BlendDstIn = OHOS::COMP_OP_DST_IN,
+            BlendSrcOut = OHOS::COMP_OP_SRC_OUT,
+            BlendDstOut = OHOS::COMP_OP_DST_OUT,
+            BlendSrcAtop = OHOS::COMP_OP_SRC_ATOP,
+            BlendDstAtop = OHOS::COMP_OP_DST_ATOP,
+            BlendXor = OHOS::COMP_OP_XOR,
+            BlendAdd = OHOS::COMP_OP_PLUS,
+            BlendMultiply = OHOS::COMP_OP_MULTIPLY,
+            BlendScreen = OHOS::COMP_OP_SCREEN,
+            BlendOverlay = OHOS::COMP_OP_OVERLAY,
+            BlendDarken = OHOS::COMP_OP_DARKEN,
+            BlendLighten = OHOS::COMP_OP_LIGHTEN,
+            BlendColorDodge = OHOS::COMP_OP_COLOR_DODGE,
+            BlendColorBurn = OHOS::COMP_OP_COLOR_BURN,
+            BlendHardLight = OHOS::COMP_OP_HARD_LIGHT,
+            BlendSoftLight = OHOS::COMP_OP_SOFT_LIGHT,
+            BlendDifference = OHOS::COMP_OP_DIFFERENCE,
+            BlendExclusion = OHOS::COMP_OP_EXCLUSION
         };
 
         enum Direction
@@ -495,15 +495,15 @@ namespace OHOS {
         //-----------------------
         static double pi()
         {
-            return OHOS::pi;
+            return OHOS::PI;
         }
         static double deg2Rad(double v)
         {
-            return v * OHOS::pi / 180.0;
+            return v * OHOS::PI / 180.0;
         }
         static double rad2Deg(double v)
         {
-            return v * 180.0 / OHOS::pi;
+            return v * 180.0 / OHOS::PI;
         }
 
         void lineDashOffset(float dDashOffset)
@@ -688,7 +688,7 @@ namespace OHOS {
 
     inline bool operator==(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
-        return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
+        return c1.redValue == c2.redValue && c1.greenValue == c2.greenValue && c1.blueValue == c2.blueValue && c1.alphaValue == c2.alphaValue;
     }
 
     inline bool operator!=(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)

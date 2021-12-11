@@ -27,16 +27,14 @@
 
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
-namespace OHOS
-{
+namespace OHOS {
     /**
      * 行访问器
      */
     template <class T>
-    class row_accessor
-    {
+    class row_accessor {
     public:
-        using rowData = const_row_info<T>;
+        using rowData = ConstRowInfo<T>;
         row_accessor() :
             buf(0),
             start(0),
@@ -64,44 +62,43 @@ namespace OHOS
             width = areaWidth;
             height = areaHeight;
             bufStride = stride;
-            if (stride < 0)
-            {
-                start = buf - (AGG_INT64)(areaHeight - 1) * stride;
+            if (stride < 0) {
+                start = buf - (GRAPHIC_GEOMETRY_INT64)(areaHeight - 1) * stride;
             }
         }
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE T* GetBuf()
+        GRAPHIC_GEOMETRY_INLINE T* GetBuf()
         {
             return buf;
         }
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE const T* GetBuf() const
+        GRAPHIC_GEOMETRY_INLINE const T* GetBuf() const
         {
             return buf;
         }
         /**
          * @brief GetBuf 获取区域宽度
          */
-        AGG_INLINE unsigned GetWidth() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetWidth() const
         {
             return width;
         }
         /**
          * @brief GetBuf 获取区域高度
          */
-        AGG_INLINE unsigned GetHeight() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetHeight() const
         {
             return height;
         }
-        AGG_INLINE int GetStride() const
+        GRAPHIC_GEOMETRY_INLINE int GetStride() const
         {
             return bufStride;
         }
-        AGG_INLINE unsigned GetStrideAbs() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetStrideAbs() const
         {
             return (bufStride < 0) ? unsigned(-bufStride) : unsigned(bufStride);
         }
@@ -109,28 +106,28 @@ namespace OHOS
         /**
          * @brief row_ptr 获取行首地址
          */
-        AGG_INLINE T* row_ptr(int, int y, unsigned)
+        GRAPHIC_GEOMETRY_INLINE T* row_ptr(int, int y, unsigned)
         {
-            return start + y * (AGG_INT64)bufStride;
+            return start + y * (GRAPHIC_GEOMETRY_INT64)bufStride;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE T* row_ptr(int y)
+        GRAPHIC_GEOMETRY_INLINE T* row_ptr(int y)
         {
-            return start + y * (AGG_INT64)bufStride;
+            return start + y * (GRAPHIC_GEOMETRY_INT64)bufStride;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE const T* row_ptr(int y) const
+        GRAPHIC_GEOMETRY_INLINE const T* row_ptr(int y) const
         {
-            return start + y * (AGG_INT64)bufStride;
+            return start + y * (GRAPHIC_GEOMETRY_INT64)bufStride;
         }
         /**
          * @brief row 获取行数据
          */
-        AGG_INLINE rowData row(int y) const
+        GRAPHIC_GEOMETRY_INLINE rowData row(int y) const
         {
             return rowData(0, width - 1, row_ptr(y));
         }
@@ -142,20 +139,17 @@ namespace OHOS
         void copy_from(const RenBuf& src)
         {
             unsigned h = GetHeight();
-            if (src.height() < h)
-            {
+            if (src.height() < h) {
                 h = src.height();
             }
             unsigned l = GetStrideAbs();
-            if (src.stride_abs() < l)
-            {
+            if (src.stride_abs() < l) {
                 l = src.stride_abs();
             }
             l *= sizeof(T);
             unsigned y;
             unsigned w = GetWidth();
-            for (y = 0; y < h; y++)
-            {
+            for (y = 0; y < h; y++) {
                 std::memcpy(row_ptr(0, y, w), src.row_ptr(y), l);
             }
         }
@@ -169,12 +163,10 @@ namespace OHOS
             unsigned y;
             unsigned w = GetWidth();
             unsigned stride = GetStrideAbs();
-            for (y = 0; y < GetHeight(); y++)
-            {
+            for (y = 0; y < GetHeight(); y++) {
                 T* p = row_ptr(0, y, w);
                 unsigned x;
-                for (x = 0; x < stride; x++)
-                {
+                for (x = 0; x < stride; x++) {
                     *p++ = value;
                 }
             }

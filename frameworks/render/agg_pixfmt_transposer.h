@@ -17,154 +17,238 @@
 #define AGG_PIXFMT_TRANSPOSER_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-
-namespace OHOS
-{
-    //=======================================================pixfmt_transposer
+#include "gfx_utils/heap_base.h"
+namespace OHOS {
     template <class PixFmt>
-    class pixfmt_transposer
-    {
+    class PixfmtTransposer : public HeapBase {
     public:
-        typedef PixFmt pixfmt_type;
-        typedef typename pixfmt_type::color_type color_type;
-        typedef typename pixfmt_type::rowData rowData;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
+        using PixfmtType = PixFmt;
+        using ColorType = typename PixfmtType::ColorType;
+        using RowData = typename PixfmtType::RowData;
+        using ValueType = typename ColorType::ValueType;
+        using CalcType = typename ColorType::CalcType;
 
-        //--------------------------------------------------------------------
-        pixfmt_transposer() :
-            m_pixf(0)
-        {
-        }
-        explicit pixfmt_transposer(pixfmt_type& pixf) :
-            m_pixf(&pixf)
-        {
-        }
-        void attach(pixfmt_type& pixf)
-        {
-            m_pixf = &pixf;
-        }
+        PixfmtTransposer() :
+            pixf_(0)
+        {}
 
-        //--------------------------------------------------------------------
-        AGG_INLINE unsigned width() const
-        {
-            return m_pixf->height();
-        }
-        AGG_INLINE unsigned height() const
-        {
-            return m_pixf->width();
-        }
+        /**
+         * @brief 构造PixfmtTransposer实例，用于初始化pixf_成员.
+         * @Param 屏幕缓存区
+         * @since 1.0
+         * @version 1.0
+         */
+        explicit PixfmtTransposer(PixfmtType& pixf) :
+            pixf_(&pixf)
+        {}
 
-        //--------------------------------------------------------------------
-        AGG_INLINE color_type pixel(int x, int y) const
+        /**
+         * @brief 附加屏幕
+         * @Param 屏幕缓存区
+         * @since 1.0
+         * @version 1.0
+         */
+        void Attach(PixfmtType& pixf)
         {
-            return m_pixf->pixel(y, x);
+            pixf_ = &pixf;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
+        /**
+         * @brief 获取屏幕宽
+         * @return 宽度
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE unsigned Width() const
         {
-            m_pixf->copy_pixel(y, x, c);
+            return pixf_->Height();
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_pixel(int x, int y,
-                                    const color_type& c,
-                                    int8u cover)
+        /**
+         * @brief 获取屏幕高
+         * @return 高度
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE unsigned Height() const
         {
-            m_pixf->blend_pixel(y, x, c, cover);
+            return pixf_->Width();
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y,
-                                   unsigned len,
-                                   const color_type& c)
+        /**
+         * @brief 获取指定坐标颜色
+         * @return 颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
         {
-            m_pixf->copy_vline(y, x, len, c);
+            return pixf_->Pixel(y, x);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_vline(int x, int y,
-                                   unsigned len,
-                                   const color_type& c)
+        /**
+         * @brief 设置指定坐标颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
         {
-            m_pixf->copy_hline(y, x, len, c);
+            pixf_->CopyPixel(y, x, c);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_hline(int x, int y,
-                                    unsigned len,
-                                    const color_type& c,
-                                    int8u cover)
+        /**
+         * @brief 从指定x,y起混合颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y,
+                                                const ColorType& color,
+                                                int8u cover)
         {
-            m_pixf->blend_vline(y, x, len, c, cover);
+            pixf_->BlendPixel(y, x, color, cover);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_vline(int x, int y,
-                                    unsigned len,
-                                    const color_type& c,
-                                    int8u cover)
+        /**
+         * @brief 从指定x,y起横向拷贝len长度的颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
+                                               unsigned len,
+                                               const ColorType& color)
         {
-            m_pixf->blend_hline(y, x, len, c, cover);
+            pixf_->copy_vline(y, x, len, color);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_solid_hspan(int x, int y,
-                                          unsigned len,
-                                          const color_type& c,
-                                          const int8u* covers)
+        /**
+         * @brief 从指定x,y起纵向拷贝len长度的颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
+                                               unsigned len,
+                                               const ColorType& color)
         {
-            m_pixf->blend_solid_vspan(y, x, len, c, covers);
+            pixf_->CopyHline(y, x, len, color);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_solid_vspan(int x, int y,
-                                          unsigned len,
-                                          const color_type& c,
-                                          const int8u* covers)
+        /**
+         * @brief 从指定x,y起横向混合len长度的颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendHline(int x, int y,
+                                                unsigned len,
+                                                const ColorType& color, int8u cover)
         {
-            m_pixf->blend_solid_hspan(y, x, len, c, covers);
+            pixf_->BlendVline(y, x, len, color, cover);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_color_hspan(int x, int y,
-                                         unsigned len,
-                                         const color_type* colors)
+        /**
+         * @brief 从指定x,y起纵向混合len长度的颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendVline(int x, int y,
+                                                unsigned len,
+                                                const ColorType& c,
+                                                int8u cover)
         {
-            m_pixf->copy_color_vspan(y, x, len, colors);
+            pixf_->BlendHline(y, x, len, c, cover);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void copy_color_vspan(int x, int y,
-                                         unsigned len,
-                                         const color_type* colors)
+        /**
+         * @brief 从指定x,y起横向混合len长度的一系列颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendSolidHspan(int x, int y,
+                                                     unsigned len,
+                                                     const ColorType& c,
+                                                     const int8u* covers)
         {
-            m_pixf->copy_color_hspan(y, x, len, colors);
+            pixf_->BlendSolidVspan(y, x, len, c, covers);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_color_hspan(int x, int y,
-                                          unsigned len,
-                                          const color_type* colors,
-                                          const int8u* covers,
-                                          int8u cover)
+        /**
+         * @brief 从指定x,y起纵向混合len长度的一系列颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendSolidVspan(int x, int y,
+                                                     unsigned len,
+                                                     const ColorType& c,
+                                                     const int8u* covers)
         {
-            m_pixf->blend_color_vspan(y, x, len, colors, covers, cover);
+            pixf_->BlendSolidHspan(y, x, len, c, covers);
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void blend_color_vspan(int x, int y,
-                                          unsigned len,
-                                          const color_type* colors,
-                                          const int8u* covers,
-                                          int8u cover)
+        /**
+         * @brief 从指定x,y起横向拷贝len长度的一系列颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyColorHspan(int x, int y,
+                                                    unsigned len,
+                                                    const ColorType* colors)
         {
-            m_pixf->blend_color_hspan(y, x, len, colors, covers, cover);
+            pixf_->CopyColorVspan(y, x, len, colors);
+        }
+
+        /**
+         * @brief 从指定x,y起纵向拷贝len长度的一系列颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyColorVspan(int x, int y,
+                                                    unsigned len,
+                                                    const ColorType* colors)
+        {
+            pixf_->CopyColorHspan(y, x, len, colors);
+        }
+
+        /**
+         * @brief 从指定x,y起横向混合len长度的一系列颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendColorHspan(int x, int y,
+                                                     unsigned len,
+                                                     const ColorType* colors,
+                                                     const int8u* covers,
+                                                     int8u cover)
+        {
+            pixf_->BlendColorVspan(y, x, len, colors, covers, cover);
+        }
+
+        /**
+         * @brief 从指定x,y起纵向混合len长度的一系列颜色
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendColorVspan(int x, int y,
+                                                     unsigned len,
+                                                     const ColorType* colors,
+                                                     const int8u* covers,
+                                                     int8u cover)
+        {
+            pixf_->BlendColorHspan(y, x, len, colors, covers, cover);
         }
 
     private:
-        pixfmt_type* m_pixf;
+        PixfmtType* pixf_;
     };
 } // namespace OHOS
 

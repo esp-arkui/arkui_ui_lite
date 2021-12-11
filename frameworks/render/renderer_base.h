@@ -32,15 +32,15 @@ namespace OHOS {
     class RendererBase {
     public:
         typedef PixelFormat pixfmt_type;
-        typedef typename pixfmt_type::color_type color_type;
-        typedef typename pixfmt_type::rowData rowData;
+        typedef typename pixfmt_type::ColorType color_type;
+        typedef typename pixfmt_type::RowData rowData;
 
         RendererBase() :
             pixfmtType(0), clipBox(1, 1, 0, 0)
         {
         }
         explicit RendererBase(pixfmt_type& ren) :
-            pixfmtType(&ren), clipBox(0, 0, ren.width() - 1, ren.height() - 1)
+            pixfmtType(&ren), clipBox(0, 0, ren.Width() - 1, ren.Height() - 1)
         {
         }
 
@@ -50,7 +50,7 @@ namespace OHOS {
         void Attach(pixfmt_type& ren)
         {
             pixfmtType = &ren;
-            clipBox = rect_i(0, 0, ren.GetWidth() - 1, ren.GetHeight() - 1);
+            clipBox = RectI(0, 0, ren.GetWidth() - 1, ren.GetHeight() - 1);
         }
 
         /**
@@ -58,7 +58,7 @@ namespace OHOS {
          */
         unsigned GetWidth() const
         {
-            return pixfmtType->width();
+            return pixfmtType->Width();
         }
 
         /**
@@ -66,7 +66,7 @@ namespace OHOS {
          */
         unsigned GetHeight() const
         {
-            return pixfmtType->height();
+            return pixfmtType->Height();
         }
 
         /**
@@ -79,9 +79,9 @@ namespace OHOS {
          */
         bool ClipBox(int x1, int y1, int x2, int y2)
         {
-            rect_i cb(x1, y1, x2, y2);
-            cb.normalize();
-            if (cb.clip(rect_i(0, 0, GetWidth() - 1, GetHeight() - 1))) {
+            RectI cb(x1, y1, x2, y2);
+            cb.Normalize();
+            if (cb.Clip(RectI(0, 0, GetWidth() - 1, GetHeight() - 1))) {
                 clipBox = cb;
                 return true;
             }
@@ -132,7 +132,7 @@ namespace OHOS {
          * @brief GetClipBox 获取剪切的盒子
          * @return 返回对应盒子
          */
-        const rect_i& GetClipBox() const
+        const RectI& GetClipBox() const
         {
             return clipBox;
         }
@@ -174,7 +174,7 @@ namespace OHOS {
             unsigned y;
             if (GetWidth()) {
                 for (y = 0; y < GetHeight(); y++) {
-                    pixfmtType->copy_hline(0, y, GetWidth(), color);
+                    pixfmtType->CopyHline(0, y, GetWidth(), color);
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace OHOS {
             unsigned y;
             if (GetWidth()) {
                 for (y = 0; y < GetHeight(); y++) {
-                    pixfmtType->blend_hline(0, y, GetWidth(), color, cover_mask);
+                    pixfmtType->blend_hline(0, y, GetWidth(), color, COVER_MASK);
                 }
             }
         }
@@ -212,7 +212,7 @@ namespace OHOS {
          * @param c 渲染扫描线的颜色
          * @param colors 扫描线对应颜色数组
          */
-        void BlendHline(int x1, int y, int x2, const color_type& color, cover_type cover)
+        void BlendHline(int x1, int y, int x2, const color_type& color, CoverType cover)
         {
             if (x1 > x2) {
                 int t = x2;
@@ -229,7 +229,7 @@ namespace OHOS {
             if (x2 > GetXmax()) {
                 x2 = GetXmax();
             }
-            pixfmtType->blend_hline(x1, y, x2 - x1 + 1, color, cover);
+            pixfmtType->BlendHline(x1, y, x2 - x1 + 1, color, cover);
         }
 
         /**
@@ -240,7 +240,7 @@ namespace OHOS {
          * @param c 渲染扫描线的颜色
          * @param colors 扫描线对应颜色数组
          */
-        void BlendSolidHspan(int x, int y, int len, const color_type& color, const cover_type* covers)
+        void BlendSolidHspan(int x, int y, int len, const color_type& color, const CoverType* covers)
         {
             if (y > GetYmax() || y < GetYmin()) {
                 return;
@@ -259,7 +259,7 @@ namespace OHOS {
                     return;
                 }
             }
-            pixfmtType->blend_solid_hspan(x, y, len, color, covers);
+            pixfmtType->BlendSolidHspan(x, y, len, color, covers);
         }
 
         /**
@@ -270,7 +270,7 @@ namespace OHOS {
          * @param color 渲染扫描线的颜色
          * @param colors 扫描线对应颜色数组
          */
-        void BlendSolidVspan(int x, int y, int len, const color_type& color, const cover_type* covers)
+        void BlendSolidVspan(int x, int y, int len, const color_type& color, const CoverType* covers)
         {
             if (x > GetXmax() || x < GetXmin()) {
                 return;
@@ -332,8 +332,8 @@ namespace OHOS {
          * @param covers 扫描线对应覆盖率数组
          * @param cover 覆盖率
          */
-        void BlendColorHspan(int x, int y, int len, const color_type* colors, const cover_type* covers,
-                             cover_type cover = OHOS::cover_full)
+        void BlendColorHspan(int x, int y, int len, const color_type* colors, const CoverType* covers,
+                             CoverType cover = OHOS::COVER_FULL)
         {
             if (y > GetYmax() || y < GetYmin()) {
                 return;
@@ -356,7 +356,7 @@ namespace OHOS {
                     return;
                 }
             }
-            pixfmtType->blend_color_hspan(x, y, len, colors, covers, cover);
+            pixfmtType->BlendColorHspan(x, y, len, colors, covers, cover);
         }
 
         /**
@@ -367,10 +367,10 @@ namespace OHOS {
          * @param hsrc
          * @return  返回剪辑的区域
          */
-        rect_i ClipRectArea(rect_i& dst, rect_i& src, int wsrc, int hsrc) const
+        RectI ClipRectArea(RectI& dst, RectI& src, int wsrc, int hsrc) const
         {
-            rect_i rc(0, 0, 0, 0);
-            rect_i cb = GetClipBox();
+            RectI rc(0, 0, 0, 0);
+            RectI cb = GetClipBox();
             ++cb.x2;
             ++cb.y2;
 
@@ -426,9 +426,9 @@ namespace OHOS {
          * @param dy 需要复制的y长度
          */
         template <class RenBuf>
-        void CopyFrom(const RenBuf& src, const rect_i* rectSrcPtr = 0, int dx = 0, int dy = 0)
+        void CopyFrom(const RenBuf& src, const RectI* rectSrcPtr = 0, int dx = 0, int dy = 0)
         {
-            rect_i rsrc(0, 0, src.GetWidth(), src.GetHeight());
+            RectI rsrc(0, 0, src.GetWidth(), src.GetHeight());
             if (rectSrcPtr) {
                 rsrc.x1 = rectSrcPtr->x1;
                 rsrc.y1 = rectSrcPtr->y1;
@@ -436,9 +436,9 @@ namespace OHOS {
                 rsrc.y2 = rectSrcPtr->y2 + 1;
             }
 
-            rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
+            RectI rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
 
-            rect_i rect = ClipRectArea(rdst, rsrc, src.GetWidth(), src.GetHeight());
+            RectI rect = ClipRectArea(rdst, rsrc, src.GetWidth(), src.GetHeight());
 
             if (rect.x2 > 0) {
                 int incy = 1;
@@ -448,7 +448,7 @@ namespace OHOS {
                     incy = -1;
                 }
                 while (rect.y2 > 0) {
-                    pixfmtType->copy_from(src, rdst.x1, rdst.y1, rsrc.x1, rsrc.y1, rect.x2);
+                    pixfmtType->CopyFrom(src, rdst.x1, rdst.y1, rsrc.x1, rsrc.y1, rect.x2);
                     rdst.y1 += incy;
                     rsrc.y1 += incy;
                     --rect.y2;
@@ -465,10 +465,10 @@ namespace OHOS {
          * @param cover 覆盖率
          */
         template <class SrcPixelFormatRenderer>
-        void BlendFrom(const SrcPixelFormatRenderer& src, const rect_i* rectSrcPtr = 0, int dx = 0, int dy = 0,
-                       cover_type cover = OHOS::cover_full)
+        void BlendFrom(const SrcPixelFormatRenderer& src, const RectI* rectSrcPtr = 0, int dx = 0, int dy = 0,
+                       CoverType cover = OHOS::COVER_FULL)
         {
-            rect_i rsrc(0, 0, src.width(), src.height());
+            RectI rsrc(0, 0, src.Width(), src.Height());
             if (rectSrcPtr) {
                 rsrc.x1 = rectSrcPtr->x1;
                 rsrc.y1 = rectSrcPtr->y1;
@@ -476,8 +476,8 @@ namespace OHOS {
                 rsrc.y2 = rectSrcPtr->y2 + 1;
             }
 
-            rect_i rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
-            rect_i rect = ClipRectArea(rdst, rsrc, src.width(), src.height());
+            RectI rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
+            RectI rect = ClipRectArea(rdst, rsrc, src.Width(), src.Height());
 
             if (rect.x2 > 0) {
                 int incy = 1;
@@ -487,7 +487,7 @@ namespace OHOS {
                     incy = -1;
                 }
                 while (rect.y2 > 0) {
-                    typename SrcPixelFormatRenderer::rowData rw = src.row(rsrc.y1);
+                    typename SrcPixelFormatRenderer::RowData rw = src.Row(rsrc.y1);
                     if (rw.ptr) {
                         int x1src = rsrc.x1;
                         int x1dst = rdst.x1;
@@ -502,7 +502,7 @@ namespace OHOS {
                                 len -= x1src + len - rw.x2 - 1;
                             }
                             if (len > 0) {
-                                pixfmtType->blend_from(src, x1dst, rdst.y1, x1src, rsrc.y1, len, cover);
+                                pixfmtType->BlendFrom(src, x1dst, rdst.y1, x1src, rsrc.y1, len, cover);
                             }
                         }
                     }
@@ -515,7 +515,7 @@ namespace OHOS {
 
     private:
         pixfmt_type* pixfmtType;
-        rect_i clipBox;
+        RectI clipBox;
     };
 
 } // namespace OHOS

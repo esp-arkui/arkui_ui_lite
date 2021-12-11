@@ -205,7 +205,7 @@ namespace OHOS {
         lineJoin(JoinRound);
         m_masterAlpha = 1.0;
         m_antiAliasGamma = 1.0;
-        m_rasterizer.gamma(OHOS::gamma_none());
+        m_rasterizer.gamma(OHOS::GammaNone());
         m_blendMode = BlendAlpha;
     }
 
@@ -236,8 +236,8 @@ namespace OHOS {
     void BaseGfxExtendEngine::blendMode(BlendMode m)
     {
         m_blendMode = m;
-        m_pixFormatComp.comp_op(m);
-        m_pixFormatCompPre.comp_op(m);
+        m_pixFormatComp.CompOp(m);
+        m_pixFormatCompPre.CompOp(m);
     }
 
     //------------------------------------------------------------------------
@@ -576,7 +576,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::fillEvenOdd(bool evenOddFlag)
     {
         m_evenOddFlag = evenOddFlag;
-        m_rasterizer.filling_rule(evenOddFlag ? OHOS::fill_even_odd : OHOS::fill_non_zero);
+        m_rasterizer.filling_rule(evenOddFlag ? OHOS::FILL_EVEN_ODD : OHOS::FILL_NON_ZERO);
     }
 
     //------------------------------------------------------------------------
@@ -686,9 +686,9 @@ namespace OHOS {
     void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2, double r)
     {
         m_path.RemoveAll();
-        OHOS::rounded_rect rc(x1, y1, x2, y2, r);
-        rc.normalize_radius();
-        rc.SetApproximationScale(worldToScreen(1.0) * g_approxScale);
+        OHOS::RoundedRect rc(x1, y1, x2, y2, r);
+        rc.NormalizeRadius();
+        rc.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         // JME audit
         //m_path.add_path(rc, 0, false);
         m_path.ConcatPath(rc, 0);
@@ -699,10 +699,10 @@ namespace OHOS {
     void BaseGfxExtendEngine::roundedRect(double x1, double y1, double x2, double y2, double rx, double ry)
     {
         m_path.RemoveAll();
-        OHOS::rounded_rect rc;
-        rc.rect(x1, y1, x2, y2);
-        rc.radius(rx, ry);
-        rc.normalize_radius();
+        OHOS::RoundedRect rc;
+        rc.Rect(x1, y1, x2, y2);
+        rc.Radius(rx, ry);
+        rc.NormalizeRadius();
         //m_path.add_path(rc, 0, false);
         m_path.ConcatPath(rc, 0); // JME
         drawPath(FillAndStroke);
@@ -714,11 +714,11 @@ namespace OHOS {
                                           double rx_top, double ry_top)
     {
         m_path.RemoveAll();
-        OHOS::rounded_rect rc;
-        rc.rect(x1, y1, x2, y2);
-        rc.radius(rx_bottom, ry_bottom, rx_top, ry_top);
-        rc.normalize_radius();
-        rc.SetApproximationScale(worldToScreen(1.0) * g_approxScale);
+        OHOS::RoundedRect rc;
+        rc.Rect(x1, y1, x2, y2);
+        rc.Radius(rx_bottom, ry_bottom, rx_top, ry_top);
+        rc.NormalizeRadius();
+        rc.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         //m_path.add_path(rc, 0, false);
         m_path.ConcatPath(rc, 0); // JME
         drawPath(FillAndStroke);
@@ -728,7 +728,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::ellipse(double cx, double cy, double rx, double ry)
     {
         m_path.RemoveAll();
-        OHOS::bezier_arc arc(cx, cy, rx, ry, 0, 2 * pi());
+        OHOS::BezierArc arc(cx, cy, rx, ry, 0, 2 * pi());
         m_path.ConcatPath(arc, 0); // JME
         m_path.ClosePolygon();
         drawPath(FillAndStroke);
@@ -738,7 +738,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::arc(double cx, double cy, double rx, double ry, double start, double sweep)
     {
         m_path.RemoveAll();
-        OHOS::bezier_arc arc(cx, cy, rx, ry, start, sweep);
+        OHOS::BezierArc arc(cx, cy, rx, ry, start, sweep);
         //m_path.add_path(arc, 0, false);
         m_path.ConcatPath(arc, 0); // JME
         drawPath(StrokeOnly);
@@ -748,7 +748,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::star(double cx, double cy, double r1, double r2, double startAngle, int numRays)
     {
         m_path.RemoveAll();
-        double da = OHOS::pi / double(numRays);
+        double da = OHOS::PI / double(numRays);
         double a = startAngle;
         int i;
         for (i = 0; i < numRays; i++) {
@@ -929,8 +929,8 @@ namespace OHOS {
             bbox.y2 += shadowBlurRadius_;
             RenderingBuffer m_rbuf_window;
             PixFormat pixf2(m_rbuf_window);
-            pixf2.attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
-            m_stack_blur.Blur(pixf2, OHOS::uround(shadowBlurRadius_));
+            pixf2.Attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
+            m_stack_blur.Blur(pixf2, OHOS::Uround(shadowBlurRadius_));
         }
         m_rasterizer.reset();
     }
@@ -938,7 +938,7 @@ namespace OHOS {
                                          double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
     {
         m_path.RemoveAll();
-        OHOS::bezier_arc arc(cx, cy, rx, ry, 0, 2 * pi());
+        OHOS::BezierArc arc(cx, cy, rx, ry, 0, 2 * pi());
         m_path.ConcatPath(arc, 0); // JME
         m_path.ClosePolygon();
         drawShadow(x, y, a, scaleX, scaleY);
@@ -961,7 +961,7 @@ namespace OHOS {
         m_rasterizer.reset();
         switch (flag) {
             case FillOnly:
-                if (m_fillColor.a) {
+                if (m_fillColor.alphaValue) {
                     // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
                     //     // drawShadow();
                     // }
@@ -971,7 +971,7 @@ namespace OHOS {
                 break;
 
             case StrokeOnly:
-                if (m_lineColor.a && m_lineWidth > 0.0) {
+                if (m_lineColor.alphaValue && m_lineWidth > 0.0) {
                     if (!this->is_dash) {
                         m_rasterizer.add_path(m_strokeTransform);
                     } else {
@@ -986,7 +986,7 @@ namespace OHOS {
                 break;
 
             case FillAndStroke:
-                if (m_fillColor.a) {
+                if (m_fillColor.alphaValue) {
                     // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
                     //     // drawShadow();
                     // }
@@ -994,7 +994,7 @@ namespace OHOS {
                     render(true);
                 }
 
-                if (m_lineColor.a && m_lineWidth > 0.0) {
+                if (m_lineColor.alphaValue && m_lineWidth > 0.0) {
                     if (!this->is_dash) {
                         m_rasterizer.add_path(m_strokeTransform);
                     } else {
@@ -1009,7 +1009,7 @@ namespace OHOS {
                 break;
 
             case FillWithLineColor:
-                if (m_lineColor.a) {
+                if (m_lineColor.alphaValue) {
                     m_rasterizer.add_path(m_pathTransform);
                     render(false);
                 }
@@ -1109,26 +1109,26 @@ namespace OHOS {
                 if (m_mode != BaseGfxExtendEngine::BlendDst) {
                     l2 = len;
                     s2 = span;
-                    typedef OHOS::comp_op_adaptor_clip_to_dst_rgba_pre<BaseGfxExtendEngine::Color, OHOS::order_rgba> OpType;
+                    typedef OHOS::CompOpAdaptorClipToDstRgbaPre<BaseGfxExtendEngine::Color, OHOS::OrderRgba> OpType;
                     do {
-                        OpType::blend_pix(m_mode,
-                                          (BaseGfxExtendEngine::Color::value_type*)s2,
-                                          m_color.r,
-                                          m_color.g,
-                                          m_color.b,
-                                          BaseGfxExtendEngine::Color::full_value(),
-                                          OHOS::cover_full);
+                        OpType::BlendPix(m_mode,
+                                         (BaseGfxExtendEngine::Color::ValueType*)s2,
+                                         m_color.redValue,
+                                         m_color.greenValue,
+                                         m_color.blueValue,
+                                         BaseGfxExtendEngine::Color::FullValue(),
+                                         OHOS::cover_full);
                         ++s2;
                     } while (--l2);
                 }
-                if (!m_color.is_opaque()) {
+                if (!m_color.IsOpaque()) {
                     l2 = len;
                     s2 = span;
                     do {
-                        s2->r = BaseGfxExtendEngine::Color::multiply(s2->r, m_color.a);
-                        s2->g = BaseGfxExtendEngine::Color::multiply(s2->g, m_color.a);
-                        s2->b = BaseGfxExtendEngine::Color::multiply(s2->b, m_color.a);
-                        s2->a = BaseGfxExtendEngine::Color::multiply(s2->a, m_color.a);
+                        s2->redValue = BaseGfxExtendEngine::Color::Multiply(s2->redValue, m_color.alphaValue);
+                        s2->greenValue = BaseGfxExtendEngine::Color::Multiply(s2->greenValue, m_color.alphaValue);
+                        s2->blueValue = BaseGfxExtendEngine::Color::Multiply(s2->blueValue, m_color.alphaValue);
+                        s2->alphaValue = BaseGfxExtendEngine::Color::Multiply(s2->alphaValue, m_color.alphaValue);
                         ++s2;
                     } while (--l2);
                 }
@@ -1245,8 +1245,8 @@ namespace OHOS {
         {
             return m_alpha(m_gamma(x));
         }
-        OHOS::gamma_multiply m_alpha;
-        OHOS::gamma_power m_gamma;
+        OHOS::GammaMultiply m_alpha;
+        OHOS::GammaPower m_gamma;
     };
 
     //------------------------------------------------------------------------
@@ -1405,19 +1405,19 @@ namespace OHOS {
     void BaseGfxExtendEngine::Image::premultiply()
     {
         PixFormat pixf(renBuf);
-        pixf.premultiply();
+        pixf.Premultiply();
     }
 
     //------------------------------------------------------------------------
     void BaseGfxExtendEngine::Image::demultiply()
     {
         PixFormat pixf(renBuf);
-        pixf.demultiply();
+        pixf.Demultiply();
     }
 
     bool BaseGfxExtendEngine::bounding_rect_single(unsigned int path_id, RectD* rect, PathTransform& path)
     {
-        return OHOS::bounding_rect_single(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);
+        return OHOS::BoundingRectSingle(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);
     }
 
 } // namespace OHOS
