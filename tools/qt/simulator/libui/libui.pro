@@ -126,6 +126,7 @@ SOURCES += \
     ../../../../../utils/frameworks/graphics/graphic_geometry/agg_rounded_rect.cpp \
     ../../../../../utils/frameworks/graphics/graphic_color/agg_color_rgba.cpp \
     ../../../../../utils/frameworks/graphics/graphic_common/agg_sqrt_tables.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_common/agg_clip_liang_barsky.cpp \
     ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_affine.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_dash.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_stroke.cpp \
