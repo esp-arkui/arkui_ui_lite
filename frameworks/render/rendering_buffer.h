@@ -43,6 +43,13 @@ namespace OHOS {
             bufStride_(0)
         {
         }
+        /**
+         * @brief RowAccessor 行访问器
+         * @param renBuf 缓冲区
+         * @param areaWidth 缓冲区内像素区域的宽度
+         * @param areaHeight 缓冲区内像素区域的高度
+         * @param stride 缓冲区的步幅
+         */
         RowAccessor(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride) :
             renBuf_(0),
             start_(0),
@@ -55,6 +62,10 @@ namespace OHOS {
 
         /**
          * @brief attach 传入参数
+         * @param renBuf 缓冲区
+         * @param areaWidth 缓冲区内像素区域的宽度
+         * @param areaHeight 缓冲区内像素区域的高度
+         * @param stride 缓冲区的步幅
          */
         void Attach(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride)
         {
