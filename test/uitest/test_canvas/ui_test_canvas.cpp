@@ -159,7 +159,7 @@ void UITestCanvas::UIKitCanvasTestComposite001()
     paint.SetFillColor(Color::Red());
     //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
     canvas->DrawCircle({ 50, 50 }, 40, paint);
-    paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOut);
+    paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
     //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
     //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
@@ -269,7 +269,7 @@ void UITestCanvas::UIKitCanvasTestDrawLine002()
     canvas->DrawLine({ 100, 50 }, paint); // {100, 50}: end point coordinates x, y
     paint.SetStrokeColor(Color::Green());
     canvas->LineWidth(5,paint);
-    paint.SetLineCap(BaseGfxExtendEngine::CapRound);
+    paint.SetLineCap(BaseGfxExtendEngine::CAPROUND);
     canvas->SetStartPosition({ 150, 80 });
     canvas->DrawLine({ 50, 100 }, paint);
 }
@@ -284,8 +284,8 @@ void UITestCanvas::UIKitCanvasTestLineJoin001()
     Paint paint;
     // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
     canvas->LineWidth(10,paint);
-    paint.SetLineCap(BaseGfxExtendEngine::CapRound);
-    paint.SetLineJoin(BaseGfxExtendEngine::JoinBevel);
+    paint.SetLineCap(BaseGfxExtendEngine::CAPROUND);
+    paint.SetLineJoin(BaseGfxExtendEngine::JOINBEVEL);
     paint.SetStrokeColor(Color::Blue());
     paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
     canvas->BeginPath();
@@ -296,8 +296,8 @@ void UITestCanvas::UIKitCanvasTestLineJoin001()
     canvas->DrawPath(paint);
 
     canvas->LineWidth(8,paint);
-    paint.SetLineCap(BaseGfxExtendEngine::CapSquare);
-    paint.SetLineJoin(BaseGfxExtendEngine::JoinMiter);
+    paint.SetLineCap(BaseGfxExtendEngine::CAPSQUARE);
+    paint.SetLineJoin(BaseGfxExtendEngine::JOINMITER);
     paint.SetMiterLimit(5);
     paint.SetStrokeColor(Color::Green());
     canvas->BeginPath();
