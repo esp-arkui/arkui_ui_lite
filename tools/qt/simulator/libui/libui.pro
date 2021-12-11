@@ -127,13 +127,8 @@ SOURCES += \
     ../../../../../utils/frameworks/graphics/graphic_color/agg_color_rgba.cpp \
     ../../../../../utils/frameworks/graphics/graphic_common/agg_sqrt_tables.cpp \
     ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_affine.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_double_path.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_single_path.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_warp_magnifier.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_contour.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_dash.cpp \
     ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_stroke.cpp \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_line_profile_aa.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vpgen_segmentator.cpp \
@@ -183,9 +178,12 @@ HEADERS += \
     ../../../../frameworks/font/ui_font_adaptor.h \
     ../../../../frameworks/font/ui_multi_font_manager.h \
     ../../../../frameworks/render/agg_pixfmt_base.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba.h \
+    ../../../../frameworks/render/agg_pixfmt_rgba_blend.h \
+    ../../../../frameworks/render/agg_pixfmt_rgba_comp.h \
+    ../../../../frameworks/render/agg_pixfmt_rgba_conv.h \
+    ../../../../frameworks/render/agg_pixfmt_rgba_gamma.h \
+    ../../../../frameworks/render/agg_pixfmt_rgba_multi.h \
     ../../../../frameworks/render/agg_pixfmt_transposer.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/agg_color_gray.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/agg_color_rgba.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_basics.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h \
@@ -200,6 +198,12 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_filter/agg_blur.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_arc.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_range_adapter.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_bvector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_auto_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_auto_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_array.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_bezier_arc.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_bounding_rect.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_curves.h \
@@ -221,13 +225,7 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_gradient.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_image_accessors.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_affine.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_double_path.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_single_path.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_viewport.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_warp_magnifier.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_polygon_ctrl.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_ctrl.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_contour.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \

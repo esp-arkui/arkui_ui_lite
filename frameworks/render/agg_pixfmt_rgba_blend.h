@@ -26,1506 +26,1553 @@
 /**
 * @file graphic_geometry_pixfmt_rgba.h
 *
-* @brief Defines —’…´∑÷¡øgamma≤Ÿ◊˜¿‡.
+* @brief Defines È¢úËâ≤ÂàÜÈáègammaÊìç‰ΩúÁ±ª.
 *
 * @since 1.0
 * @version 1.0
 */
 
-#ifndef GRAPHIC_GEOMETRY_PIXFMT_RGBA_GAMMA_INCLUDED
-#define GRAPHIC_GEOMETRY_PIXFMT_RGBA_GAMMA_INCLUDED
+#ifndef GRAPHIC_GEOMETRY_PIXFMT_RGBA_BLEND_INCLUDED
+#define GRAPHIC_GEOMETRY_PIXFMT_RGBA_BLEND_INCLUDED
 
 #include <cmath>
 #include <cstring>
 
+#include "agg_pixfmt_rgba_conv.h"
+#include "agg_pixfmt_rgba_gamma.h"
+#include "gfx_utils/heap_base.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/rendering_buffer.h"
-#include "heap_base.h"
 namespace OHOS {
-template <class ColorT, class Order>
-struct BlenderRgba : ConvRgbaPre<ColorT, Order> {
-    using ColorType = ColorT;
-    using OrderType = Order;
-    using ValueType = typename ColorType::ValueType;
-    using CalcType = typename ColorType::CalcType;
-    using LongType = typename ColorType::LongType;
 
     /**
-     * @brief ”√—’…´∑÷¡øªÏ∫œœÒÀÿ.
+     * @file graphic_geometry_pixfmt_rgba.h
+     *
+     * @brief Defines È¢úËâ≤ÂàÜÈáèÂÄçÂ¢ûÂô®.
      *
      * @since 1.0
      * @version 1.0
      */
-    static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                 ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
-    {
-        BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
-    }
-    /**
-     * @brief ”√—’…´∑÷¡øªÏ∫œœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                 ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
-    {
-        pColor[Order::R] = ColorType::Lerp(pColor[Order::R], cr, alpha);
-        pColor[Order::G] = ColorType::Lerp(pColor[Order::G], cg, alpha);
-        pColor[Order::B] = ColorType::Lerp(pColor[Order::B], cb, alpha);
-        pColor[Order::A] = ColorType::Prelerp(pColor[Order::A], alpha, alpha);
-    }
-};
-
-template <class ColorT, class Order>
-struct BlenderRgbaPre : ConvRgbaPre<ColorT, Order> {
-    using ColorType = ColorT;
-    using OrderType = Order;
-    using ValueType = typename ColorType::ValueType;
-    using CalcType = typename ColorType::CalcType;
-    using LongType = typename ColorType::LongType;
-
-    /**
-     * @brief ”√—’…´∑÷¡øªÏ∫œœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void
-    BlendPix(ValueType* pColor,
-             ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
-    {
-        BlendPix(pColor,
-                 ColorType::MultCover(cr, cover),
-                 ColorType::MultCover(cg, cover),
-                 ColorType::MultCover(cb, cover),
-                 ColorType::MultCover(alpha, cover));
-    }
-    /**
-     * @brief ”√—’…´∑÷¡øªÏ∫œœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                 ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
-    {
-        pColor[Order::R] = ColorType::Prelerp(pColor[Order::R], cr, alpha);
-        pColor[Order::G] = ColorType::Prelerp(pColor[Order::G], cg, alpha);
-        pColor[Order::B] = ColorType::Prelerp(pColor[Order::B], cb, alpha);
-        pColor[Order::A] = ColorType::Prelerp(pColor[Order::A], alpha, alpha);
-    }
-};
-
-template <class ColorT, class Order>
-struct BlenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
-    using ColorType = ColorT;
-    using OrderType = Order;
-    using ValueType = typename ColorType::ValueType;
-    using CalcType = typename ColorType::CalcType;
-    using LongType = typename ColorType::LongType;
-
-    /**
-     * @brief ”√—’…´∑÷¡øº∞∏≤∏«¬ ªÏ∫œœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                 ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
-    {
-        BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
-    }
-    /**
-     * @brief ”√—’…´∑÷¡øº∞∏≤∏«¬ ªÏ∫œœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                 ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
-    {
-        if (alpha > ColorType::EmptyValue()) {
-            CalcType a = pColor[Order::A];
-            CalcType r = ColorType::Multiply(pColor[Order::R], a);
-            CalcType g = ColorType::Multiply(pColor[Order::G], a);
-            CalcType b = ColorType::Multiply(pColor[Order::B], a);
-            pColor[Order::A] = ColorType::Prelerp(a, alpha, alpha);
-            pColor[Order::R] = ColorType::Lerp(r, cr, alpha);
-            pColor[Order::G] = ColorType::Lerp(g, cg, alpha);
-            pColor[Order::B] = ColorType::Lerp(b, cb, alpha);
-            MultiplierRgba<ColorT, Order>::Demultiply(pColor);
+    template <class ColorT, class Order>
+    struct MultiplierRgba {
+        using ColorType = ColorT;
+        using ValueType = typename ColorType::ValueType;
+        /**
+         * @brief È¢úËâ≤ÂàÜÈáè‰∏éAlphaÁõ∏‰πò.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void Premultiply(ValueType* pColor)
+        {
+            ValueType a = pColor[Order::ALPHA];
+            pColor[Order::BLUE] = ColorType::Multiply(pColor[Order::BLUE], a);
+            pColor[Order::RED] = ColorType::Multiply(pColor[Order::RED], a);
+            pColor[Order::GREEN] = ColorType::Multiply(pColor[Order::GREEN], a);
         }
-    }
-};
 
-template <class Blender, class RenBuf>
-class PixfmtAlphaBlendRgba : public HeapBase {
-public:
-    using PixfmtCategory = PixfmtRgbaTag;
-    using RbufType = RenBuf;
-    using RowData = typename RbufType::RowData;
-    using BlenderType = Blender;
-    using ColorType = typename BlenderType::ColorType;
-    using OrderType = typename BlenderType::OrderType;
-    using ValueType = typename ColorType::ValueType;
-    using CalcType = typename ColorType::CalcType
+        /**
+         * @brief È¢úËâ≤ÂàÜÈáè‰∏éAlphaËß£Â§çÁî®.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* pColor)
+        {
+            ValueType a = pColor[Order::ALPHA];
+            pColor[Order::BLUE] = ColorType::Demultiply(pColor[Order::BLUE], a);
+            pColor[Order::RED] = ColorType::Demultiply(pColor[Order::RED], a);
+            pColor[Order::GREEN] = ColorType::Demultiply(pColor[Order::GREEN], a);
+        }
+    };
 
-        enum {
+    template <class ColorT, class Order>
+    struct BlenderRgba : ConvRgbaPre<ColorT, Order> {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
+        using CalcType = typename ColorType::CalcType;
+        using LongType = typename ColorType::LongType;
+
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
+            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+        {
+            BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
+        }
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
+            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+        {
+            pColor[Order::RED] = ColorType::Lerp(pColor[Order::RED], cr, alpha);
+            pColor[Order::GREEN] = ColorType::Lerp(pColor[Order::GREEN], cg, alpha);
+            pColor[Order::BLUE] = ColorType::Lerp(pColor[Order::BLUE], cb, alpha);
+            pColor[Order::ALPHA] = ColorType::Prelerp(pColor[Order::ALPHA], alpha, alpha);
+        }
+    };
+
+    template <class ColorT, class Order>
+    struct BlenderRgbaPre : ConvRgbaPre<ColorT, Order> {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
+        using CalcType = typename ColorType::CalcType;
+        using LongType = typename ColorType::LongType;
+
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void
+            BlendPix(ValueType* pColor,
+                     ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+        {
+            BlendPix(pColor,
+                     ColorType::MultCover(cr, cover),
+                     ColorType::MultCover(cg, cover),
+                     ColorType::MultCover(cb, cover),
+                     ColorType::MultCover(alpha, cover));
+        }
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
+                                                     ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+        {
+            pColor[Order::RED] = ColorType::Prelerp(pColor[Order::RED], cr, alpha);
+            pColor[Order::GREEN] = ColorType::Prelerp(pColor[Order::GREEN], cg, alpha);
+            pColor[Order::BLUE] = ColorType::Prelerp(pColor[Order::BLUE], cb, alpha);
+            pColor[Order::ALPHA] = ColorType::Prelerp(pColor[Order::ALPHA], alpha, alpha);
+        }
+    };
+
+    template <class ColorT, class Order>
+    struct BlenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
+        using CalcType = typename ColorType::CalcType;
+        using LongType = typename ColorType::LongType;
+
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÂèäË¶ÜÁõñÁéáÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
+            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+        {
+            BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
+        }
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÂèäË¶ÜÁõñÁéáÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
+            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+        {
+            if (alpha > ColorType::EmptyValue()) {
+                CalcType a = pColor[Order::ALPHA];
+                CalcType r = ColorType::Multiply(pColor[Order::RED], a);
+                CalcType g = ColorType::Multiply(pColor[Order::GREEN], a);
+                CalcType b = ColorType::Multiply(pColor[Order::BLUE], a);
+                pColor[Order::ALPHA] = ColorType::Prelerp(a, alpha, alpha);
+                pColor[Order::RED] = ColorType::Lerp(r, cr, alpha);
+                pColor[Order::GREEN] = ColorType::Lerp(g, cg, alpha);
+                pColor[Order::BLUE] = ColorType::Lerp(b, cb, alpha);
+                MultiplierRgba<ColorT, Order>::Demultiply(pColor);
+            }
+        }
+    };
+
+    template <class Blender, class RenBuf>
+    class PixfmtAlphaBlendRgba : public HeapBase {
+    public:
+        using PixfmtCategory = PixfmtRgbaTag;
+        using RbufType = RenBuf;
+        using RowData = typename RbufType::rowData;
+        using BlenderType = Blender;
+        using ColorType = typename BlenderType::ColorType;
+        using OrderType = typename BlenderType::OrderType;
+        using ValueType = typename ColorType::ValueType;
+        using CalcType = typename ColorType::CalcType;
+
+        enum
+        {
+            NUM_COMPONENTS = 4,
+            PIX_STEP = 4,
+            PIX_WIDTH = sizeof(ValueType) * PIX_STEP
+        };
+
+        struct PixelType {
+            ValueType colors[NUM_COMPONENTS];
+
+            void Set(ValueType r, ValueType g, ValueType b, ValueType a)
+            {
+                colors[OrderType::RED] = r;
+                colors[OrderType::GREEN] = g;
+                colors[OrderType::BLUE] = b;
+                colors[OrderType::ALPHA] = a;
+            }
+
+            void Set(const ColorType& color)
+            {
+                Set(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+            }
+
+            void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
+            {
+                r = colors[OrderType::RED];
+                g = colors[OrderType::GREEN];
+                b = colors[OrderType::BLUE];
+                a = colors[OrderType::ALPHA];
+            }
+
+            ColorType Get() const
+            {
+                return ColorType(colors[OrderType::RED], colors[OrderType::GREEN], colors[OrderType::BLUE], colors[OrderType::ALPHA]);
+            }
+            /**
+            * @brief Ëé∑Âèñ‰∏ã‰∏Ä‰∏™ÂÉèÁ¥†ÁöÑÈ¢úËâ≤ÂàÜÈáè.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
+            PixelType* Next()
+            {
+                return (PixelType*)(colors + PIX_STEP);
+            }
+            /**
+            * @brief Ëé∑Âèñ‰∏ã‰∏Ä‰∏™ÂÉèÁ¥†ÁöÑÈ¢úËâ≤ÂàÜÈáèÈ¶ñÂú∞ÂùÄ.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
+            const PixelType* Next() const
+            {
+                return (const PixelType*)(colors + PIX_STEP);
+            }
+            /**
+            * @brief Ëé∑ÂèñÁ¨¨n‰∏™ÂÉèÁ¥†ÁöÑÈ¢úËâ≤ÂàÜÈáèÈ¶ñÂú∞ÂùÄ.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
+            PixelType* Advance(int n)
+            {
+                return (PixelType*)(colors + n * PIX_STEP);
+            }
+            /**
+            * @brief Ëé∑ÂèñÁ¨¨n‰∏™ÂÉèÁ¥†ÁöÑÈ¢úËâ≤ÂàÜÈáèÈ¶ñÂú∞ÂùÄ.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
+            const PixelType* Advance(int n) const
+            {
+                return (const PixelType*)(colors + n * PIX_STEP);
+            }
+        };
+
+    private:
+        /**
+         * @brief Áî®È¢úËâ≤ÂèäË¶ÜÁõñÁéáÊ∑∑ÂêàÂà∞ÊåáÂÆöÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover)
+        {
+            blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
+        }
+
+        /**
+         * @brief Áî®È¢úËâ≤Ê∑∑ÂêàÂà∞ÊåáÂÆöÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c)
+        {
+            blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+        }
+        /**
+         * @brief Áî®È¢úËâ≤ÂèäË¶ÜÁõñÁéáËÆæÁΩÆÊàñÊ∑∑ÂêàÂà∞ÊåáÂÆöÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover)
+        {
+            if (!c.IsTransparent()) {
+                if (c.IsOpaque() && cover == COVER_MASK) {
+                    p->Set(c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+                } else {
+                    blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
+                }
+            }
+        }
+        /**
+         * @brief Áî®È¢úËâ≤ËÆæÁΩÆÊàñÊ∑∑ÂêàÂà∞ÊåáÂÆöÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c)
+        {
+            if (!c.IsTransparent()) {
+                if (c.IsOpaque()) {
+                    p->Set(c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+                } else {
+                    blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+                }
+            }
+        }
+
+    public:
+        PixfmtAlphaBlendRgba() :
+            rbuf_(0)
+        {}
+        explicit PixfmtAlphaBlendRgba(RbufType& rb) :
+            rbuf_(&rb)
+        {}
+        void Attach(RbufType& rb)
+        {
+            rbuf_ = &rb;
+        }
+        /**
+         * @brief ÊääÂÉèÁ¥†ÁºìÂÜ≤Âå∫ÈôÑÂä†Âà∞Ê∑∑ÂêàÂô®.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class PixFmt>
+        bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
+        {
+            RectI r(x1, y1, x2, y2);
+            if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
+                int stride = pixf.Stride();
+                rbuf_->attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * @brief ËøîÂõûÁ™óÂè£ÁöÑÂÆΩ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE unsigned Width() const
+        {
+            return rbuf_->GetWidth();
+        }
+
+        /**
+          * @brief ËøîÂõûÁ™óÂè£ÁöÑÈ´ò.
+          *
+          * @since 1.0
+          * @version 1.0
+          */
+        GRAPHIC_GEOMETRY_INLINE unsigned Height() const
+        {
+            return rbuf_->GetHeight();
+        }
+
+        /**
+          * @brief ËøîÂõûÁ™óÂè£‰∏ÄË°åÁöÑÂ≠óËäÇÊï∞.
+          *
+          * @since 1.0
+          * @version 1.0
+          */
+        GRAPHIC_GEOMETRY_INLINE int Stride() const
+        {
+            return rbuf_->GetStride();
+        }
+
+        /**
+          * @brief ËøîÂõûÁ™óÂè£‰∏ÄË°åÁöÑË°åÂú∞ÂùÄ.
+          *
+          * @since 1.0
+          * @version 1.0
+          */
+        GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
+        {
+            return rbuf_->row_ptr(y);
+        }
+
+        /**
+          * @brief ËøîÂõûÁ™óÂè£‰∏ÄË°åÁöÑË°åÂú∞ÂùÄ.
+          *
+          * @since 1.0
+          * @version 1.0
+          */
+        GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
+        {
+            return rbuf_->row_ptr(y);
+        }
+
+        /**
+          * @brief ËøîÂõûÁ™óÂè£‰∏ÄË°åÁöÑË°åÊï∞ÊçÆ.
+          *
+          * @since 1.0
+          * @version 1.0
+          */
+        GRAPHIC_GEOMETRY_INLINE RowData Row(int y) const
+        {
+            return rbuf_->row(y);
+        }
+
+        /**
+          * @brief ÊåáÈíàËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+          *
+          * @since 1.0
+          * @version 1.0
+          */
+        GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
+        {
+            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+        }
+
+        /**
+         * @brief ÊåáÈíàËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
+        {
+            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+        }
+
+        /**
+         * @brief ÊåáÈíàËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
+        {
+            return (PixelType*)(rbuf_->row_ptr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+        }
+
+        /**
+         * @brief Ëé∑ÂèñÊåáÂÆöÂ∑¶ËæπÁöÑÂÉèÁ¥†Âú∞ÂùÄ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
+        {
+            int8u* p = rbuf_->row_ptr(y);
+            return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
+        }
+
+        /**
+         * @brief ÊåáÈíàËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p)
+        {
+            return (PixelType*)p;
+        }
+
+        /**
+         * @brief ÊåáÈíàËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
+        {
+            return (const PixelType*)p;
+        }
+
+        /**
+         * @brief ÊääÁ∫ØËâ≤ÂÜôÂÖ•‰∏Ä‰∏™Âú∞ÂùÄ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static void WritePlainColor(void* p, ColorType c)
+        {
+            BlenderType::SetPlainColor(PixValuePtr(p)->c, c);
+        }
+
+        /**
+         * @brief Ëé∑Âèñ‰∏Ä‰∏™Âú∞ÂùÄÁöÑÁ∫ØËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static ColorType ReadPlainColor(const void* p)
+        {
+            return BlenderType::GetPlainColor(PixValuePtr(p)->c);
+        }
+
+        /**
+         * @brief Áªô‰∏Ä‰∏™Âú∞ÂùÄËÆæÁΩÆÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+        {
+            ((PixelType*)p)->Set(c);
+        }
+
+        /**
+         * @brief Ëé∑Âèñ‰∏Ä‰∏™ÂÉèÁ¥†ÁöÑÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
+        {
+            if (const PixelType* p = PixValuePtr(x, y)) {
+                return p->Get();
+            }
+            return ColorType::NoColor();
+        }
+
+        /**
+         * @brief Êã∑Ë¥ùÈ¢úËâ≤Âà∞ÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
+        {
+            PixValuePtr(x, y, 1)->Set(c);
+        }
+
+        /**
+        * @brief Áî®È¢úËâ≤c‰ª•coverÔºàË¶ÜÁõñÁéá = ÈÄèÊòéÂ∫¶ÔºâÁöÑÈÄèÊòéÂ∫¶Ê∑∑ÂêàÂÉèÁ¥†(x, y).
+        *
+        * @since 1.0
+        * @version 1.0
+        */
+        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
+        {
+            CopyOrBlendPix(PixValuePtr(x, y, 1), c, cover);
+        }
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÊ®™È°∫Â∫èËÆæÁΩÆlenÈïøÂ∫¶ÁöÑÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
+                                               unsigned len,
+                                               const ColorType& c)
+        {
+            PixelType v;
+            v.Set(c);
+            PixelType* p = PixValuePtr(x, y, len);
+            do {
+                *p = v;
+                p = p->Next();
+            } while (--len);
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÁ´ñÈ°∫Â∫èËÆæÁΩÆlenÈïøÂ∫¶ÁöÑÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
+                                               unsigned len,
+                                               const ColorType& c)
+        {
+            PixelType v;
+            v.Set(c);
+            do {
+                *PixValuePtr(x, y++, 1) = v;
+            } while (--len);
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÊ®™È°∫Â∫èÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendHline(int x, int y,
+                        unsigned len,
+                        const ColorType& c,
+                        int8u cover)
+        {
+            if (!c.IsTransparent()) {
+                PixelType* p = PixValuePtr(x, y, len);
+                if (c.IsOpaque() && cover == COVER_MASK) {
+                    PixelType v;
+                    v.Set(c);
+                    do {
+                        *p = v;
+                        p = p->Next();
+                    } while (--len);
+                } else {
+                    if (cover == COVER_MASK) {
+                        do {
+                            BlendPix(p, c);
+                            p = p->Next();
+                        } while (--len);
+                    } else {
+                        do {
+                            BlendPix(p, c, cover);
+                            p = p->Next();
+                        } while (--len);
+                    }
+                }
+            }
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÁ´ñÈ°∫Â∫èÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendVline(int x, int y,
+                        unsigned len,
+                        const ColorType& c,
+                        int8u cover)
+        {
+            if (!c.IsTransparent()) {
+                if (c.IsOpaque() && cover == COVER_MASK) {
+                    PixelType v;
+                    v.Set(c);
+                    do {
+                        *PixValuePtr(x, y++, 1) = v;
+                    } while (--len);
+                } else {
+                    if (cover == COVER_MASK) {
+                        do {
+                            BlendPix(PixValuePtr(x, y++, 1), c, c.alphaValue);
+                        } while (--len);
+                    } else {
+                        do {
+                            BlendPix(PixValuePtr(x, y++, 1), c, cover);
+                        } while (--len);
+                    }
+                }
+            }
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÊ®™È°∫Â∫èÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendSolidHspan(int x, int y,
+                             unsigned len,
+                             const ColorType& c,
+                             const int8u* covers)
+        {
+            if (!c.IsTransparent()) {
+                PixelType* p = PixValuePtr(x, y, len);
+                do {
+                    if (c.IsOpaque() && *covers == cover_mask) {
+                        p->Set(c);
+                    } else {
+                        BlendPix(p, c, *covers);
+                    }
+                    p = p->Next();
+                    ++covers;
+                } while (--len);
+            }
+        }
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÁ´ñÈ°∫Â∫èÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendSolidVspan(int x, int y,
+                             unsigned len,
+                             const ColorType& c,
+                             const int8u* covers)
+        {
+            if (!c.IsTransparent()) {
+                do {
+                    PixelType* p = PixValuePtr(x, y++, 1);
+                    if (c.IsOpaque() && *covers == COVER_MASK) {
+                        p->Set(c);
+                    } else {
+                        BlendPix(p, c, *covers);
+                    }
+                    ++covers;
+                } while (--len);
+            }
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÊ®™È°∫Â∫èËÆæÁΩÆlenÈïøÂ∫¶ÁöÑÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void CopyColorHspan(int x, int y,
+                            unsigned len,
+                            const ColorType* colors)
+        {
+            PixelType* p = PixValuePtr(x, y, len);
+            do {
+                p->Set(*colors++);
+                p = p->Next();
+            } while (--len);
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÁ´ñÈ°∫Â∫èËÆæÁΩÆlenÈïøÂ∫¶ÁöÑÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void CopyColorVspan(int x, int y,
+                            unsigned len,
+                            const ColorType* colors)
+        {
+            do {
+                PixValuePtr(x, y++, 1)->Set(*colors++);
+            } while (--len);
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊâìÊ®™È°∫Â∫èÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendColorHspan(int x, int y,
+                             unsigned len,
+                             const ColorType* colors,
+                             const int8u* covers,
+                             int8u cover)
+        {
+            PixelType* p = PixValuePtr(x, y, len);
+            if (covers) {
+                do {
+                    CopyOrBlendPix(p, *colors++, *covers++);
+                    p = p->Next();
+                } while (--len);
+            } else {
+                if (cover == COVER_MASK) {
+                    do {
+                        CopyOrBlendPix(p, *colors++);
+                        p = p->Next();
+                    } while (--len);
+                } else {
+                    do {
+                        CopyOrBlendPix(p, *colors++, cover);
+                        p = p->Next();
+                    } while (--len);
+                }
+            }
+        }
+
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÁ∫µÂêëÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendColorVspan(int x, int y,
+                             unsigned len,
+                             const ColorType* colors,
+                             const int8u* covers,
+                             int8u cover)
+        {
+            if (covers) {
+                do {
+                    CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, *covers++);
+                } while (--len);
+            } else {
+                if (cover == COVER_MASK) {
+                    do {
+                        CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++);
+                    } while (--len);
+                } else {
+                    do {
+                        CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, cover);
+                    } while (--len);
+                }
+            }
+        }
+
+        /**
+         * @brief ÊØè‰∏ÄÂÉèÁ¥†ÊâßË°å‰∏ÄÈÅçFunctionÂáΩÊï∞.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class Function>
+        void ForEachPixel(Function f)
+        {
+            for (unsigned y = 0; y < Height(); ++y) {
+                RowData r = rbuf_->row(y);
+                if (r.ptr) {
+                    unsigned len = r.x2 - r.x1 + 1;
+                    PixelType* p = PixValuePtr(r.x1, y, len);
+                    do {
+                        f(p->colors);
+                        p = p->Next();
+                    } while (--len);
+                }
+            }
+        }
+        /**
+         * @brief ÂØπÂÉèÁ¥†‰∏äÁöÑÈ¢úËâ≤ÂàÜÈáèÈ¢Ñ‰πò.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Premultiply()
+        {
+            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
+        }
+        /**
+         * @brief ÂØπÂÉèÁ¥†‰∏äÁöÑÈ¢úËâ≤ÂàÜÈáèËß£Â§çÁî®.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Demultiply()
+        {
+            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
+        }
+
+        template <class GammaLut>
+        void ApplyGammaDir(const GammaLut& g)
+        {
+            ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
+        }
+
+        template <class GammaLut>
+        void ApplyGammaInv(const GammaLut& g)
+        {
+            ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
+        }
+        /**
+         * @brief ÊääÊ∫êÂÉèÁ¥†Êã∑Ë¥ùÂà∞rbuf_.
+         * @param from Ê∫êÂÉèÁ¥†ÁºìÂ≠òÂå∫,xdst,ydst ÁõÆÁöÑÁºìÂÜ≤Âå∫Ëµ∑Âßã‰ΩçÁΩÆ,xsrc,ysrc Ê∫êÁºìÂÜ≤Âå∫Ëµ∑Âßã‰ΩçÁΩÆ,len Ë¶ÅÊã∑Ë¥ùÁöÑÈïøÂ∫¶
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class RenBuf2>
+        void CopyFrom(const RenBuf2& from,
+                      int xdst, int ydst,
+                      int xsrc, int ysrc,
+                      unsigned len)
+        {
+            if (const int8u* p = from.row_ptr(ysrc)) {
+                memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
+                          len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH);
+            }
+        }
+        /**
+         * @brief ÊääÊ∫êÂÉèÁ¥†ÂèäË¶ÜÁõñÁéáÊ∑∑ÂêàÂà∞rbuf_.
+         * @param from Ê∫êÂÉèÁ¥†ÁºìÂ≠òÂå∫,xdst,ydst ÁõÆÁöÑÁºìÂÜ≤Âå∫Ëµ∑Âßã‰ΩçÁΩÆ,xsrc,ysrc Ê∫êÁºìÂÜ≤Âå∫Ëµ∑Âßã‰ΩçÁΩÆ,
+         *        len Ë¶ÅÊ∑∑ÂêàÁöÑÈïøÂ∫¶ cover Ë¶ÜÁõñÁéá
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class SrcPixelFormatRenderer>
+        void BlendFrom(const SrcPixelFormatRenderer& from,
+                       int xdst, int ydst,
+                       int xsrc, int ysrc,
+                       unsigned len,
+                       int8u cover)
+        {
+            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
+                int srcinc = 1;
+                int dstinc = 1;
+
+                if (xdst > xsrc) {
+                    psrc = psrc->Advance(len - 1);
+                    pdst = pdst->Advance(len - 1);
+                    srcinc = -1;
+                    dstinc = -1;
+                }
+
+                if (cover == COVER_MASK) {
+                    do {
+                        CopyOrBlendPix(pdst, psrc->Get());
+                        psrc = psrc->Advance(srcinc);
+                        pdst = pdst->Advance(dstinc);
+                    } while (--len);
+                } else {
+                    do {
+                        CopyOrBlendPix(pdst, psrc->Get(), cover);
+                        psrc = psrc->Advance(srcinc);
+                        pdst = pdst->Advance(dstinc);
+                    } while (--len);
+                }
+            }
+        }
+
+        template <class SrcPixelFormatRenderer>
+        void BlendFromColor(const SrcPixelFormatRenderer& from,
+                            const ColorType& color,
+                            int xdst, int ydst,
+                            int xsrc, int ysrc,
+                            unsigned len,
+                            int8u cover)
+        {
+            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+            using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
+
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
+
+                do {
+                    CopyOrBlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
+                    psrc = psrc->Next();
+                    pdst = pdst->Next();
+                } while (--len);
+            }
+        }
+
+        template <class SrcPixelFormatRenderer>
+        void BlendFromLut(const SrcPixelFormatRenderer& from,
+                          const ColorType* colorLut,
+                          int xdst, int ydst,
+                          int xsrc, int ysrc,
+                          unsigned len,
+                          int8u cover)
+        {
+            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
+
+                if (cover == COVER_MASK) {
+                    do {
+                        CopyOrBlendPix(pdst, colorLut[psrc->c[0]]);
+                        psrc = psrc->Next();
+                        pdst = pdst->Next();
+                    } while (--len);
+                } else {
+                    do {
+                        CopyOrBlendPix(pdst, colorLut[psrc->c[0]], cover);
+                        psrc = psrc->Next();
+                        pdst = pdst->Next();
+                    } while (--len);
+                }
+            }
+        }
+
+    private:
+        RbufType* rbuf_;
+        Blender blender_;
+    };
+
+    template <class Blender, class RenBuf>
+    class PixfmtCustomBlendRgba : public HeapBase {
+    public:
+        using PixfmtCategory = PixfmtRgbaTag;
+        using RbufType = RenBuf;
+        using RowData = typename RbufType::rowData;
+        using BlenderType = Blender;
+        using ColorType = typename BlenderType::ColorType;
+        using OrderType = typename BlenderType::OrderType;
+        using ValueType = typename ColorType::ValueType;
+        using CalcType = typename ColorType::CalcType;
+        enum
+        {
             NUM_COMPONENTS = 4,
             PIX_STEP = 4,
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
         };
+        struct PixelType {
+            ValueType c[NUM_COMPONENTS];
 
-    struct PixelType {
-        ValueType colors[NUM_COMPONENTS];
-
-        void Set(ValueType r, ValueType g, ValueType b, ValueType a)
-        {
-            colors[OrderType::R] = r;
-            colors[OrderType::G] = g;
-            colors[OrderType::B] = b;
-            colors[OrderType::A] = a;
-        }
-
-        void Set(const ColorType& color)
-        {
-            Set(color.r, color.g, color.b, color.a);
-        }
-
-        void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
-        {
-            r = colors[OrderType::R];
-            g = colors[OrderType::G];
-            b = colors[OrderType::B];
-            a = colors[OrderType::A];
-        }
-
-        ColorType Get() const
-        {
-            return ColorType(colors[OrderType::R], colors[OrderType::G], colors[OrderType::B], colors[OrderType::A]);
-        }
-        /**
-        * @brief ªÒ»°œ¬“ª∏ˆœÒÀÿµƒ—’…´∑÷¡ø.
-        *
-        * @since 1.0
-        * @version 1.0
-        */
-        PixelType* Next()
-        {
-            return (PixelType*)(colors + PIX_STEP);
-        }
-        /**
-        * @brief ªÒ»°œ¬“ª∏ˆœÒÀÿµƒ—’…´∑÷¡ø ◊µÿ÷∑.
-        *
-        * @since 1.0
-        * @version 1.0
-        */
-        const PixelType* Next() const
-        {
-            return (const PixelType*)(colors + PIX_STEP);
-        }
-        /**
-        * @brief ªÒ»°µ⁄n∏ˆœÒÀÿµƒ—’…´∑÷¡ø ◊µÿ÷∑.
-        *
-        * @since 1.0
-        * @version 1.0
-        */
-        PixelType* Advance(int n)
-        {
-            return (PixelType*)(colors + n * PIX_STEP);
-        }
-        /**
-        * @brief ªÒ»°µ⁄n∏ˆœÒÀÿµƒ—’…´∑÷¡ø ◊µÿ÷∑.
-        *
-        * @since 1.0
-        * @version 1.0
-        */
-        const PixelType* Advance(int n) const
-        {
-            return (const PixelType*)(colors + n * PIX_STEP);
-        }
-    };
-
-private:
-    /**
-     * @brief ”√—’…´º∞∏≤∏«¬ ªÏ∫œµΩ÷∏∂®œÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover)
-    {
-        blender_.BlendPix(p->c, c.r, c.g, c.b, c.a, cover);
-    }
-
-    /**
-     * @brief ”√—’…´ªÏ∫œµΩ÷∏∂®œÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c)
-    {
-        blender_.BlendPix(p->c, c.r, c.g, c.b, c.a);
-    }
-    /**
-     * @brief ”√—’…´º∞∏≤∏«¬ …Ë÷√ªÚªÏ∫œµΩ÷∏∂®œÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover)
-    {
-        if (!c.IsTransparent()) {
-            if (c.IsOpaque() && cover == COVER_MASK) {
-                p->Set(c.r, c.g, c.b, c.a);
-            } else {
-                blender_.BlendPix(p->c, c.r, c.g, c.b, c.a, cover);
+            void Set(ValueType r, ValueType g, ValueType b, ValueType a)
+            {
+                c[OrderType::RED] = r;
+                c[OrderType::G] = g;
+                c[OrderType::B] = b;
+                c[OrderType::A] = a;
             }
-        }
-    }
-    /**
-     * @brief ”√—’…´…Ë÷√ªÚªÏ∫œµΩ÷∏∂®œÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c)
-    {
-        if (!c.IsTransparent()) {
-            if (c.IsOpaque()) {
-                p->Set(c.r, c.g, c.b, c.a);
-            } else {
-                blender_.BlendPix(p->c, c.r, c.g, c.b, c.a);
+
+            void Set(const ColorType& color)
+            {
+                Set(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
             }
+
+            void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
+            {
+                r = c[OrderType::RED];
+                g = c[OrderType::G];
+                b = c[OrderType::B];
+                a = c[OrderType::A];
+            }
+
+            ColorType Get() const
+            {
+                return ColorType(
+                    c[OrderType::RED],
+                    c[OrderType::G],
+                    c[OrderType::B],
+                    c[OrderType::A]);
+            }
+
+            PixelType* Next()
+            {
+                return (PixelType*)(c + PIX_STEP);
+            }
+
+            const PixelType* Next() const
+            {
+                return (const PixelType*)(c + PIX_STEP);
+            }
+
+            PixelType* Advance(int n)
+            {
+                return (PixelType*)(c + n * PIX_STEP);
+            }
+
+            const PixelType* Advance(int n) const
+            {
+                return (const PixelType*)(c + n * PIX_STEP);
+            }
+        };
+
+    private:
+        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
+        {
+            blender_.BlendPix(compOp_, p->c, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
         }
-    }
 
-public:
-    PixfmtAlphaBlendRgba()
-        : rbuf_(0)
-    {}
-    explicit PixfmtAlphaBlendRgba(RbufType& rb)
-        : rbuf_(&rb)
-    {}
-    void Attach(RbufType& rb)
-    {
-        rbuf_ = &rb;
-    }
-    /**
-     * @brief ∞—œÒÀÿª∫≥Â«¯∏Ωº”µΩªÏ∫œ∆˜.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class PixFmt>
-    bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
-    {
-        RectI r(x1, y1, x2, y2);
-        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
-            int stride = pixf.Stride();
-            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @brief ∑µªÿ¥∞ø⁄µƒøÌ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE unsigned Width() const
-    {
-        return rbuf_->Width();
-    }
-
-    /**
-      * @brief ∑µªÿ¥∞ø⁄µƒ∏ﬂ.
-      *
-      * @since 1.0
-      * @version 1.0
-      */
-    GRAPHIC_GEOMETRY_INLINE unsigned Height() const
-    {
-        return rbuf_->Height();
-    }
-
-    /**
-      * @brief ∑µªÿ¥∞ø⁄“ª––µƒ◊÷Ω⁄ ˝.
-      *
-      * @since 1.0
-      * @version 1.0
-      */
-    GRAPHIC_GEOMETRY_INLINE int Stride() const
-    {
-        return rbuf_->Stride();
-    }
-
-    /**
-      * @brief ∑µªÿ¥∞ø⁄“ª––µƒ––µÿ÷∑.
-      *
-      * @since 1.0
-      * @version 1.0
-      */
-    GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
-    {
-        return rbuf_->RowPtr(y);
-    }
-
-    /**
-      * @brief ∑µªÿ¥∞ø⁄“ª––µƒ––µÿ÷∑.
-      *
-      * @since 1.0
-      * @version 1.0
-      */
-    GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
-    {
-        return rbuf_->RowPtr(y);
-    }
-
-    /**
-      * @brief ∑µªÿ¥∞ø⁄“ª––µƒ–– ˝æ›.
-      *
-      * @since 1.0
-      * @version 1.0
-      */
-    GRAPHIC_GEOMETRY_INLINE row_data Row(int y) const
-    {
-        return rbuf_->Row(y);
-    }
-
-    /**
-      * @brief ÷∏’Î◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-      *
-      * @since 1.0
-      * @version 1.0
-      */
-    GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
-    {
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-    }
-
-    /**
-     * @brief ÷∏’Î◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
-    {
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-    }
-
-    /**
-     * @brief ÷∏’Î◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
-    {
-        return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
-    }
-
-    /**
-     * @brief ªÒ»°÷∏∂®◊Û±ﬂµƒœÒÀÿµÿ÷∑.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
-    {
-        int8u* p = rbuf_->RowPtr(y);
-        return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
-    }
-
-    /**
-     * @brief ÷∏’Î◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p)
-    {
-        return (PixelType*)p;
-    }
-
-    /**
-     * @brief ÷∏’Î◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
-    {
-        return (const PixelType*)p;
-    }
-
-    /**
-     * @brief ∞—¥ø…´–¥»Î“ª∏ˆµÿ÷∑.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static void WritePlainColor(void* p, ColorType c)
-    {
-        BlenderType::SetPlainColor(PixValuePtr(p)->c, c);
-    }
-
-    /**
-     * @brief ªÒ»°“ª∏ˆµÿ÷∑µƒ¥ø…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static ColorType ReadPlainColor(const void* p)
-    {
-        return BlenderType::GetPlainColor(PixValuePtr(p)->c);
-    }
-
-    /**
-     * @brief ∏¯“ª∏ˆµÿ÷∑…Ë÷√—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
-    {
-        ((PixelType*)p)->Set(c);
-    }
-
-    /**
-     * @brief ªÒ»°“ª∏ˆœÒÀÿµƒ—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
-    {
-        if (const PixelType* p = PixValuePtr(x, y)) {
-            return p->Get();
-        }
-        return ColorType::NoColor();
-    }
-
-    /**
-     * @brief øΩ±¥—’…´µΩœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
-    {
-        PixValuePtr(x, y, 1)->Set(c);
-    }
-
-    /**
-    * @brief ”√—’…´c“‘cover£®∏≤∏«¬  = Õ∏√˜∂»£©µƒÕ∏√˜∂»ªÏ∫œœÒÀÿ(x, y).
-    *
-    * @since 1.0
-    * @version 1.0
-    */
-    GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
-    {
-        CopyOrBlendPix(PixValuePtr(x, y, 1), c, cover);
-    }
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú∫·À≥–Ú…Ë÷√len≥§∂»µƒœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
-                                           unsigned len,
-                                           const ColorType& c)
-    {
-        PixelType v;
-        v.Set(c);
-        PixelType* p = PixValuePtr(x, y, len);
-        do {
-            *p = v;
-            p = p->Next();
-        } while (--len);
-    }
-
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú ˙À≥–Ú…Ë÷√len≥§∂»µƒœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
-                                           unsigned len,
-                                           const ColorType& c)
-    {
-        PixelType v;
-        v.Set(c);
-        do {
-            *PixValuePtr(x, y++, 1) = v;
-        } while (--len);
-    }
-
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú∫·À≥–ÚªÏ∫œlen≥§∂»µƒœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendHline(int x, int y,
-                    unsigned len,
-                    const ColorType& c,
-                    int8u cover)
-    {
-        if (!c.IsTransparent()) {
-            PixelType* p = PixValuePtr(x, y, len);
-            if (c.IsOpaque() && cover == COVER_MASK) {
-                PixelType v;
-                v.Set(c);
-                do {
-                    *p = v;
-                    p = p->Next();
-                } while (--len);
-            } else {
-                if (cover == COVER_MASK) {
-                    do {
-                        BlendPix(p, c);
-                        p = p->Next();
-                    } while (--len);
+        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
+        {
+            if (!c.IsTransparent()) {
+                if (c.IsOpaque() && cover == COVER_MASK) {
+                    p->Set(c.redValue, c.greenValue, c.blueValue, c.alphaValue);
                 } else {
-                    do {
-                        BlendPix(p, c, cover);
-                        p = p->Next();
-                    } while (--len);
+                    BlendPix(p, c, cover);
                 }
             }
         }
-    }
 
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú ˙À≥–ÚªÏ∫œlen≥§∂»µƒœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendVline(int x, int y,
-                    unsigned len,
-                    const ColorType& c,
-                    int8u cover)
-    {
-        if (!c.IsTransparent()) {
-            if (c.IsOpaque() && cover == COVER_MASK) {
-                PixelType v;
-                v.Set(c);
-                do {
-                    *PixValuePtr(x, y++, 1) = v;
-                } while (--len);
-            } else {
-                if (cover == COVER_MASK) {
-                    do {
-                        BlendPix(PixValuePtr(x, y++, 1), c, c.a);
-                    } while (--len);
-                } else {
-                    do {
-                        BlendPix(PixValuePtr(x, y++, 1), c, cover);
-                    } while (--len);
-                }
-            }
+    public:
+        PixfmtCustomBlendRgba() :
+            rbuf_(0), compOp_(3)
+        {}
+        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
+            rbuf_(&rb), compOp_(compOp)
+        {}
+        void Attach(RbufType& rb)
+        {
+            rbuf_ = &rb;
         }
-    }
+        /**
+         * @brief ÊääÂÉèÁ¥†ÈôÑÂä†Âà∞ÁªòÂà∂Âå∫.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class PixFmt>
+        bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
+        {
+            RectI r(x1, y1, x2, y2);
+            if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
+                int stride = pixf.Stride();
+                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                return true;
+            }
+            return false;
+        }
 
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú∫·À≥–ÚªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendSolidHspan(int x, int y,
-                         unsigned len,
-                         const ColorType& c,
-                         const int8u* covers)
-    {
-        if (!c.IsTransparent()) {
+        void CompOp(unsigned op)
+        {
+            compOp_ = op;
+        }
+
+        unsigned CompOp() const
+        {
+            return compOp_;
+        }
+        /**
+         * @brief Ëé∑ÂèñÊØèÂ±èÂπïÔºàÁªòÂà∂ÁºìÂÜ≤Âå∫ÔºâÂÆΩÂ∫¶.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE unsigned Width() const
+        {
+            return rbuf_->GetWidth();
+        }
+        /**
+         * @brief Ëé∑ÂèñÊØèÂ±èÂπïÔºàÁªòÂà∂ÁºìÂÜ≤Âå∫ÔºâÈ´òÂ∫¶.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE unsigned Height() const
+        {
+            return rbuf_->GetHeight();
+        }
+        /**
+         * @brief Ëé∑ÂèñÊØè‰∏ÄË°åÁöÑÂÉèÁ¥†Âç†Áî®ÁöÑÂÜÖÂ≠ò.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE int Stride() const
+        {
+            return rbuf_->Stride();
+        }
+        /**
+         * @brief ÈÄöËøáÁ∫µÂùêÊ†áËé∑ÂèñË°åÂú∞ÂùÄ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
+        {
+            return rbuf_->row_ptr(y);
+        }
+        /**
+         * @brief ÈÄöËøáÁ∫µÂùêÊ†áËé∑ÂèñË°åÂú∞ÂùÄ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
+        {
+            return rbuf_->row_ptr(y);
+        }
+        /**
+         * @brief ÈÄöËøáÁ∫µÂùêÊ†áËé∑ÂèñË°åÊï∞ÊçÆ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE RowData Row(int y) const
+        {
+            return rbuf_->Row(y);
+        }
+        /**
+         * @brief ÂÉèÁ¥†ÂùêÊ†áËΩ¨‰∏∫ÂÉèÁ¥†‰ΩçÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
+        {
+            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+        }
+        /**
+         * @brief ÂÉèÁ¥†ÂùêÊ†áËΩ¨‰∏∫ÂÉèÁ¥†‰ΩçÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
+        {
+            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+        }
+        /**
+         * @brief ÂÉèÁ¥†ÂùêÊ†áËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
+        {
+            return (PixelType*)(rbuf_->row_ptr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+        }
+        /**
+         * @brief ÂÉèÁ¥†ÂùêÊ†áËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
+        {
+            int8u* p = rbuf_->row_ptr(y);
+            return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
+        }
+        /**
+         * @brief ÂÉèÁ¥†Âú∞ÂùÄËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p)
+        {
+            return (PixelType*)p;
+        }
+        /**
+         * @brief ÂÉèÁ¥†Âú∞ÂùÄËΩ¨‰∏∫ÂÉèÁ¥†Á±ªÂûãÊåáÈíà.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
+        {
+            return (const PixelType*)p;
+        }
+        /**
+         * @brief ËÆæÁΩÆÂÉèÁ¥†Âú∞ÂùÄÁöÑÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+        {
+            ((PixelType*)p)->Set(c);
+        }
+        /**
+         * @brief Ëé∑ÂèñÂÉèÁ¥†ÁöÑÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
+        {
+            if (const PixelType* p = PixValuePtr(x, y)) {
+                return p->Get();
+            }
+            return ColorType::NoColor();
+        }
+        /**
+         * @brief ÊääÊåáÂÆöÁöÑÈ¢úËâ≤Êã∑Ë¥ùÂà∞ÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
+        {
+            MakePix(PixValuePtr(x, y, 1), c);
+        }
+        /**
+         * @brief Âú®(x, y)ÂùêÊ†áÁöÑÂÉèÁ¥†Ê∑∑ÂêàÈ¢úËâ≤È¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
+        {
+            BlendPix(PixValuePtr(x, y, 1), c, cover);
+        }
+        /**
+         * @brief ‰ªé(x, y)Ê®™ÂêëÂêëÂºÄÂßãÊã∑Ë¥ùlenÈïøÂ∫¶ÁöÑÁ∫øÊÄßÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
+                                               unsigned len,
+                                               const ColorType& c)
+        {
+            PixelType v;
+            v.Set(c);
             PixelType* p = PixValuePtr(x, y, len);
             do {
-                if (c.IsOpaque() && *covers == cover_mask) {
-                    p->Set(c);
-                } else {
-                    BlendPix(p, c, *covers);
-                }
-                p = p->Next();
-                ++covers;
-            } while (--len);
-        }
-    }
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú ˙À≥–ÚªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendSolidVspan(int x, int y,
-                         unsigned len,
-                         const ColorType& c,
-                         const int8u* covers)
-    {
-        if (!c.IsTransparent()) {
-            do {
-                PixelType* p = PixValuePtr(x, y++, 1);
-                if (c.IsOpaque() && *covers == COVER_MASK) {
-                    p->Set(c);
-                } else {
-                    BlendPix(p, c, *covers);
-                }
-                ++covers;
-            } while (--len);
-        }
-    }
-
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú∫·À≥–Ú…Ë÷√len≥§∂»µƒ—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void CopyColorHspan(int x, int y,
-                        unsigned len,
-                        const ColorType* colors)
-    {
-        PixelType* p = PixValuePtr(x, y, len);
-        do {
-            p->Set(*colors++);
-            p = p->Next();
-        } while (--len);
-    }
-
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú ˙À≥–Ú…Ë÷√len≥§∂»µƒ—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void CopyColorVspan(int x, int y,
-                        unsigned len,
-                        const ColorType* colors)
-    {
-        do {
-            PixValuePtr(x, y++, 1)->Set(*colors++);
-        } while (--len);
-    }
-
-    /**
-     * @brief ¥”(x, y)ø™ º¥Ú∫·À≥–ÚªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendColorHspan(int x, int y,
-                         unsigned len,
-                         const ColorType* colors,
-                         const int8u* covers,
-                         int8u cover)
-    {
-        PixelType* p = PixValuePtr(x, y, len);
-        if (covers) {
-            do {
-                CopyOrBlendPix(p, *colors++, *covers++);
+                *p = v;
                 p = p->Next();
             } while (--len);
-        } else {
-            if (cover == COVER_MASK) {
-                do {
-                    CopyOrBlendPix(p, *colors++);
-                    p = p->Next();
-                } while (--len);
-            } else {
-                do {
-                    CopyOrBlendPix(p, *colors++, cover);
-                    p = p->Next();
-                } while (--len);
-            }
         }
-    }
-
-    /**
-     * @brief ¥”(x, y)ø™ º◊›œÚªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendColorVspan(int x, int y,
-                         unsigned len,
-                         const ColorType* colors,
-                         const int8u* covers,
-                         int8u cover)
-    {
-        if (covers) {
+        /**
+         * @brief ‰ªé(x, y)Á∫µÂêëÂºÄÂßãÊã∑Ë¥ùlenÈïøÂ∫¶ÁöÑÁ∫øÊÄßÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
+                                               unsigned len,
+                                               const ColorType& c)
+        {
+            PixelType v;
+            v.Set(c);
             do {
-                CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, *covers++);
-            } while (--len);
-        } else {
-            if (cover == COVER_MASK) {
-                do {
-                    CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++);
-                } while (--len);
-            } else {
-                do {
-                    CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, cover);
-                } while (--len);
-            }
-        }
-    }
-
-    /**
-     * @brief √ø“ªœÒÀÿ÷¥––“ª±ÈFunction∫Ø ˝.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class Function>
-    void ForEachPixel(Function f)
-    {
-        for (unsigned y = 0; y < height(); ++y) {
-            RowData r = rbuf_->Row(y);
-            if (r.ptr) {
-                unsigned len = r.x2 - r.x1 + 1;
-                PixelType* p = PixValuePtr(r.x1, y, len);
-                do {
-                    f(p->c);
-                    p = p->Next();
-                } while (--len);
-            }
-        }
-    }
-    /**
-     * @brief ∂‘œÒÀÿ…œµƒ—’…´∑÷¡ø‘§≥À.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Premultiply()
-    {
-        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
-    }
-    /**
-     * @brief ∂‘œÒÀÿ…œµƒ—’…´∑÷¡øΩ‚∏¥”√.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Demultiply()
-    {
-        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
-    }
-
-    template <class GammaLut>
-    void ApplyGammaDir(const GammaLut& g)
-    {
-        ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
-    }
-
-    template <class GammaLut>
-    void ApplyGammaInv(const GammaLut& g)
-    {
-        ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
-    }
-    /**
-     * @brief ∞—‘¥œÒÀÿøΩ±¥µΩrbuf_.
-     * @param from ‘¥œÒÀÿª∫¥Ê«¯,xdst,ydst ƒøµƒª∫≥Â«¯∆ ºŒª÷√,xsrc,ysrc ‘¥ª∫≥Â«¯∆ ºŒª÷√,len “™øΩ±¥µƒ≥§∂»
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class RenBuf2>
-    void CopyFrom(const RenBuf2& from,
-                  int xdst, int ydst,
-                  int xsrc, int ysrc,
-                  unsigned len)
-    {
-        if (const int8u* p = from.RowPtr(ysrc)) {
-            std::memmove_s(rbuf_->RowPtr(xdst, ydst, len) + xdst * PIX_WIDTH, len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH);
-        }
-    }
-    /**
-     * @brief ∞—‘¥œÒÀÿº∞∏≤∏«¬ ªÏ∫œµΩrbuf_.
-     * @param from ‘¥œÒÀÿª∫¥Ê«¯,xdst,ydst ƒøµƒª∫≥Â«¯∆ ºŒª÷√,xsrc,ysrc ‘¥ª∫≥Â«¯∆ ºŒª÷√,
-     *        len “™ªÏ∫œµƒ≥§∂» cover ∏≤∏«¬ 
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class SrcPixelFormatRenderer>
-    void BlendFrom(const SrcPixelFormatRenderer& from,
-                   int xdst, int ydst,
-                   int xsrc, int ysrc,
-                   unsigned len,
-                   int8u cover)
-    {
-        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-
-        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-            PixelType* pdst = PixValuePtr(xdst, ydst, len);
-            int srcinc = 1;
-            int dstinc = 1;
-
-            if (xdst > xsrc) {
-                psrc = psrc->Advance(len - 1);
-                pdst = pdst->Advance(len - 1);
-                srcinc = -1;
-                dstinc = -1;
-            }
-
-            if (cover == COVER_MASK) {
-                do {
-                    CopyOrBlendPix(pdst, psrc->Get());
-                    psrc = psrc->Advance(srcinc);
-                    pdst = pdst->Advance(dstinc);
-                } while (--len);
-            } else {
-                do {
-                    CopyOrBlendPix(pdst, psrc->Get(), cover);
-                    psrc = psrc->Advance(srcinc);
-                    pdst = pdst->Advance(dstinc);
-                } while (--len);
-            }
-        }
-    }
-
-    template <class SrcPixelFormatRenderer>
-    void BlendFromColor(const SrcPixelFormatRenderer& from,
-                        const ColorType& color,
-                        int xdst, int ydst,
-                        int xsrc, int ysrc,
-                        unsigned len,
-                        int8u cover)
-    {
-        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-        using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
-
-        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-            PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-            do {
-                CopyOrBlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
-                psrc = psrc->Next();
-                pdst = pdst->Next();
+                *PixValuePtr(x, y++, 1) = v;
             } while (--len);
         }
-    }
-
-    template <class SrcPixelFormatRenderer>
-    void BlendFromLut(const SrcPixelFormatRenderer& from,
-                      const ColorType* colorLut,
-                      int xdst, int ydst,
-                      int xsrc, int ysrc,
-                      unsigned len,
-                      int8u cover)
-    {
-        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-
-        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-            PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-            if (cover == COVER_MASK) {
-                do {
-                    CopyOrBlendPix(pdst, colorLut[psrc->c[0]]);
-                    psrc = psrc->Next();
-                    pdst = pdst->Next();
-                } while (--len);
-            } else {
-                do {
-                    CopyOrBlendPix(pdst, colorLut[psrc->c[0]], cover);
-                    psrc = psrc->Next();
-                    pdst = pdst->Next();
-                } while (--len);
-            }
-        }
-    }
-
-private:
-    RbufType* rbuf_;
-    Blender blender_;
-};
-
-template <class Blender, class RenBuf>
-class PixfmtCustomBlendRgba public HeapBase
-{
-public:
-    using PixfmtCategory = PixfmtRgbaTag;
-    using RbufType = RenBuf;
-    using RowData = typename RbufType::RowData;
-    using BlenderType = Blender;
-    using ColorType = typename BlenderType::ColorType;
-    using OrderType = typename BlenderType::OrderType;
-    using ValueType = typename ColorType::ValueType;
-    using CalcType = typename ColorType::CalcType;
-    enum
-    {
-        NUM_COMPONENTS = 4,
-        PIX_STEP = 4,
-        PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
-    };
-    struct PixelType {
-        ValueType c[NUM_COMPONENTS];
-
-        void Set(ValueType r, ValueType g, ValueType b, ValueType a)
+        /**
+         * @brief ‰ªé(x, y)Ê®™ÂêëÂºÄÂßãÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑÁ∫øÊÄßÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendHline(int x, int y, unsigned len,
+                        const ColorType& c, int8u cover)
         {
-            c[OrderType::R] = r;
-            c[OrderType::G] = g;
-            c[OrderType::B] = b;
-            c[OrderType::A] = a;
-        }
-
-        void Set(const ColorType& color)
-        {
-            Set(color.r, color.g, color.b, color.a);
-        }
-
-        void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
-        {
-            r = c[OrderType::R];
-            g = c[OrderType::G];
-            b = c[OrderType::B];
-            a = c[OrderType::A];
-        }
-
-        ColorType Get() const
-        {
-            return ColorType(
-                c[OrderType::R],
-                c[OrderType::G],
-                c[OrderType::B],
-                c[OrderType::A]);
-        }
-
-        PixelType* Next()
-        {
-            return (PixelType*)(c + PIX_STEP);
-        }
-
-        const PixelType* Next() const
-        {
-            return (const PixelType*)(c + PIX_STEP);
-        }
-
-        PixelType* Advance(int n)
-        {
-            return (PixelType*)(c + n * PIX_STEP);
-        }
-
-        const PixelType* Advance(int n) const
-        {
-            return (const PixelType*)(c + n * PIX_STEP);
-        }
-    };
-
-private:
-    GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType * p, const ColorType& c, unsigned cover = COVER_FULL)
-    {
-        blender_.BlendPix(compOp_, p->c, c.r, c.g, c.b, c.a, cover);
-    }
-
-    GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType * p, const ColorType& c, unsigned cover = COVER_FULL)
-    {
-        if (!c.IsTransparent()) {
-            if (c.IsOpaque() && cover == COVER_MASK) {
-                p->Set(c.r, c.g, c.b, c.a);
-            } else {
+            PixelType* p = PixValuePtr(x, y, len);
+            do {
                 BlendPix(p, c, cover);
+                p = p->Next();
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)Á∫µÂêëÂºÄÂßãÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑÁ∫øÊÄßÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendVline(int x, int y, unsigned len,
+                        const ColorType& c, int8u cover)
+        {
+            do {
+                BlendPix(PixValuePtr(x, y++, 1), c, cover);
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)Ê®™ÂêëÂºÄÂßãÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendSolidHspan(int x, int y, unsigned len,
+                             const ColorType& c, const int8u* covers)
+        {
+            PixelType* p = PixValuePtr(x, y, len);
+
+            do {
+                BlendPix(p, c, *covers++);
+                p = p->Next();
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)Á∫µÂêëÂºÄÂßãÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendSolidVspan(int x, int y, unsigned len,
+                             const ColorType& c, const int8u* covers)
+        {
+            do {
+                BlendPix(PixValuePtr(x, y++, 1), c, *covers++);
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)Ê®™ÂêëÂºÄÂßãÊã∑Ë¥ùlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void CopyColorHspan(int x, int y,
+                            unsigned len,
+                            const ColorType* colors)
+        {
+            PixelType* p = PixValuePtr(x, y, len);
+
+            do {
+                p->Set(*colors++);
+                p = p->Next();
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)Á∫µÂêëÂºÄÂßãÊã∑Ë¥ùlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void CopyColorVspan(int x, int y,
+                            unsigned len,
+                            const ColorType* colors)
+        {
+            do {
+                PixValuePtr(x, y++, 1)->Set(*colors++);
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÊ®™ÂêëÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendColorHspan(int x, int y, unsigned len,
+                             const ColorType* colors,
+                             const int8u* covers,
+                             int8u cover)
+        {
+            PixelType* p = PixValuePtr(x, y, len);
+
+            do {
+                BlendPix(p, *colors++, covers ? *covers++ : cover);
+                p = p->Next();
+            } while (--len);
+        }
+        /**
+         * @brief ‰ªé(x, y)ÂºÄÂßãÁ∫µÂêëÊ∑∑ÂêàlenÈïøÂ∫¶ÁöÑ‰∏ÄÁ≥ªÂàóÈ¢úËâ≤ÂèäË¶ÜÁõñÁéá.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void BlendColorVspan(int x, int y, unsigned len,
+                             const ColorType* colors,
+                             const int8u* covers,
+                             int8u cover)
+        {
+            do {
+                BlendPix(PixValuePtr(x, y++, 1), *colors++, covers ? *covers++ : cover);
+            } while (--len);
+        }
+
+        /**
+         * @brief ÊØè‰∏ÄÂÉèÁ¥†ÊâßË°å‰∏ÄÈÅçFunctionÂáΩÊï∞.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class Function>
+        void ForEachPixel(Function f)
+        {
+            unsigned y;
+            for (y = 0; y < Height(); ++y) {
+                RowData r = rbuf_->row(y);
+                if (r.ptr) {
+                    unsigned len = r.x2 - r.x1 + 1;
+                    PixelType* p = PixValuePtr(r.x1, y, len);
+                    do {
+                        f(p->c);
+                        p = p->Next();
+                    } while (--len);
+                }
             }
         }
-    }
 
-public:
-    PixfmtCustomBlendRgba()
-        : rbuf_(0), compOp_(3)
-    {}
-    explicit PixfmtCustomBlendRgba(RbufType & rb, unsigned compOp = 3)
-        : rbuf_(&rb), compOp_(compOp)
-    {}
-    void Attach(RbufType & rb)
-    {
-        rbuf_ = &rb;
-    }
-    /**
-     * @brief ∞—œÒÀÿ∏Ωº”µΩªÊ÷∆«¯.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class PixFmt>
-    bool Attach(PixFmt & pixf, int x1, int y1, int x2, int y2)
-    {
-        RectI r(x1, y1, x2, y2);
-        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
-            int stride = pixf.Stride();
-            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
-            return true;
+        void Premultiply()
+        {
+            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
         }
-        return false;
-    }
 
-    void CompOp(unsigned op)
-    {
-        compOp_ = op;
-    }
-
-    unsigned CompOp() const
-    {
-        return compOp_;
-    }
-    /**
-     * @brief ªÒ»°√ø∆¡ƒª£®ªÊ÷∆ª∫≥Â«¯£©øÌ∂».
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE unsigned Width() const
-    {
-        return rbuf_->Width();
-    }
-    /**
-     * @brief ªÒ»°√ø∆¡ƒª£®ªÊ÷∆ª∫≥Â«¯£©∏ﬂ∂».
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE unsigned Height() const
-    {
-        return rbuf_->Height();
-    }
-    /**
-     * @brief ªÒ»°√ø“ª––µƒœÒÀÿ’º”√µƒƒ⁄¥Ê.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE int Stride() const
-    {
-        return rbuf_->Stride();
-    }
-    /**
-     * @brief Õ®π˝◊›◊¯±ÍªÒ»°––µÿ÷∑.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
-    {
-        return rbuf_->RowPtr(y);
-    }
-    /**
-     * @brief Õ®π˝◊›◊¯±ÍªÒ»°––µÿ÷∑.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
-    {
-        return rbuf_->RowPtr(y);
-    }
-    /**
-     * @brief Õ®π˝◊›◊¯±ÍªÒ»°–– ˝æ›.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE RowData Row(int y) const
-    {
-        return rbuf_->Row(y);
-    }
-    /**
-     * @brief œÒÀÿ◊¯±Í◊™Œ™œÒÀÿŒª÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
-    {
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-    }
-    /**
-     * @brief œÒÀÿ◊¯±Í◊™Œ™œÒÀÿŒª÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
-    {
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-    }
-    /**
-     * @brief œÒÀÿ◊¯±Í◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
-    {
-        return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
-    }
-    /**
-     * @brief œÒÀÿ◊¯±Í◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
-    {
-        int8u* p = rbuf_->RowPtr(y);
-        return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
-    }
-    /**
-     * @brief œÒÀÿµÿ÷∑◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p)
-    {
-        return (PixelType*)p;
-    }
-    /**
-     * @brief œÒÀÿµÿ÷∑◊™Œ™œÒÀÿ¿‡–Õ÷∏’Î.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
-    {
-        return (const PixelType*)p;
-    }
-    /**
-     * @brief …Ë÷√œÒÀÿµÿ÷∑µƒ—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u * p, const ColorType& c)
-    {
-        ((PixelType*)p)->Set(c);
-    }
-    /**
-     * @brief ªÒ»°œÒÀÿµƒ—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
-    {
-        if (const PixelType* p = PixValuePtr(x, y)) {
-            return p->Get();
+        void Demultiply()
+        {
+            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
         }
-        return ColorType::NoColor();
-    }
-    /**
-     * @brief ∞—÷∏∂®µƒ—’…´øΩ±¥µΩœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
-    {
-        MakePix(PixValuePtr(x, y, 1), c);
-    }
-    /**
-     * @brief ‘⁄(x, y)◊¯±ÍµƒœÒÀÿªÏ∫œ—’…´—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
-    {
-        BlendPix(PixValuePtr(x, y, 1), c, cover);
-    }
-    /**
-     * @brief ¥”(x, y)∫·œÚœÚø™ ºøΩ±¥len≥§∂»µƒœﬂ–‘—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
-                                           unsigned len,
-                                           const ColorType& c)
-    {
-        PixelType v;
-        v.Set(c);
-        PixelType* p = PixValuePtr(x, y, len);
-        do {
-            *p = v;
-            p = p->Next();
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)◊›œÚø™ ºøΩ±¥len≥§∂»µƒœﬂ–‘—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
-                                           unsigned len,
-                                           const ColorType& c)
-    {
-        PixelType v;
-        v.Set(c);
-        do {
-            *PixValuePtr(x, y++, 1) = v;
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)∫·œÚø™ ºªÏ∫œlen≥§∂»µƒœﬂ–‘—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendHline(int x, int y, unsigned len,
-                    const ColorType& c, int8u cover)
-    {
-        PixelType* p = PixValuePtr(x, y, len);
-        do {
-            BlendPix(p, c, cover);
-            p = p->Next();
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)◊›œÚø™ ºªÏ∫œlen≥§∂»µƒœﬂ–‘—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendVline(int x, int y, unsigned len,
-                    const ColorType& c, int8u cover)
-    {
-        do {
-            BlendPix(PixValuePtr(x, y++, 1), c, cover);
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)∫·œÚø™ ºªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendSolidHspan(int x, int y, unsigned len,
-                         const ColorType& c, const int8u* covers)
-    {
-        PixelType* p = PixValuePtr(x, y, len);
 
-        do {
-            BlendPix(p, c, *covers++);
-            p = p->Next();
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)◊›œÚø™ ºªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendSolidVspan(int x, int y, unsigned len,
-                         const ColorType& c, const int8u* covers)
-    {
-        do {
-            BlendPix(PixValuePtr(x, y++, 1), c, *covers++);
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)∫·œÚø™ ºøΩ±¥len≥§∂»µƒ“ªœµ¡–—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void CopyColorHspan(int x, int y,
-                        unsigned len,
-                        const ColorType* colors)
-    {
-        PixelType* p = PixValuePtr(x, y, len);
+        template <class GammaLut>
+        void ApplyGammaDir(const GammaLut& g)
+        {
+            ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
+        }
 
-        do {
-            p->Set(*colors++);
-            p = p->Next();
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)◊›œÚø™ ºøΩ±¥len≥§∂»µƒ“ªœµ¡–—’…´.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void CopyColorVspan(int x, int y,
-                        unsigned len,
-                        const ColorType* colors)
-    {
-        do {
-            PixValuePtr(x, y++, 1)->Set(*colors++);
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)ø™ º∫·œÚªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendColorHspan(int x, int y, unsigned len,
-                         const ColorType* colors,
-                         const int8u* covers,
-                         int8u cover)
-    {
-        PixelType* p = PixValuePtr(x, y, len);
+        template <class GammaLut>
+        void ApplyGammaInv(const GammaLut& g)
+        {
+            ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
+        }
 
-        do {
-            BlendPix(p, *colors++, covers ? *covers++ : cover);
-            p = p->Next();
-        } while (--len);
-    }
-    /**
-     * @brief ¥”(x, y)ø™ º◊›œÚªÏ∫œlen≥§∂»µƒ“ªœµ¡–—’…´º∞∏≤∏«¬ .
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void BlendColorVspan(int x, int y, unsigned len,
-                         const ColorType* colors,
-                         const int8u* covers,
-                         int8u cover)
-    {
-        do {
-            BlendPix(PixValuePtr(x, y++, 1), *colors++, covers ? *covers++ : cover);
-        } while (--len);
-    }
+        template <class RenBuf2>
+        void CopyFrom(const RenBuf2& from,
+                      int xdst, int ydst,
+                      int xsrc, int ysrc,
+                      unsigned len)
+        {
+            if (const int8u* p = from.RowPtr(ysrc)) {
+                memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH, len * PIX_WIDTH,
+                          p + xsrc * PIX_WIDTH, len * PIX_WIDTH);
+            }
+        }
 
-    /**
-     * @brief √ø“ªœÒÀÿ÷¥––“ª±ÈFunction∫Ø ˝.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class Function>
-    void ForEachPixel(Function f)
-    {
-        unsigned y;
-        for (y = 0; y < Height(); ++y) {
-            row_data r = rbuf_->row(y);
-            if (r.ptr) {
-                unsigned len = r.x2 - r.x1 + 1;
-                PixelType* p = PixValuePtr(r.x1, y, len);
+        template <class SrcPixelFormatRenderer>
+        void BlendFrom(const SrcPixelFormatRenderer& from,
+                       int xdst, int ydst,
+                       int xsrc, int ysrc,
+                       unsigned len,
+                       int8u cover)
+        {
+            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
+                int srcinc = 1;
+                int dstinc = 1;
+
+                if (xdst > xsrc) {
+                    psrc = psrc->Advance(len - 1);
+                    pdst = pdst->Advance(len - 1);
+                    srcinc = -1;
+                    dstinc = -1;
+                }
+
                 do {
-                    f(p->c);
-                    p = p->Next();
+                    BlendPix(pdst, psrc->Get(), cover);
+                    psrc = psrc->Advance(srcinc);
+                    pdst = pdst->Advance(dstinc);
                 } while (--len);
             }
         }
-    }
 
-    void Premultiply()
-    {
-        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
-    }
+        template <class SrcPixelFormatRenderer>
+        void BlendFromColor(const SrcPixelFormatRenderer& from,
+                            const ColorType& color,
+                            int xdst, int ydst,
+                            int xsrc, int ysrc,
+                            unsigned len,
+                            int8u cover)
+        {
+            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
+            using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
 
-    void Demultiply()
-    {
-        ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
-    }
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
 
-    template <class GammaLut>
-    void ApplyGammaDir(const GammaLut& g)
-    {
-        ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
-    }
-
-    template <class GammaLut>
-    void ApplyGammaInv(const GammaLut& g)
-    {
-        ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
-    }
-
-    template <class RenBuf2>
-    void CopyFrom(const RenBuf2& from,
-                  int xdst, int ydst,
-                  int xsrc, int ysrc,
-                  unsigned len)
-    {
-        if (const int8u* p = from.RowPtr(ysrc)) {
-            std::memmove(rbuf_->RowPtr(xdst, ydst, len) + xdst * PIX_IDTH, p + xsrc * PIX_IDTH, len * PIX_IDTH);
-        }
-    }
-
-    template <class SrcPixelFormatRenderer>
-    void BlendFrom(const SrcPixelFormatRenderer& from,
-                   int xdst, int ydst,
-                   int xsrc, int ysrc,
-                   unsigned len,
-                   int8u cover)
-    {
-        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-
-        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-            PixelType* pdst = PixValuePtr(xdst, ydst, len);
-            int srcinc = 1;
-            int dstinc = 1;
-
-            if (xdst > xsrc) {
-                psrc = psrc->Advance(len - 1);
-                pdst = pdst->Advance(len - 1);
-                srcinc = -1;
-                dstinc = -1;
+                do {
+                    BlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
+                    psrc = psrc->Next();
+                    pdst = pdst->Next();
+                } while (--len);
             }
-
-            do {
-                BlendPix(pdst, psrc->Get(), cover);
-                psrc = psrc->Advance(srcinc);
-                pdst = pdst->Advance(dstinc);
-            } while (--len);
         }
-    }
 
-    template <class SrcPixelFormatRenderer>
-    void BlendFromColor(const SrcPixelFormatRenderer& from,
-                        const ColorType& color,
-                        int xdst, int ydst,
-                        int xsrc, int ysrc,
-                        unsigned len,
-                        int8u cover)
-    {
-        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-        using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
+        template <class SrcPixelFormatRenderer>
+        void BlendFromLut(const SrcPixelFormatRenderer& from,
+                          const ColorType* colorLut,
+                          int xdst, int ydst,
+                          int xsrc, int ysrc,
+                          unsigned len,
+                          int8u cover)
+        {
+            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
 
-        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-            PixelType* pdst = PixValuePtr(xdst, ydst, len);
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
 
-            do {
-                BlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
-                psrc = psrc->Next();
-                pdst = pdst->Next();
-            } while (--len);
+                do {
+                    BlendPix(pdst, colorLut[psrc->c[0]], cover);
+                    psrc = psrc->Next();
+                    pdst = pdst->Next();
+                } while (--len);
+            }
         }
-    }
 
-    template <class SrcPixelFormatRenderer>
-    void BlendFromLut(const SrcPixelFormatRenderer& from,
-                      const ColorType* colorLut,
-                      int xdst, int ydst,
-                      int xsrc, int ysrc,
-                      unsigned len,
-                      int8u cover)
-    {
-        using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-
-        if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-            PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-            do {
-                BlendPix(pdst, colorLut[psrc->c[0]], cover);
-                psrc = psrc->Next();
-                pdst = pdst->Next();
-            } while (--len);
-        }
-    }
-
-private:
-    RbufType* rbuf_;
-    Blender blender_;
-    unsigned compOp_;
-};
+    private:
+        RbufType* rbuf_;
+        Blender blender_;
+        unsigned compOp_;
+    };
 
 } // namespace OHOS
+#endif

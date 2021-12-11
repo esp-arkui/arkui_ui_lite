@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_pixfmt_rgba.h
 *
-* @brief Defines —’…´∑÷¡øgamma≤Ÿ◊˜¿‡.
+* @brief Defines È¢úËâ≤ÂàÜÈáègammaÊìç‰ΩúÁ±ª.
 *
 * @since 1.0
 * @version 1.0
@@ -38,77 +38,74 @@
 #include <cmath>
 #include <cstring>
 
+#include "gfx_utils/heap_base.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/rendering_buffer.h"
-#include "heap_base.h"
 namespace OHOS {
-/**
- *
- * @brief Defines —’…´∑÷¡ø±∂‘ˆ∆˜.
- *
- * @since 1.0
- * @version 1.0
- */
-template <class ColorT, class Order>
-struct MultiplierRgba {
-    using ColorType = ColorT;
-    using ValueType = typename ColorType::ValueType;
-    /**
-     * @brief —’…´∑÷¡ø”ÎAlphaœ‡≥À.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void Premultiply(ValueType* pColor)
-    {
-        ValueType a = pColor[Order::A];
-        pColor[Order::B] = ColorType::Multiply(p[Order::B], a);
-        pColor[Order::R] = ColorType::Multiply(p[Order::R], a);
-        pColor[Order::G] = ColorType::Multiply(p[Order::G], a);
-    }
 
     /**
-     * @brief —’…´∑÷¡ø”ÎAlphaΩ‚∏¥”√.
+     * @brief È¢úËâ≤ÂàÜÈáèË£ÅÂâ™.
      *
      * @since 1.0
      * @version 1.0
      */
-    static GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* pColor)
+    inline Rgba& Clip(Rgba& color)
     {
-        ValueType a = pColor[Order::A];
-        pColor[Order::B] = ColorType::Demultiply(pColor[Order::B], a);
-        pColor[Order::R] = ColorType::Demultiply(pColor[Order::R], a);
-        pColor[Order::G] = ColorType::Demultiply(pColor[Order::G], a);
-    }
-};
-template <class ColorT, class Order>
-struct CompOpRgbaMultiply : BlenderBase<ColorT, Order> {
-    using ColorType = ColorT;
-    using ValueType = typename ColorType::ValueType;
-    using BlenderBase<ColorT, Order>::Get;
-    using BlenderBase<ColorT, Order>::Set;
-
-    /**
-     * @brief ”√—’…´∑÷¡øº∞∏≤∏«¬ ªÏ∫œœÒÀÿ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                 ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
-    {
-        Rgba s = Get(r, g, b, a, cover);
-        if (s.a > 0) {
-            Rgba d = Get(pColor);
-            double s1a = 1 - s.a;
-            double d1a = 1 - d.a;
-            d.r = s.r * d.r + s.r * d1a + d.r * s1a;
-            d.g = s.g * d.g + s.g * d1a + d.g * s1a;
-            d.b = s.b * d.b + s.b * d1a + d.b * s1a;
-            d.a += s.a - s.a * d.a;
-            Set(pColor, Clip(d));
+        if (color.alphaValue > 1) {
+            color.alphaValue = 1;
+        } else if (color.alphaValue < 0) {
+            color.alphaValue = 0;
         }
-    }
-};
 
-}
+        if (color.blueValue > color.alphaValue) {
+            color.blueValue = color.alphaValue;
+        } else if (color.blueValue < 0) {
+            color.blueValue = 0;
+        }
+
+        if (color.redValue > color.alphaValue) {
+            color.redValue = color.alphaValue;
+        } else if (color.redValue < 0) {
+            color.redValue = 0;
+        }
+
+        if (color.greenValue > color.alphaValue) {
+            color.greenValue = color.alphaValue;
+        } else if (color.greenValue < 0) {
+            color.greenValue = 0;
+        }
+        return color;
+    }
+
+    template <class ColorT, class Order>
+    struct CompOpRgbaMultiply : BlenderBase<ColorT, Order> {
+        using ColorType = ColorT;
+        using ValueType = typename ColorType::ValueType;
+        using BlenderBase<ColorT, Order>::Get;
+        using BlenderBase<ColorT, Order>::Set;
+
+        /**
+         * @brief Áî®È¢úËâ≤ÂàÜÈáèÂèäË¶ÜÁõñÁéáÊ∑∑ÂêàÂÉèÁ¥†.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
+                                                     ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+        {
+            Rgba s = Get(r, g, b, a, cover);
+            if (s.alphaValue > 0) {
+                Rgba d = Get(pColor);
+                double s1a = 1 - s.alphaValue;
+                double d1a = 1 - d.alphaValue;
+                d.redValue = s.redValue * d.redValue + s.redValue * d1a + d.redValue * s1a;
+                d.greenValue = s.greenValue * d.greenValue + s.greenValue * d1a + d.greenValue * s1a;
+                d.blueValue = s.blueValue * d.blueValue + s.blueValue * d1a + d.blueValue * s1a;
+                d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
+                Set(pColor, Clip(d));
+            }
+        }
+    };
+
+} // namespace OHOS
+#endif

@@ -35,90 +35,96 @@
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 #define GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "gfx_utils/graphics/graphic_color/agg_color_gray.h"
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace OHOS {
- /**
- *
- * @brief Defines Blenderbase.
- * @since 1.0
- * @version 1.0
- */
-template<class ColorT, class Order = void> 
-struct BlenderBase
-{
-    using ColorType = ColorT;
-    using OrderType = Order;
-    using ValueType = typename ColorType::ValueType;
+
+    struct PixfmtGrayTag {
+    };
+
+    struct PixfmtRgbTag {
+    };
+
+    struct PixfmtRgbaTag {
+    };
 
     /**
-     * @brief 把颜色分量设置给颜色.
      *
+     * @brief Defines Blenderbase.
      * @since 1.0
      * @version 1.0
      */
-    static void Set(ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a)
-    {
-        pColor[OrderType::R] = r;
-        pColor[OrderType::G] = g;
-        pColor[OrderType::B] = b;
-        pColor[OrderType::A] = a;
-    }
+    template <class ColorT, class Order = void>
+    struct BlenderBase {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
 
-    /**
-     * @brief 把颜色分量设置给颜色.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    static void Set(ValueType* pColor, const Rgba& color)
-    {
-        pColor[OrderType::R] = ColorType::fromDouble(color.r);
-        pColor[OrderType::G] = ColorType::fromDouble(color.g);
-        pColor[OrderType::B] = ColorType::fromDouble(color.b);
-        pColor[OrderType::A] = ColorType::fromDouble(color.a);
-    }
-
-    /**
-     * @brief 通过颜色分量获取颜色.
-     * @return 返回颜色
-     * @since 1.0
-     * @version 1.0
-     */
-    static Rgba Get(ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover = COVER_FULL)
-    {
-        if (cover > COVER_NONE) {
-            Rgba c(ColorType::ToDouble(r), ColorType::ToDouble(g), ColorType::ToDouble(b), ColorType::ToDouble(a));
-
-            if (cover < COVER_FULL) {
-                double x = double(cover) / COVER_FULL;
-                c.r *= x;
-                c.g *= x;
-                c.b *= x;
-                c.a *= x;
-            }
-
-            return c;
-        } else {
-            return Rgba::NoColor();
+        /**
+         * @brief 把颜色分量设置给颜色.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Set(ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a)
+        {
+            pColor[OrderType::RED] = r;
+            pColor[OrderType::GREEN] = g;
+            pColor[OrderType::BLUE] = b;
+            pColor[OrderType::ALPHA] = a;
         }
-                
-    }
 
-    /**
-     * @brief 通过颜色分量获取颜色.
-     * @return 返回颜色
-     * @since 1.0
-     * @version 1.0
-     */
-    static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
-    {
-        return Get(pColor[OrderType::R], pColor[OrderType::G], pColor[OrderType::B], pColor[OrderType::A], cover);
-    }
+        /**
+         * @brief 把颜色分量设置给颜色.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Set(ValueType* pColor, const Rgba& color)
+        {
+            pColor[OrderType::RED] = ColorType::FromDouble(color.redValue);
+            pColor[OrderType::GREEN] = ColorType::FromDouble(color.greenValue);
+            pColor[OrderType::BLUE] = ColorType::FromDouble(color.blueValue);
+            pColor[OrderType::ALPHA] = ColorType::FromDouble(color.alphaValue);
+        }
 
-};
-}
+        /**
+         * @brief 通过颜色分量获取颜色.
+         * @return 返回颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        static Rgba Get(ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover = COVER_FULL)
+        {
+            if (cover > COVER_NONE) {
+                Rgba c(ColorType::ToDouble(r), ColorType::ToDouble(g), ColorType::ToDouble(b), ColorType::ToDouble(a));
+
+                if (cover < COVER_FULL) {
+                    double x = double(cover) / COVER_FULL;
+                    c.redValue *= x;
+                    c.greenValue *= x;
+                    c.blueValue *= x;
+                    c.alphaValue *= x;
+                }
+
+                return c;
+            } else {
+                return Rgba::NoColor();
+            }
+        }
+
+        /**
+         * @brief 通过颜色分量获取颜色.
+         * @return 返回颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
+        {
+            return Get(pColor[OrderType::RED], pColor[OrderType::GREEN], pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
+        }
+    };
+} // namespace OHOS
 
 #endif

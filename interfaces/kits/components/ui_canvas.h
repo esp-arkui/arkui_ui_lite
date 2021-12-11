@@ -36,17 +36,19 @@
 #ifndef GRAPHIC_LITE_UI_CANVAS_H
 #define GRAPHIC_LITE_UI_CANVAS_H
 
-#include <memory>
-#include "draw/clip_utils.h"
-#include "common/image.h"
-#include "components/ui_label.h"
-#include "gfx_utils/list.h"
-#include "engines/gfx/gfx_enginex_manager.h"
-#include "ui_image_view.h"
 #include <fcntl.h>
-#include "gfx_utils/file.h"
+
+#include <memory>
 
 #include "animator/gif_canvas_image_animator.h"
+#include "common/image.h"
+#include "components/ui_label.h"
+#include "draw/clip_utils.h"
+#include "engines/gfx/gfx_enginex_manager.h"
+#include "gfx_utils/file.h"
+#include "gfx_utils/list.h"
+#include "stack"
+#include "ui_image_view.h"
 namespace OHOS {
 
 /**
@@ -91,161 +93,169 @@ public:
         ColorType color;
     };
 
-    enum Gradient
-    {
-        Solid,
-        Linear,
-        Radial
-    }gradientflag;
+        enum Gradient {
+            Solid,
+            Linear,
+            Radial
+        } gradientflag;
 
-    void createLinearGradient(double startx,double starty,double endx,double endy){
-        gradientflag=Linear;
-        linearGradientPoint_.x0=startx;
-        linearGradientPoint_.y0=starty;
-        linearGradientPoint_.x1=endx;
-        linearGradientPoint_.y1=endy;
-    }
+        void createLinearGradient(double startx, double starty, double endx, double endy)
+        {
+            gradientflag = Linear;
+            linearGradientPoint_.x0 = startx;
+            linearGradientPoint_.y0 = starty;
+            linearGradientPoint_.x1 = endx;
+            linearGradientPoint_.y1 = endy;
+        }
 
-    void addColorStop(double stop,ColorType color){
-        StopAndColor stopAndColor;
-        stopAndColor.stop = stop;
-        stopAndColor.color = color;
-        stopAndColors_.PushBack(stopAndColor);
-    }
+        void addColorStop(double stop, ColorType color)
+        {
+            StopAndColor stopAndColor;
+            stopAndColor.stop = stop;
+            stopAndColor.color = color;
+            stopAndColors_.PushBack(stopAndColor);
+        }
 
-    void createRadialGradient(double start_x,double start_y,double start_r, double end_x,double end_y,double end_r){
-        gradientflag=Radial;
-        radialGradientPoint_.x0=start_x;
-        radialGradientPoint_.y0=start_y;
-        radialGradientPoint_.r0=start_r;
-        radialGradientPoint_.x1=end_x;
-        radialGradientPoint_.y1=end_y;
-        radialGradientPoint_.r1=end_r;
-    }
+        void createRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r)
+        {
+            gradientflag = Radial;
+            radialGradientPoint_.x0 = start_x;
+            radialGradientPoint_.y0 = start_y;
+            radialGradientPoint_.r0 = start_r;
+            radialGradientPoint_.x1 = end_x;
+            radialGradientPoint_.y1 = end_y;
+            radialGradientPoint_.r1 = end_r;
+        }
 
-    List<StopAndColor> getStopAndColor() const
-    {
-        return stopAndColors_;
-    } 
+        List<StopAndColor> getStopAndColor() const
+        {
+            return stopAndColors_;
+        }
 
-    LinearGradientPoint getLinearGradientPoint() const{
-        return linearGradientPoint_;
-    }   
+        LinearGradientPoint getLinearGradientPoint() const
+        {
+            return linearGradientPoint_;
+        }
 
-    RadialGradientPoint getRadialGradientPoint() const{
-        return radialGradientPoint_;
-    }
+        RadialGradientPoint getRadialGradientPoint() const
+        {
+            return radialGradientPoint_;
+        }
 
-    GradientControl& operator = (GradientControl gradientControl)
-    {
-        gradientflag=gradientControl.gradientflag;
-        linearGradientPoint_=gradientControl.getLinearGradientPoint();
-        radialGradientPoint_=gradientControl.getRadialGradientPoint();
-        stopAndColors_=gradientControl.getStopAndColor();
-        return *this;
-    }
-private:
-    LinearGradientPoint linearGradientPoint_;
-    RadialGradientPoint radialGradientPoint_;
-    List<StopAndColor> stopAndColors_;
-};
+        GradientControl& operator=(GradientControl gradientControl)
+        {
+            gradientflag = gradientControl.gradientflag;
+            linearGradientPoint_ = gradientControl.getLinearGradientPoint();
+            radialGradientPoint_ = gradientControl.getRadialGradientPoint();
+            stopAndColors_ = gradientControl.getStopAndColor();
+            return *this;
+        }
 
-class Paint : public HeapBase {
-public:
-    /**
+    private:
+        LinearGradientPoint linearGradientPoint_;
+        RadialGradientPoint radialGradientPoint_;
+        List<StopAndColor> stopAndColors_;
+    };
+
+    class Paint : public HeapBase {
+    public:
+        /**
      * @brief A constructor used to create a <b>Paint</b> instance.
      *
      * @since 1.0
      * @version 1.0
      */
-    Paint()
-        : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
-          strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
-          lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
-          lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
-          miterLimit_(10.0),dashOffset(0.0),isDrawDash(false),
-          dashArray(nullptr),ndashes(0),globalAlpha(1.0f),shadowBlurRadius(0),shadowOffsetX(0),shadowOffsetY(0),
-          shadowColor(Color::Black()),
-          blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver),rotateCenterX(0),rotateCenterY(0),
-          rotateAngle(0),scaleX(0),scaleY(0)
-    {
-        m_graphics = std::make_shared<BaseGfxExtendEngine>();
-        m_transform.reset();
-        //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
-    }
-    Paint(const Paint& paint)
-    {
-        Init(paint);
-    }
+        Paint() :
+            style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
+            strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
+            lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
+            lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
+            miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
+            dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
+            shadowColor(Color::Black()),
+            blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver), rotateCenterX(0), rotateCenterY(0),
+            rotateAngle(0), scaleX(0), scaleY(0)
+        {
+            m_graphics = std::make_shared<BaseGfxExtendEngine>();
+            m_transform.Reset();
+            this->Save();
+            //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
+        }
+        Paint(const Paint& paint)
+        {
+            Init(paint);
+        }
 
-    void Init(const Paint& paint) {
-        style_=paint.style_;
-        fillColor_=paint.fillColor_;
-        m_graphics= paint.m_graphics;
-        //m_graphics_Image = paint.m_graphics_Image;
-        strokeColor_=paint.strokeColor_;
-        opacity_=paint.opacity_;
-        strokeWidth_=paint.strokeWidth_;
-        lineCap_=paint.lineCap_;
-        lineJoin_=paint.lineJoin_;
-        miterLimit_=paint.miterLimit_;
-        globalAlpha=paint.globalAlpha;
-        dashOffset=paint.dashOffset;
-        isDrawDash=paint.isDrawDash;
-        shadowColor=paint.shadowColor;
-        shadowOffsetX=paint.shadowOffsetX;
-        shadowOffsetY=paint.shadowOffsetY;
-        shadowBlurRadius=paint.shadowBlurRadius;
-        ndashes = (paint.ndashes+1)&~1;
-        blendMode = paint.blendMode;
-        m_transform=paint.m_transform;
+        void Init(const Paint& paint)
+        {
+            style_ = paint.style_;
+            fillColor_ = paint.fillColor_;
+            m_graphics = paint.m_graphics;
+            //m_graphics_Image = paint.m_graphics_Image;
+            strokeColor_ = paint.strokeColor_;
+            opacity_ = paint.opacity_;
+            strokeWidth_ = paint.strokeWidth_;
+            lineCap_ = paint.lineCap_;
+            lineJoin_ = paint.lineJoin_;
+            miterLimit_ = paint.miterLimit_;
+            globalAlpha = paint.globalAlpha;
+            dashOffset = paint.dashOffset;
+            isDrawDash = paint.isDrawDash;
+            shadowColor = paint.shadowColor;
+            shadowOffsetX = paint.shadowOffsetX;
+            shadowOffsetY = paint.shadowOffsetY;
+            shadowBlurRadius = paint.shadowBlurRadius;
+            ndashes = (paint.ndashes + 1) & ~1;
+            blendMode = paint.blendMode;
+            m_transform = paint.m_transform;
 
-        rotateCenterX=paint.rotateCenterX;
-        rotateCenterY=paint.rotateCenterY;
-        rotateAngle=paint.rotateAngle;
-        scaleX=paint.scaleX;
-        scaleY=paint.scaleY;
-        if(isDrawDash && ndashes > 0) {
-            dashArray = new float[ndashes];
-            if (dashArray) {
-                memset(dashArray, 0, ndashes * sizeof(float));
-                for (unsigned int i = 0; i < ndashes; i++) {
-                    dashArray[i] = paint.dashArray[i];
+            rotateCenterX = paint.rotateCenterX;
+            rotateCenterY = paint.rotateCenterY;
+            rotateAngle = paint.rotateAngle;
+            scaleX = paint.scaleX;
+            scaleY = paint.scaleY;
+            if (isDrawDash && ndashes > 0) {
+                dashArray = new float[ndashes];
+                if (dashArray) {
+                    memset(dashArray, 0, ndashes * sizeof(float));
+                    for (unsigned int i = 0; i < ndashes; i++) {
+                        dashArray[i] = paint.dashArray[i];
+                    }
+                } else {
+                    //memory alloc error, ignore this dash
+                    //I think it is never happen.
+                    ndashes = 0;
+                    dashOffset = 0;
+                    isDrawDash = false;
                 }
             } else {
-                //memory alloc error, ignore this dash
-                //I think it is never happen.
-                ndashes = 0;
-                dashOffset = 0;
-                isDrawDash = false;
+                dashArray = nullptr;
             }
-        } else {
-            dashArray =nullptr;
+            gradientControl = paint.getGradientControl();
+            patternRepeat = paint.patternRepeat;
         }
-        gradientControl=paint.getGradientControl();
-        patternRepeat = paint.patternRepeat;
-    }
-    const Paint& operator = (const Paint& paint)
-    {
-        if (dashArray!=nullptr) {
-            delete [] dashArray;
-            dashArray = nullptr;
+        const Paint& operator=(const Paint& paint)
+        {
+            if (dashArray != nullptr) {
+                delete[] dashArray;
+                dashArray = nullptr;
+            }
+            Init(paint);
+            return *this;
         }
-        Init(paint);
-        return *this;
-    }
-    /**
+        /**
      * @brief A destructor used to delete the <b>Paint</b> instance.
      *
      * @since 1.0
      * @version 1.0
      */
-    virtual ~Paint() {
-        if (dashArray!=nullptr) {
-            delete [] dashArray;
-            dashArray = nullptr;
+        virtual ~Paint()
+        {
+            if (dashArray != nullptr) {
+                delete[] dashArray;
+                dashArray = nullptr;
+            }
         }
-    }
 
     /**
      * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
@@ -633,55 +643,57 @@ public:
         return this->blendMode;
     }
 
-    void createPattern(const char* img,const char* text)
-    {
-        image = img;
-        patternRepeat =NO_REPEAT;
-        if(strcmp(text,"repeat")==0){
-            patternRepeat =REPEAT;
-        } else if (strcmp(text,"repeat-x")==0) {
-            patternRepeat =REPEAT_X;
-        } else if (strcmp(text,"repeat-y")==0) {
-            patternRepeat =REPEAT_Y;
-        } else if (strcmp(text,"no-repeat")==0) {
-            patternRepeat =NO_REPEAT;
+        void createPattern(const char* img, const char* text)
+        {
+            image = img;
+            patternRepeat = NO_REPEAT;
+            if (strcmp(text, "repeat") == 0) {
+                patternRepeat = REPEAT;
+            } else if (strcmp(text, "repeat-x") == 0) {
+                patternRepeat = REPEAT_X;
+            } else if (strcmp(text, "repeat-y") == 0) {
+                patternRepeat = REPEAT_Y;
+            } else if (strcmp(text, "no-repeat") == 0) {
+                patternRepeat = NO_REPEAT;
+            }
         }
-    }
-    void fillStyle(GradientControl& ctrl){
-        gradientControl=ctrl;
-    }
-    void fillStyle(ColorType color){
-        SetFillColor(color);
-    }
+        void fillStyle(GradientControl& ctrl)
+        {
+            gradientControl = ctrl;
+        }
+        void fillStyle(ColorType color)
+        {
+            SetFillColor(color);
+        }
 
     /* 缩放当前绘图至更大或更小 */
     void Scale(float x, float y)
     {
-        m_transform.scale(x,y);
+        m_transform.Scale(x,y);
     }
 
     /* 旋转当前绘图 */
     void Rotate(float angle)
     {
-        m_transform.rotate(BaseGfxExtendEngine::deg2Rad(angle));
+        m_transform.Rotate(BaseGfxExtendEngine::deg2Rad(angle));
     }
 
     /* 重新映射画布上的 (x,y) 位置 */
     void Translate(int16_t x, int16_t y)
     {
-        m_transform.translate(x,y);
+        m_transform.Translate(x,y);
     }
 
 
     /* 替换绘图的当前转换矩阵 */
     void Transform(float sx,float shy,float shx,float sy,float tx,float ty)
     {
-        m_transform=OHOS::trans_affine(sx, shy, shx, sy, tx, ty);
+        m_transform=OHOS::TransAffine(sx, shy, shx, sy, tx, ty);
 
     }
 
     /* 获取当前变换矩阵 */
-    const OHOS::trans_affine& GetTransform() const
+    const OHOS::TransAffine& GetTransform() const
     {
         return m_transform;
     }
@@ -689,51 +701,69 @@ public:
     /* 将当前转换重置为单位矩阵。然后运行 transform() */
     void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty)
     {
-        m_transform.reset();
+        m_transform.Reset();
         Transform(sx, shy, shx, sy, tx, ty);
     }
     /* 是否经过变换，即是不是单位矩阵 */
     bool IsTransform() const
     {
-        return !m_transform.is_identity();
+        return !m_transform.IsIdentity();
     }
 
-    GradientControl getGradientControl() const{
-        return gradientControl;
-    }
-private:
-    PaintStyle style_;
-    ColorType fillColor_;
-    ColorType strokeColor_;
-    uint8_t opacity_;
-    uint16_t strokeWidth_;
-    BaseGfxExtendEngine::LineCap lineCap_;
-    BaseGfxExtendEngine::LineJoin lineJoin_;
-    double miterLimit_;
-    float dashOffset;
-    bool isDrawDash;
-    float* dashArray;
-    unsigned int ndashes;
-    std::shared_ptr<BaseGfxExtendEngine> m_graphics;
+        GradientControl getGradientControl() const
+        {
+            return gradientControl;
+        }
+        /* 保存历史状态 */
+        void Save()
+        {
+            m_stack.push(*this);
+        }
+        /* 恢复到上次历史状态 */
+        void Restore()
+        {
+            if (m_stack.empty()) {
+                return;
+            }
+            Init(m_stack.top());
+            m_stack.pop();
+        }
 
-    //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
-    float globalAlpha;
-    double shadowBlurRadius;
-    double shadowOffsetX;
-    double shadowOffsetY;
-    ColorType shadowColor;
-    BaseGfxExtendEngine::BlendMode blendMode;
+    private:
+        PaintStyle style_;
+        ColorType fillColor_;
+        ColorType strokeColor_;
+        uint8_t opacity_;
+        uint16_t strokeWidth_;
+        BaseGfxExtendEngine::LineCap lineCap_;
+        BaseGfxExtendEngine::LineJoin lineJoin_;
+        double miterLimit_;
+        float dashOffset;
+        bool isDrawDash;
+        float* dashArray;
+        unsigned int ndashes;
+        std::shared_ptr<BaseGfxExtendEngine> m_graphics;
 
-    /* 用于操作变换矩阵 */
-    OHOS::trans_affine               m_transform;
-    GradientControl gradientControl;
-    double rotateCenterX;
-    double rotateCenterY;
-    double rotateAngle;
-    double scaleX;
-    double scaleY;
+        //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
+        float globalAlpha;
+        double shadowBlurRadius;
+        double shadowOffsetX;
+        double shadowOffsetY;
+        ColorType shadowColor;
+        BaseGfxExtendEngine::BlendMode blendMode;
 
-};
+        /* 用于操作变换矩阵 */
+        OHOS::TransAffine m_transform;
+        GradientControl gradientControl;
+        double rotateCenterX;
+        double rotateCenterY;
+        double rotateAngle;
+        double scaleX;
+        double scaleY;
+
+        //保存历史修改信息
+        std::stack<Paint> m_stack;
+    };
 
 /**
  * @brief Defines a canvas, which is used to draw multiple types of 2D graphs.
@@ -749,7 +779,9 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    UICanvas() : startPoint_({ 0, 0 }), path_(nullptr) {}
+        UICanvas() :
+            startPoint_({0, 0}), path_(nullptr)
+        {}
 
     /**
      * @brief A destructor used to delete the <b>UICanvas</b> instance.
@@ -1133,21 +1165,30 @@ public:
     }
 
     /* 获取当前变换矩阵 */
-    const OHOS::trans_affine& GetTransform(const Paint& paint) const
+    const OHOS::TransAffine& GetTransform(const Paint& paint) const
     {
         return paint.GetTransform();
     }
 
-    /* 将当前转换重置为单位矩阵。然后运行 transform() */
-    void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty,Paint& paint)
-    {
-        paint.SetTransform(sx,  shy,  shx,  sy,  tx,  ty);
-    }
-
-    struct Images_ {
-        Point startp;
-        UIImageView* img;
-    };
+        /* 将当前转换重置为单位矩阵。然后运行 transform() */
+        void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty, Paint& paint)
+        {
+            paint.SetTransform(sx, shy, shx, sy, tx, ty);
+        }
+        /* 保存历史状态 */
+        void Save(Paint& paint)
+        {
+            paint.Save();
+        }
+        /* 恢复到上次历史状态 */
+        void Restore(Paint& paint)
+        {
+            paint.Restore();
+        }
+        struct Images_ {
+            Point startp;
+            UIImageView* img;
+        };
 
 protected:
     bool InitDrawEnvironment(const BufferInfo &gfxDstBuffer,
@@ -1201,35 +1242,37 @@ protected:
         TransformMap drawTransMap;
         bool isDrawTrans;
 
-        TextParam(){
-            textComment = new Text;
-        }
-
-        ~TextParam(){
-            if(textComment){
-                delete textComment;
-                textComment = nullptr;
+            TextParam()
+            {
+                textComment = new Text;
             }
+
+            ~TextParam()
+            {
+                if (textComment) {
+                    delete textComment;
+                    textComment = nullptr;
+                }
+            };
+        };
+        enum PathCmd {
+            CMD_MOVE_TO,
+            CMD_LINE_TO,
+            CMD_ARC,
+            CMD_CLOSE,
         };
 
-    };
-    enum PathCmd {
-        CMD_MOVE_TO,
-        CMD_LINE_TO,
-        CMD_ARC,
-        CMD_CLOSE,
-    };
-
-    class UICanvasPath : public HeapBase {
-    public:
-        UICanvasPath() : startPos_({ 0, 0 }), strokeCount_(0) {};
-        ~UICanvasPath();
-        List<Point> points_;
-        List<PathCmd> cmd_;
-        List<ArcParam> arcParam_;
-        Point startPos_;
-        uint16_t strokeCount_;
-    };
+        class UICanvasPath : public HeapBase {
+        public:
+            UICanvasPath() :
+                startPos_({0, 0}), strokeCount_(0){};
+            ~UICanvasPath();
+            List<Point> points_;
+            List<PathCmd> cmd_;
+            List<ArcParam> arcParam_;
+            Point startPos_;
+            uint16_t strokeCount_;
+        };
 
     struct PathParam : public HeapBase {
         UICanvasPath* path;

@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_pixfmt_rgba.h
 *
-* @brief Defines —’…´∑÷¡øgamma≤Ÿ◊˜¿‡.
+* @brief Defines È¢úËâ≤ÂàÜÈáègammaÊìç‰ΩúÁ±ª.
 *
 * @since 1.0
 * @version 1.0
@@ -38,53 +38,53 @@
 #include <cmath>
 #include <cstring>
 
+#include "gfx_utils/heap_base.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/rendering_buffer.h"
-#include "heap_base.h"
 namespace OHOS {
 
+    template <class ColorT, class Order, class GammaLut>
+    class ApplyGammaDirRgba : public HeapBase {
+    public:
+        using ColorType = ColorT;
+        using ValueType = typename ColorType::ValueType;
 
-template <class ColorT, class Order, class GammaLut>
-class ApplyGammaDirRgba : public HeapBase {
-public:
-    using ColorType = ColorT;
-    using ValueType = typename ColorType::ValueType;
+        ApplyGammaDirRgba(const GammaLut& gamma) :
+            gamma_(gamma)
+        {}
 
-    ApplyGammaDirRgba(const GammaLut& gamma)
-        : gamma_(gamma)
-    {}
+        GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
+        {
+            pColor[Order::RED] = gamma_.Dir(pColor[Order::RED]);
+            pColor[Order::BLUE] = gamma_.Dir(pColor[Order::BLUE]);
+            pColor[Order::GREEN] = gamma_.Dir(pColor[Order::GREEN]);
+        }
 
-    GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
-    {
-        pColor[Order::R] = gamma_.Dir(pColor[Order::R]);
-        pColor[Order::B] = gamma_.Dir(pColor[Order::B]);
-        pColor[Order::G] = gamma_.Dir(pColor[Order::G]);
-    }
+    private:
+        const GammaLut& gamma_;
+    };
 
-private:
-    const GammaLut& gamma_;
-};
+    template <class ColorT, class Order, class GammaLut>
+    class ApplyGammaInvRgba : public HeapBase {
+    public:
+        using ColorType = ColorT;
+        using ValueType = typename ColorType::ValueType;
 
+        ApplyGammaInvRgba(const GammaLut& gamma) :
+            gamma_(gamma)
+        {}
 
-template <class ColorT, class Order, class GammaLut>
-class ApplyGammaInvRgba : public HeapBase {
-public:
-    using ColorType = ColorT;
-    using ValueType = typename ColorType::ValueType;
+        GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
+        {
+            pColor[Order::BLUE] = gamma_.Inv(pColor[Order::BLUE]);
+            pColor[Order::RED] = gamma_.Inv(pColor[Order::RED]);
+            pColor[Order::GREEN] = gamma_.Inv(pColor[Order::GREEN]);
+        }
 
-    ApplyGammaInvRgba(const GammaLut& gamma)
-        : gamma_(gamma)
-    {}
-
-    GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
-    {
-        pColor[Order::B] = gamma_.Inv(pColor[Order::B]);
-        pColor[Order::R] = gamma_.Inv(pColor[Order::R]);
-        pColor[Order::G] = gamma_.Inv(pColor[Order::G]);
-    }
-
-private:
-    const GammaLut& gamma_;
-};
+    private:
+        const GammaLut& gamma_;
+    };
 
 } // namespace OHOS
+
+#endif

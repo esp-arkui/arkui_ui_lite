@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_pixfmt_rgba.h
 *
-* @brief Defines —’…´∑÷¡øgamma≤Ÿ◊˜¿‡.
+* @brief Defines È¢úËâ≤ÂàÜÈáègammaÊìç‰ΩúÁ±ª.
 *
 * @since 1.0
 * @version 1.0
@@ -38,49 +38,50 @@
 #include <cmath>
 #include <cstring>
 
+#include "gfx_utils/heap_base.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/rendering_buffer.h"
-#include "heap_base.h"
 namespace OHOS {
-template <class ColorT, class Order>
-struct ConvRgbaPre {
-    using ColorType = ColorT;
-    using OrderType = Order;
-    using ValueType = typename ColorType::ValueType;
+    template <class ColorT, class Order>
+    struct ConvRgbaPre {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
 
-    static GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* pColor, ColorType color)
-    {
-        color.Premultiply();
-        pColor[Order::A] = color.a;
-        pColor[Order::R] = color.r;
-        pColor[Order::B] = color.b;
-        pColor[Order::G] = color.g;
-    }
+        static GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* pColor, ColorType color)
+        {
+            color.Premultiply();
+            pColor[Order::ALPHA] = color.alphaValue;
+            pColor[Order::RED] = color.redValue;
+            pColor[Order::BLUE] = color.blueValue;
+            pColor[Order::GREEN] = color.greenValue;
+        }
 
-    static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* p)
-    {
-        return ColorType(p[Order::R], p[Order::G], p[Order::B], p[Order::A])
-            .Demultiply();
-    }
-};
+        static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* p)
+        {
+            return ColorType(p[Order::RED], p[Order::GREEN], p[Order::BLUE], p[Order::ALPHA])
+                .Demultiply();
+        }
+    };
 
-template <class ColorT, class Order>
-struct ConvRgbaPlain {
-    using ColorType = ColorT;
-    using OrderType = Order;
-    using ValueType = typename ColorType::ValueType;
+    template <class ColorT, class Order>
+    struct ConvRgbaPlain {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
 
-    static GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* pColor, ColorType color)
-    {
-        pColor[Order::R] = color.r;
-        pColor[Order::G] = color.g;
-        pColor[Order::B] = color.b;
-        pColor[Order::A] = color.a;
-    }
+        static GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* pColor, ColorType color)
+        {
+            pColor[Order::ALPHA] = color.alphaValue;
+            pColor[Order::RED] = color.redValue;
+            pColor[Order::BLUE] = color.blueValue;
+            pColor[Order::GREEN] = color.greenValue;
+        }
 
-    static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* pColor)
-    {
-        return ColorType(pColor[Order::R], pColor[Order::G], pColor[Order::B], pColor[Order::A]);
-    }
-};
-}
+        static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* pColor)
+        {
+            return ColorType(pColor[Order::RED], pColor[Order::GREEN], pColor[Order::BLUE], pColor[Order::ALPHA]);
+        }
+    };
+} // namespace OHOS
+#endif
