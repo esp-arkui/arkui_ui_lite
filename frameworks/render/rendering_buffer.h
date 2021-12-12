@@ -32,9 +32,10 @@ namespace OHOS {
      * 行访问器
      */
     template <class T>
+
     class RowAccessor {
     public:
-        using rowData = const_row_info<T>;
+        using rowData = ConstRowInfo<T>;
         RowAccessor() :
             renBuf_(0),
             start_(0),
@@ -74,42 +75,42 @@ namespace OHOS {
             height_ = areaHeight;
             bufStride_ = stride;
             if (stride < 0) {
-                start_ = renBuf - (AGG_INT64)(areaHeight - 1) * stride;
+                start_ = renBuf - (GRAPHIC_GEOMETRY_INT64)(areaHeight - 1) * stride;
             }
         }
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE T* GetBuf()
+        GRAPHIC_GEOMETRY_INLINE T* GetBuf()
         {
             return renBuf_;
         }
         /**
          * @brief GetBuf 获取渲染缓冲区的指针
          */
-        AGG_INLINE const T* GetBuf() const
+        GRAPHIC_GEOMETRY_INLINE const T* GetBuf() const
         {
             return renBuf_;
         }
         /**
          * @brief GetBuf 获取区域宽度
          */
-        AGG_INLINE unsigned GetWidth() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetWidth() const
         {
             return width_;
         }
         /**
          * @brief GetBuf 获取区域高度
          */
-        AGG_INLINE unsigned GetHeight() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetHeight() const
         {
             return height_;
         }
-        AGG_INLINE int GetStride() const
+        GRAPHIC_GEOMETRY_INLINE int GetStride() const
         {
             return bufStride_;
         }
-        AGG_INLINE unsigned GetStrideAbs() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetStrideAbs() const
         {
             return (bufStride_ < 0) ? unsigned(-bufStride_) : unsigned(bufStride_);
         }
@@ -117,28 +118,31 @@ namespace OHOS {
         /**
          * @brief row_ptr 获取行首地址
          */
-        AGG_INLINE T* RowPtr(int, int y, unsigned)
+
+        GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned)
         {
-            return start_ + y * (AGG_INT64)bufStride_;
+            return start_ + y * (GRAPHIC_GEOMETRY_INT64)bufStride_;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE T* RowPtr(int y)
+
+        GRAPHIC_GEOMETRY_INLINE T* RowPtr(int y)
         {
-            return start_ + y * (AGG_INT64)bufStride_;
+            return start_ + y * (GRAPHIC_GEOMETRY_INT64)bufStride_;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
-        AGG_INLINE const T* RowPtr(int y) const
+        GRAPHIC_GEOMETRY_INLINE const T* RowPtr(int y) const
         {
-            return start_ + y * (AGG_INT64)bufStride_;
+            return start_ + y * (GRAPHIC_GEOMETRY_INT64)bufStride_;
         }
         /**
          * @brief row 获取行数据
          */
-        AGG_INLINE rowData Row(int y) const
+
+        GRAPHIC_GEOMETRY_INLINE rowData Row(int y) const
         {
             return rowData(0, width_ - 1, RowPtr(y));
         }

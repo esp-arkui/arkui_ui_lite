@@ -1,96 +1,128 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_PIXFMT_BASE_INCLUDED
-#define AGG_PIXFMT_BASE_INCLUDED
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines Blenderbase.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
 
-#include "gfx_utils/graphics/graphic_color/agg_color_gray.h"
+/**
+ * @file graphic_geometry_pixfmt_base.h
+ *
+ * @brief Defines 定义了像素与颜色分量转换的操作方法.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
+#define GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
+
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace OHOS
-{
-    struct pixfmt_gray_tag
-    {
+namespace OHOS {
+
+    struct PixfmtGrayTag {
     };
 
-    struct pixfmt_rgb_tag
-    {
+    struct PixfmtRgbTag {
     };
 
-    struct pixfmt_rgba_tag
-    {
+    struct PixfmtRgbaTag {
     };
 
-    //--------------------------------------------------------------blender_base
+    /**
+     *
+     * @brief Defines Blenderbase.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class ColorT, class Order = void>
-    struct blender_base
-    {
-        typedef ColorT color_type;
-        typedef Order order_type;
-        typedef typename color_type::value_type value_type;
+    struct BlenderBase {
+        using ColorType = ColorT;
+        using OrderType = Order;
+        using ValueType = typename ColorType::ValueType;
 
-        static rgba get(value_type r, value_type g, value_type b, value_type a, cover_type cover = cover_full)
+        /**
+         * @brief 把颜色分量设置给颜色.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Set(ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a)
         {
-            if (cover > cover_none)
-            {
-                rgba c(
-                    color_type::to_double(r),
-                    color_type::to_double(g),
-                    color_type::to_double(b),
-                    color_type::to_double(a));
+            pColor[OrderType::RED] = r;
+            pColor[OrderType::GREEN] = g;
+            pColor[OrderType::BLUE] = b;
+            pColor[OrderType::ALPHA] = a;
+        }
 
-                if (cover < cover_full)
-                {
-                    double x = double(cover) / cover_full;
-                    c.r *= x;
-                    c.g *= x;
-                    c.b *= x;
-                    c.a *= x;
+        /**
+         * @brief 把颜色分量设置给颜色.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Set(ValueType* pColor, const Rgba& color)
+        {
+            pColor[OrderType::RED] = ColorType::FromDouble(color.redValue);
+            pColor[OrderType::GREEN] = ColorType::FromDouble(color.greenValue);
+            pColor[OrderType::BLUE] = ColorType::FromDouble(color.blueValue);
+            pColor[OrderType::ALPHA] = ColorType::FromDouble(color.alphaValue);
+        }
+
+        /**
+         * @brief 通过颜色分量获取颜色.
+         * @return 返回颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        static Rgba Get(ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover = COVER_FULL)
+        {
+            if (cover > COVER_NONE) {
+                Rgba c(ColorType::ToDouble(r), ColorType::ToDouble(g), ColorType::ToDouble(b), ColorType::ToDouble(a));
+
+                if (cover < COVER_FULL) {
+                    double x = double(cover) / COVER_FULL;
+                    c.redValue *= x;
+                    c.greenValue *= x;
+                    c.blueValue *= x;
+                    c.alphaValue *= x;
                 }
 
                 return c;
+            } else {
+                return Rgba::NoColor();
             }
-            else
-                return rgba::no_color();
         }
 
-        static rgba get(const value_type* p, cover_type cover = cover_full)
+        /**
+         * @brief 通过颜色分量获取颜色.
+         * @return 返回颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
         {
-            return get(
-                p[order_type::R],
-                p[order_type::G],
-                p[order_type::B],
-                p[order_type::A],
-                cover);
-        }
-
-        static void set(value_type* p, value_type r, value_type g, value_type b, value_type a)
-        {
-            p[order_type::R] = r;
-            p[order_type::G] = g;
-            p[order_type::B] = b;
-            p[order_type::A] = a;
-        }
-
-        static void set(value_type* p, const rgba& c)
-        {
-            p[order_type::R] = color_type::from_double(c.r);
-            p[order_type::G] = color_type::from_double(c.g);
-            p[order_type::B] = color_type::from_double(c.b);
-            p[order_type::A] = color_type::from_double(c.a);
+            return Get(pColor[OrderType::RED], pColor[OrderType::GREEN], pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
         }
     };
 } // namespace OHOS

@@ -46,24 +46,24 @@ namespace OHOS {
 #ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
         typedef OHOS::rgba32 ColorType;
 #else
-        typedef OHOS::rgba8 ColorType;
+        typedef OHOS::Rgba8 ColorType;
 #endif
         //颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
-        typedef OHOS::order_bgra ComponentOrder;
+        typedef OHOS::OrderBgra ComponentOrder;
         //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-        typedef OHOS::blender_rgba<ColorType, ComponentOrder> Blender;
+        typedef OHOS::BlenderRgba<ColorType, ComponentOrder> Blender;
         //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
-        typedef OHOS::comp_op_adaptor_rgba<ColorType, ComponentOrder> BlenderComp;
+        typedef OHOS::CompOpAdaptorRgba<ColorType, ComponentOrder> BlenderComp;
         //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
-        typedef OHOS::blender_rgba_pre<ColorType, ComponentOrder> BlenderPre;
+        typedef OHOS::BlenderRgbaPre<ColorType, ComponentOrder> BlenderPre;
         //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
-        typedef OHOS::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
+        typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
         //根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
-        typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::RenderingBuffer> PixFormat;
-        typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
-        typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
-        typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
-        typedef OHOS::pixfmt_bgra32 pixfmt;
+        typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixFormat;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
+        typedef OHOS::PixfmtAlphaBlendRgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
+        typedef OHOS::PixfmtBgra32 pixfmt;
 
         //根据像素处理的模板处理基础渲染器
         typedef OHOS::RendererBase<PixFormat> RendererBase;
@@ -76,7 +76,7 @@ namespace OHOS {
         //设定线段分配器
         typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
         //设定渐变数组的构造器设定颜色插值器和颜色模板等
-        typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::srgba8>, 1024> color_func_type;
+        typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
         //设定放射渐变的算法
         typedef OHOS::GradientRadialCalculate gradient_func_type;
         //设定线段插值器
@@ -86,13 +86,13 @@ namespace OHOS {
         //设定放射渐变的线段生成器
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type> RadialGradientSpan;
 
-        typedef OHOS::conv_curve<OHOS::PathStorage> ConvCurve;
-        typedef OHOS::conv_stroke<ConvCurve> ConvStroke;
-        typedef OHOS::conv_dash<ConvCurve> ConvDashCurve;
-        typedef OHOS::conv_transform<ConvCurve> PathTransform;
-        typedef OHOS::conv_stroke<ConvDashCurve> ConvDashStroke;
-        typedef OHOS::conv_transform<ConvStroke> StrokeTransform;
-        typedef OHOS::conv_transform<ConvDashStroke> DashStrokeTransform;
+        typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
+        typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
+        typedef OHOS::DepictDash<ConvCurve> ConvDashCurve;
+        typedef OHOS::DepictTransform<ConvCurve> PathTransform;
+        typedef OHOS::DepictStroke<ConvDashCurve> ConvDashStroke;
+        typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
+        typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
         //渲染器缓冲区
         typedef OHOS::RenderingBuffer RenderingBuffer;
@@ -116,9 +116,9 @@ namespace OHOS {
 
     public:
         friend class BaseGfxExtendEngineRenderer;
-        typedef OHOS::srgba8 Color;
-        typedef OHOS::rect_i Rect;
-        typedef OHOS::rect_d RectD;
+        typedef OHOS::Srgba8 Color;
+        typedef OHOS::RectI Rect;
+        typedef OHOS::RectD RectD;
         typedef OHOS::TransAffine Affine;
 
         /**
@@ -227,42 +227,42 @@ namespace OHOS {
             /** 不混合 */
             BLENDNONE = -1,
             /** 混合透明度 */
-            BLENDALPHA = OHOS::end_of_comp_op_e,
-            BLENDCLEAR = OHOS::comp_op_clear,
-            BLENDSRC = OHOS::comp_op_src,
-            BLENDDST = OHOS::comp_op_dst,
+            BLENDALPHA = OHOS::END_OF_COMP_OP_E,
+            BLENDCLEAR = OHOS::COMP_OP_CLEAR,
+            BLENDSRC = OHOS::COMP_OP_SRC,
+            BLENDDST = OHOS::COMP_OP_DST,
             /** 默认。在目标图像上显示源图像。 */
-            BLENDSRCOVER = OHOS::comp_op_src_over,
+            BLENDSRCOVER = OHOS::COMP_OP_SRC_OVER,
             /** 在源图像上显示目标图像。 */
-            BLENDDSTOVER = OHOS::comp_op_dst_over,
+            BLENDDSTOVER = OHOS::COMP_OP_DST_OVER,
             /** 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。 */
-            BLENDSRCIN = OHOS::comp_op_src_in,
+            BLENDSRCIN = OHOS::COMP_OP_SRC_IN,
             /** 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。 */
-            BLENDDSTIN = OHOS::comp_op_dst_in,
+            BLENDDSTIN = OHOS::COMP_OP_DST_IN,
             /** 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。 */
-            BLENDSRCOUT = OHOS::comp_op_src_out,
+            BLENDSRCOUT = OHOS::COMP_OP_SRC_OUT,
             /** 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。 */
-            BLENDDSTOUT = OHOS::comp_op_dst_out,
+            BLENDDSTOUT = OHOS::COMP_OP_DST_OUT,
             /** 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。 */
-            BLENDSRCATOP = OHOS::comp_op_src_atop,
+            BLENDSRCATOP = OHOS::COMP_OP_SRC_ATOP,
             /** 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。 */
-            BLENDDSTATOP = OHOS::comp_op_dst_atop,
+            BLENDDSTATOP = OHOS::COMP_OP_DST_ATOP,
             /** 使用异或操作对源图像与目标图像进行组合。 */
-            BLENDXOR = OHOS::comp_op_xor,
-            BLENDADD = OHOS::comp_op_plus,
-            BLENDMULTIPLY = OHOS::comp_op_multiply,
-            BLENDSCREEN = OHOS::comp_op_screen,
-            BLENDOVERLAY = OHOS::comp_op_overlay,
-            BLENDDARKEN = OHOS::comp_op_darken,
-            BLENDLIGHTEN = OHOS::comp_op_lighten,
-            BLENDCOLORDODGE = OHOS::comp_op_color_dodge,
-            BLENDCOLORBURN = OHOS::comp_op_color_burn,
+            BLENDXOR = OHOS::COMP_OP_XOR,
+            BLENDADD = OHOS::COMP_OP_PLUS,
+            BLENDMULTIPLY = OHOS::COMP_OP_MULTIPLY,
+            BLENDSCREEN = OHOS::COMP_OP_SCREEN,
+            BLENDOVERLAY = OHOS::COMP_OP_OVERLAY,
+            BLENDDARKEN = OHOS::COMP_OP_DARKEN,
+            BLENDLIGHTEN = OHOS::COMP_OP_LIGHTEN,
+            BLENDCOLORDODGE = OHOS::COMP_OP_COLOR_DODGE,
+            BLENDCOLORBURN = OHOS::COMP_OP_COLOR_BURN,
             /**  显示源图像 + 目标图像 -硬 */
-            BLENDHARDLIGHT = OHOS::comp_op_hard_light,
+            BLENDHARDLIGHT = OHOS::COMP_OP_HARD_LIGHT,
             /** 显示源图像 + 目标图像 -软 */
-            BLENDSOFTLIGHT = OHOS::comp_op_soft_light,
-            BLENDDIFFERENCE = OHOS::comp_op_difference,
-            BLENDEXCLUSION = OHOS::comp_op_exclusion
+            BLENDSOFTLIGHT = OHOS::COMP_OP_SOFT_LIGHT,
+            BLENDDIFFERENCE = OHOS::COMP_OP_DIFFERENCE,
+            BLENDEXCLUSION = OHOS::COMP_OP_EXCLUSION
         };
 
         struct Transformations {
@@ -700,7 +700,7 @@ namespace OHOS {
          */
         static double Pi()
         {
-            return OHOS::pi;
+            return OHOS::PI;
         }
 
         /**
@@ -710,7 +710,7 @@ namespace OHOS {
          */
         static double Deg2Rad(double Angle)
         {
-            return Angle * OHOS::pi / 180.0;
+            return Angle * OHOS::PI / 180.0;
         }
 
         /**
@@ -878,10 +878,10 @@ namespace OHOS {
                 dashes = NULL;
             }
         }
-        OHOS::RenderingBuffer m_rbuf;                //渲染器缓冲区
-        OHOS::scanline_u8 m_scanline;                //扫描线不合并相同扫描线
-        OHOS::rasterizer_scanline_aa<> m_rasterizer; //光栅
-        OHOS::TransAffine m_fillGradientMatrix;      //放射渐变的矩阵
+        OHOS::RenderingBuffer m_rbuf;                     //渲染器缓冲区
+        OHOS::ScanlineUnPackedContainer m_scanline;       //扫描线不合并相同扫描线
+        OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; //光栅
+        OHOS::TransAffine m_fillGradientMatrix;           //放射渐变的矩阵
         OHOS::TransAffine m_lineGradientMatrix;
         OHOS::TransAffine m_fillRadialMatrix;
         OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
@@ -945,7 +945,7 @@ namespace OHOS {
      */
     inline bool operator==(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
-        return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
+        return c1.redValue == c2.redValue && c1.greenValue == c2.greenValue && c1.blueValue == c2.blueValue && c1.alphaValue == c2.alphaValue;
     }
 
     /**
