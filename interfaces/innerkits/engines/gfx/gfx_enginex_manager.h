@@ -86,15 +86,15 @@ namespace OHOS {
 
         //  typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
 
-        typedef OHOS::conv_curve<OHOS::PathStorage> ConvCurve;
-        typedef OHOS::conv_dash<ConvCurve> ConvDashCurve;
-        typedef OHOS::conv_stroke<ConvCurve> ConvStroke;
-        typedef OHOS::conv_stroke<ConvDashCurve> ConvDashStroke;
-        typedef OHOS::conv_transform<ConvCurve> PathTransform;
-        typedef OHOS::conv_transform<ConvStroke> StrokeTransform;
+        typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
+        typedef OHOS::DepictDash<ConvCurve> ConvDashCurve;
+        typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
+        typedef OHOS::DepictStroke<ConvDashCurve> ConvDashStroke;
+        typedef OHOS::DepictTransform<ConvCurve> PathTransform;
+        typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
         //    typedef OHOS::conv_stroke<OHOS::path_storage>       t_conv_stroke;
 
-        typedef OHOS::conv_transform<ConvDashStroke> DashStrokeTransform;
+        typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
         typedef OHOS::rendering_buffer RenderingBuffer;
 
@@ -112,8 +112,7 @@ namespace OHOS {
         //    typedef AGG_INT8U  int8u;
         //    typedef row_accessor<int8u> rendering_buffer;
 
-        enum Gradient
-        {
+        enum Gradient {
             Solid,
             Linear,
             Radial
@@ -130,32 +129,28 @@ namespace OHOS {
         typedef OHOS::RectD RectD;
         typedef OHOS::TransAffine Affine;
 
-        enum LineJoin
-        {
+        enum LineJoin {
             JoinNone = -1,
             JoinMiter = OHOS::MITER_JOIN,
             JoinRound = OHOS::ROUND_JOIN,
             JoinBevel = OHOS::BEVEL_JOIN
         };
 
-        enum LineCap
-        {
+        enum LineCap {
             CapNone = -1,
             CapButt = OHOS::BUTT_CAP,
             CapSquare = OHOS::SQUARE_CAP,
             CapRound = OHOS::ROUND_CAP
         };
 
-        enum DrawPathFlag
-        {
+        enum DrawPathFlag {
             FillOnly,
             StrokeOnly,
             FillAndStroke,
             FillWithLineColor
         };
 
-        enum ViewportOption
-        {
+        enum ViewportOption {
             Anisotropic,
             XMinYMin,
             XMidYMin,
@@ -198,16 +193,14 @@ namespace OHOS {
         /**
      * repeat|repeat-x|repeat-y|no-repeat
      */
-        enum PatternRepeat
-        {
+        enum PatternRepeat {
             REPEAT,
             REPEAT_X,
             REPEAT_Y,
             NO_REPEAT,
         };
 
-        enum ImageFilter
-        {
+        enum ImageFilter {
             NoFilter,
             Bilinear,
             Hanning,
@@ -220,15 +213,13 @@ namespace OHOS {
             Blackman144
         };
 
-        enum ImageResample
-        {
+        enum ImageResample {
             NoResample,
             ResampleAlways,
             ResampleOnZoomOut
         };
 
-        enum BlendMode
-        {
+        enum BlendMode {
             BlendNone = -1,
             BlendAlpha = OHOS::END_OF_COMP_OP_E,
             BlendClear = OHOS::COMP_OP_CLEAR,
@@ -257,8 +248,7 @@ namespace OHOS {
             BlendExclusion = OHOS::COMP_OP_EXCLUSION
         };
 
-        enum Direction
-        {
+        enum Direction {
             CW,
             CCW
         };
@@ -623,8 +613,8 @@ namespace OHOS {
         BlendMode m_imageBlendMode;
         Color m_imageBlendColor;
 
-        OHOS::scanline_u8 m_scanline;
-        OHOS::rasterizer_scanline_aa<> m_rasterizer;
+        OHOS::ScanlineUnPackedContainer m_scanline;
+        OHOS::RasterizerScanlineAntiAlias<RasterizerScanlineClipInt> m_rasterizer;
 
         double m_masterAlpha;
         double m_antiAliasGamma;

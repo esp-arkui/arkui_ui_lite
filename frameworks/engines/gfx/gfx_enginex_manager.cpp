@@ -205,7 +205,7 @@ namespace OHOS {
         lineJoin(JoinRound);
         m_masterAlpha = 1.0;
         m_antiAliasGamma = 1.0;
-        m_rasterizer.gamma(OHOS::GammaNone());
+        m_rasterizer.GammaFunction(OHOS::GammaNone());
         m_blendMode = BlendAlpha;
     }
 
@@ -229,7 +229,7 @@ namespace OHOS {
         m_renBasePre.ClipBox(rx1, ry1, rx2, ry2);
         m_renBaseCompPre.ClipBox(rx1, ry1, rx2, ry2);
 
-        m_rasterizer.clip_box(x1, y1, x2, y2);
+        m_rasterizer.ClipBox(x1, y1, x2, y2);
     }
 
     //------------------------------------------------------------------------
@@ -395,11 +395,11 @@ namespace OHOS {
     void BaseGfxExtendEngine::affine(const Affine& tr)
     {
         m_transform *= tr;
-        m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
+        m_convCurve.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         if (!this->is_dash) {
-            m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+            m_convStroke.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         } else {
-            m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+            m_convDashStroke.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         }
     }
 
@@ -414,11 +414,11 @@ namespace OHOS {
     void BaseGfxExtendEngine::scale(double sx, double sy)
     {
         m_transform *= OHOS::TransAffineScaling(sx, sy);
-        m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
+        m_convCurve.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         if (!this->is_dash) {
-            m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+            m_convStroke.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         } else {
-            m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+            m_convDashStroke.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         }
     }
 
@@ -443,11 +443,11 @@ namespace OHOS {
         vp.WorldViewPort(worldX1, worldY1, worldX2, worldY2);
         vp.DeviceViewPort(screenX1, screenY1, screenX2, screenY2);
         m_transform *= vp.ToAffine();
-        m_convCurve.approximation_scale(worldToScreen(1.0) * g_approxScale);
+        m_convCurve.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         if (!this->is_dash) {
-            m_convStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+            m_convStroke.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         } else {
-            m_convDashStroke.approximation_scale(worldToScreen(1.0) * g_approxScale);
+            m_convDashStroke.ApproximationScale(worldToScreen(1.0) * g_approxScale);
         }
     }
 
@@ -560,9 +560,9 @@ namespace OHOS {
         }
         m_lineWidth = w;
         if (!this->is_dash) {
-            m_convStroke.width(w);
+            m_convStroke.Width(w);
         } else {
-            m_convDashStroke.width(w);
+            m_convDashStroke.Width(w);
         }
     }
 
@@ -576,7 +576,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::fillEvenOdd(bool evenOddFlag)
     {
         m_evenOddFlag = evenOddFlag;
-        m_rasterizer.filling_rule(evenOddFlag ? OHOS::FILL_EVEN_ODD : OHOS::FILL_NON_ZERO);
+        m_rasterizer.FillingRule(evenOddFlag ? OHOS::FILL_EVEN_ODD : OHOS::FILL_NON_ZERO);
     }
 
     //------------------------------------------------------------------------
@@ -590,9 +590,9 @@ namespace OHOS {
     {
         m_lineCap = cap;
         if (!this->is_dash) {
-            m_convStroke.line_cap((OHOS::LineCap)cap);
+            m_convStroke.LineCap((OHOS::LineCapEnum)cap);
         } else {
-            m_convDashStroke.line_cap((OHOS::LineCap)cap);
+            m_convDashStroke.LineCap((OHOS::LineCapEnum)cap);
         }
     }
 
@@ -607,9 +607,9 @@ namespace OHOS {
     {
         m_lineJoin = join;
         if (!this->is_dash) {
-            m_convStroke.line_join((OHOS::LineJoin)join);
+            m_convStroke.LineJoin((OHOS::LineJoinEnum)join);
         } else {
-            m_convDashStroke.line_join((OHOS::LineJoin)join);
+            m_convDashStroke.LineJoin((OHOS::LineJoinEnum)join);
         }
     }
 
@@ -623,9 +623,9 @@ namespace OHOS {
     {
         m_miterLimit = limitValue;
         if (!this->is_dash) {
-            m_convStroke.miter_limit(limitValue);
+            m_convStroke.MiterLimit(limitValue);
         } else {
-            m_convDashStroke.miter_limit(limitValue);
+            m_convDashStroke.MiterLimit(limitValue);
         }
     }
 
@@ -904,7 +904,7 @@ namespace OHOS {
 
     void BaseGfxExtendEngine::drawShadow(double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
     {
-        m_rasterizer.reset();
+        m_rasterizer.Reset();
         OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY, m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
         PathTransform shadow_trans(m_convCurve, transform);
         transform.Translate(shadowOffsetX_, shadowOffsetY_);
@@ -918,7 +918,7 @@ namespace OHOS {
             transform *= OHOS::TransAffineScaling(scaleX, scaleY);
             transform *= OHOS::TransAffineTranslation(x, y);
         }
-        m_rasterizer.add_path(shadow_trans);
+        m_rasterizer.AddPath(shadow_trans);
         OHOS::RenderScanlinesAntiAliasSolid(m_rasterizer, m_scanline, m_renBase, shadowColor_);
         if (shadowBlurRadius_ != 0) {
             RectD bbox;
@@ -932,7 +932,7 @@ namespace OHOS {
             pixf2.Attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
             m_stack_blur.Blur(pixf2, OHOS::Uround(shadowBlurRadius_));
         }
-        m_rasterizer.reset();
+        m_rasterizer.Reset();
     }
     void BaseGfxExtendEngine::drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
                                          double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
@@ -958,14 +958,14 @@ namespace OHOS {
     //------------------------------------------------------------------------
     void BaseGfxExtendEngine::drawPath(DrawPathFlag flag)
     {
-        m_rasterizer.reset();
+        m_rasterizer.Reset();
         switch (flag) {
             case FillOnly:
                 if (m_fillColor.alphaValue) {
-                    // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
+                    // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsety()!=0) {
                     //     // drawShadow();
                     // }
-                    m_rasterizer.add_path(m_pathTransform);
+                    m_rasterizer.AddPath(m_pathTransform);
                     render(true);
                 }
                 break;
@@ -973,13 +973,13 @@ namespace OHOS {
             case StrokeOnly:
                 if (m_lineColor.alphaValue && m_lineWidth > 0.0) {
                     if (!this->is_dash) {
-                        m_rasterizer.add_path(m_strokeTransform);
+                        m_rasterizer.AddPath(m_strokeTransform);
                     } else {
                         for (unsigned int i = 0; i < this->ndashes; i += 2) {
-                            m_convDashCurve.add_dash(dashes[i], dashes[i + 1]);
+                            m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
-                        m_convDashCurve.dash_start(dDashOffset);
-                        m_rasterizer.add_path(m_dashStrokeTransform);
+                        m_convDashCurve.DashStart(dDashOffset);
+                        m_rasterizer.AddPath(m_dashStrokeTransform);
                     }
                     render(false);
                 }
@@ -987,22 +987,22 @@ namespace OHOS {
 
             case FillAndStroke:
                 if (m_fillColor.alphaValue) {
-                    // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsetY()!=0) {
+                    // if (m_shadow_ctrl.GetOffsetX()!=0||m_shadow_ctrl.GetOffsety()!=0) {
                     //     // drawShadow();
                     // }
-                    m_rasterizer.add_path(m_pathTransform);
+                    m_rasterizer.AddPath(m_pathTransform);
                     render(true);
                 }
 
                 if (m_lineColor.alphaValue && m_lineWidth > 0.0) {
                     if (!this->is_dash) {
-                        m_rasterizer.add_path(m_strokeTransform);
+                        m_rasterizer.AddPath(m_strokeTransform);
                     } else {
                         for (unsigned int i = 0; i < this->ndashes; i += 2) {
-                            m_convDashCurve.add_dash(dashes[i], dashes[i + 1]);
+                            m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
-                        m_convDashCurve.dash_start(dDashOffset);
-                        m_rasterizer.add_path(m_dashStrokeTransform);
+                        m_convDashCurve.DashStart(dDashOffset);
+                        m_rasterizer.AddPath(m_dashStrokeTransform);
                     }
                     render(false);
                 }
@@ -1010,7 +1010,7 @@ namespace OHOS {
 
             case FillWithLineColor:
                 if (m_lineColor.alphaValue) {
-                    m_rasterizer.add_path(m_pathTransform);
+                    m_rasterizer.AddPath(m_pathTransform);
                     render(false);
                 }
                 break;
@@ -1019,8 +1019,8 @@ namespace OHOS {
 
     void BaseGfxExtendEngine::stroke()
     {
-        m_rasterizer.reset();
-        m_rasterizer.add_path(m_strokeTransform);
+        m_rasterizer.Reset();
+        m_rasterizer.AddPath(m_strokeTransform);
         render(false);
     }
 
@@ -1214,8 +1214,8 @@ namespace OHOS {
         mtx *= m_transform;
         mtx.Invert();
 
-        m_rasterizer.reset();
-        m_rasterizer.add_path(m_pathTransform);
+        m_rasterizer.Reset();
+        m_rasterizer.AddPath(m_pathTransform);
 
         typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
         Interpolator interpolator(mtx);
@@ -1252,7 +1252,7 @@ namespace OHOS {
     //------------------------------------------------------------------------
     void BaseGfxExtendEngine::updateRasterizerGamma()
     {
-        m_rasterizer.gamma(BaseGfxExtendEngineRasterizerGamma(m_masterAlpha, m_antiAliasGamma));
+        m_rasterizer.GammaFunction(BaseGfxExtendEngineRasterizerGamma(m_masterAlpha, m_antiAliasGamma));
     }
 
     //------------------------------------------------------------------------
@@ -1289,7 +1289,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::patternImageFill(Image& img, double dstX, double dstY, const char* pattternMode)
     {
         worldToScreen(dstX, dstY);
-        m_rasterizer.add_path(m_pathTransform);
+        m_rasterizer.AddPath(m_pathTransform);
         pixfmt img_pixf(img.renBuf); //获取图片
         if (strcmp(pattternMode, "repeat") == 0) {
             img_source_type img_src(img_pixf);
@@ -1315,7 +1315,7 @@ namespace OHOS {
         worldToScreen(dstX, dstY);
         pixfmt img_pixf(img.renBuf); //获取图片
 
-        m_rasterizer.add_path(m_strokeTransform);
+        m_rasterizer.AddPath(m_strokeTransform);
 
         if (strcmp(pattternMode, "repeat") == 0) {
             img_source_type img_src(img_pixf);

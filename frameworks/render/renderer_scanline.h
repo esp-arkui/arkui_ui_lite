@@ -46,23 +46,23 @@ namespace OHOS {
     void RenderScanlinesAntiAliasSolid(Rasterizer& raster, Scanline& scanline,
                                        BaseRenderer& renBase, const ColorT& color)
     {
-        if (raster.rewind_scanlines()) {
+        if (raster.RewindScanlines()) {
             typename BaseRenderer::color_type ren_color = color;
 
-            scanline.reset(raster.min_x(), raster.max_x());
-            while (raster.sweep_scanline(scanline)) {
-                int y = scanline.y();
-                unsigned num_spans = scanline.num_spans();
-                typename Scanline::const_iterator span = scanline.begin();
+            scanline.Reset(raster.MinX(), raster.MaxX());
+            while (raster.SweepScanline(scanline)) {
+                int y = scanline.GetYLevel();
+                unsigned num_spans = scanline.NumSpans();
+                typename Scanline::const_iterator span = scanline.Begin();
 
                 while (true) {
                     int x = span->x;
-                    if (span->len > 0) {
-                        renBase.BlendSolidHspan(x, y, (unsigned)span->len,
+                    if (span->spanLength > 0) {
+                        renBase.BlendSolidHspan(x, y, (unsigned)span->spanLength,
                                                 ren_color,
                                                 span->covers);
                     } else {
-                        renBase.BlendHline(x, y, (unsigned)(x - span->len - 1),
+                        renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
                                            ren_color,
                                            *(span->covers));
                     }
@@ -133,18 +133,18 @@ namespace OHOS {
         template <class Scanline>
         void Render(const Scanline& scanline)
         {
-            int y = scanline.y();
-            unsigned num_spans = scanline.num_spans();
-            typename Scanline::const_iterator span = scanline.begin();
+            int y = scanline.GetYLevel();
+            unsigned num_spans = scanline.NumSpans();
+            typename Scanline::const_iterator span = scanline.Begin();
 
             for (;;) {
                 int x = span->x;
-                if (span->len > 0) {
-                    renBase_->BlendSolidHspan(x, y, (unsigned)span->len,
+                if (span->spanLength > 0) {
+                    renBase_->BlendSolidHspan(x, y, (unsigned)span->spanLength,
                                               color_,
                                               span->covers);
                 } else {
-                    renBase_->BlendHline(x, y, (unsigned)(x - span->len - 1),
+                    renBase_->BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
                                          color_,
                                          *(span->covers));
                 }
@@ -177,17 +177,17 @@ namespace OHOS {
     void RenderScanlinesAntiAlias(Rasterizer& raster, Scanline& scanline, BaseRenderer& renBase,
                                   SpanAllocator& alloc, SpanGenerator& spanGen)
     {
-        if (raster.rewind_scanlines()) {
-            scanline.reset(raster.min_x(), raster.max_x());
+        if (raster.RewindScanlines()) {
+            scanline.Reset(raster.MinX(), raster.MaxX());
             spanGen.Prepare(); //线段生成器预备
-            while (raster.sweep_scanline(scanline)) {
-                int y = scanline.y();
+            while (raster.SweepScanline(scanline)) {
+                int y = scanline.GetYLevel();
 
-                unsigned num_spans = scanline.num_spans();
-                typename Scanline::const_iterator span = scanline.begin();
+                unsigned num_spans = scanline.NumSpans();
+                typename Scanline::const_iterator span = scanline.Begin();
                 while (true) {
                     int x = span->x;
-                    int len = span->len;
+                    int len = span->spanLength;
                     const typename Scanline::cover_type* covers = span->covers;
 
                     if (len < 0) {
@@ -196,7 +196,7 @@ namespace OHOS {
                     typename BaseRenderer::color_type* colors = alloc.Resize(len);
                     spanGen.Generate(colors, x, y, len);
                     renBase.BlendColorHspan(x, y, len, colors,
-                                            (span->len < 0) ? 0 : covers, *covers);
+                                            (span->spanLength < 0) ? 0 : covers, *covers);
 
                     if (--num_spans == 0) {
                         break;
@@ -257,13 +257,13 @@ namespace OHOS {
         template <class Scanline>
         void Render(const Scanline& scanline)
         {
-            int y = scanline.y();
+            int y = scanline.GetYLevel();
 
-            unsigned num_spans = scanline.num_spans();
-            typename Scanline::const_iterator span = scanline.begin();
+            unsigned num_spans = scanline.NumSpans();
+            typename Scanline::const_iterator span = scanline.Begin();
             while (true) {
                 int x = span->x;
-                int len = span->len;
+                int len = span->spanLength;
                 const typename Scanline::cover_type* covers = span->covers;
 
                 if (len < 0) {
@@ -272,7 +272,7 @@ namespace OHOS {
                 typename BaseRenderer::color_type* colors = allocat_->Resize(len);
                 spanGenerat_->Generate(colors, x, y, len);
                 renBase_->BlendColorHspan(x, y, len, colors,
-                                          (span->len < 0) ? 0 : covers, *covers);
+                                          (span->spanLength < 0) ? 0 : covers, *covers);
 
                 if (--num_spans == 0) {
                     break;
@@ -533,10 +533,10 @@ namespace OHOS {
     template <class Rasterizer, class Scanline, class Renderer>
     void RenderScanlines(Rasterizer& raster, Scanline& scanline, Renderer& renBase)
     {
-        if (raster.rewind_scanlines()) {
-            scanline.reset(raster.min_x(), raster.max_x());
+        if (raster.RewindScanlines()) {
+            scanline.Reset(raster.MinX(), raster.MaxX());
             renBase.Prepare(); //线段生成器预备
-            while (raster.sweep_scanline(scanline)) {
+            while (raster.SweepScanline(scanline)) {
                 renBase.Render(scanline);
             }
         }
