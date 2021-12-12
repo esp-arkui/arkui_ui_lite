@@ -93,7 +93,8 @@ namespace OHOS {
             ColorType color;
         };
 
-        enum Gradient {
+        enum Gradient
+        {
             Solid,
             Linear,
             Radial
@@ -168,12 +169,12 @@ namespace OHOS {
         Paint() :
             style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
             strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
-            lineCap_(BaseGfxExtendEngine::LineCap::CapButt),
-            lineJoin_(BaseGfxExtendEngine::LineJoin::JoinMiter),
+            lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
+            lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER),
             miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
             shadowColor(Color::Black()),
-            blendMode(BaseGfxExtendEngine::BlendMode::BlendSrcOver), rotateCenterX(0), rotateCenterY(0),
+            blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), rotateCenterX(0), rotateCenterY(0),
             rotateAngle(0), scaleX(0), scaleY(0)
         {
             m_graphics = std::make_shared<BaseGfxExtendEngine>();
@@ -260,7 +261,8 @@ namespace OHOS {
         /**
      * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
      */
-        enum PaintStyle {
+        enum PaintStyle
+        {
             /** Stroke only */
             STROKE_STYLE = 1,
             /** Fill only */
@@ -279,7 +281,8 @@ namespace OHOS {
         /**
       * repeat|repeat-x|repeat-y|no-repeat
       */
-        enum PatternRepeat {
+        enum PatternRepeat
+        {
             REPEAT,
             REPEAT_X,
             REPEAT_Y,
@@ -455,12 +458,12 @@ namespace OHOS {
 
         void SetLineDashOffset(float dashOffset)
         {
-            m_graphics->lineDashOffset(dashOffset);
+            m_graphics->SetLineDashOffset(dashOffset);
         }
 
         float GetLineDashOffset() const
         {
-            return m_graphics->lineDashOffset();
+            return m_graphics->GetLineDashOffset();
         }
         BaseGfxExtendEngine* GetDrawGraphicsContext() const
         {
@@ -550,7 +553,7 @@ namespace OHOS {
             shadowOffsetX = offset;
         }
 
-        double GetShadowOffsety() const
+        double GetShadowOffsetY() const
         {
             return shadowOffsetY;
         }
@@ -585,7 +588,7 @@ namespace OHOS {
             rotateCenterY = y;
         }
 
-        double GetRotateCentery() const
+        double GetRotateCenterY() const
         {
             return rotateCenterY;
         }
@@ -621,7 +624,7 @@ namespace OHOS {
             scaleY = y;
         }
 
-        double GetScaley() const
+        double GetScaleY() const
         {
             return scaleY;
         }
@@ -672,7 +675,7 @@ namespace OHOS {
         /* 旋转当前绘图 */
         void Rotate(float angle)
         {
-            m_transform.Rotate(BaseGfxExtendEngine::deg2Rad(angle));
+            m_transform.Rotate(BaseGfxExtendEngine::Deg2Rad(angle));
         }
 
         /* 重新映射画布上的 (x,y) 位置 */
@@ -1238,7 +1241,8 @@ namespace OHOS {
                 }
             };
         };
-        enum PathCmd {
+        enum PathCmd
+        {
             CMD_MOVE_TO,
             CMD_LINE_TO,
             CMD_ARC,

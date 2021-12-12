@@ -183,6 +183,7 @@ HEADERS += \
     ../../../../frameworks/render/agg_pixfmt_rgba_comp.h \
     ../../../../frameworks/render/agg_pixfmt_rgba_conv.h \
     ../../../../frameworks/render/agg_pixfmt_rgba_gamma.h \
+    ../../../../frameworks/render/agg_pixfmt_rgba.h \
     ../../../../frameworks/render/agg_pixfmt_rgba_multi.h \
     ../../../../frameworks/render/agg_pixfmt_transposer.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/agg_color_rgba.h \

@@ -1,25 +1,17 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Adaptation for high precision colors has been sponsored by
-// Liberty Technology Systems, Inc., visit http://lib-sys.com
-//
-// Liberty Technology Systems, Inc. is the provider of
-// PostScript and PDF technology for software developers.
-//
-//----------------------------------------------------------------------------
+/*
+* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_RGBA_INCLUDED
 #define GRAPHIC_GEOMETRY_PIXFMT_RGBA_INCLUDED
@@ -112,50 +104,50 @@ namespace OHOS {
     using BlenderAbgr128Plain = BlenderRgbaPlain<Rgba32, OrderAbgr>;
     using BlenderBgra128Plain = BlenderRgbaPlain<Rgba32, OrderBgra>;
 
-    using PixfmtRgba32 = PixfmtAlphaBlendRgba<BlenderRgba32, rendering_buffer>;
-    using PixfmtArgb32 = PixfmtAlphaBlendRgba<BlenderArgb32, rendering_buffer>;
-    using PixfmtAbgr32 = PixfmtAlphaBlendRgba<BlenderAbgr32, rendering_buffer>;
-    using PixfmtBgra32 = PixfmtAlphaBlendRgba<BlenderBgra32, rendering_buffer>;
+    using PixfmtRgba32 = PixfmtAlphaBlendRgba<BlenderRgba32, RenderingBuffer>;
+    using PixfmtArgb32 = PixfmtAlphaBlendRgba<BlenderArgb32, RenderingBuffer>;
+    using PixfmtAbgr32 = PixfmtAlphaBlendRgba<BlenderAbgr32, RenderingBuffer>;
+    using PixfmtBgra32 = PixfmtAlphaBlendRgba<BlenderBgra32, RenderingBuffer>;
 
-    using PixfmtSrgba32 = PixfmtAlphaBlendRgba<BlenderSrgba32, rendering_buffer>;
-    using PixfmtSargb32 = PixfmtAlphaBlendRgba<BlenderSargb32, rendering_buffer>;
-    using PixfmtSabgr32 = PixfmtAlphaBlendRgba<BlenderSabgr32, rendering_buffer>;
-    using PixfmtSbgra32 = PixfmtAlphaBlendRgba<BlenderSbgra32, rendering_buffer>;
+    using PixfmtSrgba32 = PixfmtAlphaBlendRgba<BlenderSrgba32, RenderingBuffer>;
+    using PixfmtSargb32 = PixfmtAlphaBlendRgba<BlenderSargb32, RenderingBuffer>;
+    using PixfmtSabgr32 = PixfmtAlphaBlendRgba<BlenderSabgr32, RenderingBuffer>;
+    using PixfmtSbgra32 = PixfmtAlphaBlendRgba<BlenderSbgra32, RenderingBuffer>;
 
-    using PixfmtRgba32Pre = PixfmtAlphaBlendRgba<BlenderRgba32Pre, rendering_buffer>;
-    using PixfmtArgb32Pre = PixfmtAlphaBlendRgba<BlenderArgb32Pre, rendering_buffer>;
-    using PixfmtAbgr32Pre = PixfmtAlphaBlendRgba<BlenderAbgr32Pre, rendering_buffer>;
-    using PixfmtBgra32Pre = PixfmtAlphaBlendRgba<BlenderBgra32Pre, rendering_buffer>;
+    using PixfmtRgba32Pre = PixfmtAlphaBlendRgba<BlenderRgba32Pre, RenderingBuffer>;
+    using PixfmtArgb32Pre = PixfmtAlphaBlendRgba<BlenderArgb32Pre, RenderingBuffer>;
+    using PixfmtAbgr32Pre = PixfmtAlphaBlendRgba<BlenderAbgr32Pre, RenderingBuffer>;
+    using PixfmtBgra32Pre = PixfmtAlphaBlendRgba<BlenderBgra32Pre, RenderingBuffer>;
 
-    using PixfmtSrgba32Pre = PixfmtAlphaBlendRgba<BlenderSrgba32Pre, rendering_buffer>;
-    using PixfmtSargb32Pre = PixfmtAlphaBlendRgba<BlenderSargb32Pre, rendering_buffer>;
-    using PixfmtSabgr32Pre = PixfmtAlphaBlendRgba<BlenderSabgr32Pre, rendering_buffer>;
-    using PixfmtSbgra32Pre = PixfmtAlphaBlendRgba<BlenderSbgra32Pre, rendering_buffer>;
+    using PixfmtSrgba32Pre = PixfmtAlphaBlendRgba<BlenderSrgba32Pre, RenderingBuffer>;
+    using PixfmtSargb32Pre = PixfmtAlphaBlendRgba<BlenderSargb32Pre, RenderingBuffer>;
+    using PixfmtSabgr32Pre = PixfmtAlphaBlendRgba<BlenderSabgr32Pre, RenderingBuffer>;
+    using PixfmtSbgra32Pre = PixfmtAlphaBlendRgba<BlenderSbgra32Pre, RenderingBuffer>;
 
-    using PixfmtRgba32Plain = PixfmtAlphaBlendRgba<BlenderRgba32Plain, rendering_buffer>;
-    using PixfmtArgb32Plain = PixfmtAlphaBlendRgba<BlenderArgb32Plain, rendering_buffer>;
-    using PixfmtAbgr32Plain = PixfmtAlphaBlendRgba<BlenderAbgr32Plain, rendering_buffer>;
-    using PixfmtBgra32Plain = PixfmtAlphaBlendRgba<BlenderBgra32Plain, rendering_buffer>;
+    using PixfmtRgba32Plain = PixfmtAlphaBlendRgba<BlenderRgba32Plain, RenderingBuffer>;
+    using PixfmtArgb32Plain = PixfmtAlphaBlendRgba<BlenderArgb32Plain, RenderingBuffer>;
+    using PixfmtAbgr32Plain = PixfmtAlphaBlendRgba<BlenderAbgr32Plain, RenderingBuffer>;
+    using PixfmtBgra32Plain = PixfmtAlphaBlendRgba<BlenderBgra32Plain, RenderingBuffer>;
 
-    using PixfmtSrgba32Plain = PixfmtAlphaBlendRgba<BlenderSrgba32Plain, rendering_buffer>;
-    using PixfmtSargb32Plain = PixfmtAlphaBlendRgba<BlenderSargb32Plain, rendering_buffer>;
-    using PixfmtSabgr32Plain = PixfmtAlphaBlendRgba<BlenderSabgr32Plain, rendering_buffer>;
-    using PixfmtSbgra32Plain = PixfmtAlphaBlendRgba<BlenderSbgra32Plain, rendering_buffer>;
+    using PixfmtSrgba32Plain = PixfmtAlphaBlendRgba<BlenderSrgba32Plain, RenderingBuffer>;
+    using PixfmtSargb32Plain = PixfmtAlphaBlendRgba<BlenderSargb32Plain, RenderingBuffer>;
+    using PixfmtSabgr32Plain = PixfmtAlphaBlendRgba<BlenderSabgr32Plain, RenderingBuffer>;
+    using PixfmtSbgra32Plain = PixfmtAlphaBlendRgba<BlenderSbgra32Plain, RenderingBuffer>;
 
-    using PixfmtRgba128 = PixfmtAlphaBlendRgba<BlenderRgba128, rendering_buffer>;
-    using PixfmtArgb128 = PixfmtAlphaBlendRgba<BlenderArgb128, rendering_buffer>;
-    using PixfmtAbgr128 = PixfmtAlphaBlendRgba<BlenderAbgr128, rendering_buffer>;
-    using PixfmtBgra128 = PixfmtAlphaBlendRgba<BlenderBgra128, rendering_buffer>;
+    using PixfmtRgba128 = PixfmtAlphaBlendRgba<BlenderRgba128, RenderingBuffer>;
+    using PixfmtArgb128 = PixfmtAlphaBlendRgba<BlenderArgb128, RenderingBuffer>;
+    using PixfmtAbgr128 = PixfmtAlphaBlendRgba<BlenderAbgr128, RenderingBuffer>;
+    using PixfmtBgra128 = PixfmtAlphaBlendRgba<BlenderBgra128, RenderingBuffer>;
 
-    using PixfmtRgba128Pre = PixfmtAlphaBlendRgba<BlenderRgba128Pre, rendering_buffer>;
-    using PixfmtArgb128Pre = PixfmtAlphaBlendRgba<BlenderArgb128Pre, rendering_buffer>;
-    using PixfmtAbgr128Pre = PixfmtAlphaBlendRgba<BlenderAbgr128Pre, rendering_buffer>;
-    using PixfmtBgra128Pre = PixfmtAlphaBlendRgba<BlenderBgra128Pre, rendering_buffer>;
+    using PixfmtRgba128Pre = PixfmtAlphaBlendRgba<BlenderRgba128Pre, RenderingBuffer>;
+    using PixfmtArgb128Pre = PixfmtAlphaBlendRgba<BlenderArgb128Pre, RenderingBuffer>;
+    using PixfmtAbgr128Pre = PixfmtAlphaBlendRgba<BlenderAbgr128Pre, RenderingBuffer>;
+    using PixfmtBgra128Pre = PixfmtAlphaBlendRgba<BlenderBgra128Pre, RenderingBuffer>;
 
-    using PixfmtRgba128Plain = PixfmtAlphaBlendRgba<BlenderRgba128Plain, rendering_buffer>;
-    using PixfmtArgb128Plain = PixfmtAlphaBlendRgba<BlenderArgb128Plain, rendering_buffer>;
-    using PixfmtAbgr128Plain = PixfmtAlphaBlendRgba<BlenderAbgr128Plain, rendering_buffer>;
-    using PixfmtBgra128Plain = PixfmtAlphaBlendRgba<BlenderBgra128Plain, rendering_buffer>;
+    using PixfmtRgba128Plain = PixfmtAlphaBlendRgba<BlenderRgba128Plain, RenderingBuffer>;
+    using PixfmtArgb128Plain = PixfmtAlphaBlendRgba<BlenderArgb128Plain, RenderingBuffer>;
+    using PixfmtAbgr128Plain = PixfmtAlphaBlendRgba<BlenderAbgr128Plain, RenderingBuffer>;
+    using PixfmtBgra128Plain = PixfmtAlphaBlendRgba<BlenderBgra128Plain, RenderingBuffer>;
 
 } // namespace OHOS
 

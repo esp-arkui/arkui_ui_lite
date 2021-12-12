@@ -14,16 +14,6 @@
 */
 
 /**
-* @addtogroup GraphicGeometry
-* @{
-*
-* @brief Defines .
-*
-* @since 1.0
-* @version 1.0
-*/
-
-/**
 * @file graphic_geometry_pixfmt_rgba.h
 *
 * @brief Defines 颜色分量gamma操作类.

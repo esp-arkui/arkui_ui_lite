@@ -14,16 +14,6 @@
 */
 
 /**
-* @addtogroup GraphicGeometry
-* @{
-*
-* @brief Defines .
-*
-* @since 1.0
-* @version 1.0
-*/
-
-/**
 * @file graphic_geometry_pixfmt_rgba.h
 *
 * @brief Defines 颜色分量gamma操作类.
@@ -370,7 +360,7 @@ namespace OHOS {
             RectI r(x1, y1, x2, y2);
             if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
                 int stride = pixf.Stride();
-                rbuf_->attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
                 return true;
             }
             return false;
@@ -428,7 +418,7 @@ namespace OHOS {
           */
         GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
         {
-            return rbuf_->row_ptr(y);
+            return rbuf_->RowPtr(y);
         }
 
         /**
@@ -439,7 +429,7 @@ namespace OHOS {
           */
         GRAPHIC_GEOMETRY_INLINE RowData Row(int y) const
         {
-            return rbuf_->row(y);
+            return rbuf_->Row(y);
         }
 
         /**
@@ -450,7 +440,7 @@ namespace OHOS {
           */
         GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
         {
-            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
 
         /**
@@ -461,7 +451,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
         {
-            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
 
         /**
@@ -472,7 +462,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
         {
-            return (PixelType*)(rbuf_->row_ptr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+            return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
         }
 
         /**
@@ -483,7 +473,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {
-            int8u* p = rbuf_->row_ptr(y);
+            int8u* p = rbuf_->RowPtr(y);
             return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
         }
 
@@ -1207,7 +1197,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
         {
-            return (PixelType*)(rbuf_->row_ptr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+            return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
         }
         /**
          * @brief 像素坐标转为像素类型指针.
