@@ -179,7 +179,7 @@ namespace OHOS {
         {
             m_graphics = std::make_shared<BaseGfxExtendEngine>();
             m_transform.Reset();
-            this->Save();
+
             //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
         }
         Paint(const Paint& paint)
@@ -712,20 +712,6 @@ namespace OHOS {
         {
             return gradientControl;
         }
-        /* 保存历史状态 */
-        void Save()
-        {
-            m_stack.push(*this);
-        }
-        /* 恢复到上次历史状态 */
-        void Restore()
-        {
-            if (m_stack.empty()) {
-                return;
-            }
-            Init(m_stack.top());
-            m_stack.pop();
-        }
 
     private:
         PaintStyle style_;
@@ -758,9 +744,6 @@ namespace OHOS {
         double rotateAngle;
         double scaleX;
         double scaleY;
-
-        //保存历史修改信息
-        std::stack<Paint> m_stack;
     };
 
     /**
@@ -1174,12 +1157,19 @@ namespace OHOS {
         /* 保存历史状态 */
         void Save(Paint& paint)
         {
-            paint.Save();
+            PaintStack.push(paint);
         }
+
         /* 恢复到上次历史状态 */
-        void Restore(Paint& paint)
+        Paint Restore()
         {
-            paint.Restore();
+            Paint paint;
+            if (PaintStack.empty()) {
+                return paint;
+            }
+            paint = PaintStack.top();
+            PaintStack.pop();
+            return paint;
         }
         struct Images_ {
             Point startp;
@@ -1287,7 +1277,8 @@ namespace OHOS {
         Point startPoint_;
         UICanvasPath* path_;
         List<DrawCmd> drawCmdList_;
-
+        //保存Paint的历史修改信息
+        std::stack<Paint> PaintStack;
         static void DeleteTextParam(void* param)
         {
             TextParam* textParam = static_cast<TextParam*>(param);
