@@ -789,7 +789,7 @@ namespace OHOS {
                                                    paint.GetStrokeColor(), paint.GetOpacity());
         } else {
             ColorType colorType = paint.GetStrokeColor();
-            m_graphics->LineColor(colorType.red, colorType.green, colorType.blue, colorType.alpha);
+            m_graphics->SetLineColor(colorType.red, colorType.green, colorType.blue, colorType.alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
             m_graphics->SetLineCap(paint.GetLineCap());
             m_graphics->NoFill();
@@ -873,7 +873,7 @@ namespace OHOS {
         } else {
             m_graphics->SetLineDash(nullptr, 0);
         }
-        m_graphics->LineColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green, drawStyle.bgColor_.blue, drawStyle.bgOpa_);
+        m_graphics->SetLineColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green, drawStyle.bgColor_.blue, drawStyle.bgOpa_);
         m_graphics->SetLineWidth(lineWidth);
         if (paint.GetStyle() == Paint::PaintStyle::STROKE_STYLE) {
             m_graphics->NoFill();
@@ -1181,7 +1181,7 @@ namespace OHOS {
 
         if (gradientControl.gradientflag == gradientControl.Solid) { //纯色渐变
             ColorType color = paint.GetFillColor();
-            m_graphics.FillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
+            m_graphics.SetFillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
         }
     }
 
@@ -1232,8 +1232,8 @@ namespace OHOS {
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
             drawStyle.bgColor_ = paint.GetFillColor();
             drawStyle.bgOpa_ = paint.GetOpacity();
-            m_graphics->FillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
-                                  drawStyle.bgColor_.blue, drawStyle.bgOpa_);
+            m_graphics->SetFillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
+                                     drawStyle.bgColor_.blue, drawStyle.bgOpa_);
         }
         if (enableStroke) {
             drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
@@ -1246,8 +1246,8 @@ namespace OHOS {
                 m_graphics->SetLineDash(nullptr, 0);
             }
             m_graphics->SetLineWidth(drawStyle.lineWidth_);
-            m_graphics->LineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
-                                  drawStyle.lineColor_.blue, drawStyle.lineOpa_);
+            m_graphics->SetLineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
+                                     drawStyle.lineColor_.blue, drawStyle.lineOpa_);
         }
 
         if (paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
@@ -1286,8 +1286,7 @@ namespace OHOS {
                 m_graphics->DrawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
                                        rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
             }
-            m_graphics->Ellipse(arcInfo.center.x, arcInfo.center.y,
-                                arcInfo.radius, arcInfo.radius);
+            m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);
         }
 
         m_graphics->ResetTransformations();
@@ -1450,7 +1449,7 @@ namespace OHOS {
 
         if (gradientControl.gradientflag == gradientControl.Solid) { //纯色渐变
             ColorType color = paint.GetFillColor();
-            m_graphics->FillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
+            m_graphics->SetFillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
         }
 
         DoDrawPath(gfxDstBuffer, param, paint, rect, invalidatedArea, style);
@@ -1716,8 +1715,8 @@ namespace OHOS {
         bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
         bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
         if ((!isLineJoin || !isLineCap) && !(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) && (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) && (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
-            m_graphics->LineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
-                                  paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
+            m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
+                                     paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
             m_graphics->SetLineCap(paint.GetLineCap());
             m_graphics->SetLineJoin(paint.GetLineJoin());
@@ -1852,8 +1851,8 @@ namespace OHOS {
         bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
 
         if (!isLineJoin || !isLineCap) {
-            m_graphics->LineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
-                                  paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
+            m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
+                                     paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
             m_graphics->SetLineCap(paint.GetLineCap());
             m_graphics->SetLineJoin(paint.GetLineJoin());
@@ -1863,12 +1862,12 @@ namespace OHOS {
             //        m_graphics->noFill();
         }
         if (paint.GetFillColor().alpha) {
-            m_graphics->FillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
-                                  paint.GetFillColor().alpha);
+            m_graphics->SetFillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
+                                     paint.GetFillColor().alpha);
         }
         if (paint.GetStrokeColor().alpha) {
-            m_graphics->LineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green, paint.GetStrokeColor().blue,
-                                  paint.GetStrokeColor().alpha);
+            m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green, paint.GetStrokeColor().blue,
+                                     paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
         }
         m_graphics->ResetPath();

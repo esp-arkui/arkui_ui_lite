@@ -48,46 +48,71 @@ namespace OHOS {
 #else
         typedef OHOS::rgba8 ColorType;
 #endif
+        //颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OHOS::order_bgra ComponentOrder;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
         typedef OHOS::blender_rgba<ColorType, ComponentOrder> Blender;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
         typedef OHOS::comp_op_adaptor_rgba<ColorType, ComponentOrder> BlenderComp;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
         typedef OHOS::blender_rgba_pre<ColorType, ComponentOrder> BlenderPre;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
         typedef OHOS::comp_op_adaptor_rgba_pre<ColorType, ComponentOrder> BlenderCompPre;
+        //根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
         typedef OHOS::pixfmt_alpha_blend_rgba<Blender, OHOS::RenderingBuffer> PixFormat;
         typedef OHOS::pixfmt_custom_blend_rgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
         typedef OHOS::pixfmt_alpha_blend_rgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
         typedef OHOS::pixfmt_custom_blend_rgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
         typedef OHOS::pixfmt_bgra32 pixfmt;
+
+        //根据像素处理的模板处理基础渲染器
         typedef OHOS::RendererBase<PixFormat> RendererBase;
         typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
         typedef OHOS::RendererBase<PixFormatPre> RendererBasePre;
         typedef OHOS::RendererBase<PixFormatCompPre> RendererBaseCompPre;
+
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBase> RendererSolid;
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
+        //设定线段分配器
         typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
-        typedef OHOS::pod_auto_array<ColorType, 256> GradientArray;
+        //设定渐变数组的构造器设定颜色插值器和颜色模板等
         typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::srgba8>, 1024> color_func_type;
+        //设定放射渐变的算法
         typedef OHOS::GradientRadialCalculate gradient_func_type;
+        //设定线段插值器
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
+        //设定线性渐变的线段生成器
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate, color_func_type> LinearGradientSpan;
+        //设定放射渐变的线段生成器
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type> RadialGradientSpan;
+
         typedef OHOS::conv_curve<OHOS::PathStorage> ConvCurve;
-        typedef OHOS::conv_dash<ConvCurve> ConvDashCurve;
         typedef OHOS::conv_stroke<ConvCurve> ConvStroke;
-        typedef OHOS::conv_stroke<ConvDashCurve> ConvDashStroke;
+        typedef OHOS::conv_dash<ConvCurve> ConvDashCurve;
         typedef OHOS::conv_transform<ConvCurve> PathTransform;
+        typedef OHOS::conv_stroke<ConvDashCurve> ConvDashStroke;
         typedef OHOS::conv_transform<ConvStroke> StrokeTransform;
         typedef OHOS::conv_transform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
+        //渲染器缓冲区
         typedef OHOS::RenderingBuffer RenderingBuffer;
-        typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> img_source_type;
-        typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> img_source_type_x;
-        typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> img_source_type_y;
-        typedef OHOS::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
-        typedef OHOS::SpanPatternRgba<img_source_type> span_pattern_type_repeat;
-        typedef OHOS::SpanPatternRgba<img_source_type_x> span_pattern_type_x;
-        typedef OHOS::SpanPatternRgba<img_source_type_y> span_pattern_type_y;
-        typedef OHOS::SpanPatternRgba<img_source_type_none> span_pattern_type_none;
+        //设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> imgSourceTypeRepeat;
+        //设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
+        //设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
+        //设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        typedef OHOS::ImageAccessorNoRepeat<pixfmt> imgSourceTypeNoRepeat;
+        //通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        //x,y轴都重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
+        //x轴重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
+        //y轴重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
+        //不重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 
     public:
         friend class BaseGfxExtendEngineRenderer;
@@ -391,14 +416,38 @@ namespace OHOS {
          * @brief 将填充区域设置为透明
          */
         void NoFill();
-        void LineColor(Color color);
-        void LineColor(const OHOS::ColorType& color);
-        void LineColor(unsigned read, unsigned green, unsigned blue, unsigned alpha = 255);
+        /**
+         * @brief 设置线条颜色
+         * @param color
+         */
+        void SetLineColor(Color color);
+        void SetLineColor(const OHOS::ColorType& color);
+        void SetLineColor(unsigned read, unsigned green, unsigned blue, unsigned alpha = 255);
+        /**
+         * @brief 返回线条颜色
+         */
+        Color GetLineColor() const;
+        /**
+         * @brief 将线条颜色设置为透明，即不显示线条
+         */
         void NoLine();
 
-        Color LineColor() const;
+        /**
+         * @brief 颜色渐变，删除所有颜色
+         */
         void RemoveAllColor();
-        void AddColor(double offset, Color c1);
+        /**
+         * @brief AddColor 颜色渐变，添加渐变过程颜色
+         * @param offset （0-1）
+         * @param color  offset所在位置的颜色
+         */
+        void AddColor(double offset, Color color);
+
+        /**
+         * @brief 根据渐变颜色构建color_type数组
+        * 数组长度0-255
+        * 数组内容根据渐变颜色分布在数组上
+         */
         void BuildLut();
 
         /**
@@ -411,45 +460,207 @@ namespace OHOS {
          * @param end_r 结束圆半径
          */
         void SetRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r);
+        /**
+         * @brief fillRadialGradient 根据线性起点和终点控制线性渐变
+         * @param start_x 线性起点坐标x
+         * @param start_y 线性起点坐标y
+         * @param end_x 线性终点坐标x
+         * @param end_y 线性终点坐标y
+         */
         void SetLinearGradient(double start_x, double start_y, double end_x, double end_y);
+        /**
+         * @brief 设置线条宽度
+         */
         void SetLineWidth(double w);
+        /**
+         * @brief 获取线条宽度
+         * @return
+         */
         double GetLineWidth() const;
+        /**
+         * @brief 设置线条末端线帽样式
+         * @param cap 具体线帽样式
+         */
         void SetLineCap(LineCap cap);
+        /**
+         * @brief 获取线条末端线帽样式
+         */
         LineCap GetLineCap() const;
+
+        /**
+         * @brief 设置交点拐角类型
+         */
         void SetLineJoin(LineJoin join);
+        /**
+         * @brief 返回线条拐点的样式
+         */
         LineJoin GetLineJoin() const;
+        /**
+         * @brief 设置最大斜接长度
+         */
         void SetMiterLimit(double limitValue);
+        /**
+         * @brief 返回最大斜接长度
+         */
         double GetMiterLimit() const;
+        /**
+         * @brief 重置转换
+         */
         void ResetTransformations();
+
         void SetAffine(const Affine& tr);
         void SetAffine(const Transformations& tr);
+
+        /**
+         * @brief Rotate 以（0,0）为基准旋转一定范围内矩形
+         * @param angle 旋转角度
+         */
         void Rotate(double angle);
-        void Rotate(double x, double y, double a);
+        /**
+         * @brief Rotate 以（x,y）为基准旋转一定范围内矩形
+         * @param x
+         * @param y
+         * @param angle 旋转角度
+         */
+        void Rotate(double x, double y, double angle);
+
         void Scale(double sx, double sy);
         void Scale(double x, double y, double scaleX, double scaleY);
+
+        /**
+         * @brief Translate 将坐标转换为
+         * @param x
+         * @param y
+         */
         void Translate(double x, double y);
+
+        /**
+         * @brief Viewport 将画布映射到屏幕上
+         * @param worldX1 画布左上角坐标x
+         * @param worldY1 画布左上角坐标y
+         * @param worldX2 画布右下角角坐标x
+         * @param worldY2 画布右下角坐标y
+         * @param screenX1 屏幕左上角坐标x
+         * @param screenY1 屏幕左上角坐标y
+         * @param screenX2 屏幕右下角角坐标x
+         * @param screenY2 屏幕右下角坐标y
+         * @param opt
+         */
         void Viewport(double worldX1, double worldY1, double worldX2, double worldY2,
                       double screenX1, double screenY1, double screenX2, double screenY2,
                       ViewportOption opt = XMIDYMID);
+        /**
+         * @brief 设置线条的起止位置
+         * @param x1 起点x
+         * @param y1 起点y
+         * @param x2 终点x
+         * @param y2 终点y
+         */
         void Line(double x1, double y1, double x2, double y2);
+        /**
+         * @brief Triangle 绘制三角形
+         * @param x1 第一个点x坐标
+         * @param y1 第一个点y坐标
+         * @param x2 第二个点x坐标
+         * @param y2 第二个点y坐标
+         * @param x3 第三个点x坐标
+         * @param y3 第三个点y坐标
+         */
         void Triangle(double x1, double y1, double x2, double y2, double x3, double y3);
+        /**
+         * @brief 绘制矩形
+         * @param x1 矩形左上角x
+         * @param y1 矩形左上角y
+         * @param x2 矩形右下角x
+         * @param y2 矩形右下角y
+         */
         void Rectangle(double x1, double y1, double x2, double y2);
+
+        /**
+         * @brief Rectstroke 绘制矩形的路径
+         * @param x1 矩形左上角x
+         * @param y1 矩形左上角y
+         * @param x2 矩形右下角x
+         * @param y2 矩形右下角y
+         */
         void Rectstroke(double x1, double y1, double x2, double y2);
-        void Ellipse(double cx, double cy, double rx, double ry);
-        void Arc(double cx, double cy, double rx, double ry, double start, double sweep);
+        /**
+         * @brief Round 绘制圆
+         * @param cx 圆心x坐标
+         * @param cy 圆心y坐标
+         * @param radius 半径
+         */
+        void Round(double cx, double cy, double radius);
+        /**
+         * @brief 重置路径
+         */
         void ResetPath();
+        /**
+         * @brief 起点
+         * @param x 起点坐标x
+         * @param y 起点坐标y
+         */
         void MoveTo(double x, double y);
+        /**
+         * @brief 直线连接上一个点到当前点。
+         * @param x 当前点坐标x
+         * @param y 当前点坐标y
+         */
         void LineTo(double x, double y);
+        /**
+         * @brief 弧线连接上一个点到当前点。
+         * @param rx 长短半轴
+         * @param ry 长短半轴
+         * @param angle 角度
+         * @param largeArcFlag 优劣弧
+         * @param sweepFlag 顺逆时针
+         * @param x 终点x轴坐标
+         * @param y 终点y轴坐标
+         */
         void ArcTo(double rx, double ry,
                    double angle,
                    bool largeArcFlag,
                    bool sweepFlag,
                    double x, double y);
+        /**
+         * @brief 关闭多边形路径
+         */
         void ClosePolygon();
+
+        /**
+         * @brief 绘制阴影
+         * @param x
+         * @param y
+         * @param a
+         * @param scaleX
+         * @param scaleY
+         */
         void DrawShadow(double x, double y, double a, double scaleX, double scaleY);
         void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX, double scaleY);
+
+        /**
+         * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
+         * @param flag 绘制模式 默认填充和绘制路径都有
+         */
         void DrawPath(DrawPathFlag flag = FILLANDSTROKE);
+        /**
+         * @brief 绘制路径
+         */
         void Stroke();
+
+        /**
+         * @brief 变换图像
+         * @param img 图像
+         * @param imgX1 图像左上角x
+         * @param imgY1 图像左上角y
+         * @param imgX2 图像右下角x
+         * @param imgY2 图像右下角y
+         * @param dstX1 合法区域的左上角x
+         * @param dstY1 合法区域的左上角y
+         * @param dstX2 合法区域的右下角x
+         * @param dstY2 合法区域的右下角y
+         * @param isAntiAlias 是否抗锯齿
+         */
         void TransformImage(const Image& img,
                             int imgX1, int imgY1, int imgX2, int imgY2,
                             double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias = true);
@@ -459,31 +670,70 @@ namespace OHOS {
                             int imgX1, int imgY1, int imgX2, int imgY2,
                             const double* parallelogram, bool isAntiAlias = true);
         void TransformImage(const Image& img, const double* parallelogram, bool isAntiAlias = true);
-        void BlendImage(Image& img,
-                        int imgX1, int imgY1, int imgX2, int imgY2,
+
+        void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
                         double dstX, double dstY, unsigned alpha = 255);
         void BlendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
-        void PatternImageFill(Image& img, double dstX, double dstY, const char* pattternMode);
-        void PatternImageStroke(Image& img, double dstX, double dstY, const char* pattternMode);
+
+        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
+                            double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+
+        /**
+         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
+         * @param img 图像相关信息
+         * @param dstX x方向偏移量
+         * @param dstY y方向偏移量
+         * @param pattternMode 有四种模式
+         */
+        void PatternImageFill(Image& img, double offsetX, double offsetY, const char* pattternMode);
+        /**
+         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充路径
+         * @param img 图像相关信息
+         * @param dstX x方向偏移量
+         * @param dstY y方向偏移量
+         * @param pattternMode 有四种模式
+         */
+        void PatternImageStroke(Image& img, double offsetX, double offsetY, const char* pattternMode);
+        /**
+         * @brief 返回 π
+         */
         static double Pi()
         {
             return OHOS::pi;
         }
-        static double Deg2Rad(double v)
+
+        /**
+         * @brief 角度转换为弧度
+         * @param  Angle 规定要转换的角度。
+         * @return 返回弧度
+         */
+        static double Deg2Rad(double Angle)
         {
-            return v * OHOS::pi / 180.0;
+            return Angle * OHOS::pi / 180.0;
         }
 
+        /**
+         * @brief 设置lineDash的起始位置偏移量
+         * @param dDashOffset 要偏移的位置
+         */
         void SetLineDashOffset(float dDashOffset)
         {
             this->dDashOffset = dDashOffset;
         }
-
+        /**
+         * @brief 获得lineDash的起始位置偏移量
+         */
         float GetLineDashOffset() const
         {
             return dDashOffset;
         }
 
+        /**
+         * @brief 设置lineDash的虚实线的长度
+         * @param dashArray 虚实线长度的数组
+         * @param ndash 数组长度
+         */
         void SetLineDash(const float* dashArray, unsigned int ndash)
         {
             ClearLineDash();
@@ -505,57 +755,119 @@ namespace OHOS {
             }
         }
 
+        /**
+         * @brief 返回是否是dash的划线模式
+         */
         bool IsLineDash() const
         {
             return is_dash;
         }
 
+        /**
+         * @brief 获取lineDash的虚实线长度数组
+         */
         float* GetLineDash() const
         {
             return dashes;
         }
 
+        /**
+         * @brief 获取lineDash的虚实线长度数组的长度
+         */
         unsigned int GetLineDashCount() const
         {
             return ndashes;
         }
+
+        /**
+         * @brief 返回渲染器
+         */
         OHOS::RenderingBuffer GetRenderBuffer() const
         {
             return m_rbuf;
         }
 
-        void SetShadowColor(int r, int g, int b, int a)
+        /**
+         * @brief 设置阴影的颜色
+         * @param red 红色
+         * @param green 绿色
+         * @param blue 蓝色
+         * @param alpha 透明度
+         */
+        void SetShadowColor(unsigned red, unsigned green, unsigned blue, unsigned alpha = 255)
         {
-            shadowColor_ = Color(r, g, b, a);
+            shadowColor_ = Color(red, green, blue, alpha);
         }
+        /**
+         * @brief 设置阴影的x轴偏移量
+         */
         void SetShadowOffsetX(double x)
         {
             shadowOffsetX_ = x;
         }
+        /**
+         * @brief 设置阴影的y轴偏移量
+         */
         void SetShadowOffsetY(double y)
         {
             shadowOffsetY_ = y;
         }
+        /**
+         * @brief 设置阴影的偏移量
+         * @param x x轴偏移量
+         * @param y y轴偏移量
+         */
         void SetShadowOffset(double x, double y)
         {
             shadowOffsetX_ = x;
             shadowOffsetY_ = y;
         }
+        /**
+         * @brief 设置阴影模糊半径
+         */
         void SetShadowBlurRadius(double radius)
         {
             shadowBlurRadius_ = radius;
         }
-        bool bounding_rect_single(unsigned int path_id, RectD* rect, PathTransform& path);
-        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                            double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
-        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+
+        /**
+         * @brief 设置单个矩形边界
+         */
+        bool BoundingRectSingle(unsigned int path_id, RectD* rect, PathTransform& path);
 
     private:
+        /**
+         * @brief 开始渲染
+         * @param fillColor 是否填充颜色
+         */
         void Render(bool fillColor);
+        /**
+         * @brief 添加一条直线
+         * @param x1 直线的起点x
+         * @param y1 直线的起点y
+         * @param x2 直线的终点x
+         * @param y2 直线的终点y
+         */
         void AddLine(double x1, double y1, double x2, double y2);
+        /**
+         * @brief 更新光栅器的gamma
+         */
         void UpdateRasterizerGamma();
+        /**
+         * @brief 渲染图像
+         * @param img
+         * @param x1
+         * @param y1
+         * @param x2
+         * @param y2
+         * @param parl
+         * @param isAntiAlias
+         */
         void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl, bool isAntiAlias = true);
 
+        /**
+         * @brief 重置LineDash相关配置
+         */
         void ClearLineDash(void)
         {
             dDashOffset = 0;
@@ -566,10 +878,10 @@ namespace OHOS {
                 dashes = NULL;
             }
         }
-        OHOS::RenderingBuffer m_rbuf;
-        OHOS::scanline_u8 m_scanline;
-        OHOS::rasterizer_scanline_aa<> m_rasterizer;
-        OHOS::TransAffine m_fillGradientMatrix;
+        OHOS::RenderingBuffer m_rbuf;                //渲染器缓冲区
+        OHOS::scanline_u8 m_scanline;                //扫描线不合并相同扫描线
+        OHOS::rasterizer_scanline_aa<> m_rasterizer; //光栅
+        OHOS::TransAffine m_fillGradientMatrix;      //放射渐变的矩阵
         OHOS::TransAffine m_lineGradientMatrix;
         OHOS::TransAffine m_fillRadialMatrix;
         OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
@@ -591,11 +903,9 @@ namespace OHOS {
         RectD m_clipBox;
         BlendMode m_blendMode;
         BlendMode m_imageBlendMode;
-        Color m_imageBlendColor;
-        Color m_fillColor;
-        Color m_lineColor;
-        GradientArray m_fillGradient;
-        GradientArray m_lineGradient;
+        Color m_imageBlendColor; //图像混合颜色
+        Color m_fillColor;       //图像需要填充颜色
+        Color m_lineColor;       //线条需要填充颜色
         color_func_type m_fillRadialGradient;
         LineCap m_lineCap;
         LineJoin m_lineJoin;
@@ -630,11 +940,17 @@ namespace OHOS {
         float dDashOffset;
     };
 
+    /**
+     * @brief operator ==重写两个颜色相比是否相等的比较过程
+     */
     inline bool operator==(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
         return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
     }
 
+    /**
+     * @brief operator != 重写两个颜色相比是否不相等的比较过程
+     */
     inline bool operator!=(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
         return !(c1 == c2);
