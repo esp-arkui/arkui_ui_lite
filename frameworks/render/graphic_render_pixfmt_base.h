@@ -63,7 +63,7 @@ namespace OHOS {
 
         /**
          * @brief 把颜色分量设置给颜色.
-         *
+         * @param r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -77,7 +77,7 @@ namespace OHOS {
 
         /**
          * @brief 把颜色分量设置给颜色.
-         *
+         * @param pColor 颜色,color像素颜色分量
          * @since 1.0
          * @version 1.0
          */
@@ -92,6 +92,7 @@ namespace OHOS {
         /**
          * @brief 通过颜色分量获取颜色.
          * @return 返回颜色
+         * @param r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -117,6 +118,7 @@ namespace OHOS {
         /**
          * @brief 通过颜色分量获取颜色.
          * @return 返回颜色
+         * @param pColor 颜色,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */

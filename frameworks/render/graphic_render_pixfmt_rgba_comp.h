@@ -76,7 +76,7 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::Set;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -104,6 +104,12 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
 
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -128,7 +134,7 @@ namespace OHOS {
 
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -161,7 +167,12 @@ namespace OHOS {
                        2 * sca * dca + sca * d1a + dca * s1a :
                        sada - 2 * (da - dca) * (sa - sca) + sca * d1a + dca * s1a;
         }
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -189,7 +200,7 @@ namespace OHOS {
 
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -219,7 +230,7 @@ namespace OHOS {
 
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -263,7 +274,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -308,7 +319,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -350,7 +361,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -394,7 +405,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -428,7 +439,7 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::Set;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -455,7 +466,7 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::Set;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -486,7 +497,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -508,7 +524,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -530,7 +551,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -553,7 +579,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -572,7 +603,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType, ValueType, ValueType, ValueType a, CoverType cover)
         {
@@ -593,7 +629,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -613,7 +654,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType, ValueType, ValueType, ValueType a, CoverType cover)
         {
@@ -633,7 +679,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -656,7 +707,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -669,7 +725,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
@@ -688,6 +749,12 @@ namespace OHOS {
     struct CompOpRgbaDst : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType*, ValueType, ValueType, ValueType, ValueType, CoverType)
         {
@@ -699,7 +766,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* p, ValueType, ValueType, ValueType, ValueType, CoverType cover)
         {
@@ -757,7 +829,7 @@ namespace OHOS {
         using LongType = typename ColorType::LongType;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param op 函数表保存了各个子操作的函数的index, pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -781,7 +853,7 @@ namespace OHOS {
         using LongType = typename ColorType::LongType;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param op 函数表保存了各个子操作的函数的index, pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -808,7 +880,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
         using LongType = typename ColorType::LongType;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param op 函数表保存了各个子操作的函数的index, pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void
             BlendPix(unsigned op, ValueType* pColor,
                      ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
@@ -824,7 +901,12 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
         using LongType = typename ColorType::LongType;
-
+        /**
+         * @brief 用颜色分量及覆盖率混合像素.
+         * @param op 函数表保存了各个子操作的函数的index, pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void
             BlendPix(unsigned op, ValueType* pColor,
                      ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
