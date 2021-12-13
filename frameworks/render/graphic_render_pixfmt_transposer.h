@@ -27,8 +27,7 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
 
-        PixfmtTransposer() :
-            pixf_(0)
+        PixfmtTransposer() : pixf_(0)
         {}
 
         /**
@@ -37,8 +36,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit PixfmtTransposer(PixfmtType& pixf) :
-            pixf_(&pixf)
+        explicit PixfmtTransposer(PixfmtType& pixf) : pixf_(&pixf)
         {}
 
         /**
