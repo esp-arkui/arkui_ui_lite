@@ -16,8 +16,6 @@
 
 #include <components/ui_view_group.h>
 
-#include <utility>
-
 #include "common/image.h"
 #include "draw/draw_arc.h"
 #include "draw/draw_image.h"
@@ -87,9 +85,9 @@ namespace OHOS {
         }
 
         /*
-     * If there is no command before CMD_ARC, only the arc is drawn. If there is a command in front of
-     * CMD_ARC, the start point of arc must be connected to the end point of the path.
-     */
+         * If there is no command before CMD_ARC, only the arc is drawn. If there is a command in front of
+         * CMD_ARC, the start point of arc must be connected to the end point of the path.
+         */
         float sinma = radius * Sin(startAngle);
         float cosma = radius * Sin(QUARTER_IN_DEGREE - startAngle);
         if (path_->cmd_.Size() != 0) {
@@ -221,11 +219,8 @@ namespace OHOS {
         DrawCurve(startPoint_, control1, control2, endPoint, paint);
     }
 
-    void UICanvas::DrawCurve(const Point& startPoint,
-                             const Point& control1,
-                             const Point& control2,
-                             const Point& endPoint,
-                             const Paint& paint)
+    void UICanvas::DrawCurve(const Point& startPoint, const Point& control1, const Point& control2,
+                             const Point& endPoint, const Paint& paint)
     {
         CurveParam* curveParam = new CurveParam;
         if (curveParam == nullptr) {
@@ -275,8 +270,7 @@ namespace OHOS {
         Invalidate();
     }
 
-    void UICanvas::ClearRect(const Point& clearRect, int clearHeight, int clearWidth,
-                             const Paint& paint)
+    void UICanvas::ClearRect(const Point& clearRect, int clearHeight, int clearWidth, const Paint& paint)
     {
         RectParam* clearRectParam = new RectParam;
         if (clearRectParam == nullptr) {
@@ -290,7 +284,6 @@ namespace OHOS {
 
         DrawCmd cmd;
         cmd.paint.SetFillColor(this->style_->bgColor_);
-        //OpacityType opa = DrawUtils::GetMixOpacity(this->opaScale_, this->style_->bgOpa_);
         cmd.paint.SetOpacity(this->opaScale_);
         cmd.param = clearRectParam;
         cmd.DeleteParam = DeleteRectParam;
@@ -301,7 +294,8 @@ namespace OHOS {
 
     void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
     {
-        if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) || (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT)) {
+        if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) ||
+            (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT)) {
             RectParam* rectParam = new RectParam;
             if (rectParam == nullptr) {
                 GRAPHIC_LOGE("new RectParam fail");
@@ -319,7 +313,8 @@ namespace OHOS {
             drawCmdList_.PushBack(cmd);
         }
 
-        if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) || (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)) {
+        if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) ||
+            (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)) {
             RectParam* rectParam = new RectParam;
             if (rectParam == nullptr) {
                 GRAPHIC_LOGE("new RectParam fail");
@@ -360,10 +355,7 @@ namespace OHOS {
         Invalidate();
     }
 
-    void UICanvas::DrawSector(const Point& center,
-                              uint16_t radius,
-                              int16_t startAngle,
-                              int16_t endAngle,
+    void UICanvas::DrawSector(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle,
                               const Paint& paint)
     {
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
@@ -376,7 +368,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint)
+    void UICanvas::DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle,
+                           const Paint& paint)
     {
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
             ArcParam* arcParam = new ArcParam;
@@ -455,10 +448,7 @@ namespace OHOS {
         return textSize;
     }
 
-    void UICanvas::DrawLabel(const Point& startPoint,
-                             const char* text,
-                             uint16_t maxWidth,
-                             const FontStyle& fontStyle,
+    void UICanvas::DrawLabel(const Point& startPoint, const char* text, uint16_t maxWidth, const FontStyle& fontStyle,
                              const Paint& paint)
     {
         if (text == nullptr) {
@@ -629,39 +619,29 @@ namespace OHOS {
             if (memcpy_s(gfxMapBuffer.get(), sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
                 return;
             }
-            //        //BufferInfo* modeBuff = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
             uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-            //        //uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
 
             uint32_t destStride = gfxMapBuffer->width * destByteSize;
             uint32_t buffSize = gfxMapBuffer->height * destStride;
-            gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(
-                buffSize, BUFFER_MAP_SURFACE);
+            gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
             memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
-            //BaseGfxEngine::GetInstance()->Fill(*gfxMapBuffer, invalidatedArea, Color::GetColorFromRGBA(0,0,0,0), opaScale_);
-
             gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
             //添加的处理机制的。。。
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 //应该是实现画布的处理机制..
                 param = curDraw->data_.param;
 
-                InitDrawEnvironment(*gfxMapBuffer, trunc,
-                                    Rect(realLeft,
-                                         realTop,
-                                         realLeft + trunc.GetWidth() - 1,
-                                         realTop + trunc.GetHeight() - 1),
-                                    Rect(posViewLeft,
-                                         posViewTop,
-                                         posViewLeft + trunc.GetWidth() - 1,
-                                         posViewTop + trunc.GetHeight() - 1),
-                                    curDraw->data_.paint);
+                InitDrawEnvironment(
+                    *gfxMapBuffer, trunc,
+                    Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
+                    Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
+                         posViewTop + trunc.GetHeight() - 1),
+                    curDraw->data_.paint);
 
                 curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
             }
-            BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr,
-                                                   gfxMapBuffer->width, gfxMapBuffer->height,
-                                                   gfxMapBuffer->stride);
+            BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr, gfxMapBuffer->width,
+                                                   gfxMapBuffer->height, gfxMapBuffer->stride);
             BaseGfxExtendEngine m_graphics_Image;
 
             uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
@@ -670,50 +650,18 @@ namespace OHOS {
             }
 
             ColorMode mode = gfxDstBuffer.mode;
-            int32_t offset = static_cast<int32_t>(trunc.GetTop()) * gfxDstBuffer.width +
-                             trunc.GetLeft();
+            int32_t offset = static_cast<int32_t>(trunc.GetTop()) * gfxDstBuffer.width + trunc.GetLeft();
             destBuf += offset * destByteSize;
 
-            m_graphics_Image.Attach(destBuf, trunc.GetWidth(),
-                                    trunc.GetHeight(), gfxDstBuffer.stride);
-            m_graphics_Image.Viewport(realLeft,
-                                      realTop,
-                                      realLeft + trunc.GetWidth() - 1,
-                                      realTop + trunc.GetHeight() - 1,
-                                      posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
-                                      posViewTop + trunc.GetHeight() - 1,
+            m_graphics_Image.Attach(destBuf, trunc.GetWidth(), trunc.GetHeight(), gfxDstBuffer.stride);
+            m_graphics_Image.Viewport(realLeft, realTop, realLeft + trunc.GetWidth() - 1,
+                                      realTop + trunc.GetHeight() - 1, posViewLeft, posViewTop,
+                                      posViewLeft + trunc.GetWidth() - 1, posViewTop + trunc.GetHeight() - 1,
                                       BaseGfxExtendEngine::XMINYMIN);
-            //BaseGfxExtendEngine::XMidYMid);
             OpacityType opa = DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_);
-            m_graphics_Image.BlendImage(imageBuffer, gfxMapBuffer->rect.GetLeft(),
-                                        gfxMapBuffer->rect.GetTop(),
-                                        gfxMapBuffer->rect.GetRight(),
-                                        gfxMapBuffer->rect.GetBottom(),
+            m_graphics_Image.BlendImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
+                                        gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
                                         gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(), opa);
-
-            //m_graphics_Image.BlendFromImage(imageBuffer,gfxMapBuffer->rect.GetLeft(),
-            //                                    gfxMapBuffer->rect.GetTop(),255);
-
-            //       ImageInfo imageInfo;
-            //       imageInfo.header.colorMode = gfxMapBuffer->mode;
-            //       imageInfo.dataSize = gfxMapBuffer->width * gfxMapBuffer->height *
-            //               DrawUtils::GetByteSizeByColorMode(imageInfo.header.colorMode);
-            //       imageInfo.header.width = gfxMapBuffer->width;
-            //       imageInfo.header.height = gfxMapBuffer->height;
-            //       imageInfo.header.reserved = 0;
-
-            //       imageInfo.data = reinterpret_cast<uint8_t*>(gfxMapBuffer->virAddr);
-
-            //       DrawImage::DrawCommon(gfxDstBuffer, Rect(gfxDstBuffer.rect.GetLeft(),
-            //                                                gfxDstBuffer.rect.GetTop(),
-            //                                                gfxDstBuffer.rect.GetRight(),
-            //                                                gfxDstBuffer.rect.GetBottom()),
-            //                             Rect(gfxMapBuffer->rect.GetLeft(),
-            //                                  gfxMapBuffer->rect.GetTop(),
-            //                                  gfxMapBuffer->rect.GetRight(),
-            //                                  gfxMapBuffer->rect.GetBottom()),
-            //                             &imageInfo,*style_, opaScale_);
-
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
         }
     }
@@ -725,12 +673,8 @@ namespace OHOS {
         if (m_graphics == nullptr) {
             return false;
         }
-        //    BaseGfxExtendEngine* m_graphics_Image = paint.GetImageBufferContext();
-        //    if(m_graphics_Image==nullptr) {
-        //        return false;
-        //    }
-        int16_t posLeft = fillArea.GetLeft(); // + style_->paddingLeft_ + style_->borderWidth_;
-        int16_t posTop = fillArea.GetTop();   // + style_->paddingTop_ + style_->borderWidth_;
+        int16_t posLeft = fillArea.GetLeft();
+        int16_t posTop = fillArea.GetTop();
 
         uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
         if (gfxDstBuffer.virAddr == nullptr) {
@@ -739,16 +683,13 @@ namespace OHOS {
 
         ColorMode mode = gfxDstBuffer.mode;
         uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(mode);
-        int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width +
-                         posLeft;
+        int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width + posLeft;
         destBuf += offset * destByteSize;
 
-        m_graphics->Attach(destBuf, fillArea.GetWidth(),
-                           fillArea.GetHeight(), gfxDstBuffer.stride);
+        m_graphics->Attach(destBuf, fillArea.GetWidth(), fillArea.GetHeight(), gfxDstBuffer.stride);
         m_graphics->Viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
                              screenRect.GetLeft(), screenRect.GetTop(), screenRect.GetRight(), screenRect.GetBottom(),
                              BaseGfxExtendEngine::XMINYMIN);
-        //BaseGfxExtendEngine::XMidYMid);
         return true;
     }
 
@@ -763,12 +704,8 @@ namespace OHOS {
         point.y = prePoint.y + rect.GetTop() + style.paddingTop_ + style.borderWidth_;
     }
 
-    void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style)
+    void UICanvas::DoDrawLine(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -797,12 +734,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style)
+    void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -818,10 +751,12 @@ namespace OHOS {
         GetAbsolutePosition(curveParam->control2, rect, style, control2);
 
         BaseGfxEngine::GetInstance()->DrawCubicBezier(gfxDstBuffer, start, control1, control2, end, invalidatedArea,
-                                                      paint.GetStrokeWidth(), paint.GetStrokeColor(), paint.GetOpacity());
+                                                      paint.GetStrokeWidth(), paint.GetStrokeColor(),
+                                                      paint.GetOpacity());
     }
 
-    void UICanvas::DoClearRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect, const Rect& invalidatedArea, const Style& style)
+    void UICanvas::DoClearRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -833,12 +768,13 @@ namespace OHOS {
         fillStyle.bgOpa_ = paint.GetOpacity();
         Point start;
         GetAbsolutePosition(rectParam->start, rect, style, start);
-        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer,
-                                               Rect(start.x, start.y, start.x + rectParam->width - 1, start.y + rectParam->height - 1), invalidatedArea,
-                                               fillStyle, fillStyle.bgOpa_);
+        BaseGfxEngine::GetInstance()->DrawRect(
+            gfxDstBuffer, Rect(start.x, start.y, start.x + rectParam->width - 1, start.y + rectParam->height - 1),
+            invalidatedArea, fillStyle, fillStyle.bgOpa_);
     }
 
-    void UICanvas::DoStrokeRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect, const Rect& invalidatedArea, const Style& style)
+    void UICanvas::DoStrokeRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -852,8 +788,8 @@ namespace OHOS {
         int16_t lineWidth = static_cast<int16_t>(paint.GetStrokeWidth());
         Point start;
         GetAbsolutePosition(rectParam->start, rect, style, start);
-        int16_t x = start.x - lineWidth / 2; // 2: half
-        int16_t y = start.y - lineWidth / 2; // 2: half
+        int16_t x = start.x - lineWidth / 2;
+        int16_t y = start.y - lineWidth / 2;
         Rect coords;
         if ((rectParam->height <= lineWidth) || (rectParam->width <= lineWidth)) {
             coords.SetPosition(x, y);
@@ -862,8 +798,7 @@ namespace OHOS {
             BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, coords, invalidatedArea, drawStyle, OPA_OPAQUE);
             return;
         }
-        BaseGfxExtendEngine* m_graphics =
-            paint.GetDrawGraphicsContext();
+        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
         if (m_graphics == nullptr) {
             return;
         }
@@ -873,7 +808,8 @@ namespace OHOS {
         } else {
             m_graphics->SetLineDash(nullptr, 0);
         }
-        m_graphics->SetLineColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green, drawStyle.bgColor_.blue, drawStyle.bgOpa_);
+        m_graphics->SetLineColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green, drawStyle.bgColor_.blue,
+                                 drawStyle.bgOpa_);
         m_graphics->SetLineWidth(lineWidth);
         if (paint.GetStyle() == Paint::PaintStyle::STROKE_STYLE) {
             m_graphics->NoFill();
@@ -882,12 +818,8 @@ namespace OHOS {
         m_graphics->Rectangle(start.x, start.y, start.x + rectParam->width - 1, start.y + rectParam->height - 1);
     }
 
-    void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style)
+    void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -946,12 +878,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style)
+    void UICanvas::DoFillRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -968,7 +896,8 @@ namespace OHOS {
             return;
         }
 
-        if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) || (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)) {
+        if ((static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) ||
+            (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)) {
             Point start;
             GetAbsolutePosition(rectParam->start, rect, style, start);
 
@@ -993,7 +922,8 @@ namespace OHOS {
         uint16_t count = 0;
         for (; count < stopAndColors.Size(); count++) {
             ColorType stopColor = iter->data_.color;
-            m_graphics.AddColor(iter->data_.stop, BaseGfxExtendEngine::Color(stopColor.red, stopColor.green, stopColor.blue, stopColor.alpha));
+            m_graphics.AddColor(iter->data_.stop, BaseGfxExtendEngine::Color(stopColor.red, stopColor.green,
+                                                                             stopColor.blue, stopColor.alpha));
             iter = iter->next_;
         }
         m_graphics.BuildLut();
@@ -1133,7 +1063,8 @@ namespace OHOS {
         Invalidate();
     }
 
-    void UICanvas::setGradient(BaseGfxExtendEngine& m_graphics, const Paint& paint, const Rect& rect, const Style& style)
+    void UICanvas::setGradient(BaseGfxExtendEngine& m_graphics, const Paint& paint, const Rect& rect,
+                               const Style& style)
     {
         GradientControl gradientControl = paint.getGradientControl();
         List<GradientControl::StopAndColor> stopAndColors = gradientControl.getStopAndColor();
@@ -1185,12 +1116,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer,
-                                void* param,
-                                const Paint& paint,
-                                const Rect& rect,
-                                const Rect& invalidatedArea,
-                                const Style& style)
+    void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1213,27 +1140,14 @@ namespace OHOS {
 
         double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
         arcInfo.radius = circleParam->radius + halfLineWidth - 1;
-
-        //    Rect imgRect(posViewLeft, posViewLeft, posViewLeft+1, posViewLeft+1);
-        //    TransformMap backwardMap;
-        //    Vector2<float> pivot;
-        //    pivot.x_ = arcInfo.center.x;
-        //    pivot.y_ = arcInfo.center.y;
-
-        //    Rotate the specified angle,  BaseGfxExtendEngine::deg2Rad()
-        //    backwardMap.Rotate(30, pivot);
-        //    Rect redraw = hand.target_;
-        //    hand.target_ = backwardMap.GetBoxRect();
-        //    hand.trans_ = backwardMap;
-        //    hand.preAngle_ = hand.nextAngle_;
         int16_t posViewLeft = rect.GetX() - invalidatedArea.GetX();
         int16_t posViewTop = rect.GetY() - invalidatedArea.GetY();
 
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
             drawStyle.bgColor_ = paint.GetFillColor();
             drawStyle.bgOpa_ = paint.GetOpacity();
-            m_graphics->SetFillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green,
-                                     drawStyle.bgColor_.blue, drawStyle.bgOpa_);
+            m_graphics->SetFillColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green, drawStyle.bgColor_.blue,
+                                     drawStyle.bgOpa_);
         }
         if (enableStroke) {
             drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
@@ -1246,8 +1160,8 @@ namespace OHOS {
                 m_graphics->SetLineDash(nullptr, 0);
             }
             m_graphics->SetLineWidth(drawStyle.lineWidth_);
-            m_graphics->SetLineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green,
-                                     drawStyle.lineColor_.blue, drawStyle.lineOpa_);
+            m_graphics->SetLineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green, drawStyle.lineColor_.blue,
+                                     drawStyle.lineOpa_);
         }
 
         if (paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
@@ -1276,8 +1190,6 @@ namespace OHOS {
 
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
             m_graphics->SetBlendMode(paint.globalCompositeOperation());
-            //double xx=circleParam->center.x,yy=circleParam->center.y;
-            //m_graphics->screenToWorld(xx,yy);
             if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
                 m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -1292,12 +1204,8 @@ namespace OHOS {
         m_graphics->ResetTransformations();
     }
 
-    void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer,
-                             void* param,
-                             const Paint& paint,
-                             const Rect& rect,
-                             const Rect& invalidatedArea,
-                             const Style& style)
+    void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                             const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1319,12 +1227,8 @@ namespace OHOS {
                                               CapType::CAP_NONE);
     }
 
-    void UICanvas::DoDrawPattern(BufferInfo& gfxDstBuffer,
-                                 void* param,
-                                 const Paint& paint,
-                                 const Rect& rect,
-                                 const Rect& invalidatedArea,
-                                 const Style& style)
+    void UICanvas::DoDrawPattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                 const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1339,8 +1243,9 @@ namespace OHOS {
         GetAbsolutePosition(imageParam->start, rect, style, start);
 
         BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
-                                               imageParam->image->GetImageInfo()->header.width, imageParam->image->GetImageInfo()->header.height,
-                                               imageParam->image->GetImageInfo()->header.width * 4);
+                                               imageParam->image->GetImageInfo()->header.width,
+                                               imageParam->image->GetImageInfo()->header.height,
+                                               imageParam->image->GetImageInfo()->header.width * OHOS::STRIDE_FACTOR);
 
         if (paint.patternRepeat == paint.REPEAT) {
             paint.GetDrawGraphicsContext()->PatternImageFill(imageBuffer, start.x, start.y, "repeat");
@@ -1353,12 +1258,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoStrokePattern(BufferInfo& gfxDstBuffer,
-                                   void* param,
-                                   const Paint& paint,
-                                   const Rect& rect,
-                                   const Rect& invalidatedArea,
-                                   const Style& style)
+    void UICanvas::DoStrokePattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                   const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1378,8 +1279,9 @@ namespace OHOS {
         cordsTmp.SetWidth(imageParam->width);
 
         BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
-                                               imageParam->image->GetImageInfo()->header.width, imageParam->image->GetImageInfo()->header.height,
-                                               imageParam->image->GetImageInfo()->header.width * 4);
+                                               imageParam->image->GetImageInfo()->header.width,
+                                               imageParam->image->GetImageInfo()->header.height,
+                                               imageParam->image->GetImageInfo()->header.width * OHOS::STRIDE_FACTOR);
 
         BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
         m_graphics->SetLineWidth(paint.GetStrokeWidth());
@@ -1394,12 +1296,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoGradient(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style)
+    void UICanvas::DoGradient(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
         m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
@@ -1453,7 +1351,6 @@ namespace OHOS {
         }
 
         DoDrawPath(gfxDstBuffer, param, paint, rect, invalidatedArea, style);
-        //    m_graphics->closePolygon();
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) {
             m_graphics->NoLine();
             m_graphics->DrawPath(BaseGfxExtendEngine::FILLANDSTROKE);
@@ -1464,12 +1361,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style)
+    void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1490,7 +1383,7 @@ namespace OHOS {
         uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
         BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
                                                (int)imageParam->width, (int)imageParam->height,
-                                               (int)imageParam->width * (pxSize >> 3));
+                                               (int)imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
         BaseGfxExtendEngine* graphics = paint.GetDrawGraphicsContext();
         if (graphics == nullptr) {
             return;
@@ -1520,20 +1413,11 @@ namespace OHOS {
         graphics->Translate(-posViewLeft, -posViewTop);
         auto tr = paint.GetTransform();
         graphics->SetAffine(tr);
-        //graphics->transformations(tr);
         graphics->Translate(posViewLeft, posViewTop);
-
-        //         x缩放，y斜切 x斜切 x平移 ,y平移
-        //  double sx, shy, shx, sy, tx, ty;
-        //graphics->resetTransformations();不能在这使用
     }
 
-    void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style)
+    void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1547,17 +1431,17 @@ namespace OHOS {
         label->SetPosition(startPos.x, startPos.y);
     }
 
-    void UICanvas::BlitMapBuffer(BufferInfo& gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& textRect, TransformMap& transMap, const Rect& invalidatedArea)
+    void UICanvas::BlitMapBuffer(BufferInfo& gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& textRect,
+                                 TransformMap& transMap, const Rect& invalidatedArea)
     {
         Rect invalidRect = textRect;
         if (invalidRect.Intersect(invalidRect, invalidatedArea)) {
             uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
             ImageInfo imageInfo;
             imageInfo.header.colorMode = gfxDstBuffer.mode;
-            imageInfo.dataSize = gfxMapBuffer.width * gfxMapBuffer.height * (pxSize >> 3);
+            imageInfo.dataSize = gfxMapBuffer.width * gfxMapBuffer.height * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR);
             imageInfo.header.width = gfxMapBuffer.width;
             imageInfo.header.height = gfxMapBuffer.height;
-            // imageInfo.header.reserved = 0;
             uint8_t* addr = reinterpret_cast<uint8_t*>(gfxMapBuffer.virAddr);
             imageInfo.data = addr;
             TransformDataInfo imageTranDataInfo = {imageInfo.header, imageInfo.data, pxSize, LEVEL0, BILINEAR};
@@ -1566,7 +1450,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect, const Rect& invalidatedArea, const Style& style)
+    void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         TextParam* textParam = static_cast<TextParam*>(param);
         if (textParam == nullptr) {
@@ -1619,18 +1504,16 @@ namespace OHOS {
         errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
         if (err != EOK) {
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
-
             GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
             return;
         }
         pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
 
-        text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
+        text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle,
+                     Text::TEXT_ELLIPSIS_END_INV, opa);
 
         BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
-                                               pGfxMapBuffer->width,
-                                               pGfxMapBuffer->height,
-                                               pGfxMapBuffer->stride);
+                                               pGfxMapBuffer->width, pGfxMapBuffer->height, pGfxMapBuffer->stride);
         double x = start.x;
         double y = start.y;
         double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
@@ -1644,9 +1527,7 @@ namespace OHOS {
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
     }
 
-    void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer,
-                                  const Point& center,
-                                  const Rect& invalidatedArea,
+    void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer, const Point& center, const Rect& invalidatedArea,
                                   const Paint& paint)
     {
         ArcInfo arcinfo = {{0}};
@@ -1687,12 +1568,8 @@ namespace OHOS {
         return false;
     }
 
-    void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style)
+    void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1702,8 +1579,7 @@ namespace OHOS {
         if (path == nullptr) {
             return;
         }
-        BaseGfxExtendEngine* m_graphics =
-            paint.GetDrawGraphicsContext();
+        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
         if (m_graphics == nullptr) {
             return;
         }
@@ -1714,7 +1590,10 @@ namespace OHOS {
         ListNode<PathCmd>* iter = path->cmd_.Begin();
         bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
         bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
-        if ((!isLineJoin || !isLineCap) && !(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) && (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) && (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
+        if ((!isLineJoin || !isLineCap) &&
+            !(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) &&
+            (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) &&
+            (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
             m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
                                      paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
@@ -1750,7 +1629,8 @@ namespace OHOS {
                     GetAbsolutePosition(end, rect, style, end);
                     if (isLineJoin && isLineCap) {
                         BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
-                                                               paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+                                                               paint.GetStrokeWidth(), paint.GetStrokeColor(),
+                                                               OPA_OPAQUE);
                         if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
                             DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
                         }
@@ -1773,15 +1653,15 @@ namespace OHOS {
 
                     GetAbsolutePosition(arcIter->data_.center, rect, style, arcInfo.center);
                     if (isLineJoin && isLineCap) {
-                        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                                              CapType::CAP_NONE);
+                        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle,
+                                                              OPA_OPAQUE, CapType::CAP_NONE);
                         if (pointIter != path->points_.Begin()) {
                             DoDrawLineJoin(gfxDstBuffer, pathEnd, invalidatedArea, paint);
                         }
                     } else {
                         m_graphics->ArcTo(arcInfo.radius, arcInfo.radius,
-                                          BaseGfxExtendEngine::Deg2Rad(arcInfo.endAngle - arcInfo.startAngle),
-                                          0, 1, arcInfo.center.x, arcInfo.center.y);
+                                          BaseGfxExtendEngine::Deg2Rad(arcInfo.endAngle - arcInfo.startAngle), 0, 1,
+                                          arcInfo.center.x, arcInfo.center.y);
                     }
                     GetAbsolutePosition(pointIter->data_, rect, style, pathEnd);
 
@@ -1799,7 +1679,8 @@ namespace OHOS {
                     } else {
                         if ((start.x != end.x) || (start.y != end.y)) {
                             BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
-                                                                   paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+                                                                   paint.GetStrokeWidth(), paint.GetStrokeColor(),
+                                                                   OPA_OPAQUE);
                             if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
                                 DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
                             }
@@ -1813,21 +1694,19 @@ namespace OHOS {
                     pointIter = pointIter->next_;
                     break;
                 }
-                default:
-                    break;
+                default: break;
             }
         }
-        if ((!isLineJoin || !isLineCap) && !(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) && (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) && (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
+        if ((!isLineJoin || !isLineCap) &&
+            !(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) &&
+            (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) &&
+            (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN))) {
             m_graphics->DrawPath(BaseGfxExtendEngine::DrawPathFlag::STROKEONLY);
         }
     }
 
-    void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style)
+    void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style)
     {
         if (param == nullptr) {
             return;
@@ -1837,8 +1716,7 @@ namespace OHOS {
         if (path == nullptr) {
             return;
         }
-        BaseGfxExtendEngine* m_graphics =
-            paint.GetDrawGraphicsContext();
+        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
         if (m_graphics == nullptr) {
             return;
         }
@@ -1866,8 +1744,8 @@ namespace OHOS {
                                      paint.GetFillColor().alpha);
         }
         if (paint.GetStrokeColor().alpha) {
-            m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green, paint.GetStrokeColor().blue,
-                                     paint.GetStrokeColor().alpha);
+            m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
+                                     paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
         }
         m_graphics->ResetPath();
@@ -1894,7 +1772,8 @@ namespace OHOS {
                     GetAbsolutePosition(end, rect, style, end);
                     if (isLineJoin && isLineCap) {
                         BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
-                                                               paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+                                                               paint.GetStrokeWidth(), paint.GetStrokeColor(),
+                                                               OPA_OPAQUE);
                         if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
                             DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
                         }
@@ -1917,15 +1796,15 @@ namespace OHOS {
 
                     GetAbsolutePosition(arcIter->data_.center, rect, style, arcInfo.center);
                     if (isLineJoin && isLineCap) {
-                        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
-                                                              CapType::CAP_NONE);
+                        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle,
+                                                              OPA_OPAQUE, CapType::CAP_NONE);
                         if (pointIter != path->points_.Begin()) {
                             DoDrawLineJoin(gfxDstBuffer, pathEnd, invalidatedArea, paint);
                         }
                     } else {
                         m_graphics->ArcTo(arcInfo.radius, arcInfo.radius,
-                                          BaseGfxExtendEngine::Deg2Rad(arcInfo.endAngle - arcInfo.startAngle),
-                                          0, 1, arcInfo.center.x, arcInfo.center.y);
+                                          BaseGfxExtendEngine::Deg2Rad(arcInfo.endAngle - arcInfo.startAngle), 0, 1,
+                                          arcInfo.center.x, arcInfo.center.y);
                     }
                     GetAbsolutePosition(pointIter->data_, rect, style, pathEnd);
 
@@ -1943,7 +1822,8 @@ namespace OHOS {
                     } else {
                         if ((start.x != end.x) || (start.y != end.y)) {
                             BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea,
-                                                                   paint.GetStrokeWidth(), paint.GetStrokeColor(), OPA_OPAQUE);
+                                                                   paint.GetStrokeWidth(), paint.GetStrokeColor(),
+                                                                   OPA_OPAQUE);
                             if ((pathEnd.x == start.x) && (pathEnd.y == start.y)) {
                                 DoDrawLineJoin(gfxDstBuffer, start, invalidatedArea, paint);
                             }
@@ -1958,8 +1838,7 @@ namespace OHOS {
                     pointIter = pointIter->next_;
                     break;
                 }
-                default:
-                    break;
+                default: break;
             }
         }
         double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;

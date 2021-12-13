@@ -27,16 +27,16 @@
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
 #include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
 #include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
 #include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
 #include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
-#include <render/graphic_render_pixfmt_rgba.h>
 #include <render/graphic_render_base.h>
+#include <render/graphic_render_pixfmt_rgba.h>
 #include <render/graphic_render_scanline.h>
 
 #include "gfx_engine_manager.h"
@@ -48,24 +48,24 @@ namespace OHOS {
 #else
         typedef OHOS::Rgba8 ColorType;
 #endif
-        //颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+        // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OHOS::OrderBgra ComponentOrder;
-        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
         typedef OHOS::BlenderRgba<ColorType, ComponentOrder> Blender;
-        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
+        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
         typedef OHOS::CompOpAdaptorRgba<ColorType, ComponentOrder> BlenderComp;
-        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
+        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
         typedef OHOS::BlenderRgbaPre<ColorType, ComponentOrder> BlenderPre;
-        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
+        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
         typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
-        //根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
+        // 根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixFormat;
         typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
         typedef OHOS::PixfmtAlphaBlendRgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
         typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
         typedef OHOS::PixfmtBgra32 pixfmt;
 
-        //根据像素处理的模板处理基础渲染器
+        // 根据像素处理的模板处理基础渲染器
         typedef OHOS::RendererBase<PixFormat> RendererBase;
         typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
         typedef OHOS::RendererBase<PixFormatPre> RendererBasePre;
@@ -73,18 +73,21 @@ namespace OHOS {
 
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBase> RendererSolid;
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
-        //设定线段分配器
+        // 设定线段分配器
         typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
-        //设定渐变数组的构造器设定颜色插值器和颜色模板等
+        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
         typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
-        //设定放射渐变的算法
+        // 设定放射渐变的算法
         typedef OHOS::GradientRadialCalculate gradient_func_type;
-        //设定线段插值器
+        // 设定线段插值器
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
-        //设定线性渐变的线段生成器
-        typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate, color_func_type> LinearGradientSpan;
-        //设定放射渐变的线段生成器
-        typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type> RadialGradientSpan;
+        // 设定线性渐变的线段生成器
+        typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate,
+                                   color_func_type>
+            LinearGradientSpan;
+        // 设定放射渐变的线段生成器
+        typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type>
+            RadialGradientSpan;
 
         typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
         typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
@@ -94,24 +97,24 @@ namespace OHOS {
         typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
         typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
-        //渲染器缓冲区
+        // 渲染器缓冲区
         typedef OHOS::RenderingBuffer RenderingBuffer;
-        //设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
         typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> imgSourceTypeRepeat;
-        //设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
         typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
-        //设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
         typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
-        //设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
         typedef OHOS::ImageAccessorNoRepeat<pixfmt> imgSourceTypeNoRepeat;
-        //通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
-        //x,y轴都重复
+        // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        //  x,y轴都重复
         typedef OHOS::SpanPatternRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
-        //x轴重复
+        //  x轴重复
         typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
-        //y轴重复
+        //  y轴重复
         typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
-        //不重复
+        // 不重复
         typedef OHOS::SpanPatternRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 
     public:
@@ -124,8 +127,7 @@ namespace OHOS {
         /**
          * 渐变的模式
          */
-        enum Gradient
-        {
+        enum Gradient {
             /** 单色 */
             SOLID,
             /** 线性渐变 */
@@ -137,8 +139,7 @@ namespace OHOS {
         /**
          * @brief 两条线相交时，所创建的拐角类型
          */
-        enum LineJoin
-        {
+        enum LineJoin {
             JOINNONE = -1,
             /** 创建尖角 */
             JOINMITER = OHOS::MITER_JOIN,
@@ -151,8 +152,7 @@ namespace OHOS {
         /**
          * @brief 线条末端线帽的样式。
          */
-        enum LineCap
-        {
+        enum LineCap {
             CAPNONE = -1,
             /** 向线条的每个末端添加平直的边缘 */
             CAPBUTT = OHOS::BUTT_CAP,
@@ -165,8 +165,7 @@ namespace OHOS {
         /**
          * @brief 绘制的类型
          */
-        enum DrawPathFlag
-        {
+        enum DrawPathFlag {
             /** 填充路径绘制的区域 */
             FILLONLY,
             /** 绘制路径 */
@@ -180,8 +179,7 @@ namespace OHOS {
         /**
          * @brief viewPort的模式
          */
-        enum ViewportOption
-        {
+        enum ViewportOption {
             /** 以0.0, 0.0为基准，拉伸 */
             ANISOTROPIC,
             /** 以0.0, 0.0为基准，铺满 */
@@ -207,8 +205,7 @@ namespace OHOS {
         /**
          * repeat|repeat-x|repeat-y|no-repeat
          */
-        enum PatternRepeat
-        {
+        enum PatternRepeat {
             /** 铺满，x,y轴都重复 */
             REPEAT,
             /** x轴上重复，y轴上无 */
@@ -222,8 +219,7 @@ namespace OHOS {
         /**
          * 混合模式
          */
-        enum BlendMode
-        {
+        enum BlendMode {
             /** 不混合 */
             BLENDNONE = -1,
             /** 混合透明度 */
@@ -283,8 +279,7 @@ namespace OHOS {
              * @param height 图片的高度
              * @param stride 图片的步幅
              */
-            Image(unsigned char* buf, unsigned width, unsigned height, int stride) :
-                renBuf(buf, width, height, stride)
+            Image(unsigned char* buf, unsigned width, unsigned height, int stride) : renBuf(buf, width, height, stride)
             {}
 
             /**
@@ -445,8 +440,8 @@ namespace OHOS {
 
         /**
          * @brief 根据渐变颜色构建color_type数组
-        * 数组长度0-255
-        * 数组内容根据渐变颜色分布在数组上
+         * 数组长度0-255
+         * 数组内容根据渐变颜色分布在数组上
          */
         void BuildLut();
 
@@ -459,7 +454,8 @@ namespace OHOS {
          * @param end_y 结束圆圆心坐标y
          * @param end_r 结束圆半径
          */
-        void SetRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r);
+        void SetRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y,
+                               double end_r);
         /**
          * @brief fillRadialGradient 根据线性起点和终点控制线性渐变
          * @param start_x 线性起点坐标x
@@ -546,9 +542,8 @@ namespace OHOS {
          * @param screenY2 屏幕右下角坐标y
          * @param opt
          */
-        void Viewport(double worldX1, double worldY1, double worldX2, double worldY2,
-                      double screenX1, double screenY1, double screenX2, double screenY2,
-                      ViewportOption opt = XMIDYMID);
+        void Viewport(double worldX1, double worldY1, double worldX2, double worldY2, double screenX1, double screenY1,
+                      double screenX2, double screenY2, ViewportOption opt = XMIDYMID);
         /**
          * @brief 设置线条的起止位置
          * @param x1 起点x
@@ -617,11 +612,7 @@ namespace OHOS {
          * @param x 终点x轴坐标
          * @param y 终点y轴坐标
          */
-        void ArcTo(double rx, double ry,
-                   double angle,
-                   bool largeArcFlag,
-                   bool sweepFlag,
-                   double x, double y);
+        void ArcTo(double rx, double ry, double angle, bool largeArcFlag, bool sweepFlag, double x, double y);
         /**
          * @brief 关闭多边形路径
          */
@@ -636,7 +627,8 @@ namespace OHOS {
          * @param scaleY
          */
         void DrawShadow(double x, double y, double a, double scaleX, double scaleY);
-        void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX, double scaleY);
+        void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX,
+                        double scaleY);
 
         /**
          * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
@@ -661,22 +653,20 @@ namespace OHOS {
          * @param dstY2 合法区域的右下角y
          * @param isAntiAlias 是否抗锯齿
          */
-        void TransformImage(const Image& img,
-                            int imgX1, int imgY1, int imgX2, int imgY2,
-                            double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias = true);
-        void TransformImage(const Image& img,
-                            double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias = true);
-        void TransformImage(const Image& img,
-                            int imgX1, int imgY1, int imgX2, int imgY2,
-                            const double* parallelogram, bool isAntiAlias = true);
+        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX1, double dstY1,
+                            double dstX2, double dstY2, bool isAntiAlias = true);
+        void TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2,
+                            bool isAntiAlias = true);
+        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, const double* parallelogram,
+                            bool isAntiAlias = true);
         void TransformImage(const Image& img, const double* parallelogram, bool isAntiAlias = true);
 
-        void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                        double dstX, double dstY, unsigned alpha = 255);
+        void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
+                        unsigned alpha = 255);
         void BlendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
 
-        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                            double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
+                            unsigned alpha, bool isAntiAlias = false);
         void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
 
         /**
@@ -710,7 +700,7 @@ namespace OHOS {
          */
         static double Deg2Rad(double Angle)
         {
-            return Angle * OHOS::PI / 180.0;
+            return Angle * OHOS::PI / OHOS::BOXER;
         }
 
         /**
@@ -878,10 +868,10 @@ namespace OHOS {
                 dashes = NULL;
             }
         }
-        OHOS::RenderingBuffer m_rbuf;                     //渲染器缓冲区
-        OHOS::ScanlineUnPackedContainer m_scanline;       //扫描线不合并相同扫描线
-        OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; //光栅
-        OHOS::TransAffine m_fillGradientMatrix;           //放射渐变的矩阵
+        OHOS::RenderingBuffer m_rbuf;                     // 渲染器缓冲区
+        OHOS::ScanlineUnPackedContainer m_scanline;       // 扫描线不合并相同扫描线
+        OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; // 光栅
+        OHOS::TransAffine m_fillGradientMatrix;           // 放射渐变的矩阵
         OHOS::TransAffine m_lineGradientMatrix;
         OHOS::TransAffine m_fillRadialMatrix;
         OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
@@ -903,9 +893,9 @@ namespace OHOS {
         RectD m_clipBox;
         BlendMode m_blendMode;
         BlendMode m_imageBlendMode;
-        Color m_imageBlendColor; //图像混合颜色
-        Color m_fillColor;       //图像需要填充颜色
-        Color m_lineColor;       //线条需要填充颜色
+        Color m_imageBlendColor; // 图像混合颜色
+        Color m_fillColor;       // 图像需要填充颜色
+        Color m_lineColor;       // 线条需要填充颜色
         color_func_type m_fillRadialGradient;
         LineCap m_lineCap;
         LineJoin m_lineJoin;
@@ -945,7 +935,8 @@ namespace OHOS {
      */
     inline bool operator==(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
-        return c1.redValue == c2.redValue && c1.greenValue == c2.greenValue && c1.blueValue == c2.blueValue && c1.alphaValue == c2.alphaValue;
+        return c1.redValue == c2.redValue && c1.greenValue == c2.greenValue && c1.blueValue == c2.blueValue &&
+               c1.alphaValue == c2.alphaValue;
     }
 
     /**
@@ -955,6 +946,5 @@ namespace OHOS {
     {
         return !(c1 == c2);
     }
-
 } // namespace OHOS
 #endif

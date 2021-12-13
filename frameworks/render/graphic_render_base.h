@@ -435,11 +435,8 @@ namespace OHOS {
                 rsrc.x2 = rectSrcPtr->x2 + 1;
                 rsrc.y2 = rectSrcPtr->y2 + 1;
             }
-
             RectI rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
-
             RectI rect = ClipRectArea(rdst, rsrc, src.GetWidth(), src.GetHeight());
-
             if (rect.x2 > 0) {
                 int incy = 1;
                 if (rdst.y1 > rsrc.y1) {
@@ -512,7 +509,6 @@ namespace OHOS {
                 }
             }
         }
-
     private:
         pixfmt_type* pixfmtType;
         RectI clipBox;
