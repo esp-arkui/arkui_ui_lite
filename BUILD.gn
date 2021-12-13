@@ -62,6 +62,7 @@ shared_library("ui") {
     "frameworks/animator/animator_manager.cpp",
     "frameworks/animator/easing_equation.cpp",
     "frameworks/animator/interpolation.cpp",
+    "frameworks/animator/gif_canvas_image_animator.cpp",
     "frameworks/common/graphic_startup.cpp",
     "frameworks/common/image_decode_ability.cpp",
     "frameworks/common/image.cpp",
@@ -159,6 +160,7 @@ shared_library("ui") {
     "frameworks/window/window.cpp",
     "frameworks/window/window_impl.cpp",
     "frameworks/engines/gfx/gfx_engine_manager.cpp",
+    "frameworks/engines/gfx/gfx_enginex_manager.cpp",
     "frameworks/engines/gfx/hi3516/hi3516_engine.cpp",
   ]
 

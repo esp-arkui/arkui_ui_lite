@@ -30,7 +30,17 @@ DESTDIR = ../libs
 
 SOURCES += \
     ../../../../../utils/frameworks/graphic_timer.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_color/graphic_color_rgba.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_common/graphic_common_clip_operate.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_rounded_rect.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_transform/graphic_transform_trans_affine.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.cpp \
     ../../../../frameworks/animator/animator.cpp \
+    ../../../../frameworks/animator/gif_canvas_image_animator.cpp \
     ../../../../frameworks/animator/animator_manager.cpp \
     ../../../../frameworks/animator/easing_equation.cpp \
     ../../../../frameworks/animator/interpolation.cpp \
@@ -105,6 +115,7 @@ SOURCES += \
     ../../../../frameworks/draw/draw_rect.cpp \
     ../../../../frameworks/draw/draw_triangle.cpp \
     ../../../../frameworks/draw/draw_utils.cpp \
+    ../../../../frameworks/engines/gfx/gfx_enginex_manager.cpp \
     ../../../../frameworks/events/event.cpp \
     ../../../../frameworks/font/base_font.cpp \
     ../../../../frameworks/font/glyphs_manager.cpp \
@@ -118,6 +129,9 @@ SOURCES += \
     ../../../../frameworks/font/ui_line_break.cpp \
     ../../../../frameworks/font/ui_multi_font_manager.cpp \
     ../../../../frameworks/font/ui_text_shaping.cpp \
+#    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
+#    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_line_profile_aa.cpp \
+#    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vpgen_segmentator.cpp \
     ../../../../frameworks/imgdecode/cache_manager.cpp \
     ../../../../frameworks/imgdecode/file_img_decoder.cpp \
     ../../../../frameworks/imgdecode/image_load.cpp \
@@ -137,10 +151,55 @@ SOURCES += \
     ../../../../../utils/frameworks/transform.cpp \
     ../../../../../utils/frameworks/version.cpp \
     ../../../../../../../third_party/bounds_checking_function/src/memset_s.c \
-    ../../../../../../../third_party/cJSON/cJSON.c
+    ../../../../../../../third_party/cJSON/cJSON.c \
 
 HEADERS += \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/graphic_color_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_clip_operate.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_functions.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_math.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_adaptor_vertex_generate.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_curve.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_transform.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_filter/graphic_filter_blur.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_bezier_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_ellipse.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_auto_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_auto_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_bvector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_range_adapter.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_vertex_sequence.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_cells_antialias.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_affine.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h \
     ../../../../frameworks/common/typed_text.h \
     ../../../../frameworks/core/render_manager.h \
     ../../../../frameworks/default_resource/check_box_res.h \
@@ -161,9 +220,24 @@ HEADERS += \
     ../../../../frameworks/draw/draw_utils.h \
     ../../../../frameworks/font/ui_font_adaptor.h \
     ../../../../frameworks/font/ui_multi_font_manager.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_DepictCurve.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb16.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb8.h \
     ../../../../frameworks/imgdecode/cache_manager.h \
     ../../../../frameworks/imgdecode/file_img_decoder.h \
     ../../../../frameworks/imgdecode/image_load.h \
+    ../../../../frameworks/render/graphic_render_base.h \
+    ../../../../frameworks/render/graphic_render_buffer.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_base.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_blend.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_comp.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_conv.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_gamma.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_multi.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_transposer.h \
+    ../../../../frameworks/render/graphic_render_scanline.h \
     ../../../../interfaces/innerkits/common/graphic_startup.h \
     ../../../../interfaces/innerkits/common/image_decode_ability.h \
     ../../../../interfaces/innerkits/common/input_device_manager.h \
@@ -171,9 +245,11 @@ HEADERS += \
     ../../../../interfaces/innerkits/dock/focus_manager.h \
     ../../../../interfaces/innerkits/dock/rotate_input_device.h \
     ../../../../interfaces/innerkits/dock/vibrator_manager.h \
+    ../../../../interfaces/innerkits/engines/gfx/gfx_enginex_manager.h \
     ../../../../interfaces/innerkits/font/ui_font_builder.h \
     ../../../../interfaces/innerkits/engines/gfx/gfx_engine_manager.h \
     ../../../../interfaces/kits/animator/animator.h \
+    ../../../../interfaces/kits/animator/gif_canvas_image_animator.h \
     ../../../../interfaces/kits/animator/easing_equation.h \
     ../../../../interfaces/kits/animator/interpolation.h \
     ../../../../interfaces/kits/common/image.h \
@@ -267,8 +343,12 @@ HEADERS += \
     ../../../../../../../third_party/cJSON/cJSON_Utils.h \
     ../../../../../../../tools/developer_tools_lite/graphic_tool/iar_project/config/gpu_2d/graphic_config.h
 
+
+
+
 INCLUDEPATH += \
     ../../../../frameworks \
+    ../../../../frameworks/graphics/include \
     ../../../../../utils/frameworks/windows \
     ../../../../../utils/interfaces/innerkits \
     ../../../../../utils/interfaces/kits \
@@ -281,7 +361,8 @@ INCLUDEPATH += \
     ../../../../../../../third_party/cJSON \
     ../../../../../../../third_party/libjpeg \
     ../../../../../../../third_party/libpng \
-    ../../../../../../../third_party/qrcodegen/cpp
+    ../../../../../../../third_party/qrcodegen/cpp \
+    ../../../../../../../third_party/giflib
 
 LIBS += $$OUT_PWD/../libs/libpng.dll
 LIBS += $$OUT_PWD/../libs/libjpeg.dll
@@ -289,3 +370,4 @@ LIBS += $$OUT_PWD/../libs/qrcodegen.dll
 LIBS += $$OUT_PWD/../libs/freetype.dll
 LIBS += $$OUT_PWD/../libs/libharfbuzz.a
 LIBS += $$OUT_PWD/../libs/icu.dll
+LIBS += $$OUT_PWD/../libs/giflib.dll
