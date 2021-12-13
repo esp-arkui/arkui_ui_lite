@@ -17,7 +17,7 @@
 #define GFX_GRAPGICS_MANAGER_INCLUDED
 
 #include <gfx_utils/graphics/graphic_color/graphic_color_rgba.h>
-#include <gfx_utils/graphics/graphic_depict/agg_conv_curve.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_conv_curve.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_transform.h>
@@ -27,16 +27,16 @@
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
 #include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
 #include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
 #include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
 #include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
-#include <render/graphic_render_pixfmt_rgba.h>
 #include <render/graphic_render_base.h>
+#include <render/graphic_render_pixfmt_rgba.h>
 #include <render/graphic_render_scanline.h>
 
 #include "gfx_engine_manager.h"
