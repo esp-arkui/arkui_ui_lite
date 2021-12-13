@@ -13,14 +13,6 @@
 * limitations under the License.
 */
 
-/**
-* @file graphic_geometry_pixfmt_rgba.h
-*
-* @brief Defines 颜色分量gamma操作类.
-*
-* @since 1.0
-* @version 1.0
-*/
 
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_RGBA_BLEND_INCLUDED
 #define GRAPHIC_GEOMETRY_PIXFMT_RGBA_BLEND_INCLUDED
@@ -49,7 +41,7 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         /**
          * @brief 颜色分量与Alpha相乘.
-         *
+         * @param pColor 颜色
          * @since 1.0
          * @version 1.0
          */
@@ -63,7 +55,7 @@ namespace OHOS {
 
         /**
          * @brief 颜色分量与Alpha解复用.
-         *
+         * @param pColor 颜色
          * @since 1.0
          * @version 1.0
          */
@@ -86,7 +78,7 @@ namespace OHOS {
 
         /**
          * @brief 用颜色分量混合像素.
-         *
+         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -97,7 +89,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量混合像素.
-         *
+         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
          * @since 1.0
          * @version 1.0
          */
@@ -121,7 +113,7 @@ namespace OHOS {
 
         /**
          * @brief 用颜色分量混合像素.
-         *
+         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -137,7 +129,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量混合像素.
-         *
+         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
          * @since 1.0
          * @version 1.0
          */
@@ -161,7 +153,7 @@ namespace OHOS {
 
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量,cover 覆盖率
          * @since 1.0
          * @version 1.0
          */
@@ -172,7 +164,7 @@ namespace OHOS {
         }
         /**
          * @brief 用颜色分量及覆盖率混合像素.
-         *
+         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
          * @since 1.0
          * @version 1.0
          */
@@ -215,6 +207,12 @@ namespace OHOS {
         struct PixelType {
             ValueType colors[NUM_COMPONENTS];
 
+            /**
+             * @brief 设置颜色.
+             * @param r，g，b，a 颜色分量
+             * @since 1.0
+             * @version 1.0
+             */
             void Set(ValueType r, ValueType g, ValueType b, ValueType a)
             {
                 colors[OrderType::RED] = r;
@@ -222,12 +220,22 @@ namespace OHOS {
                 colors[OrderType::BLUE] = b;
                 colors[OrderType::ALPHA] = a;
             }
-
+            /**
+             * @brief 设置颜色.
+             * @param color 颜色
+             * @since 1.0
+             * @version 1.0
+             */
             void Set(const ColorType& color)
             {
                 Set(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
             }
-
+            /**
+             * @brief 获取颜色.
+             * @param r，g，b，a 颜色分量
+             * @since 1.0
+             * @version 1.0
+             */
             void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
             {
                 r = colors[OrderType::RED];
@@ -235,7 +243,12 @@ namespace OHOS {
                 b = colors[OrderType::BLUE];
                 a = colors[OrderType::ALPHA];
             }
-
+            /**
+             * @brief 获取颜色.
+             * @return 颜色
+             * @since 1.0
+             * @version 1.0
+             */
             ColorType Get() const
             {
                 return ColorType(colors[OrderType::RED], colors[OrderType::GREEN], colors[OrderType::BLUE], colors[OrderType::ALPHA]);
@@ -344,6 +357,12 @@ namespace OHOS {
         explicit PixfmtAlphaBlendRgba(RbufType& rb) :
             rbuf_(&rb)
         {}
+        /**
+         * @brief 把像素缓冲区附加到混合器.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         void Attach(RbufType& rb)
         {
             rbuf_ = &rb;
@@ -926,7 +945,13 @@ namespace OHOS {
                 }
             }
         }
-
+        /**
+         * @brief 把源像素及覆盖率混合到rbuf_.
+         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
+         *        len 要混合的长度 cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         template <class SrcPixelFormatRenderer>
         void BlendFromColor(const SrcPixelFormatRenderer& from,
                             const ColorType& color,
@@ -948,7 +973,13 @@ namespace OHOS {
                 } while (--len);
             }
         }
-
+        /**
+         * @brief 把源像素及覆盖率混合到rbuf_.
+         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
+         *        len 要混合的长度 cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         template <class SrcPixelFormatRenderer>
         void BlendFromLut(const SrcPixelFormatRenderer& from,
                           const ColorType* colorLut,
@@ -1010,12 +1041,22 @@ namespace OHOS {
                 c[OrderType::B] = b;
                 c[OrderType::A] = a;
             }
-
+            /**
+             * @brief 设置颜色.
+             * @param color 颜色
+             * @since 1.0
+             * @version 1.0
+             */
             void Set(const ColorType& color)
             {
                 Set(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
             }
-
+            /**
+             * @brief 设置颜色.
+             * @param r,g,b,a 颜色分量
+             * @since 1.0
+             * @version 1.0
+             */
             void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
             {
                 r = c[OrderType::RED];
@@ -1023,7 +1064,12 @@ namespace OHOS {
                 b = c[OrderType::B];
                 a = c[OrderType::A];
             }
-
+            /**
+             * @brief 获取颜色.
+             * @return 颜色值
+             * @since 1.0
+             * @version 1.0
+             */
             ColorType Get() const
             {
                 return ColorType(
@@ -1485,7 +1531,13 @@ namespace OHOS {
                           p + xsrc * PIX_WIDTH, len * PIX_WIDTH);
             }
         }
-
+        /**
+         * @brief 把源像素及覆盖率混合到rbuf_.
+         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
+         *        len 要混合的长度 cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         template <class SrcPixelFormatRenderer>
         void BlendFrom(const SrcPixelFormatRenderer& from,
                        int xdst, int ydst,
@@ -1514,7 +1566,13 @@ namespace OHOS {
                 } while (--len);
             }
         }
-
+        /**
+         * @brief 把源像素及覆盖率混合到rbuf_.
+         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
+         *        len 要混合的长度 cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         template <class SrcPixelFormatRenderer>
         void BlendFromColor(const SrcPixelFormatRenderer& from,
                             const ColorType& color,
@@ -1536,7 +1594,13 @@ namespace OHOS {
                 } while (--len);
             }
         }
-
+        /**
+         * @brief 把源像素及覆盖率混合到rbuf_.
+         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
+         *        len 要混合的长度 cover 覆盖率
+         * @since 1.0
+         * @version 1.0
+         */
         template <class SrcPixelFormatRenderer>
         void BlendFromLut(const SrcPixelFormatRenderer& from,
                           const ColorType* colorLut,

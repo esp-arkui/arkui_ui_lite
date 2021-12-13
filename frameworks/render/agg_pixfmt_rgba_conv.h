@@ -37,7 +37,13 @@ namespace OHOS {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
-
+        /**
+         * @brief 设置素色
+         *
+         * @param pColor 像素指针，color指定的颜色
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* pColor, ColorType color)
         {
             color.Premultiply();
@@ -46,7 +52,14 @@ namespace OHOS {
             pColor[Order::BLUE] = color.blueValue;
             pColor[Order::GREEN] = color.greenValue;
         }
-
+        /**
+         * @brief 获取素色
+         *
+         * @param pColor 像素指针
+         * @return color指定的颜色
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* p)
         {
             return ColorType(p[Order::RED], p[Order::GREEN], p[Order::BLUE], p[Order::ALPHA])
@@ -59,7 +72,13 @@ namespace OHOS {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
-
+        /**
+         * @brief 设置素色
+         *
+         * @param pColor 像素指针，color指定的颜色
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE void SetPlainColor(ValueType* pColor, ColorType color)
         {
             pColor[Order::ALPHA] = color.alphaValue;
@@ -67,7 +86,14 @@ namespace OHOS {
             pColor[Order::BLUE] = color.blueValue;
             pColor[Order::GREEN] = color.greenValue;
         }
-
+        /**
+         * @brief 获取素色
+         *
+         * @param pColor 像素指针
+         * @return color指定的颜色
+         * @since 1.0
+         * @version 1.0
+         */
         static GRAPHIC_GEOMETRY_INLINE ColorType GetPlainColor(const ValueType* pColor)
         {
             return ColorType(pColor[Order::RED], pColor[Order::GREEN], pColor[Order::BLUE], pColor[Order::ALPHA]);
