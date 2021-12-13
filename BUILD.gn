@@ -162,30 +162,9 @@ shared_library("ui") {
     "frameworks/engines/gfx/gfx_engine_manager.cpp",
     "frameworks/engines/gfx/gfx_enginex_manager.cpp",
     "frameworks/engines/gfx/hi3516/hi3516_engine.cpp",
-    "frameworks/graphics/src/agg_arc.cpp",
-    "frameworks/graphics/src/agg_arrowhead.cpp",
-    "frameworks/graphics/src/agg_bezier_arc.cpp",
-    "frameworks/graphics/src/agg_bspline.cpp",
-    "frameworks/graphics/src/agg_color_rgba.cpp",
-    "frameworks/graphics/src/agg_curves.cpp",
-    "frameworks/graphics/src/agg_embedded_raster_fonts.cpp",
-    "frameworks/graphics/src/agg_gsv_text.cpp",
-    "frameworks/graphics/src/agg_image_filters.cpp",
-    "frameworks/graphics/src/agg_line_aa_basics.cpp",
-    "frameworks/graphics/src/agg_line_profile_aa.cpp",
-    "frameworks/graphics/src/agg_rounded_rect.cpp",
-    "frameworks/graphics/src/agg_sqrt_tables.cpp",
-    "frameworks/graphics/src/agg_trans_affine.cpp",
-    "frameworks/graphics/src/agg_vcgen_bspline.cpp",
-    "frameworks/graphics/src/agg_vcgen_dash.cpp",
-    "frameworks/graphics/src/agg_vcgen_stroke.cpp",
-    "frameworks/graphics/src/agg_vpgen_clip_polygon.cpp",
-    "frameworks/graphics/src/agg_vpgen_clip_polyline.cpp",
-    "frameworks/graphics/src/ctrl/agg_polygon_ctrl.cpp",
   ]
 
-  include_dirs = [ "//foundation/graphic/ui/frameworks",
-      "//foundation/graphic/ui/frameworks/graphics/include", ]
+  include_dirs = [ "//foundation/graphic/ui/frameworks" ]
   deps = [
     "//build/lite/config/component/cJSON:cjson_shared",
     "//foundation/graphic/surface:lite_surface",
