@@ -615,7 +615,7 @@ namespace OHOS {
             int16_t posViewTop = rect.GetY() - trunc.GetY();
             int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
             int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
-            std::unique_ptr<BufferInfo> gfxMapBuffer(new BufferInfo);
+            std::shared_ptr<BufferInfo> gfxMapBuffer =std::make_shared<BufferInfo>();
             if (memcpy_s(gfxMapBuffer.get(), sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
                 return;
             }
@@ -1488,7 +1488,7 @@ namespace OHOS {
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
         Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
 
-        std::unique_ptr<BufferInfo> pGfxMapBuffer(new BufferInfo);
+        std::shared_ptr<BufferInfo> pGfxMapBuffer =std::make_shared<BufferInfo>();
         pGfxMapBuffer->rect = textRect;
         pGfxMapBuffer->width = textRect.GetWidth();
         pGfxMapBuffer->height = textRect.GetHeight();
