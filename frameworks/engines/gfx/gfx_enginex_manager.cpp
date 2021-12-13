@@ -644,7 +644,7 @@ namespace OHOS {
         transform.Translate(shadowOffsetX_, shadowOffsetY_);
         if (a != 0) {
             transform *= OHOS::TransAffineTranslation(-x, -y);
-            transform *= OHOS::TransAffineRotation(a * 3.1415926 / 180.0);
+            transform *= OHOS::TransAffineRotation(a * Pi() / OHOS::BOXER);
             transform *= OHOS::TransAffineTranslation(x, y);
         }
         if (scaleX != 0 || scaleY != 0) {
