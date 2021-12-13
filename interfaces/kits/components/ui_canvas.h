@@ -50,13 +50,12 @@
 #include "stack"
 #include "ui_image_view.h"
 namespace OHOS {
-
     /**
- * @brief Defines the basic styles of graphs drawn on canvases.
- *
- * @since 1.0
- * @version 1.0
- */
+     * @brief Defines the basic styles of graphs drawn on canvases.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
 
     class GradientControl {
     public:
@@ -117,7 +116,8 @@ namespace OHOS {
             stopAndColors_.PushBack(stopAndColor);
         }
 
-        void createRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r)
+        void createRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y,
+                                  double end_r)
         {
             gradientflag = Radial;
             radialGradientPoint_.x0 = start_x;
@@ -161,26 +161,21 @@ namespace OHOS {
     class Paint : public HeapBase {
     public:
         /**
-     * @brief A constructor used to create a <b>Paint</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief A constructor used to create a <b>Paint</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         Paint() :
-            style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
-            strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2),
-            lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
-            lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER),
-            miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
+            style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
+            opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
+            lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
-            shadowColor(Color::Black()),
-            blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), rotateCenterX(0), rotateCenterY(0),
-            rotateAngle(0), scaleX(0), scaleY(0)
+            shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), rotateCenterX(0),
+            rotateCenterY(0), rotateAngle(0), scaleX(0), scaleY(0)
         {
             m_graphics = std::make_shared<BaseGfxExtendEngine>();
             m_transform.Reset();
-
-            //m_graphics_Image = std::make_shared<BaseGfxExtendEngine>();
         }
         Paint(const Paint& paint)
         {
@@ -192,7 +187,6 @@ namespace OHOS {
             style_ = paint.style_;
             fillColor_ = paint.fillColor_;
             m_graphics = paint.m_graphics;
-            //m_graphics_Image = paint.m_graphics_Image;
             strokeColor_ = paint.strokeColor_;
             opacity_ = paint.opacity_;
             strokeWidth_ = paint.strokeWidth_;
@@ -223,8 +217,8 @@ namespace OHOS {
                         dashArray[i] = paint.dashArray[i];
                     }
                 } else {
-                    //memory alloc error, ignore this dash
-                    //I think it is never happen.
+                    // memory alloc error, ignore this dash
+                    // I think it is never happen.
                     ndashes = 0;
                     dashOffset = 0;
                     isDrawDash = false;
@@ -245,11 +239,11 @@ namespace OHOS {
             return *this;
         }
         /**
-     * @brief A destructor used to delete the <b>Paint</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief A destructor used to delete the <b>Paint</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         virtual ~Paint()
         {
             if (dashArray != nullptr) {
@@ -259,8 +253,8 @@ namespace OHOS {
         }
 
         /**
-     * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
-     */
+         * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
+         */
         enum PaintStyle
         {
             /** Stroke only */
@@ -275,12 +269,12 @@ namespace OHOS {
         };
 
         /**
-     * @brief 线性渐变所需要的起止点
-     */
+         * @brief 线性渐变所需要的起止点
+         */
 
         /**
-      * repeat|repeat-x|repeat-y|no-repeat
-      */
+         * repeat|repeat-x|repeat-y|no-repeat
+         */
         enum PatternRepeat
         {
             REPEAT,
@@ -292,94 +286,95 @@ namespace OHOS {
         const char* image;
 
         /**
-     * @brief Sets the paint style of a closed graph.
-     *
-     * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link PaintStyle}.
-     * @see GetStyle
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the paint style of a closed graph.
+         *
+         * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link
+         * PaintStyle}.
+         * @see GetStyle
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStyle(PaintStyle style)
         {
             style_ = style;
         }
 
         /**
-     * @brief Obtains the paint style of a closed graph.
-     *
-     * @return Returns the paint style. For details, see {@link PaintStyle}.
-     * @see SetStyle
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the paint style of a closed graph.
+         *
+         * @return Returns the paint style. For details, see {@link PaintStyle}.
+         * @see SetStyle
+         * @since 1.0
+         * @version 1.0
+         */
         PaintStyle GetStyle() const
         {
             return style_;
         }
 
         /**
-     * @brief Sets the width of a line or border.
-     *
-     * @param width Indicates the line width when a line is drawn or the border width when a closed graph is drawn.
-     *        The width is extended to both sides.
-     * @see GetStrokeWidth
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the width of a line or border.
+         *
+         * @param width Indicates the line width when a line is drawn or the border width when a closed graph is drawn.
+         *        The width is extended to both sides.
+         * @see GetStrokeWidth
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStrokeWidth(uint16_t width)
         {
             strokeWidth_ = width;
         }
 
         /**
-     * @brief Obtains the width of a line or border.
-     *
-     * @return Returns the line width if a line is drawn or the border width if a closed graph is drawn.
-     * @see SetStrokeWidth
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the width of a line or border.
+         *
+         * @return Returns the line width if a line is drawn or the border width if a closed graph is drawn.
+         * @see SetStrokeWidth
+         * @since 1.0
+         * @version 1.0
+         */
         uint16_t GetStrokeWidth() const
         {
             return strokeWidth_;
         }
 
         /**
-     * @brief Sets the color of a line or border.
-     *
-     * @param color Indicates the line color when a line is drawn or the border color when a closed graph is drawn.
-     * @see GetStrokeColor
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the color of a line or border.
+         *
+         * @param color Indicates the line color when a line is drawn or the border color when a closed graph is drawn.
+         * @see GetStrokeColor
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStrokeColor(ColorType color)
         {
             strokeColor_ = color;
         }
 
         /**
-     * @brief Obtains the color of a line or border.
-     *
-     * @return Returns the line color if a line is drawn or the border color if a closed graph is drawn.
-     * @see SetStrokeWidth
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the color of a line or border.
+         *
+         * @return Returns the line color if a line is drawn or the border color if a closed graph is drawn.
+         * @see SetStrokeWidth
+         * @since 1.0
+         * @version 1.0
+         */
         ColorType GetStrokeColor() const
         {
             return strokeColor_;
         }
 
         /**
-     * @brief Sets fill color.
-     *
-     * This function is valid only for closed graphs.
-     *
-     * @param color Indicates the fill color to set.
-     * @see GetFillColor
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets fill color.
+         *
+         * This function is valid only for closed graphs.
+         *
+         * @param color Indicates the fill color to set.
+         * @see GetFillColor
+         * @since 1.0
+         * @version 1.0
+         */
         void SetFillColor(ColorType color)
         {
             gradientControl.gradientflag = GradientControl::Solid;
@@ -387,41 +382,41 @@ namespace OHOS {
         }
 
         /**
-     * @brief Obtains the fill color.
-     *
-     * @return Returns the fill color.
-     * @see SetFillColor
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the fill color.
+         *
+         * @return Returns the fill color.
+         * @see SetFillColor
+         * @since 1.0
+         * @version 1.0
+         */
         ColorType GetFillColor() const
         {
             return fillColor_;
         }
 
         /**
-     * @brief Sets the opacity.
-     *
-     * The setting takes effect for the entire graph, including the border, line color, and fill color.
-     *
-     * @param opacity Indicates the opacity. The value range is [0, 255].
-     * @see GetOpacity
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the opacity.
+         *
+         * The setting takes effect for the entire graph, including the border, line color, and fill color.
+         *
+         * @param opacity Indicates the opacity. The value range is [0, 255].
+         * @see GetOpacity
+         * @since 1.0
+         * @version 1.0
+         */
         void SetOpacity(uint8_t opacity)
         {
             opacity_ = opacity;
         }
 
         /**
-     * @brief Obtains the opacity.
-     *
-     * @return Returns the opacity.
-     * @see SetOpacity
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the opacity.
+         *
+         * @return Returns the opacity.
+         * @see SetOpacity
+         * @since 1.0
+         * @version 1.0
+         */
         uint8_t GetOpacity() const
         {
             return opacity_;
@@ -489,8 +484,8 @@ namespace OHOS {
                     dashArray[i] = lineDashs[i];
                 }
             } else {
-                //memory alloc error, ignore this dash
-                //I think it is never happen.
+                // memory alloc error, ignore this dash
+                // I think it is never happen.
                 ndashes = 0;
                 dashOffset = 0;
                 isDrawDash = false;
@@ -727,8 +722,6 @@ namespace OHOS {
         float* dashArray;
         unsigned int ndashes;
         std::shared_ptr<BaseGfxExtendEngine> m_graphics;
-
-        //std::shared_ptr<BaseGfxExtendEngine> m_graphics_Image;
         float globalAlpha;
         double shadowBlurRadius;
         double shadowOffsetX;
@@ -747,223 +740,221 @@ namespace OHOS {
     };
 
     /**
- * @brief Defines a canvas, which is used to draw multiple types of 2D graphs.
- *
- * @since 1.0
- * @version 1.0
- */
+     * @brief Defines a canvas, which is used to draw multiple types of 2D graphs.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
     class UICanvas : public UIView {
     public:
         /**
-     * @brief A constructor used to create a <b>UICanvas</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-        UICanvas() :
-            startPoint_({0, 0}), path_(nullptr)
+         * @brief A constructor used to create a <b>UICanvas</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        UICanvas() : startPoint_({0, 0}), path_(nullptr)
         {}
 
         /**
-     * @brief A destructor used to delete the <b>UICanvas</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief A destructor used to delete the <b>UICanvas</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         virtual ~UICanvas();
 
         /**
-     * @brief Obtains the view type.
-     *
-     * @return Returns the view type. For details, see {@link UIViewType}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the view type.
+         *
+         * @return Returns the view type. For details, see {@link UIViewType}.
+         * @since 1.0
+         * @version 1.0
+         */
         UIViewType GetViewType() const override
         {
             return UI_CANVAS;
         }
 
         /**
-     * @brief Clears the entire canvas.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Clears the entire canvas.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         void Clear();
 
         /**
-     * @brief Sets the coordinates of the start point for drawing a line. For example, if <b>startPoint</b> is
-     *        set to {50, 50}, the line is drawn from this set of coordinates on the canvas.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @see GetStartPosition
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the coordinates of the start point for drawing a line. For example, if <b>startPoint</b> is
+         *        set to {50, 50}, the line is drawn from this set of coordinates on the canvas.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @see GetStartPosition
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStartPosition(const Point& startPoint)
         {
             startPoint_ = startPoint;
         }
 
         /**
-     * @brief Obtains the coordinates of the start point of a line.
-     *
-     * @return Returns the coordinates of the start point.
-     * @see SetStartPosition
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the coordinates of the start point of a line.
+         *
+         * @return Returns the coordinates of the start point.
+         * @see SetStartPosition
+         * @since 1.0
+         * @version 1.0
+         */
         const Point& GetStartPosition() const
         {
             return startPoint_;
         }
 
         /**
-     * @brief Draws a straight line.
-     *
-     * If {@link SetStartPosition} is not used to set the coordinates of the start point of the line, the drawing
-     * starts from the end point of the last line.
-     *
-     * @param endPoint Indicates the end point of the straight line.
-     * @param paint    Indicates the straight line style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a straight line.
+         *
+         * If {@link SetStartPosition} is not used to set the coordinates of the start point of the line, the drawing
+         * starts from the end point of the last line.
+         *
+         * @param endPoint Indicates the end point of the straight line.
+         * @param paint    Indicates the straight line style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawLine(const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a straight line from the coordinates of the start point.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param endPoint   Indicates the coordinates of the end point.
-     * @param paint      Indicates the straight line style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a straight line from the coordinates of the start point.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param endPoint   Indicates the coordinates of the end point.
+         * @param paint      Indicates the straight line style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawLine(const Point& startPoint, const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a cubic Bezier curve.
-     *
-     * If {@link SetStartPosition} is not used to set the coordinates of the start point of the curve,
-     * the drawing starts from the end point of the last line.
-     * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
-     *
-     * @param control1 Indicates the coordinates of the first control point of the cubic Bezier curve.
-     * @param control2 Indicates the coordinates of the second control point of the cubic Bezier curve.
-     * @param endPoint Indicates the coordinates of the end point of the cubic Bezier curve.
-     * @param paint    Indicates the curve style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a cubic Bezier curve.
+         *
+         * If {@link SetStartPosition} is not used to set the coordinates of the start point of the curve,
+         * the drawing starts from the end point of the last line.
+         * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
+         *
+         * @param control1 Indicates the coordinates of the first control point of the cubic Bezier curve.
+         * @param control2 Indicates the coordinates of the second control point of the cubic Bezier curve.
+         * @param endPoint Indicates the coordinates of the end point of the cubic Bezier curve.
+         * @param paint    Indicates the curve style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawCurve(const Point& control1, const Point& control2, const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a cubic Bezier curve from the start point coordinates.
-     *
-     * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
-     *
-     * @param startPoint Indicates the coordinates of the start point of the cubic Bezier curve.
-     * @param control1   Indicates the coordinates of the first control point of the cubic Bezier curve.
-     * @param control2   Indicates the coordinates of the second control point of the cubic Bezier curve.
-     * @param endPoint   Indicates the coordinates of the end point of the cubic Bezier curve.
-     * @param paint      Indicates the curve style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
-        void DrawCurve(const Point& startPoint, const Point& control1, const Point& control2,
-                       const Point& endPoint, const Paint& paint);
+         * @brief Draws a cubic Bezier curve from the start point coordinates.
+         *
+         * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
+         *
+         * @param startPoint Indicates the coordinates of the start point of the cubic Bezier curve.
+         * @param control1   Indicates the coordinates of the first control point of the cubic Bezier curve.
+         * @param control2   Indicates the coordinates of the second control point of the cubic Bezier curve.
+         * @param endPoint   Indicates the coordinates of the end point of the cubic Bezier curve.
+         * @param paint      Indicates the curve style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
+        void DrawCurve(const Point& startPoint, const Point& control1, const Point& control2, const Point& endPoint,
+                       const Paint& paint);
 
         /**
-     * @brief Draws a rectangle.
-     *
-     * @param startPoint Indicates the coordinates of the point at the upper left corner of the rectangle.
-     * @param height     Indicates the height of the rectangle.
-     * @param width      Indicates the width of the rectangle.
-     * @param paint      Indicates the rectangle style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a rectangle.
+         *
+         * @param startPoint Indicates the coordinates of the point at the upper left corner of the rectangle.
+         * @param height     Indicates the height of the rectangle.
+         * @param width      Indicates the width of the rectangle.
+         * @param paint      Indicates the rectangle style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
         void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
-        void ClearRect(const Point& clearRect, int clearHeight, int clearWidth,
-                       const Paint& paint);
+        void ClearRect(const Point& clearRect, int clearHeight, int clearWidth, const Paint& paint);
         /**
-     * @brief Draws a circle.
-     *
-     * @param center Indicates the coordinates of the circle center.
-     * @param radius Indicates the radius of the circle.
-     * @param paint  Indicates the circle style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a circle.
+         *
+         * @param center Indicates the coordinates of the circle center.
+         * @param radius Indicates the radius of the circle.
+         * @param paint  Indicates the circle style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawCircle(const Point& center, uint16_t radius, const Paint& paint);
 
         /**
-     * @brief Draws a sector.
-     *
-     * When the start angle is smaller than the end angle, the sector is drawn clockwise.
-     * Otherwise, the sector is drawn counterclockwise.
-     *
-     * @param center     Indicates the coordinates of the sector's center.
-     * @param radius     Indicates the radius of the sector.
-     * @param startAngle Indicates the start angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param paint      Indicates the sector style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a sector.
+         *
+         * When the start angle is smaller than the end angle, the sector is drawn clockwise.
+         * Otherwise, the sector is drawn counterclockwise.
+         *
+         * @param center     Indicates the coordinates of the sector's center.
+         * @param radius     Indicates the radius of the sector.
+         * @param startAngle Indicates the start angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param endAngle   Indicates the end angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param paint      Indicates the sector style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawSector(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
         /**
-     * @brief Draws an arc.
-     *
-     * Only stroke is supported. \n
-     * When the start angle is smaller than the end angle, the sector is drawn clockwise.
-     * Otherwise, the sector is drawn counterclockwise. \n
-     *
-     * @param center     Indicates the coordinates of the arc's center.
-     * @param radius     Indicates the radius of the arc.
-     * @param startAngle Indicates the start angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param paint      Indicates the arc style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws an arc.
+         *
+         * Only stroke is supported. \n
+         * When the start angle is smaller than the end angle, the sector is drawn clockwise.
+         * Otherwise, the sector is drawn counterclockwise. \n
+         *
+         * @param center     Indicates the coordinates of the arc's center.
+         * @param radius     Indicates the radius of the arc.
+         * @param startAngle Indicates the start angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param endAngle   Indicates the end angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param paint      Indicates the arc style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
         /**
-     * @brief Draws an image.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param image      Indicates the pointer to the image source.
-     * @param paint      Indicates the image style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws an image.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param image      Indicates the pointer to the image source.
+         * @param paint      Indicates the image style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
         /**
-     * @brief Draws an image.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param image      Indicates the pointer to the image source.
-     * @param paint      Indicates the image style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws an image.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param image      Indicates the pointer to the image source.
+         * @param paint      Indicates the image style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawImage(const Point& startPoint, const ImageInfo* image, const Paint& paint);
 
         /**
-     * @brief Defines the font style.
-     */
+         * @brief Defines the font style.
+         */
         struct FontStyle {
             /** Text direction. For details, see {@link UITextLanguageDirect}. */
             UITextLanguageDirect direct;
@@ -985,101 +976,101 @@ namespace OHOS {
         };
 
         /**
-     * @brief Draws text.
-     *
-     * Only fill is supported. \n
-     * If the text length exceeds the value of <b>maxWidth</b>, the text will be truncated. \n
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param text       Indicates the pointer to the text content.
-     * @param maxWidth   Indicates the maximum width of the text that can be displayed. If the maximum width is
-     *                   exceeded, the text is truncated.
-     * @param fontStyle  Indicates the text layout and font style. For details, see {@link FontStyle}.
-     * @param paint      Indicates the text style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws text.
+         *
+         * Only fill is supported. \n
+         * If the text length exceeds the value of <b>maxWidth</b>, the text will be truncated. \n
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param text       Indicates the pointer to the text content.
+         * @param maxWidth   Indicates the maximum width of the text that can be displayed. If the maximum width is
+         *                   exceeded, the text is truncated.
+         * @param fontStyle  Indicates the text layout and font style. For details, see {@link FontStyle}.
+         * @param paint      Indicates the text style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawLabel(const Point& startPoint, const char* text, uint16_t maxWidth, const FontStyle& fontStyle,
                        const Paint& paint);
 
         /**
-     * @brief Creates a path.
-     *
-     * A round corner can be used to join two lines. Currently, miter and bevel joints are not supported.
-     * To draw this path, you need to call {@link DrawPath}.
-     *
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates a path.
+         *
+         * A round corner can be used to join two lines. Currently, miter and bevel joints are not supported.
+         * To draw this path, you need to call {@link DrawPath}.
+         *
+         * @since 3.0
+         * @version 5.0
+         */
         void BeginPath();
 
         /**
-     * @brief Moves the start point of this path to a specified point.
-     *
-     * @param point Indicates the specified point to move to.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Moves the start point of this path to a specified point.
+         *
+         * @param point Indicates the specified point to move to.
+         * @since 3.0
+         * @version 5.0
+         */
         void MoveTo(const Point& point);
 
         /**
-     * @brief Creates a straight line from the end point of this path to a specified point.
-     *
-     * @param point Indicates the coordinates of the specified point.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates a straight line from the end point of this path to a specified point.
+         *
+         * @param point Indicates the coordinates of the specified point.
+         * @since 3.0
+         * @version 5.0
+         */
         void LineTo(const Point& point);
 
         /**
-     * @brief Creates an arc path.
-     *
-     * @param center     Indicates the coordinates of the arc's center point.
-     * @param radius     Indicates the radius of the arc.
-     * @param startAngle Indicates the start angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates an arc path.
+         *
+         * @param center     Indicates the coordinates of the arc's center point.
+         * @param radius     Indicates the radius of the arc.
+         * @param startAngle Indicates the start angle of the arc. The value <b>0</b> indicates the 12-o'clock
+         * direction, and <b>90</b> indicates the 3-o'clock direction.
+         * @param endAngle   Indicates the end angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @since 3.0
+         * @version 5.0
+         */
         void ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle);
 
         /**
-     * @brief Creates a rectangular path.
-     *
-     * @param point  Indicates the coordinates of the rectangle's upper left corner.
-     * @param height Indicates the height of the rectangle.
-     * @param width  Indicates the width of the rectangle.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates a rectangular path.
+         *
+         * @param point  Indicates the coordinates of the rectangle's upper left corner.
+         * @param height Indicates the height of the rectangle.
+         * @param width  Indicates the width of the rectangle.
+         * @since 3.0
+         * @version 5.0
+         */
         void AddRect(const Point& point, int16_t height, int16_t width);
 
         void AddRect(const Point& point, int16_t height, int16_t width, const Paint& paint);
         /**
-     * @brief Closes this path.
-     *
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Closes this path.
+         *
+         * @since 3.0
+         * @version 5.0
+         */
         void ClosePath();
 
         /**
-     * @brief Draws this path.
-     *
-     * @param paint Indicates the path style. For details, see {@link Paint}.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Draws this path.
+         *
+         * @param paint Indicates the path style. For details, see {@link Paint}.
+         * @since 3.0
+         * @version 5.0
+         */
         void DrawPath(const Paint& paint);
         /**
-     * @brief FIlls this path.
-     *
-     * @param paint Indicates the path style. For details, see {@link Paint}.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief FIlls this path.
+         *
+         * @param paint Indicates the path style. For details, see {@link Paint}.
+         * @since 3.0
+         * @version 5.0
+         */
         void FillPath(const Paint& paint);
         void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
@@ -1114,10 +1105,7 @@ namespace OHOS {
         void stroke(const Paint& paint);
 
         /*  在画布上绘制文本 */
-        void StrokeText(const char* text,
-                        const Point& point,
-                        const FontStyle& fontStyle,
-                        const Paint& paint);
+        void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
 
         /* 缩放当前绘图至更大或更小 */
         void SetScale(float x, float y, Paint& paint)
@@ -1177,8 +1165,8 @@ namespace OHOS {
         };
 
     protected:
-        bool InitDrawEnvironment(const BufferInfo& gfxDstBuffer,
-                                 const Rect& fillArea, const Rect& worldRect, const Rect& screenRect, const Paint& paint);
+        bool InitDrawEnvironment(const BufferInfo& gfxDstBuffer, const Rect& fillArea, const Rect& worldRect,
+                                 const Rect& screenRect, const Paint& paint);
 
         constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
@@ -1212,12 +1200,6 @@ namespace OHOS {
             int16_t endAngle;
         };
 
-        //    struct ImageParam : public HeapBase {
-        //        Point start;
-        //        uint16_t height;
-        //        uint16_t width;
-        //        Image* image;
-        //    };
         struct TextParam : public HeapBase {
             const char* text;
             Point position;
@@ -1251,8 +1233,7 @@ namespace OHOS {
 
         class UICanvasPath : public HeapBase {
         public:
-            UICanvasPath() :
-                startPos_({0, 0}), strokeCount_(0){};
+            UICanvasPath() : startPos_({0, 0}), strokeCount_(0){};
             ~UICanvasPath();
             List<Point> points_;
             List<PathCmd> cmd_;
@@ -1351,123 +1332,60 @@ namespace OHOS {
             delete pathParam;
         }
 
-        static void DoDrawLine(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
-        static void DoDrawCurve(BufferInfo& gfxDstBuffer,
-                                void* param,
-                                const Paint& paint,
-                                const Rect& rect,
-                                const Rect& invalidatedArea,
-                                const Style& style);
+        static void DoDrawLine(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
+        static void DoDrawCurve(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                const Rect& invalidatedArea, const Style& style);
 
-        static void DoClearRect(BufferInfo& gfxDstBuffer,
-                                void* param,
-                                const Paint& paint,
-                                const Rect& rect,
-                                const Rect& invalidatedArea,
-                                const Style& style);
+        static void DoClearRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                const Rect& invalidatedArea, const Style& style);
 
-        static void DoStrokeRect(BufferInfo& gfxDstBuffer,
-                                 void* param,
-                                 const Paint& paint,
-                                 const Rect& rect,
-                                 const Rect& invalidatedArea,
-                                 const Style& style);
+        static void DoStrokeRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                 const Rect& invalidatedArea, const Style& style);
 
-        static void DoDrawRect(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
-        static void DoFillRect(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
-        static void DoDrawCircle(BufferInfo& gfxDstBuffer,
-                                 void* param,
-                                 const Paint& paint,
-                                 const Rect& rect,
-                                 const Rect& invalidatedArea,
-                                 const Style& style);
-        static void DoDrawArc(BufferInfo& gfxDstBuffer,
-                              void* param,
-                              const Paint& paint,
-                              const Rect& rect,
-                              const Rect& invalidatedArea,
-                              const Style& style);
-        static void DoDrawImage(BufferInfo& gfxDstBuffer,
-                                void* param,
-                                const Paint& paint,
-                                const Rect& rect,
-                                const Rect& invalidatedArea,
-                                const Style& style);
+        static void DoDrawRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
+        static void DoFillRect(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
+        static void DoDrawCircle(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                 const Rect& invalidatedArea, const Style& style);
+        static void DoDrawArc(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                              const Rect& invalidatedArea, const Style& style);
+        static void DoDrawImage(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                const Rect& invalidatedArea, const Style& style);
 
         /*绘制图元时，开始执行变换操作*/
         static void StartTransform(const Rect& rect, const Rect& invalidatedArea, const Paint& paint);
 
-        static void DoDrawPattern(BufferInfo& gfxDstBuffer,
-                                  void* param,
-                                  const Paint& paint,
-                                  const Rect& rect,
-                                  const Rect& invalidatedArea,
-                                  const Style& style);
-        static void DoStrokePattern(BufferInfo& gfxDstBuffer,
-                                    void* param,
-                                    const Paint& paint,
-                                    const Rect& rect,
-                                    const Rect& invalidatedArea,
-                                    const Style& style);
-        static void DoDrawLabel(BufferInfo& gfxDstBuffer,
-                                void* param,
-                                const Paint& paint,
-                                const Rect& rect,
-                                const Rect& invalidatedArea,
-                                const Style& style);
+        static void DoDrawPattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                  const Rect& invalidatedArea, const Style& style);
+        static void DoStrokePattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                    const Rect& invalidatedArea, const Style& style);
+        static void DoDrawLabel(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                const Rect& invalidatedArea, const Style& style);
 
-        static void DoDrawText(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
+        static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
         /* 返回包含指定文本宽度的对象 */
         Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
-        static void DoDrawPath(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
-        static void DoFillPath(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
+        static void DoDrawPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
+        static void DoFillPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
         static void GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point);
-        static void DoDrawLineJoin(BufferInfo& gfxDstBuffer,
-                                   const Point& center,
-                                   const Rect& invalidatedArea,
+        static void DoDrawLineJoin(BufferInfo& gfxDstBuffer, const Point& center, const Rect& invalidatedArea,
                                    const Paint& paint);
 
-        static void addColorGradient(BaseGfxExtendEngine& m_graphics, List<GradientControl::StopAndColor>& stopAndColors);
+        static void addColorGradient(BaseGfxExtendEngine& m_graphics,
+                                     List<GradientControl::StopAndColor>& stopAndColors);
 
-        static void setGradient(BaseGfxExtendEngine& m_graphics, const Paint& paint, const Rect& rect, const Style& style);
-        static void DoGradient(BufferInfo& gfxDstBuffer,
-                               void* param,
-                               const Paint& paint,
-                               const Rect& rect,
-                               const Rect& invalidatedArea,
-                               const Style& style);
+        static void setGradient(BaseGfxExtendEngine& m_graphics, const Paint& paint, const Rect& rect,
+                                const Style& style);
+        static void DoGradient(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                               const Rect& invalidatedArea, const Style& style);
 
-        static void BlitMapBuffer(BufferInfo& gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& curViewRect, TransformMap& transMap, const Rect& invalidatedArea);
+        static void BlitMapBuffer(BufferInfo& gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& curViewRect,
+                                  TransformMap& transMap, const Rect& invalidatedArea);
         static bool IsGif(const char* src);
     };
 } // namespace OHOS

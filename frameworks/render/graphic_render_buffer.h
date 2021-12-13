@@ -148,7 +148,7 @@ namespace OHOS {
         }
 
         /**
-         *从另一rendering_buffer中复制数据
+         * 从另一rendering_buffer中复制数据
          */
         template <class RenBuf>
         void CopyFrom(const RenBuf& renBuf)
@@ -194,13 +194,7 @@ namespace OHOS {
         unsigned height_; // 区域高度
         int bufStride_;   // 每行字节数。
     };
-
-#ifdef RENDERING_BUFFER
-    using RenderingBuffer = RENDERING_BUFFER;
-#else
     using RenderingBuffer = RowAccessor<int8u>;
-#endif
-
 } // namespace OHOS
 
 #endif

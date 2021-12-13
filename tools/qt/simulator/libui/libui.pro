@@ -160,6 +160,7 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_math.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_adaptor_vertex_generate.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_curve.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_dash.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_transform.h \
