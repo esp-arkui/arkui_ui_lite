@@ -25,160 +25,164 @@
 #include "gfx_utils/transform.h"
 
 namespace OHOS {
-class BaseGfxEngine;
-enum BlendMode {
-    BLEND_MODE,          /* no blending */
-    BLEND_SRC,           /* S */
-    BLEND_DST,           /* D */
-    BLEND_SRC_OVER,      /* S + (1 - Sa) * D */
-    BLEND_DST_OVER,      /* (1 - Da) * S + D */
-    BLEND_SRC_IN,        /* Da * S */
-    BLEND_DST_IN,        /* Sa * D */
-    BLEND_SRC_OUT,       /* S * (1 - Da) */
-    BLEND_DST_OUT,       /* D * (1 - Sa) */
-    BLEND_SCREEN,        /* S + D - S * D */
-    BLEND_MULTIPLY,      /* S * (1 - Da) + D * (1 - Sa) + S * D */
-    BLEND_ADDITIVE,      /* S + D */
-    BLEND_SUBTRACT,      /* D * (1 - S) */
-};
+    class BaseGfxEngine;
+    enum BlendMode
+    {
+        BLEND_MODE,     /* no blending */
+        BLEND_SRC,      /* S */
+        BLEND_DST,      /* D */
+        BLEND_SRC_OVER, /* S + (1 - Sa) * D */
+        BLEND_DST_OVER, /* (1 - Da) * S + D */
+        BLEND_SRC_IN,   /* Da * S */
+        BLEND_DST_IN,   /* Sa * D */
+        BLEND_SRC_OUT,  /* S * (1 - Da) */
+        BLEND_DST_OUT,  /* D * (1 - Sa) */
+        BLEND_SCREEN,   /* S + D - S * D */
+        BLEND_MULTIPLY, /* S * (1 - Da) + D * (1 - Sa) + S * D */
+        BLEND_ADDITIVE, /* S + D */
+        BLEND_SUBTRACT, /* D * (1 - S) */
+    };
 
 #ifndef TRANSFORMOPTION
-#define TRANSFORMOPTION
-struct TransformOption {
-    TransformAlgorithm algorithm;
-};
+#    define TRANSFORMOPTION
+    struct TransformOption {
+        TransformAlgorithm algorithm;
+    };
 #endif
 
-struct BlendOption {
-    TransformMap transMap;
-    BlendMode mode;
-    TransformOption option;
-    OpacityType opacity;
-};
+    struct BlendOption {
+        TransformMap transMap;
+        BlendMode mode;
+        TransformOption option;
+        OpacityType opacity;
+    };
 
-class Image;
-struct ArcInfo {
-    Point center;
-    Point imgPos;
-    uint16_t radius;
-    int16_t startAngle;
-    int16_t endAngle;
-    const Image* imgSrc;
-};
+    class Image;
+    struct ArcInfo {
+        Point center;
+        Point imgPos;
+        uint16_t radius;
+        int16_t startAngle;
+        int16_t endAngle;
+        const Image* imgSrc;
+    };
 
-struct TransformDataInfo {
-    ImageHeader header;
-    const uint8_t* data;
-    uint8_t pxSize;
-    BlurLevel blurLevel;
-    TransformAlgorithm algorithm;
-};
+    struct TransformDataInfo {
+        ImageHeader header;
+        const uint8_t* data;
+        uint8_t pxSize;
+        BlurLevel blurLevel;
+        TransformAlgorithm algorithm;
+    };
 
-enum BufferInfoUsage {
-    BUFFER_FB_SURFACE,
-    BUFFER_MAP_SURFACE,
-    BUFFER_SNAPSHOT_SURFACE
-};
-
-class BaseGfxEngine : public HeapBase {
-public:
-    virtual void DrawArc(BufferInfo& dst, ArcInfo& arcInfo, const Rect& mask,
-                         const Style& style, OpacityType opacity, uint8_t cap);
-
-    virtual void DrawLine(BufferInfo& dst, const Point& start, const Point& end,
-                          const Rect& mask, int16_t width, ColorType color, OpacityType opacity);
-
-    virtual void DrawLetter(BufferInfo& gfxDstBuffer,
-                            const uint8_t* fontMap,
-                            const Rect& fontRect,
-                            const Rect& subRect,
-                            const uint8_t fontWeight,
-                            const ColorType& color,
-                            const OpacityType opa);
-
-    virtual void DrawCubicBezier(BufferInfo& dst, const Point& start, const Point& control1,
-                                 const Point& control2, const Point& end, const Rect& mask,
-                                 int16_t width, ColorType color, OpacityType opacity);
-
-    virtual void DrawRect(BufferInfo& dst,
-                          const Rect& rect,
-                          const Rect& dirtyRect,
-                          const Style& style,
-                          OpacityType opacity);
-
-    virtual void DrawTransform(BufferInfo& dst,
-                               const Rect& mask,
-                               const Point& position,
-                               ColorType color,
-                               OpacityType opacity,
-                               const TransformMap& transMap,
-                               const TransformDataInfo& dataInfo);
-
-    // x/y: center of a circle
-    virtual void ClipCircle(const ImageInfo* info, float x, float y, float radius);
-
-    virtual void Blit(BufferInfo& dst,
-                      const Point& dstPos,
-                      const BufferInfo& src,
-                      const Rect& subRect,
-                      const BlendOption& blendOption);
-
-    virtual void Fill(BufferInfo& dst,
-                      const Rect& fillArea,
-                      const ColorType color,
-                      const OpacityType opacity);
-
-    virtual uint8_t* AllocBuffer(uint32_t size, uint32_t usage);
-
-    virtual void FreeBuffer(uint8_t* buffer);
-
-    virtual BufferInfo* GetFBBufferInfo()
+    enum BufferInfoUsage
     {
-        return nullptr;
-    }
+        BUFFER_FB_SURFACE,
+        BUFFER_MAP_SURFACE,
+        BUFFER_SNAPSHOT_SURFACE
+    };
 
-    virtual void Flush() {}
+    class BaseGfxEngine : public HeapBase {
+    public:
+        virtual void DrawArc(BufferInfo& dst, ArcInfo& arcInfo, const Rect& mask,
+                             const Style& style, OpacityType opacity, uint8_t cap);
 
-    virtual uint16_t GetScreenWidth()
-    {
-        return width_;
-    }
+        virtual void DrawLine(BufferInfo& dst, const Point& start, const Point& end,
+                              const Rect& mask, int16_t width, ColorType color, OpacityType opacity);
 
-    virtual uint16_t GetScreenHeight()
-    {
-        return height_;
-    }
+        virtual void DrawLetter(BufferInfo& gfxDstBuffer,
+                                const uint8_t* fontMap,
+                                const Rect& fontRect,
+                                const Rect& subRect,
+                                const uint8_t fontWeight,
+                                const ColorType& color,
+                                const OpacityType opa);
 
-    virtual void SetScreenShape(ScreenShape screenShape)
-    {
-        screenShape_ = screenShape;
-    }
+        virtual void DrawCubicBezier(BufferInfo& dst, const Point& start, const Point& control1,
+                                     const Point& control2, const Point& end, const Rect& mask,
+                                     int16_t width, ColorType color, OpacityType opacity);
 
-    virtual ScreenShape GetScreenShape()
-    {
-        return screenShape_;
-    }
+        virtual void DrawRect(BufferInfo& dst,
+                              const Rect& rect,
+                              const Rect& dirtyRect,
+                              const Style& style,
+                              OpacityType opacity);
 
-    static BaseGfxEngine* GetInstance()
-    {
-        return baseEngine_;
-    }
+        virtual void DrawTransform(BufferInfo& dst,
+                                   const Rect& mask,
+                                   const Point& position,
+                                   ColorType color,
+                                   OpacityType opacity,
+                                   const TransformMap& transMap,
+                                   const TransformDataInfo& dataInfo);
 
-    static void InitGfxEngine(BaseGfxEngine* gfxEngine = nullptr)
-    {
-        if (gfxEngine == nullptr) {
-            static BaseGfxEngine localGfxEngine;
-            baseEngine_ = &localGfxEngine;
-            return;
+        // x/y: center of a circle
+        virtual void ClipCircle(const ImageInfo* info, float x, float y, float radius);
+
+        virtual void Blit(BufferInfo& dst,
+                          const Point& dstPos,
+                          const BufferInfo& src,
+                          const Rect& subRect,
+                          const BlendOption& blendOption);
+
+        virtual void Fill(BufferInfo& dst,
+                          const Rect& fillArea,
+                          const ColorType color,
+                          const OpacityType opacity);
+
+        virtual uint8_t* AllocBuffer(uint32_t size, uint32_t usage);
+
+        virtual void FreeBuffer(uint8_t* buffer);
+
+        virtual BufferInfo* GetFBBufferInfo()
+        {
+            return nullptr;
         }
-        baseEngine_ = gfxEngine;
-    }
-protected:
-    static BaseGfxEngine* baseEngine_;
-    uint16_t width_ = HORIZONTAL_RESOLUTION;
-    uint16_t height_ = VERTICAL_RESOLUTION;
-    ScreenShape screenShape_ = RECTANGLE;
-};
-}
+
+        virtual void Flush()
+        {}
+
+        virtual uint16_t GetScreenWidth()
+        {
+            return width_;
+        }
+
+        virtual uint16_t GetScreenHeight()
+        {
+            return height_;
+        }
+
+        virtual void SetScreenShape(ScreenShape screenShape)
+        {
+            screenShape_ = screenShape;
+        }
+
+        virtual ScreenShape GetScreenShape()
+        {
+            return screenShape_;
+        }
+
+        static BaseGfxEngine* GetInstance()
+        {
+            return baseEngine_;
+        }
+
+        static void InitGfxEngine(BaseGfxEngine* gfxEngine = nullptr)
+        {
+            if (gfxEngine == nullptr) {
+                static BaseGfxEngine localGfxEngine;
+                baseEngine_ = &localGfxEngine;
+                return;
+            }
+            baseEngine_ = gfxEngine;
+        }
+
+    protected:
+        static BaseGfxEngine* baseEngine_;
+        uint16_t width_ = HORIZONTAL_RESOLUTION;
+        uint16_t height_ = VERTICAL_RESOLUTION;
+        ScreenShape screenShape_ = RECTANGLE;
+    };
+} // namespace OHOS
 
 #endif // GRAPHIC_LITE_GFX_ENGINE_MANAGER_H

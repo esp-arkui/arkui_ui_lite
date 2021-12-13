@@ -16,12 +16,6 @@
 #ifndef GFX_GRAPGICS_MANAGER_INCLUDED
 #define GFX_GRAPGICS_MANAGER_INCLUDED
 
-// With this define uncommented you can use FreeType font engine
-//#define BaseGfxExtendEngine_USE_FREETYPE
-
-// With this define uncommented you can use floating-point pixel format
-//#define BaseGfxExtendEngine_USE_FLOAT_FORMAT
-
 #include <gfx_utils/graphics/graphic_color/agg_color_rgba.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_curve.h>
 #include <gfx_utils/graphics/graphic_depict/agg_conv_dash.h>
@@ -50,22 +44,28 @@
 namespace OHOS {
     class BaseGfxExtendEngine : public BaseGfxEngine {
 #ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
-        typedef OHOS::Rgba32 ColorType;
+        typedef OHOS::rgba32 ColorType;
 #else
         typedef OHOS::Rgba8 ColorType;
 #endif
-        typedef OHOS::OrderBgra ComponentOrder; // Platform dependent!
+        //颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+        typedef OHOS::OrderBgra ComponentOrder;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
         typedef OHOS::BlenderRgba<ColorType, ComponentOrder> Blender;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
         typedef OHOS::CompOpAdaptorRgba<ColorType, ComponentOrder> BlenderComp;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
         typedef OHOS::BlenderRgbaPre<ColorType, ComponentOrder> BlenderPre;
+        //根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
         typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
-
-        typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::rendering_buffer> PixFormat;
-        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::rendering_buffer> PixFormatComp;
-        typedef OHOS::PixfmtAlphaBlendRgba<BlenderPre, OHOS::rendering_buffer> PixFormatPre;
-        typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::rendering_buffer> PixFormatCompPre;
+        //根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
+        typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixFormat;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
+        typedef OHOS::PixfmtAlphaBlendRgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
         typedef OHOS::PixfmtBgra32 pixfmt;
 
+        //根据像素处理的模板处理基础渲染器
         typedef OHOS::RendererBase<PixFormat> RendererBase;
         typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
         typedef OHOS::RendererBase<PixFormatPre> RendererBasePre;
@@ -73,449 +73,667 @@ namespace OHOS {
 
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBase> RendererSolid;
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
-
+        //设定线段分配器
         typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
-        typedef OHOS::PodAutoArray<ColorType, 256> GradientArray;
+        //设定渐变数组的构造器设定颜色插值器和颜色模板等
         typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
-
+        //设定放射渐变的算法
         typedef OHOS::GradientRadialCalculate gradient_func_type;
+        //设定线段插值器
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
+        //设定线性渐变的线段生成器
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate, color_func_type> LinearGradientSpan;
-        //    typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>, OHOS::gradient_circle, GradientArray> RadialGradientSpan;
+        //设定放射渐变的线段生成器
         typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type> RadialGradientSpan;
 
-        //  typedef OHOS::span_gradient<ColorType, OHOS::span_interpolator_linear<>,gradient_func_type,color_func_type> span_gradient_type;
-
-        typedef OHOS::conv_curve<OHOS::PathStorage> ConvCurve;
-        typedef OHOS::conv_dash<ConvCurve> ConvDashCurve;
-        typedef OHOS::conv_stroke<ConvCurve> ConvStroke;
-        typedef OHOS::conv_stroke<ConvDashCurve> ConvDashStroke;
-        typedef OHOS::conv_transform<ConvCurve> PathTransform;
-        typedef OHOS::conv_transform<ConvStroke> StrokeTransform;
-        //    typedef OHOS::conv_stroke<OHOS::path_storage>       t_conv_stroke;
-
-        typedef OHOS::conv_transform<ConvDashStroke> DashStrokeTransform;
+        typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
+        typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
+        typedef OHOS::DepictDash<ConvCurve> ConvDashCurve;
+        typedef OHOS::DepictTransform<ConvCurve> PathTransform;
+        typedef OHOS::DepictStroke<ConvDashCurve> ConvDashStroke;
+        typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
+        typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
-        typedef OHOS::rendering_buffer RenderingBuffer;
-
-        typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> img_source_type;
-
-        typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> img_source_type_x;
-        typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> img_source_type_y;
-        typedef OHOS::ImageAccessorNoRepeat<pixfmt> img_source_type_none;
-
-        typedef OHOS::SpanPatternRgba<img_source_type> span_pattern_type_repeat;
-        typedef OHOS::SpanPatternRgba<img_source_type_x> span_pattern_type_x;
-        typedef OHOS::SpanPatternRgba<img_source_type_y> span_pattern_type_y;
-        typedef OHOS::SpanPatternRgba<img_source_type_none> span_pattern_type_none;
-
-        //    typedef AGG_INT8U  int8u;
-        //    typedef row_accessor<int8u> rendering_buffer;
-
-        enum Gradient
-        {
-            Solid,
-            Linear,
-            Radial
-        };
+        //渲染器缓冲区
+        typedef OHOS::RenderingBuffer RenderingBuffer;
+        //设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        typedef OHOS::ImageAccessorWrap<pixfmt, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> imgSourceTypeRepeat;
+        //设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        typedef OHOS::ImageAccessorRepeatX<pixfmt, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
+        //设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        typedef OHOS::ImageAccessorRepeatY<pixfmt, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
+        //设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        typedef OHOS::ImageAccessorNoRepeat<pixfmt> imgSourceTypeNoRepeat;
+        //通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        //x,y轴都重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
+        //x轴重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
+        //y轴重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
+        //不重复
+        typedef OHOS::SpanPatternRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 
     public:
         friend class BaseGfxExtendEngineRenderer;
-
-        // Use srgba8 as the "user" color type, even though the underlying color type
-        // might be something else, such as rgba32. This allows code based on
-        // 8-bit sRGB values to carry on working as before.
         typedef OHOS::Srgba8 Color;
         typedef OHOS::RectI Rect;
         typedef OHOS::RectD RectD;
         typedef OHOS::TransAffine Affine;
 
+        /**
+         * 渐变的模式
+         */
+        enum Gradient
+        {
+            /** 单色 */
+            SOLID,
+            /** 线性渐变 */
+            LINEAR,
+            /** 放射渐变 */
+            RADIAL
+        };
+
+        /**
+         * @brief 两条线相交时，所创建的拐角类型
+         */
         enum LineJoin
         {
-            JoinNone = -1,
-            JoinMiter = OHOS::MITER_JOIN,
-            JoinRound = OHOS::ROUND_JOIN,
-            JoinBevel = OHOS::BEVEL_JOIN
+            JOINNONE = -1,
+            /** 创建尖角 */
+            JOINMITER = OHOS::MITER_JOIN,
+            /** 创建圆角 */
+            JOINROUND = OHOS::ROUND_JOIN,
+            /** 创建斜角 */
+            JOINBEVEL = OHOS::BEVEL_JOIN
         };
 
+        /**
+         * @brief 线条末端线帽的样式。
+         */
         enum LineCap
         {
-            CapNone = -1,
-            CapButt = OHOS::BUTT_CAP,
-            CapSquare = OHOS::SQUARE_CAP,
-            CapRound = OHOS::ROUND_CAP
+            CAPNONE = -1,
+            /** 向线条的每个末端添加平直的边缘 */
+            CAPBUTT = OHOS::BUTT_CAP,
+            /** 向线条的每个末端添加正方形线帽 */
+            CAPSQUARE = OHOS::SQUARE_CAP,
+            /** 向线条的每个末端添加圆形线帽 */
+            CAPROUND = OHOS::ROUND_CAP
         };
 
+        /**
+         * @brief 绘制的类型
+         */
         enum DrawPathFlag
         {
-            FillOnly,
-            StrokeOnly,
-            FillAndStroke,
-            FillWithLineColor
+            /** 填充路径绘制的区域 */
+            FILLONLY,
+            /** 绘制路径 */
+            STROKEONLY,
+            /** 填充路径绘制区域和绘制路径 */
+            FILLANDSTROKE,
+            /** 填充线条颜色 */
+            FILLWITHLINECOLOR
         };
 
+        /**
+         * @brief viewPort的模式
+         */
         enum ViewportOption
         {
-            Anisotropic,
-            XMinYMin,
-            XMidYMin,
-            XMaxYMin,
-            XMinYMid,
-            XMidYMid,
-            XMaxYMid,
-            XMinYMax,
-            XMidYMax,
-            XMaxYMax
+            /** 以0.0, 0.0为基准，拉伸 */
+            ANISOTROPIC,
+            /** 以0.0, 0.0为基准，铺满 */
+            XMINYMIN,
+            /** 以0.5, 0.0为基准，铺满 */
+            XMIDYMIN,
+            /** 以1.0, 0.0为基准，铺满 */
+            XMAXYMIN,
+            /** 以0.0, 0.5为基准，铺满 */
+            XMINYMID,
+            /** 以0.5, 0.5为基准，铺满 */
+            XMIDYMID,
+            /** 以1.0, 0.5为基准，铺满 */
+            XMAXYMID,
+            /** 以0.0, 1.0为基准，铺满 */
+            XMINYMAX,
+            /** 以0.5, 1.0为基准，铺满 */
+            XMIDYMAX,
+            /** 以1.0, 1.0为基准，铺满 */
+            XMAXYMAX
+        };
+
+        /**
+         * repeat|repeat-x|repeat-y|no-repeat
+         */
+        enum PatternRepeat
+        {
+            /** 铺满，x,y轴都重复 */
+            REPEAT,
+            /** x轴上重复，y轴上无 */
+            REPEAT_X,
+            /** y轴上重复，x轴上无 */
+            REPEAT_Y,
+            /** 单个图片，x,y都不重复 */
+            NO_REPEAT,
+        };
+
+        /**
+         * 混合模式
+         */
+        enum BlendMode
+        {
+            /** 不混合 */
+            BLENDNONE = -1,
+            /** 混合透明度 */
+            BLENDALPHA = OHOS::END_OF_COMP_OP_E,
+            BLENDCLEAR = OHOS::COMP_OP_CLEAR,
+            BLENDSRC = OHOS::COMP_OP_SRC,
+            BLENDDST = OHOS::COMP_OP_DST,
+            /** 默认。在目标图像上显示源图像。 */
+            BLENDSRCOVER = OHOS::COMP_OP_SRC_OVER,
+            /** 在源图像上显示目标图像。 */
+            BLENDDSTOVER = OHOS::COMP_OP_DST_OVER,
+            /** 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。 */
+            BLENDSRCIN = OHOS::COMP_OP_SRC_IN,
+            /** 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。 */
+            BLENDDSTIN = OHOS::COMP_OP_DST_IN,
+            /** 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。 */
+            BLENDSRCOUT = OHOS::COMP_OP_SRC_OUT,
+            /** 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。 */
+            BLENDDSTOUT = OHOS::COMP_OP_DST_OUT,
+            /** 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。 */
+            BLENDSRCATOP = OHOS::COMP_OP_SRC_ATOP,
+            /** 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。 */
+            BLENDDSTATOP = OHOS::COMP_OP_DST_ATOP,
+            /** 使用异或操作对源图像与目标图像进行组合。 */
+            BLENDXOR = OHOS::COMP_OP_XOR,
+            BLENDADD = OHOS::COMP_OP_PLUS,
+            BLENDMULTIPLY = OHOS::COMP_OP_MULTIPLY,
+            BLENDSCREEN = OHOS::COMP_OP_SCREEN,
+            BLENDOVERLAY = OHOS::COMP_OP_OVERLAY,
+            BLENDDARKEN = OHOS::COMP_OP_DARKEN,
+            BLENDLIGHTEN = OHOS::COMP_OP_LIGHTEN,
+            BLENDCOLORDODGE = OHOS::COMP_OP_COLOR_DODGE,
+            BLENDCOLORBURN = OHOS::COMP_OP_COLOR_BURN,
+            /**  显示源图像 + 目标图像 -硬 */
+            BLENDHARDLIGHT = OHOS::COMP_OP_HARD_LIGHT,
+            /** 显示源图像 + 目标图像 -软 */
+            BLENDSOFTLIGHT = OHOS::COMP_OP_SOFT_LIGHT,
+            BLENDDIFFERENCE = OHOS::COMP_OP_DIFFERENCE,
+            BLENDEXCLUSION = OHOS::COMP_OP_EXCLUSION
         };
 
         struct Transformations {
             double affineMatrix[6];
         };
 
+        /**
+         * @brief 图像的结构体
+         */
         struct Image {
-            OHOS::rendering_buffer renBuf;
+            OHOS::RenderingBuffer renBuf;
             Image()
             {}
+            /**
+             * @brief 图像相关信息入参
+             * @param buf 缓冲区
+             * @param width 图片的宽度
+             * @param height 图片的高度
+             * @param stride 图片的步幅
+             */
             Image(unsigned char* buf, unsigned width, unsigned height, int stride) :
                 renBuf(buf, width, height, stride)
             {}
+
+            /**
+             * @brief 图像相关信息入参
+             * @param buf 缓冲区
+             * @param width 图片的宽度
+             * @param height 图片的高度
+             * @param stride 图片的步幅
+             */
             void attach(unsigned char* buf, unsigned width, unsigned height, int stride)
             {
-                renBuf.attach(buf, width, height, stride);
+                renBuf.Attach(buf, width, height, stride);
             }
-            int width() const
+            /**
+             * @brief 获取缓冲区的图片宽的
+             */
+            int GetWidth() const
             {
                 return renBuf.GetWidth();
             }
-            int height() const
+            /**
+             * @brief 获取缓冲区的高度
+             */
+            int GetHeight() const
             {
                 return renBuf.GetHeight();
             }
-            void premultiply();
-            void demultiply();
         };
-
-        /**
-     * repeat|repeat-x|repeat-y|no-repeat
-     */
-        enum PatternRepeat
-        {
-            REPEAT,
-            REPEAT_X,
-            REPEAT_Y,
-            NO_REPEAT,
-        };
-
-        enum ImageFilter
-        {
-            NoFilter,
-            Bilinear,
-            Hanning,
-            Hermite,
-            Quadric,
-            Bicubic,
-            Catrom,
-            Spline16,
-            Spline36,
-            Blackman144
-        };
-
-        enum ImageResample
-        {
-            NoResample,
-            ResampleAlways,
-            ResampleOnZoomOut
-        };
-
-        enum BlendMode
-        {
-            BlendNone = -1,
-            BlendAlpha = OHOS::END_OF_COMP_OP_E,
-            BlendClear = OHOS::COMP_OP_CLEAR,
-            BlendSrc = OHOS::COMP_OP_SRC,
-            BlendDst = OHOS::COMP_OP_DST,
-            BlendSrcOver = OHOS::COMP_OP_SRC_OVER,
-            BlendDstOver = OHOS::COMP_OP_DST_OVER,
-            BlendSrcIn = OHOS::COMP_OP_SRC_IN,
-            BlendDstIn = OHOS::COMP_OP_DST_IN,
-            BlendSrcOut = OHOS::COMP_OP_SRC_OUT,
-            BlendDstOut = OHOS::COMP_OP_DST_OUT,
-            BlendSrcAtop = OHOS::COMP_OP_SRC_ATOP,
-            BlendDstAtop = OHOS::COMP_OP_DST_ATOP,
-            BlendXor = OHOS::COMP_OP_XOR,
-            BlendAdd = OHOS::COMP_OP_PLUS,
-            BlendMultiply = OHOS::COMP_OP_MULTIPLY,
-            BlendScreen = OHOS::COMP_OP_SCREEN,
-            BlendOverlay = OHOS::COMP_OP_OVERLAY,
-            BlendDarken = OHOS::COMP_OP_DARKEN,
-            BlendLighten = OHOS::COMP_OP_LIGHTEN,
-            BlendColorDodge = OHOS::COMP_OP_COLOR_DODGE,
-            BlendColorBurn = OHOS::COMP_OP_COLOR_BURN,
-            BlendHardLight = OHOS::COMP_OP_HARD_LIGHT,
-            BlendSoftLight = OHOS::COMP_OP_SOFT_LIGHT,
-            BlendDifference = OHOS::COMP_OP_DIFFERENCE,
-            BlendExclusion = OHOS::COMP_OP_EXCLUSION
-        };
-
-        enum Direction
-        {
-            CW,
-            CCW
-        };
-
         ~BaseGfxExtendEngine();
         BaseGfxExtendEngine();
         BaseGfxExtendEngine(const BaseGfxExtendEngine& o);
-        // Setup
-        //-----------------------
-        void attach(unsigned char* buf, unsigned width, unsigned height, int stride);
-        void attach(Image& img);
-
-        void clipBox(double x1, double y1, double x2, double y2);
-        RectD clipBox() const;
-
-        void clearAll(Color c);
-        void clearAll(unsigned r, unsigned g, unsigned b, unsigned a = 255);
-
-        // Conversions
-        //-----------------------
-        void worldToScreen(double& x, double& y) const;
-        void screenToWorld(double& x, double& y) const;
-        double worldToScreen(double scalar) const;
-        double screenToWorld(double scalar) const;
-        void alignPoint(double& x, double& y) const;
-        bool inBox(double worldX, double worldY) const;
-
-        // General Attributes
-        //-----------------------
-        void blendMode(BlendMode m);
-        BlendMode blendMode() const;
-
-        void imageBlendMode(BlendMode m);
-        BlendMode imageBlendMode() const;
-
-        void imageBlendColor(Color c);
-        void imageBlendColor(unsigned r, unsigned g, unsigned b, unsigned a = 255);
-        Color imageBlendColor() const;
-
-        void masterAlpha(double a);
-        double masterAlpha() const;
-
-        void antiAliasGamma(double g);
-        double antiAliasGamma() const;
-
-        void fillColor(Color c);
-        void fillColor(const OHOS::ColorType& c);
-        void fillColor(unsigned r, unsigned g, unsigned b, unsigned a = 255);
-        void noFill();
-
-        void lineColor(Color c);
-        void lineColor(const OHOS::ColorType& c);
-        void lineColor(unsigned r, unsigned g, unsigned b, unsigned a = 255);
-        void noLine();
-
-        Color fillColor() const;
-        Color lineColor() const;
-
-        void remove_all_color();
-        void add_color(double offset, Color c1);
-        void build_lut();
 
         /**
-     * @brief fillRadialGradient 根据开始圆和结束圆控制放射渐变。
-     * @param start_x 开始圆圆心坐标x
-     * @param start_y 开始圆圆心坐标y
-     * @param start_r 开始圆半径
-     * @param end_x 结束圆圆心坐标x
-     * @param end_y 结束圆圆心坐标y
-     * @param end_r 结束圆半径
-     */
-        void fillRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r);
+         * @brief 初始化参数
+         * @param buf 缓冲区首地址
+         * @param width 缓冲区的宽度
+         * @param height 缓冲区的高度
+         * @param stride 缓冲区的步幅
+         */
+        void Attach(unsigned char* buf, unsigned width, unsigned height, int stride);
+        /**
+         * @brief  传入图片的结构体
+         * @param img
+         */
+        void Attach(Image& img);
+        /**
+         * @brief 裁剪出矩形盒子
+         * @param x1 矩形左上角的x坐标
+         * @param y1 矩形左上角的y坐标
+         * @param x2 矩形右下角的x坐标
+         * @param y2 矩形右下角的y坐标
+         */
+        void ClipBox(double x1, double y1, double x2, double y2);
+        /**
+         * @brief 获得裁剪的矩形
+         */
+        RectD GetClipBox() const;
 
-        void fillLinearGradient(double start_x, double start_y, double end_x, double end_y);
+        /**
+         * @brief 使用颜色color覆盖缓冲区的对应矩形的区域颜色
+         */
+        void ClearAll(Color color);
 
-        void lineWidth(double w);
-        double lineWidth() const;
+        /**
+         * @brief 使用颜色(red,green,blue,alpha)覆盖缓冲区的对应矩形的区域颜色
+         * @param red 红色
+         * @param green 绿色
+         * @param blue 蓝色
+         * @param alpha 透明度
+         */
+        void ClearAll(unsigned red, unsigned green, unsigned blue, unsigned alpha = 255);
 
-        void lineCap(LineCap cap);
-        LineCap lineCap() const;
+        /**
+         * @brief 将画布坐标转换到屏幕坐标
+         * @param x 入参为画布坐标x
+         * @param y 入参为画布坐标y
+         */
+        void WorldToScreen(double& x, double& y) const;
+        /**
+         * @brief 将屏幕坐标转换为画布坐标
+         * @param x 屏幕坐标x
+         * @param y 屏幕坐标y
+         */
+        void ScreenToWorld(double& x, double& y) const;
+        /**
+         * @brief 将画布上的长度scalar转换成屏幕上的长度
+         * @param scalar 画布上的长度
+         * @return
+         */
+        double WorldToScreen(double scalar) const;
+        /**
+         * @brief 将屏幕上的长度scalar转换成画布上的长度
+         * @param scalar
+         * @return
+         */
+        double ScreenToWorld(double scalar) const;
+        /**
+         * @brief 设置混合的模式
+         * @param bMode 混合模式
+         */
+        void SetBlendMode(BlendMode bMode);
+        /**
+         * @brief 获取混合模式
+         */
+        BlendMode GetBlendMode() const;
+        /**
+         * @brief 设置透明度
+         * @param alpha
+         */
+        void SetMasterAlpha(double alpha);
+        /**
+         * @brief 获取透明度
+         * @return
+         */
+        double GetMasterAlpha() const;
+        /**
+         * @brief 设置区域填充的颜色，单色模式
+         * @param color 颜色
+         */
+        void SetFillColor(Color color);
+        void SetFillColor(const OHOS::ColorType& color);
+        void SetFillColor(unsigned read, unsigned green, unsigned blue, unsigned alpha = 255);
+        /**
+         * @brief 返回区域填充颜色
+         */
+        Color GetFillColor() const;
 
-        void lineJoin(LineJoin join);
-        LineJoin lineJoin() const;
-        void MiterLimit(double limitValue);
-        double MiterLimit() const;
+        /**
+         * @brief 将填充区域设置为透明
+         */
+        void NoFill();
+        /**
+         * @brief 设置线条颜色
+         * @param color
+         */
+        void SetLineColor(Color color);
+        void SetLineColor(const OHOS::ColorType& color);
+        void SetLineColor(unsigned read, unsigned green, unsigned blue, unsigned alpha = 255);
+        /**
+         * @brief 返回线条颜色
+         */
+        Color GetLineColor() const;
+        /**
+         * @brief 将线条颜色设置为透明，即不显示线条
+         */
+        void NoLine();
 
-        void fillEvenOdd(bool evenOddFlag);
-        bool fillEvenOdd() const;
+        /**
+         * @brief 颜色渐变，删除所有颜色
+         */
+        void RemoveAllColor();
+        /**
+         * @brief AddColor 颜色渐变，添加渐变过程颜色
+         * @param offset （0-1）
+         * @param color  offset所在位置的颜色
+         */
+        void AddColor(double offset, Color color);
 
-        // Transformations-
-        //-----------------------
-        Transformations transformations() const;
-        void transformations(const Transformations& tr);
-        void resetTransformations();
-        void affine(const Affine& tr);
-        void affine(const Transformations& tr);
-        void rotate(double angle);
-        void scale(double sx, double sy);
-        // void skew(double sx, double sy);
-        void translate(double x, double y);
-        // void parallelogram(double x1, double y1, double x2, double y2, const double* para);
-        void viewport(double worldX1, double worldY1, double worldX2, double worldY2,
+        /**
+         * @brief 根据渐变颜色构建color_type数组
+        * 数组长度0-255
+        * 数组内容根据渐变颜色分布在数组上
+         */
+        void BuildLut();
+
+        /**
+         * @brief fillRadialGradient 根据开始圆和结束圆控制放射渐变。
+         * @param start_x 开始圆圆心坐标x
+         * @param start_y 开始圆圆心坐标y
+         * @param start_r 开始圆半径
+         * @param end_x 结束圆圆心坐标x
+         * @param end_y 结束圆圆心坐标y
+         * @param end_r 结束圆半径
+         */
+        void SetRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r);
+        /**
+         * @brief fillRadialGradient 根据线性起点和终点控制线性渐变
+         * @param start_x 线性起点坐标x
+         * @param start_y 线性起点坐标y
+         * @param end_x 线性终点坐标x
+         * @param end_y 线性终点坐标y
+         */
+        void SetLinearGradient(double start_x, double start_y, double end_x, double end_y);
+        /**
+         * @brief 设置线条宽度
+         */
+        void SetLineWidth(double w);
+        /**
+         * @brief 获取线条宽度
+         * @return
+         */
+        double GetLineWidth() const;
+        /**
+         * @brief 设置线条末端线帽样式
+         * @param cap 具体线帽样式
+         */
+        void SetLineCap(LineCap cap);
+        /**
+         * @brief 获取线条末端线帽样式
+         */
+        LineCap GetLineCap() const;
+
+        /**
+         * @brief 设置交点拐角类型
+         */
+        void SetLineJoin(LineJoin join);
+        /**
+         * @brief 返回线条拐点的样式
+         */
+        LineJoin GetLineJoin() const;
+        /**
+         * @brief 设置最大斜接长度
+         */
+        void SetMiterLimit(double limitValue);
+        /**
+         * @brief 返回最大斜接长度
+         */
+        double GetMiterLimit() const;
+        /**
+         * @brief 重置转换
+         */
+        void ResetTransformations();
+
+        void SetAffine(const Affine& tr);
+        void SetAffine(const Transformations& tr);
+
+        /**
+         * @brief Rotate 以（0,0）为基准旋转一定范围内矩形
+         * @param angle 旋转角度
+         */
+        void Rotate(double angle);
+        /**
+         * @brief Rotate 以（x,y）为基准旋转一定范围内矩形
+         * @param x
+         * @param y
+         * @param angle 旋转角度
+         */
+        void Rotate(double x, double y, double angle);
+
+        void Scale(double sx, double sy);
+        void Scale(double x, double y, double scaleX, double scaleY);
+
+        /**
+         * @brief Translate 将坐标转换为
+         * @param x
+         * @param y
+         */
+        void Translate(double x, double y);
+
+        /**
+         * @brief Viewport 将画布映射到屏幕上
+         * @param worldX1 画布左上角坐标x
+         * @param worldY1 画布左上角坐标y
+         * @param worldX2 画布右下角角坐标x
+         * @param worldY2 画布右下角坐标y
+         * @param screenX1 屏幕左上角坐标x
+         * @param screenY1 屏幕左上角坐标y
+         * @param screenX2 屏幕右下角角坐标x
+         * @param screenY2 屏幕右下角坐标y
+         * @param opt
+         */
+        void Viewport(double worldX1, double worldY1, double worldX2, double worldY2,
                       double screenX1, double screenY1, double screenX2, double screenY2,
-                      ViewportOption opt = XMidYMid);
+                      ViewportOption opt = XMIDYMID);
+        /**
+         * @brief 设置线条的起止位置
+         * @param x1 起点x
+         * @param y1 起点y
+         * @param x2 终点x
+         * @param y2 终点y
+         */
+        void Line(double x1, double y1, double x2, double y2);
+        /**
+         * @brief Triangle 绘制三角形
+         * @param x1 第一个点x坐标
+         * @param y1 第一个点y坐标
+         * @param x2 第二个点x坐标
+         * @param y2 第二个点y坐标
+         * @param x3 第三个点x坐标
+         * @param y3 第三个点y坐标
+         */
+        void Triangle(double x1, double y1, double x2, double y2, double x3, double y3);
+        /**
+         * @brief 绘制矩形
+         * @param x1 矩形左上角x
+         * @param y1 矩形左上角y
+         * @param x2 矩形右下角x
+         * @param y2 矩形右下角y
+         */
+        void Rectangle(double x1, double y1, double x2, double y2);
 
-        // Basic Shapes
-        //-----------------------
-        void line(double x1, double y1, double x2, double y2);
-        void triangle(double x1, double y1, double x2, double y2, double x3, double y3);
-        void rectangle(double x1, double y1, double x2, double y2);
-        void rectstroke(double x1, double y1, double x2, double y2);
-        void roundedRect(double x1, double y1, double x2, double y2, double r);
-        void roundedRect(double x1, double y1, double x2, double y2, double rx, double ry);
-        void roundedRect(double x1, double y1, double x2, double y2,
-                         double rxBottom, double ryBottom,
-                         double rxTop, double ryTop);
-        void ellipse(double cx, double cy, double rx, double ry);
-        void arc(double cx, double cy, double rx, double ry, double start, double sweep);
-        void star(double cx, double cy, double r1, double r2, double startAngle, int numRays);
-        // void curve(double x1, double y1, double x2, double y2, double x3, double y3);
-        // void curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
-        void polygon(double* xy, int numPoints);
-        void polyline(double* xy, int numPoints);
-
-        // Path commands
-        //-----------------------
-        void resetPath();
-
-        void moveTo(double x, double y);
-        // void moveRel(double dx, double dy);
-
-        void lineTo(double x, double y);
-        // void lineRel(double dx, double dy);
-
-        // void horLineTo(double x);
-        // void horLineRel(double dx);
-
-        // void verLineTo(double y);
-        // void verLineRel(double dy);
-
-        void arcTo(double rx, double ry,
+        /**
+         * @brief Rectstroke 绘制矩形的路径
+         * @param x1 矩形左上角x
+         * @param y1 矩形左上角y
+         * @param x2 矩形右下角x
+         * @param y2 矩形右下角y
+         */
+        void Rectstroke(double x1, double y1, double x2, double y2);
+        /**
+         * @brief Round 绘制圆
+         * @param cx 圆心x坐标
+         * @param cy 圆心y坐标
+         * @param radius 半径
+         */
+        void Round(double cx, double cy, double radius);
+        /**
+         * @brief 重置路径
+         */
+        void ResetPath();
+        /**
+         * @brief 起点
+         * @param x 起点坐标x
+         * @param y 起点坐标y
+         */
+        void MoveTo(double x, double y);
+        /**
+         * @brief 直线连接上一个点到当前点。
+         * @param x 当前点坐标x
+         * @param y 当前点坐标y
+         */
+        void LineTo(double x, double y);
+        /**
+         * @brief 弧线连接上一个点到当前点。
+         * @param rx 长短半轴
+         * @param ry 长短半轴
+         * @param angle 角度
+         * @param largeArcFlag 优劣弧
+         * @param sweepFlag 顺逆时针
+         * @param x 终点x轴坐标
+         * @param y 终点y轴坐标
+         */
+        void ArcTo(double rx, double ry,
                    double angle,
                    bool largeArcFlag,
                    bool sweepFlag,
                    double x, double y);
+        /**
+         * @brief 关闭多边形路径
+         */
+        void ClosePolygon();
 
-        // void arcRel(double rx, double ry,
-        //             double angle,
-        //             bool largeArcFlag,
-        //             bool sweepFlag,
-        //             double dx, double dy);
+        /**
+         * @brief 绘制阴影
+         * @param x
+         * @param y
+         * @param a
+         * @param scaleX
+         * @param scaleY
+         */
+        void DrawShadow(double x, double y, double a, double scaleX, double scaleY);
+        void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX, double scaleY);
 
-        // void quadricCurveTo(double xCtrl, double yCtrl,
-        //                      double xTo,   double yTo);
-        // void quadricCurveRel(double dxCtrl, double dyCtrl,
-        //                      double dxTo,   double dyTo);
-        // void quadricCurveTo(double xTo, double yTo);
-        // void quadricCurveRel(double dxTo, double dyTo);
+        /**
+         * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
+         * @param flag 绘制模式 默认填充和绘制路径都有
+         */
+        void DrawPath(DrawPathFlag flag = FILLANDSTROKE);
+        /**
+         * @brief 绘制路径
+         */
+        void Stroke();
 
-        // void cubicCurveTo(double xCtrl1, double yCtrl1,
-        //                   double xCtrl2, double yCtrl2,
-        //                   double xTo,    double yTo);
-
-        // void cubicCurveRel(double dxCtrl1, double dyCtrl1,
-        //                    double dxCtrl2, double dyCtrl2,
-        //                    double dxTo,    double dyTo);
-
-        // void cubicCurveTo(double xCtrl2, double yCtrl2,
-        //                   double xTo,    double yTo);
-
-        // void cubicCurveRel(double xCtrl2, double yCtrl2,
-        //                    double xTo,    double yTo);
-
-        // void addEllipse(double cx, double cy, double rx, double ry, Direction dir);
-        void closePolygon();
-        void drawShadow(double x, double y, double a, double scaleX, double scaleY);
-        void drawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX, double scaleY);
-        void rotate(double x, double y, double a);
-        void scale(double x, double y, double scaleX, double scaleY);
-        void drawPath(DrawPathFlag flag = FillAndStroke);
-        void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
-
-        void stroke();
-
-        // Image Transformations
-        //-----------------------
-        void imageFilter(ImageFilter f);
-        ImageFilter imageFilter() const;
-
-        void imageResample(ImageResample f);
-        ImageResample imageResample() const;
-
-        void transformImage(const Image& img,
+        /**
+         * @brief 变换图像
+         * @param img 图像
+         * @param imgX1 图像左上角x
+         * @param imgY1 图像左上角y
+         * @param imgX2 图像右下角x
+         * @param imgY2 图像右下角y
+         * @param dstX1 合法区域的左上角x
+         * @param dstY1 合法区域的左上角y
+         * @param dstX2 合法区域的右下角x
+         * @param dstY2 合法区域的右下角y
+         * @param isAntiAlias 是否抗锯齿
+         */
+        void TransformImage(const Image& img,
                             int imgX1, int imgY1, int imgX2, int imgY2,
                             double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias = true);
-
-        void transformImage(const Image& img,
+        void TransformImage(const Image& img,
                             double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias = true);
-
-        void transformImage(const Image& img,
+        void TransformImage(const Image& img,
                             int imgX1, int imgY1, int imgX2, int imgY2,
                             const double* parallelogram, bool isAntiAlias = true);
+        void TransformImage(const Image& img, const double* parallelogram, bool isAntiAlias = true);
 
-        void transformImage(const Image& img, const double* parallelogram, bool isAntiAlias = true);
-
-        void transformImagePath(const Image& img,
-                                int imgX1, int imgY1, int imgX2, int imgY2,
-                                double dstX1, double dstY1, double dstX2, double dstY2);
-
-        void transformImagePath(const Image& img,
-                                double dstX1, double dstY1, double dstX2, double dstY2);
-
-        void transformImagePath(const Image& img,
-                                int imgX1, int imgY1, int imgX2, int imgY2,
-                                const double* parallelogram);
-
-        void transformImagePath(const Image& img, const double* parallelogram);
-
-        // Image Blending (no transformations available)
-        void blendImage(Image& img,
-                        int imgX1, int imgY1, int imgX2, int imgY2,
+        void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
                         double dstX, double dstY, unsigned alpha = 255);
-        void blendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
-        void patternImageFill(Image& img, double dstX, double dstY, const char* pattternMode);
-        void patternImageStroke(Image& img, double dstX, double dstY, const char* pattternMode);
+        void BlendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
 
-        // Copy image directly, together with alpha-channel
-        void copyImage(Image& img,
-                       int imgX1, int imgY1, int imgX2, int imgY2,
-                       double dstX, double dstY);
-        void copyImage(Image& img, double dstX, double dstY);
+        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
+                            double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
 
-        // Auxiliary
-        //-----------------------
-        static double pi()
+        /**
+         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
+         * @param img 图像相关信息
+         * @param dstX x方向偏移量
+         * @param dstY y方向偏移量
+         * @param pattternMode 有四种模式
+         */
+        void PatternImageFill(Image& img, double offsetX, double offsetY, const char* pattternMode);
+        /**
+         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充路径
+         * @param img 图像相关信息
+         * @param dstX x方向偏移量
+         * @param dstY y方向偏移量
+         * @param pattternMode 有四种模式
+         */
+        void PatternImageStroke(Image& img, double offsetX, double offsetY, const char* pattternMode);
+        /**
+         * @brief 返回 π
+         */
+        static double Pi()
         {
             return OHOS::PI;
         }
-        static double deg2Rad(double v)
+
+        /**
+         * @brief 角度转换为弧度
+         * @param  Angle 规定要转换的角度。
+         * @return 返回弧度
+         */
+        static double Deg2Rad(double Angle)
         {
-            return v * OHOS::PI / 180.0;
-        }
-        static double rad2Deg(double v)
-        {
-            return v * 180.0 / OHOS::PI;
+            return Angle * OHOS::PI / 180.0;
         }
 
-        void lineDashOffset(float dDashOffset)
+        /**
+         * @brief 设置lineDash的起始位置偏移量
+         * @param dDashOffset 要偏移的位置
+         */
+        void SetLineDashOffset(float dDashOffset)
         {
             this->dDashOffset = dDashOffset;
         }
-
-        float lineDashOffset() const
+        /**
+         * @brief 获得lineDash的起始位置偏移量
+         */
+        float GetLineDashOffset() const
         {
             return dDashOffset;
         }
 
+        /**
+         * @brief 设置lineDash的虚实线的长度
+         * @param dashArray 虚实线长度的数组
+         * @param ndash 数组长度
+         */
         void SetLineDash(const float* dashArray, unsigned int ndash)
         {
             ClearLineDash();
@@ -523,7 +741,6 @@ namespace OHOS {
                 return;
             }
             is_dash = true;
-            //dDashOffset = dashOffset;
             ndashes = (ndash + 1) & ~1;
             dashes = new float[ndashes];
             if (dashes) {
@@ -532,68 +749,125 @@ namespace OHOS {
                     dashes[i] = dashArray[i];
                 }
             } else {
-                //memory alloc error, ignore this dash
-                //I think it is never happen.
                 ndashes = 0;
                 dDashOffset = 0;
                 is_dash = false;
             }
         }
 
+        /**
+         * @brief 返回是否是dash的划线模式
+         */
         bool IsLineDash() const
         {
             return is_dash;
         }
 
+        /**
+         * @brief 获取lineDash的虚实线长度数组
+         */
         float* GetLineDash() const
         {
             return dashes;
         }
 
+        /**
+         * @brief 获取lineDash的虚实线长度数组的长度
+         */
         unsigned int GetLineDashCount() const
         {
             return ndashes;
         }
-        OHOS::rendering_buffer GetRenderBuffer() const
+
+        /**
+         * @brief 返回渲染器
+         */
+        OHOS::RenderingBuffer GetRenderBuffer() const
         {
             return m_rbuf;
         }
 
-        void SetShadowColor(int r, int g, int b, int a)
+        /**
+         * @brief 设置阴影的颜色
+         * @param red 红色
+         * @param green 绿色
+         * @param blue 蓝色
+         * @param alpha 透明度
+         */
+        void SetShadowColor(unsigned red, unsigned green, unsigned blue, unsigned alpha = 255)
         {
-            shadowColor_ = Color(r, g, b, a);
+            shadowColor_ = Color(red, green, blue, alpha);
         }
+        /**
+         * @brief 设置阴影的x轴偏移量
+         */
         void SetShadowOffsetX(double x)
         {
             shadowOffsetX_ = x;
         }
+        /**
+         * @brief 设置阴影的y轴偏移量
+         */
         void SetShadowOffsetY(double y)
         {
             shadowOffsetY_ = y;
         }
+        /**
+         * @brief 设置阴影的偏移量
+         * @param x x轴偏移量
+         * @param y y轴偏移量
+         */
         void SetShadowOffset(double x, double y)
         {
             shadowOffsetX_ = x;
             shadowOffsetY_ = y;
         }
+        /**
+         * @brief 设置阴影模糊半径
+         */
         void SetShadowBlurRadius(double radius)
         {
             shadowBlurRadius_ = radius;
         }
-        bool bounding_rect_single(unsigned int path_id, RectD* rect, PathTransform& path);
 
-        void blend_from(const Image& img, Rect srcRect, Rect dstRect);
-
-        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                            double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
-        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+        /**
+         * @brief 设置单个矩形边界
+         */
+        bool BoundingRectSingle(unsigned int path_id, RectD* rect, PathTransform& path);
 
     private:
-        void render(bool fillColor);
-        void addLine(double x1, double y1, double x2, double y2);
-        void updateRasterizerGamma();
-        void renderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl, bool isAntiAlias = true);
+        /**
+         * @brief 开始渲染
+         * @param fillColor 是否填充颜色
+         */
+        void Render(bool fillColor);
+        /**
+         * @brief 添加一条直线
+         * @param x1 直线的起点x
+         * @param y1 直线的起点y
+         * @param x2 直线的终点x
+         * @param y2 直线的终点y
+         */
+        void AddLine(double x1, double y1, double x2, double y2);
+        /**
+         * @brief 更新光栅器的gamma
+         */
+        void UpdateRasterizerGamma();
+        /**
+         * @brief 渲染图像
+         * @param img
+         * @param x1
+         * @param y1
+         * @param x2
+         * @param y2
+         * @param parl
+         * @param isAntiAlias
+         */
+        void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl, bool isAntiAlias = true);
 
+        /**
+         * @brief 重置LineDash相关配置
+         */
         void ClearLineDash(void)
         {
             dDashOffset = 0;
@@ -604,7 +878,17 @@ namespace OHOS {
                 dashes = NULL;
             }
         }
-        OHOS::rendering_buffer m_rbuf;
+        OHOS::RenderingBuffer m_rbuf;                     //渲染器缓冲区
+        OHOS::ScanlineUnPackedContainer m_scanline;       //扫描线不合并相同扫描线
+        OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; //光栅
+        OHOS::TransAffine m_fillGradientMatrix;           //放射渐变的矩阵
+        OHOS::TransAffine m_lineGradientMatrix;
+        OHOS::TransAffine m_fillRadialMatrix;
+        OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
+        OHOS::SpanInterpolatorLinear<> m_lineGradientInterpolator;
+        OHOS::GradientLinearCalculate m_linearGradientFunction;
+        OHOS::PathStorage m_path;
+        OHOS::TransAffine m_transform;
         PixFormat m_pixFormat;
         PixFormatComp m_pixFormatComp;
         PixFormatPre m_pixFormatPre;
@@ -615,57 +899,20 @@ namespace OHOS {
         RendererBaseCompPre m_renBaseCompPre;
         RendererSolid m_renSolid;
         RendererSolidComp m_renSolidComp;
-
         SpanAllocator m_allocator;
         RectD m_clipBox;
-
         BlendMode m_blendMode;
         BlendMode m_imageBlendMode;
-        Color m_imageBlendColor;
-
-        OHOS::scanline_u8 m_scanline;
-        OHOS::rasterizer_scanline_aa<> m_rasterizer;
-
-        double m_masterAlpha;
-        double m_antiAliasGamma;
-
-        Color m_fillColor;
-        Color m_lineColor;
-        GradientArray m_fillGradient;
-        GradientArray m_lineGradient;
-
+        Color m_imageBlendColor; //图像混合颜色
+        Color m_fillColor;       //图像需要填充颜色
+        Color m_lineColor;       //线条需要填充颜色
         color_func_type m_fillRadialGradient;
-
         LineCap m_lineCap;
         LineJoin m_lineJoin;
-        double m_miterLimit;
         Gradient m_fillGradientFlag;
         Gradient m_lineGradientFlag;
-        OHOS::TransAffine m_fillGradientMatrix;
-        OHOS::TransAffine m_lineGradientMatrix;
-        OHOS::TransAffine m_fillRadialMatrix;
-
         interpolator_type m_interpolator_type;
-
-        double m_fillGradientD1;
-        double m_lineGradientD1;
-        double m_fillGradientD2;
-        double m_lineGradientD2;
-
-        OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
-        OHOS::SpanInterpolatorLinear<> m_lineGradientInterpolator;
-
-        OHOS::GradientLinearCalculate m_linearGradientFunction;
-
-        gradient_func_type m_radialGradientFunction; //TODO：m_fillRadialMatrix
-
-        double m_lineWidth;
-        bool m_evenOddFlag;
-
-        OHOS::PathStorage m_path;
-
-        OHOS::TransAffine m_transform;
-
+        gradient_func_type m_radialGradientFunction;
         ConvCurve m_convCurve;
         ConvDashCurve m_convDashCurve;
         ConvStroke m_convStroke;
@@ -673,24 +920,37 @@ namespace OHOS {
         PathTransform m_pathTransform;
         StrokeTransform m_strokeTransform;
         DashStrokeTransform m_dashStrokeTransform;
-
         StackBlur m_stack_blur;
-        //dash
-        bool is_dash;
-        float* dashes;
-        unsigned int ndashes;
-        float dDashOffset;
+        ColorType shadowColor_;
+        double m_masterAlpha;
+        double m_antiAliasGamma;
+        double m_miterLimit;
+        double m_fillGradientD1;
+        double m_lineGradientD1;
+        double m_fillGradientD2;
+        double m_lineGradientD2;
+        double m_lineWidth;
         double shadowOffsetY_;
         double shadowOffsetX_;
         double shadowBlurRadius_;
-        ColorType shadowColor_;
+        bool m_evenOddFlag;
+        bool is_dash;
+        unsigned int ndashes;
+        float* dashes;
+        float dDashOffset;
     };
 
+    /**
+     * @brief operator ==重写两个颜色相比是否相等的比较过程
+     */
     inline bool operator==(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
         return c1.redValue == c2.redValue && c1.greenValue == c2.greenValue && c1.blueValue == c2.blueValue && c1.alphaValue == c2.alphaValue;
     }
 
+    /**
+     * @brief operator != 重写两个颜色相比是否不相等的比较过程
+     */
     inline bool operator!=(const BaseGfxExtendEngine::Color& c1, const BaseGfxExtendEngine::Color& c2)
     {
         return !(c1 == c2);

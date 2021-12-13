@@ -233,7 +233,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief blend_solid_vspan 渲染y轴一定范围内实线的扫描线
+         * @brief BlendSolidHspan 渲染y轴一定范围内实线的扫描线
          * @param x 扫描线 x轴开始坐标
          * @param y 扫描线 y轴坐标
          * @param len 扫描线长度
