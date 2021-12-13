@@ -29,9 +29,7 @@
 #include "render/graphic_render_buffer.h"
 
 namespace OHOS {
-
-    enum CompOpEnum
-    {
+    enum CompOpEnum {
         COMP_OP_CLEAR,
         COMP_OP_SRC,
         COMP_OP_DST,
@@ -148,7 +146,6 @@ namespace OHOS {
     using PixfmtArgb128Plain = PixfmtAlphaBlendRgba<BlenderArgb128Plain, RenderingBuffer>;
     using PixfmtAbgr128Plain = PixfmtAlphaBlendRgba<BlenderAbgr128Plain, RenderingBuffer>;
     using PixfmtBgra128Plain = PixfmtAlphaBlendRgba<BlenderBgra128Plain, RenderingBuffer>;
-
 } // namespace OHOS
 
 #endif
