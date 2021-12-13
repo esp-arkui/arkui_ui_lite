@@ -1737,7 +1737,6 @@ namespace OHOS {
             if (paint.GetLineJoin() == BaseGfxExtendEngine::JOINMITER) {
                 m_graphics->SetMiterLimit(paint.GetMiterLimit());
             }
-            //        m_graphics->noFill();
         }
         if (paint.GetFillColor().alpha) {
             m_graphics->SetFillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
