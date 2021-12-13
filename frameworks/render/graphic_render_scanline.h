@@ -27,8 +27,8 @@
 #include <cstring>
 #include <limits>
 
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "render/renderer_base.h"
+#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "render/graphic_render_base.h"
 
 namespace OHOS {
 
