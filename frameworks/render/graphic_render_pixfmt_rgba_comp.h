@@ -1,17 +1,17 @@
 /*
-* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
 * @addtogroup GraphicGeometry
@@ -160,8 +160,8 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(double dca,
-                                                   double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE double Calc(
+            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             return (2 * dca <= da) ?
                        2 * sca * dca + sca * d1a + dca * s1a :
@@ -212,9 +212,12 @@ namespace OHOS {
                 Rgba d = Get(pColor);
                 double d1a = 1 - d.alphaValue;
                 double s1a = 1 - s.alphaValue;
-                d.redValue = SdMin(s.redValue * d.alphaValue, d.redValue * s.alphaValue) + s.redValue * d1a + d.redValue * s1a;
-                d.greenValue = SdMin(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) + s.greenValue * d1a + d.greenValue * s1a;
-                d.blueValue = SdMin(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue) + s.blueValue * d1a + d.blueValue * s1a;
+                d.redValue = SdMin(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
+                    s.redValue * d1a + d.redValue * s1a;
+                d.greenValue = SdMin(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
+                    s.greenValue * d1a + d.greenValue * s1a;
+                d.blueValue = SdMin(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue) +
+                    s.blueValue * d1a + d.blueValue * s1a;
                 d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
                 Set(pColor, Clip(d));
             }
@@ -307,7 +310,8 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::Get;
         using BlenderBase<ColorT, Order>::Set;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE double Calc(
+            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
         {
             if (sca > 0) {
                 return sada * (1 - SdMin(1.0, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
@@ -483,8 +487,8 @@ namespace OHOS {
                 d.greenValue = (s.greenValue * d.alphaValue + d.greenValue * s.alphaValue -
                                 2 * s.greenValue * d.greenValue) +
                                s.greenValue * d1a + d.greenValue * s1a;
-                d.blueValue = (s.blueValue * d.alphaValue + d.blueValue * s.alphaValue - 2 * s.blueValue * d.blueValue) +
-                              s.blueValue * d1a + d.blueValue * s1a;
+                d.blueValue = (s.blueValue * d.alphaValue + d.blueValue * s.alphaValue -
+                    2 * s.blueValue * d.blueValue) + s.blueValue * d1a + d.blueValue * s1a;
                 d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
                 Set(pColor, Clip(d));
             }
@@ -787,13 +791,13 @@ namespace OHOS {
     struct CompOpTableRgba {
         using ValueType = typename ColorT::ValueType;
         using CalcType = typename ColorT::CalcType;
-        using CompOpFuncType = void (*)(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType ca, CoverType cover);
+        using CompOpFuncType =
+            void (*)(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType ca, CoverType cover);
         static CompOpFuncType g_compOpFunc[];
     };
 
     template <class ColorT, class Order>
-    typename CompOpTableRgba<ColorT, Order>::CompOpFuncType CompOpTableRgba<ColorT, Order>::g_compOpFunc[] =
-        {
+    typename CompOpTableRgba<ColorT, Order>::CompOpFuncType CompOpTableRgba<ColorT, Order>::g_compOpFunc[] = {
             CompOpRgbaClear<ColorT, Order>::BlendPix,
             CompOpRgbaSrc<ColorT, Order>::BlendPix,
             CompOpRgbaDst<ColorT, Order>::BlendPix,

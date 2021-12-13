@@ -75,7 +75,7 @@ namespace OHOS {
             height_ = areaHeight;
             bufStride_ = stride;
             if (stride < 0) {
-                start_ = renBuf - (GRAPHIC_GEOMETRY_INT64)(areaHeight - 1) * stride;
+                start_ = renBuf - (int64)(areaHeight - 1) * stride;
             }
         }
         /**
@@ -121,7 +121,7 @@ namespace OHOS {
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned)
         {
-            return start_ + y * (GRAPHIC_GEOMETRY_INT64)bufStride_;
+            return start_ + y * (int64)bufStride_;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
@@ -129,14 +129,14 @@ namespace OHOS {
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int y)
         {
-            return start_ + y * (GRAPHIC_GEOMETRY_INT64)bufStride_;
+            return start_ + y * (int64)bufStride_;
         }
         /**
          * @brief row_ptr 返回指向第y行起点的指针
          */
         GRAPHIC_GEOMETRY_INLINE const T* RowPtr(int y) const
         {
-            return start_ + y * (GRAPHIC_GEOMETRY_INT64)bufStride_;
+            return start_ + y * (int64)bufStride_;
         }
         /**
          * @brief row 获取行数据

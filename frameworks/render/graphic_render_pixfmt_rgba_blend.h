@@ -26,7 +26,6 @@
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_buffer.h"
 namespace OHOS {
-
     /**
      * @file graphic_geometry_pixfmt_rgba.h
      *
@@ -197,8 +196,7 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
 
-        enum
-        {
+        enum {
             NUM_COMPONENTS = 4,
             PIX_STEP = 4,
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP
@@ -251,7 +249,8 @@ namespace OHOS {
              */
             ColorType Get() const
             {
-                return ColorType(colors[OrderType::RED], colors[OrderType::GREEN], colors[OrderType::BLUE], colors[OrderType::ALPHA]);
+                return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
+                    colors[OrderType::BLUE], colors[OrderType::ALPHA]);
             }
             /**
             * @brief 获取下一个像素的颜色分量.
@@ -351,11 +350,9 @@ namespace OHOS {
         }
 
     public:
-        PixfmtAlphaBlendRgba() :
-            rbuf_(0)
+        PixfmtAlphaBlendRgba() : rbuf_(0)
         {}
-        explicit PixfmtAlphaBlendRgba(RbufType& rb) :
-            rbuf_(&rb)
+        explicit PixfmtAlphaBlendRgba(RbufType& rb) : rbuf_(&rb)
         {}
         /**
          * @brief 把像素缓冲区附加到混合器.
@@ -379,7 +376,8 @@ namespace OHOS {
             RectI r(x1, y1, x2, y2);
             if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
                 int stride = pixf.Stride();
-                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),
+                    (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
                 return true;
             }
             return false;
@@ -898,8 +896,9 @@ namespace OHOS {
                       unsigned len)
         {
             if (const int8u* p = from.row_ptr(ysrc)) {
-                memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
-                          len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH);
+                if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
+                    len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOK) {
+                }
             }
         }
         /**
@@ -1014,6 +1013,8 @@ namespace OHOS {
         Blender blender_;
     };
 
+    const unsigned COMP_OP_VALUE = 3;
+
     template <class Blender, class RenBuf>
     class PixfmtCustomBlendRgba : public HeapBase {
     public:
@@ -1025,8 +1026,7 @@ namespace OHOS {
         using OrderType = typename BlenderType::OrderType;
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
-        enum
-        {
+        enum {
             NUM_COMPONENTS = 4,
             PIX_STEP = 4,
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
@@ -1037,9 +1037,9 @@ namespace OHOS {
             void Set(ValueType r, ValueType g, ValueType b, ValueType a)
             {
                 c[OrderType::RED] = r;
-                c[OrderType::G] = g;
-                c[OrderType::B] = b;
-                c[OrderType::A] = a;
+                c[OrderType::GREEN] = g;
+                c[OrderType::BLUE] = b;
+                c[OrderType::ALPHA] = a;
             }
             /**
              * @brief 设置颜色.
@@ -1060,9 +1060,9 @@ namespace OHOS {
             void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
             {
                 r = c[OrderType::RED];
-                g = c[OrderType::G];
-                b = c[OrderType::B];
-                a = c[OrderType::A];
+                g = c[OrderType::GREEN];
+                b = c[OrderType::BLUE];
+                a = c[OrderType::ALPHA];
             }
             /**
              * @brief 获取颜色.
@@ -1074,9 +1074,9 @@ namespace OHOS {
             {
                 return ColorType(
                     c[OrderType::RED],
-                    c[OrderType::G],
-                    c[OrderType::B],
-                    c[OrderType::A]);
+                    c[OrderType::GREEN],
+                    c[OrderType::BLUE],
+                    c[OrderType::ALPHA]);
             }
 
             PixelType* Next()
@@ -1118,11 +1118,10 @@ namespace OHOS {
         }
 
     public:
-        PixfmtCustomBlendRgba() :
-            rbuf_(0), compOp_(3)
+        PixfmtCustomBlendRgba() : rbuf_(0), compOp_(COMP_OP_VALUE)
         {}
-        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
-            rbuf_(&rb), compOp_(compOp)
+        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3)
+            : rbuf_(&rb), compOp_(compOp)
         {}
         void Attach(RbufType& rb)
         {
@@ -1140,7 +1139,8 @@ namespace OHOS {
             RectI r(x1, y1, x2, y2);
             if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
                 int stride = pixf.Stride();
-                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),
+                    (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
                 return true;
             }
             return false;
@@ -1527,8 +1527,9 @@ namespace OHOS {
                       unsigned len)
         {
             if (const int8u* p = from.RowPtr(ysrc)) {
-                memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH, len * PIX_WIDTH,
-                          p + xsrc * PIX_WIDTH, len * PIX_WIDTH);
+                if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
+                    len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOF) {
+                }
             }
         }
         /**
@@ -1627,6 +1628,6 @@ namespace OHOS {
         Blender blender_;
         unsigned compOp_;
     };
-
 } // namespace OHOS
+
 #endif

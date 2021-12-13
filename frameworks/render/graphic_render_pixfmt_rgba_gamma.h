@@ -1,17 +1,17 @@
 /*
-* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
 * @addtogroup GraphicGeometry
@@ -42,15 +42,13 @@
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_buffer.h"
 namespace OHOS {
-
     template <class ColorT, class Order, class GammaLut>
     class ApplyGammaDirRgba : public HeapBase {
     public:
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
 
-        ApplyGammaDirRgba(const GammaLut& gamma) :
-            gamma_(gamma)
+        ApplyGammaDirRgba(const GammaLut& gamma) : gamma_(gamma)
         {}
 
         GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
@@ -70,8 +68,7 @@ namespace OHOS {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
 
-        ApplyGammaInvRgba(const GammaLut& gamma) :
-            gamma_(gamma)
+        ApplyGammaInvRgba(const GammaLut& gamma) : gamma_(gamma)
         {}
 
         GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
@@ -84,7 +81,6 @@ namespace OHOS {
     private:
         const GammaLut& gamma_;
     };
-
 } // namespace OHOS
 
 #endif

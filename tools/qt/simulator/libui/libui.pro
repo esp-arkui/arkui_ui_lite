@@ -30,8 +30,6 @@ DESTDIR = ../libs
 
 SOURCES += \
     ../../../../../utils/frameworks/graphic_timer.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_color/graphic_color_rgba.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_common/graphic_common_clip_operate.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp \
     ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp \
