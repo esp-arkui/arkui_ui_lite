@@ -91,7 +91,7 @@ namespace OHOS {
         float sinma = radius * Sin(startAngle);
         float cosma = radius * Sin(QUARTER_IN_DEGREE - startAngle);
         if (path_->cmd_.Size() != 0) {
-            path_->points_.PushBack({MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
+            path_->points_.PushBack( {MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
             path_->cmd_.PushBack(CMD_LINE_TO);
         } else {
             path_->startPos_ = {MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)};
@@ -102,7 +102,7 @@ namespace OHOS {
             sinma = radius * Sin(endAngle);
             cosma = radius * Sin(QUARTER_IN_DEGREE - endAngle);
         }
-        path_->points_.PushBack({MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
+        path_->points_.PushBack( {MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
         path_->cmd_.PushBack(CMD_ARC);
 
         int16_t start;
@@ -603,14 +603,10 @@ namespace OHOS {
     void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     {
         Rect rect = GetOrigRect();
-
         BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, rect, invalidatedArea, *style_, opaScale_);
-
-        void* param = nullptr;
         ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
-        Rect coords = GetOrigRect();
         Rect trunc = invalidatedArea;
-        if (trunc.Intersect(trunc, coords)) {
+        if (trunc.Intersect(trunc, GetOrigRect())) {
             int16_t posViewLeft = rect.GetX() - trunc.GetX();
             int16_t posViewTop = rect.GetY() - trunc.GetY();
             int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
@@ -620,17 +616,14 @@ namespace OHOS {
                 return;
             }
             uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-
             uint32_t destStride = gfxMapBuffer->width * destByteSize;
             uint32_t buffSize = gfxMapBuffer->height * destStride;
             gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
             memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
             gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
-            //添加的处理机制的。。。
+            // 添加的处理机制的。。。
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
-                //应该是实现画布的处理机制..
-                param = curDraw->data_.param;
-
+                // 应该是实现画布的处理机制..
                 InitDrawEnvironment(
                     *gfxMapBuffer, trunc,
                     Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
@@ -638,30 +631,26 @@ namespace OHOS {
                          posViewTop + trunc.GetHeight() - 1),
                     curDraw->data_.paint);
 
-                curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
+                curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_);
             }
             BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr, gfxMapBuffer->width,
                                                    gfxMapBuffer->height, gfxMapBuffer->stride);
             BaseGfxExtendEngine m_graphics_Image;
-
             uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
             if (gfxDstBuffer.virAddr == nullptr) {
                 return;
             }
-
-            ColorMode mode = gfxDstBuffer.mode;
             int32_t offset = static_cast<int32_t>(trunc.GetTop()) * gfxDstBuffer.width + trunc.GetLeft();
             destBuf += offset * destByteSize;
-
             m_graphics_Image.Attach(destBuf, trunc.GetWidth(), trunc.GetHeight(), gfxDstBuffer.stride);
             m_graphics_Image.Viewport(realLeft, realTop, realLeft + trunc.GetWidth() - 1,
                                       realTop + trunc.GetHeight() - 1, posViewLeft, posViewTop,
                                       posViewLeft + trunc.GetWidth() - 1, posViewTop + trunc.GetHeight() - 1,
                                       BaseGfxExtendEngine::XMINYMIN);
-            OpacityType opa = DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_);
             m_graphics_Image.BlendImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
                                         gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
-                                        gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(), opa);
+                                        gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
+                                        DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
         }
     }
@@ -838,7 +827,7 @@ namespace OHOS {
             }
             Point start;
             GetAbsolutePosition(rectParam->start, rect, style, start);
-            setGradient(*m_graphics, paint, rect, style); //填充颜色
+            setGradient(*m_graphics, paint, rect, style); // 填充颜色
             m_graphics->SetLineWidth(lineWidth);
             m_graphics->Rectstroke(start.x, start.y, start.x + rectParam->width, start.y + rectParam->height);
         } else {
@@ -910,7 +899,7 @@ namespace OHOS {
 
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
             m_graphics->NoLine();
-            setGradient(*m_graphics, paint, rect, style); //填充颜色
+            setGradient(*m_graphics, paint, rect, style); // 填充颜色
             m_graphics->Rectangle(start.x, start.y, start.x + rectParam->width, start.y + rectParam->height);
         }
     }
@@ -1071,7 +1060,7 @@ namespace OHOS {
         if (stopAndColors.Size() > 0) {
             addColorGradient(m_graphics, stopAndColors);
         }
-        if (gradientControl.gradientflag == gradientControl.Linear) { //线性渐变
+        if (gradientControl.gradientflag == gradientControl.Linear) { // 线性渐变
             double x0 = gradientControl.getLinearGradientPoint().x0;
             double y0 = gradientControl.getLinearGradientPoint().y0;
             double x1 = gradientControl.getLinearGradientPoint().x1;
@@ -1092,7 +1081,7 @@ namespace OHOS {
             m_graphics.SetLinearGradient(start.x, start.y, end.x, end.y);
         }
 
-        if (gradientControl.gradientflag == gradientControl.Radial) { //放射渐变
+        if (gradientControl.gradientflag == gradientControl.Radial) { // 放射渐变
             GradientControl::RadialGradientPoint rp = gradientControl.getRadialGradientPoint();
 
             Point start;
@@ -1110,7 +1099,7 @@ namespace OHOS {
             m_graphics.SetRadialGradient(start.x, start.y, rp.r0, end.x, end.y, rp.r1);
         }
 
-        if (gradientControl.gradientflag == gradientControl.Solid) { //纯色渐变
+        if (gradientControl.gradientflag == gradientControl.Solid) { // 纯色渐变
             ColorType color = paint.GetFillColor();
             m_graphics.SetFillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
         }
@@ -1127,7 +1116,7 @@ namespace OHOS {
         Style drawStyle = StyleDefault::GetDefaultStyle();
 
         ArcInfo arcInfo = {{0}};
-        arcInfo.imgPos = Point{0, 0};
+        arcInfo.imgPos = Point {0, 0};
         arcInfo.startAngle = 0;
         arcInfo.endAngle = CIRCLE_IN_DEGREE;
         GetAbsolutePosition(circleParam->center, rect, style, arcInfo.center);
@@ -1140,9 +1129,6 @@ namespace OHOS {
 
         double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
         arcInfo.radius = circleParam->radius + halfLineWidth - 1;
-        int16_t posViewLeft = rect.GetX() - invalidatedArea.GetX();
-        int16_t posViewTop = rect.GetY() - invalidatedArea.GetY();
-
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
             drawStyle.bgColor_ = paint.GetFillColor();
             drawStyle.bgOpa_ = paint.GetOpacity();
@@ -1213,7 +1199,7 @@ namespace OHOS {
         ArcParam* arcParam = static_cast<ArcParam*>(param);
 
         ArcInfo arcInfo = {{0}};
-        arcInfo.imgPos = Point{0, 0};
+        arcInfo.imgPos = Point {0, 0};
         arcInfo.startAngle = arcParam->startAngle;
         arcInfo.endAngle = arcParam->endAngle;
         Style drawStyle = StyleDefault::GetDefaultStyle();
@@ -1306,7 +1292,7 @@ namespace OHOS {
         if (stopAndColors.Size() > 0) {
             addColorGradient(*m_graphics, stopAndColors);
         }
-        if (gradientControl.gradientflag == gradientControl.Linear) { //线性渐变
+        if (gradientControl.gradientflag == gradientControl.Linear) { // 线性渐变
             double x0 = gradientControl.getLinearGradientPoint().x0;
             double y0 = gradientControl.getLinearGradientPoint().y0;
             double x1 = gradientControl.getLinearGradientPoint().x1;
@@ -1327,7 +1313,7 @@ namespace OHOS {
             m_graphics->SetLinearGradient(start.x, start.y, end.x, end.y);
         }
 
-        if (gradientControl.gradientflag == gradientControl.Radial) { //放射渐变
+        if (gradientControl.gradientflag == gradientControl.Radial) { // 放射渐变
             GradientControl::RadialGradientPoint rp = gradientControl.getRadialGradientPoint();
 
             Point start;
@@ -1345,7 +1331,7 @@ namespace OHOS {
             m_graphics->SetRadialGradient(start.x, start.y, rp.r0, end.x, end.y, rp.r1);
         }
 
-        if (gradientControl.gradientflag == gradientControl.Solid) { //纯色渐变
+        if (gradientControl.gradientflag == gradientControl.Solid) { // 纯色渐变
             ColorType color = paint.GetFillColor();
             m_graphics->SetFillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
         }
@@ -1425,7 +1411,7 @@ namespace OHOS {
         UILabel* label = static_cast<UILabel*>(param);
         Point startPos = {label->GetX(), label->GetY()};
         Point start;
-        GetAbsolutePosition({startPos.x, startPos.y}, rect, style, start);
+        GetAbsolutePosition( {startPos.x, startPos.y}, rect, style, start);
         label->SetPosition(start.x, start.y);
         label->OnDraw(gfxDstBuffer, invalidatedArea);
         label->SetPosition(startPos.x, startPos.y);
@@ -1532,7 +1518,7 @@ namespace OHOS {
     {
         ArcInfo arcinfo = {{0}};
         arcinfo.center = center;
-        arcinfo.imgPos = Point{0, 0};
+        arcinfo.imgPos = Point {0, 0};
         arcinfo.radius = (paint.GetStrokeWidth() + 1) >> 1;
         arcinfo.startAngle = 0;
         arcinfo.endAngle = CIRCLE_IN_DEGREE;
@@ -1642,7 +1628,7 @@ namespace OHOS {
                 }
                 case CMD_ARC: {
                     ArcInfo arcInfo = {{0}};
-                    arcInfo.imgPos = Point{0, 0};
+                    arcInfo.imgPos = Point {0, 0};
                     arcInfo.startAngle = arcIter->data_.startAngle;
                     arcInfo.endAngle = arcIter->data_.endAngle;
                     Style drawStyle = StyleDefault::GetDefaultStyle();
@@ -1727,7 +1713,6 @@ namespace OHOS {
         ListNode<PathCmd>* iter = path->cmd_.Begin();
         bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
         bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
-
         if (!isLineJoin || !isLineCap) {
             m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
                                      paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
@@ -1784,7 +1769,7 @@ namespace OHOS {
                 }
                 case CMD_ARC: {
                     ArcInfo arcInfo = {{0}};
-                    arcInfo.imgPos = Point{0, 0};
+                    arcInfo.imgPos = Point {0, 0};
                     arcInfo.startAngle = arcIter->data_.startAngle;
                     arcInfo.endAngle = arcIter->data_.endAngle;
                     Style drawStyle = StyleDefault::GetDefaultStyle();
@@ -1860,8 +1845,7 @@ namespace OHOS {
         if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
             m_graphics->Scale(rotateCenterX, rotateCenterY, paint.GetScaleX(), paint.GetScaleY());
         }
-        setGradient(*m_graphics, paint, rect, style); //填充颜色
+        setGradient(*m_graphics, paint, rect, style); // 填充颜色
         m_graphics->DrawPath(BaseGfxExtendEngine::FILLANDSTROKE);
     }
-
 } // namespace OHOS
