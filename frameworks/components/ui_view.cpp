@@ -65,9 +65,6 @@ UIView::UIView()
 
 UIView::~UIView()
 {
-    if (parent_ != nullptr) {
-        GRAPHIC_LOGE("UIView::~UIView failed, parent is not nullptr! Need to remove from parent component first");
-    }
     if (transMap_ != nullptr) {
         delete transMap_;
         transMap_ = nullptr;
@@ -1025,6 +1022,18 @@ bool UIView::GetBitmap(ImageInfo& bitmap)
     nextSibling_ = tempSibling;
     parent_ = tempParent;
     rect_.SetPosition(tempX, tempY);
+    return true;
+}
+
+bool UIView::IsOnViewTree()
+{
+    UIView* par = this;
+    while (par->GetParent() != nullptr) {
+        par = par->GetParent();
+    }
+    if (par->GetViewType() != UI_ROOT_VIEW) {
+        return false;
+    }
     return true;
 }
 } // namespace OHOS
