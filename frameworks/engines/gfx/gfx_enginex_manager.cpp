@@ -44,7 +44,7 @@ namespace OHOS {
         m_blendMode(BLENDALPHA),
         m_imageBlendMode(BLENDDST),
         m_imageBlendColor(0, 0, 0),
-        m_fillColor(255, 255, 255),
+        m_fillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM),
         m_lineColor(0, 0, 0),
         m_lineCap(CAPROUND),
         m_lineJoin(JOINROUND),
@@ -52,7 +52,7 @@ namespace OHOS {
         m_lineGradientMatrix(),
         m_fillRadialMatrix(),
         m_antiAliasGamma(1.0),
-        m_miterLimit(10),
+        m_miterLimit(OHOS::DEFAULTMITERLIMIT),
         m_fillGradientD1(0.0),
         m_lineGradientD1(0.0),
         m_fillGradientInterpolator(m_fillGradientMatrix),
@@ -62,8 +62,8 @@ namespace OHOS {
         m_lineGradientFlag(SOLID),
         m_interpolator_type(m_fillRadialMatrix),
         m_radialGradientFunction(),
-        m_fillGradientD2(100.0),
-        m_lineGradientD2(100.0),
+        m_fillGradientD2(0.0),
+        m_lineGradientD2(0.0),
         m_lineWidth(1),
         m_path(),
         m_transform(),
@@ -78,7 +78,7 @@ namespace OHOS {
         is_dash(false),
         ndashes(0),
         dashes(nullptr),
-        shadowColor_(Color(255, 255, 255)),
+        shadowColor_(Color(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM)),
         m_masterAlpha(1.0),
         shadowOffsetY_(0),
         shadowOffsetX_(0),
@@ -170,7 +170,7 @@ namespace OHOS {
         ResetTransformations();
         SetLineWidth(1.0);
         SetLineColor(0, 0, 0);
-        SetFillColor(255, 255, 255);
+        SetFillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM);
         ClipBox(0, 0, width, height);
         SetLineCap(CAPROUND);
         SetLineJoin(JOINROUND);
@@ -257,7 +257,7 @@ namespace OHOS {
         double y2 = scalar;
         WorldToScreen(x1, y1);
         WorldToScreen(x2, y2);
-        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) * 0.7071068;
+        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) * OHOS::COS45;
     }
 
     double BaseGfxExtendEngine::ScreenToWorld(double scalar) const
@@ -268,7 +268,7 @@ namespace OHOS {
         double y2 = scalar;
         ScreenToWorld(x1, y1);
         ScreenToWorld(x2, y2);
-        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) * 0.7071068;
+        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) * OHOS::COS45;
     }
 
     void BaseGfxExtendEngine::ResetTransformations()
@@ -283,7 +283,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::Rotate(double x, double y, double angle)
     {
         m_transform *= OHOS::TransAffineTranslation(-x, -y);
-        m_transform *= OHOS::TransAffineRotation(angle * 3.1415926 / 180.0);
+        m_transform *= OHOS::TransAffineRotation(angle * Pi() / OHOS::BOXER);
         m_transform *= OHOS::TransAffineTranslation(x, y);
     }
     void BaseGfxExtendEngine::Translate(double x, double y)
@@ -327,13 +327,13 @@ namespace OHOS {
         switch (opt) {
             case ANISOTROPIC: vp.PreserveAspectRatio(0.0, 0.0, OHOS::ASPECT_RATIO_STRETCH); break;
             case XMINYMIN: vp.PreserveAspectRatio(0.0, 0.0, OHOS::ASPECT_RATIO_MEET); break;
-            case XMIDYMIN: vp.PreserveAspectRatio(0.5, 0.0, OHOS::ASPECT_RATIO_MEET); break;
+            case XMIDYMIN: vp.PreserveAspectRatio(HALF, 0.0, OHOS::ASPECT_RATIO_MEET); break;
             case XMAXYMIN: vp.PreserveAspectRatio(1.0, 0.0, OHOS::ASPECT_RATIO_MEET); break;
-            case XMINYMID: vp.PreserveAspectRatio(0.0, 0.5, OHOS::ASPECT_RATIO_MEET); break;
-            case XMIDYMID: vp.PreserveAspectRatio(0.5, 0.5, OHOS::ASPECT_RATIO_MEET); break;
-            case XMAXYMID: vp.PreserveAspectRatio(1.0, 0.5, OHOS::ASPECT_RATIO_MEET); break;
+            case XMINYMID: vp.PreserveAspectRatio(0.0, HALF, OHOS::ASPECT_RATIO_MEET); break;
+            case XMIDYMID: vp.PreserveAspectRatio(HALF, HALF, OHOS::ASPECT_RATIO_MEET); break;
+            case XMAXYMID: vp.PreserveAspectRatio(1.0, HALF, OHOS::ASPECT_RATIO_MEET); break;
             case XMINYMAX: vp.PreserveAspectRatio(0.0, 1.0, OHOS::ASPECT_RATIO_MEET); break;
-            case XMIDYMAX: vp.PreserveAspectRatio(0.5, 1.0, OHOS::ASPECT_RATIO_MEET); break;
+            case XMIDYMAX: vp.PreserveAspectRatio(HALF, 1.0, OHOS::ASPECT_RATIO_MEET); break;
             case XMAXYMAX: vp.PreserveAspectRatio(1.0, 1.0, OHOS::ASPECT_RATIO_MEET); break;
         }
         vp.WorldViewPort(worldX1, worldY1, worldX2, worldY2);
@@ -424,7 +424,7 @@ namespace OHOS {
         m_fillGradientD2 = end_r;
         m_radialGradientFunction = OHOS::GradientRadialCalculate(end_r, start_x - end_x, start_y - end_y);
         m_fillGradientFlag = RADIAL;
-        m_fillColor = Color(0, 0, 0, 255);
+        m_fillColor = Color(0, 0, 0, OHOS::MAX_COLOR_NUM);
     }
 
     void BaseGfxExtendEngine::SetLinearGradient(double start_x, double start_y, double end_x, double end_y)
@@ -551,7 +551,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::Round(double cx, double cy, double radius)
     {
         m_path.RemoveAll();
-        OHOS::BezierArc arc(cx, cy, radius, radius, 0, 2 * Pi());
+        OHOS::BezierArc arc(cx, cy, radius, radius, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
         m_path.ClosePolygon();
         DrawPath(FILLANDSTROKE);
@@ -594,7 +594,7 @@ namespace OHOS {
         LineTo(dstX2, dstY2);
         LineTo(dstX1, dstY2);
         ClosePolygon();
-        double parallelogram[6] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
+        double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
         RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
     }
 
@@ -606,7 +606,7 @@ namespace OHOS {
         LineTo(dstX2, dstY2);
         LineTo(dstX1, dstY2);
         ClosePolygon();
-        double parallelogram[6] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
+        double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
 
         RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
     }
@@ -615,11 +615,11 @@ namespace OHOS {
                                              const double* parallelogram, bool isAntiAlias)
     {
         ResetPath();
-        MoveTo(parallelogram[0], parallelogram[1]);
-        LineTo(parallelogram[2], parallelogram[3]);
-        LineTo(parallelogram[4], parallelogram[5]);
-        LineTo(parallelogram[0] + parallelogram[4] - parallelogram[2],
-               parallelogram[1] + parallelogram[5] - parallelogram[3]);
+        MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
+        LineTo(parallelogram[OHOS::INDEX_TWO], parallelogram[OHOS::INDEX_THREE]);
+        LineTo(parallelogram[OHOS::INDEX_FOUR], parallelogram[OHOS::INDEX_FIVE]);
+        LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
+               parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
         RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
     }
@@ -627,11 +627,11 @@ namespace OHOS {
     void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram, bool isAntiAlias)
     {
         ResetPath();
-        MoveTo(parallelogram[0], parallelogram[1]);
-        LineTo(parallelogram[2], parallelogram[3]);
-        LineTo(parallelogram[4], parallelogram[5]);
-        LineTo(parallelogram[0] + parallelogram[4] - parallelogram[2],
-               parallelogram[1] + parallelogram[5] - parallelogram[3]);
+        MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
+        LineTo(parallelogram[OHOS::INDEX_TWO], parallelogram[OHOS::INDEX_THREE]);
+        LineTo(parallelogram[OHOS::INDEX_FOUR], parallelogram[OHOS::INDEX_FIVE]);
+        LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
+               parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
 
         RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
@@ -672,7 +672,7 @@ namespace OHOS {
                                          double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
     {
         m_path.RemoveAll();
-        OHOS::BezierArc arc(cx, cy, rx, ry, 0, 2 * Pi());
+        OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
         m_path.ClosePolygon();
         DrawShadow(x, y, a, scaleX, scaleY);
@@ -700,7 +700,7 @@ namespace OHOS {
                     if (!this->is_dash) {
                         m_rasterizer.AddPath(m_strokeTransform);
                     } else {
-                        for (unsigned int i = 0; i < this->ndashes; i += 2) {
+                        for (unsigned int i = 0; i < this->ndashes; i += OHOS::TWO_STEP) {
                             m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
                         m_convDashCurve.DashStart(dDashOffset);
@@ -720,7 +720,7 @@ namespace OHOS {
                     if (!this->is_dash) {
                         m_rasterizer.AddPath(m_strokeTransform);
                     } else {
-                        for (unsigned int i = 0; i < this->ndashes; i += 2) {
+                        for (unsigned int i = 0; i < this->ndashes; i += OHOS::TWO_STEP) {
                             m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
                         m_convDashCurve.DashStart(dDashOffset);
