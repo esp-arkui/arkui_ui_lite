@@ -127,8 +127,7 @@ namespace OHOS {
         /**
          * 渐变的模式
          */
-        enum Gradient
-        {
+        enum Gradient {
             /** 单色 */
             SOLID,
             /** 线性渐变 */
@@ -140,8 +139,7 @@ namespace OHOS {
         /**
          * @brief 两条线相交时，所创建的拐角类型
          */
-        enum LineJoin
-        {
+        enum LineJoin {
             JOINNONE = -1,
             /** 创建尖角 */
             JOINMITER = OHOS::MITER_JOIN,
@@ -154,8 +152,7 @@ namespace OHOS {
         /**
          * @brief 线条末端线帽的样式。
          */
-        enum LineCap
-        {
+        enum LineCap {
             CAPNONE = -1,
             /** 向线条的每个末端添加平直的边缘 */
             CAPBUTT = OHOS::BUTT_CAP,
@@ -168,8 +165,7 @@ namespace OHOS {
         /**
          * @brief 绘制的类型
          */
-        enum DrawPathFlag
-        {
+        enum DrawPathFlag {
             /** 填充路径绘制的区域 */
             FILLONLY,
             /** 绘制路径 */
@@ -183,8 +179,7 @@ namespace OHOS {
         /**
          * @brief viewPort的模式
          */
-        enum ViewportOption
-        {
+        enum ViewportOption {
             /** 以0.0, 0.0为基准，拉伸 */
             ANISOTROPIC,
             /** 以0.0, 0.0为基准，铺满 */
@@ -210,8 +205,7 @@ namespace OHOS {
         /**
          * repeat|repeat-x|repeat-y|no-repeat
          */
-        enum PatternRepeat
-        {
+        enum PatternRepeat {
             /** 铺满，x,y轴都重复 */
             REPEAT,
             /** x轴上重复，y轴上无 */
@@ -225,8 +219,7 @@ namespace OHOS {
         /**
          * 混合模式
          */
-        enum BlendMode
-        {
+        enum BlendMode {
             /** 不混合 */
             BLENDNONE = -1,
             /** 混合透明度 */
