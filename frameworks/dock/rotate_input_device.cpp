@@ -43,7 +43,6 @@ void RotateInputDevice::DispatchEvent(const DeviceData& data)
     }
 
     if (!cachedToRotate && !rotateStart_) {
-        GRAPHIC_LOGW("RotateInputDevice failed to dispatch event without rotate cached and started!\n");
         return;
     }
 
@@ -76,8 +75,8 @@ void RotateInputDevice::DispatchEvent(const DeviceData& data)
     }
     view->OnRotateEvent(data.rotate);
     rotateStart_ = true;
-    GRAPHIC_LOGI("RotateInputDevice dispatched rotate event, targetView Type = %d, rotate value = %d\n!",
-        static_cast<uint8_t>(view->GetViewType()), data.rotate);
+    GRAPHIC_LOGI("RotateInputDevice dispatched rotate event, targetView Type = %{public}d,\
+        rotate value = %{public}d\n!", static_cast<uint8_t>(view->GetViewType()), data.rotate);
 }
 } // namespace OHOS
 #endif
