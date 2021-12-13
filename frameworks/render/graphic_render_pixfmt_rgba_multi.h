@@ -42,14 +42,13 @@
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_buffer.h"
 namespace OHOS {
-
     /**
      * @brief 颜色分量裁剪.
      *
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba& Clip(Rgba& color)
+    static Rgba& Clip(Rgba& color)
     {
         if (color.alphaValue > 1) {
             color.alphaValue = 1;
@@ -90,8 +89,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                     ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
+                ValueType* pColor,ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
             Rgba s = Get(r, g, b, a, cover);
             if (s.alphaValue > 0) {
@@ -106,6 +105,5 @@ namespace OHOS {
             }
         }
     };
-
 } // namespace OHOS
 #endif
