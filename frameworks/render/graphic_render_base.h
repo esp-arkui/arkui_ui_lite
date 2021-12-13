@@ -23,8 +23,8 @@
 #ifndef RENDERER_BASE_INCLUDED
 #define RENDERER_BASE_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "render/rendering_buffer.h"
+#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "render/graphic_render_buffer.h"
 
 namespace OHOS {
     template <class PixelFormat>

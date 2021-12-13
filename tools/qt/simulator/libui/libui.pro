@@ -30,6 +30,15 @@ DESTDIR = ../libs
 
 SOURCES += \
     ../../../../../utils/frameworks/graphic_timer.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_color/graphic_color_rgba.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_common/graphic_common_clip_barsky.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_rounded_rect.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_transform/graphic_transform_trans_affine.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.cpp \
+    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.cpp \
     ../../../../frameworks/animator/animator.cpp \
     ../../../../frameworks/animator/gif_canvas_image_animator.cpp \
     ../../../../frameworks/animator/animator_manager.cpp \
@@ -120,16 +129,6 @@ SOURCES += \
     ../../../../frameworks/font/ui_line_break.cpp \
     ../../../../frameworks/font/ui_multi_font_manager.cpp \
     ../../../../frameworks/font/ui_text_shaping.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_arc.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_bezier_arc.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_curves.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_rounded_rect.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_color/agg_color_rgba.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_common/agg_sqrt_tables.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_common/agg_clip_liang_barsky.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_transform/agg_trans_affine.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_dash.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vcgen_stroke.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_line_profile_aa.cpp \
 #    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vpgen_segmentator.cpp \
@@ -156,8 +155,50 @@ SOURCES += \
 
 HEADERS += \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/graphic_color_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_clip_barsky.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_functions.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_math.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_adaptor_vcgen.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_transform.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_filter/graphic_filter_blur.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_bezier_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_ellipse.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_image_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_auto_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_auto_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_bvector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_range_adapter.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_vertex_sequence.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_cells_aa.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_aa.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_sl_clip.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_scanline/graphic_scanline.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_span_base.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_span_gradient.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_span_image_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_span_interpolator.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_span_pattern_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_affine.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h \
     ../../../../frameworks/common/typed_text.h \
     ../../../../frameworks/core/render_manager.h \
     ../../../../frameworks/default_resource/check_box_res.h \
@@ -178,66 +219,24 @@ HEADERS += \
     ../../../../frameworks/draw/draw_utils.h \
     ../../../../frameworks/font/ui_font_adaptor.h \
     ../../../../frameworks/font/ui_multi_font_manager.h \
-    ../../../../frameworks/render/agg_pixfmt_base.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba_blend.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba_comp.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba_conv.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba_gamma.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba.h \
-    ../../../../frameworks/render/agg_pixfmt_rgba_multi.h \
-    ../../../../frameworks/render/agg_pixfmt_transposer.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/agg_color_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_basics.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_gamma_functions.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_gamma_lut.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/agg_math.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_conv_adaptor_vcgen.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_DepictCurve.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_conv_dash.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_conv_stroke.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_conv_transform.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_filter/agg_blur.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_arc.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_range_adapter.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_vector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_bvector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_auto_vector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_auto_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_pod_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_bezier_arc.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_bounding_rect.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_curves.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_dda_line.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_ellipse.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_path_storage.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_shorten_path.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_cells_aa.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_scanline_aa.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/agg_rasterizer_sl_clip.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_scanline/agg_scanline_u.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_pattern_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_interpolator.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/gradient_lut.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_base.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/span_gradient.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_image_accessors.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_affine.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/agg_trans_viewport.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb16.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb8.h \
     ../../../../frameworks/imgdecode/cache_manager.h \
     ../../../../frameworks/imgdecode/file_img_decoder.h \
     ../../../../frameworks/imgdecode/image_load.h \
-    ../../../../frameworks/render/renderer_base.h \
-    ../../../../frameworks/render/renderer_scanline.h \
-    ../../../../frameworks/render/rendering_buffer.h \
+    ../../../../frameworks/render/graphic_render_base.h \
+    ../../../../frameworks/render/graphic_render_buffer.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_base.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_blend.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_comp.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_conv.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_gamma.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_rgba_multi.h \
+    ../../../../frameworks/render/graphic_render_pixfmt_transposer.h \
+    ../../../../frameworks/render/graphic_render_scanline.h \
     ../../../../interfaces/innerkits/common/graphic_startup.h \
     ../../../../interfaces/innerkits/common/image_decode_ability.h \
     ../../../../interfaces/innerkits/common/input_device_manager.h \

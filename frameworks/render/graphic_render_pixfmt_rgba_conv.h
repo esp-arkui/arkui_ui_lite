@@ -29,8 +29,8 @@
 #include <cstring>
 
 #include "gfx_utils/heap_base.h"
-#include "render/agg_pixfmt_base.h"
-#include "render/rendering_buffer.h"
+#include "render/graphic_render_pixfmt_base.h"
+#include "render/graphic_render_buffer.h"
 namespace OHOS {
     template <class ColorT, class Order>
     struct ConvRgbaPre {

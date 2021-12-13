@@ -39,10 +39,10 @@
 #include <cstring>
 
 #include "gfx_utils/heap_base.h"
-#include "render/agg_pixfmt_base.h"
-#include "render/agg_pixfmt_rgba_blend.h"
-#include "render/agg_pixfmt_rgba_multi.h"
-#include "render/rendering_buffer.h"
+#include "render/graphic_render_pixfmt_base.h"
+#include "render/graphic_render_pixfmt_rgba_blend.h"
+#include "render/graphic_render_pixfmt_rgba_multi.h"
+#include "render/graphic_render_buffer.h"
 namespace OHOS {
     /**
      * @brief 求两个数的最小值.

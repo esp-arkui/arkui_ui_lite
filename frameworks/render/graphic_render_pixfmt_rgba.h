@@ -19,14 +19,14 @@
 #include <cmath>
 #include <cstring>
 
-#include "agg_pixfmt_rgba_blend.h"
-#include "agg_pixfmt_rgba_comp.h"
-#include "agg_pixfmt_rgba_conv.h"
-#include "agg_pixfmt_rgba_gamma.h"
-#include "agg_pixfmt_rgba_multi.h"
+#include "graphic_render_pixfmt_rgba_blend.h"
+#include "graphic_render_pixfmt_rgba_comp.h"
+#include "graphic_render_pixfmt_rgba_conv.h"
+#include "graphic_render_pixfmt_rgba_gamma.h"
+#include "graphic_render_pixfmt_rgba_multi.h"
 #include "gfx_utils/heap_base.h"
-#include "render/agg_pixfmt_base.h"
-#include "render/rendering_buffer.h"
+#include "render/graphic_render_pixfmt_base.h"
+#include "render/graphic_render_buffer.h"
 
 namespace OHOS {
 
