@@ -1368,7 +1368,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->fill(paint);
+        canvas->Fill(paint);
     }
 
     void UITestCanvas::UIKitCanvasTestcreatePattern2()
@@ -1399,7 +1399,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
     }
     void UITestCanvas::UIKitCanvasTestcreatePattern3()
     {
@@ -1429,7 +1429,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->fill(paint);
+        canvas->Fill(paint);
     }
 
     void UITestCanvas::UIKitCanvasTestcreatePattern4()
@@ -1460,7 +1460,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
     }
     void UITestCanvas::UIKitCanvasTestcreatePattern5()
     {
@@ -1490,7 +1490,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->fill(paint);
+        canvas->Fill(paint);
     }
 
     void UITestCanvas::UIKitCanvasTestcreatePattern6()
@@ -1521,7 +1521,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
     }
     void UITestCanvas::UIKitCanvasTestcreatePattern7()
     {
@@ -1551,7 +1551,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->fill(paint);
+        canvas->Fill(paint);
     }
 
     void UITestCanvas::UIKitCanvasTestcreatePattern8()
@@ -1583,7 +1583,7 @@ namespace OHOS {
         //----------------------------------------五角星----------------------------------------------------------------//
         //    canvas->DrawPath(paint);
         canvas->ClosePath();
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
     }
 
     /**
@@ -1627,7 +1627,7 @@ namespace OHOS {
         //----------------------------------------五角星----------------------------------------------------------------//
 
         canvas->ClosePath();
-        canvas->fill(paint);
+        canvas->Fill(paint);
     }
 
     /**
@@ -1672,7 +1672,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
     }
 
     /**
@@ -1716,7 +1716,7 @@ namespace OHOS {
         }
         //----------------------------------------五角星----------------------------------------------------------------//
         canvas->ClosePath();
-        canvas->fill(paint);
+        canvas->Fill(paint);
     }
 
     void UITestCanvas::UIKitCanvasTestRadialGradient2()
@@ -1758,7 +1758,7 @@ namespace OHOS {
         //----------------------------------------五角星----------------------------------------------------------------//
 
         canvas->ClosePath();
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
     }
 
     void UITestCanvas::UIKitCanvasTestcreateStrokeGradient1()
@@ -1807,7 +1807,7 @@ namespace OHOS {
         canvas->ClosePath();
         paint.SetStrokeWidth(8);
         canvas->DrawPath(paint);
-        canvas->stroke(paint);
+        canvas->Stroke(paint);
         //    canvas->fill(paint);
     }
 
