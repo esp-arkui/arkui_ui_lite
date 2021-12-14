@@ -538,8 +538,8 @@ namespace OHOS {
             if (dashArray) {
                 if (memset_s(dashArray, ndashes * sizeof(float), 0, ndashes * sizeof(float)) != EOF) {
                 }
-                for (unsigned int i = 0; i < ndashes; i++) {
-                    dashArray[i] = lineDashs[i];
+                for (unsigned int iIndex = 0; iIndex < ndashes; iIndex++) {
+                    dashArray[iIndex] = lineDashs[iIndex];
                 }
             } else {
                 // memory alloc error, ignore this dash
