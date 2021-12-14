@@ -310,7 +310,7 @@ namespace OHOS {
         };
         ~BaseGfxExtendEngine();
         BaseGfxExtendEngine();
-        BaseGfxExtendEngine(const BaseGfxExtendEngine& o);
+        BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine);
 
         /**
          * @brief 初始化参数

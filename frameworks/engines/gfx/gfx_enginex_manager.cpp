@@ -25,8 +25,8 @@ namespace OHOS {
         }
     }
 
-    BaseGfxExtendEngine::BaseGfxExtendEngine() :
-        m_rbuf(),
+    BaseGfxExtendEngine::BaseGfxExtendEngine()
+        : m_rbuf(),
         m_scanline(),
         m_rasterizer(),
         m_pixFormat(m_rbuf),
@@ -89,14 +89,14 @@ namespace OHOS {
         SetLineJoin(m_lineJoin);
     }
 
-    BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& o) :
-        m_scanline(),
+    BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine)
+        : m_scanline(),
         m_rasterizer(),
-        m_fillGradientMatrix(o.m_fillGradientMatrix),
-        m_lineGradientMatrix(o.m_lineGradientMatrix),
+        m_fillGradientMatrix(baseGfxExtendEngine.m_fillGradientMatrix),
+        m_lineGradientMatrix(baseGfxExtendEngine.m_lineGradientMatrix),
         m_fillGradientInterpolator(m_fillGradientMatrix),
         m_lineGradientInterpolator(m_lineGradientMatrix),
-        m_path(o.m_path),
+        m_path(baseGfxExtendEngine.m_path),
         m_convCurve(m_path),
         m_convDashCurve(m_convCurve),
         m_convStroke(m_convCurve),
@@ -105,7 +105,7 @@ namespace OHOS {
         m_strokeTransform(m_convStroke, m_transform),
         m_dashStrokeTransform(m_convDashStroke, m_transform)
     {
-        m_rbuf = o.m_rbuf;
+        m_rbuf = baseGfxExtendEngine.m_rbuf;
         m_pixFormat = PixFormat(m_rbuf);
         m_pixFormatComp = PixFormatComp(m_rbuf);
         m_pixFormatPre = PixFormatPre(m_rbuf);
@@ -116,41 +116,41 @@ namespace OHOS {
         m_renBaseCompPre = RendererBaseCompPre(m_pixFormatCompPre);
         m_renSolid = RendererSolid(m_renBase);
         m_renSolidComp = RendererSolidComp(m_renBaseComp);
-        m_allocator = o.m_allocator;
-        m_clipBox = o.m_clipBox;
-        m_blendMode = o.m_blendMode;
-        m_imageBlendMode = o.BLENDDST;
-        m_imageBlendColor = o.m_imageBlendColor;
-        m_masterAlpha = o.m_masterAlpha;
-        m_antiAliasGamma = o.m_antiAliasGamma;
-        m_fillColor = o.m_fillColor;
-        m_lineColor = o.m_lineColor;
-        m_lineCap = o.m_lineCap;
-        m_lineJoin = o.m_lineJoin;
-        m_miterLimit = o.m_miterLimit;
-        m_fillGradientFlag = o.SOLID;
-        m_lineGradientFlag = o.SOLID;
-        m_fillGradientD1 = o.m_fillGradientD1;
-        m_lineGradientD1 = o.m_lineGradientD1;
-        m_fillGradientD2 = o.m_fillGradientD2;
-        m_lineGradientD2 = o.m_lineGradientD2;
-        m_linearGradientFunction = o.m_linearGradientFunction;
-        m_radialGradientFunction = o.m_radialGradientFunction;
-        m_lineWidth = o.m_lineWidth;
-        m_evenOddFlag = o.m_evenOddFlag;
-        m_transform = o.m_transform;
-        shadowBlurRadius_ = o.shadowBlurRadius_;
-        shadowColor_ = o.shadowColor_;
-        shadowOffsetX_ = o.shadowOffsetX_;
-        shadowOffsetY_ = o.shadowOffsetY_;
-        is_dash = o.is_dash;
+        m_allocator = baseGfxExtendEngine.m_allocator;
+        m_clipBox = baseGfxExtendEngine.m_clipBox;
+        m_blendMode = baseGfxExtendEngine.m_blendMode;
+        m_imageBlendMode = baseGfxExtendEngine.BLENDDST;
+        m_imageBlendColor = baseGfxExtendEngine.m_imageBlendColor;
+        m_masterAlpha = baseGfxExtendEngine.m_masterAlpha;
+        m_antiAliasGamma = baseGfxExtendEngine.m_antiAliasGamma;
+        m_fillColor = baseGfxExtendEngine.m_fillColor;
+        m_lineColor = baseGfxExtendEngine.m_lineColor;
+        m_lineCap = baseGfxExtendEngine.m_lineCap;
+        m_lineJoin = baseGfxExtendEngine.m_lineJoin;
+        m_miterLimit = baseGfxExtendEngine.m_miterLimit;
+        m_fillGradientFlag = baseGfxExtendEngine.SOLID;
+        m_lineGradientFlag = baseGfxExtendEngine.SOLID;
+        m_fillGradientD1 = baseGfxExtendEngine.m_fillGradientD1;
+        m_lineGradientD1 = baseGfxExtendEngine.m_lineGradientD1;
+        m_fillGradientD2 = baseGfxExtendEngine.m_fillGradientD2;
+        m_lineGradientD2 = baseGfxExtendEngine.m_lineGradientD2;
+        m_linearGradientFunction = baseGfxExtendEngine.m_linearGradientFunction;
+        m_radialGradientFunction = baseGfxExtendEngine.m_radialGradientFunction;
+        m_lineWidth = baseGfxExtendEngine.m_lineWidth;
+        m_evenOddFlag = baseGfxExtendEngine.m_evenOddFlag;
+        m_transform = baseGfxExtendEngine.m_transform;
+        shadowBlurRadius_ = baseGfxExtendEngine.shadowBlurRadius_;
+        shadowColor_ = baseGfxExtendEngine.shadowColor_;
+        shadowOffsetX_ = baseGfxExtendEngine.shadowOffsetX_;
+        shadowOffsetY_ = baseGfxExtendEngine.shadowOffsetY_;
+        is_dash = baseGfxExtendEngine.is_dash;
         if (is_dash) {
-            ndashes = o.ndashes;
-            dDashOffset = o.dDashOffset;
+            ndashes = baseGfxExtendEngine.ndashes;
+            dDashOffset = baseGfxExtendEngine.dDashOffset;
             dashes = new float[ndashes];
             if (dashes) {
                 for (unsigned int i = 0; i < ndashes; i++) {
-                    dashes[i] = o.dashes[i];
+                    dashes[i] = baseGfxExtendEngine.dashes[i];
                 }
             } else {
                 ndashes = 0;
@@ -413,7 +413,8 @@ namespace OHOS {
         m_fillRadialGradient.BuildLut();
     }
 
-    void BaseGfxExtendEngine::SetRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y, double end_r)
+    void BaseGfxExtendEngine::SetRadialGradient(
+        double start_x, double start_y, double start_r, double end_x, double end_y, double end_r)
     {
         m_fillRadialMatrix.Reset();
         m_fillRadialMatrix *= OHOS::TransAffineTranslation(end_x, end_y);
@@ -598,7 +599,8 @@ namespace OHOS {
         RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
     }
 
-    void BaseGfxExtendEngine::TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias)
+    void BaseGfxExtendEngine::TransformImage(
+        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -636,10 +638,13 @@ namespace OHOS {
 
         RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
     }
-    void BaseGfxExtendEngine::DrawShadow(double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
+
+    void BaseGfxExtendEngine::DrawShadow(
+        double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
     {
         m_rasterizer.Reset();
-        OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY, m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
+        OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY,
+            m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
         PathTransform shadow_trans(m_convCurve, transform);
         transform.Translate(shadowOffsetX_, shadowOffsetY_);
         if (a != 0) {
@@ -669,7 +674,7 @@ namespace OHOS {
         m_rasterizer.Reset();
     }
     void BaseGfxExtendEngine::DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
-                                         double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
+        double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
     {
         m_path.RemoveAll();
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
@@ -751,15 +756,11 @@ namespace OHOS {
         template <class BaseRenderer, class SolidRenderer>
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, bool fillColor)
         {
-            typedef OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType> span_allocator_type;
-            typedef OHOS::RendererScanlineAntiAlias<BaseRenderer,
-                                                    span_allocator_type,
-                                                    BaseGfxExtendEngine::LinearGradientSpan>
-                RendererLinearGradient;
-            typedef OHOS::RendererScanlineAntiAlias<BaseRenderer,
-                                                    span_allocator_type,
-                                                    BaseGfxExtendEngine::RadialGradientSpan>
-                RendererRadialGradient;
+            using SpanAllocatorType = OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType>;
+            using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
+                                                                           BaseGfxExtendEngine::LinearGradientSpan>;
+            using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
+                                                                           BaseGfxExtendEngine::RadialGradientSpan>;
 
             if (gr.m_fillGradientFlag == BaseGfxExtendEngine::LINEAR) {
                 if (fillColor) {
@@ -805,11 +806,14 @@ namespace OHOS {
         }
 
         template <class BaseRenderer, class SolidRenderer, class Rasterizer, class Scanline>
-        void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
+        void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase,
+            SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
-            typedef OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType> span_allocator_type;
-            typedef OHOS::RendererScanlineAntiAlias<BaseRenderer, span_allocator_type, BaseGfxExtendEngine::LinearGradientSpan> RendererLinearGradient;
-            typedef OHOS::RendererScanlineAntiAlias<BaseRenderer, span_allocator_type, BaseGfxExtendEngine::RadialGradientSpan> RendererRadialGradient;
+            using SpanAllocatorType = OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType>;
+            using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
+                                                                           BaseGfxExtendEngine::LinearGradientSpan>;
+            using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
+                                                                           BaseGfxExtendEngine::RadialGradientSpan>;
 
             if (gr.m_fillGradientFlag == BaseGfxExtendEngine::LINEAR) {
                 BaseGfxExtendEngine::LinearGradientSpan span(
@@ -843,9 +847,9 @@ namespace OHOS {
         {
             BaseGfxExtendEngine::Image& imgc = const_cast<BaseGfxExtendEngine::Image&>(img);
             BaseGfxExtendEngine::PixFormat img_pixf(imgc.renBuf);
-            typedef OHOS::ImageAccessorClone<BaseGfxExtendEngine::PixFormat> img_source_type;
-            img_source_type source(img_pixf);
-            typedef OHOS::SpanImageRgba<img_source_type, Interpolator> SpanGenType;
+            using ImgSourceType = OHOS::ImageAccessorClone<BaseGfxExtendEngine::PixFormat>;
+            ImgSourceType source(img_pixf);
+            using SpanGenType = OHOS::SpanImageRgba<ImgSourceType, Interpolator>;
             SpanGenType sg(source, interpolator);
             OHOS::RenderScanlinesAntiAlias(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, sg);
         }
@@ -893,8 +897,7 @@ namespace OHOS {
     }
 
     struct BaseGfxExtendEngineRasterizerGamma {
-        BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) :
-            m_alpha(alpha), m_gamma(gamma)
+        BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) : m_alpha(alpha), m_gamma(gamma)
         {}
 
         double operator()(double x) const
@@ -940,7 +943,7 @@ namespace OHOS {
     {
         WorldToScreen(offsetX, offsetY);
         m_rasterizer.AddPath(m_pathTransform);
-        pixfmt img_pixf(img.renBuf); //获取图片
+        pixfmt img_pixf(img.renBuf); // 获取图片
         if (strcmp(pattternMode, "repeat") == 0) {
             imgSourceTypeRepeat img_src(img_pixf);
             spanPatternTypeRepeat m_spanPatternType(img_src, 0 - offsetX, 0 - offsetY);
@@ -963,7 +966,7 @@ namespace OHOS {
     void BaseGfxExtendEngine::PatternImageStroke(Image& img, double offsetX, double offsetY, const char* pattternMode)
     {
         WorldToScreen(offsetX, offsetY);
-        pixfmt img_pixf(img.renBuf); //获取图片
+        pixfmt img_pixf(img.renBuf); // 获取图片
         m_rasterizer.AddPath(m_strokeTransform);
         if (strcmp(pattternMode, "repeat") == 0) {
             imgSourceTypeRepeat img_src(img_pixf);
@@ -1031,5 +1034,4 @@ namespace OHOS {
     {
         return OHOS::BoundingRectSingle(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);
     }
-
 } // namespace OHOS

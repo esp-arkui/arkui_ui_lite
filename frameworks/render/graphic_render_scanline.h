@@ -31,7 +31,6 @@
 #include "render/graphic_render_base.h"
 
 namespace OHOS {
-
     /**
      * @brief 渲染实线的反走样扫描线
      * 通过scanline.begin获取第一个span,++span获取下一个span
@@ -87,13 +86,11 @@ namespace OHOS {
         using BaseRenType = BaseRenderer;
         using color_type = typename BaseRenType::color_type;
 
-        RendererScanlineAntiAliasSolid() :
-            renBase_(0)
+        RendererScanlineAntiAliasSolid() : renBase_(0)
         {
         }
-        //构造函数传入BaseRenderer
-        explicit RendererScanlineAntiAliasSolid(BaseRenType& renBase) :
-            renBase_(&renBase)
+        // 构造函数传入BaseRenderer
+        explicit RendererScanlineAntiAliasSolid(BaseRenType& renBase) : renBase_(&renBase)
         {
         }
 
@@ -172,7 +169,7 @@ namespace OHOS {
     {
         if (raster.RewindScanlines()) {
             scanline.Reset(raster.MinX(), raster.MaxX());
-            spanGen.Prepare(); //线段生成器预备
+            spanGen.Prepare(); // 线段生成器预备
             while (raster.SweepScanline(scanline)) {
                 int y = scanline.GetYLevel();
 
@@ -216,21 +213,19 @@ namespace OHOS {
         using BaseRenType = BaseRenderer;
         using AllocType = SpanAllocator;
         using SpanGenType = SpanGenerator;
-        RendererScanlineAntiAlias() :
-            renBase_(0), allocat_(0), spanGenerat_(0)
+        RendererScanlineAntiAlias() : renBase_(0), allocat_(0), spanGenerat_(0)
         {
         }
         RendererScanlineAntiAlias(BaseRenType& renBase,
                                   AllocType& alloc,
-                                  SpanGenType& span_gen) :
-            renBase_(&renBase),
-            allocat_(&alloc), spanGenerat_(&span_gen)
+                                  SpanGenType& span_gen)
+            : renBase_(&renBase), allocat_(&alloc), spanGenerat_(&span_gen)
         {
         }
 
         void Prepare()
         {
-            spanGenerat_->Prepare(); //线段生成器预备
+            spanGenerat_->Prepare(); // 线段生成器预备
         }
         /**
          * @brief Render 开始渲染
@@ -340,12 +335,10 @@ namespace OHOS {
     public:
         using BaseRenType = BaseRenderer;
         using color_type = typename BaseRenType::color_type;
-        RendererScanlineBinSolid() :
-            renBase_(0)
+        RendererScanlineBinSolid() : renBase_(0)
         {
         }
-        explicit RendererScanlineBinSolid(BaseRenType& renBase) :
-            renBase_(&renBase)
+        explicit RendererScanlineBinSolid(BaseRenType& renBase) : renBase_(&renBase)
         {
         }
         void SetColor(const color_type& c)
@@ -406,7 +399,7 @@ namespace OHOS {
     {
         if (raster.rewind_scanlines()) {
             scanline.reset(raster.min_x(), raster.max_x());
-            spanGen.Prepare(); //线段生成器预备
+            spanGen.Prepare(); // 线段生成器预备
             while (raster.sweep_scanline(scanline)) {
                 int y = scanline.y();
                 unsigned num_spans = scanline.num_spans();
@@ -440,15 +433,13 @@ namespace OHOS {
         using BaseRenType = BaseRenderer;
         using AllocType = SpanAllocator;
         using SpanGenType = SpanGenerator;
-        RendererScanlineBin() :
-            renBase_(0), allocat_(0), spanGenerat_(0)
+        RendererScanlineBin() : renBase_(0), allocat_(0), spanGenerat_(0)
         {
         }
         RendererScanlineBin(BaseRenType& renBase,
                             AllocType& alloc,
-                            SpanGenType& span_gen) :
-            renBase_(&renBase),
-            allocat_(&alloc), spanGenerat_(&span_gen)
+                            SpanGenType& span_gen)
+            : renBase_(&renBase), allocat_(&alloc), spanGenerat_(&span_gen)
         {
         }
 
@@ -457,7 +448,7 @@ namespace OHOS {
          */
         void Prepare()
         {
-            spanGenerat_->Prepare(); //线段生成器预备
+            spanGenerat_->Prepare(); // 线段生成器预备
         }
 
         /**
@@ -505,13 +496,12 @@ namespace OHOS {
     {
         if (raster.RewindScanlines()) {
             scanline.Reset(raster.MinX(), raster.MaxX());
-            renBase.Prepare(); //线段生成器预备
+            renBase.Prepare(); // 线段生成器预备
             while (raster.SweepScanline(scanline)) {
                 renBase.Render(scanline);
             }
         }
     }
-
 } // namespace OHOS
 
 #endif
