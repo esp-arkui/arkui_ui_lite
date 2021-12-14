@@ -361,7 +361,6 @@ namespace OHOS {
 
         /**
          * @brief Sets the color of a line or border.
-         *
          * @param color Indicates the line color when a line is drawn or the border color when a closed graph is drawn.
          * @see GetStrokeColor
          * @since 1.0
@@ -374,7 +373,6 @@ namespace OHOS {
 
         /**
          * @brief Obtains the color of a line or border.
-         *
          * @return Returns the line color if a line is drawn or the border color if a closed graph is drawn.
          * @see SetStrokeWidth
          * @since 1.0
