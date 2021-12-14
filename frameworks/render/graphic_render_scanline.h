@@ -53,7 +53,7 @@ namespace OHOS {
             while (raster.SweepScanline(scanline)) {
                 int y = scanline.GetYLevel();
                 unsigned num_spans = scanline.NumSpans();
-                typename Scanline::const_iterator span = scanline.Begin();
+                typename Scanline::ConstIterator span = scanline.Begin();
 
                 while (true) {
                     int x = span->x;
@@ -128,7 +128,7 @@ namespace OHOS {
         {
             int y = scanline.GetYLevel();
             unsigned num_spans = scanline.NumSpans();
-            typename Scanline::const_iterator span = scanline.Begin();
+            typename Scanline::ConstIterator span = scanline.Begin();
 
             for (;;) {
                 int x = span->x;
@@ -177,7 +177,7 @@ namespace OHOS {
                 int y = scanline.GetYLevel();
 
                 unsigned num_spans = scanline.NumSpans();
-                typename Scanline::const_iterator span = scanline.Begin();
+                typename Scanline::ConstIterator span = scanline.Begin();
                 while (true) {
                     int x = span->x;
                     int len = span->spanLength;
@@ -246,7 +246,7 @@ namespace OHOS {
             int y = scanline.GetYLevel();
 
             unsigned num_spans = scanline.NumSpans();
-            typename Scanline::const_iterator span = scanline.Begin();
+            typename Scanline::ConstIterator span = scanline.Begin();
             while (true) {
                 int x = span->x;
                 int len = span->spanLength;
@@ -287,7 +287,7 @@ namespace OHOS {
                                 const ColorT& color)
     {
         unsigned num_spans = scanline.num_spans();
-        typename Scanline::const_iterator span = scanline.begin();
+        typename Scanline::ConstIterator span = scanline.begin();
         for (;;) {
             renBase.blend_hline(span->x,
                                 scanline.y(),
@@ -320,7 +320,7 @@ namespace OHOS {
             scanline.reset(raster.min_x(), raster.max_x());
             while (raster.sweep_scanline(scanline)) {
                 unsigned num_spans = scanline.num_spans();
-                typename Scanline::const_iterator span = scanline.begin();
+                typename Scanline::ConstIterator span = scanline.begin();
                 for (;;) {
                     renBase.BlendHline(span->x,
                                        scanline.y(),
@@ -369,7 +369,7 @@ namespace OHOS {
         void Render(const Scanline& scanline)
         {
             unsigned num_spans = scanline.num_spans();
-            typename Scanline::const_iterator span = scanline.begin();
+            typename Scanline::ConstIterator span = scanline.begin();
             for (;;) {
                 renBase_->BlendHline(span->x,
                                      scanline.y(),
@@ -410,7 +410,7 @@ namespace OHOS {
             while (raster.sweep_scanline(scanline)) {
                 int y = scanline.y();
                 unsigned num_spans = scanline.num_spans();
-                typename Scanline::const_iterator span = scanline.begin();
+                typename Scanline::ConstIterator span = scanline.begin();
                 for (;;) {
                     int x = span->x;
                     int len = span->len;
@@ -473,7 +473,7 @@ namespace OHOS {
         {
             int y = scanline.y();
             unsigned num_spans = scanline.num_spans();
-            typename Scanline::const_iterator span = scanline.begin();
+            typename Scanline::ConstIterator span = scanline.begin();
             for (;;) {
                 int x = span->x;
                 int len = span->len;
