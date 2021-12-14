@@ -1366,7 +1366,11 @@ namespace OHOS {
         if ((imageParam->height == 0) || (imageParam->width == 0)) {
             return;
         }
-        uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
+        const ImageInfo* imgInfo = imageParam->image->GetImageInfo();
+        if(imgInfo == nullptr) {
+            return;
+        }
+        uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imgInfo->header.colorMode);
         BaseGfxExtendEngine::Image imageBuffer((unsigned char*)imageParam->image->GetImageInfo()->data,
                                                (int)imageParam->width, (int)imageParam->height,
                                                (int)imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
