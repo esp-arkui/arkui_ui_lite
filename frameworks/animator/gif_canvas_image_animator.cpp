@@ -120,8 +120,8 @@ void GifCanvasImageAnimator::DealGifImageData(const GifFileType* gifFileType,
     uint32_t index = 0;
     bool transparentColor = true;
     int32_t loc = 0;
-    memset_s(gifImageData_,gifFileType->SHeight *  gifFileType->SWidth* 4,
-             0, gifFileType->SHeight *  gifFileType->SWidth* 4);
+//    memset_s(gifImageData_,gifFileType->SHeight *  gifFileType->SWidth* 4,
+//             0, gifFileType->SHeight *  gifFileType->SWidth* 4);
     for (int32_t x = 0; x < gifFileType->SHeight; x++) {
         for (int32_t y = 0; y < gifFileType->SWidth; y++) {
             transparentColor = true;
