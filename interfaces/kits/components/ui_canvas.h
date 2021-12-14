@@ -92,8 +92,7 @@ namespace OHOS {
             ColorType color;
         };
 
-        enum Gradient
-        {
+        enum Gradient {
             Solid,
             Linear,
             Radial
@@ -166,8 +165,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Paint() :
-            style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
+        Paint()
+            : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
@@ -212,7 +211,8 @@ namespace OHOS {
             if (isDrawDash && ndashes > 0) {
                 dashArray = new float[ndashes];
                 if (dashArray) {
-                    memset(dashArray, 0, ndashes * sizeof(float));
+                    if (memset_s(dashArray, ndashes * sizeof(float), 0, ndashes * sizeof(float)) != EOF) {
+                    }
                     for (unsigned int i = 0; i < ndashes; i++) {
                         dashArray[i] = paint.dashArray[i];
                     }
@@ -255,8 +255,7 @@ namespace OHOS {
         /**
          * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
          */
-        enum PaintStyle
-        {
+        enum PaintStyle {
             /** Stroke only */
             STROKE_STYLE = 1,
             /** Fill only */
@@ -275,8 +274,7 @@ namespace OHOS {
         /**
          * repeat|repeat-x|repeat-y|no-repeat
          */
-        enum PatternRepeat
-        {
+        enum PatternRepeat {
             REPEAT,
             REPEAT_X,
             REPEAT_Y,
@@ -479,7 +477,8 @@ namespace OHOS {
             isDrawDash = true;
             dashArray = new float[ndashes];
             if (dashArray) {
-                memset(dashArray, 0, ndashes * sizeof(float));
+                if (memset_s(dashArray, ndashes * sizeof(float), 0, ndashes * sizeof(float)) != EOF) {
+                }
                 for (unsigned int i = 0; i < ndashes; i++) {
                     dashArray[i] = lineDashs[i];
                 }
@@ -1241,8 +1240,7 @@ namespace OHOS {
                 }
             };
         };
-        enum PathCmd
-        {
+        enum PathCmd {
             CMD_MOVE_TO,
             CMD_LINE_TO,
             CMD_ARC,
@@ -1276,7 +1274,7 @@ namespace OHOS {
         Point startPoint_;
         UICanvasPath* path_;
         List<DrawCmd> drawCmdList_;
-        //保存Paint的历史修改信息
+        // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
         static void DeleteTextParam(void* param)
         {
@@ -1372,7 +1370,7 @@ namespace OHOS {
         static void DoDrawImage(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                 const Rect& invalidatedArea, const Style& style);
 
-        /*绘制图元时，开始执行变换操作*/
+        /* 绘制图元时，开始执行变换操作 */
         static void StartTransform(const Rect& rect, const Rect& invalidatedArea, const Paint& paint);
 
         static void DoDrawPattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
