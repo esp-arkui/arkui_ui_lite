@@ -1101,8 +1101,26 @@ namespace OHOS {
             paint.SetStrokeWidth(lineWidth);
         }
 
-        void fill(const Paint& paint);
-        void stroke(const Paint& paint);
+        /**
+         * @brief 填充渐变和pattern
+         */
+        void Fill(const Paint& paint);
+        /**
+         * @brief 绘制路径渐变和pattern模式
+         */
+        void Stroke(const Paint& paint);
+        /**
+         * @brief 根据设置模式去绘制路径或者填充
+         */
+        void Gradient(const Paint& paint);
+        /**
+         * @brief 根据pattern模式填充路径绘制的区域
+         */
+        void FillPattern(const Paint& paint);
+        /**
+         * @brief 根据pattern模式填充绘制的路径
+         */
+        void StrokePattern(const Paint& paint);
 
         /*  在画布上绘制文本 */
         void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);

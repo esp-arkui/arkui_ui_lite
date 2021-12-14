@@ -13,18 +13,17 @@
 * limitations under the License.
 */
 
-
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_RGBA_BLEND_INCLUDED
 #define GRAPHIC_GEOMETRY_PIXFMT_RGBA_BLEND_INCLUDED
 
 #include <cmath>
 #include <cstring>
 
+#include "gfx_utils/heap_base.h"
 #include "graphic_render_pixfmt_rgba_conv.h"
 #include "graphic_render_pixfmt_rgba_gamma.h"
-#include "gfx_utils/heap_base.h"
-#include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_buffer.h"
+#include "render/graphic_render_pixfmt_base.h"
 namespace OHOS {
     /**
      * @file graphic_geometry_pixfmt_rgba.h
@@ -250,7 +249,7 @@ namespace OHOS {
             ColorType Get() const
             {
                 return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
-                    colors[OrderType::BLUE], colors[OrderType::ALPHA]);
+                                 colors[OrderType::BLUE], colors[OrderType::ALPHA]);
             }
             /**
             * @brief 获取下一个像素的颜色分量.
@@ -350,9 +349,11 @@ namespace OHOS {
         }
 
     public:
-        PixfmtAlphaBlendRgba() : rbuf_(0)
+        PixfmtAlphaBlendRgba() :
+            rbuf_(0)
         {}
-        explicit PixfmtAlphaBlendRgba(RbufType& rb) : rbuf_(&rb)
+        explicit PixfmtAlphaBlendRgba(RbufType& rb) :
+            rbuf_(&rb)
         {}
         /**
          * @brief 把像素缓冲区附加到混合器.
@@ -377,7 +378,7 @@ namespace OHOS {
             if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
                 int stride = pixf.Stride();
                 rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),
-                    (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                              (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
                 return true;
             }
             return false;
@@ -702,7 +703,7 @@ namespace OHOS {
             if (!c.IsTransparent()) {
                 PixelType* p = PixValuePtr(x, y, len);
                 do {
-                    if (c.IsOpaque() && *covers == cover_mask) {
+                    if (c.IsOpaque() && *covers == COVER_MASK) {
                         p->Set(c);
                     } else {
                         BlendPix(p, c, *covers);
@@ -897,7 +898,7 @@ namespace OHOS {
         {
             if (const int8u* p = from.row_ptr(ysrc)) {
                 if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
-                    len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOK) {
+                              len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOK) {
                 }
             }
         }
@@ -1118,10 +1119,11 @@ namespace OHOS {
         }
 
     public:
-        PixfmtCustomBlendRgba() : rbuf_(0), compOp_(COMP_OP_VALUE)
+        PixfmtCustomBlendRgba() :
+            rbuf_(0), compOp_(COMP_OP_VALUE)
         {}
-        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3)
-            : rbuf_(&rb), compOp_(compOp)
+        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
+            rbuf_(&rb), compOp_(compOp)
         {}
         void Attach(RbufType& rb)
         {
@@ -1140,7 +1142,7 @@ namespace OHOS {
             if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
                 int stride = pixf.Stride();
                 rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),
-                    (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
+                              (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
                 return true;
             }
             return false;
@@ -1528,7 +1530,7 @@ namespace OHOS {
         {
             if (const int8u* p = from.RowPtr(ysrc)) {
                 if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
-                    len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOF) {
+                              len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOF) {
                 }
             }
         }

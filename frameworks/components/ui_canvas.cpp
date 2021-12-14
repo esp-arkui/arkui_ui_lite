@@ -130,9 +130,9 @@ namespace OHOS {
         }
 
         MoveTo(point);
-        LineTo({static_cast<int16_t>(point.x + width), point.y});
-        LineTo({static_cast<int16_t>(point.x + width), static_cast<int16_t>(point.y + height)});
-        LineTo({point.x, static_cast<int16_t>(point.y + height)});
+        LineTo( {static_cast<int16_t>(point.x + width), point.y});
+        LineTo( {static_cast<int16_t>(point.x + width), static_cast<int16_t>(point.y + height)});
+        LineTo( {point.x, static_cast<int16_t>(point.y + height)});
         ClosePath();
     }
 
@@ -631,7 +631,8 @@ namespace OHOS {
                          posViewTop + trunc.GetHeight() - 1),
                     curDraw->data_.paint);
 
-                curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_);
+                curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                            curDraw->data_.paint, rect, trunc, *style_);
             }
             BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr, gfxMapBuffer->width,
                                                    gfxMapBuffer->height, gfxMapBuffer->stride);
@@ -918,138 +919,137 @@ namespace OHOS {
         m_graphics.BuildLut();
     }
 
-    void UICanvas::fill(const Paint& paint)
+    void UICanvas::FillPattern(const Paint& paint)
     {
-        if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
-            if (strcmp(paint.image, "") == 0) {
-                return;
-            }
-
-            ImageParam* imageParam = new ImageParam;
-            if (imageParam == nullptr) {
-                GRAPHIC_LOGE("new ImageParam fail");
-                return;
-            }
-            imageParam->image = new Image();
-            if (imageParam->image == nullptr) {
-                delete imageParam;
-                imageParam = nullptr;
-                return;
-            }
-
-            imageParam->image->SetSrc(paint.image);
-            ImageHeader header = {0};
-            imageParam->image->GetHeader(header);
-            imageParam->start = {0, 0};
-            imageParam->height = header.height;
-            imageParam->width = header.width;
-
-            PathParam* param = new PathParam;
-            if (param == nullptr) {
-                GRAPHIC_LOGE("new PathParam fail");
-                return;
-            }
-            param->path = path_;
-            param->count = path_->cmd_.Size();
-            DrawCmd cmd2;
-            cmd2.paint = paint;
-            cmd2.param = param;
-            cmd2.DeleteParam = DeletePathParam;
-            cmd2.DrawGraphics = DoDrawPath;
-            drawCmdList_.PushBack(cmd2);
-
-            DrawCmd cmd;
-            cmd.paint = paint;
-            cmd.param = imageParam;
-            cmd.DeleteParam = DeleteImageParam;
-            cmd.DrawGraphics = DoDrawPattern;
-            drawCmdList_.PushBack(cmd);
+        if (strcmp(paint.image, "") == 0) {
+            return;
         }
 
-        if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) {
-            PathParam* param = new PathParam;
-            if (param == nullptr) {
-                GRAPHIC_LOGE("new PathParam fail");
-                return;
-            }
-            param->path = path_;
-            param->count = path_->cmd_.Size();
-            DrawCmd cmd2;
-            cmd2.paint = paint;
-            cmd2.param = param;
-            cmd2.DeleteParam = DeletePathParam;
-            cmd2.DrawGraphics = DoGradient;
-            drawCmdList_.PushBack(cmd2);
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
         }
 
+        imageParam->image->SetSrc(paint.image);
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = {0, 0};
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoDrawPath;
+        drawCmdList_.PushBack(cmd2);
+
+        DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = imageParam;
+        cmd.DeleteParam = DeleteImageParam;
+        cmd.DrawGraphics = DoDrawPattern;
+        drawCmdList_.PushBack(cmd);
         Invalidate();
     }
 
-    void UICanvas::stroke(const Paint& paint)
+    void UICanvas::StrokePattern(const Paint& paint)
+    {
+        if (strcmp(paint.image, "") == 0) {
+            return;
+        }
+
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
+        }
+
+        imageParam->image->SetSrc(paint.image);
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = {0, 0};
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoDrawPath;
+        drawCmdList_.PushBack(cmd2);
+
+        DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = imageParam;
+        cmd.DeleteParam = DeleteImageParam;
+        cmd.DrawGraphics = DoStrokePattern;
+        drawCmdList_.PushBack(cmd);
+        Invalidate();
+    }
+    void UICanvas::Gradient(const Paint &paint)
+    {
+        PathParam* param = new PathParam;
+        if (param == nullptr) {
+            GRAPHIC_LOGE("new PathParam fail");
+            return;
+        }
+        param->path = path_;
+        param->count = path_->cmd_.Size();
+        DrawCmd cmd2;
+        cmd2.paint = paint;
+        cmd2.param = param;
+        cmd2.DeleteParam = DeletePathParam;
+        cmd2.DrawGraphics = DoGradient;
+        drawCmdList_.PushBack(cmd2);
+        Invalidate();
+    }
+
+    void UICanvas::Fill(const Paint& paint)
     {
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
-            if (strcmp(paint.image, "") == 0) {
-                return;
-            }
-
-            ImageParam* imageParam = new ImageParam;
-            if (imageParam == nullptr) {
-                GRAPHIC_LOGE("new ImageParam fail");
-                return;
-            }
-            imageParam->image = new Image();
-            if (imageParam->image == nullptr) {
-                delete imageParam;
-                imageParam = nullptr;
-                return;
-            }
-
-            imageParam->image->SetSrc(paint.image);
-            ImageHeader header = {0};
-            imageParam->image->GetHeader(header);
-            imageParam->start = {0, 0};
-            imageParam->height = header.height;
-            imageParam->width = header.width;
-
-            PathParam* param = new PathParam;
-            if (param == nullptr) {
-                GRAPHIC_LOGE("new PathParam fail");
-                return;
-            }
-            param->path = path_;
-            param->count = path_->cmd_.Size();
-            DrawCmd cmd2;
-            cmd2.paint = paint;
-            cmd2.param = param;
-            cmd2.DeleteParam = DeletePathParam;
-            cmd2.DrawGraphics = DoDrawPath;
-            drawCmdList_.PushBack(cmd2);
-
-            DrawCmd cmd;
-            cmd.paint = paint;
-            cmd.param = imageParam;
-            cmd.DeleteParam = DeleteImageParam;
-            cmd.DrawGraphics = DoStrokePattern;
-            drawCmdList_.PushBack(cmd);
+            FillPattern(paint);
         }
+        if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) {
+            Gradient(paint);
+        }
+    }
 
+    void UICanvas::Stroke(const Paint& paint)
+    {
+        if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
+            StrokePattern(paint);
+        }
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) {
-            PathParam* param = new PathParam;
-            if (param == nullptr) {
-                GRAPHIC_LOGE("new PathParam fail");
-                return;
-            }
-            param->path = path_;
-            param->count = path_->cmd_.Size();
-            DrawCmd cmd2;
-            cmd2.paint = paint;
-            cmd2.param = param;
-            cmd2.DeleteParam = DeletePathParam;
-            cmd2.DrawGraphics = DoGradient;
-            drawCmdList_.PushBack(cmd2);
+            Gradient(paint);
         }
-
-        Invalidate();
     }
 
     void UICanvas::setGradient(BaseGfxExtendEngine& m_graphics, const Paint& paint, const Rect& rect,
