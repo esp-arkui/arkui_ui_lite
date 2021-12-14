@@ -293,7 +293,7 @@ namespace OHOS {
                                 scanline.y(),
                                 span->x - 1 + ((span->len < 0) ? -span->len : span->len),
                                 color,
-                                cover_full);
+                                COVER_FULL);
             if (--num_spans == 0)
                 break;
             ++span;
@@ -326,7 +326,7 @@ namespace OHOS {
                                        scanline.y(),
                                        span->x - 1 + ((span->len < 0) ? -span->len : span->len),
                                        ren_color,
-                                       cover_full);
+                                       COVER_FULL);
                     if (--num_spans == 0)
                         break;
                     ++span;
@@ -375,7 +375,7 @@ namespace OHOS {
                                      scanline.y(),
                                      span->x - 1 + ((span->len < 0) ? -span->len : span->len),
                                      color_,
-                                     cover_full);
+                                     COVER_FULL);
                 if (--num_spans == 0)
                     break;
                 ++span;
@@ -419,7 +419,7 @@ namespace OHOS {
                     }
                     typename BaseRenderer::color_type* colors = alloc.Resize(len);
                     spanGen.Generate(colors, x, y, len);
-                    renBase.BlendColorHspan(x, y, len, colors, 0, cover_full);
+                    renBase.BlendColorHspan(x, y, len, colors, 0, COVER_FULL);
                     if (--num_spans == 0)
                         break;
                     ++span;
@@ -481,7 +481,7 @@ namespace OHOS {
                     len = -len;
                 typename BaseRenderer::color_type* colors = allocat_->Resize(len);
                 spanGenerat_->Generate(colors, x, y, len);
-                renBase_->BlendColorHspan(x, y, len, colors, 0, cover_full);
+                renBase_->BlendColorHspan(x, y, len, colors, 0, COVER_FULL);
                 if (--num_spans == 0)
                     break;
                 ++span;
