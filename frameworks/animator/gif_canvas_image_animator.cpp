@@ -1,6 +1,9 @@
 #include "animator/gif_canvas_image_animator.h"
 #include "draw/draw_utils.h"
+#include <securec.h>
 namespace OHOS {
+const int HUNDREDTHS = 10;
+const int GIF_PIX_SIZE = 4;
 const void GifCanvasImageAnimator::OpenGifFile(const char* src)
 {
     int32_t error = D_GIF_SUCCEEDED;
@@ -37,8 +40,6 @@ void GifCanvasImageAnimator::Callback(UIView* view)
     if (view == nullptr) {
         return;
     }
-
-    //UICanvas* imageView = static_cast<UiView*>(view);
     if(view == nullptr){
      return;
     }
@@ -98,8 +99,7 @@ uint32_t GifCanvasImageAnimator::SetGifFrame(GifFileType* gifFileType, int32_t i
 
     if (gcb.DelayTime >= 0) {
         imageView->Invalidate();
-        return static_cast<uint32_t>(gcb.DelayTime) * 10; // 10: change hundredths (1/100) of a second to millisecond
-
+        return static_cast<uint32_t>(gcb.DelayTime) * HUNDREDTHS; // 10: change hundredths (1/100) of a second to millisecond
     } else {
         return 0;
     }
@@ -120,21 +120,23 @@ void GifCanvasImageAnimator::DealGifImageData(const GifFileType* gifFileType,
     uint32_t index = 0;
     bool transparentColor = true;
     int32_t loc = 0;
+//    memset_s(gifImageData_,gifFileType->SHeight *  gifFileType->SWidth* 4,
+//             0, gifFileType->SHeight *  gifFileType->SWidth* 4);
     for (int32_t x = 0; x < gifFileType->SHeight; x++) {
         for (int32_t y = 0; y < gifFileType->SWidth; y++) {
             transparentColor = true;
             if ((x >= gifImageDesc->Top) && (x < gifImageDesc->Top + gifImageDesc->Height) &&
                 (y >= gifImageDesc->Left) && (y < gifImageDesc->Left + gifImageDesc->Width)) {
+
                 loc = (x - gifImageDesc->Top) * gifImageDesc->Width + (y - gifImageDesc->Left);
                 colorIndex = savedImage->RasterBits[loc];
-
-                if ((gcb.DisposalMode != DISPOSE_DO_NOT) || (gcb.TransparentColor == NO_TRANSPARENT_COLOR) ||
-                    (colorIndex != gcb.TransparentColor)) {
+                if ( (gcb.TransparentColor == NO_TRANSPARENT_COLOR)
+                        || (colorIndex != gcb.TransparentColor)) {
                     transparentColor = false;
                 }
             }
             if (transparentColor) {
-                index += 4; // 4: skip color index, keep last frame color
+                index += GIF_PIX_SIZE; // GIF_PIX_SIZE: skip color index, keep last frame color
             } else {
                 gifColorType = &colorMap->Colors[colorIndex];
                 gifImageData_[index++] = gifColorType->Blue;
