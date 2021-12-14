@@ -181,6 +181,27 @@ namespace OHOS {
             Init(paint);
         }
 
+        /*
+         * 对于数据成员进行初始化
+         * style_;       paint style
+         * fillColor_;   设置笔的填充颜色
+         * strokeColor_; 设置笔的线条颜色
+         * opacity_;     设置透明度
+         * strokeWidth_; 设置线宽
+         * lineCap_;     设置笔帽
+         * lineJoin_;    设置笔的路径连接处的风格样式
+         * miterLimit_;  设置路径连接处的尖角的间距限制
+         * dashOffset;   dash 点偏移量
+         * isDrawDash;   是否绘制点划线
+         * dashArray;    dash 点数组
+         * ndashes;      点划线数量
+         * globalAlpha;  设置图元全局alpha
+         * shadowBlurRadius;  设置阴影模糊半径
+         * shadowOffsetX;     设置阴影横坐标偏移量
+         * shadowOffsetY;     设置阴影纵坐标偏移量
+         * shadowColor;       设置阴影色彩
+         * blendMode;     设置多图元混合渲染模式
+         */
         void Init(const Paint& paint)
         {
             style_ = paint.style_;
@@ -217,8 +238,9 @@ namespace OHOS {
                         dashArray[i] = paint.dashArray[i];
                     }
                 } else {
-                    // memory alloc error, ignore this dash
-                    // I think it is never happen.
+                    /*memory alloc error, ignore this dash
+                     *I think it is never happen.
+                     */
                     ndashes = 0;
                     dashOffset = 0;
                     isDrawDash = false;
@@ -394,9 +416,7 @@ namespace OHOS {
 
         /**
          * @brief Sets the opacity.
-         *
          * The setting takes effect for the entire graph, including the border, line color, and fill color.
-         *
          * @param opacity Indicates the opacity. The value range is [0, 255].
          * @see GetOpacity
          * @since 1.0
