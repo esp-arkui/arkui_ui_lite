@@ -349,11 +349,9 @@ namespace OHOS {
         }
 
     public:
-        PixfmtAlphaBlendRgba() :
-            rbuf_(0)
+        PixfmtAlphaBlendRgba() : rbuf_(0)
         {}
-        explicit PixfmtAlphaBlendRgba(RbufType& rb) :
-            rbuf_(&rb)
+        explicit PixfmtAlphaBlendRgba(RbufType& rb) : rbuf_(&rb)
         {}
         /**
          * @brief 把像素缓冲区附加到混合器.
@@ -1119,11 +1117,10 @@ namespace OHOS {
         }
 
     public:
-        PixfmtCustomBlendRgba() :
-            rbuf_(0), compOp_(COMP_OP_VALUE)
+        PixfmtCustomBlendRgba() : rbuf_(0), compOp_(COMP_OP_VALUE)
         {}
-        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
-            rbuf_(&rb), compOp_(compOp)
+        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3)
+            : rbuf_(&rb), compOp_(compOp)
         {}
         void Attach(RbufType& rb)
         {
