@@ -455,7 +455,7 @@ namespace OHOS {
         }
         /**
          * @brief 设置笔帽类型.
-         * @see GetMiterLimit
+         * @see GetLineCap
          * @since 1.0
          * @version 1.0
          */
@@ -465,7 +465,7 @@ namespace OHOS {
         }
         /**
          * @brief 获取笔帽类型.
-         * @see GetMiterLimit
+         * @see SetLineCap
          * @since 1.0
          * @version 1.0
          */
