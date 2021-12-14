@@ -91,7 +91,7 @@ namespace OHOS {
         float sinma = radius * Sin(startAngle);
         float cosma = radius * Sin(QUARTER_IN_DEGREE - startAngle);
         if (path_->cmd_.Size() != 0) {
-            path_->points_.PushBack( {MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
+            path_->points_.PushBack({MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
             path_->cmd_.PushBack(CMD_LINE_TO);
         } else {
             path_->startPos_ = {MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)};
@@ -102,7 +102,7 @@ namespace OHOS {
             sinma = radius * Sin(endAngle);
             cosma = radius * Sin(QUARTER_IN_DEGREE - endAngle);
         }
-        path_->points_.PushBack( {MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
+        path_->points_.PushBack({MATH_ROUND(center.x + sinma), MATH_ROUND(center.y - cosma)});
         path_->cmd_.PushBack(CMD_ARC);
 
         int16_t start;
@@ -130,9 +130,9 @@ namespace OHOS {
         }
 
         MoveTo(point);
-        LineTo( {static_cast<int16_t>(point.x + width), point.y});
-        LineTo( {static_cast<int16_t>(point.x + width), static_cast<int16_t>(point.y + height)});
-        LineTo( {point.x, static_cast<int16_t>(point.y + height)});
+        LineTo({static_cast<int16_t>(point.x + width), point.y});
+        LineTo({static_cast<int16_t>(point.x + width), static_cast<int16_t>(point.y + height)});
+        LineTo({point.x, static_cast<int16_t>(point.y + height)});
         ClosePath();
     }
 
@@ -611,7 +611,7 @@ namespace OHOS {
             int16_t posViewTop = rect.GetY() - trunc.GetY();
             int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
             int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
-            std::shared_ptr<BufferInfo> gfxMapBuffer =std::make_shared<BufferInfo>();
+            std::shared_ptr<BufferInfo> gfxMapBuffer = std::make_shared<BufferInfo>();
             if (memcpy_s(gfxMapBuffer.get(), sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
                 return;
             }
@@ -1014,7 +1014,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
         Invalidate();
     }
-    void UICanvas::Gradient(const Paint &paint)
+    void UICanvas::Gradient(const Paint& paint)
     {
         PathParam* param = new PathParam;
         if (param == nullptr) {
@@ -1116,7 +1116,7 @@ namespace OHOS {
         Style drawStyle = StyleDefault::GetDefaultStyle();
 
         ArcInfo arcInfo = {{0}};
-        arcInfo.imgPos = Point {0, 0};
+        arcInfo.imgPos = Point{0, 0};
         arcInfo.startAngle = 0;
         arcInfo.endAngle = CIRCLE_IN_DEGREE;
         GetAbsolutePosition(circleParam->center, rect, style, arcInfo.center);
@@ -1151,7 +1151,7 @@ namespace OHOS {
         }
 
         if (paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
-            paint.globalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BLENDNONE) {
+            paint.GetGlobalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BLENDNONE) {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
         } else {
@@ -1175,7 +1175,7 @@ namespace OHOS {
             }
 
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
-            m_graphics->SetBlendMode(paint.globalCompositeOperation());
+            m_graphics->SetBlendMode(paint.GetGlobalCompositeOperation());
             if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
                 m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -1199,7 +1199,7 @@ namespace OHOS {
         ArcParam* arcParam = static_cast<ArcParam*>(param);
 
         ArcInfo arcInfo = {{0}};
-        arcInfo.imgPos = Point {0, 0};
+        arcInfo.imgPos = Point{0, 0};
         arcInfo.startAngle = arcParam->startAngle;
         arcInfo.endAngle = arcParam->endAngle;
         Style drawStyle = StyleDefault::GetDefaultStyle();
@@ -1411,7 +1411,7 @@ namespace OHOS {
         UILabel* label = static_cast<UILabel*>(param);
         Point startPos = {label->GetX(), label->GetY()};
         Point start;
-        GetAbsolutePosition( {startPos.x, startPos.y}, rect, style, start);
+        GetAbsolutePosition({startPos.x, startPos.y}, rect, style, start);
         label->SetPosition(start.x, start.y);
         label->OnDraw(gfxDstBuffer, invalidatedArea);
         label->SetPosition(startPos.x, startPos.y);
@@ -1474,7 +1474,7 @@ namespace OHOS {
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
         Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
 
-        std::shared_ptr<BufferInfo> pGfxMapBuffer =std::make_shared<BufferInfo>();
+        std::shared_ptr<BufferInfo> pGfxMapBuffer = std::make_shared<BufferInfo>();
         pGfxMapBuffer->rect = textRect;
         pGfxMapBuffer->width = textRect.GetWidth();
         pGfxMapBuffer->height = textRect.GetHeight();
@@ -1518,7 +1518,7 @@ namespace OHOS {
     {
         ArcInfo arcinfo = {{0}};
         arcinfo.center = center;
-        arcinfo.imgPos = Point {0, 0};
+        arcinfo.imgPos = Point{0, 0};
         arcinfo.radius = (paint.GetStrokeWidth() + 1) >> 1;
         arcinfo.startAngle = 0;
         arcinfo.endAngle = CIRCLE_IN_DEGREE;
@@ -1628,7 +1628,7 @@ namespace OHOS {
                 }
                 case CMD_ARC: {
                     ArcInfo arcInfo = {{0}};
-                    arcInfo.imgPos = Point {0, 0};
+                    arcInfo.imgPos = Point{0, 0};
                     arcInfo.startAngle = arcIter->data_.startAngle;
                     arcInfo.endAngle = arcIter->data_.endAngle;
                     Style drawStyle = StyleDefault::GetDefaultStyle();
@@ -1769,7 +1769,7 @@ namespace OHOS {
                 }
                 case CMD_ARC: {
                     ArcInfo arcInfo = {{0}};
-                    arcInfo.imgPos = Point {0, 0};
+                    arcInfo.imgPos = Point{0, 0};
                     arcInfo.startAngle = arcIter->data_.startAngle;
                     arcInfo.endAngle = arcIter->data_.endAngle;
                     Style drawStyle = StyleDefault::GetDefaultStyle();

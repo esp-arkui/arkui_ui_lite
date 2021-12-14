@@ -165,8 +165,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Paint()
-            : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
+        Paint() :
+            style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
@@ -419,6 +419,13 @@ namespace OHOS {
         {
             return opacity_;
         }
+
+        /**
+         * @brief 设置路径连接处的尖角的间距限制.
+         * @see GetMiterLimit
+         * @since 1.0
+         * @version 1.0
+         */
         void SetMiterLimit(double miterLimit)
         {
             miterLimit_ = miterLimit;
@@ -428,32 +435,61 @@ namespace OHOS {
         {
             return miterLimit_;
         }
-
+        /**
+         * @brief 设置笔帽类型.
+         * @see GetMiterLimit
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineCap(BaseGfxExtendEngine::LineCap lineCap)
         {
             lineCap_ = lineCap;
         }
-
+        /**
+         * @brief 获取笔帽类型.
+         * @see GetMiterLimit
+         * @since 1.0
+         * @version 1.0
+         */
         BaseGfxExtendEngine::LineCap GetLineCap() const
         {
             return lineCap_;
         }
-
+        /**
+         * @brief 设置笔的路径连接处的风格样式.
+         * @see GetLineJoin
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineJoin(BaseGfxExtendEngine::LineJoin lineJoin)
         {
             lineJoin_ = lineJoin;
         }
-
+        /**
+         * @brief 获取笔的路径连接处的风格样式.
+         * @see SetLineJoin
+         * @since 1.0
+         * @version 1.0
+         */
         BaseGfxExtendEngine::LineJoin GetLineJoin() const
         {
             return lineJoin_;
         }
-
+        /**
+         * @brief 设置点划线的偏移量.
+         * @see GetLineDashOffset
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineDashOffset(float dashOffset)
         {
             m_graphics->SetLineDashOffset(dashOffset);
         }
-
+        /**
+         * @brief 获取点划线的偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         float GetLineDashOffset() const
         {
             return m_graphics->GetLineDashOffset();
@@ -462,7 +498,12 @@ namespace OHOS {
         {
             return m_graphics.get();
         }
-
+        /**
+         * @brief 设置点划线的数组和数量.
+         * @param lineDashs 表示点划线数组,ndash 表示点划线数量
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineDash(float* lineDashs, const unsigned int ndash)
         {
             if (ndash < 0) {
@@ -490,7 +531,11 @@ namespace OHOS {
                 isDrawDash = false;
             }
         }
-
+        /**
+         * @brief 清空点划线的，改用实现绘制.
+         * @since 1.0
+         * @version 1.0
+         */
         void ClearLineDash(void)
         {
             dashOffset = 0;
@@ -516,52 +561,92 @@ namespace OHOS {
         {
             return ndashes;
         }
-
+        /**
+         * @brief 设置全局alpha度.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetGlobalAlpha(float globalAlpha)
         {
             this->globalAlpha = globalAlpha;
         }
-
+        /**
+         * @brief 获取全局alpha度.
+         * @since 1.0
+         * @version 1.0
+         */
         float GetGlobalAlpha() const
         {
             return globalAlpha;
         }
-
+        /**
+         * @brief 获取阴影模糊半径.
+         * @since 1.0
+         * @version 1.0
+         */
         double GetShadowBlurRadius() const
         {
             return shadowBlurRadius;
         }
-
+        /**
+         * @brief 设置阴影模糊半径.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowBlurRadius(double radius)
         {
             shadowBlurRadius = radius;
         }
-
+        /**
+         * @brief 获取阴影横坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         double GetShadowOffsetX() const
         {
             return shadowOffsetX;
         }
-
+        /**
+         * @brief 设置阴影横坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowOffsetX(double offset)
         {
             shadowOffsetX = offset;
         }
-
+        /**
+         * @brief 获取阴影纵坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         double GetShadowOffsetY() const
         {
             return shadowOffsetY;
         }
-
+        /**
+         * @brief 设置阴影纵坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowOffsetY(double offset)
         {
             shadowOffsetY = offset;
         }
-
+        /**
+         * @brief 获取阴影的颜色值.
+         * @since 1.0
+         * @version 1.0
+         */
         ColorType GetShadowColor() const
         {
             return shadowColor;
         }
-
+        /**
+         * @brief 设置阴影的颜色值.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowColor(ColorType color)
         {
             shadowColor = color;
@@ -627,16 +712,23 @@ namespace OHOS {
             scaleX = x;
             scaleY = y;
         }
-        void globalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
+        /*
+         * 设置图元混合渲染模式
+         * @param BaseGfxExtendEngine::BlendMode 表示图元混合渲染模式
+         */
+        void SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
         {
             this->blendMode = blendMode;
         }
 
-        BaseGfxExtendEngine::BlendMode globalCompositeOperation() const
+        BaseGfxExtendEngine::BlendMode GetGlobalCompositeOperation() const
         {
             return this->blendMode;
         }
-
+        /*
+         * 设置图元用图案填充样式
+         * @param img 表示填充的图案，text表示填充样式
+         */
         void createPattern(const char* img, const char* text)
         {
             image = img;
@@ -651,10 +743,19 @@ namespace OHOS {
                 patternRepeat = NO_REPEAT;
             }
         }
+
+        /*
+         * 设置图元填充样式
+         * @param GradientControl表示渐变控制器
+         */
         void fillStyle(GradientControl& ctrl)
         {
             gradientControl = ctrl;
         }
+        /*
+         * 设置图元填充样式颜色
+         * @param ColorType表示颜色值类型
+         */
         void fillStyle(ColorType color)
         {
             SetFillColor(color);
@@ -712,21 +813,21 @@ namespace OHOS {
         ColorType fillColor_;
         ColorType strokeColor_;
         uint8_t opacity_;
-        uint16_t strokeWidth_;
-        BaseGfxExtendEngine::LineCap lineCap_;
-        BaseGfxExtendEngine::LineJoin lineJoin_;
-        double miterLimit_;
-        float dashOffset;
+        uint16_t strokeWidth_;                   //设置线宽
+        BaseGfxExtendEngine::LineCap lineCap_;   //设置笔帽
+        BaseGfxExtendEngine::LineJoin lineJoin_; //设置笔的路径连接处的风格样式
+        double miterLimit_;                      //设置路径连接处的尖角的间距限制
+        float dashOffset;                        //dash 点偏移量
         bool isDrawDash;
-        float* dashArray;
+        float* dashArray; //dash 点数组
         unsigned int ndashes;
         std::shared_ptr<BaseGfxExtendEngine> m_graphics;
-        float globalAlpha;
-        double shadowBlurRadius;
-        double shadowOffsetX;
-        double shadowOffsetY;
-        ColorType shadowColor;
-        BaseGfxExtendEngine::BlendMode blendMode;
+        float globalAlpha;                        //设置图元全局alpha
+        double shadowBlurRadius;                  //设置阴影模糊半径
+        double shadowOffsetX;                     //设置阴影横坐标偏移量
+        double shadowOffsetY;                     //设置阴影纵坐标偏移量
+        ColorType shadowColor;                    //设置阴影色彩
+        BaseGfxExtendEngine::BlendMode blendMode; //设置多图元混合渲染模式
 
         /* 用于操作变换矩阵 */
         OHOS::TransAffine m_transform;
@@ -752,7 +853,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        UICanvas() : startPoint_({0, 0}), path_(nullptr)
+        UICanvas() :
+            startPoint_({0, 0}), path_(nullptr)
         {}
 
         /**
@@ -877,9 +979,27 @@ namespace OHOS {
          * @version 1.0
          */
         void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
-
+        /**
+         * @brief Draws a rectangle not fill.
+         *
+         * @param startPoint Indicates the coordinates of the point at the upper left corner of the rectangle.
+         * @param height     Indicates the height of the rectangle.
+         * @param width      Indicates the width of the rectangle.
+         * @param paint      Indicates the rectangle style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
-
+        /**
+         * @brief Clear a rectangle not fill.
+         *
+         * @param startPoint Indicates the coordinates of the point at the upper left corner of the rectangle.
+         * @param height     Indicates the height of the rectangle.
+         * @param width      Indicates the width of the rectangle.
+         * @param paint      Indicates the rectangle style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void ClearRect(const Point& clearRect, int clearHeight, int clearWidth, const Paint& paint);
         /**
          * @brief Draws a circle.
@@ -1072,9 +1192,18 @@ namespace OHOS {
          */
         void FillPath(const Paint& paint);
         void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
-
+        /**
+         * @brief 设置点划线的数组和数量.
+         * @param lineDashs 表示点划线数组,ndash 表示点划线数量
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineDash(float* dashArray, unsigned int ndash, Paint&);
-
+        /**
+         * @brief 设置全局alpha.
+         * @since 1.0
+         * @version 1.0
+         */
         void GlobalAlpha(float globalAlpha, Paint& paint)
         {
             if (globalAlpha < 0.0f) {
@@ -1084,17 +1213,32 @@ namespace OHOS {
             }
             paint.SetGlobalAlpha(globalAlpha);
         }
-
+        /**
+         * @brief 获取点划线的数组和数量.
+         * @since 1.0
+         * @version 1.0
+         */
         float* GetLineDash(const Paint& paint, unsigned& nDashes)
         {
             nDashes = paint.GetLineDashCount();
             return paint.GetLineDash();
         }
-
+        /**
+         * @brief 设置点划线的偏移量.
+         * @param dashOffset 表示点划线偏移量
+         * @since 1.0
+         * @version 1.0
+         */
         void LineDashOffset(float dashOffset, Paint& paint)
         {
             paint.SetLineDashOffset(dashOffset);
         }
+        /**
+         * @brief 设置线的宽度.
+         * @param lineWidth 表示线的宽度
+         * @since 1.0
+         * @version 1.0
+         */
         void LineWidth(uint16_t lineWidth, Paint& paint)
         {
             paint.SetStrokeWidth(lineWidth);
@@ -1249,7 +1393,8 @@ namespace OHOS {
 
         class UICanvasPath : public HeapBase {
         public:
-            UICanvasPath() : startPos_({0, 0}), strokeCount_(0){};
+            UICanvasPath() :
+                startPos_({0, 0}), strokeCount_(0){};
             ~UICanvasPath();
             List<Point> points_;
             List<PathCmd> cmd_;

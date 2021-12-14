@@ -17,7 +17,7 @@
 #define GFX_GRAPGICS_MANAGER_INCLUDED
 
 #include <gfx_utils/graphics/graphic_color/graphic_color_rgba.h>
-#include <gfx_utils/graphics/graphic_depict/graphic_depict_conv_curve.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_transform.h>
@@ -74,19 +74,19 @@ namespace OHOS {
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBase> RendererSolid;
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
         // 设定线段分配器
-        typedef OHOS::SpanAllocator<ColorType> SpanAllocator;
+        typedef OHOS::SpanFillColorAllocator<ColorType> SpanAllocator;
         // 设定渐变数组的构造器设定颜色插值器和颜色模板等
-        typedef OHOS::GradientLut<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
+        typedef OHOS::GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
         // 设定放射渐变的算法
         typedef OHOS::GradientRadialCalculate gradient_func_type;
         // 设定线段插值器
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
         // 设定线性渐变的线段生成器
-        typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate,
-                                   color_func_type>
+        typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate,
+                                            color_func_type>
             LinearGradientSpan;
         // 设定放射渐变的线段生成器
-        typedef OHOS::SpanGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type>
+        typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type>
             RadialGradientSpan;
 
         typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
@@ -109,13 +109,13 @@ namespace OHOS {
         typedef OHOS::ImageAccessorNoRepeat<pixfmt> imgSourceTypeNoRepeat;
         // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
         //  x,y轴都重复
-        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
         //  x轴重复
-        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
         //  y轴重复
-        typedef OHOS::SpanPatternRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
         // 不重复
-        typedef OHOS::SpanPatternRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 
     public:
         friend class BaseGfxExtendEngineRenderer;
@@ -279,7 +279,8 @@ namespace OHOS {
              * @param height 图片的高度
              * @param stride 图片的步幅
              */
-            Image(unsigned char* buf, unsigned width, unsigned height, int stride) : renBuf(buf, width, height, stride)
+            Image(unsigned char* buf, unsigned width, unsigned height, int stride) :
+                renBuf(buf, width, height, stride)
             {}
 
             /**

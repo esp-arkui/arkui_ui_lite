@@ -127,9 +127,6 @@ SOURCES += \
     ../../../../frameworks/font/ui_line_break.cpp \
     ../../../../frameworks/font/ui_multi_font_manager.cpp \
     ../../../../frameworks/font/ui_text_shaping.cpp \
-#    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_embedded_raster_fonts.cpp \
-#    ../../../../../utils/frameworks/graphics/graphic_geometry/agg_line_profile_aa.cpp \
-#    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/agg_vpgen_segmentator.cpp \
     ../../../../frameworks/imgdecode/cache_manager.cpp \
     ../../../../frameworks/imgdecode/file_img_decoder.cpp \
     ../../../../frameworks/imgdecode/image_load.cpp \
@@ -152,6 +149,9 @@ SOURCES += \
     ../../../../../../../third_party/cJSON/cJSON.c \
 
 HEADERS += \
+    ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_cells_antialias.tpp \
+    ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.tpp \
+    ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/graphic_color_rgba.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
@@ -160,7 +160,7 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_math.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_adaptor_vertex_generate.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_conv_curve.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_curve.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_dash.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_transform.h \
@@ -174,11 +174,11 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_ellipse.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_auto_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_auto_vector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_bvector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_pod_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_auto_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_auto_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_blockvector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_vector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_range_adapter.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h \
@@ -218,10 +218,6 @@ HEADERS += \
     ../../../../frameworks/draw/draw_utils.h \
     ../../../../frameworks/font/ui_font_adaptor.h \
     ../../../../frameworks/font/ui_multi_font_manager.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/agg_DepictCurve.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb16.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/util/agg_color_conv_rgb8.h \
     ../../../../frameworks/imgdecode/cache_manager.h \
     ../../../../frameworks/imgdecode/file_img_decoder.h \
     ../../../../frameworks/imgdecode/image_load.h \

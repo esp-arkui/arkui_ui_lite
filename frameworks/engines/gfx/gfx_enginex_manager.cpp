@@ -756,7 +756,7 @@ namespace OHOS {
         template <class BaseRenderer, class SolidRenderer>
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, bool fillColor)
         {
-            using SpanAllocatorType = OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType>;
+            using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
                                                                            BaseGfxExtendEngine::LinearGradientSpan>;
             using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -809,7 +809,7 @@ namespace OHOS {
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase,
             SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
-            using SpanAllocatorType = OHOS::SpanAllocator<BaseGfxExtendEngine::ColorType>;
+            using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
                                                                            BaseGfxExtendEngine::LinearGradientSpan>;
             using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
