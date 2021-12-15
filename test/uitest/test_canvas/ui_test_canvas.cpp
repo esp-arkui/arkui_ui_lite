@@ -338,16 +338,17 @@ namespace OHOS {
         paint.SetStrokeWidth(1);
         paint.SetShadowOffsetX(10);
         paint.SetShadowOffsetY(10);
-        paint.SetRotateCenter(60, 60);
-        paint.SetRotateAngle(10.0);
-        paint.SetScale(2.0, 2.0);
+        paint.SetTransformCenter(60, 60);
+
         paint.SetShadowBlurRadius(5);
         gradientControl.createLinearGradient(60, 60, 160, 110);
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.3, Color::White());
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
-        paint.fillStyle(gradientControl);
+        paint.FillStyle(gradientControl);
+        canvas->SetRotate(10.0, paint);
+        canvas->SetScale(2.0, 2.0, paint);
         canvas->BeginPath();
         canvas->MoveTo({60, 60});
         canvas->LineTo({60, 110});
@@ -595,6 +596,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetTransformCenter(0, 0, paint);
         canvas->SetRotate(10, paint); //设置旋转
         canvas->SetScale(2, 2, paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
@@ -1350,7 +1352,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
-        paint.createPattern(RED_IMAGE_PATH, "repeat");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1381,7 +1383,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
-        paint.createPattern(RED_IMAGE_PATH, "repeat");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1411,7 +1413,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
-        paint.createPattern(RED_IMAGE_PATH, "repeat-x");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat-x");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1442,7 +1444,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
-        paint.createPattern(RED_IMAGE_PATH, "repeat-x");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat-x");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1472,7 +1474,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
-        paint.createPattern(RED_IMAGE_PATH, "repeat-y");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat-y");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1503,7 +1505,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
-        paint.createPattern(RED_IMAGE_PATH, "repeat-y");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat-y");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1533,7 +1535,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
-        paint.createPattern(RED_IMAGE_PATH, "no-repeat");
+        paint.CreatePattern(RED_IMAGE_PATH, "no-repeat");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1564,7 +1566,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
-        paint.createPattern(RED_IMAGE_PATH, "no-repeat");
+        paint.CreatePattern(RED_IMAGE_PATH, "no-repeat");
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1608,7 +1610,7 @@ namespace OHOS {
         gradientControl.addColorStop(0.3, Color::White());
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
-        paint.fillStyle(gradientControl);
+        paint.FillStyle(gradientControl);
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1654,7 +1656,7 @@ namespace OHOS {
         gradientControl.addColorStop(0.3, Color::White());
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
-        paint.fillStyle(gradientControl);
+        paint.FillStyle(gradientControl);
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1698,7 +1700,7 @@ namespace OHOS {
         gradientControl.addColorStop(0.8, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
         paint.SetStrokeColor(Color::White());
-        paint.fillStyle(gradientControl);
+        paint.FillStyle(gradientControl);
 
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
@@ -1738,7 +1740,7 @@ namespace OHOS {
         gradientControl.addColorStop(0.8, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
         paint.SetStrokeColor(Color::White());
-        paint.fillStyle(gradientControl);
+        paint.FillStyle(gradientControl);
 
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
@@ -1788,7 +1790,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::PATTERN);
-        paint.createPattern(RED_IMAGE_PATH, "repeat");
+        paint.CreatePattern(RED_IMAGE_PATH, "repeat");
 
         int32_t rot = 0;
         int32_t outerR = 80;

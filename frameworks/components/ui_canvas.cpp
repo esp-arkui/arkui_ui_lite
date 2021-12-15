@@ -1127,7 +1127,7 @@ namespace OHOS {
             return;
         }
 
-        double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
+        double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
         arcInfo.radius = circleParam->radius + halfLineWidth - 1;
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
             drawStyle.bgColor_ = paint.GetFillColor();
@@ -1155,18 +1155,10 @@ namespace OHOS {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
         } else {
-            rotateCenterX = paint.GetRotateCenterX() + rect.GetX() - invalidatedArea.GetX();
-            rotateCenterY = paint.GetRotateCenterY() + rect.GetY() - invalidatedArea.GetY();
-            if (paint.GetRotateAngle() != 0) {
-                rotateAngle = paint.GetRotateAngle();
-            }
-            if (paint.GetRotateAngle() != 0) {
-                m_graphics->Rotate(rotateCenterX, rotateCenterY, rotateAngle);
-            }
-            if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
-                m_graphics->Scale(rotateCenterX, rotateCenterY, paint.GetScaleX(), paint.GetScaleY());
-            }
+            transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+            transFormCenterY = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
 
+            StartTransform(rect, invalidatedArea, paint);
             if (!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)) {
                 m_graphics->NoFill();
             }
@@ -1182,7 +1174,7 @@ namespace OHOS {
                 m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
                 m_graphics->DrawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
-                                       rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+                                       transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
             }
             m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);
         }
@@ -1367,7 +1359,7 @@ namespace OHOS {
             return;
         }
         const ImageInfo* imgInfo = imageParam->image->GetImageInfo();
-        if(imgInfo == nullptr) {
+        if (imgInfo == nullptr) {
             return;
         }
         uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imgInfo->header.colorMode);
@@ -1398,8 +1390,8 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
-        int16_t posViewLeft = rect.GetX() - invalidatedArea.GetX();
-        int16_t posViewTop = rect.GetY() - invalidatedArea.GetY();
+        int16_t posViewLeft = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+        int16_t posViewTop = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
         graphics->Translate(-posViewLeft, -posViewTop);
         auto tr = paint.GetTransform();
         graphics->SetAffine(tr);
@@ -1829,9 +1821,9 @@ namespace OHOS {
                 default: break;
             }
         }
-        double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
-        rotateCenterX = paint.GetRotateCenterX() + rect.GetX() - invalidatedArea.GetX();
-        rotateCenterY = paint.GetRotateCenterY() + rect.GetY() - invalidatedArea.GetY();
+        double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
+        transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+        transFormCenterY = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
         if (paint.GetRotateAngle() != 0) {
             rotateAngle = paint.GetRotateAngle();
         }
@@ -1840,15 +1832,17 @@ namespace OHOS {
             m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
             m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-            m_graphics->DrawShadow(rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+            m_graphics->DrawShadow(transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
         }
 
-        if (paint.GetRotateAngle() != 0) {
-            m_graphics->Rotate(rotateCenterX, rotateCenterY, rotateAngle);
-        }
-        if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
-            m_graphics->Scale(rotateCenterX, rotateCenterY, paint.GetScaleX(), paint.GetScaleY());
-        }
+        //               if (paint.GetRotateAngle() != 0) {
+        //                   m_graphics->Rotate(transFormCenterX, transFormCenterY, rotateAngle);
+        //                }
+        //                if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
+        //                    m_graphics->Scale(transFormCenterX, transFormCenterY, paint.GetScaleX(), paint.GetScaleY());
+        //                }
+
+        StartTransform(rect, invalidatedArea, paint);
         setGradient(*m_graphics, paint, rect, style); // 填充颜色
         m_graphics->DrawPath(BaseGfxExtendEngine::FILLANDSTROKE);
     }

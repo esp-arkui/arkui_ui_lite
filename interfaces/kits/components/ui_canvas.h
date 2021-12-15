@@ -170,8 +170,8 @@ namespace OHOS {
             opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
-            shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), rotateCenterX(0),
-            rotateCenterY(0), rotateAngle(0), scaleX(0), scaleY(0)
+            shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
+            transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0)
         {
             m_graphics = std::make_shared<BaseGfxExtendEngine>();
             m_transform.Reset();
@@ -224,8 +224,8 @@ namespace OHOS {
             blendMode = paint.blendMode;
             m_transform = paint.m_transform;
 
-            rotateCenterX = paint.rotateCenterX;
-            rotateCenterY = paint.rotateCenterY;
+            transformCenterX = paint.transformCenterX;
+            transformCenterY = paint.transformCenterY;
             rotateAngle = paint.rotateAngle;
             scaleX = paint.scaleX;
             scaleY = paint.scaleY;
@@ -670,66 +670,46 @@ namespace OHOS {
             shadowColor = color;
         }
 
-        void SetRotateCenterX(double x)
+        void SetTransformCenterX(double x)
         {
-            rotateCenterX = x;
+            transformCenterX = x;
         }
 
-        double GetRotateCenterX() const
+        double GetTransformCenterX() const
         {
-            return rotateCenterX;
+            return transformCenterX;
         }
 
-        void SetRotateCenterY(double y)
+        void SetTransformCenterY(double y)
         {
-            rotateCenterY = y;
+            transformCenterY = y;
         }
 
-        double GetRotateCenterY() const
+        double GetTransformCenterY() const
         {
-            return rotateCenterY;
+            return transformCenterY;
         }
 
-        void SetRotateCenter(double x, double y)
+        void SetTransformCenter(double x, double y)
         {
-            rotateCenterX = x;
-            rotateCenterY = y;
-        }
-
-        void SetRotateAngle(double angle)
-        {
-            rotateAngle = angle;
+            transformCenterX = x;
+            transformCenterY = y;
         }
 
         double GetRotateAngle() const
         {
             return rotateAngle;
         }
-
-        void SetScaleX(double x)
-        {
-            scaleX = x;
-        }
-
         double GetScaleX() const
         {
             return scaleX;
-        }
-
-        void SetScaleY(double y)
-        {
-            scaleY = y;
         }
 
         double GetScaleY() const
         {
             return scaleY;
         }
-        void SetScale(double x, double y)
-        {
-            scaleX = x;
-            scaleY = y;
-        }
+
         /*
          * 设置图元混合渲染模式
          * @param BaseGfxExtendEngine::BlendMode 表示图元混合渲染模式
@@ -747,7 +727,7 @@ namespace OHOS {
          * 设置图元用图案填充样式
          * @param img 表示填充的图案，text表示填充样式
          */
-        void createPattern(const char* img, const char* text)
+        void CreatePattern(const char* img, const char* text)
         {
             image = img;
             patternRepeat = NO_REPEAT;
@@ -766,7 +746,7 @@ namespace OHOS {
          * 设置图元填充样式
          * @param GradientControl表示渐变控制器
          */
-        void fillStyle(GradientControl& ctrl)
+        void FillStyle(GradientControl& ctrl)
         {
             gradientControl = ctrl;
         }
@@ -774,27 +754,31 @@ namespace OHOS {
          * 设置图元填充样式颜色
          * @param ColorType表示颜色值类型
          */
-        void fillStyle(ColorType color)
+        void FillStyle(ColorType color)
         {
             SetFillColor(color);
         }
 
         /* 缩放当前绘图至更大或更小 */
-        void Scale(float x, float y)
+        void Scale(float scaleX, float scaleY)
         {
-            m_transform.Scale(x, y);
+            this->scaleX = scaleX;
+            this->scaleY = scaleY;
+            m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
         }
 
         /* 旋转当前绘图 */
         void Rotate(float angle)
         {
-            m_transform.Rotate(BaseGfxExtendEngine::Deg2Rad(angle));
+            rotateAngle = angle;
+            m_transform *= OHOS::TransAffineRotation(BaseGfxExtendEngine::Deg2Rad(angle));
         }
 
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)
         {
-            m_transform.Translate(x, y);
+            //m_transform.Translate(x, y);
+            m_transform *= OHOS::TransAffineTranslation(x, y);
         }
 
         /* 替换绘图的当前转换矩阵 */
@@ -850,8 +834,8 @@ namespace OHOS {
         /* 用于操作变换矩阵 */
         OHOS::TransAffine m_transform;
         GradientControl gradientControl;
-        double rotateCenterX;
-        double rotateCenterY;
+        double transformCenterX;
+        double transformCenterY;
         double rotateAngle;
         double scaleX;
         double scaleY;
@@ -1292,6 +1276,20 @@ namespace OHOS {
             paint.Scale(x, y);
         }
 
+        double GetTransformCenterX(const Paint& paint) const
+        {
+            return paint.GetTransformCenterX();
+        }
+
+        double GetTransformCenterY(const Paint& paint) const
+        {
+            return paint.GetTransformCenterY();
+        }
+
+        void SetTransformCenter(double x, double y, Paint& paint)
+        {
+            paint.SetTransformCenter(x, y);
+        }
         /* 旋转当前绘图 */
         void SetRotate(float angle, Paint& paint)
         {

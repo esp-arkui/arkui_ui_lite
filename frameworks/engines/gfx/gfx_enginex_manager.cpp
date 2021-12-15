@@ -25,8 +25,8 @@ namespace OHOS {
         }
     }
 
-    BaseGfxExtendEngine::BaseGfxExtendEngine()
-        : m_rbuf(),
+    BaseGfxExtendEngine::BaseGfxExtendEngine() :
+        m_rbuf(),
         m_scanline(),
         m_rasterizer(),
         m_pixFormat(m_rbuf),
@@ -89,8 +89,8 @@ namespace OHOS {
         SetLineJoin(m_lineJoin);
     }
 
-    BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine)
-        : m_scanline(),
+    BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine) :
+        m_scanline(),
         m_rasterizer(),
         m_fillGradientMatrix(baseGfxExtendEngine.m_fillGradientMatrix),
         m_lineGradientMatrix(baseGfxExtendEngine.m_lineGradientMatrix),
@@ -644,7 +644,7 @@ namespace OHOS {
     {
         m_rasterizer.Reset();
         OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY,
-            m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
+                                    m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
         PathTransform shadow_trans(m_convCurve, transform);
         transform.Translate(shadowOffsetX_, shadowOffsetY_);
         if (a != 0) {
@@ -674,7 +674,7 @@ namespace OHOS {
         m_rasterizer.Reset();
     }
     void BaseGfxExtendEngine::DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
-        double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
+                                         double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
     {
         m_path.RemoveAll();
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
@@ -807,7 +807,7 @@ namespace OHOS {
 
         template <class BaseRenderer, class SolidRenderer, class Rasterizer, class Scanline>
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase,
-            SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
+                           SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
             using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -897,7 +897,8 @@ namespace OHOS {
     }
 
     struct BaseGfxExtendEngineRasterizerGamma {
-        BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) : m_alpha(alpha), m_gamma(gamma)
+        BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) :
+            m_alpha(alpha), m_gamma(gamma)
         {}
 
         double operator()(double x) const
