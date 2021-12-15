@@ -171,7 +171,7 @@ namespace OHOS {
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
             shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
-            transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0)
+            transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
         {
             m_graphics = std::make_shared<BaseGfxExtendEngine>();
             m_transform.Reset();
@@ -229,6 +229,8 @@ namespace OHOS {
             rotateAngle = paint.rotateAngle;
             scaleX = paint.scaleX;
             scaleY = paint.scaleY;
+            transLateX = paint.transLateX;
+            transLateY = paint.transLateY;
             if (isDrawDash && ndashes > 0) {
                 dashArray = new float[ndashes];
                 if (dashArray) {
@@ -710,6 +712,16 @@ namespace OHOS {
             return scaleY;
         }
 
+        double GetTransLateX() const
+        {
+            return transLateX;
+        }
+
+        double GetTransLateY() const
+        {
+            return transLateY;
+        }
+
         /*
          * 设置图元混合渲染模式
          * @param BaseGfxExtendEngine::BlendMode 表示图元混合渲染模式
@@ -766,6 +778,11 @@ namespace OHOS {
             this->scaleY = scaleY;
             m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
         }
+        /* 重新设置矩阵，形成单位阵 */
+        void ResetTransForm()
+        {
+            m_transform.Reset();
+        }
 
         /* 旋转当前绘图 */
         void Rotate(float angle)
@@ -777,7 +794,8 @@ namespace OHOS {
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)
         {
-            //m_transform.Translate(x, y);
+            transLateX = x;
+            transLateY = y;
             m_transform *= OHOS::TransAffineTranslation(x, y);
         }
 
@@ -839,6 +857,8 @@ namespace OHOS {
         double rotateAngle;
         double scaleX;
         double scaleY;
+        double transLateX;
+        double transLateY;
     };
 
     /**
@@ -1301,7 +1321,11 @@ namespace OHOS {
         {
             paint.Translate(x, y);
         }
-
+        /* 重新设置矩阵，形成单位阵 */
+        void ResetTransForm(Paint& paint)
+        {
+            paint.ResetTransForm();
+        }
         /* 替换绘图的当前转换矩阵 */
         void Transform(float sx, float shy, float shx, float sy, float tx, float ty, Paint& paint)
         {

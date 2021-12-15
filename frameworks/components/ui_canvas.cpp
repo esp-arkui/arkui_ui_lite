@@ -1174,7 +1174,9 @@ namespace OHOS {
                 m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
                 m_graphics->DrawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
-                                       transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+                                       transFormCenterX, transFormCenterY, rotateAngle,
+                                       paint.GetScaleX(), paint.GetScaleY(), paint.GetTransLateX(),
+                                       paint.GetTransLateY());
             }
             m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);
         }
@@ -1833,7 +1835,9 @@ namespace OHOS {
             m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
             m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-            m_graphics->DrawShadow(transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+            m_graphics->DrawShadow(transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(),
+                                   paint.GetScaleY(), paint.GetTransLateX(),
+                                   paint.GetTransLateY());
         }
 
         StartTransform(rect, invalidatedArea, paint);

@@ -574,11 +574,14 @@ namespace OHOS {
         canvas->SetRotate(0, paint);
         //canvas->StrokeText("中国",{20,10},fontStyle,paint);
         canvas->StrokeText("0度", {20, 10}, fontStyle, paint);
+        canvas->ResetTransForm(paint);
         canvas->SetRotate(10, paint);
         canvas->StrokeText("10度qwqwqwqwqwq", {20, 10}, fontStyle, paint);
-        canvas->SetRotate(5, paint);
+        canvas->ResetTransForm(paint);
+        canvas->SetRotate(15, paint);
         canvas->StrokeText("15度", {20, 10}, fontStyle, paint);
-        canvas->SetRotate(5, paint);
+        canvas->ResetTransForm(paint);
+        canvas->SetRotate(20, paint);
         canvas->SetScale(2, 2, paint);
         canvas->SetTranslate(50, 20, paint);
         paint.SetFillColor(Color::Green());
