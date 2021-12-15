@@ -1821,26 +1821,20 @@ namespace OHOS {
                 default: break;
             }
         }
-        double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
-        transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
-        transFormCenterY = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
-        if (paint.GetRotateAngle() != 0) {
-            rotateAngle = paint.GetRotateAngle();
-        }
+
         if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
+            double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
+            transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+            transFormCenterY = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
+            if (paint.GetRotateAngle() != 0) {
+                rotateAngle = paint.GetRotateAngle();
+            }
             m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
             m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
             m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
             m_graphics->DrawShadow(transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
         }
-
-        //               if (paint.GetRotateAngle() != 0) {
-        //                   m_graphics->Rotate(transFormCenterX, transFormCenterY, rotateAngle);
-        //                }
-        //                if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
-        //                    m_graphics->Scale(transFormCenterX, transFormCenterY, paint.GetScaleX(), paint.GetScaleY());
-        //                }
 
         StartTransform(rect, invalidatedArea, paint);
         setGradient(*m_graphics, paint, rect, style); // 填充颜色
