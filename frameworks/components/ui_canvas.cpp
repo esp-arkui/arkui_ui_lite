@@ -611,17 +611,8 @@ namespace OHOS {
             int16_t posViewTop = rect.GetY() - trunc.GetY();
             int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
             int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
-            std::shared_ptr<BufferInfo> gfxMapBuffer = std::make_shared<BufferInfo>();
-            if (memcpy_s(gfxMapBuffer.get(), sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
-                return;
-            }
-            uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-            uint32_t destStride = gfxMapBuffer->width * destByteSize;
-            uint32_t buffSize = gfxMapBuffer->height * destStride;
-            gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-            memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
-            gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
-
+            BufferInfo* gfxMapBuffer = nullptr;
+            uint8_t destByteSize;
             // 添加的处理机制的。。。
             bool isChangeBlend = false;
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -632,9 +623,24 @@ namespace OHOS {
                     break;
                 }
             }
+            if (isChangeBlend) {
+                gfxMapBuffer = new BufferInfo();
+                if (memcpy_s(gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
+                    return;
+                }
+                destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+                uint32_t destStride = gfxMapBuffer->width * destByteSize;
+                uint32_t buffSize = gfxMapBuffer->height * destStride;
+                gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
+                memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
+                gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
+            }
             for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
                 if (isChangeBlend) {
+                    if (gfxMapBuffer == nullptr) {
+                        return;
+                    }
                     InitDrawEnvironment(
                         *gfxMapBuffer, trunc,
                         Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
@@ -656,6 +662,9 @@ namespace OHOS {
                                                 curDraw->data_.paint, rect, trunc, *style_);
                 }
             }
+            if (gfxMapBuffer == nullptr) {
+                return;
+            }
             BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr, gfxMapBuffer->width,
                                                    gfxMapBuffer->height, gfxMapBuffer->stride);
             BaseGfxExtendEngine m_graphics_Image;
@@ -675,6 +684,8 @@ namespace OHOS {
                                         gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
                                         DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
+            delete gfxMapBuffer;
+            gfxMapBuffer = nullptr;
         }
     }
 
