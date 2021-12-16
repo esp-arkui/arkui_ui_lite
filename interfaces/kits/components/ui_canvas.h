@@ -39,6 +39,7 @@
 #include <fcntl.h>
 
 #include <memory>
+#include <stack>
 
 #include "animator/gif_canvas_image_animator.h"
 #include "common/image.h"
@@ -47,7 +48,6 @@
 #include "engines/gfx/gfx_enginex_manager.h"
 #include "gfx_utils/file.h"
 #include "gfx_utils/list.h"
-#include "stack"
 #include "ui_image_view.h"
 namespace OHOS {
     /**
@@ -877,7 +877,8 @@ namespace OHOS {
          */
         UICanvas() :
             startPoint_({0, 0}), path_(nullptr)
-        {}
+        {
+        }
 
         /**
          * @brief A destructor used to delete the <b>UICanvas</b> instance.

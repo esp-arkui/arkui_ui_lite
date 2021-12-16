@@ -621,18 +621,40 @@ namespace OHOS {
             gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
             memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
             gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
+
             // 添加的处理机制的。。。
+            bool isChangeBlend = false;
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
-                InitDrawEnvironment(
-                    *gfxMapBuffer, trunc,
-                    Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
-                    Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
-                         posViewTop + trunc.GetHeight() - 1),
-                    curDraw->data_.paint);
+                if (curDraw->data_.paint.GetGlobalCompositeOperation() !=
+                    BaseGfxExtendEngine::BlendMode::BLENDSRCOVER) {
+                    isChangeBlend = true;
+                    break;
+                }
+            }
+            for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
+                // 应该是实现画布的处理机制..
+                if (isChangeBlend) {
+                    InitDrawEnvironment(
+                        *gfxMapBuffer, trunc,
+                        Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
+                        Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
+                             posViewTop + trunc.GetHeight() - 1),
+                        curDraw->data_.paint);
 
-                curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
-                                            curDraw->data_.paint, rect, trunc, *style_);
+                    curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                                curDraw->data_.paint, rect, trunc, *style_);
+                } else {
+                    InitDrawEnvironment(
+                        gfxDstBuffer, trunc,
+                        Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
+                        Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
+                             posViewTop + trunc.GetHeight() - 1),
+                        curDraw->data_.paint);
+
+                    curDraw->data_.DrawGraphics(gfxDstBuffer, curDraw->data_.param,
+                                                curDraw->data_.paint, rect, trunc, *style_);
+                }
             }
             BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr, gfxMapBuffer->width,
                                                    gfxMapBuffer->height, gfxMapBuffer->stride);
@@ -1470,45 +1492,49 @@ namespace OHOS {
         textRect.SetWidth(text->GetTextSize().x);
         textRect.SetHeight(text->GetTextSize().y);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
-        Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
 
-        std::shared_ptr<BufferInfo> pGfxMapBuffer = std::make_shared<BufferInfo>();
-        pGfxMapBuffer->rect = textRect;
-        pGfxMapBuffer->width = textRect.GetWidth();
-        pGfxMapBuffer->height = textRect.GetHeight();
-
-        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-        uint32_t destStride = pGfxMapBuffer->width * destByteSize;
-        pGfxMapBuffer->stride = destStride;
-
-        pGfxMapBuffer->mode = gfxDstBuffer.mode;
-        pGfxMapBuffer->color = gfxDstBuffer.color;
-        uint32_t buffSize = pGfxMapBuffer->height * pGfxMapBuffer->width * destByteSize;
-        pGfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-        errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
-        if (err != EOK) {
-            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
-            GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
-            return;
-        }
-        pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
-
-        text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle,
-                     Text::TEXT_ELLIPSIS_END_INV, opa);
-
-        BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
-                                               pGfxMapBuffer->width, pGfxMapBuffer->height, pGfxMapBuffer->stride);
-        double x = start.x;
-        double y = start.y;
-        double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
         if (!paint.IsTransform()) {
-            graphicsContext->BlendFromImage(imageBuffer, x, y, opa, false);
+            text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle,
+                         Text::TEXT_ELLIPSIS_END_INV, opa);
         } else {
+            std::shared_ptr<BufferInfo> pGfxMapBuffer = std::make_shared<BufferInfo>();
+
+            Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
+
+            pGfxMapBuffer->rect = textRect;
+            pGfxMapBuffer->width = textRect.GetWidth();
+            pGfxMapBuffer->height = textRect.GetHeight();
+
+            uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+            uint32_t destStride = pGfxMapBuffer->width * destByteSize;
+            pGfxMapBuffer->stride = destStride;
+
+            pGfxMapBuffer->mode = gfxDstBuffer.mode;
+            pGfxMapBuffer->color = gfxDstBuffer.color;
+            uint32_t buffSize = pGfxMapBuffer->height * pGfxMapBuffer->width * destByteSize;
+            pGfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
+            errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
+            if (err != EOK) {
+                BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
+                GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
+                return;
+            }
+            pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
+
+            text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle,
+                         Text::TEXT_ELLIPSIS_END_INV, opa);
+
+            BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
+                                                   pGfxMapBuffer->width, pGfxMapBuffer->height, pGfxMapBuffer->stride);
+            double x = start.x;
+            double y = start.y;
+            double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
+
             StartTransform(rect, invalidatedArea, paint);
             graphicsContext->TransformImage(imageBuffer, parallelogram, false);
+            graphicsContext->ResetTransformations();
+            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
         }
-        graphicsContext->ResetTransformations();
-        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
     }
 
     void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer, const Point& center, const Rect& invalidatedArea,
