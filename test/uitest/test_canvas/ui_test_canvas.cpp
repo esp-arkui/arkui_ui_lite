@@ -568,8 +568,8 @@ namespace OHOS {
         canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
         paint.Rotate(10);
         canvas->DrawImage({200, 20}, GIF_IMAGE_PATH, paint);
-
-        paint.Rotate(-5);
+        canvas->ResetTransForm(paint);
+        paint.Rotate(-10);
         canvas->DrawImage({100, 20}, RED_IMAGE_PATH, paint);
     }
 
@@ -598,15 +598,14 @@ namespace OHOS {
         //canvas->StrokeText("中国",{20,10},fontStyle,paint);
         canvas->StrokeText("0度", {20, 10}, fontStyle, paint);
         canvas->ResetTransForm(paint);
-        canvas->SetRotate(10, paint);
+        canvas->SetRotate(5, paint);
         canvas->StrokeText("10度qwqwqwqwqwq", {20, 10}, fontStyle, paint);
         canvas->ResetTransForm(paint);
-        canvas->SetRotate(15, paint);
+        canvas->SetRotate(10, paint);
         canvas->StrokeText("15度", {20, 10}, fontStyle, paint);
         canvas->ResetTransForm(paint);
         canvas->SetRotate(20, paint);
         canvas->SetScale(2, 2, paint);
-        canvas->SetTranslate(50, 20, paint);
         paint.SetFillColor(Color::Green());
         canvas->StrokeText("20度。放大", {20, 10}, fontStyle, paint);
     }
