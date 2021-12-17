@@ -492,7 +492,7 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint)
+    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t sizeWidth, int16_t sizeHeight)
     {
         if (image == nullptr) {
             return;
@@ -509,8 +509,9 @@ namespace OHOS {
             imageParam = nullptr;
             return;
         }
-        imageParam->path = image;
-        imageParam->image->SetSrc(image);
+        imageParam->path = new char[strlen(image) + 1];
+        strcpy_s(imageParam->path, strlen(image) + 1, image);
+        imageParam->image->SetSrc(imageParam->path);
         ImageHeader header = {0};
         imageParam->image->GetHeader(header);
 
@@ -524,9 +525,22 @@ namespace OHOS {
         cmd.DrawGraphics = DoDrawImage;
 
         if (IsGif(image)) {
-            imageParam->gifImageAnimator = new GifCanvasImageAnimator(imageParam, this, image);
+            imageParam->gifImageAnimator = new GifCanvasImageAnimator(imageParam, this, imageParam->path);
+            Point gifSize = imageParam->gifImageAnimator->GetSize();
+            imageParam->width = gifSize.x;
+            imageParam->height = gifSize.y;
             imageParam->gifImageAnimator->Start();
         }
+
+        float scaleX = 1;
+        float scaleY = 1;
+        if(sizeWidth >= 0 && imageParam->width!= 0){
+            scaleX = sizeWidth * 1.0 / imageParam->width;
+        }
+        if(sizeHeight >= 0 && imageParam->height != 0){
+            scaleY = sizeHeight * 1.0 / imageParam->height;
+        }
+        cmd.paint.Scale(scaleX,scaleY);
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
@@ -1411,7 +1425,14 @@ namespace OHOS {
         }
         Rect trunc(invalidatedArea);
         if (!paint.IsTransform()) {
-            graphics->BlendImage(imageBuffer, start.x, start.y, opa);
+            //graphics->BlendImage(imageBuffer, start.x, start.y, opa);
+
+            Rect cordsTmp;
+            cordsTmp.SetPosition(start.x, start.y);
+            cordsTmp.SetHeight(imageParam->height);
+            cordsTmp.SetWidth(imageParam->width);
+            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
+                imageParam->image->GetImageInfo(), style, opa);
         } else {
             StartTransform(rect, invalidatedArea, paint);
             double x = start.x;

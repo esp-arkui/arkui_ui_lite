@@ -1093,7 +1093,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
+        void DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t sizeWidth = -1, int16_t sizeHeight = -1);
 
         /**
          * @brief Draws an image.
@@ -1552,6 +1552,10 @@ namespace OHOS {
                 imageParam->gifImageAnimator->Stop();
                 delete imageParam->gifImageAnimator;
                 imageParam->gifImageAnimator = nullptr;
+            }
+            if(imageParam->path != nullptr){
+                delete[] imageParam->path;
+                imageParam->path = nullptr;
             }
             delete imageParam;
         }

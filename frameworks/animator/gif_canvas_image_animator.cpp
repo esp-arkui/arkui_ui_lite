@@ -15,6 +15,7 @@ const void GifCanvasImageAnimator::OpenGifFile(const char* src)
     /* 3 : when change single pixel to byte, the buffer should divided by 8, equal to shift right 3 bits. */
     uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(ARGB8888) >> 3;
     gifDataSize_ = gifFileType->SWidth * gifFileType->SHeight * pixelByteSize;
+    size_ = {(int16_t)gifFileType->SWidth , (int16_t)gifFileType->SHeight};
     gifImageData_ = static_cast<uint8_t*>(UIMalloc(gifDataSize_));
     if (gifImageData_ == nullptr) {
         CloseGifFile();
@@ -33,6 +34,8 @@ void GifCanvasImageAnimator::CloseGifFile()
         UIFree(reinterpret_cast<void*>(const_cast<uint8_t*>(gifImageData_)));
         gifImageData_ = nullptr;
     }
+    imageIndex_ = 0;
+    gifFileType_ = nullptr;
 }
 
 void GifCanvasImageAnimator::Callback(UIView* view)
