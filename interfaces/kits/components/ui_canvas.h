@@ -173,7 +173,7 @@ namespace OHOS {
             shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
             transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
         {
-            m_graphics = std::make_shared<BaseGfxExtendEngine>();
+            m_graphics = nullptr;
             m_transform.Reset();
         }
         Paint(const Paint& paint)
@@ -503,7 +503,7 @@ namespace OHOS {
          */
         void SetLineDashOffset(float dashOffset)
         {
-            m_graphics->SetLineDashOffset(dashOffset);
+            this->dashOffset = dashOffset; //dash 点偏移量
         }
         /**
          * @brief 获取点划线的偏移量.
@@ -512,12 +512,9 @@ namespace OHOS {
          */
         float GetLineDashOffset() const
         {
-            return m_graphics->GetLineDashOffset();
+            return dashOffset;
         }
-        BaseGfxExtendEngine* GetDrawGraphicsContext() const
-        {
-            return m_graphics.get();
-        }
+
         /**
          * @brief 设置点划线的数组和数量.
          * @param lineDashs 表示点划线数组,ndash 表示点划线数量
@@ -835,6 +832,15 @@ namespace OHOS {
             return gradientControl;
         }
 
+        BaseGfxExtendEngine* GetDrawGraphicsContext() const
+        {
+            return m_graphics;
+        }
+        void SetDrawGraphicsContext(BaseGfxExtendEngine* m_graphics)
+        {
+            this->m_graphics = m_graphics;
+        }
+
     private:
         PaintStyle style_;
         ColorType fillColor_;
@@ -848,14 +854,13 @@ namespace OHOS {
         bool isDrawDash;
         float* dashArray; //dash 点数组
         unsigned int ndashes;
-        std::shared_ptr<BaseGfxExtendEngine> m_graphics;
         float globalAlpha;                        //设置图元全局alpha
         double shadowBlurRadius;                  //设置阴影模糊半径
         double shadowOffsetX;                     //设置阴影横坐标偏移量
         double shadowOffsetY;                     //设置阴影纵坐标偏移量
         ColorType shadowColor;                    //设置阴影色彩
         BaseGfxExtendEngine::BlendMode blendMode; //设置多图元混合渲染模式
-
+        BaseGfxExtendEngine* m_graphics;
         /* 用于操作变换矩阵 */
         OHOS::TransAffine m_transform;
         GradientControl gradientControl;
@@ -1351,6 +1356,31 @@ namespace OHOS {
         {
             paint.SetTransform(sx, shy, shx, sy, tx, ty);
         }
+        /**
+         * @brief 设置点划线的偏移量.
+         * @see GetLineDashOffset
+         * @since 1.0
+         * @version 1.0
+         */
+        void SetLineDashOffset(float dashOffset, Paint& paint)
+        {
+            //m_graphics->SetLineDashOffset(dashOffset);
+            paint.SetLineDashOffset(dashOffset);
+        }
+        /**
+         * @brief 获取点划线的偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
+        float GetLineDashOffset(const Paint& paint) const
+        {
+            //return m_graphics->GetLineDashOffset();
+            return paint.GetLineDashOffset();
+        }
+        void SetDrawGraphicsContext(Paint& paint)
+        {
+            paint.SetDrawGraphicsContext(&this->m_graphics);
+        }
         /* 保存历史状态 */
         void Save(Paint& paint)
         {
@@ -1375,7 +1405,7 @@ namespace OHOS {
 
     protected:
         bool InitDrawEnvironment(const BufferInfo& gfxDstBuffer, const Rect& fillArea, const Rect& worldRect,
-                                 const Rect& screenRect, const Paint& paint);
+                                 const Rect& screenRect);
 
         constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
@@ -1469,6 +1499,7 @@ namespace OHOS {
         List<DrawCmd> drawCmdList_;
         // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
+        BaseGfxExtendEngine m_graphics;
         static void DeleteTextParam(void* param)
         {
             TextParam* textParam = static_cast<TextParam*>(param);

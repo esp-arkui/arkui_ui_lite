@@ -171,6 +171,10 @@ namespace OHOS {
         while (!PaintStack.empty()) {
             PaintStack.pop();
         }
+        //        if (m_graphics != nullptr) {
+        //            delete m_graphics;
+        //            m_graphics = nullptr;
+        //        }
     }
 
     void UICanvas::Clear()
@@ -642,30 +646,24 @@ namespace OHOS {
                     memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
                     gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
                 }
+                InitDrawEnvironment(
+                    *gfxMapBuffer, trunc,
+                    Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
+                    Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
+                         posViewTop + trunc.GetHeight() - 1));
+            } else {
+                InitDrawEnvironment(
+                    gfxDstBuffer, trunc,
+                    Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
+                    Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
+                         posViewTop + trunc.GetHeight() - 1));
             }
             for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
                 if (isChangeBlend) {
-                    if (gfxMapBuffer == nullptr) {
-                        return;
-                    }
-                    InitDrawEnvironment(
-                        *gfxMapBuffer, trunc,
-                        Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
-                        Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
-                             posViewTop + trunc.GetHeight() - 1),
-                        curDraw->data_.paint);
-
                     curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
                                                 curDraw->data_.paint, rect, trunc, *style_);
                 } else {
-                    InitDrawEnvironment(
-                        gfxDstBuffer, trunc,
-                        Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
-                        Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
-                             posViewTop + trunc.GetHeight() - 1),
-                        curDraw->data_.paint);
-
                     curDraw->data_.DrawGraphics(gfxDstBuffer, curDraw->data_.param,
                                                 curDraw->data_.paint, rect, trunc, *style_);
                 }
@@ -698,12 +696,10 @@ namespace OHOS {
     }
 
     bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer, const Rect& fillArea, const Rect& worldRect,
-                                       const Rect& screenRect, const Paint& paint)
+                                       const Rect& screenRect)
     {
-        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
-        if (m_graphics == nullptr) {
-            return false;
-        }
+        //BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+
         int16_t posLeft = fillArea.GetLeft();
         int16_t posTop = fillArea.GetTop();
 
@@ -717,10 +713,10 @@ namespace OHOS {
         int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width + posLeft;
         destBuf += offset * destByteSize;
 
-        m_graphics->Attach(destBuf, fillArea.GetWidth(), fillArea.GetHeight(), gfxDstBuffer.stride);
-        m_graphics->Viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
-                             screenRect.GetLeft(), screenRect.GetTop(), screenRect.GetRight(), screenRect.GetBottom(),
-                             BaseGfxExtendEngine::XMINYMIN);
+        m_graphics.Attach(destBuf, fillArea.GetWidth(), fillArea.GetHeight(), gfxDstBuffer.stride);
+        m_graphics.Viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
+                            screenRect.GetLeft(), screenRect.GetTop(), screenRect.GetRight(), screenRect.GetBottom(),
+                            BaseGfxExtendEngine::XMINYMIN);
         return true;
     }
 

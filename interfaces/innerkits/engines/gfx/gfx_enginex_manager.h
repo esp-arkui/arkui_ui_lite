@@ -309,7 +309,7 @@ namespace OHOS {
                 return renBuf.GetHeight();
             }
         };
-        ~BaseGfxExtendEngine();
+        virtual ~BaseGfxExtendEngine();
         BaseGfxExtendEngine();
         BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine);
 
