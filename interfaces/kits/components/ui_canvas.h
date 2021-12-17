@@ -774,28 +774,35 @@ namespace OHOS {
         /* 缩放当前绘图至更大或更小 */
         void Scale(float scaleX, float scaleY)
         {
-            this->scaleX = scaleX;
-            this->scaleY = scaleY;
+            this->scaleX += scaleX;
+            this->scaleY += scaleY;
             m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
         }
         /* 重新设置矩阵，形成单位阵 */
         void ResetTransForm()
         {
+            rotateAngle = 0;
+            this->scaleX = 0;
+            this->scaleY = 0;
+            transLateX = 0;
+            transLateY = 0;
+            transformCenterX = 0;
+            transformCenterY = 0;
             m_transform.Reset();
         }
 
         /* 旋转当前绘图 */
         void Rotate(float angle)
         {
-            rotateAngle = angle;
+            rotateAngle += angle;
             m_transform *= OHOS::TransAffineRotation(BaseGfxExtendEngine::Deg2Rad(angle));
         }
 
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)
         {
-            transLateX = x;
-            transLateY = y;
+            transLateX += x;
+            transLateY += y;
             m_transform *= OHOS::TransAffineTranslation(x, y);
         }
 

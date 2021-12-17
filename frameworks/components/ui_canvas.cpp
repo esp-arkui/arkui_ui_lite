@@ -168,6 +168,9 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        while (!PaintStack.empty()) {
+            PaintStack.pop();
+        }
     }
 
     void UICanvas::Clear()
@@ -185,6 +188,9 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        while (!PaintStack.empty()) {
+            PaintStack.pop();
+        }
         Invalidate();
     }
 
@@ -624,16 +630,18 @@ namespace OHOS {
                 }
             }
             if (isChangeBlend) {
-                gfxMapBuffer = new BufferInfo();
-                if (memcpy_s(gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
-                    return;
+                if (gfxMapBuffer == nullptr) {
+                    gfxMapBuffer = new BufferInfo();
+                    if (memcpy_s(gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
+                        return;
+                    }
+                    destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+                    uint32_t destStride = gfxMapBuffer->width * destByteSize;
+                    uint32_t buffSize = gfxMapBuffer->height * destStride;
+                    gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
+                    memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
+                    gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
                 }
-                destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-                uint32_t destStride = gfxMapBuffer->width * destByteSize;
-                uint32_t buffSize = gfxMapBuffer->height * destStride;
-                gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-                memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
-                gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
             }
             for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
@@ -1214,7 +1222,7 @@ namespace OHOS {
             m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);
         }
 
-        m_graphics->ResetTransformations();
+        //m_graphics->ResetTransformations();
     }
 
     void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
@@ -1415,7 +1423,7 @@ namespace OHOS {
             double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
             uint8_t formatType = imageParam->image->GetImgType();
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
-            graphics->ResetTransformations();
+            //graphics->ResetTransformations();
         }
     }
 
@@ -1543,7 +1551,7 @@ namespace OHOS {
 
             StartTransform(rect, invalidatedArea, paint);
             graphicsContext->TransformImage(imageBuffer, parallelogram, false);
-            graphicsContext->ResetTransformations();
+            //graphicsContext->ResetTransformations();
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
         }
     }

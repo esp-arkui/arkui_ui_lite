@@ -162,6 +162,11 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Red());
         paint.SetFillColor(Color::GetColorFromRGB(0, 255, 0));
         canvas->DrawCircle({70, 70}, 40, paint);
+
+        paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+        paint.SetStrokeColor(Color::Red());
+        paint.SetFillColor(Color::GetColorFromRGB(0, 255, 0));
+        canvas->DrawCircle({90, 90}, 40, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestGlobalAlpha001()
