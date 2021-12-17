@@ -240,7 +240,6 @@ int8_t GlyphsManager::SetCurrentFontId(uint8_t fontId)
         GRAPHIC_LOGE("GlyphsManager::SetCurrentFontId fontId need less than max fontId");
         return INVALID_RET_VALUE;
     }
-    GraphicLockGuard guard(lock_);
     if (!isFileSet_) {
         GRAPHIC_LOGE("GlyphsManager::SetCurrentFontId file not set");
         return INVALID_RET_VALUE;
@@ -315,9 +314,10 @@ int8_t GlyphsManager::GetFontVersion(char* version, uint8_t len) const
     return RET_VALUE_OK;
 }
 
-const FontHeader* GlyphsManager::GetCurrentFontHeader() const
+const FontHeader* GlyphsManager::GetCurrentFontHeader(uint8_t fontId)
 {
-    if (!isFontIdSet_) {
+    GraphicLockGuard guard(lock_);
+    if (SetCurrentFontId(fontId) != RET_VALUE_OK) {
         return nullptr;
     }
 
@@ -328,12 +328,12 @@ const FontHeader* GlyphsManager::GetCurrentFontHeader() const
     return curFontHeader_;
 }
 
-const GlyphNode* GlyphsManager::GetGlyphNode(uint32_t unicode)
+const GlyphNode* GlyphsManager::GetGlyphNode(uint32_t unicode, uint8_t fontId)
 {
-    if (!isFontIdSet_) {
+    GraphicLockGuard guard(lock_);
+    if (SetCurrentFontId(fontId) != RET_VALUE_OK) {
         return nullptr;
     }
-    uint8_t fontId = fontId_;
     if (curGlyphNode_ != nullptr) {
         if ((curGlyphNode_->unicode == unicode) && (curGlyphNode_->reserve == fontId)) {
             return curGlyphNode_;
@@ -350,9 +350,10 @@ const GlyphNode* GlyphsManager::GetGlyphNode(uint32_t unicode)
     return node;
 }
 
-int16_t GlyphsManager::GetFontHeight() const
+int16_t GlyphsManager::GetFontHeight(uint8_t fontId)
 {
-    if (!isFontIdSet_) {
+    GraphicLockGuard guard(lock_);
+    if (SetCurrentFontId(fontId) != RET_VALUE_OK) {
         GRAPHIC_LOGE("GlyphsManager::GetFontHeight fontId not set");
         return INVALID_RET_VALUE;
     }
@@ -365,15 +366,9 @@ int16_t GlyphsManager::GetFontHeight() const
     return curFontHeader_->fontHeight;
 }
 
-int16_t GlyphsManager::GetFontWidth(uint32_t unicode)
+int16_t GlyphsManager::GetFontWidth(uint32_t unicode, uint8_t fontId)
 {
-    const GlyphNode* node = nullptr;
-
-    if (!isFontIdSet_) {
-        GRAPHIC_LOGE("GlyphsManager::GetFontWidth fontId not set");
-        return INVALID_RET_VALUE;
-    }
-    node = GetGlyphNode(unicode);
+    const GlyphNode* node = GetGlyphNode(unicode, fontId);
     if (node == nullptr) {
         return INVALID_RET_VALUE;
     }
@@ -388,23 +383,13 @@ int8_t GlyphsManager::GetBitmap(uint32_t unicode, uint8_t* bitmap, uint8_t fontI
     }
     
     GraphicLockGuard guard(lock_);
-    if (!isFontIdSet_) {
-        GRAPHIC_LOGE("GlyphsManager::GetBitmap fontId not set");
-        return INVALID_RET_VALUE;
-    }
-    const GlyphNode* node = GetGlyphNode(unicode);
-    uint32_t tmpBitMapSectionStart = curBitMapSectionStart_;
-    while ((node != nullptr) && ((node->reserve != fontId) || (node->unicode != unicode))) {
-        SetCurrentFontId(fontId);
-        node = GetGlyphNode(unicode);
-        tmpBitMapSectionStart = curBitMapSectionStart_;
-    }
-    guard.Unlock();
+    const GlyphNode* node = GetGlyphNode(unicode, fontId);
     if (node == nullptr) {
         GRAPHIC_LOGE("GlyphsManager::GetBitmap node not found");
         return INVALID_RET_VALUE;
     }
-    uint32_t offset = tmpBitMapSectionStart + node->dataOff;
+    uint32_t offset = curBitMapSectionStart_ + node->dataOff;
+    guard.Unlock();
     uint32_t size = node->kernOff - node->dataOff;
     int32_t ret = lseek(fp_, offset, SEEK_SET);
     if (ret != static_cast<int32_t>(offset)) {

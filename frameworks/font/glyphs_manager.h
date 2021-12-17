@@ -34,13 +34,13 @@ public:
 
     int8_t GetFontVersion(char* version, uint8_t len) const;
 
-    int16_t GetFontHeight() const;
+    int16_t GetFontHeight(uint8_t fontId);
 
-    int16_t GetFontWidth(uint32_t unicode);
+    int16_t GetFontWidth(uint32_t unicode, uint8_t fontId);
 
-    const FontHeader* GetCurrentFontHeader() const;
+    const FontHeader* GetCurrentFontHeader(uint8_t fontId);
 
-    const GlyphNode* GetGlyphNode(uint32_t unicode);
+    const GlyphNode* GetGlyphNode(uint32_t unicode, uint8_t fontId);
 
     int8_t GetBitmap(uint32_t unicode, uint8_t* bitmap, uint8_t fontId);
 
