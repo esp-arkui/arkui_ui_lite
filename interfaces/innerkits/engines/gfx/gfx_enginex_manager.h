@@ -258,7 +258,8 @@ namespace OHOS {
             /** 显示源图像 + 目标图像 -软 */
             BLENDSOFTLIGHT = OHOS::COMP_OP_SOFT_LIGHT,
             BLENDDIFFERENCE = OHOS::COMP_OP_DIFFERENCE,
-            BLENDEXCLUSION = OHOS::COMP_OP_EXCLUSION
+            BLENDEXCLUSION = OHOS::COMP_OP_EXCLUSION,
+            BLENDCOPY = 1000
         };
 
         struct Transformations {

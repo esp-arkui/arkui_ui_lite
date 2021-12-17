@@ -156,7 +156,7 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Blue());
         paint.SetFillColor(Color::Red());
         canvas->DrawCircle({50, 50}, 40, paint);
-        paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
+        paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
@@ -167,7 +167,7 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetStrokeColor(Color::Red());
         paint.SetFillColor(Color::GetColorFromRGB(0, 255, 0));
-        canvas->DrawCircle({90, 90}, 40, paint);
+        canvas->DrawCircle({100, 100}, 40, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestGlobalAlpha001()

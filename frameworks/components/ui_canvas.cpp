@@ -661,6 +661,16 @@ namespace OHOS {
             for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
                 if (isChangeBlend) {
+                    if (BaseGfxExtendEngine::BlendMode::BLENDCOPY ==
+                        curDraw->data_.paint.GetGlobalCompositeOperation()) {
+                        BaseGfxEngine::GetInstance()->DrawRect(*gfxMapBuffer, rect, invalidatedArea, *style_, opaScale_);
+
+                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+                        curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                                    curDraw->data_.paint, rect, trunc, *style_);
+                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+                        continue;
+                    }
                     curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
                                                 curDraw->data_.paint, rect, trunc, *style_);
                 } else {
