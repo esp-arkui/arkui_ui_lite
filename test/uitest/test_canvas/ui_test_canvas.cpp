@@ -55,8 +55,8 @@ namespace OHOS {
         UIKitCanvasTestRadialGradient1(); //调试渐变
         UIKitCanvasTestRadialGradient2(); //调试渐变
 
-        //    UIKitCanvasTestcreateStrokeGradient1();
-        //    UIKitCanvasTestcreateStrokePattern1();
+        //UIKitCanvasTestcreateStrokeGradient1();
+        UIKitCanvasTestcreateStrokePattern1();
 
         UIKitCanvasTestDrawText002();
         UIKitCanvasTestDrawText003();
@@ -105,7 +105,7 @@ namespace OHOS {
         UIKitCanvasTestClear001();
         UIKitCanvasTestDrawPath001();
         UIKitCanvasTestDrawPath002();
-        UIKitCanvasTestDrawPath003();
+        //UIKitCanvasTestDrawPath003();
         UIKitCanvasTestDrawPath004();
         UIKitCanvasTestDrawPath005();
         UIKitCanvasTestDrawPath006();
@@ -149,12 +149,12 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         //canvas->GlobalAlpha(0.8f,paint);
         paint.SetStrokeWidth(5);
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         paint.SetStrokeColor(Color::Blue());
         paint.SetFillColor(Color::Red());
-        //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcOver);
         canvas->DrawCircle({50, 50}, 40, paint);
         paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
@@ -163,6 +163,11 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Red());
         paint.SetFillColor(Color::GetColorFromRGB(0, 255, 0));
         canvas->DrawCircle({70, 70}, 40, paint);
+
+        paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+        paint.SetStrokeColor(Color::Red());
+        paint.SetFillColor(Color::GetColorFromRGB(0, 255, 0));
+        canvas->DrawCircle({90, 90}, 40, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestGlobalAlpha001()
@@ -174,6 +179,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetFillColor(Color::Green());
         canvas->GlobalAlpha(0.8f, paint);
@@ -193,6 +199,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Green());
         paint.SetOpacity(200); //0 是完全透明 255 不透明
@@ -245,6 +252,7 @@ namespace OHOS {
         CreateTitleLabel("绘制直线");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
         canvas->DrawLine({0, 10}, {50, 10}, paint);
     }
@@ -258,7 +266,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
-
+        canvas->SetDrawGraphicsContext(paint);
         canvas->LineWidth(15, paint);
         paint.SetStrokeColor(Color::Red());
         canvas->Save(paint);
@@ -283,6 +291,7 @@ namespace OHOS {
         CreateTitleLabel("LineCap lineJoin miterlimit设置或返回两条线相交时，所创建的拐角类型度");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
         canvas->LineWidth(10, paint);
         paint.SetLineCap(BaseGfxExtendEngine::CAPROUND);
@@ -318,6 +327,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStrokeColor(Color::Red());
         canvas->DrawCurve({100, 50}, {150, 50}, {150, 50}, {150, 100}, paint);
     }
@@ -329,6 +339,7 @@ namespace OHOS {
         CreateTitleLabel("绘制矩形和阴影");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         GradientControl gradientControl;
         paint.SetStrokeColor(Color::Red());
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
@@ -368,6 +379,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStrokeColor(Color::Red());
         canvas->DrawCurve({100, 50}, {150, 50}, {150, 100}, paint);
     }
@@ -381,6 +393,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
 
         paint.SetShadowColor(Color::Black());
@@ -404,6 +417,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Blue());
         // {200, 10}: left corner coordinates point, 50: width, 50: rectangle style
@@ -419,6 +433,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeColor(Color::Blue());
@@ -436,6 +451,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Green());
         paint.SetOpacity(255); //0 是完全透明 255 不透明
@@ -452,6 +468,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetFillColor(Color::Red());
         // {300, 10}: left corner coordinates point, 50: width, 50: rectangle style
@@ -468,6 +485,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
@@ -492,6 +510,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Blue());
         paint.SetStrokeWidth(10); // 10: line width
@@ -509,6 +528,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeColor(Color::Blue());
@@ -527,6 +547,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Red());
         canvas->LineWidth(10, paint);
@@ -543,11 +564,12 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
         paint.Rotate(10);
         canvas->DrawImage({200, 20}, GIF_IMAGE_PATH, paint);
-
-        paint.Rotate(-5);
+        canvas->ResetTransForm(paint);
+        paint.Rotate(-10);
         canvas->DrawImage({100, 20}, RED_IMAGE_PATH, paint);
     }
 
@@ -560,6 +582,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         UICanvas::FontStyle fontStyle;
         fontStyle.align = TEXT_ALIGNMENT_LEFT;
@@ -575,15 +598,14 @@ namespace OHOS {
         //canvas->StrokeText("中国",{20,10},fontStyle,paint);
         canvas->StrokeText("0度", {20, 10}, fontStyle, paint);
         canvas->ResetTransForm(paint);
-        canvas->SetRotate(10, paint);
+        canvas->SetRotate(5, paint);
         canvas->StrokeText("10度qwqwqwqwqwq", {20, 10}, fontStyle, paint);
         canvas->ResetTransForm(paint);
-        canvas->SetRotate(15, paint);
+        canvas->SetRotate(10, paint);
         canvas->StrokeText("15度", {20, 10}, fontStyle, paint);
         canvas->ResetTransForm(paint);
         canvas->SetRotate(20, paint);
         canvas->SetScale(2, 2, paint);
-        canvas->SetTranslate(50, 20, paint);
         paint.SetFillColor(Color::Green());
         canvas->StrokeText("20度。放大", {20, 10}, fontStyle, paint);
     }
@@ -599,6 +621,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->SetTransformCenter(0, 0, paint);
         canvas->SetRotate(10, paint); //设置旋转
         canvas->SetScale(2, 2, paint);
@@ -617,6 +640,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->SetRotate(20, paint); //设置旋转
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         canvas->StrokeText("hello word HMOS.", {0, 20}, fontStyle, paint);
@@ -633,6 +657,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         canvas->StrokeText("こんにちは、おーとり鴻もー蒙", {0, 20}, fontStyle, paint);
     }
@@ -648,6 +673,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         canvas->StrokeText("안녕하세요.", {0, 20}, fontStyle, paint);
     }
@@ -663,6 +689,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         canvas->StrokeText("Xin chào, Hồng Môn.", {0, 20}, fontStyle, paint);
     }
@@ -680,6 +707,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         canvas->StrokeText("英语：hello word HMOS.", {0, 20}, fontStyle, paint);
         canvas->StrokeText("日语：こんにちは、おーとり鴻もー蒙", {0, 40}, fontStyle, paint);
@@ -701,6 +729,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
 
         canvas->StrokeText("樊瓦什语：Кайалла", {0, 20}, fontStyle, paint);
@@ -724,6 +753,7 @@ namespace OHOS {
         fontStyle.fontSize = 15;   // 30: font size
         fontStyle.letterSpace = 2; // 10 letter space
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
         canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0, 20}, fontStyle, paint);
         canvas->StrokeText("西班牙语：Hong Meng, test", {0, 40}, fontStyle, paint);
@@ -741,6 +771,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetFillColor(Color::Yellow());
         // {350, 150}: sector's center coordinates, 100: sector radius, 0: start angle, 30: end angle
@@ -756,6 +787,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
         canvas->DrawLine({0, 10}, {50, 10}, paint);
         canvas->Clear();
@@ -770,6 +802,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ClosePath();
@@ -785,6 +818,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->LineTo({LINE1_X, LINE1_Y});
         canvas->DrawPath(paint);
@@ -795,10 +829,11 @@ namespace OHOS {
         if (container_ == nullptr) {
             return;
         }
-        CreateTitleLabel("arc");
+        CreateTitleLabel("arc to  无显示");
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
         canvas->DrawPath(paint);
@@ -813,6 +848,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->AddRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH);
         canvas->DrawPath(paint);
@@ -827,6 +863,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->ClosePath();
         canvas->DrawPath(paint);
@@ -841,6 +878,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -856,6 +894,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
@@ -871,6 +910,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->AddRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH);
@@ -886,6 +926,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -903,6 +944,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -921,6 +963,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -938,6 +981,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -954,6 +998,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -971,6 +1016,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -987,6 +1033,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -1004,6 +1051,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->AddRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH);
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -1019,6 +1067,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->AddRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH);
         canvas->MoveTo({START1_X, START1_Y});
@@ -1035,6 +1084,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->AddRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH);
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
@@ -1050,6 +1100,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
         canvas->AddRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH);
@@ -1065,6 +1116,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
@@ -1082,6 +1134,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
         canvas->ClosePath();
@@ -1098,6 +1151,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
@@ -1114,6 +1168,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -1130,6 +1185,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ClosePath();
@@ -1145,6 +1201,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -1165,6 +1222,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, END_ANGLE);
@@ -1184,6 +1242,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, START_ANGLE + CIRCLE_IN_DEGREE + QUARTER_IN_DEGREE);
@@ -1201,6 +1260,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, START_ANGLE + CIRCLE_IN_DEGREE);
@@ -1221,6 +1281,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->ArcTo({CENTER_X, CENTER_Y}, RADIUS, START_ANGLE, START_ANGLE + CIRCLE_IN_DEGREE);
@@ -1242,6 +1303,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X, LINE1_Y});
@@ -1261,6 +1323,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
         canvas->LineTo({LINE1_X + HORIZONTAL_RESOLUTION, LINE1_Y});
@@ -1277,6 +1340,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->MoveTo({INT16_MAX, INT16_MAX});
         canvas->LineTo({0, 0});
@@ -1302,6 +1366,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->ArcTo({INT16_MAX, INT16_MAX}, RADIUS, START_ANGLE, END_ANGLE);
         canvas->DrawPath(paint);
@@ -1332,6 +1397,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         canvas->BeginPath();
         canvas->AddRect({INT16_MAX, INT16_MAX}, RECT_HEIGHT, RECT_WIDTH);
         canvas->DrawPath(paint);
@@ -1353,6 +1419,7 @@ namespace OHOS {
         CreateTitleLabel("repeat-五角星");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
         paint.CreatePattern(RED_IMAGE_PATH, "repeat");
@@ -1384,6 +1451,7 @@ namespace OHOS {
         CreateTitleLabel("repeat-五角星-stroke");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
         paint.CreatePattern(RED_IMAGE_PATH, "repeat");
@@ -1414,6 +1482,7 @@ namespace OHOS {
         CreateTitleLabel("repeat-x-五角星");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
         paint.CreatePattern(RED_IMAGE_PATH, "repeat-x");
@@ -1445,6 +1514,7 @@ namespace OHOS {
         CreateTitleLabel("repeat-x-五角星-stroke");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
         paint.CreatePattern(RED_IMAGE_PATH, "repeat-x");
@@ -1475,6 +1545,7 @@ namespace OHOS {
         CreateTitleLabel("repeat-y-五角星");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
         paint.CreatePattern(RED_IMAGE_PATH, "repeat-y");
@@ -1506,6 +1577,7 @@ namespace OHOS {
         CreateTitleLabel("repeat-y-五角星-stroke");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
         paint.CreatePattern(RED_IMAGE_PATH, "repeat-y");
@@ -1536,6 +1608,7 @@ namespace OHOS {
         CreateTitleLabel("no-repeat-五角星");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
 
         paint.CreatePattern(RED_IMAGE_PATH, "no-repeat");
@@ -1567,6 +1640,7 @@ namespace OHOS {
         CreateTitleLabel("no-repeat-五角星-stroke");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.SetStrokeWidth(8);
         paint.CreatePattern(RED_IMAGE_PATH, "no-repeat");
@@ -1604,6 +1678,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         GradientControl gradientControl;
         paint.SetStyle(Paint::PaintStyle::FILL_GRADIENT);
         paint.SetStrokeWidth(2);
@@ -1648,7 +1723,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-
+        canvas->SetDrawGraphicsContext(paint);
         GradientControl gradientControl;
         paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
         paint.SetFillColor(Color::Yellow());
@@ -1693,7 +1768,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_GRADIENT);
         paint.SetStrokeWidth(2);
         GradientControl gradientControl;
@@ -1734,6 +1809,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
         paint.SetStrokeWidth(8);
         GradientControl gradientControl;
@@ -1792,6 +1868,7 @@ namespace OHOS {
         CreateTitleLabel("pattern-重复");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
+        canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::PATTERN);
         paint.CreatePattern(RED_IMAGE_PATH, "repeat");
 
