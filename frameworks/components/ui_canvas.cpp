@@ -518,11 +518,6 @@ namespace OHOS {
         imageParam->start = startPoint;
         imageParam->height = header.height;
         imageParam->width = header.width;
-        DrawCmd cmd;
-        cmd.paint = paint;
-        cmd.param = imageParam;
-        cmd.DeleteParam = DeleteImageParam;
-        cmd.DrawGraphics = DoDrawImage;
 
         if (IsGif(image)) {
             imageParam->gifImageAnimator = new GifCanvasImageAnimator(imageParam, this, imageParam->path);

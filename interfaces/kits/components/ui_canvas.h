@@ -1093,7 +1093,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t sizeWidth = -1, int16_t sizeHeight = -1);
+        void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
         /**
          * @brief Draws an image.
