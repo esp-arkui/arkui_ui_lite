@@ -997,18 +997,10 @@ namespace OHOS {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
         Rect r(imgX1, imgY1, imgX2, imgY2);
-        if (m_blendMode == BLENDALPHA) {
-            if (isAntiAlias) {
-                m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            } else {
-                m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            }
+        if (isAntiAlias) {
+            m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         } else {
-            if (isAntiAlias) {
-                this->m_renBaseCompPre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            } else {
-                this->m_renBaseComp.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            }
+            m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         }
     }
 
@@ -1018,19 +1010,8 @@ namespace OHOS {
         PixFormat pixF(img.renBuf);
         if (isAntiAlias) {
             m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        }
-        if (m_blendMode == BLENDALPHA) {
-            if (isAntiAlias) {
-                m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            } else {
-                m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            }
         } else {
-            if (isAntiAlias) {
-                m_renBaseCompPre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            } else {
-                m_renBaseComp.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            }
+            m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
         }
     }
 

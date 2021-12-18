@@ -695,10 +695,10 @@ namespace OHOS {
                                       realTop + trunc.GetHeight() - 1, posViewLeft, posViewTop,
                                       posViewLeft + trunc.GetWidth() - 1, posViewTop + trunc.GetHeight() - 1,
                                       BaseGfxExtendEngine::XMINYMIN);
-            m_graphics_Image.BlendImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
-                                        gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
-                                        gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
-                                        DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
+            m_graphics_Image.BlendFromImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
+                                            gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
+                                            gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
+                                            DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
             delete gfxMapBuffer;
             gfxMapBuffer = nullptr;
@@ -1419,17 +1419,17 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
+        //
         Rect trunc(invalidatedArea);
         if (!paint.IsTransform()) {
-            graphics->BlendImage(imageBuffer, start.x, start.y, opa);
+            graphics->BlendFromImage(imageBuffer, start.x, start.y, opa);
         } else {
-            StartTransform(rect, invalidatedArea, paint);
             double x = start.x;
             double y = start.y;
             double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
             uint8_t formatType = imageParam->image->GetImgType();
+            StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
-            //graphics->ResetTransformations();
         }
     }
 
