@@ -15,6 +15,8 @@ struct ImageParam : public HeapBase {
     Point start;
     uint16_t height;
     uint16_t width;
+    int16_t newWidth;
+    int16_t newHeight;
     Image* image = nullptr;
     GifCanvasImageAnimator *gifImageAnimator = nullptr;
     char* path;

@@ -492,7 +492,7 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint)
+    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t width, int16_t height)
     {
         if (image == nullptr) {
             return;
@@ -526,6 +526,9 @@ namespace OHOS {
             imageParam->height = gifSize.y;
             imageParam->gifImageAnimator->Start();
         }
+
+        imageParam->newWidth = width;
+        imageParam->newHeight = height;
 		DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = imageParam;
@@ -1423,21 +1426,35 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
-        //
+        int16_t width =imageParam->width;
+        int16_t height =imageParam->height;
+        if(imageParam->newWidth >= 0){
+            width = imageParam->newWidth;
+        }
+        if(imageParam->newHeight >= 0){
+            height = imageParam->newHeight;
+        }
         Rect trunc(invalidatedArea);
         if (!paint.IsTransform()) {
+            double x = start.x;
+            double y = start.y;
+            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
+            uint8_t formatType = imageParam->image->GetImgType();
+            graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
+
             //graphics->BlendImage(imageBuffer, start.x, start.y, opa);
 
-            Rect cordsTmp;
-            cordsTmp.SetPosition(start.x, start.y);
-            cordsTmp.SetHeight(imageParam->height);
-            cordsTmp.SetWidth(imageParam->width);
-            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-            imageParam->image->GetImageInfo(), style, opa);
+//            Rect cordsTmp;
+//            cordsTmp.SetPosition(start.x, start.y);
+//            cordsTmp.SetHeight(imageParam->height);
+//            cordsTmp.SetWidth(imageParam->width);
+//            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
+//            imageParam->image->GetImageInfo(), style, opa);
         } else {
             double x = start.x;
             double y = start.y;
-            double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
+
+            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
             uint8_t formatType = imageParam->image->GetImgType();
             StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
@@ -1766,6 +1783,14 @@ namespace OHOS {
         if (m_graphics == nullptr) {
             return;
         }
+        if (paint.IsLineDash()) {
+            m_graphics->SetLineDashOffset(paint.GetLineDashOffset());
+            m_graphics->SetLineDash(paint.GetLineDash(), paint.GetLineDashCount());
+        } else {
+            m_graphics->SetLineDash(nullptr, 0);
+        }
+
+
         Point pathEnd = {COORD_MIN, COORD_MIN};
 
         ListNode<Point>* pointIter = path->points_.Begin();
