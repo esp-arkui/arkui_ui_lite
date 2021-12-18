@@ -1442,14 +1442,6 @@ namespace OHOS {
             uint8_t formatType = imageParam->image->GetImgType();
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
 
-            //graphics->BlendImage(imageBuffer, start.x, start.y, opa);
-
-//            Rect cordsTmp;
-//            cordsTmp.SetPosition(start.x, start.y);
-//            cordsTmp.SetHeight(imageParam->height);
-//            cordsTmp.SetWidth(imageParam->width);
-//            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-//            imageParam->image->GetImageInfo(), style, opa);
         } else {
             double x = start.x;
             double y = start.y;
