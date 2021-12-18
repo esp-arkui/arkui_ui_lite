@@ -492,7 +492,7 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t sizeWidth, int16_t sizeHeight)
+    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint)
     {
         if (image == nullptr) {
             return;
@@ -518,7 +518,6 @@ namespace OHOS {
         imageParam->start = startPoint;
         imageParam->height = header.height;
         imageParam->width = header.width;
-
         DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = imageParam;
@@ -532,16 +531,11 @@ namespace OHOS {
             imageParam->height = gifSize.y;
             imageParam->gifImageAnimator->Start();
         }
-
-        float scaleX = 1;
-        float scaleY = 1;
-        if(sizeWidth >= 0 && imageParam->width!= 0){
-            scaleX = sizeWidth * 1.0 / imageParam->width;
-        }
-        if(sizeHeight >= 0 && imageParam->height != 0){
-            scaleY = sizeHeight * 1.0 / imageParam->height;
-        }
-        cmd.paint.Scale(scaleX,scaleY);
+		DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = imageParam;
+        cmd.DeleteParam = DeleteImageParam;
+        cmd.DrawGraphics = DoDrawImage;
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
@@ -676,6 +670,16 @@ namespace OHOS {
             for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
                 if (isChangeBlend) {
+                    if (BaseGfxExtendEngine::BlendMode::BLENDCOPY ==
+                        curDraw->data_.paint.GetGlobalCompositeOperation()) {
+                        BaseGfxEngine::GetInstance()->DrawRect(*gfxMapBuffer, rect, invalidatedArea, *style_, opaScale_);
+
+                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+                        curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                                    curDraw->data_.paint, rect, trunc, *style_);
+                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+                        continue;
+                    }
                     curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
                                                 curDraw->data_.paint, rect, trunc, *style_);
                 } else {
@@ -700,10 +704,10 @@ namespace OHOS {
                                       realTop + trunc.GetHeight() - 1, posViewLeft, posViewTop,
                                       posViewLeft + trunc.GetWidth() - 1, posViewTop + trunc.GetHeight() - 1,
                                       BaseGfxExtendEngine::XMINYMIN);
-            m_graphics_Image.BlendImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
-                                        gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
-                                        gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
-                                        DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
+            m_graphics_Image.BlendFromImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
+                                            gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
+                                            gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
+                                            DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
             delete gfxMapBuffer;
             gfxMapBuffer = nullptr;
@@ -1424,6 +1428,7 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
+        //
         Rect trunc(invalidatedArea);
         if (!paint.IsTransform()) {
             //graphics->BlendImage(imageBuffer, start.x, start.y, opa);
@@ -1433,15 +1438,14 @@ namespace OHOS {
             cordsTmp.SetHeight(imageParam->height);
             cordsTmp.SetWidth(imageParam->width);
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-                imageParam->image->GetImageInfo(), style, opa);
+            imageParam->image->GetImageInfo(), style, opa);
         } else {
-            StartTransform(rect, invalidatedArea, paint);
             double x = start.x;
             double y = start.y;
             double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
             uint8_t formatType = imageParam->image->GetImgType();
+            StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
-            //graphics->ResetTransformations();
         }
     }
 
