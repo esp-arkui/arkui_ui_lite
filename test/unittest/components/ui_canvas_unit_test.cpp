@@ -665,7 +665,7 @@ HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_.SetDrawGraphicsContext(paint_);
+    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->LineWidth(LineWidth1);
     EXPECT_EQ(paint_->GetStrokeWidth(), LineWidth1);
 
@@ -722,5 +722,94 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
 
     canvas_->SetMiterLimit(MITERLIMIT3 + MITERLIMIT2);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT3 + MITERLIMIT2);
+}
+
+/**
+ * @tc.name: UICanvasSetLineDash_001
+ * @tc.desc: Verify SetLineDash function, equal.
+ * @tc.type: FUNC
+ * @tc.require: AR000DSMPV
+ */
+HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    canvas_.SetDrawGraphicsContext(*paint_);
+
+    const int32_t dashCount = 4;
+    float dash[dashCount] = {1, 1.5, 2, 2.5};
+    canvas_->SetLineDash(dash, dashCount);
+    EXPECT_EQ(paint_->GetLineDashCount(), dashCount);
+
+    paint_->ClearLineDash();
+    EXPECT_EQ(paint_->GetLineDashCount(), 0);
+    
+    canvas_->SetLineDash(dash, dashCount);
+    int32_t dashLen = paint_->GetLineDashCount();
+    float* dashArr = paint_->GetLineDash();
+    for (int32_t i = 0; i < dashLen; i++) {
+        EXPECT_EQ(dashArr[i], dash[i]);
+    }
+
+    EXPECT_EQ(paint_->IsLineDash(), 1);
+
+    paint_->ClearLineDash();
+    EXPECT_EQ(paint_->GetLineDashCount(), 0);
+
+    EXPECT_EQ(paint_->IsLineDash(), 0);
+}
+
+/**
+ * @tc.name: UICanvasStrokeRect_001
+ * @tc.desc: Verify StrokeRect function, equal.
+ * @tc.type: FUNC
+ * @tc.require: AR000DSMPV
+ */
+HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    RootView* rootView = RootView::GetInstance();
+    UIViewGroup* viewGroup = static_cast<UIViewGroup*>(rootView);
+    Paint paint;
+    Point startPoint = {100, 100};
+    Point endPoint = {150, 200};
+    Point control1Point = {150, 100};
+    Point control2Point = {150, 100};
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, endPoint.x);
+    EXPECT_EQ(canvas_->GetStartPosition().y, endPoint.y);
+    viewGroup->Remove(canvas_);
+
+
+    viewGroup->SetPosition(10, 20);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, endPoint.x);
+    EXPECT_EQ(canvas_->GetStartPosition().y, endPoint.y);
+    viewGroup->Remove(canvas_);
+
 }
 } // namespace OHOS
