@@ -639,23 +639,26 @@ namespace OHOS {
         RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
     }
 
-    void BaseGfxExtendEngine::DrawShadow(
-        double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
+    void BaseGfxExtendEngine::DrawShadow(double centerX = 0,
+                                         double centerY = 0,
+                                         double angle = 0,
+                                         double scaleX = 0,
+                                         double scaleY = 0)
     {
         m_rasterizer.Reset();
         OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY,
             m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
         PathTransform shadow_trans(m_convCurve, transform);
         transform.Translate(shadowOffsetX_, shadowOffsetY_);
-        if (a != 0) {
-            transform *= OHOS::TransAffineTranslation(-x, -y);
-            transform *= OHOS::TransAffineRotation(a * Pi() / OHOS::BOXER);
-            transform *= OHOS::TransAffineTranslation(x, y);
+        if (angle != 0) {
+            transform *= OHOS::TransAffineTranslation(-centerX, -centerY);
+            transform *= OHOS::TransAffineRotation(angle * Pi() / OHOS::BOXER);
+            transform *= OHOS::TransAffineTranslation(centerX, centerY);
         }
         if (scaleX != 0 || scaleY != 0) {
-            transform *= OHOS::TransAffineTranslation(-x, -y);
+            transform *= OHOS::TransAffineTranslation(-centerX, -centerY);
             transform *= OHOS::TransAffineScaling(scaleX, scaleY);
-            transform *= OHOS::TransAffineTranslation(x, y);
+            transform *= OHOS::TransAffineTranslation(centerX, centerY);
         }
         m_rasterizer.AddPath(shadow_trans);
         OHOS::RenderScanlinesAntiAliasSolid(m_rasterizer, m_scanline, m_renBase, shadowColor_);
@@ -673,14 +676,39 @@ namespace OHOS {
         }
         m_rasterizer.Reset();
     }
-    void BaseGfxExtendEngine::DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
-        double x = 0, double y = 0, double a = 0, double scaleX = 0, double scaleY = 0)
+    void BaseGfxExtendEngine::DrawCircleShadow(int16_t cx,
+                                               int16_t cy,
+                                               int16_t rx,
+                                               int16_t ry,
+                                               double centerX = 0,
+                                               double centerY = 0,
+                                               double angle = 0,
+                                               double scaleX = 0,
+                                               double scaleY = 0)
     {
         m_path.RemoveAll();
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
         m_path.ClosePolygon();
-        DrawShadow(x, y, a, scaleX, scaleY);
+        DrawShadow(centerX, centerY, angle, scaleX, scaleY);
+    }
+    void BaseGfxExtendEngine::DrawRectShadow(int16_t x1,
+                                             int16_t y1,
+                                             int16_t x2,
+                                             int16_t y2,
+                                             double centerX = 0,
+                                             double centerY = 0,
+                                             double angle = 0,
+                                             double scaleX = 0,
+                                             double scaleY = 0)
+    {
+        m_path.RemoveAll();
+        m_path.MoveTo(x1, y1);
+        m_path.LineTo(x2, y1);
+        m_path.LineTo(x2, y2);
+        m_path.LineTo(x1, y2);
+        m_path.ClosePolygon();
+        DrawShadow(centerX, centerY, angle, scaleX, scaleY);
     }
     void BaseGfxExtendEngine::Scale(double x, double y, double scaleX, double scaleY)
     {

@@ -890,12 +890,26 @@ namespace OHOS {
             (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_GRADIENT)) {
             Point start;
             GetAbsolutePosition(rectParam->start, rect, style, start);
-
+            double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
+            rotateCenterX = paint.GetRotateCenterX() + rect.GetX() - invalidatedArea.GetX();
+            rotateCenterY = paint.GetRotateCenterY() + rect.GetY() - invalidatedArea.GetY();
+            if (paint.GetRotateAngle() != 0) {
+                rotateAngle = paint.GetRotateAngle();
+            }
             if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
                 m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
                 m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
+                m_graphics->DrawRectShadow(start.x,
+                                           start.y,
+                                           start.x + rectParam->width,
+                                           start.y + rectParam->height,
+                                           rotateCenterX,
+                                           rotateCenterY,
+                                           rotateAngle,
+                                           paint.GetScaleX(),
+                                           paint.GetScaleY());
             }
 
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
@@ -1181,7 +1195,7 @@ namespace OHOS {
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
                 m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-                m_graphics->DrawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
+                m_graphics->DrawCircleShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
                                        rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
             }
             m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);

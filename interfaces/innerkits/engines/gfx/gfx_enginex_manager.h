@@ -627,10 +627,29 @@ namespace OHOS {
          * @param scaleX
          * @param scaleY
          */
-        void DrawShadow(double x, double y, double a, double scaleX, double scaleY);
-        void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double a, double scaleX,
+        void DrawShadow(double centerX,
+                        double centerY,
+                        double angle,
+                        double scaleX,
                         double scaleY);
-
+        void DrawCircleShadow(int16_t cx,
+                              int16_t cy,
+                              int16_t rx,
+                              int16_t ry,
+                              double centerX,
+                              double centerY,
+                              double angle,
+                              double scaleX,
+                              double scaleY);
+        void DrawRectShadow(int16_t x1,
+                            int16_t y1,
+                            int16_t x2,
+                            int16_t y2,
+                            double centerX,
+                            double centerY,
+                            double angle,
+                            double scaleX,
+                            double scaleY);
         /**
          * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
          * @param flag 绘制模式 默认填充和绘制路径都有
