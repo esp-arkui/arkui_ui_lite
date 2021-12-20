@@ -564,4 +564,24 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     EXPECT_EQ(end.x, LINE2_X);
     EXPECT_EQ(end.y, LINE2_Y);
 }
+HWTEST_F(UICanvasTest, UICanvasShadowColor_001, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType color = Color::Red();
+    paint_->SetShadowColor(color);
+    EXPECT_EQ(paint_->GetFillColor().full, color.full);
+}
+HWTEST_F(UICanvasTest, UICanvasShadowColor_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType color = Color::Red();
+    paint_->SetShadowColor(color);
+    EXPECT_EQ(paint_->GetFillColor().full, color.full);
+}
 } // namespace OHOS
