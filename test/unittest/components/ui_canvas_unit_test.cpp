@@ -738,7 +738,7 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_.SetDrawGraphicsContext(paint_);
+    canvas_.SetDrawGraphicsContext(*paint_);
 
     const int32_t dashCount = 4;
     float dash[dashCount] = {1, 1.5, 2, 2.5};
@@ -787,7 +787,7 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
     viewGroup->SetPosition(0, 0);
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
@@ -798,7 +798,7 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
     viewGroup->SetPosition(10, 20);
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -833,16 +833,16 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level0)
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Red());
 
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
 
-    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
-                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+    canvas->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
+                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
 
     viewGroup->Remove(canvas_);
 
@@ -851,7 +851,7 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level0)
     viewGroup->SetHeight(HEIGHT);
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Blue());
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -888,16 +888,16 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawImage(,, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
 
-    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
-                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+    canvas->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
+                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
 
     viewGroup->Remove(canvas_);
 
@@ -905,7 +905,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
     
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
@@ -941,16 +941,16 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawImage(, , paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
 
-    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
-                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+    canvas->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
+                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
 
     viewGroup->Remove(canvas_);
 
@@ -958,7 +958,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
@@ -994,16 +994,16 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawImage(, , paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
 
-    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
-                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+    canvas->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
+                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
 
     viewGroup->Remove(canvas_);
 
@@ -1011,7 +1011,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_.SetDrawGraphicsContext(paint);
+    canvas_.SetDrawGraphicsContext(*paint);
     canvas->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
