@@ -55,7 +55,7 @@ namespace {
     const int16_t IMAGE_Y = 10;
     const int16_t IMAGE_WIDTH = 20;
     const int16_t IMAGE_HEIGHT = 10;
-    
+    const int16_t LineWidth1 = 5;
     }
 
 class TestUICanvas : public UICanvas {
@@ -667,7 +667,7 @@ HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
         return;
     }
     canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->LineWidth(LineWidth1);
+    canvas_->LineWidth(LineWidth1, *paint_);
     EXPECT_EQ(paint_->GetStrokeWidth(), LineWidth1);
 
     paint_->SetLineDashOffset(LINE_OFFSET1);
