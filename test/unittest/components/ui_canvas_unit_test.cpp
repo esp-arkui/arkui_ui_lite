@@ -706,16 +706,17 @@ HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
     stopAndColor.PopFront();
 }
 
-// HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
-// {
-//     if (gradientControl_ == nullptr) {
-//         EXPECT_EQ(1, 0);
-//         return;
-//     }
-//     if (paint_ == nullptr) {
-//         EXPECT_EQ(1, 0);
-//         return;
-//     }
-//     ColorType colorStop0 = Color::Yellow();
-// }
+HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
+{
+    
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType colorStop0 = Color::Yellow();
+    paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    paint_->SetStyle(Paint::PaintStyle::PATTERN);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+}
 } // namespace OHOS
