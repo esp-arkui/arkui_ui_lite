@@ -667,7 +667,7 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
     }
     paint_->createPattern(RED_IMAGE_PATH,PATTERN_REPEAT_TYPE);
     EXPECT_EQ(paint_->GetPatternImagePath(),RED_IMAGE_PATH);
-    EXPECT_EQ(paint_->GetPatternRepeatType(),PATTERN_REPEAT_TYPE);
+    EXPECT_EQ(((paint_->GetPatternRepeatType()==0)?PATTERN_REPEAT_TYPE:"false"),PATTERN_REPEAT_TYPE);
 }
 
 HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
