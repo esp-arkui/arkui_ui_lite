@@ -742,13 +742,13 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
 
     const int32_t dashCount = 4;
     float dash[dashCount] = {1, 1.5, 2, 2.5};
-    canvas_->SetLineDash(dash, dashCount);
+    canvas_->SetLineDash(dash, dashCount, *paint_);
     EXPECT_EQ(paint_->GetLineDashCount(), dashCount);
 
     paint_->ClearLineDash();
     EXPECT_EQ(paint_->GetLineDashCount(), 0);
     
-    canvas_->SetLineDash(dash, dashCount);
+    canvas_->SetLineDash(dash, dashCount, *paint_);
     int32_t dashLen = paint_->GetLineDashCount();
     float* dashArr = paint_->GetLineDash();
     for (int32_t i = 0; i < dashLen; i++) {
@@ -889,7 +889,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
     viewGroup->SetHeight(HEIGHT);
 
     canvas_->SetDrawGraphicsContext(paint);
-    canvas_->DrawImage(,, paint);
+    canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
@@ -942,7 +942,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
     viewGroup->SetHeight(HEIGHT);
 
     canvas_->SetDrawGraphicsContext(paint);
-    canvas_->DrawImage(, , paint);
+    canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
@@ -995,7 +995,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
     viewGroup->SetHeight(HEIGHT);
 
     canvas_->SetDrawGraphicsContext(paint);
-    canvas_->DrawImage(, , paint);
+    canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
