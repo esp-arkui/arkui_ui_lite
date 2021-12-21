@@ -738,7 +738,7 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_.SetDrawGraphicsContext(*paint_);
+    canvas_.SetDrawGraphicsContext(paint_);
 
     const int32_t dashCount = 4;
     float dash[dashCount] = {1, 1.5, 2, 2.5};
