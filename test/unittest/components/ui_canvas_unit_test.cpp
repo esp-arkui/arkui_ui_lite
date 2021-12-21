@@ -592,16 +592,16 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level0)
     }
 
     paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPBUTT);
-    EXPECT_EQ(paint_->LineCap, BaseGfxExtendEngine::LineCap::CAPBUTT);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPBUTT);
     
     paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPSQUARE);
-    EXPECT_EQ(paint_->LineCap, BaseGfxExtendEngine::LineCap::CAPSQUARE);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPSQUARE);
 
     paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPROUND);
-    EXPECT_EQ(paint_->LineCap, BaseGfxExtendEngine::LineCap::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPROUND);
     
     paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPNONE);
-    EXPECT_EQ(paint_->LineCap, BaseGfxExtendEngine::LineCap::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPNONE);
   
 }
 
@@ -617,16 +617,16 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level0)
         return;
     }
     paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINMITER);
-    EXPECT_EQ(paint_->LineJoin, BaseGfxExtendEngine::LineJoin::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINMITER);
 
     paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINROUND);
-    EXPECT_EQ(paint_->LineJoin, BaseGfxExtendEngine::LineJoin::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINROUND);
 
     paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINBEVEL);
-    EXPECT_EQ(paint_->LineJoin, BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINBEVEL);
 
     paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINNONE);
-    EXPECT_EQ(paint_->LineJoin, BaseGfxExtendEngine::LineJoin::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINNONE);
 }
 
 /**
