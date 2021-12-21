@@ -333,7 +333,7 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Red());
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         //paint.SetFillColor(Color::Green());
-        //paint.fillStyle(Color::White());
+        paint.fillStyle(Color::White());
         paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
         paint.SetShadowOffsetX(10);
@@ -1359,7 +1359,6 @@ namespace OHOS {
         int32_t y = 80;
         float pi = 180.0;
         canvas->BeginPath();
-
         for (int32_t i = 0; i < 5; i++) {
             canvas->LineTo({static_cast<int16_t>(cos((18 + 72 * i - rot) / pi * UI_PI) * outerR + x),
                             static_cast<int16_t>(-sin((18 + 72 * i - rot) / pi * UI_PI) * outerR + y)});
