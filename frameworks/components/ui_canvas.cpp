@@ -705,10 +705,10 @@ namespace OHOS {
                                       realTop + trunc.GetHeight() - 1, posViewLeft, posViewTop,
                                       posViewLeft + trunc.GetWidth() - 1, posViewTop + trunc.GetHeight() - 1,
                                       BaseGfxExtendEngine::XMINYMIN);
-            m_graphics_Image.BlendFromImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
-                                            gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
-                                            gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
-                                            DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
+            m_graphics_Image.BlendImage(imageBuffer, gfxMapBuffer->rect.GetLeft(), gfxMapBuffer->rect.GetTop(),
+                                        gfxMapBuffer->rect.GetRight(), gfxMapBuffer->rect.GetBottom(),
+                                        gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
+                                        DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
             delete gfxMapBuffer;
             gfxMapBuffer = nullptr;

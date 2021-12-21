@@ -156,7 +156,7 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Blue());
         paint.SetFillColor(Color::Red());
         canvas->DrawCircle({50, 50}, 40, paint);
-        paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+        paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);

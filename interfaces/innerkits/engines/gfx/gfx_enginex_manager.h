@@ -653,23 +653,23 @@ namespace OHOS {
          * @param dstY1 合法区域的左上角y
          * @param dstX2 合法区域的右下角x
          * @param dstY2 合法区域的右下角y
-         * @param isAntiAlias 是否抗锯齿
+         * @param isComposite 是否抗锯齿
          */
         void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX1, double dstY1,
-                            double dstX2, double dstY2, bool isAntiAlias = true);
+                            double dstX2, double dstY2, bool isComposite = true);
         void TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2,
-                            bool isAntiAlias = true);
+                            bool isComposite = true);
         void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, const double* parallelogram,
-                            bool isAntiAlias = true);
-        void TransformImage(const Image& img, const double* parallelogram, bool isAntiAlias = true);
+                            bool isComposite = true);
+        void TransformImage(const Image& img, const double* parallelogram, bool isComposite = true);
 
         void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
                         unsigned alpha = 255);
         void BlendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
 
         void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
-                            unsigned alpha, bool isAntiAlias = false);
-        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias = false);
+                            unsigned alpha, bool isComposite = false);
+        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isComposite = false);
 
         /**
          * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
@@ -853,9 +853,9 @@ namespace OHOS {
          * @param x2
          * @param y2
          * @param parl
-         * @param isAntiAlias
+         * @param isComposite
          */
-        void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl, bool isAntiAlias = true);
+        void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl, bool isComposite = true);
 
         /**
          * @brief 重置LineDash相关配置
