@@ -26,6 +26,7 @@ class GifCanvasImageAnimator : public Animator, public AnimatorCallback {
 public:
     GifCanvasImageAnimator(ImageParam* image,UIView* view, const char* src)
         : Animator(this, view, 0, true),
+          size_({0,0}),
           gifFileType_(nullptr),
           imageIndex_(0),
           delayTime_(0),
@@ -33,8 +34,8 @@ public:
           deltaTime_(0),
           gifDataSize_(0),
           src_(src),
-          image_(image),
-          size_({0,0})
+          image_(image)
+
     {
 
         OpenGifFile(image->path);// 打开一次先获取大小
