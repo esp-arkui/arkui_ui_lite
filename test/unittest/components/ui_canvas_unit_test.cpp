@@ -691,13 +691,13 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_->SetMiterLimit(MITERLIMIT1);
+    paint_->SetMiterLimit(MITERLIMIT1);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT1);
 
-    canvas_->SetMiterLimit(MITERLIMIT2);
+    paint_->SetMiterLimit(MITERLIMIT2);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT2);
 
-    canvas_->SetMiterLimit(MITERLIMIT3);
+    paint_->SetMiterLimit(MITERLIMIT3);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT3);
 
 }
@@ -713,13 +713,13 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_->SetMiterLimit(MITERLIMIT1);
+    paint_->SetMiterLimit(MITERLIMIT1);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT1);
 
-    canvas_->SetMiterLimit(MITERLIMIT2 + MITERLIMIT1);
+    paint_->SetMiterLimit(MITERLIMIT2 + MITERLIMIT1);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT2 + MITERLIMIT1);
 
-    canvas_->SetMiterLimit(MITERLIMIT3 + MITERLIMIT2);
+    paint_->SetMiterLimit(MITERLIMIT3 + MITERLIMIT2);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT3 + MITERLIMIT2);
 }
 
