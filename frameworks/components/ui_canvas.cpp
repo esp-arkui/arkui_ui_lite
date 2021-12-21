@@ -278,6 +278,7 @@ namespace OHOS {
         }
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::ClearRect(const Point& clearRect, int clearHeight, int clearWidth, const Paint& paint)
@@ -300,6 +301,7 @@ namespace OHOS {
         cmd.DrawGraphics = DoClearRect;
         drawCmdList_.PushBack(cmd);
         Invalidate();
+        SetStartPosition(clearRect);
     }
 
     void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
@@ -514,7 +516,7 @@ namespace OHOS {
         imageParam->image->SetSrc(imageParam->path);
         ImageHeader header = {0};
         imageParam->image->GetHeader(header);
-
+        imageParam->gifImageAnimator = nullptr;
         imageParam->start = startPoint;
         imageParam->height = header.height;
         imageParam->width = header.width;
@@ -537,6 +539,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::DrawImage(const Point& startPoint, const ImageInfo* image, const Paint& paint)
@@ -556,7 +559,7 @@ namespace OHOS {
             imageParam = nullptr;
             return;
         }
-
+        imageParam->path = nullptr;
         imageParam->image->SetSrc(image);
         ImageHeader header = {0};
         imageParam->image->GetHeader(header);

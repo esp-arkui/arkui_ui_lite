@@ -19,7 +19,7 @@
 
 #include <climits>
 #include <gtest/gtest.h>
-
+#include "test_resource_config.h"
 using namespace testing::ext;
 namespace OHOS {
 namespace {
@@ -51,6 +51,11 @@ namespace {
     const double MITERLIMIT1 = 11.05;
     const double MITERLIMIT2 = 4.6;
     const double MITERLIMIT3 = -5.6;
+    const int16_t IMAGE_X = 20;
+    const int16_t IMAGE_Y = 10;
+    const int16_t IMAGE_WIDTH = 20;
+    const int16_t IMAGE_HEIGHT = 10;
+    
     }
 
 class TestUICanvas : public UICanvas {
@@ -578,7 +583,6 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
  * @tc.name: UICanvasSetLineCap_001
  * @tc.desc: Verify SetLineCap function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level0)
 {
@@ -605,7 +609,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level0)
  * @tc.name: UICanvasSetLineJoin_001
  * @tc.desc: Verify SetLineJoin function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level0)
 {
@@ -630,7 +633,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level0)
  * @tc.name: UICanvasSetLineDashOffset_001
  * @tc.desc: Verify SetLineDashOffset function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_001, TestSize.Level0)
 {
@@ -653,7 +655,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_001, TestSize.Level0)
  * @tc.name: UICanvasLineWidth_001
  * @tc.desc: Verify LineWidth function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
 {
@@ -683,7 +684,6 @@ HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
  * @tc.name: UICanvasMiterLimit_001
  * @tc.desc: Verify MiterLimit function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasMiterLimit_001, TestSize.Level0)
 {
@@ -706,7 +706,6 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_001, TestSize.Level0)
  * @tc.name: UICanvasMiterLimit_002
  * @tc.desc: Verify MiterLimit function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
 {
@@ -728,7 +727,6 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
  * @tc.name: UICanvasSetLineDash_001
  * @tc.desc: Verify SetLineDash function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
 {
@@ -769,7 +767,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
  * @tc.name: UICanvasStrokeRect_001
  * @tc.desc: Verify StrokeRect function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000DSMPV
  */
 HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
 {
@@ -785,10 +782,7 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
     RootView* rootView = RootView::GetInstance();
     UIViewGroup* viewGroup = static_cast<UIViewGroup*>(rootView);
     Paint paint;
-    Point startPoint = {100, 100};
-    Point endPoint = {150, 200};
-    Point control1Point = {150, 100};
-    Point control2Point = {150, 100};
+
 
     viewGroup->SetPosition(0, 0);
     viewGroup->SetWidth(WIDTH);
@@ -796,8 +790,8 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
     canvas_.SetDrawGraphicsContext(paint);
     canvas->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, endPoint.x);
-    EXPECT_EQ(canvas_->GetStartPosition().y, endPoint.y);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
     viewGroup->Remove(canvas_);
 
 
@@ -805,11 +799,227 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
     canvas_.SetDrawGraphicsContext(paint);
-    canvas->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
+    canvas->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, endPoint.x);
-    EXPECT_EQ(canvas_->GetStartPosition().y, endPoint.y);
+    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
+    viewGroup->Remove(canvas_);
+}
+
+/**
+ * @tc.name: UICanvasCleanRect_001
+ * @tc.desc: Verify CleanRect function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    RootView* rootView = RootView::GetInstance();
+    UIViewGroup* viewGroup = static_cast<UIViewGroup*>(rootView);
+    Paint paint;
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetFillColor(Color::Red());
+
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+
+    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
+                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+
     viewGroup->Remove(canvas_);
 
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+    paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint.SetFillColor(Color::Blue());
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
+
+    canvas->ClearRect({RECT_X - 10, RECT_Y - 10},
+                      RECT_HEIGHT +10, RECT_WIDTH +10, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X - 10);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y - 10);
+    viewGroup->Remove(canvas_);
+}
+
+/**
+ * @tc.name: UICanvasDrawImage_001
+ * @tc.desc: Verify DrawImage function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    RootView* rootView = RootView::GetInstance();
+    UIViewGroup* viewGroup = static_cast<UIViewGroup*>(rootView);
+    Paint paint;
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawImage(,, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+
+    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
+                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+
+    viewGroup->Remove(canvas_);
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+    
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
+
+    canvas->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
+    viewGroup->Remove(canvas_);
+}
+
+/**
+ * @tc.name: UICanvasDrawImage_002
+ * @tc.desc: Verify DrawImage function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    RootView* rootView = RootView::GetInstance();
+    UIViewGroup* viewGroup = static_cast<UIViewGroup*>(rootView);
+    Paint paint;
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawImage(, , paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+
+    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
+                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+
+    viewGroup->Remove(canvas_);
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
+
+    canvas->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
+    viewGroup->Remove(canvas_);
+}
+
+/**
+ * @tc.name: UICanvasDrawImage_003
+ * @tc.desc: Verify DrawImage function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    RootView* rootView = RootView::GetInstance();
+    UIViewGroup* viewGroup = static_cast<UIViewGroup*>(rootView);
+    Paint paint;
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawImage(, , paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+
+    canvas->ClearRect({RECT_X + RECT_X / 2.0, RECT_Y + RECT_Y / 2.0},
+                      RECT_HEIGHT / 2.0, RECT_WIDTH / 2.0, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2.0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2.0);
+
+    viewGroup->Remove(canvas_);
+
+    viewGroup->SetPosition(0, 0);
+    viewGroup->SetWidth(WIDTH);
+    viewGroup->SetHeight(HEIGHT);
+
+    canvas_.SetDrawGraphicsContext(paint);
+    canvas->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
+    viewGroup->Add(canvas_);
+    EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
+
+    canvas->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
+    viewGroup->Remove(canvas_);
 }
 } // namespace OHOS

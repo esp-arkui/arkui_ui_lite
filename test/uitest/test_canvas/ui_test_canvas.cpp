@@ -565,7 +565,7 @@ namespace OHOS {
 
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
-        canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint,100,100);
+        canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
         paint.Rotate(10);
         canvas->DrawImage({200, 20}, GIF_IMAGE_PATH, paint,100,100);
         canvas->ResetTransForm(paint);

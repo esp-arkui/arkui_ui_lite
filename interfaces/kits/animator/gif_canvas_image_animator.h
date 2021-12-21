@@ -19,7 +19,7 @@ struct ImageParam : public HeapBase {
     int16_t newHeight;
     Image* image = nullptr;
     GifCanvasImageAnimator *gifImageAnimator = nullptr;
-    char* path;
+    char* path = nullptr;
 };
 
 class GifCanvasImageAnimator : public Animator, public AnimatorCallback {
