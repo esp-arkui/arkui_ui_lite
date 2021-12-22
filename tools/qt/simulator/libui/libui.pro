@@ -175,8 +175,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_auto_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_auto_vector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_blockvector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_vector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_range_adapter.h \

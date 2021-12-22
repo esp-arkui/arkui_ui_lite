@@ -155,7 +155,9 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         paint.SetStrokeColor(Color::Blue());
         paint.SetFillColor(Color::Red());
-        canvas->DrawCircle({50, 50}, 40, paint);
+
+        canvas->DrawCircle({180, 180}, 40, paint);
+        canvas->SetRotate(-30, paint);
         paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
@@ -214,7 +216,7 @@ namespace OHOS {
         float ds2[] = {3, 5.1f, 2.2f, 4.5f};
         canvas->SetLineDash(ds2, 4, paint);
         paint.SetOpacity(255); //0 是完全透明 255 不透明
-        canvas->StrokeRect({100, 100}, 40, 100, paint);
+        canvas->StrokeRect({100, 100}, 11140, 100, paint);
 
         canvas->SetLineDash(nullptr, 0, paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
@@ -254,7 +256,7 @@ namespace OHOS {
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
-        canvas->DrawLine({0, 10}, {50, 10}, paint);
+        canvas->DrawLine({0, 10}, {11150, 10}, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawLine002()
@@ -347,8 +349,8 @@ namespace OHOS {
         //paint.fillStyle(Color::White());
         paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
-        paint.SetShadowOffsetX(10);
-        paint.SetShadowOffsetY(10);
+        paint.SetShadowOffsetX(100);
+        paint.SetShadowOffsetY(120);
         paint.SetTransformCenter(60, 60);
 
         paint.SetShadowBlurRadius(5);
@@ -358,13 +360,14 @@ namespace OHOS {
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
         paint.FillStyle(gradientControl);
-        canvas->SetRotate(10.0, paint);
-        canvas->SetScale(2.0, 2.0, paint);
+        //canvas->SetRotate(10.0, paint);
+        //canvas->SetScale(2.0, 2.0, paint);
         canvas->BeginPath();
-        canvas->MoveTo({60, 60});
-        canvas->LineTo({60, 110});
-        canvas->LineTo({160, 110});
-        canvas->LineTo({160, 60});
+        canvas->MoveTo({60, -160});
+        canvas->LineTo({60, 50});
+        canvas->LineTo({160, 50});
+        canvas->LineTo({160, -160});
+        canvas->ClosePath();
         canvas->ClosePath();
         canvas->FillPath(paint);
         // canvas->DrawPath(paint);
@@ -1694,7 +1697,7 @@ namespace OHOS {
         int32_t outerR = 80;
         int32_t innerR = 40;
         int32_t x = 180;
-        int32_t y = 80;
+        int32_t y = 180;
         float pi = 180.0;
         canvas->BeginPath();
 
