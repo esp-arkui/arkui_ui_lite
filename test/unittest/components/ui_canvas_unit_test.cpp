@@ -65,6 +65,7 @@ namespace {
     const float TRANSLATE_X = 30;
     const float TRANSLATE_Y = 10;
     const float GLOBALALPHA = 0.5;
+    const int16_t DOUBLENUMBER = 2;
     }
 
 class TestUICanvas : public UICanvas {
@@ -900,13 +901,13 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
     canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
-
-    canvas_->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
-                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
+    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
+    
+    canvas_->ClearRect({RECT_X + RECT_X / DOUBLENUMBER, RECT_Y + RECT_Y / DOUBLENUMBER},
+                       RECT_HEIGHT / DOUBLENUMBER, RECT_WIDTH / DOUBLENUMBER, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / DOUBLENUMBER);
 
     viewGroup->Remove(canvas_);
 
@@ -953,13 +954,13 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
     canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
 
-    canvas_->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
-                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
+    canvas_->ClearRect({RECT_X + RECT_X / DOUBLENUMBER, RECT_Y + RECT_Y / DOUBLENUMBER},
+                       RECT_HEIGHT / DOUBLENUMBER, RECT_WIDTH / DOUBLENUMBER, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / DOUBLENUMBER);
 
     viewGroup->Remove(canvas_);
 
@@ -1006,13 +1007,13 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
     canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
 
-    canvas_->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
-                      RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
+    canvas_->ClearRect({RECT_X + RECT_X / DOUBLENUMBER, RECT_Y + RECT_Y / DOUBLENUMBER},
+                       RECT_HEIGHT / DOUBLENUMBER, RECT_WIDTH / DOUBLENUMBER, paint);
+    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / DOUBLENUMBER);
 
     viewGroup->Remove(canvas_);
 

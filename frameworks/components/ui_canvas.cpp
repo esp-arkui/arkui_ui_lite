@@ -345,6 +345,7 @@ namespace OHOS {
         }
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::DrawCircle(const Point& center, uint16_t radius, const Paint& paint)
