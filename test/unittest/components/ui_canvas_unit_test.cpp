@@ -107,6 +107,9 @@ void UICanvasTest::SetUp()
     if (canvas_ == nullptr) {
         canvas_ = new TestUICanvas();
     }
+    if (gradientControl_ == nullptr) {
+        gradientControl_ = new GradientControl();
+    }
 }
 
 void UICanvasTest::TearDown()
@@ -716,6 +719,6 @@ HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
     paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
     EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
     paint_->SetStyle(Paint::PaintStyle::PATTERN);
-    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
 }
 } // namespace OHOS
