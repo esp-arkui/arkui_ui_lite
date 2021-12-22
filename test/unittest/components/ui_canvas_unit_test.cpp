@@ -713,7 +713,6 @@ HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    ColorType colorStop0 = Color::Yellow();
     paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
     EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
     paint_->SetStyle(Paint::PaintStyle::PATTERN);
