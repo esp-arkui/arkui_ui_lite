@@ -442,6 +442,7 @@ namespace OHOS {
             drawCmdList_.PushBack(cmd);
 
             Invalidate();
+            SetStartPosition(point);
         }
     }
 

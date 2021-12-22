@@ -1303,6 +1303,9 @@ namespace OHOS {
         /*  在画布上绘制文本 */
         void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
 
+        /* 返回包含指定文本宽度的对象 */
+        Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
+
         /* 缩放当前绘图至更大或更小 */
         void SetScale(float x, float y, Paint& paint)
         {
@@ -1610,8 +1613,6 @@ namespace OHOS {
 
         static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
-        /* 返回包含指定文本宽度的对象 */
-        Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
         static void DoDrawPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
         static void DoFillPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,

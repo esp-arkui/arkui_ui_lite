@@ -56,6 +56,15 @@ namespace {
     const int16_t IMAGE_WIDTH = 20;
     const int16_t IMAGE_HEIGHT = 10;
     const int16_t LineWidth1 = 5;
+	const uint8_t FONT_SIZE = 15;
+    const int16_t LETTER_SPACE = 2;
+    const float SCALE_X = 0.5;
+    const float SCALE_Y = 0.5;
+    const float SHEAR_X = -0.5;
+    const float SHEAR_Y = 0.5;
+    const float TRANSLATE_X = 30;
+    const float TRANSLATE_Y = 10;
+    const float GLOBALALPHA = 0.5;
     }
 
 class TestUICanvas : public UICanvas {
@@ -1021,5 +1030,411 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
+}
+
+
+/**
+ * @tc.name: UICanvasStrokeText_001
+ * @tc.desc: Verify StrokeText function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasStrokeText_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(canvas_->GetStartPosition().x, POS_X);
+    EXPECT_EQ(canvas_->GetStartPosition().y, POS_Y);
+}
+
+/**
+ * @tc.name: UICanvasMeasureText_001
+ * @tc.desc: Verify MeasureText function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasMeasureText_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+    canvas_->SetDrawGraphicsContext(*paint_);
+    Point textSize = canvas_->MeasureText("hello world", fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+}
+
+/**
+ * @tc.name: UICanvasSetScale_001
+ * @tc.desc: Verify SetScale function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetScale_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->SetScale(SCALE_X, SCALE_Y, *paint_);
+    canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+}
+
+/**
+ * @tc.name: UICanvasSetTranslate_001
+ * @tc.desc: Verify SetTranslate function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetTranslate_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->SetTranslate(TRANSLATE_X, TRANSLATE_Y, *paint_);
+    canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+}
+
+/**
+ * @tc.name: UICanvasTransform_001
+ * @tc.desc: Verify Transform function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasTransform_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+}
+
+/**
+ * @tc.name: UICanvasSetTransform_001
+ * @tc.desc: Verify SetTransform function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetTransform_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
+    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+}
+
+/**
+ * @tc.name: UICanvasGlobalAlpha_001
+ * @tc.desc: Verify GlobalAlpha function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasGlobalAlpha_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    ColorType color = Color::Red();
+    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    paint_->SetFillColor(color);
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->DrawRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
+    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
+    color = Color::Green();
+    paint_->SetFillColor(color);
+    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
+
+    EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
+}
+
+/**
+ * @tc.name: UICanvasGetGlobalAlpha_001
+ * @tc.desc: Verify GetGlobalAlpha function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasGetGlobalAlpha_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType color = Color::Green();
+    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint_->SetFillColor(color);
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
+
+    EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
+}
+
+/**
+ * @tc.name: UICanvasSetGlobalCompositeOperation_001
+ * @tc.desc: Verify SetGlobalCompositeOperation function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    ColorType color = Color::Blue();
+    paint_->SetStrokeColor(color);
+    color = Color::Red();
+    paint_->SetFillColor(color);
+    canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
+    paint_->SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
+    paint_->SetStrokeColor(color);
+    color = Color::Blue();
+    paint_->SetFillColor(color);
+    canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
+
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+}
+
+/**
+ * @tc.name: UICanvasGetGlobalCompositeOperation_001
+ * @tc.desc: Verify GetGlobalCompositeOperation function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
+    ColorType color = Color::Red();
+    paint_->SetStrokeColor(color);
+    color = Color::Blue();
+    paint_->SetFillColor(color);
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
+    paint_->SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
+    paint_->SetStrokeColor(color);
+    color = Color::Red();
+    paint_->SetFillColor(color);
+    canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
+
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+}
+
+/**
+ * @tc.name: UICanvasSave_001
+ * @tc.desc: Verify Save function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSave_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    ColorType color = Color::Red();
+    paint_->SetFillColor(color);
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->Save(*paint_);
+    canvas_->DrawRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
+    *paint_ = canvas_->Restore();
+    canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
+
+    EXPECT_EQ(paint_->GetFillColor().full, color.full);
+}
+
+/**
+ * @tc.name: UICanvasRestore_001
+ * @tc.desc: Verify Restore function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasRestore_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    ColorType color = Color::Red();
+    paint_->SetFillColor(color);
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->Save(*paint_);
+    canvas_->DrawRect({POS_X, POS_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
+    *paint_ = canvas_->Restore();
+    canvas_->DrawRect({RECT_X, RECT_Y}, WIDTH, HEIGHT, *paint_);
+
+    EXPECT_EQ(paint_->GetFillColor().full, color.full);
 }
 } // namespace OHOS
