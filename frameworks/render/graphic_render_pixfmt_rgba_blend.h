@@ -20,7 +20,6 @@
 #include <cstring>
 
 #include "gfx_utils/heap_base.h"
-#include "graphic_render_pixfmt_rgba_conv.h"
 #include "graphic_render_pixfmt_rgba_gamma.h"
 #include "render/graphic_render_buffer.h"
 #include "render/graphic_render_pixfmt_base.h"
@@ -67,7 +66,7 @@ namespace OHOS {
     };
 
     template <class ColorT, class Order>
-    struct BlenderRgba : ConvRgbaPre<ColorT, Order> {
+    struct BlenderRgba {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
@@ -102,7 +101,7 @@ namespace OHOS {
     };
 
     template <class ColorT, class Order>
-    struct BlenderRgbaPre : ConvRgbaPre<ColorT, Order> {
+    struct BlenderRgbaPre {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
@@ -142,7 +141,7 @@ namespace OHOS {
     };
 
     template <class ColorT, class Order>
-    struct BlenderRgbaPlain : ConvRgbaPlain<ColorT, Order> {
+    struct BlenderRgbaPlain {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
@@ -186,7 +185,6 @@ namespace OHOS {
     template <class Blender, class RenBuf>
     class PixfmtAlphaBlendRgba : public HeapBase {
     public:
-        using PixfmtCategory = PixfmtRgbaTag;
         using RbufType = RenBuf;
         using RowData = typename RbufType::rowData;
         using BlenderType = Blender;
@@ -349,9 +347,11 @@ namespace OHOS {
         }
 
     public:
-        PixfmtAlphaBlendRgba() : rbuf_(0)
+        PixfmtAlphaBlendRgba() :
+            rbuf_(0)
         {}
-        explicit PixfmtAlphaBlendRgba(RbufType& rb) : rbuf_(&rb)
+        explicit PixfmtAlphaBlendRgba(RbufType& rb) :
+            rbuf_(&rb)
         {}
         /**
          * @brief 把像素缓冲区附加到混合器.
@@ -513,28 +513,6 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
         {
             return (const PixelType*)p;
-        }
-
-        /**
-         * @brief 把纯色写入一个地址.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE static void WritePlainColor(void* p, ColorType c)
-        {
-            BlenderType::SetPlainColor(PixValuePtr(p)->c, c);
-        }
-
-        /**
-         * @brief 获取一个地址的纯色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE static ColorType ReadPlainColor(const void* p)
-        {
-            return BlenderType::GetPlainColor(PixValuePtr(p)->c);
         }
 
         /**
@@ -1017,7 +995,6 @@ namespace OHOS {
     template <class Blender, class RenBuf>
     class PixfmtCustomBlendRgba : public HeapBase {
     public:
-        using PixfmtCategory = PixfmtRgbaTag;
         using RbufType = RenBuf;
         using RowData = typename RbufType::rowData;
         using BlenderType = Blender;
@@ -1117,10 +1094,11 @@ namespace OHOS {
         }
 
     public:
-        PixfmtCustomBlendRgba() : rbuf_(0), compOp_(COMP_OP_VALUE)
+        PixfmtCustomBlendRgba() :
+            rbuf_(0), compOp_(COMP_OP_VALUE)
         {}
-        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3)
-            : rbuf_(&rb), compOp_(compOp)
+        explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
+            rbuf_(&rb), compOp_(compOp)
         {}
         void Attach(RbufType& rb)
         {
