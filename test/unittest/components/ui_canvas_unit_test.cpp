@@ -42,6 +42,18 @@ namespace {
     const int16_t RECT_Y = 50;
     const int16_t RECT_WIDTH = 100;
     const int16_t RECT_HEIGHT = 50;
+    const double START_X = 180.0;
+    const double START_Y = 140.0;
+    const double START_R = 10.0;
+    const double END_X = 150.0;
+    const double END_Y = 100.0;
+    const double END_R = 80.0;
+    const char* RED_IMAGE_PATH = "/user/data/red.png";
+    const char* PATTERN_REPEAT_TYPE = "repeat";
+    const double COLOR_STOP_0 = 0.0;
+    const double COLOR_STOP_1 = 0.3;
+    const double COLOR_STOP_2 = 0.6;
+    const double COLOR_STOP_3 = 1.0;
 }
 
 class TestUICanvas : public UICanvas {
@@ -81,11 +93,12 @@ public:
     void TearDown();
     static Paint* paint_;
     static TestUICanvas* canvas_;
+    static GradientControl* gradientControl_;
 };
 
 Paint* UICanvasTest::paint_ = nullptr;
 TestUICanvas* UICanvasTest::canvas_ = nullptr;
-
+GradientControl* UICanvasTest::gradientControl_ = nullptr;
 void UICanvasTest::SetUp()
 {
     if (paint_ == nullptr) {
@@ -93,6 +106,9 @@ void UICanvasTest::SetUp()
     }
     if (canvas_ == nullptr) {
         canvas_ = new TestUICanvas();
+    }
+    if (gradientControl_ == nullptr) {
+        gradientControl_ = new GradientControl();
     }
 }
 
@@ -563,5 +579,160 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     end = canvas_->GetEndPos();
     EXPECT_EQ(end.x, LINE2_X);
     EXPECT_EQ(end.y, LINE2_Y);
+}
+
+HWTEST_F(UICanvasTest, UICanvasShadowColor_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType color = Color::Red();
+    paint_->SetShadowColor(color);
+    EXPECT_EQ(paint_->GetShadowColor().full, color.full);
+}
+
+HWTEST_F(UICanvasTest, UICanvasShadowBlur_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetShadowBlurRadius(RADIUS);
+    EXPECT_EQ(paint_->GetShadowBlurRadius(),RADIUS);
+}
+
+HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetShadowOffsetX(RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetX(),RADIUS);
+}
+
+HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetShadowOffsetY(RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetY(),RADIUS);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_001, TestSize.Level1)
+{
+    if (gradientControl_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    gradientControl_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->fillStyle(*gradientControl_);
+    GradientControl gradientControl = paint_->getGradientControl();
+    EXPECT_EQ(gradientControl.getLinearGradientPoint().x0,START_X);
+    EXPECT_EQ(gradientControl.getLinearGradientPoint().y0,START_Y);
+    EXPECT_EQ(gradientControl.getLinearGradientPoint().x1,END_X);
+    EXPECT_EQ(gradientControl.getLinearGradientPoint().y1,END_Y);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_001, TestSize.Level1)
+{
+    if (gradientControl_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    gradientControl_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
+    paint_->fillStyle(*gradientControl_);
+    GradientControl gradientcontrol = paint_->getGradientControl();
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().x0,START_X);
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y0,START_Y);
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().r0,START_R);
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().x1,END_X);
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y1,END_Y);
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().r1,END_R);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->createPattern(RED_IMAGE_PATH,PATTERN_REPEAT_TYPE);
+    EXPECT_EQ(paint_->GetPatternImagePath(),RED_IMAGE_PATH);
+    EXPECT_EQ(((paint_->GetPatternRepeatType() == 0)?PATTERN_REPEAT_TYPE:"false"), 
+               PATTERN_REPEAT_TYPE);
+}
+
+HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
+{
+    if (gradientControl_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType colorStop0 = Color::Yellow();
+    ColorType colorStop1 = Color::White();
+    ColorType colorStop2 = Color::Green();
+    ColorType colorStop3 = Color::Blue();
+    gradientControl_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    gradientControl_->addColorStop(COLOR_STOP_0, colorStop0);
+    gradientControl_->addColorStop(COLOR_STOP_1, colorStop1);
+    gradientControl_->addColorStop(COLOR_STOP_2, colorStop2);
+    gradientControl_->addColorStop(COLOR_STOP_3, colorStop3);
+    paint_->fillStyle(*gradientControl_);
+    GradientControl gradientControl = paint_->getGradientControl();
+    List<OHOS::GradientControl::StopAndColor> stopAndColor = gradientControl.getStopAndColor();
+    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_0);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop0.full);
+    stopAndColor.PopFront();
+    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_1);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop1.full);
+    stopAndColor.PopFront();
+    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_2);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop2.full);
+    stopAndColor.PopFront();
+    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_3);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop3.full);
+    stopAndColor.PopFront();
+}
+
+HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
+{
+    
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    paint_->SetStyle(Paint::PaintStyle::PATTERN);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
+}
+
+HWTEST_F(UICanvasTest, UICanvasStrokeStyle_001, TestSize.Level1)
+{
+    
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    paint_->SetStyle(Paint::PaintStyle::PATTERN);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
 }
 } // namespace OHOS
