@@ -22,8 +22,6 @@
 #include "layout/grid_layout.h"
 #include "ui_test.h"
 
-#include <components/ui_image_view.h>
-
 namespace OHOS {
 class UITestCanvas : public UITest {
 public:
@@ -32,32 +30,14 @@ public:
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
-    void UIKitCanvasTestDrawText001();
-    void UIKitCanvasTestComposite001();
-    void UIKitCanvasTestGlobalAlpha001();
 
-    void UIKitCanvasTestDrawText002();
-    void UIKitCanvasTestDrawText003();
-    void UIKitCanvasTestDrawText004();
-    void UIKitCanvasTestDrawText005();
-    void UIKitCanvasTestDrawText006();
-
-    void UIKitCanvasTestDrawMulitLangueText001();
-    void UIKitCanvasTestDrawMulitLangueText002();
-    void UIKitCanvasTestDrawMulitLangueText003();
-
-    void UIKitCanvasTestDrawDashLine001();
     void UIKitCanvasTestDrawLine001();
     void UIKitCanvasTestDrawLine002();
-    void UIKitCanvasTestLineJoin001();
-    void UIKitCanvasTestDrawShadow001();
     void UIKitCanvasTestDrawCurve001();
     void UIKitCanvasTestDrawCurve002();
     void UIKitCanvasTestDrawRect001();
     void UIKitCanvasTestDrawRect002();
     void UIKitCanvasTestDrawRect003();
-    void UIKitCanvasTestDrawRect004();
-    void UIKitCanvasTestClearRect001();
     void UIKitCanvasTestDrawCircle001();
     void UIKitCanvasTestDrawCircle002();
     void UIKitCanvasTestDrawCircle003();
@@ -100,28 +80,7 @@ public:
     void UIKitCanvasTestDrawPath032();
     void UIKitCanvasTestDrawPath033();
     void UIKitCanvasTestDrawPath034();
-    void UIKitCanvasTestcreatePattern1();
-    void UIKitCanvasTestcreatePattern2();
-    void UIKitCanvasTestcreatePattern3();
-    void UIKitCanvasTestcreatePattern4();
-    void UIKitCanvasTestcreatePattern5();
-    void UIKitCanvasTestcreatePattern6();
-    void UIKitCanvasTestcreatePattern7();
-    void UIKitCanvasTestcreatePattern8();
-    void UIKitCanvasTestLinearGradient1();//调试渐变
-    void UIKitCanvasTestLinearGradient2();//调试渐变
-    void UIKitCanvasTestRadialGradient1();//调试渐变
-    void UIKitCanvasTestRadialGradient2();//调试渐变
-
-
-//    void UIKitCanvasTestLinearGradient();//调试渐变
-//    void UIKitCanvasTestLinearGradient2();//调试渐变
-//    void UIKitCanvasTestRadialGradient();//放射渐变
-
-
-    void UIKitCanvasTestcreateStrokeGradient1();
-    void UIKitCanvasTestcreateStrokePattern1();
-
+    void RM009LineCapDrawPath();
 
 private:
     const static int16_t GAP = 10;
@@ -146,21 +105,10 @@ private:
     static constexpr int16_t RECT_Y = 50;
     static constexpr int16_t RECT_WIDTH = 100;
     static constexpr int16_t RECT_HEIGHT = 50;
-
-
-    const static int32_t BUFFER_SIZE = 20;
-    const static uint16_t BLOCK_WIDTH = 454;
-    const static uint16_t BLOCK_HEIGHT = 200;
-    const static uint16_t IMAGE_POSITION_X = 20;
-    const static uint16_t IMAGE_POSITION_Y = 20;
-
     void CreateTitleLabel(const char* title);
     UICanvas* CreateCanvas();
+
     UIScrollView* container_ = nullptr;
-
-
-
-
 };
 } // namespace OHOS
 #endif // UI_TEST_CANVAS_H
