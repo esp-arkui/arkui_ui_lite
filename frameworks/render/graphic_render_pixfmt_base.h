@@ -55,7 +55,7 @@ namespace OHOS {
          * @brief 把颜色分量设置给颜色.
          * @param r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         static void SetBlendColor(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
         {

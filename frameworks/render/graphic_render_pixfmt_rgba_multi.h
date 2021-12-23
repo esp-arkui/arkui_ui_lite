@@ -46,7 +46,7 @@ namespace OHOS {
      * @brief 颜色分量裁剪.
      *
      * @since 1.0
-     * @version 1.0
+     * @version 1.0.
      */
     static Rgba& Clip(Rgba& color)
     {

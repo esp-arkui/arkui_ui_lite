@@ -54,7 +54,7 @@ namespace OHOS {
          * @brief 颜色分量与Alpha解复用.
          * @param pColor 颜色
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         static GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* pColor)
         {

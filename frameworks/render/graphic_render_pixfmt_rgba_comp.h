@@ -716,7 +716,7 @@ namespace OHOS {
          * @brief 用颜色分量及覆盖率混合像素.
          * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
