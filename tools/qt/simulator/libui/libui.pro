@@ -153,7 +153,6 @@ HEADERS += \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.tpp \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/graphic_color_rgba.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_clip_operate.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_functions.h \
