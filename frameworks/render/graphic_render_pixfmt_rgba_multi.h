@@ -90,17 +90,17 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            ValueType* pColor, ValueType vRed, ValueType vGreen, ValueType vBlue, ValueType vAlpha, CoverType cover)
         {
-            Rgba s = Get(r, g, b, a, cover);
-            if (s.alphaValue > 0) {
+            Rgba sColor = Get(vRed, vGreen, vBlue, vAlpha, cover);
+            if (sColor.alphaValue > 0) {
                 Rgba dColor = Get(pColor);
-                double s1a = 1 - s.alphaValue;
+                double s1a = 1 - sColor.alphaValue;
                 double d1a = 1 - dColor.alphaValue;
-                dColor.redValue = s.redValue * dColor.redValue + s.redValue * d1a + dColor.redValue * s1a;
-                dColor.greenValue = s.greenValue * dColor.greenValue + s.greenValue * d1a + dColor.greenValue * s1a;
-                dColor.blueValue = s.blueValue * dColor.blueValue + s.blueValue * d1a + dColor.blueValue * s1a;
-                dColor.alphaValue += s.alphaValue - s.alphaValue * dColor.alphaValue;
+                dColor.redValue = sColor.redValue * dColor.redValue + sColor.redValue * d1a + dColor.redValue * s1a;
+                dColor.greenValue = sColor.greenValue * dColor.greenValue + sColor.greenValue * d1a + dColor.greenValue * s1a;
+                dColor.blueValue = sColor.blueValue * dColor.blueValue + sColor.blueValue * d1a + dColor.blueValue * s1a;
+                dColor.alphaValue += sColor.alphaValue - sColor.alphaValue * dColor.alphaValue;
                 Set(pColor, Clip(dColor));
             }
         }

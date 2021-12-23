@@ -57,12 +57,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static void Set(ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a)
+        static void Set(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
         {
-            pColor[OrderType::RED] = r;
-            pColor[OrderType::GREEN] = g;
-            pColor[OrderType::BLUE] = b;
-            pColor[OrderType::ALPHA] = a;
+            pColor[OrderType::RED] = redValue;
+            pColor[OrderType::GREEN] = greenValue;
+            pColor[OrderType::BLUE] = blueValue;
+            pColor[OrderType::ALPHA] = alphaValue;
         }
 
         /**
@@ -86,20 +86,20 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba Get(ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover = COVER_FULL)
+        static Rgba Get(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue, CoverType cover = COVER_FULL)
         {
             if (cover > COVER_NONE) {
-                Rgba c(ColorType::ToDouble(r), ColorType::ToDouble(g), ColorType::ToDouble(b), ColorType::ToDouble(a));
+                Rgba resultColor(ColorType::ToDouble(redValue), ColorType::ToDouble(greenValue), ColorType::ToDouble(blueValue), ColorType::ToDouble(alphaValue));
 
                 if (cover < COVER_FULL) {
-                    double x = double(cover) / COVER_FULL;
-                    c.redValue *= x;
-                    c.greenValue *= x;
-                    c.blueValue *= x;
-                    c.alphaValue *= x;
+                    double coverX = double(cover) / COVER_FULL;
+                    resultColor.redValue *= coverX;
+                    resultColor.greenValue *= coverX;
+                    resultColor.blueValue *= coverX;
+                    resultColor.alphaValue *= coverX;
                 }
 
-                return c;
+                return resultColor;
             } else {
                 return Rgba::NoColor();
             }

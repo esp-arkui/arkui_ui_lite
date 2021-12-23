@@ -19,11 +19,8 @@
 #include <cmath>
 #include <cstring>
 
-#include "gfx_utils/heap_base.h"
 #include "graphic_render_pixfmt_rgba_blend.h"
 #include "graphic_render_pixfmt_rgba_comp.h"
-#include "graphic_render_pixfmt_rgba_gamma.h"
-#include "graphic_render_pixfmt_rgba_multi.h"
 #include "render/graphic_render_buffer.h"
 #include "render/graphic_render_pixfmt_base.h"
 
@@ -61,31 +58,10 @@ namespace OHOS {
     using BlenderAbgr32 = BlenderRgba<Rgba8, OrderAbgr>;
     using BlenderBgra32 = BlenderRgba<Rgba8, OrderBgra>;
 
-    using BlenderRgba32Pre = BlenderRgbaPre<Rgba8, OrderRgba>;
-    using BlenderArgb32Pre = BlenderRgbaPre<Rgba8, OrderArgb>;
-    using BlenderAbgr32Pre = BlenderRgbaPre<Rgba8, OrderAbgr>;
-    using BlenderBgra32Pre = BlenderRgbaPre<Rgba8, OrderBgra>;
-
-    using BlenderRgba32Plain = BlenderRgbaPlain<Rgba8, OrderRgba>;
-    using BlenderArgb32Plain = BlenderRgbaPlain<Rgba8, OrderArgb>;
-    using BlenderAbgr32Plain = BlenderRgbaPlain<Rgba8, OrderAbgr>;
-    using BlenderBgra32Plain = BlenderRgbaPlain<Rgba8, OrderBgra>;
-
     using PixfmtRgba32 = PixfmtAlphaBlendRgba<BlenderRgba32, RenderingBuffer>;
     using PixfmtArgb32 = PixfmtAlphaBlendRgba<BlenderArgb32, RenderingBuffer>;
     using PixfmtAbgr32 = PixfmtAlphaBlendRgba<BlenderAbgr32, RenderingBuffer>;
     using PixfmtBgra32 = PixfmtAlphaBlendRgba<BlenderBgra32, RenderingBuffer>;
-
-    using PixfmtRgba32Pre = PixfmtAlphaBlendRgba<BlenderRgba32Pre, RenderingBuffer>;
-    using PixfmtArgb32Pre = PixfmtAlphaBlendRgba<BlenderArgb32Pre, RenderingBuffer>;
-    using PixfmtAbgr32Pre = PixfmtAlphaBlendRgba<BlenderAbgr32Pre, RenderingBuffer>;
-    using PixfmtBgra32Pre = PixfmtAlphaBlendRgba<BlenderBgra32Pre, RenderingBuffer>;
-
-    using PixfmtRgba32Plain = PixfmtAlphaBlendRgba<BlenderRgba32Plain, RenderingBuffer>;
-    using PixfmtArgb32Plain = PixfmtAlphaBlendRgba<BlenderArgb32Plain, RenderingBuffer>;
-    using PixfmtAbgr32Plain = PixfmtAlphaBlendRgba<BlenderAbgr32Plain, RenderingBuffer>;
-    using PixfmtBgra32Plain = PixfmtAlphaBlendRgba<BlenderBgra32Plain, RenderingBuffer>;
-
 } // namespace OHOS
 
 #endif
