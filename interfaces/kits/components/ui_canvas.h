@@ -750,7 +750,21 @@ namespace OHOS {
                 patternRepeat = NO_REPEAT;
             }
         }
+         /*
+         * 获取图元填充用图案路径
+         */
+        const char* GetPatternImagePath()
+        {
+            return image;
+        }
 
+        /*
+         * 获取图元填充用图案类型
+         */
+        OHOS::Paint::PatternRepeat GetPatternRepeatType()
+        {
+            return patternRepeat;
+        }
         /*
          * 设置图元填充样式
          * @param GradientControl表示渐变控制器
