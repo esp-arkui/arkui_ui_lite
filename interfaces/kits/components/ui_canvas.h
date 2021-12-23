@@ -159,6 +159,11 @@ namespace OHOS {
 
     class Paint : public HeapBase {
     public:
+        using UICanvasPath = DepictCurve<UICanvasVertices> ;//将UICanvasVertices存储的点形成路径
+        using LineStyle = DepictStroke<UICanvasPath>;//配置路径相关样式linecap,linejoin等
+        using DashStyle = DepictDash<UICanvasPath>;//配置dash对应参数
+        using DashLineStyle = DepictStroke<DashStyle>;//根据路径和dash配置参数绘制多边形dash样式路径
+
         /**
          * @brief A constructor used to create a <b>Paint</b> instance.
          *
@@ -167,15 +172,16 @@ namespace OHOS {
          */
         Paint() :
             style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
-            opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
-            lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
+            opacity_(OPA_OPAQUE), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
             shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
-            transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
+            transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0),changeFlage(false),
+            vertices_(),path_(vertices_),lineStyle_(path_),dashStyle_(path_),dashLineStyle_(dashStyle_)
         {
             m_graphics = nullptr;
             m_transform.Reset();
         }
+
         Paint(const Paint& paint)
         {
             Init(paint);
@@ -209,10 +215,10 @@ namespace OHOS {
             m_graphics = paint.m_graphics;
             strokeColor_ = paint.strokeColor_;
             opacity_ = paint.opacity_;
-            strokeWidth_ = paint.strokeWidth_;
-            lineCap_ = paint.lineCap_;
-            lineJoin_ = paint.lineJoin_;
-            miterLimit_ = paint.miterLimit_;
+//            strokeWidth_ = paint.strokeWidth_;
+//            lineCap_ = paint.lineCap_;
+//            lineJoin_ = paint.lineJoin_;
+//            miterLimit_ = paint.miterLimit_;
             globalAlpha = paint.globalAlpha;
             dashOffset = paint.dashOffset;
             isDrawDash = paint.isDrawDash;
@@ -252,6 +258,7 @@ namespace OHOS {
             }
             gradientControl = paint.getGradientControl();
             patternRepeat = paint.patternRepeat;
+            vertices_ = paint.vertices_;
         }
         const Paint& operator=(const Paint& paint)
         {
@@ -319,6 +326,11 @@ namespace OHOS {
         void SetStyle(PaintStyle style)
         {
             style_ = style;
+            if(style==PaintStyle::FILL_GRADIENT||
+               style==PaintStyle::PATTERN||
+               style==PaintStyle::STROKE_GRADIENT){
+                changeFlage = true;
+            }
         }
 
         /**
@@ -345,7 +357,7 @@ namespace OHOS {
          */
         void SetStrokeWidth(uint16_t width)
         {
-            strokeWidth_ = width;
+            lineStyle_.Width(width);
         }
 
         /**
@@ -358,7 +370,7 @@ namespace OHOS {
          */
         uint16_t GetStrokeWidth() const
         {
-            return strokeWidth_;
+            return lineStyle_.Width();
         }
 
         /**
@@ -385,6 +397,10 @@ namespace OHOS {
             return strokeColor_;
         }
 
+        bool GetChangeFlag() const
+        {
+            return changeFlage;
+        }
         /**
          * @brief Sets fill color.
          *
@@ -448,12 +464,13 @@ namespace OHOS {
          */
         void SetMiterLimit(double miterLimit)
         {
-            miterLimit_ = miterLimit;
+            lineStyle_.MiterLimit(miterLimit);
+            changeFlage = true;
         }
 
         double GetMiterLimit() const
         {
-            return miterLimit_;
+            return lineStyle_.MiterLimit();;
         }
         /**
          * @brief 设置笔帽类型.
@@ -461,9 +478,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void SetLineCap(BaseGfxExtendEngine::LineCap lineCap)
+        void SetLineCap(LineCapEnum lineCap)
         {
-            lineCap_ = lineCap;
+//            lineCap_ = lineCap;
+            lineStyle_.LineCap(lineCap);
+            changeFlage = true;
         }
         /**
          * @brief 获取笔帽类型.
@@ -471,9 +490,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        BaseGfxExtendEngine::LineCap GetLineCap() const
+        LineCapEnum GetLineCap() const
         {
-            return lineCap_;
+            return lineStyle_.LineCap();
         }
         /**
          * @brief 设置笔的路径连接处的风格样式.
@@ -481,9 +500,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void SetLineJoin(BaseGfxExtendEngine::LineJoin lineJoin)
+        void SetLineJoin(LineJoinEnum lineJoin)
         {
-            lineJoin_ = lineJoin;
+            lineStyle_.LineJoin(lineJoin);
+            changeFlage = true;
         }
         /**
          * @brief 获取笔的路径连接处的风格样式.
@@ -491,9 +511,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        BaseGfxExtendEngine::LineJoin GetLineJoin() const
+        LineJoinEnum GetLineJoin() const
         {
-            return lineJoin_;
+            return lineStyle_.LineJoin();
         }
         /**
          * @brief 设置点划线的偏移量.
@@ -503,17 +523,20 @@ namespace OHOS {
          */
         void SetLineDashOffset(float dashOffset)
         {
-            this->dashOffset = dashOffset; //dash 点偏移量
+//            this->dashOffset = dashOffset; //dash 点偏移量
+            changeFlage = true;
+            dashStyle_.DashStart(dashOffset);
         }
-        /**
-         * @brief 获取点划线的偏移量.
-         * @since 1.0
-         * @version 1.0
-         */
-        float GetLineDashOffset() const
-        {
-            return dashOffset;
-        }
+
+//        /**
+//         * @brief 获取点划线的偏移量.
+//         * @since 1.0
+//         * @version 1.0
+//         */
+//        float GetLineDashOffset() const
+//        {
+//            return dashStyle_.DashStart();
+//        }
 
         /**
          * @brief 设置点划线的数组和数量.
@@ -523,6 +546,9 @@ namespace OHOS {
          */
         void SetLineDash(float* lineDashs, const unsigned int ndash)
         {
+
+             isDrawDash = false;
+
             if (ndash < 0) {
                 GRAPHIC_LOGE("SetLineDash fail,because ndash < =0");
                 return;
@@ -547,6 +573,7 @@ namespace OHOS {
                 dashOffset = 0;
                 isDrawDash = false;
             }
+            changeFlage = true;
         }
         /**
          * @brief 清空点划线的，改用实现绘制.
@@ -586,6 +613,7 @@ namespace OHOS {
         void SetGlobalAlpha(float globalAlpha)
         {
             this->globalAlpha = globalAlpha;
+            changeFlage = true;
         }
         /**
          * @brief 获取全局alpha度.
@@ -613,6 +641,7 @@ namespace OHOS {
         void SetShadowBlurRadius(double radius)
         {
             shadowBlurRadius = radius;
+            changeFlage = true;
         }
         /**
          * @brief 获取阴影横坐标偏移量.
@@ -631,6 +660,7 @@ namespace OHOS {
         void SetShadowOffsetX(double offset)
         {
             shadowOffsetX = offset;
+            changeFlage = true;
         }
         /**
          * @brief 获取阴影纵坐标偏移量.
@@ -649,6 +679,7 @@ namespace OHOS {
         void SetShadowOffsetY(double offset)
         {
             shadowOffsetY = offset;
+            changeFlage = true;
         }
         /**
          * @brief 获取阴影的颜色值.
@@ -667,11 +698,13 @@ namespace OHOS {
         void SetShadowColor(ColorType color)
         {
             shadowColor = color;
+            changeFlage = true;
         }
 
         void SetTransformCenterX(double x)
         {
             transformCenterX = x;
+            changeFlage = true;
         }
 
         double GetTransformCenterX() const
@@ -682,6 +715,7 @@ namespace OHOS {
         void SetTransformCenterY(double y)
         {
             transformCenterY = y;
+            changeFlage = true;
         }
 
         double GetTransformCenterY() const
@@ -693,6 +727,7 @@ namespace OHOS {
         {
             transformCenterX = x;
             transformCenterY = y;
+            changeFlage = true;
         }
 
         double GetRotateAngle() const
@@ -726,6 +761,7 @@ namespace OHOS {
         void SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode blendMode)
         {
             this->blendMode = blendMode;
+            changeFlage = true;
         }
 
         BaseGfxExtendEngine::BlendMode GetGlobalCompositeOperation() const
@@ -749,6 +785,7 @@ namespace OHOS {
             } else if (strcmp(text, "no-repeat") == 0) {
                 patternRepeat = NO_REPEAT;
             }
+            changeFlage = true;
         }
 
         /*
@@ -758,6 +795,7 @@ namespace OHOS {
         void FillStyle(GradientControl& ctrl)
         {
             gradientControl = ctrl;
+            changeFlage = true;
         }
         /*
          * 设置图元填充样式颜色
@@ -774,6 +812,7 @@ namespace OHOS {
             this->scaleX += scaleX;
             this->scaleY += scaleY;
             m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
+            changeFlage = true;
         }
         /* 重新设置矩阵，形成单位阵 */
         void ResetTransForm()
@@ -786,6 +825,7 @@ namespace OHOS {
             transformCenterX = 0;
             transformCenterY = 0;
             m_transform.Reset();
+            changeFlage = true;
         }
 
         /* 旋转当前绘图 */
@@ -793,6 +833,7 @@ namespace OHOS {
         {
             rotateAngle += angle;
             m_transform *= OHOS::TransAffineRotation(BaseGfxExtendEngine::Deg2Rad(angle));
+            changeFlage = true;
         }
 
         /* 重新映射画布上的 (x,y) 位置 */
@@ -801,12 +842,14 @@ namespace OHOS {
             transLateX += x;
             transLateY += y;
             m_transform *= OHOS::TransAffineTranslation(x, y);
+            changeFlage = true;
         }
 
         /* 替换绘图的当前转换矩阵 */
         void Transform(float sx, float shy, float shx, float sy, float tx, float ty)
         {
             m_transform = OHOS::TransAffine(sx, shy, shx, sy, tx, ty);
+            changeFlage = true;
         }
 
         /* 获取当前变换矩阵 */
@@ -820,6 +863,7 @@ namespace OHOS {
         {
             m_transform.Reset();
             Transform(sx, shy, shx, sy, tx, ty);
+            changeFlage = true;
         }
         /* 是否经过变换，即是不是单位矩阵 */
         bool IsTransform() const
@@ -839,6 +883,7 @@ namespace OHOS {
         void SetDrawGraphicsContext(BaseGfxExtendEngine* m_graphics)
         {
             this->m_graphics = m_graphics;
+            changeFlage = true;
         }
 
     private:
@@ -846,10 +891,10 @@ namespace OHOS {
         ColorType fillColor_;
         ColorType strokeColor_;
         uint8_t opacity_;
-        uint16_t strokeWidth_;                   //设置线宽
-        BaseGfxExtendEngine::LineCap lineCap_;   //设置笔帽
-        BaseGfxExtendEngine::LineJoin lineJoin_; //设置笔的路径连接处的风格样式
-        double miterLimit_;                      //设置路径连接处的尖角的间距限制
+//        uint16_t strokeWidth_;                   //设置线宽
+//        BaseGfxExtendEngine::LineCap lineCap_;   //设置笔帽
+//        BaseGfxExtendEngine::LineJoin lineJoin_; //设置笔的路径连接处的风格样式
+//        double miterLimit_;                      //设置路径连接处的尖角的间距限制
         float dashOffset;                        //dash 点偏移量
         bool isDrawDash;
         float* dashArray; //dash 点数组
@@ -871,6 +916,12 @@ namespace OHOS {
         double scaleY;
         double transLateX;
         double transLateY;
+        bool changeFlage;
+        UICanvasVertices vertices_;
+        UICanvasPath path_;
+        LineStyle lineStyle_;
+        DashStyle dashStyle_;
+        DashLineStyle dashLineStyle_;
     };
 
     /**
@@ -881,6 +932,7 @@ namespace OHOS {
      */
     class UICanvas : public UIView {
     public:
+
         /**
          * @brief A constructor used to create a <b>UICanvas</b> instance.
          *
@@ -888,7 +940,7 @@ namespace OHOS {
          * @version 1.0
          */
         UICanvas() :
-            startPoint_({0, 0}), path_(nullptr)
+            startPoint_({0, 0}), vertices_(nullptr)
         {
         }
 
@@ -1200,8 +1252,6 @@ namespace OHOS {
          * @version 5.0
          */
         void AddRect(const Point& point, int16_t height, int16_t width);
-
-        void AddRect(const Point& point, int16_t height, int16_t width, const Paint& paint);
         /**
          * @brief Closes this path.
          *
@@ -1226,14 +1276,8 @@ namespace OHOS {
          * @version 5.0
          */
         void FillPath(const Paint& paint);
+
         void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
-        /**
-         * @brief 设置点划线的数组和数量.
-         * @param lineDashs 表示点划线数组,ndash 表示点划线数量
-         * @since 1.0
-         * @version 1.0
-         */
-        void SetLineDash(float* dashArray, unsigned int ndash, Paint&);
         /**
          * @brief 设置全局alpha.
          * @since 1.0
@@ -1267,6 +1311,8 @@ namespace OHOS {
         void LineDashOffset(float dashOffset, Paint& paint)
         {
             paint.SetLineDashOffset(dashOffset);
+
+
         }
         /**
          * @brief 设置线的宽度.
@@ -1462,28 +1508,9 @@ namespace OHOS {
                 }
             };
         };
-        enum PathCmd {
-            CMD_MOVE_TO,
-            CMD_LINE_TO,
-            CMD_ARC,
-            CMD_CLOSE,
-        };
-
-        class UICanvasPath : public HeapBase {
-        public:
-            UICanvasPath() :
-                startPos_({0, 0}), strokeCount_(0){};
-            ~UICanvasPath();
-            List<Point> points_;
-            List<PathCmd> cmd_;
-            List<ArcParam> arcParam_;
-            Point startPos_;
-            uint16_t strokeCount_;
-        };
 
         struct PathParam : public HeapBase {
-            UICanvasPath* path;
-            uint16_t count;
+            UICanvasVertices* path;
         };
 
         struct DrawCmd : public HeapBase {
@@ -1495,7 +1522,7 @@ namespace OHOS {
 
         List<Images_> imageList_;
         Point startPoint_;
-        UICanvasPath* path_;
+        UICanvasVertices* vertices_;
         List<DrawCmd> drawCmdList_;
         // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
@@ -1565,12 +1592,12 @@ namespace OHOS {
         static void DeletePathParam(void* param)
         {
             PathParam* pathParam = static_cast<PathParam*>(param);
-            pathParam->path->strokeCount_--;
-            if (pathParam->path->strokeCount_ == 0) {
-                delete pathParam->path;
-            }
+            pathParam->path->FreeAll();
             delete pathParam;
         }
+
+        static void InitRendAndTransform(BufferInfo& gfxDstBuffer,RenderingBuffer& renderBuffer, const Rect& rect,
+                                         TransAffine& transform, const Style& style);
 
         static void DoDrawLine(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
@@ -1601,6 +1628,9 @@ namespace OHOS {
                                   const Rect& invalidatedArea, const Style& style);
         static void DoStrokePattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                     const Rect& invalidatedArea, const Style& style);
+        static void DoStroke(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                                    const Rect& invalidatedArea, const Style& style);
+
         static void DoDrawLabel(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                 const Rect& invalidatedArea, const Style& style);
 
@@ -1613,8 +1643,6 @@ namespace OHOS {
         static void DoFillPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
         static void GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point);
-        static void DoDrawLineJoin(BufferInfo& gfxDstBuffer, const Point& center, const Rect& invalidatedArea,
-                                   const Paint& paint);
 
         static void addColorGradient(BaseGfxExtendEngine& m_graphics,
                                      List<GradientControl::StopAndColor>& stopAndColors);
