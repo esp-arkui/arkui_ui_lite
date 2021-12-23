@@ -659,7 +659,7 @@ HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_001, TestSize.Level1)
     EXPECT_EQ(gradientcontrol.getRadialGradientPoint().r0,START_R);
     EXPECT_EQ(gradientcontrol.getRadialGradientPoint().x1,END_X);
     EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y1,END_Y);
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y1,END_R);
+    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().r1,END_R);
 }
 
 HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
@@ -670,7 +670,8 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
     }
     paint_->createPattern(RED_IMAGE_PATH,PATTERN_REPEAT_TYPE);
     EXPECT_EQ(paint_->GetPatternImagePath(),RED_IMAGE_PATH);
-    EXPECT_EQ(((paint_->GetPatternRepeatType()==0)?PATTERN_REPEAT_TYPE:"false"),PATTERN_REPEAT_TYPE);
+    EXPECT_EQ(((paint_->GetPatternRepeatType() == 0)?PATTERN_REPEAT_TYPE:"false"), 
+               PATTERN_REPEAT_TYPE);
 }
 
 HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
@@ -710,6 +711,19 @@ HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
 }
 
 HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
+{
+    
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    paint_->SetStyle(Paint::PaintStyle::PATTERN);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
+}
+
+HWTEST_F(UICanvasTest, UICanvasStrokeStyle_001, TestSize.Level1)
 {
     
     if (paint_ == nullptr) {
