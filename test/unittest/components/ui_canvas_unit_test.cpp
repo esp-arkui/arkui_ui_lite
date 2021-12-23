@@ -1079,8 +1079,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_001, TestSize.Level0)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetStartPosition().x, POS_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, POS_Y);
 }
 
 /**
