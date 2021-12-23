@@ -33,7 +33,7 @@ namespace OHOS {
      * @version 1.0
      */
     template <class ColorT, class Order>
-    struct MultiplierRgba {
+    struct RgbaMultiplier {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
         /**
@@ -44,10 +44,9 @@ namespace OHOS {
          */
         static GRAPHIC_GEOMETRY_INLINE void Premultiply(ValueType* pColor)
         {
-            ValueType a = pColor[Order::ALPHA];
-            pColor[Order::BLUE] = ColorType::Multiply(pColor[Order::BLUE], a);
-            pColor[Order::RED] = ColorType::Multiply(pColor[Order::RED], a);
-            pColor[Order::GREEN] = ColorType::Multiply(pColor[Order::GREEN], a);
+            pColor[Order::BLUE] = ColorType::Multiply(pColor[Order::BLUE], pColor[Order::ALPHA]);
+            pColor[Order::RED] = ColorType::Multiply(pColor[Order::RED], pColor[Order::ALPHA]);
+            pColor[Order::GREEN] = ColorType::Multiply(pColor[Order::GREEN], pColor[Order::ALPHA]);
         }
 
         /**
@@ -58,15 +57,14 @@ namespace OHOS {
          */
         static GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* pColor)
         {
-            ValueType a = pColor[Order::ALPHA];
-            pColor[Order::BLUE] = ColorType::Demultiply(pColor[Order::BLUE], a);
-            pColor[Order::RED] = ColorType::Demultiply(pColor[Order::RED], a);
-            pColor[Order::GREEN] = ColorType::Demultiply(pColor[Order::GREEN], a);
+            pColor[Order::BLUE] = ColorType::Demultiply(pColor[Order::BLUE], pColor[Order::ALPHA]);
+            pColor[Order::RED] = ColorType::Demultiply(pColor[Order::RED], pColor[Order::ALPHA]);
+            pColor[Order::GREEN] = ColorType::Demultiply(pColor[Order::GREEN], pColor[Order::ALPHA]);
         }
     };
 
     template <class ColorT, class Order>
-    struct BlenderRgba {
+    struct RgbaBlender {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
@@ -101,7 +99,7 @@ namespace OHOS {
     };
 
     template <class ColorT, class Order>
-    struct BlenderRgbaPre {
+    struct RgbaPreBlender {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
@@ -140,48 +138,6 @@ namespace OHOS {
         }
     };
 
-    template <class ColorT, class Order>
-    struct BlenderRgbaPlain {
-        using ColorType = ColorT;
-        using OrderType = Order;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
-        using LongType = typename ColorType::LongType;
-
-        /**
-         * @brief 用颜色分量及覆盖率混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量,cover 覆盖率
-         * @since 1.0
-         * @version 1.0
-         */
-        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
-        {
-            BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
-        }
-        /**
-         * @brief 用颜色分量及覆盖率混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
-         * @since 1.0
-         * @version 1.0
-         */
-        static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
-        {
-            if (alpha > ColorType::EmptyValue()) {
-                CalcType a = pColor[Order::ALPHA];
-                CalcType r = ColorType::Multiply(pColor[Order::RED], a);
-                CalcType g = ColorType::Multiply(pColor[Order::GREEN], a);
-                CalcType b = ColorType::Multiply(pColor[Order::BLUE], a);
-                pColor[Order::ALPHA] = ColorType::Prelerp(a, alpha, alpha);
-                pColor[Order::RED] = ColorType::Lerp(r, cr, alpha);
-                pColor[Order::GREEN] = ColorType::Lerp(g, cg, alpha);
-                pColor[Order::BLUE] = ColorType::Lerp(b, cb, alpha);
-                MultiplierRgba<ColorT, Order>::Demultiply(pColor);
-            }
-        }
-    };
-
     template <class Blender, class RenBuf>
     class PixfmtAlphaBlendRgba : public HeapBase {
     public:
@@ -208,7 +164,7 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            void Set(ValueType r, ValueType g, ValueType b, ValueType a)
+            void SetPixelColor(ValueType r, ValueType g, ValueType b, ValueType a)
             {
                 colors[OrderType::RED] = r;
                 colors[OrderType::GREEN] = g;
@@ -221,9 +177,9 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            void Set(const ColorType& color)
+            void SetPixelColor(const ColorType& color)
             {
-                Set(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+                SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
             }
             /**
              * @brief 获取颜色.
@@ -231,7 +187,7 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
+            void GetPixelColor(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
             {
                 r = colors[OrderType::RED];
                 g = colors[OrderType::GREEN];
@@ -244,7 +200,7 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            ColorType Get() const
+            ColorType GetPixelColor() const
             {
                 return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
                                  colors[OrderType::BLUE], colors[OrderType::ALPHA]);
@@ -298,9 +254,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover)
+        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
         {
-            blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
+            blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
         }
 
         /**
@@ -309,9 +265,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c)
+        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color)
         {
-            blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+            blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
         /**
          * @brief 用颜色及覆盖率设置或混合到指定像素.
@@ -319,13 +275,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover)
+        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
         {
-            if (!c.IsTransparent()) {
-                if (c.IsOpaque() && cover == COVER_MASK) {
-                    p->Set(c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+            if (!color.IsTransparent()) {
+                if (color.IsOpaque() && cover == COVER_MASK) {
+                    pixelPtr->SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
                 } else {
-                    blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
+                    blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
                 }
             }
         }
@@ -333,15 +289,15 @@ namespace OHOS {
          * @brief 用颜色设置或混合到指定像素.
          *
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c)
+        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color)
         {
-            if (!c.IsTransparent()) {
-                if (c.IsOpaque()) {
-                    p->Set(c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+            if (!color.IsTransparent()) {
+                if (color.IsOpaque()) {
+                    pixelPtr->SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
                 } else {
-                    blender_.BlendPix(p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue);
+                    blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
                 }
             }
         }
@@ -489,8 +445,8 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {
-            int8u* p = rbuf_->RowPtr(y);
-            return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
+            int8u* pixelPtr = rbuf_->RowPtr(y);
+            return pixelPtr ? (PixelType*)(pixelPtr + sizeof(ValueType) * (x * PIX_STEP)) : 0;
         }
 
         /**
@@ -499,9 +455,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p)
+        GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* pixelPtr)
         {
-            return (PixelType*)p;
+            return (PixelType*)pixelPtr;
         }
 
         /**
@@ -510,9 +466,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
+        GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* pixelPtr)
         {
-            return (const PixelType*)p;
+            return (const PixelType*)pixelPtr;
         }
 
         /**
@@ -521,9 +477,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* pixelPtr, const ColorType& color)
         {
-            ((PixelType*)p)->Set(c);
+            ((PixelType*)pixelPtr)->SetPixelColor(color);
         }
 
         /**
@@ -534,8 +490,8 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
         {
-            if (const PixelType* p = PixValuePtr(x, y)) {
-                return p->Get();
+            if (const PixelType* pixelPtr = PixValuePtr(x, y)) {
+                return pixelPtr->GetPixelColor();
             }
             return ColorType::NoColor();
         }
@@ -546,9 +502,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
+        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& color)
         {
-            PixValuePtr(x, y, 1)->Set(c);
+            PixValuePtr(x, y, 1)->SetPixelColor(color);
         }
 
         /**
@@ -557,9 +513,9 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
+        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, int8u cover)
         {
-            CopyOrBlendPix(PixValuePtr(x, y, 1), c, cover);
+            CopyOrBlendPix(PixValuePtr(x, y, 1), color, cover);
         }
         /**
          * @brief 从(x, y)开始打横顺序设置len长度的像素.
@@ -569,14 +525,14 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
                                                unsigned len,
-                                               const ColorType& c)
+                                               const ColorType& color)
         {
-            PixelType v;
-            v.Set(c);
-            PixelType* p = PixValuePtr(x, y, len);
+            PixelType vPixelValue;
+            vPixelValue.SetPixelColor(color);
+            PixelType* pixelPtr = PixValuePtr(x, y, len);
             do {
-                *p = v;
-                p = p->Next();
+                *pixelPtr = vPixelValue;
+                pixelPtr = pixelPtr->Next();
             } while (--len);
         }
 
@@ -588,12 +544,12 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
                                                unsigned len,
-                                               const ColorType& c)
+                                               const ColorType& color)
         {
-            PixelType v;
-            v.Set(c);
+            PixelType vPixelValue;
+            vPixelValue.SetPixelColor(color);
             do {
-                *PixValuePtr(x, y++, 1) = v;
+                *PixValuePtr(x, y++, 1) = vPixelValue;
             } while (--len);
         }
 
@@ -612,7 +568,7 @@ namespace OHOS {
                 PixelType* p = PixValuePtr(x, y, len);
                 if (c.IsOpaque() && cover == COVER_MASK) {
                     PixelType v;
-                    v.Set(c);
+                    v.SetPixelColor(c);
                     do {
                         *p = v;
                         p = p->Next();
@@ -647,7 +603,7 @@ namespace OHOS {
             if (!c.IsTransparent()) {
                 if (c.IsOpaque() && cover == COVER_MASK) {
                     PixelType v;
-                    v.Set(c);
+                    v.SetPixelColor(c);
                     do {
                         *PixValuePtr(x, y++, 1) = v;
                     } while (--len);
@@ -680,7 +636,7 @@ namespace OHOS {
                 PixelType* p = PixValuePtr(x, y, len);
                 do {
                     if (c.IsOpaque() && *covers == COVER_MASK) {
-                        p->Set(c);
+                        p->SetPixelColor(c);
                     } else {
                         BlendPix(p, c, *covers);
                     }
@@ -704,7 +660,7 @@ namespace OHOS {
                 do {
                     PixelType* p = PixValuePtr(x, y++, 1);
                     if (c.IsOpaque() && *covers == COVER_MASK) {
-                        p->Set(c);
+                        p->SetPixelColor(c);
                     } else {
                         BlendPix(p, c, *covers);
                     }
@@ -725,7 +681,7 @@ namespace OHOS {
         {
             PixelType* p = PixValuePtr(x, y, len);
             do {
-                p->Set(*colors++);
+                p->SetPixelColor(*colors++);
                 p = p->Next();
             } while (--len);
         }
@@ -741,7 +697,7 @@ namespace OHOS {
                             const ColorType* colors)
         {
             do {
-                PixValuePtr(x, y++, 1)->Set(*colors++);
+                PixValuePtr(x, y++, 1)->SetPixelColor(*colors++);
             } while (--len);
         }
 
@@ -836,7 +792,7 @@ namespace OHOS {
          */
         void Premultiply()
         {
-            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
+            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
         }
         /**
          * @brief 对像素上的颜色分量解复用.
@@ -846,7 +802,7 @@ namespace OHOS {
          */
         void Demultiply()
         {
-            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
+            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
         }
 
         template <class GammaLut>
@@ -908,13 +864,13 @@ namespace OHOS {
 
                 if (cover == COVER_MASK) {
                     do {
-                        CopyOrBlendPix(pdst, psrc->Get());
+                        CopyOrBlendPix(pdst, psrc->GetPixelColor());
                         psrc = psrc->Advance(srcinc);
                         pdst = pdst->Advance(dstinc);
                     } while (--len);
                 } else {
                     do {
-                        CopyOrBlendPix(pdst, psrc->Get(), cover);
+                        CopyOrBlendPix(pdst, psrc->GetPixelColor(), cover);
                         psrc = psrc->Advance(srcinc);
                         pdst = pdst->Advance(dstinc);
                     } while (--len);
@@ -1477,12 +1433,12 @@ namespace OHOS {
 
         void Premultiply()
         {
-            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Premultiply);
+            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
         }
 
         void Demultiply()
         {
-            ForEachPixel(MultiplierRgba<ColorType, OrderType>::Demultiply);
+            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
         }
 
         template <class GammaLut>
@@ -1538,7 +1494,7 @@ namespace OHOS {
                 }
 
                 do {
-                    BlendPix(pdst, psrc->Get(), cover);
+                    BlendPix(pdst, psrc->GetPixelColor(), cover);
                     psrc = psrc->Advance(srcinc);
                     pdst = pdst->Advance(dstinc);
                 } while (--len);

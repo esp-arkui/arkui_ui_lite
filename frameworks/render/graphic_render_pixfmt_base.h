@@ -84,7 +84,7 @@ namespace OHOS {
          * @return 返回颜色
          * @param r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         static Rgba GetBlendColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue, CoverType cover = COVER_FULL)
         {
@@ -92,7 +92,7 @@ namespace OHOS {
                 Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue), ColorType::ToFloat(blueValue), ColorType::ToFloat(alphaValue));
 
                 if (cover < COVER_FULL) {
-                    double coverX = double(cover) / COVER_FULL;
+                    float coverX = float(cover) / COVER_FULL;
                     resultColor.redValue *= coverX;
                     resultColor.greenValue *= coverX;
                     resultColor.blueValue *= coverX;
