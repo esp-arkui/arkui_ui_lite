@@ -160,8 +160,8 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(
-            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE float Calc(
+            float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
             return (2 * dca <= da) ?
                        2 * sca * dca + sca * d1a + dca * s1a :
@@ -179,9 +179,9 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                double d1a = 1 - d.alphaValue;
-                double s1a = 1 - s.alphaValue;
-                double sada = s.alphaValue * d.alphaValue;
+                float d1a = 1 - d.alphaValue;
+                float s1a = 1 - s.alphaValue;
+                float sada = s.alphaValue * d.alphaValue;
                 d.redValue = Calc(d.redValue, s.redValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                 d.greenValue = Calc(d.greenValue, s.greenValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                 d.blueValue = Calc(d.blueValue, s.blueValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
@@ -210,8 +210,8 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                double d1a = 1 - d.alphaValue;
-                double s1a = 1 - s.alphaValue;
+                float d1a = 1 - d.alphaValue;
+                float s1a = 1 - s.alphaValue;
                 d.redValue = SdMin(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
                              s.redValue * d1a + d.redValue * s1a;
                 d.greenValue = SdMin(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
@@ -243,8 +243,8 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                double d1a = 1 - d.alphaValue;
-                double s1a = 1 - s.alphaValue;
+                float d1a = 1 - d.alphaValue;
+                float s1a = 1 - s.alphaValue;
                 d.redValue = SdMax(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
                              s.redValue * d1a + d.redValue * s1a;
                 d.greenValue = SdMax(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
@@ -264,11 +264,11 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(
-            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE float Calc(
+            float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
             if (sca < sa) {
-                return sada * SdMin(1.0, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
+                return sada * SdMin(1.0f, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
             }
             if (dca > 0) {
                 return sada + sca * d1a + dca * s1a;
@@ -288,9 +288,9 @@ namespace OHOS {
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
                 if (d.alphaValue > 0) {
-                    double sada = s.alphaValue * d.alphaValue;
-                    double s1a = 1 - s.alphaValue;
-                    double d1a = 1 - d.alphaValue;
+                    float sada = s.alphaValue * d.alphaValue;
+                    float s1a = 1 - s.alphaValue;
+                    float d1a = 1 - d.alphaValue;
                     d.redValue = Calc(d.redValue, s.redValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                     d.greenValue = Calc(d.greenValue, s.greenValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                     d.blueValue = Calc(d.blueValue, s.blueValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
@@ -310,11 +310,11 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(
-            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE float Calc(
+            float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
             if (sca > 0) {
-                return sada * (1 - SdMin(1.0, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
+                return sada * (1 - SdMin(1.0f, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
             }
             if (dca > da) {
                 return sada + dca * s1a;
@@ -334,9 +334,9 @@ namespace OHOS {
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
                 if (d.alphaValue > 0) {
-                    double sada = s.alphaValue * d.alphaValue;
-                    double s1a = 1 - s.alphaValue;
-                    double d1a = 1 - d.alphaValue;
+                    float sada = s.alphaValue * d.alphaValue;
+                    float s1a = 1 - s.alphaValue;
+                    float d1a = 1 - d.alphaValue;
                     d.redValue = Calc(d.redValue, s.redValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                     d.greenValue = Calc(d.greenValue, s.greenValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                     d.blueValue = Calc(d.blueValue, s.blueValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
@@ -356,8 +356,8 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(
-            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE float Calc(
+            float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
             return (2 * sca < sa) ?
                        2 * sca * dca + sca * d1a + dca * s1a :
@@ -375,9 +375,9 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                double d1a = 1 - d.alphaValue;
-                double s1a = 1 - s.alphaValue;
-                double sada = s.alphaValue * d.alphaValue;
+                float d1a = 1 - d.alphaValue;
+                float s1a = 1 - s.alphaValue;
+                float sada = s.alphaValue * d.alphaValue;
                 d.redValue = Calc(d.redValue, s.redValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                 d.greenValue = Calc(d.greenValue, s.greenValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                 d.blueValue = Calc(d.blueValue, s.blueValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
@@ -394,10 +394,10 @@ namespace OHOS {
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
-        static GRAPHIC_GEOMETRY_INLINE double Calc(
-            double dca, double sca, double da, double sa, double sada, double d1a, double s1a)
+        static GRAPHIC_GEOMETRY_INLINE float Calc(
+            float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
-            double dcasa = dca * sa;
+            float dcasa = dca * sa;
             if (2 * sca <= sa) {
                 return dcasa - (sada - 2 * sca * da) * dcasa * (sada - dcasa) + sca * d1a + dca * s1a;
             }
@@ -420,9 +420,9 @@ namespace OHOS {
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
                 if (d.alphaValue > 0) {
-                    double sada = s.alphaValue * d.alphaValue;
-                    double s1a = 1 - s.alphaValue;
-                    double d1a = 1 - d.alphaValue;
+                    float sada = s.alphaValue * d.alphaValue;
+                    float s1a = 1 - s.alphaValue;
+                    float d1a = 1 - d.alphaValue;
                     d.redValue = Calc(d.redValue, s.redValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                     d.greenValue = Calc(d.greenValue, s.greenValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
                     d.blueValue = Calc(d.blueValue, s.blueValue, d.alphaValue, s.alphaValue, sada, d1a, s1a);
@@ -480,8 +480,8 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                double d1a = 1 - d.alphaValue;
-                double s1a = 1 - s.alphaValue;
+                float d1a = 1 - d.alphaValue;
+                float s1a = 1 - s.alphaValue;
                 d.redValue = (s.redValue * d.alphaValue + d.redValue * s.alphaValue - 2 * s.redValue * d.redValue) +
                              s.redValue * d1a + d.redValue * s1a;
                 d.greenValue = (s.greenValue * d.alphaValue + d.greenValue * s.alphaValue -
@@ -540,8 +540,8 @@ namespace OHOS {
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
-            double s1a = 1 - s.alphaValue;
-            double d1a = 1 - ColorT::ToFloat(pColor[Order::ALPHA]);
+            float s1a = 1 - s.alphaValue;
+            float d1a = 1 - ColorT::ToFloat(pColor[Order::ALPHA]);
             d.redValue = s.redValue * d1a + d.redValue * s1a;
             d.greenValue = s.greenValue * d1a + d.greenValue * s1a;
             d.blueValue = s.blueValue * d1a + d.blueValue * s1a;
@@ -568,8 +568,8 @@ namespace OHOS {
             Rgba sc = GetBlendColor(r, g, b, a, cover);
             Rgba dc = GetBlendColor(pColor, cover);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
-            double sa = ColorT::ToFloat(a);
-            double d1a = 1 - ColorT::ToFloat(pColor[Order::ALPHA]);
+            float sa = ColorT::ToFloat(a);
+            float d1a = 1 - ColorT::ToFloat(pColor[Order::ALPHA]);
             d.redValue += dc.redValue * sa + sc.redValue * d1a;
             d.greenValue += dc.greenValue * sa + sc.greenValue * d1a;
             d.blueValue += dc.blueValue * sa + sc.blueValue * d1a;
@@ -595,7 +595,7 @@ namespace OHOS {
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
-            double s1a = 1 - s.alphaValue;
+            float s1a = 1 - s.alphaValue;
             d.redValue = s.redValue * d.alphaValue + d.redValue * s1a;
             d.greenValue = s.greenValue * d.alphaValue + d.greenValue * s1a;
             d.blueValue = s.blueValue * d.alphaValue + d.greenValue * s1a;
@@ -619,7 +619,7 @@ namespace OHOS {
         {
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
             Rgba dc = GetBlendColor(pColor, cover);
-            double s1a = 1 - ColorT::ToFloat(a);
+            float s1a = 1 - ColorT::ToFloat(a);
             d.redValue += dc.redValue * s1a;
             d.greenValue += dc.greenValue * s1a;
             d.blueValue += dc.blueValue * s1a;
@@ -645,7 +645,7 @@ namespace OHOS {
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
-            double d1a = 1 - ColorT::ToFloat(pColor[Order::ALPHA]);
+            float d1a = 1 - ColorT::ToFloat(pColor[Order::ALPHA]);
             d.alphaValue += s.alphaValue * d1a;
             d.redValue += s.redValue * d1a;
             d.greenValue += s.greenValue * d1a;
@@ -668,7 +668,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType, ValueType, ValueType, ValueType a, CoverType cover)
         {
-            double sa = ColorT::ToFloat(a);
+            float sa = ColorT::ToFloat(a);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
             Rgba d2 = GetBlendColor(pColor, cover);
             d.redValue += d2.redValue * sa;
@@ -693,7 +693,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
-            double da = ColorT::ToFloat(pColor[Order::ALPHA]);
+            float da = ColorT::ToFloat(pColor[Order::ALPHA]);
             if (da > 0) {
                 Rgba s = GetBlendColor(r, g, b, a, cover);
                 Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
@@ -741,7 +741,7 @@ namespace OHOS {
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
-            double d1a = 1 - d.alphaValue;
+            float d1a = 1 - d.alphaValue;
             d.redValue += s.redValue * d1a;
             d.greenValue += s.greenValue * d1a;
             d.blueValue += s.blueValue * d1a;
