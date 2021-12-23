@@ -1234,7 +1234,7 @@ namespace OHOS {
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
                 m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-                m_graphics->DrawCircleShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
+                m_graphics->DrawShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
                                        transFormCenterX, transFormCenterY, rotateAngle,
                                        paint.GetScaleX(), paint.GetScaleY(), paint.GetTransLateX(),
                                        paint.GetTransLateY());
