@@ -89,7 +89,7 @@ namespace OHOS {
         typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type>
             RadialGradientSpan;
 
-        typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
+        typedef OHOS::DepictCurve<OHOS::UICanvasPath2> ConvCurve;
         typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
         typedef OHOS::DepictDash<ConvCurve> ConvDashCurve;
         typedef OHOS::DepictTransform<ConvCurve> PathTransform;
@@ -879,7 +879,7 @@ namespace OHOS {
         OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
         OHOS::SpanInterpolatorLinear<> m_lineGradientInterpolator;
         OHOS::GradientLinearCalculate m_linearGradientFunction;
-        OHOS::PathStorage m_path;
+        OHOS::UICanvasPath2 m_path;
         OHOS::TransAffine m_transform;
         PixFormat m_pixFormat;
         PixFormatComp m_pixFormatComp;
