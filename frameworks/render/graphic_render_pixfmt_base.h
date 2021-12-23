@@ -57,7 +57,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static void Set(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
+        static void SetBlendColor(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
         {
             pColor[OrderType::RED] = redValue;
             pColor[OrderType::GREEN] = greenValue;
@@ -71,12 +71,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static void Set(ValueType* pColor, const Rgba& color)
+        static void SetBlendColor(ValueType* pColor, const Rgba& color)
         {
-            pColor[OrderType::RED] = ColorType::FromDouble(color.redValue);
-            pColor[OrderType::GREEN] = ColorType::FromDouble(color.greenValue);
-            pColor[OrderType::BLUE] = ColorType::FromDouble(color.blueValue);
-            pColor[OrderType::ALPHA] = ColorType::FromDouble(color.alphaValue);
+            pColor[OrderType::RED] = ColorType::FromFloat(color.redValue);
+            pColor[OrderType::GREEN] = ColorType::FromFloat(color.greenValue);
+            pColor[OrderType::BLUE] = ColorType::FromFloat(color.blueValue);
+            pColor[OrderType::ALPHA] = ColorType::FromFloat(color.alphaValue);
         }
 
         /**
@@ -86,10 +86,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba Get(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue, CoverType cover = COVER_FULL)
         {
             if (cover > COVER_NONE) {
-                Rgba resultColor(ColorType::ToDouble(redValue), ColorType::ToDouble(greenValue), ColorType::ToDouble(blueValue), ColorType::ToDouble(alphaValue));
+                Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue), ColorType::ToFloat(blueValue), ColorType::ToFloat(alphaValue));
 
                 if (cover < COVER_FULL) {
                     double coverX = double(cover) / COVER_FULL;
@@ -112,10 +112,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(const ValueType* pColor, CoverType cover = COVER_FULL)
         {
-            return Get(pColor[OrderType::RED], pColor[OrderType::GREEN],
-                       pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
+            return GetBlendColor(pColor[OrderType::RED], pColor[OrderType::GREEN],
+                                 pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
         }
     };
 } // namespace OHOS

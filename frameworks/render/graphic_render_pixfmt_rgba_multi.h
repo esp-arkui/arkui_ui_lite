@@ -80,8 +80,8 @@ namespace OHOS {
     struct CompOpRgbaMultiply : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
-        using BlenderBase<ColorT, Order>::Get;
-        using BlenderBase<ColorT, Order>::Set;
+        using BlenderBase<ColorT, Order>::GetBlendColor;
+        using BlenderBase<ColorT, Order>::SetBlendColor;
 
         /**
          * @brief 用颜色分量及覆盖率混合像素.
@@ -92,16 +92,16 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType vRed, ValueType vGreen, ValueType vBlue, ValueType vAlpha, CoverType cover)
         {
-            Rgba sColor = Get(vRed, vGreen, vBlue, vAlpha, cover);
+            Rgba sColor = GetBlendColor(vRed, vGreen, vBlue, vAlpha, cover);
             if (sColor.alphaValue > 0) {
-                Rgba dColor = Get(pColor);
+                Rgba dColor = GetBlendColor(pColor);
                 double s1a = 1 - sColor.alphaValue;
                 double d1a = 1 - dColor.alphaValue;
                 dColor.redValue = sColor.redValue * dColor.redValue + sColor.redValue * d1a + dColor.redValue * s1a;
                 dColor.greenValue = sColor.greenValue * dColor.greenValue + sColor.greenValue * d1a + dColor.greenValue * s1a;
                 dColor.blueValue = sColor.blueValue * dColor.blueValue + sColor.blueValue * d1a + dColor.blueValue * s1a;
                 dColor.alphaValue += sColor.alphaValue - sColor.alphaValue * dColor.alphaValue;
-                Set(pColor, Clip(dColor));
+                SetBlendColor(pColor, Clip(dColor));
             }
         }
     };
