@@ -27,20 +27,27 @@ namespace OHOS {
 void UICanvas::BeginPath()
 {
     //初始化UICanvasPath
+//    if (vertices_ != nullptr) {
+//        delete vertices_;
+//        vertices_ = nullptr;
+//    }
+
+    vertices_ = new UICanvasVertices();
+    if (vertices_ == nullptr) {
+        GRAPHIC_LOGE("new UICanvasPath fail");
+        return;
+    }
     if (vertices_ == nullptr) {
         vertices_ = new UICanvasVertices();
         if (vertices_ == nullptr) {
             GRAPHIC_LOGE("new UICanvasPath fail");
             return;
         }
+    }else{
+        vertices_->RemoveAll();
     }
-//    else{
-//        vertices_ = new UICanvasVertices();
-//        if (vertices_ == nullptr) {
-//            GRAPHIC_LOGE("new UICanvasPath fail");
-//            return;
-//        }
-//    }
+
+
 }
 
 void UICanvas::MoveTo(const Point& point)

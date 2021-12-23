@@ -681,13 +681,6 @@ protected:
         Image* image;
     };
 
-    enum PathCmd {
-        CMD_MOVE_TO,
-        CMD_LINE_TO,
-        CMD_ARC,
-        CMD_CLOSE,
-    };
-
     struct PathParam : public HeapBase {
         UICanvasVertices* path;
     };
