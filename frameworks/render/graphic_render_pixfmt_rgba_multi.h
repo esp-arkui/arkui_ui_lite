@@ -95,8 +95,8 @@ namespace OHOS {
             Rgba sColor = GetBlendColor(vRed, vGreen, vBlue, vAlpha, cover);
             if (sColor.alphaValue > 0) {
                 Rgba dColor = GetBlendColor(pColor);
-                double s1a = 1 - sColor.alphaValue;
-                double d1a = 1 - dColor.alphaValue;
+                float s1a = 1 - sColor.alphaValue;
+                float d1a = 1 - dColor.alphaValue;
                 dColor.redValue = sColor.redValue * dColor.redValue + sColor.redValue * d1a + dColor.redValue * s1a;
                 dColor.greenValue = sColor.greenValue * dColor.greenValue + sColor.greenValue * d1a + dColor.greenValue * s1a;
                 dColor.blueValue = sColor.blueValue * dColor.blueValue + sColor.blueValue * d1a + dColor.blueValue * s1a;

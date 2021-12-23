@@ -92,7 +92,7 @@ namespace OHOS {
                 Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue), ColorType::ToFloat(blueValue), ColorType::ToFloat(alphaValue));
 
                 if (cover < COVER_FULL) {
-                    double coverX = double(cover) / COVER_FULL;
+                    float coverX = float(cover) / COVER_FULL;
                     resultColor.redValue *= coverX;
                     resultColor.greenValue *= coverX;
                     resultColor.blueValue *= coverX;
