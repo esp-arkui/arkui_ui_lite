@@ -16,7 +16,7 @@
 #ifndef GFX_GRAPGICS_MANAGER_INCLUDED
 #define GFX_GRAPGICS_MANAGER_INCLUDED
 
-#include <gfx_utils/graphics/graphic_color/graphic_color_rgba.h>
+#include "gfx_utils/color.h"
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
