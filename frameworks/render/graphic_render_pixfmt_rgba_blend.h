@@ -289,7 +289,7 @@ namespace OHOS {
          * @brief 用颜色设置或混合到指定像素.
          *
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color)
         {
