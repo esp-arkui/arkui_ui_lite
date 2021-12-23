@@ -15,15 +15,18 @@ struct ImageParam : public HeapBase {
     Point start;
     uint16_t height;
     uint16_t width;
+    int16_t newWidth;
+    int16_t newHeight;
     Image* image = nullptr;
     GifCanvasImageAnimator *gifImageAnimator = nullptr;
-    const char* path;
+    char* path = nullptr;
 };
 
 class GifCanvasImageAnimator : public Animator, public AnimatorCallback {
 public:
     GifCanvasImageAnimator(ImageParam* image,UIView* view, const char* src)
         : Animator(this, view, 0, true),
+          size_({0,0}),
           gifFileType_(nullptr),
           imageIndex_(0),
           delayTime_(0),
@@ -32,7 +35,12 @@ public:
           gifDataSize_(0),
           src_(src),
           image_(image)
+
     {
+
+        OpenGifFile(image->path);// 打开一次先获取大小
+        CloseGifFile();
+
     }
 
     virtual ~GifCanvasImageAnimator()
@@ -57,6 +65,9 @@ public:
     const void OpenGifFile(const char* src);
     void CloseGifFile();
     void SetImage(ImageParam* image);
+    Point GetSize(){
+        return size_;
+    }
 private:
     GifFileType* GetGifFileType()
     {
@@ -66,6 +77,7 @@ private:
         return gifFileType_;
     }
 
+    Point size_;
     GifFileType* gifFileType_;
     int32_t imageIndex_;
     uint32_t delayTime_;

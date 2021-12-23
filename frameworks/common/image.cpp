@@ -70,11 +70,13 @@ Image::ImageType Image::CheckImgType(const char* src)
     int32_t fd = open(src, O_RDONLY);
 #endif
     if (fd < 0) {
+        imageType_ = IMG_UNKNOWN;
         GRAPHIC_LOGE("can't open %s\n", src);
         return IMG_UNKNOWN;
     }
     if (read(fd, buf, IMG_BYTES_TO_CHECK) != IMG_BYTES_TO_CHECK) {
         close(fd);
+        imageType_ = IMG_UNKNOWN;
         return IMG_UNKNOWN;
     }
     close(fd);
@@ -230,6 +232,39 @@ bool Image::SetSrc(const ImageInfo* src)
         srcType_ = IMG_SRC_UNKNOWN;
     }
     return true;
+}
+
+bool Image::PreParse(const char *src)
+{
+    if (src == nullptr) {
+        return false;
+    }
+    const char* ptr = strrchr(src, '.');
+    if (ptr == nullptr) {
+        srcType_ = IMG_SRC_UNKNOWN;
+        return false;
+    }
+    if(path_ != nullptr){
+        UIFree((void*)path_);
+    }
+    char* path = (char*)UIMalloc(strlen(src) + 1);
+    strcpy_s(path, (size_t)strlen(src) + 1, src);
+    path_ = path;
+    bool isSucess = false;
+    ImageType imageType = CheckImgType(src);
+    if (imageType == IMG_PNG) {
+        isSucess = SetPNGSrc(src);
+    } else if (imageType == IMG_JPEG) {
+        isSucess = SetJPEGSrc(src);
+    }else if (imageType == IMG_GIF) {
+        imageType_ = imageType;
+        isSucess = true;
+    }else{
+        imageType_ = imageType;
+        srcType_ = IMG_SRC_UNKNOWN;
+        return false;
+    }
+    return isSucess;
 }
 
 void Image::DrawImage(BufferInfo& gfxDstBuffer,

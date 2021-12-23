@@ -278,6 +278,7 @@ namespace OHOS {
         }
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::ClearRect(const Point& clearRect, int clearHeight, int clearWidth, const Paint& paint)
@@ -300,6 +301,7 @@ namespace OHOS {
         cmd.DrawGraphics = DoClearRect;
         drawCmdList_.PushBack(cmd);
         Invalidate();
+        SetStartPosition(clearRect);
     }
 
     void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
@@ -343,6 +345,7 @@ namespace OHOS {
         }
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::DrawCircle(const Point& center, uint16_t radius, const Paint& paint)
@@ -440,6 +443,7 @@ namespace OHOS {
             drawCmdList_.PushBack(cmd);
 
             Invalidate();
+            SetStartPosition(point);
         }
     }
 
@@ -492,7 +496,7 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint)
+    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t width, int16_t height)
     {
         if (image == nullptr) {
             return;
@@ -509,27 +513,35 @@ namespace OHOS {
             imageParam = nullptr;
             return;
         }
-        imageParam->path = image;
-        imageParam->image->SetSrc(image);
+        imageParam->path = new char[strlen(image) + 1];
+        strcpy_s(imageParam->path, strlen(image) + 1, image);
+        imageParam->image->SetSrc(imageParam->path);
         ImageHeader header = {0};
         imageParam->image->GetHeader(header);
-
+        imageParam->gifImageAnimator = nullptr;
         imageParam->start = startPoint;
         imageParam->height = header.height;
         imageParam->width = header.width;
-        DrawCmd cmd;
+
+        if (IsGif(image)) {
+            imageParam->gifImageAnimator = new GifCanvasImageAnimator(imageParam, this, imageParam->path);
+            Point gifSize = imageParam->gifImageAnimator->GetSize();
+            imageParam->width = gifSize.x;
+            imageParam->height = gifSize.y;
+            imageParam->gifImageAnimator->Start();
+        }
+
+        imageParam->newWidth = width;
+        imageParam->newHeight = height;
+		DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = imageParam;
         cmd.DeleteParam = DeleteImageParam;
         cmd.DrawGraphics = DoDrawImage;
-
-        if (IsGif(image)) {
-            imageParam->gifImageAnimator = new GifCanvasImageAnimator(imageParam, this, image);
-            imageParam->gifImageAnimator->Start();
-        }
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::DrawImage(const Point& startPoint, const ImageInfo* image, const Paint& paint)
@@ -549,7 +561,7 @@ namespace OHOS {
             imageParam = nullptr;
             return;
         }
-
+        imageParam->path = nullptr;
         imageParam->image->SetSrc(image);
         ImageHeader header = {0};
         imageParam->image->GetHeader(header);
@@ -1433,14 +1445,27 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
-        //
+        int16_t width =imageParam->width;
+        int16_t height =imageParam->height;
+        if(imageParam->newWidth >= 0){
+            width = imageParam->newWidth;
+        }
+        if(imageParam->newHeight >= 0){
+            height = imageParam->newHeight;
+        }
         Rect trunc(invalidatedArea);
         if (!paint.IsTransform()) {
-            graphics->BlendFromImage(imageBuffer, start.x, start.y, opa);
+            double x = start.x;
+            double y = start.y;
+            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
+            uint8_t formatType = imageParam->image->GetImgType();
+            graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
+
         } else {
             double x = start.x;
             double y = start.y;
-            double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
+
+            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
             uint8_t formatType = imageParam->image->GetImgType();
             StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
@@ -1769,6 +1794,14 @@ namespace OHOS {
         if (m_graphics == nullptr) {
             return;
         }
+        if (paint.IsLineDash()) {
+            m_graphics->SetLineDashOffset(paint.GetLineDashOffset());
+            m_graphics->SetLineDash(paint.GetLineDash(), paint.GetLineDashCount());
+        } else {
+            m_graphics->SetLineDash(nullptr, 0);
+        }
+
+
         Point pathEnd = {COORD_MIN, COORD_MIN};
 
         ListNode<Point>* pointIter = path->points_.Begin();
