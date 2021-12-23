@@ -795,7 +795,7 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
  * @tc.desc: Verify StrokeRect function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -838,7 +838,7 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level0)
  * @tc.desc: Verify CleanRect function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -896,7 +896,7 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level0)
  * @tc.desc: Verify DrawImage function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -949,7 +949,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level0)
  * @tc.desc: Verify DrawImage function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -1002,7 +1002,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level0)
  * @tc.desc: Verify DrawImage function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
