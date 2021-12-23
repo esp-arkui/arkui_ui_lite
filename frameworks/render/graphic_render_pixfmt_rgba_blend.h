@@ -164,12 +164,12 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            void SetPixelColor(ValueType r, ValueType g, ValueType b, ValueType a)
+            void SetPixelColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
             {
-                colors[OrderType::RED] = r;
-                colors[OrderType::GREEN] = g;
-                colors[OrderType::BLUE] = b;
-                colors[OrderType::ALPHA] = a;
+                colors[OrderType::RED] = redValue;
+                colors[OrderType::GREEN] = greenValue;
+                colors[OrderType::BLUE] = blueValue;
+                colors[OrderType::ALPHA] = alphaValue;
             }
             /**
              * @brief 设置颜色.
@@ -187,12 +187,12 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            void GetPixelColor(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
+            void GetPixelColor(ValueType& red, ValueType& green, ValueType& blue, ValueType& alpha) const
             {
-                r = colors[OrderType::RED];
-                g = colors[OrderType::GREEN];
-                b = colors[OrderType::BLUE];
-                a = colors[OrderType::ALPHA];
+                red = colors[OrderType::RED];
+                green = colors[OrderType::GREEN];
+                blue = colors[OrderType::BLUE];
+                alpha = colors[OrderType::ALPHA];
             }
             /**
              * @brief 获取颜色.
@@ -477,7 +477,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* pixelPtr, const ColorType& color)
+        GRAPHIC_GEOMETRY_INLINE static void SetPixelColor(int8u* pixelPtr, const ColorType& color)
         {
             ((PixelType*)pixelPtr)->SetPixelColor(color);
         }
@@ -561,27 +561,27 @@ namespace OHOS {
          */
         void BlendHline(int x, int y,
                         unsigned len,
-                        const ColorType& c,
+                        const ColorType& color,
                         int8u cover)
         {
-            if (!c.IsTransparent()) {
+            if (!color.IsTransparent()) {
                 PixelType* p = PixValuePtr(x, y, len);
-                if (c.IsOpaque() && cover == COVER_MASK) {
-                    PixelType v;
-                    v.SetPixelColor(c);
+                if (color.IsOpaque() && cover == COVER_MASK) {
+                    PixelType pixelValue;
+                    pixelValue.SetPixelColor(color);
                     do {
-                        *p = v;
+                        *p = pixelValue;
                         p = p->Next();
                     } while (--len);
                 } else {
                     if (cover == COVER_MASK) {
                         do {
-                            BlendPix(p, c);
+                            BlendPix(p, color);
                             p = p->Next();
                         } while (--len);
                     } else {
                         do {
-                            BlendPix(p, c, cover);
+                            BlendPix(p, color, cover);
                             p = p->Next();
                         } while (--len);
                     }
@@ -597,24 +597,24 @@ namespace OHOS {
          */
         void BlendVline(int x, int y,
                         unsigned len,
-                        const ColorType& c,
+                        const ColorType& color,
                         int8u cover)
         {
-            if (!c.IsTransparent()) {
-                if (c.IsOpaque() && cover == COVER_MASK) {
-                    PixelType v;
-                    v.SetPixelColor(c);
+            if (!color.IsTransparent()) {
+                if (color.IsOpaque() && cover == COVER_MASK) {
+                    PixelType pixelValue;
+                    pixelValue.SetPixelColor(color);
                     do {
-                        *PixValuePtr(x, y++, 1) = v;
+                        *PixValuePtr(x, y++, 1) = pixelValue;
                     } while (--len);
                 } else {
                     if (cover == COVER_MASK) {
                         do {
-                            BlendPix(PixValuePtr(x, y++, 1), c, c.alphaValue);
+                            BlendPix(PixValuePtr(x, y++, 1), color, color.alphaValue);
                         } while (--len);
                     } else {
                         do {
-                            BlendPix(PixValuePtr(x, y++, 1), c, cover);
+                            BlendPix(PixValuePtr(x, y++, 1), color, cover);
                         } while (--len);
                     }
                 }
@@ -629,18 +629,18 @@ namespace OHOS {
          */
         void BlendSolidHspan(int x, int y,
                              unsigned len,
-                             const ColorType& c,
+                             const ColorType& color,
                              const int8u* covers)
         {
-            if (!c.IsTransparent()) {
-                PixelType* p = PixValuePtr(x, y, len);
+            if (!color.IsTransparent()) {
+                PixelType* pixelPtr = PixValuePtr(x, y, len);
                 do {
-                    if (c.IsOpaque() && *covers == COVER_MASK) {
-                        p->SetPixelColor(c);
+                    if (color.IsOpaque() && *covers == COVER_MASK) {
+                        pixelPtr->SetPixelColor(color);
                     } else {
-                        BlendPix(p, c, *covers);
+                        BlendPix(pixelPtr, color, *covers);
                     }
-                    p = p->Next();
+                    pixelPtr = pixelPtr->Next();
                     ++covers;
                 } while (--len);
             }
@@ -653,16 +653,16 @@ namespace OHOS {
          */
         void BlendSolidVspan(int x, int y,
                              unsigned len,
-                             const ColorType& c,
+                             const ColorType& color,
                              const int8u* covers)
         {
-            if (!c.IsTransparent()) {
+            if (!color.IsTransparent()) {
                 do {
-                    PixelType* p = PixValuePtr(x, y++, 1);
-                    if (c.IsOpaque() && *covers == COVER_MASK) {
-                        p->SetPixelColor(c);
+                    PixelType* pixelPtr = PixValuePtr(x, y++, 1);
+                    if (color.IsOpaque() && *covers == COVER_MASK) {
+                        pixelPtr->SetPixelColor(color);
                     } else {
-                        BlendPix(p, c, *covers);
+                        BlendPix(pixelPtr, color, *covers);
                     }
                     ++covers;
                 } while (--len);
@@ -679,10 +679,10 @@ namespace OHOS {
                             unsigned len,
                             const ColorType* colors)
         {
-            PixelType* p = PixValuePtr(x, y, len);
+            PixelType* pixelPtr = PixValuePtr(x, y, len);
             do {
-                p->SetPixelColor(*colors++);
-                p = p->Next();
+                pixelPtr->SetPixelColor(*colors++);
+                pixelPtr = pixelPtr->Next();
             } while (--len);
         }
 
@@ -713,22 +713,22 @@ namespace OHOS {
                              const int8u* covers,
                              int8u cover)
         {
-            PixelType* p = PixValuePtr(x, y, len);
+            PixelType* pixelPtr = PixValuePtr(x, y, len);
             if (covers) {
                 do {
-                    CopyOrBlendPix(p, *colors++, *covers++);
-                    p = p->Next();
+                    CopyOrBlendPix(pixelPtr, *colors++, *covers++);
+                    pixelPtr = pixelPtr->Next();
                 } while (--len);
             } else {
                 if (cover == COVER_MASK) {
                     do {
-                        CopyOrBlendPix(p, *colors++);
-                        p = p->Next();
+                        CopyOrBlendPix(pixelPtr, *colors++);
+                        pixelPtr = pixelPtr->Next();
                     } while (--len);
                 } else {
                     do {
-                        CopyOrBlendPix(p, *colors++, cover);
-                        p = p->Next();
+                        CopyOrBlendPix(pixelPtr, *colors++, cover);
+                        pixelPtr = pixelPtr->Next();
                     } while (--len);
                 }
             }
@@ -1209,16 +1209,7 @@ namespace OHOS {
         {
             return (const PixelType*)p;
         }
-        /**
-         * @brief 设置像素地址的颜色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
-        {
-            ((PixelType*)p)->Set(c);
-        }
+
         /**
          * @brief 获取像素的颜色.
          *
@@ -1240,7 +1231,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
         {
-            MakePix(PixValuePtr(x, y, 1), c);
+            SetPixelColor(PixValuePtr(x, y, 1), c);
         }
         /**
          * @brief 在(x, y)坐标的像素混合颜色颜色及覆盖率.
@@ -1248,9 +1239,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& c, int8u cover)
+        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, int8u cover)
         {
-            BlendPix(PixValuePtr(x, y, 1), c, cover);
+            BlendPix(PixValuePtr(x, y, 1), color, cover);
         }
         /**
          * @brief 从(x, y)横向向开始拷贝len长度的线性颜色.
