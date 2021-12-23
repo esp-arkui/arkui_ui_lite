@@ -53,10 +53,10 @@ namespace OHOS {
         END_OF_COMP_OP_E
     };
 
-    using BlenderRgba32 = BlenderRgba<Rgba8, OrderRgba>;
-    using BlenderArgb32 = BlenderRgba<Rgba8, OrderArgb>;
-    using BlenderAbgr32 = BlenderRgba<Rgba8, OrderAbgr>;
-    using BlenderBgra32 = BlenderRgba<Rgba8, OrderBgra>;
+    using BlenderRgba32 = RgbaBlender<Rgba8, OrderRgba>;
+    using BlenderArgb32 = RgbaBlender<Rgba8, OrderArgb>;
+    using BlenderAbgr32 = RgbaBlender<Rgba8, OrderAbgr>;
+    using BlenderBgra32 = RgbaBlender<Rgba8, OrderBgra>;
 
     using PixfmtRgba32 = PixfmtAlphaBlendRgba<BlenderRgba32, RenderingBuffer>;
     using PixfmtArgb32 = PixfmtAlphaBlendRgba<BlenderArgb32, RenderingBuffer>;

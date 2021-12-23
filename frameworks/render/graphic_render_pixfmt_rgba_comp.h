@@ -721,7 +721,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
-            BlenderRgbaPre<ColorT, Order>::BlendPix(pColor, r, g, b, a, cover);
+            RgbaPreBlender<ColorT, Order>::BlendPix(pColor, r, g, b, a, cover);
         }
     };
     template <class ColorT, class Order>

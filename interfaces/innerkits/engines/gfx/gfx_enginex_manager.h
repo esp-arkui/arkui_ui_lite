@@ -51,11 +51,11 @@ namespace OHOS {
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OHOS::OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-        typedef OHOS::BlenderRgba<ColorType, ComponentOrder> Blender;
+        typedef OHOS::RgbaBlender<ColorType, ComponentOrder> Blender;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
         typedef OHOS::CompOpAdaptorRgba<ColorType, ComponentOrder> BlenderComp;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
-        typedef OHOS::BlenderRgbaPre<ColorType, ComponentOrder> BlenderPre;
+        typedef OHOS::RgbaPreBlender<ColorType, ComponentOrder> BlenderPre;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
         typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
         // 根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
