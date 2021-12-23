@@ -39,8 +39,8 @@
 #include <cstring>
 
 #include "gfx_utils/heap_base.h"
-#include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_buffer.h"
+#include "render/graphic_render_pixfmt_base.h"
 namespace OHOS {
     /**
      * @brief 颜色分量裁剪.
@@ -90,18 +90,18 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-                ValueType* pColor,ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
             Rgba s = Get(r, g, b, a, cover);
             if (s.alphaValue > 0) {
-                Rgba d = Get(pColor);
+                Rgba dColor = Get(pColor);
                 double s1a = 1 - s.alphaValue;
-                double d1a = 1 - d.alphaValue;
-                d.redValue = s.redValue * d.redValue + s.redValue * d1a + d.redValue * s1a;
-                d.greenValue = s.greenValue * d.greenValue + s.greenValue * d1a + d.greenValue * s1a;
-                d.blueValue = s.blueValue * d.blueValue + s.blueValue * d1a + d.blueValue * s1a;
-                d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
-                Set(pColor, Clip(d));
+                double d1a = 1 - dColor.alphaValue;
+                dColor.redValue = s.redValue * dColor.redValue + s.redValue * d1a + dColor.redValue * s1a;
+                dColor.greenValue = s.greenValue * dColor.greenValue + s.greenValue * d1a + dColor.greenValue * s1a;
+                dColor.blueValue = s.blueValue * dColor.blueValue + s.blueValue * d1a + dColor.blueValue * s1a;
+                dColor.alphaValue += s.alphaValue - s.alphaValue * dColor.alphaValue;
+                Set(pColor, Clip(dColor));
             }
         }
     };

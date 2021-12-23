@@ -36,8 +36,8 @@ namespace OHOS {
     class RowAccessor {
     public:
         using rowData = ConstRowInfo<T>;
-        RowAccessor()
-            : renBuf_(0),
+        RowAccessor() :
+            renBuf_(0),
             start_(0),
             width_(0),
             height_(0),
@@ -51,8 +51,8 @@ namespace OHOS {
          * @param areaHeight 缓冲区内像素区域的高度
          * @param stride 缓冲区的步幅
          */
-        RowAccessor(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride)
-            : renBuf_(0),
+        RowAccessor(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride) :
+            renBuf_(0),
             start_(0),
             width_(0),
             height_(0),
@@ -157,15 +157,15 @@ namespace OHOS {
             if (renBuf.height() < h) {
                 h = renBuf.height();
             }
-            unsigned l = GetStrideAbs();
-            if (renBuf.stride_abs() < l) {
-                l = renBuf.stride_abs();
+            unsigned lStride = GetStrideAbs();
+            if (renBuf.stride_abs() < lStride) {
+                lStride = renBuf.stride_abs();
             }
-            l *= sizeof(T);
+            lStride *= sizeof(T);
             unsigned y;
             unsigned w = GetWidth();
             for (y = 0; y < h; y++) {
-                std::memcpy(RowPtr(0, y, w), renBuf.row_ptr(y), l);
+                memcpy_s(RowPtr(0, y, w), lStride, renBuf.row_ptr(y), lStride);
             }
         }
 

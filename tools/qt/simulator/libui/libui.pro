@@ -175,8 +175,6 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_auto_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_auto_vector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_blockvector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_vector.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_range_adapter.h \
@@ -227,7 +225,6 @@ HEADERS += \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_blend.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_comp.h \
-    ../../../../frameworks/render/graphic_render_pixfmt_rgba_conv.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_gamma.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_multi.h \
     ../../../../frameworks/render/graphic_render_pixfmt_transposer.h \

@@ -168,6 +168,13 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        while (!PaintStack.empty()) {
+            PaintStack.pop();
+        }
+        //        if (m_graphics != nullptr) {
+        //            delete m_graphics;
+        //            m_graphics = nullptr;
+        //        }
     }
 
     void UICanvas::Clear()
@@ -185,6 +192,9 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        while (!PaintStack.empty()) {
+            PaintStack.pop();
+        }
         Invalidate();
     }
 
@@ -611,28 +621,65 @@ namespace OHOS {
             int16_t posViewTop = rect.GetY() - trunc.GetY();
             int16_t realLeft = rect.GetLeft() + style_->paddingLeft_ + style_->borderWidth_;
             int16_t realTop = rect.GetTop() + style_->paddingTop_ + style_->borderWidth_;
-            std::shared_ptr<BufferInfo> gfxMapBuffer = std::make_shared<BufferInfo>();
-            if (memcpy_s(gfxMapBuffer.get(), sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
-                return;
-            }
-            uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-            uint32_t destStride = gfxMapBuffer->width * destByteSize;
-            uint32_t buffSize = gfxMapBuffer->height * destStride;
-            gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-            memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
-            gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
+            BufferInfo* gfxMapBuffer = nullptr;
+            uint8_t destByteSize;
             // 添加的处理机制的。。。
+            bool isChangeBlend = false;
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
+                if (curDraw->data_.paint.GetGlobalCompositeOperation() !=
+                    BaseGfxExtendEngine::BlendMode::BLENDSRCOVER) {
+                    isChangeBlend = true;
+                    break;
+                }
+            }
+            if (isChangeBlend) {
+                if (gfxMapBuffer == nullptr) {
+                    gfxMapBuffer = new BufferInfo();
+                    if (memcpy_s(gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {
+                        return;
+                    }
+                    destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+                    uint32_t destStride = gfxMapBuffer->width * destByteSize;
+                    uint32_t buffSize = gfxMapBuffer->height * destStride;
+                    gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
+                    memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
+                    gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
+                }
                 InitDrawEnvironment(
                     *gfxMapBuffer, trunc,
                     Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
                     Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
-                         posViewTop + trunc.GetHeight() - 1),
-                    curDraw->data_.paint);
+                         posViewTop + trunc.GetHeight() - 1));
+            } else {
+                InitDrawEnvironment(
+                    gfxDstBuffer, trunc,
+                    Rect(realLeft, realTop, realLeft + trunc.GetWidth() - 1, realTop + trunc.GetHeight() - 1),
+                    Rect(posViewLeft, posViewTop, posViewLeft + trunc.GetWidth() - 1,
+                         posViewTop + trunc.GetHeight() - 1));
+            }
+            for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
+                // 应该是实现画布的处理机制..
+                if (isChangeBlend) {
+                    if (BaseGfxExtendEngine::BlendMode::BLENDCOPY ==
+                        curDraw->data_.paint.GetGlobalCompositeOperation()) {
+                        BaseGfxEngine::GetInstance()->DrawRect(*gfxMapBuffer, rect, invalidatedArea, *style_, opaScale_);
 
-                curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
-                                            curDraw->data_.paint, rect, trunc, *style_);
+                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+                        curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                                    curDraw->data_.paint, rect, trunc, *style_);
+                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+                        continue;
+                    }
+                    curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                                curDraw->data_.paint, rect, trunc, *style_);
+                } else {
+                    curDraw->data_.DrawGraphics(gfxDstBuffer, curDraw->data_.param,
+                                                curDraw->data_.paint, rect, trunc, *style_);
+                }
+            }
+            if (gfxMapBuffer == nullptr) {
+                return;
             }
             BaseGfxExtendEngine::Image imageBuffer((unsigned char*)gfxMapBuffer->virAddr, gfxMapBuffer->width,
                                                    gfxMapBuffer->height, gfxMapBuffer->stride);
@@ -653,16 +700,16 @@ namespace OHOS {
                                         gfxDstBuffer.rect.GetLeft(), gfxDstBuffer.rect.GetTop(),
                                         DrawUtils::GetMixOpacity(opaScale_, style_->imageOpa_));
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
+            delete gfxMapBuffer;
+            gfxMapBuffer = nullptr;
         }
     }
 
     bool UICanvas::InitDrawEnvironment(const BufferInfo& gfxDstBuffer, const Rect& fillArea, const Rect& worldRect,
-                                       const Rect& screenRect, const Paint& paint)
+                                       const Rect& screenRect)
     {
-        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
-        if (m_graphics == nullptr) {
-            return false;
-        }
+        //BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+
         int16_t posLeft = fillArea.GetLeft();
         int16_t posTop = fillArea.GetTop();
 
@@ -676,10 +723,10 @@ namespace OHOS {
         int32_t offset = static_cast<int32_t>(posTop) * gfxDstBuffer.width + posLeft;
         destBuf += offset * destByteSize;
 
-        m_graphics->Attach(destBuf, fillArea.GetWidth(), fillArea.GetHeight(), gfxDstBuffer.stride);
-        m_graphics->Viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
-                             screenRect.GetLeft(), screenRect.GetTop(), screenRect.GetRight(), screenRect.GetBottom(),
-                             BaseGfxExtendEngine::XMINYMIN);
+        m_graphics.Attach(destBuf, fillArea.GetWidth(), fillArea.GetHeight(), gfxDstBuffer.stride);
+        m_graphics.Viewport(worldRect.GetLeft(), worldRect.GetTop(), worldRect.GetRight(), worldRect.GetBottom(),
+                            screenRect.GetLeft(), screenRect.GetTop(), screenRect.GetRight(), screenRect.GetBottom(),
+                            BaseGfxExtendEngine::XMINYMIN);
         return true;
     }
 
@@ -1141,7 +1188,7 @@ namespace OHOS {
             return;
         }
 
-        double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
+        double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
         arcInfo.radius = circleParam->radius + halfLineWidth - 1;
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
             drawStyle.bgColor_ = paint.GetFillColor();
@@ -1169,18 +1216,10 @@ namespace OHOS {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
         } else {
-            rotateCenterX = paint.GetRotateCenterX() + rect.GetX() - invalidatedArea.GetX();
-            rotateCenterY = paint.GetRotateCenterY() + rect.GetY() - invalidatedArea.GetY();
-            if (paint.GetRotateAngle() != 0) {
-                rotateAngle = paint.GetRotateAngle();
-            }
-            if (paint.GetRotateAngle() != 0) {
-                m_graphics->Rotate(rotateCenterX, rotateCenterY, rotateAngle);
-            }
-            if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
-                m_graphics->Scale(rotateCenterX, rotateCenterY, paint.GetScaleX(), paint.GetScaleY());
-            }
+            transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+            transFormCenterY = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
 
+            StartTransform(rect, invalidatedArea, paint);
             if (!(static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE)) {
                 m_graphics->NoFill();
             }
@@ -1196,12 +1235,14 @@ namespace OHOS {
                 m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                            paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
                 m_graphics->DrawCircleShadow(arcInfo.center.x, arcInfo.center.y, arcInfo.radius, arcInfo.radius,
-                                       rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+                                       transFormCenterX, transFormCenterY, rotateAngle,
+                                       paint.GetScaleX(), paint.GetScaleY(), paint.GetTransLateX(),
+                                       paint.GetTransLateY());
             }
             m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);
         }
 
-        m_graphics->ResetTransformations();
+        //m_graphics->ResetTransformations();
     }
 
     void UICanvas::DoDrawArc(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
@@ -1381,7 +1422,7 @@ namespace OHOS {
             return;
         }
         const ImageInfo* imgInfo = imageParam->image->GetImageInfo();
-        if(imgInfo == nullptr) {
+        if (imgInfo == nullptr) {
             return;
         }
         uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imgInfo->header.colorMode);
@@ -1392,17 +1433,17 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
+        //
         Rect trunc(invalidatedArea);
         if (!paint.IsTransform()) {
-            graphics->BlendImage(imageBuffer, start.x, start.y, opa);
+            graphics->BlendFromImage(imageBuffer, start.x, start.y, opa);
         } else {
-            StartTransform(rect, invalidatedArea, paint);
             double x = start.x;
             double y = start.y;
             double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
             uint8_t formatType = imageParam->image->GetImgType();
+            StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
-            graphics->ResetTransformations();
         }
     }
 
@@ -1412,8 +1453,8 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
-        int16_t posViewLeft = rect.GetX() - invalidatedArea.GetX();
-        int16_t posViewTop = rect.GetY() - invalidatedArea.GetY();
+        int16_t posViewLeft = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+        int16_t posViewTop = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
         graphics->Translate(-posViewLeft, -posViewTop);
         auto tr = paint.GetTransform();
         graphics->SetAffine(tr);
@@ -1490,45 +1531,49 @@ namespace OHOS {
         textRect.SetWidth(text->GetTextSize().x);
         textRect.SetHeight(text->GetTextSize().y);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
-        Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
 
-        std::shared_ptr<BufferInfo> pGfxMapBuffer = std::make_shared<BufferInfo>();
-        pGfxMapBuffer->rect = textRect;
-        pGfxMapBuffer->width = textRect.GetWidth();
-        pGfxMapBuffer->height = textRect.GetHeight();
-
-        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-        uint32_t destStride = pGfxMapBuffer->width * destByteSize;
-        pGfxMapBuffer->stride = destStride;
-
-        pGfxMapBuffer->mode = gfxDstBuffer.mode;
-        pGfxMapBuffer->color = gfxDstBuffer.color;
-        uint32_t buffSize = pGfxMapBuffer->height * pGfxMapBuffer->width * destByteSize;
-        pGfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-        errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
-        if (err != EOK) {
-            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
-            GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
-            return;
-        }
-        pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
-
-        text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle,
-                     Text::TEXT_ELLIPSIS_END_INV, opa);
-
-        BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
-                                               pGfxMapBuffer->width, pGfxMapBuffer->height, pGfxMapBuffer->stride);
-        double x = start.x;
-        double y = start.y;
-        double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
         if (!paint.IsTransform()) {
-            graphicsContext->BlendFromImage(imageBuffer, x, y, opa, false);
+            text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle,
+                         Text::TEXT_ELLIPSIS_END_INV, opa);
         } else {
+            std::shared_ptr<BufferInfo> pGfxMapBuffer = std::make_shared<BufferInfo>();
+
+            Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
+
+            pGfxMapBuffer->rect = textRect;
+            pGfxMapBuffer->width = textRect.GetWidth();
+            pGfxMapBuffer->height = textRect.GetHeight();
+
+            uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+            uint32_t destStride = pGfxMapBuffer->width * destByteSize;
+            pGfxMapBuffer->stride = destStride;
+
+            pGfxMapBuffer->mode = gfxDstBuffer.mode;
+            pGfxMapBuffer->color = gfxDstBuffer.color;
+            uint32_t buffSize = pGfxMapBuffer->height * pGfxMapBuffer->width * destByteSize;
+            pGfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
+            errno_t err = memset_s(pGfxMapBuffer->virAddr, buffSize, 0, buffSize);
+            if (err != EOK) {
+                BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
+                GRAPHIC_LOGE("memset_s pGfxMapBuffer fail");
+                return;
+            }
+            pGfxMapBuffer->phyAddr = pGfxMapBuffer->virAddr;
+
+            text->OnDraw(*pGfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle,
+                         Text::TEXT_ELLIPSIS_END_INV, opa);
+
+            BaseGfxExtendEngine::Image imageBuffer(static_cast<unsigned char*>(pGfxMapBuffer->virAddr),
+                                                   pGfxMapBuffer->width, pGfxMapBuffer->height, pGfxMapBuffer->stride);
+            double x = start.x;
+            double y = start.y;
+            double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
+
             StartTransform(rect, invalidatedArea, paint);
             graphicsContext->TransformImage(imageBuffer, parallelogram, false);
+            //graphicsContext->ResetTransformations();
+            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
         }
-        graphicsContext->ResetTransformations();
-        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
     }
 
     void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer, const Point& center, const Rect& invalidatedArea,
@@ -1843,26 +1888,24 @@ namespace OHOS {
                 default: break;
             }
         }
-        double rotateCenterX = 0, rotateCenterY = 0, rotateAngle = 0;
-        rotateCenterX = paint.GetRotateCenterX() + rect.GetX() - invalidatedArea.GetX();
-        rotateCenterY = paint.GetRotateCenterY() + rect.GetY() - invalidatedArea.GetY();
-        if (paint.GetRotateAngle() != 0) {
-            rotateAngle = paint.GetRotateAngle();
-        }
+
         if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
+            double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
+            transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
+            transFormCenterY = paint.GetTransformCenterY() + rect.GetY() - invalidatedArea.GetY();
+            if (paint.GetRotateAngle() != 0) {
+                rotateAngle = paint.GetRotateAngle();
+            }
             m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
             m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
             m_graphics->SetShadowColor(paint.GetShadowColor().red, paint.GetShadowColor().green,
                                        paint.GetShadowColor().blue, paint.GetShadowColor().alpha);
-            m_graphics->DrawShadow(rotateCenterX, rotateCenterY, rotateAngle, paint.GetScaleX(), paint.GetScaleY());
+            m_graphics->DrawShadow(transFormCenterX, transFormCenterY, rotateAngle, paint.GetScaleX(),
+                                   paint.GetScaleY(), paint.GetTransLateX(),
+                                   paint.GetTransLateY());
         }
 
-        if (paint.GetRotateAngle() != 0) {
-            m_graphics->Rotate(rotateCenterX, rotateCenterY, rotateAngle);
-        }
-        if (paint.GetScaleX() != 0 || paint.GetScaleY() != 0) {
-            m_graphics->Scale(rotateCenterX, rotateCenterY, paint.GetScaleX(), paint.GetScaleY());
-        }
+        StartTransform(rect, invalidatedArea, paint);
         setGradient(*m_graphics, paint, rect, style); // 填充颜色
         m_graphics->DrawPath(BaseGfxExtendEngine::FILLANDSTROKE);
     }

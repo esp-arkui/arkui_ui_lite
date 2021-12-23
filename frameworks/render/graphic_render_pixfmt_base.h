@@ -39,15 +39,6 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-    struct PixfmtGrayTag {
-    };
-
-    struct PixfmtRgbTag {
-    };
-
-    struct PixfmtRgbaTag {
-    };
-
     /**
      *
      * @brief Defines Blenderbase.
@@ -124,7 +115,7 @@ namespace OHOS {
         static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
         {
             return Get(pColor[OrderType::RED], pColor[OrderType::GREEN],
-                pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
+                       pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
         }
     };
 } // namespace OHOS

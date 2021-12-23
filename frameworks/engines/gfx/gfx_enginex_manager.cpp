@@ -25,8 +25,8 @@ namespace OHOS {
         }
     }
 
-    BaseGfxExtendEngine::BaseGfxExtendEngine()
-        : m_rbuf(),
+    BaseGfxExtendEngine::BaseGfxExtendEngine() :
+        m_rbuf(),
         m_scanline(),
         m_rasterizer(),
         m_pixFormat(m_rbuf),
@@ -89,8 +89,8 @@ namespace OHOS {
         SetLineJoin(m_lineJoin);
     }
 
-    BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine)
-        : m_scanline(),
+    BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine) :
+        m_scanline(),
         m_rasterizer(),
         m_fillGradientMatrix(baseGfxExtendEngine.m_fillGradientMatrix),
         m_lineGradientMatrix(baseGfxExtendEngine.m_lineGradientMatrix),
@@ -587,7 +587,7 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias)
+                                             double dstX1, double dstY1, double dstX2, double dstY2, bool isComposite)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -596,11 +596,11 @@ namespace OHOS {
         LineTo(dstX1, dstY2);
         ClosePolygon();
         double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isComposite);
     }
 
     void BaseGfxExtendEngine::TransformImage(
-        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isAntiAlias)
+        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isComposite)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -610,11 +610,11 @@ namespace OHOS {
         ClosePolygon();
         double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
 
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
     }
 
     void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             const double* parallelogram, bool isAntiAlias)
+                                             const double* parallelogram, bool isComposite)
     {
         ResetPath();
         MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
@@ -623,10 +623,10 @@ namespace OHOS {
         LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
                parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isAntiAlias);
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isComposite);
     }
 
-    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram, bool isAntiAlias)
+    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram, bool isComposite)
     {
         ResetPath();
         MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
@@ -636,7 +636,7 @@ namespace OHOS {
                parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
 
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isAntiAlias);
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
     }
 
     void BaseGfxExtendEngine::DrawShadow(double centerX = 0,
@@ -647,19 +647,20 @@ namespace OHOS {
     {
         m_rasterizer.Reset();
         OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY,
-            m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
+                                    m_transform.shearX, m_transform.scaleY, m_transform.translateX, m_transform.translateY);
         PathTransform shadow_trans(m_convCurve, transform);
         transform.Translate(shadowOffsetX_, shadowOffsetY_);
+        transform *= OHOS::TransAffineTranslation(-x, -y);
         if (angle != 0) {
-            transform *= OHOS::TransAffineTranslation(-centerX, -centerY);
             transform *= OHOS::TransAffineRotation(angle * Pi() / OHOS::BOXER);
-            transform *= OHOS::TransAffineTranslation(centerX, centerY);
         }
         if (scaleX != 0 || scaleY != 0) {
-            transform *= OHOS::TransAffineTranslation(-centerX, -centerY);
             transform *= OHOS::TransAffineScaling(scaleX, scaleY);
-            transform *= OHOS::TransAffineTranslation(centerX, centerY);
         }
+        if (transLateX != 0 || transLateY != 0) {
+            transform *= OHOS::TransAffineTranslation(transLateX, transLateY);
+        }
+        transform *= OHOS::TransAffineTranslation(x, y);
         m_rasterizer.AddPath(shadow_trans);
         OHOS::RenderScanlinesAntiAliasSolid(m_rasterizer, m_scanline, m_renBase, shadowColor_);
         if (shadowBlurRadius_ != 0) {
@@ -676,39 +677,15 @@ namespace OHOS {
         }
         m_rasterizer.Reset();
     }
-    void BaseGfxExtendEngine::DrawCircleShadow(int16_t cx,
-                                               int16_t cy,
-                                               int16_t rx,
-                                               int16_t ry,
-                                               double centerX = 0,
-                                               double centerY = 0,
-                                               double angle = 0,
-                                               double scaleX = 0,
-                                               double scaleY = 0)
+    void BaseGfxExtendEngine::DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry,
+                                         double x, double y, double angle, double scaleX, double scaleY,
+                                         double transLateX, double transLateY)
     {
         m_path.RemoveAll();
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
         m_path.ClosePolygon();
-        DrawShadow(centerX, centerY, angle, scaleX, scaleY);
-    }
-    void BaseGfxExtendEngine::DrawRectShadow(int16_t x1,
-                                             int16_t y1,
-                                             int16_t x2,
-                                             int16_t y2,
-                                             double centerX = 0,
-                                             double centerY = 0,
-                                             double angle = 0,
-                                             double scaleX = 0,
-                                             double scaleY = 0)
-    {
-        m_path.RemoveAll();
-        m_path.MoveTo(x1, y1);
-        m_path.LineTo(x2, y1);
-        m_path.LineTo(x2, y2);
-        m_path.LineTo(x1, y2);
-        m_path.ClosePolygon();
-        DrawShadow(centerX, centerY, angle, scaleX, scaleY);
+        DrawShadow(x, y, angle, scaleX, scaleY, transLateX, transLateY);
     }
     void BaseGfxExtendEngine::Scale(double x, double y, double scaleX, double scaleY)
     {
@@ -835,7 +812,7 @@ namespace OHOS {
 
         template <class BaseRenderer, class SolidRenderer, class Rasterizer, class Scanline>
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase,
-            SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
+                           SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
             using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -893,7 +870,7 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::RenderImage(const Image& img, int x1, int y1, int x2, int y2,
-                                          const double* parl, bool isAntiAlias)
+                                          const double* parl, bool isComposite)
     {
         OHOS::TransAffine mtx((double)x1,
                               (double)y1,
@@ -910,13 +887,13 @@ namespace OHOS {
         Interpolator interpolator(mtx);
 
         if (m_blendMode == BLENDALPHA) {
-            if (isAntiAlias) {
+            if (isComposite) {
                 BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBasePre, interpolator);
             } else {
                 BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBase, interpolator);
             }
         } else {
-            if (isAntiAlias) {
+            if (isComposite) {
                 BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseCompPre, interpolator);
             } else {
                 BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseComp, interpolator);
@@ -925,7 +902,8 @@ namespace OHOS {
     }
 
     struct BaseGfxExtendEngineRasterizerGamma {
-        BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) : m_alpha(alpha), m_gamma(gamma)
+        BaseGfxExtendEngineRasterizerGamma(double alpha, double gamma) :
+            m_alpha(alpha), m_gamma(gamma)
         {}
 
         double operator()(double x) const
@@ -1016,45 +994,26 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX, double dstY, unsigned alpha, bool isAntiAlias)
+                                             double dstX, double dstY, unsigned alpha, bool isComposite)
     {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
         Rect r(imgX1, imgY1, imgX2, imgY2);
-        if (m_blendMode == BLENDALPHA) {
-            if (isAntiAlias) {
-                m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            } else {
-                m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            }
+        if (isComposite) {
+            m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         } else {
-            if (isAntiAlias) {
-                this->m_renBaseCompPre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            } else {
-                this->m_renBaseComp.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-            }
+            m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         }
     }
 
-    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isAntiAlias)
+    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isComposite)
     {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
-        if (isAntiAlias) {
+        if (isComposite) {
             m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        }
-        if (m_blendMode == BLENDALPHA) {
-            if (isAntiAlias) {
-                m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            } else {
-                m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            }
         } else {
-            if (isAntiAlias) {
-                m_renBaseCompPre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            } else {
-                m_renBaseComp.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-            }
+            m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
         }
     }
 

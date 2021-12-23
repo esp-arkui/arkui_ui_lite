@@ -39,6 +39,7 @@
 #include <fcntl.h>
 
 #include <memory>
+#include <stack>
 
 #include "animator/gif_canvas_image_animator.h"
 #include "common/image.h"
@@ -47,7 +48,6 @@
 #include "engines/gfx/gfx_enginex_manager.h"
 #include "gfx_utils/file.h"
 #include "gfx_utils/list.h"
-#include "stack"
 #include "ui_image_view.h"
 namespace OHOS {
     /**
@@ -170,10 +170,10 @@ namespace OHOS {
             opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
-            shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), rotateCenterX(0),
-            rotateCenterY(0), rotateAngle(0), scaleX(0), scaleY(0)
+            shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
+            transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
         {
-            m_graphics = std::make_shared<BaseGfxExtendEngine>();
+            m_graphics = nullptr;
             m_transform.Reset();
         }
         Paint(const Paint& paint)
@@ -224,11 +224,13 @@ namespace OHOS {
             blendMode = paint.blendMode;
             m_transform = paint.m_transform;
 
-            rotateCenterX = paint.rotateCenterX;
-            rotateCenterY = paint.rotateCenterY;
+            transformCenterX = paint.transformCenterX;
+            transformCenterY = paint.transformCenterY;
             rotateAngle = paint.rotateAngle;
             scaleX = paint.scaleX;
             scaleY = paint.scaleY;
+            transLateX = paint.transLateX;
+            transLateY = paint.transLateY;
             if (isDrawDash && ndashes > 0) {
                 dashArray = new float[ndashes];
                 if (dashArray) {
@@ -501,7 +503,7 @@ namespace OHOS {
          */
         void SetLineDashOffset(float dashOffset)
         {
-            m_graphics->SetLineDashOffset(dashOffset);
+            this->dashOffset = dashOffset; //dash 点偏移量
         }
         /**
          * @brief 获取点划线的偏移量.
@@ -510,12 +512,9 @@ namespace OHOS {
          */
         float GetLineDashOffset() const
         {
-            return m_graphics->GetLineDashOffset();
+            return dashOffset;
         }
-        BaseGfxExtendEngine* GetDrawGraphicsContext() const
-        {
-            return m_graphics.get();
-        }
+
         /**
          * @brief 设置点划线的数组和数量.
          * @param lineDashs 表示点划线数组,ndash 表示点划线数量
@@ -670,66 +669,56 @@ namespace OHOS {
             shadowColor = color;
         }
 
-        void SetRotateCenterX(double x)
+        void SetTransformCenterX(double x)
         {
-            rotateCenterX = x;
+            transformCenterX = x;
         }
 
-        double GetRotateCenterX() const
+        double GetTransformCenterX() const
         {
-            return rotateCenterX;
+            return transformCenterX;
         }
 
-        void SetRotateCenterY(double y)
+        void SetTransformCenterY(double y)
         {
-            rotateCenterY = y;
+            transformCenterY = y;
         }
 
-        double GetRotateCenterY() const
+        double GetTransformCenterY() const
         {
-            return rotateCenterY;
+            return transformCenterY;
         }
 
-        void SetRotateCenter(double x, double y)
+        void SetTransformCenter(double x, double y)
         {
-            rotateCenterX = x;
-            rotateCenterY = y;
-        }
-
-        void SetRotateAngle(double angle)
-        {
-            rotateAngle = angle;
+            transformCenterX = x;
+            transformCenterY = y;
         }
 
         double GetRotateAngle() const
         {
             return rotateAngle;
         }
-
-        void SetScaleX(double x)
-        {
-            scaleX = x;
-        }
-
         double GetScaleX() const
         {
             return scaleX;
-        }
-
-        void SetScaleY(double y)
-        {
-            scaleY = y;
         }
 
         double GetScaleY() const
         {
             return scaleY;
         }
-        void SetScale(double x, double y)
+
+        double GetTransLateX() const
         {
-            scaleX = x;
-            scaleY = y;
+            return transLateX;
         }
+
+        double GetTransLateY() const
+        {
+            return transLateY;
+        }
+
         /*
          * 设置图元混合渲染模式
          * @param BaseGfxExtendEngine::BlendMode 表示图元混合渲染模式
@@ -747,7 +736,7 @@ namespace OHOS {
          * 设置图元用图案填充样式
          * @param img 表示填充的图案，text表示填充样式
          */
-        void createPattern(const char* img, const char* text)
+        void CreatePattern(const char* img, const char* text)
         {
             image = img;
             patternRepeat = NO_REPEAT;
@@ -780,7 +769,7 @@ namespace OHOS {
          * 设置图元填充样式
          * @param GradientControl表示渐变控制器
          */
-        void fillStyle(GradientControl& ctrl)
+        void FillStyle(GradientControl& ctrl)
         {
             gradientControl = ctrl;
         }
@@ -788,27 +777,44 @@ namespace OHOS {
          * 设置图元填充样式颜色
          * @param ColorType表示颜色值类型
          */
-        void fillStyle(ColorType color)
+        void FillStyle(ColorType color)
         {
             SetFillColor(color);
         }
 
         /* 缩放当前绘图至更大或更小 */
-        void Scale(float x, float y)
+        void Scale(float scaleX, float scaleY)
         {
-            m_transform.Scale(x, y);
+            this->scaleX += scaleX;
+            this->scaleY += scaleY;
+            m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
+        }
+        /* 重新设置矩阵，形成单位阵 */
+        void ResetTransForm()
+        {
+            rotateAngle = 0;
+            this->scaleX = 0;
+            this->scaleY = 0;
+            transLateX = 0;
+            transLateY = 0;
+            transformCenterX = 0;
+            transformCenterY = 0;
+            m_transform.Reset();
         }
 
         /* 旋转当前绘图 */
         void Rotate(float angle)
         {
-            m_transform.Rotate(BaseGfxExtendEngine::Deg2Rad(angle));
+            rotateAngle += angle;
+            m_transform *= OHOS::TransAffineRotation(BaseGfxExtendEngine::Deg2Rad(angle));
         }
 
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)
         {
-            m_transform.Translate(x, y);
+            transLateX += x;
+            transLateY += y;
+            m_transform *= OHOS::TransAffineTranslation(x, y);
         }
 
         /* 替换绘图的当前转换矩阵 */
@@ -840,6 +846,15 @@ namespace OHOS {
             return gradientControl;
         }
 
+        BaseGfxExtendEngine* GetDrawGraphicsContext() const
+        {
+            return m_graphics;
+        }
+        void SetDrawGraphicsContext(BaseGfxExtendEngine* m_graphics)
+        {
+            this->m_graphics = m_graphics;
+        }
+
     private:
         PaintStyle style_;
         ColorType fillColor_;
@@ -853,22 +868,23 @@ namespace OHOS {
         bool isDrawDash;
         float* dashArray; //dash 点数组
         unsigned int ndashes;
-        std::shared_ptr<BaseGfxExtendEngine> m_graphics;
         float globalAlpha;                        //设置图元全局alpha
         double shadowBlurRadius;                  //设置阴影模糊半径
         double shadowOffsetX;                     //设置阴影横坐标偏移量
         double shadowOffsetY;                     //设置阴影纵坐标偏移量
         ColorType shadowColor;                    //设置阴影色彩
         BaseGfxExtendEngine::BlendMode blendMode; //设置多图元混合渲染模式
-
+        BaseGfxExtendEngine* m_graphics;
         /* 用于操作变换矩阵 */
         OHOS::TransAffine m_transform;
         GradientControl gradientControl;
-        double rotateCenterX;
-        double rotateCenterY;
+        double transformCenterX;
+        double transformCenterY;
         double rotateAngle;
         double scaleX;
         double scaleY;
+        double transLateX;
+        double transLateY;
     };
 
     /**
@@ -887,7 +903,8 @@ namespace OHOS {
          */
         UICanvas() :
             startPoint_({0, 0}), path_(nullptr)
-        {}
+        {
+        }
 
         /**
          * @brief A destructor used to delete the <b>UICanvas</b> instance.
@@ -1306,6 +1323,20 @@ namespace OHOS {
             paint.Scale(x, y);
         }
 
+        double GetTransformCenterX(const Paint& paint) const
+        {
+            return paint.GetTransformCenterX();
+        }
+
+        double GetTransformCenterY(const Paint& paint) const
+        {
+            return paint.GetTransformCenterY();
+        }
+
+        void SetTransformCenter(double x, double y, Paint& paint)
+        {
+            paint.SetTransformCenter(x, y);
+        }
         /* 旋转当前绘图 */
         void SetRotate(float angle, Paint& paint)
         {
@@ -1317,7 +1348,11 @@ namespace OHOS {
         {
             paint.Translate(x, y);
         }
-
+        /* 重新设置矩阵，形成单位阵 */
+        void ResetTransForm(Paint& paint)
+        {
+            paint.ResetTransForm();
+        }
         /* 替换绘图的当前转换矩阵 */
         void Transform(float sx, float shy, float shx, float sy, float tx, float ty, Paint& paint)
         {
@@ -1334,6 +1369,31 @@ namespace OHOS {
         void SetTransform(float sx, float shy, float shx, float sy, float tx, float ty, Paint& paint)
         {
             paint.SetTransform(sx, shy, shx, sy, tx, ty);
+        }
+        /**
+         * @brief 设置点划线的偏移量.
+         * @see GetLineDashOffset
+         * @since 1.0
+         * @version 1.0
+         */
+        void SetLineDashOffset(float dashOffset, Paint& paint)
+        {
+            //m_graphics->SetLineDashOffset(dashOffset);
+            paint.SetLineDashOffset(dashOffset);
+        }
+        /**
+         * @brief 获取点划线的偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
+        float GetLineDashOffset(const Paint& paint) const
+        {
+            //return m_graphics->GetLineDashOffset();
+            return paint.GetLineDashOffset();
+        }
+        void SetDrawGraphicsContext(Paint& paint)
+        {
+            paint.SetDrawGraphicsContext(&this->m_graphics);
         }
         /* 保存历史状态 */
         void Save(Paint& paint)
@@ -1359,7 +1419,7 @@ namespace OHOS {
 
     protected:
         bool InitDrawEnvironment(const BufferInfo& gfxDstBuffer, const Rect& fillArea, const Rect& worldRect,
-                                 const Rect& screenRect, const Paint& paint);
+                                 const Rect& screenRect);
 
         constexpr static uint8_t MAX_CURVE_WIDTH = 3;
 
@@ -1453,6 +1513,7 @@ namespace OHOS {
         List<DrawCmd> drawCmdList_;
         // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
+        BaseGfxExtendEngine m_graphics;
         static void DeleteTextParam(void* param)
         {
             TextParam* textParam = static_cast<TextParam*>(param);
