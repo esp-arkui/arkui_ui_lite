@@ -145,6 +145,8 @@ public:
      */
     bool SetSrc(const ImageInfo* src);
 
+    bool PreParse(const char* src);
+
     void DrawImage(BufferInfo& gfxDstBuffer,
                    const Rect& coords,
                    const Rect& mask,
@@ -156,6 +158,7 @@ protected:
     const char* path_;
 
 private:
+
 #if ENABLE_JPEG_AND_PNG
     enum ImageType {
         IMG_PNG,
@@ -163,7 +166,6 @@ private:
         IMG_GIF,
         IMG_UNKNOWN,
     };
-
     const static uint8_t IMG_BYTES_TO_CHECK = 4; // 4: check 4 bytes of image file
 #endif
 
