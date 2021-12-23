@@ -639,11 +639,9 @@ namespace OHOS {
         RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
     }
 
-    void BaseGfxExtendEngine::DrawShadow(double centerX = 0,
-                                         double centerY = 0,
-                                         double angle = 0,
-                                         double scaleX = 0,
-                                         double scaleY = 0)
+    void BaseGfxExtendEngine::DrawShadow(
+            double x, double y, double angle, double scaleX, double scaleY,
+            double transLateX, double transLateY)
     {
         m_rasterizer.Reset();
         OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY,

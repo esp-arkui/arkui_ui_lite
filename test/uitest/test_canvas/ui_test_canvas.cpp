@@ -346,7 +346,6 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Red());
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         //paint.SetFillColor(Color::Green());
-        paint.fillStyle(Color::White());
         paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
         paint.SetShadowOffsetX(100);
