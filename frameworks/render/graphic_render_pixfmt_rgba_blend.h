@@ -1515,7 +1515,7 @@ namespace OHOS {
          * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
          *        len 要混合的长度 cover 覆盖率
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         template <class SrcPixelFormatRenderer>
         void BlendFromColor(const SrcPixelFormatRenderer& from,

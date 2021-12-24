@@ -54,13 +54,13 @@ namespace OHOS {
     };
 
 #ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
-    typedef rgba32 ColorTyping;
+    using ColorTyping = rgba32;
     using BlenderRgba32 = RgbaBlender<Rgba32, OrderRgba>;
     using BlenderArgb32 = RgbaBlender<Rgba32, OrderArgb>;
     using BlenderAbgr32 = RgbaBlender<Rgba32, OrderAbgr>;
     using BlenderBgra32 = RgbaBlender<Rgba32, OrderBgra>;
 #else
-    typedef Rgba8 ColorTyping;
+    using ColorTyping = Rgba8;
     using BlenderRgba32 = RgbaBlender<Rgba8, OrderRgba>;
     using BlenderArgb32 = RgbaBlender<Rgba8, OrderArgb>;
     using BlenderAbgr32 = RgbaBlender<Rgba8, OrderAbgr>;
