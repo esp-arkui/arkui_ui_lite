@@ -39,35 +39,12 @@
 #include <cstring>
 
 #include "gfx_utils/heap_base.h"
+#include "gfx_utils/graphic_math.h"
 #include "render/graphic_render_buffer.h"
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_pixfmt_rgba_blend.h"
 #include "render/graphic_render_pixfmt_rgba_multi.h"
 namespace OHOS {
-    /**
-     * @brief 求两个数的最小值.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class T>
-    inline T SdMin(T val1, T val2)
-    {
-        return (val1 < val2) ? val1 : val2;
-    }
-
-    /**
-     * @brief 求两个数的最大值.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class T>
-    inline T SdMax(T val1, T val2)
-    {
-        return (val1 > val2) ? val1 : val2;
-    }
-
     template <class ColorT, class Order>
     struct CompOpRgbaSrc : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
@@ -117,9 +94,9 @@ namespace OHOS {
             if (srcColor.alphaValue > 0) {
                 Rgba destColor = GetBlendColor(pColor);
                 destColor.alphaValue += srcColor.alphaValue - srcColor.alphaValue * destColor.alphaValue;
-                destColor.redValue = SdMax(destColor.redValue - srcColor.redValue, 0.0f);
-                destColor.greenValue = SdMax(destColor.greenValue - srcColor.greenValue, 0.0f);
-                destColor.blueValue = SdMax(destColor.blueValue - srcColor.blueValue, 0.0f);
+                destColor.redValue = MATH_MAX(destColor.redValue - srcColor.redValue, 0.0f);
+                destColor.greenValue = MATH_MAX(destColor.greenValue - srcColor.greenValue, 0.0f);
+                destColor.blueValue = MATH_MAX(destColor.blueValue - srcColor.blueValue, 0.0f);
                 SetBlendColor(pColor, Clip(destColor));
             }
         }
@@ -212,11 +189,11 @@ namespace OHOS {
                 Rgba d = GetBlendColor(pColor);
                 float d1a = 1 - d.alphaValue;
                 float s1a = 1 - s.alphaValue;
-                d.redValue = SdMin(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
+                d.redValue = MATH_MIN(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
                              s.redValue * d1a + d.redValue * s1a;
-                d.greenValue = SdMin(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
+                d.greenValue = MATH_MIN(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
                                s.greenValue * d1a + d.greenValue * s1a;
-                d.blueValue = SdMin(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue) +
+                d.blueValue = MATH_MIN(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue) +
                               s.blueValue * d1a + d.blueValue * s1a;
                 d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
                 SetBlendColor(pColor, Clip(d));
@@ -245,11 +222,11 @@ namespace OHOS {
                 Rgba d = GetBlendColor(pColor);
                 float d1a = 1 - d.alphaValue;
                 float s1a = 1 - s.alphaValue;
-                d.redValue = SdMax(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
+                d.redValue = MATH_MAX(s.redValue * d.alphaValue, d.redValue * s.alphaValue) +
                              s.redValue * d1a + d.redValue * s1a;
-                d.greenValue = SdMax(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
+                d.greenValue = MATH_MAX(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue) +
                                s.greenValue * d1a + d.greenValue * s1a;
-                d.blueValue = SdMax(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue) +
+                d.blueValue = MATH_MAX(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue) +
                               s.blueValue * d1a + d.blueValue * s1a;
                 d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
                 SetBlendColor(pColor, Clip(d));
@@ -268,7 +245,7 @@ namespace OHOS {
             float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
             if (sca < sa) {
-                return sada * SdMin(1.0f, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
+                return sada * MATH_MIN(1.0f, (dca / da) * sa / (sa - sca)) + sca * d1a + dca * s1a;
             }
             if (dca > 0) {
                 return sada + sca * d1a + dca * s1a;
@@ -314,7 +291,7 @@ namespace OHOS {
             float dca, float sca, float da, float sa, float sada, float d1a, float s1a)
         {
             if (sca > 0) {
-                return sada * (1 - SdMin(1.0f, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
+                return sada * (1 - MATH_MIN(1.0f, (1 - dca / da) * sa / sca)) + sca * d1a + dca * s1a;
             }
             if (dca > da) {
                 return sada + dca * s1a;
@@ -453,9 +430,9 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                d.redValue += s.redValue - 2 * SdMin(s.redValue * d.alphaValue, d.redValue * s.alphaValue);
-                d.greenValue += s.greenValue - 2 * SdMin(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue);
-                d.blueValue += s.blueValue - 2 * SdMin(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue);
+                d.redValue += s.redValue - 2 * MATH_MIN(s.redValue * d.alphaValue, d.redValue * s.alphaValue);
+                d.greenValue += s.greenValue - 2 * MATH_MIN(s.greenValue * d.alphaValue, d.greenValue * s.alphaValue);
+                d.blueValue += s.blueValue - 2 * MATH_MIN(s.blueValue * d.alphaValue, d.blueValue * s.alphaValue);
                 d.alphaValue += s.alphaValue - s.alphaValue * d.alphaValue;
                 SetBlendColor(pColor, Clip(d));
             }
@@ -514,10 +491,10 @@ namespace OHOS {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
                 Rgba d = GetBlendColor(pColor);
-                d.alphaValue = SdMin(d.alphaValue + s.alphaValue, 1.0f);
-                d.redValue = SdMin(d.redValue + s.redValue, d.alphaValue);
-                d.greenValue = SdMin(d.greenValue + s.greenValue, d.alphaValue);
-                d.blueValue = SdMin(d.blueValue + s.blueValue, d.alphaValue);
+                d.alphaValue = MATH_MIN(d.alphaValue + s.alphaValue, 1.0f);
+                d.redValue = MATH_MIN(d.redValue + s.redValue, d.alphaValue);
+                d.greenValue = MATH_MIN(d.greenValue + s.greenValue, d.alphaValue);
+                d.blueValue = MATH_MIN(d.blueValue + s.blueValue, d.alphaValue);
                 SetBlendColor(pColor, Clip(d));
             }
         }
