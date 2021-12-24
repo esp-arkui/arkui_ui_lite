@@ -35,6 +35,50 @@ namespace OHOS {
     using CalcType = typename ColorType::CalcType;\
     using PixelType = PixelType<ValueType,OrderType,ColorType>;\
 
+// 把像素附加到绘制区.
+# define ATTACH_FUNCTION_DEF \
+    virtual void Attach(RbufType& rb)\
+    {\
+        rbuf_ = &rb;\
+    }\
+    \
+    template <class PixFmt> \
+    bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)\
+    {\
+        RectI r(x1, y1, x2, y2);\
+        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {\
+            int stride = pixf.Stride();\
+            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),\
+                          (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);\
+            return true;\
+        }\
+        return false;\
+    }\
+
+        //获取每屏幕（绘制缓冲区）大小
+#define GET_SIZE_FRUNCTION_DEF \
+        virtual GRAPHIC_GEOMETRY_INLINE unsigned Width() const\
+        {\
+            return rbuf_->GetWidth();\
+        }\
+\
+        virtual GRAPHIC_GEOMETRY_INLINE unsigned Height() const\
+        {\
+            return rbuf_->GetHeight();\
+        }\
+
+// 指针转为像素类型指针
+#define PIX_PTR_FUNCTION_DEF \
+    virtual GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)\
+    {\
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);\
+    }\
+    \
+    virtual GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const\
+    {\
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);\
+    }\
+
     enum {
         NUM_COMPONENTS = 4,
         PIX_STEP = 4
@@ -315,56 +359,11 @@ namespace OHOS {
         explicit PixfmtAlphaBlendRgba(RbufType& rb) :
             rbuf_(&rb)
         {}
-        /**
-         * @brief 把像素缓冲区附加到混合器.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void Attach(RbufType& rb)
-        {
-            rbuf_ = &rb;
-        }
-        /**
-         * @brief 把像素缓冲区附加到混合器.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class PixFmt>
-        bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
-        {
-            RectI r(x1, y1, x2, y2);
-            if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
-                int stride = pixf.Stride();
-                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),
-                              (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
-                return true;
-            }
-            return false;
-        }
 
-        /**
-         * @brief 返回窗口的宽.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual GRAPHIC_GEOMETRY_INLINE unsigned Width() const
-        {
-            return rbuf_->GetWidth();
-        }
+        ATTACH_FUNCTION_DEF
+        GET_SIZE_FRUNCTION_DEF
 
-        /**
-          * @brief 返回窗口的高.
-          *
-          * @since 1.0
-          * @version 1.0
-          */
-        virtual GRAPHIC_GEOMETRY_INLINE unsigned Height() const
-        {
-            return rbuf_->GetHeight();
-        }
+
 
         /**
           * @brief 返回窗口一行的字节数.
@@ -410,27 +409,7 @@ namespace OHOS {
             return rbuf_->Row(y);
         }
 
-        /**
-          * @brief 指针转为像素类型指针.
-          *
-          * @since 1.0
-          * @version 1.0
-          */
-        virtual GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
-        {
-            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-        }
-
-        /**
-         * @brief 指针转为像素类型指针.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
-        {
-            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-        }
+       PIX_PTR_FUNCTION_DEF
 
         /**
          * @brief 指针转为像素类型指针.
@@ -784,28 +763,9 @@ namespace OHOS {
         explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
             rbuf_(&rb), compOp_(compOp)
         {}
-        void Attach(RbufType& rb)
-        {
-            rbuf_ = &rb;
-        }
-        /**
-         * @brief 把像素附加到绘制区.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class PixFmt>
-        bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)
-        {
-            RectI r(x1, y1, x2, y2);
-            if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {
-                int stride = pixf.Stride();
-                rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),
-                              (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);
-                return true;
-            }
-            return false;
-        }
+
+        ATTACH_FUNCTION_DEF
+        GET_SIZE_FRUNCTION_DEF
 
         void CompOp(unsigned op)
         {
@@ -816,26 +776,7 @@ namespace OHOS {
         {
             return compOp_;
         }
-        /**
-         * @brief 获取每屏幕（绘制缓冲区）宽度.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE unsigned Width() const
-        {
-            return rbuf_->GetWidth();
-        }
-        /**
-         * @brief 获取每屏幕（绘制缓冲区）高度.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE unsigned Height() const
-        {
-            return rbuf_->GetHeight();
-        }
+
         /**
          * @brief 获取每一行的像素占用的内存.
          *
@@ -876,26 +817,9 @@ namespace OHOS {
         {
             return rbuf_->Row(y);
         }
-        /**
-         * @brief 像素坐标转为像素位指针.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
-        {
-            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-        }
-        /**
-         * @brief 像素坐标转为像素位指针.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
-        {
-            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
-        }
+
+        PIX_PTR_FUNCTION_DEF
+
         /**
          * @brief 像素坐标转为像素类型指针.
          *
@@ -916,16 +840,6 @@ namespace OHOS {
         {
             int8u* p = rbuf_->row_ptr(y);
             return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
-        }
-        /**
-         * @brief 像素地址转为像素类型指针.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE static PixelType* PixValuePtr(void* p)
-        {
-            return (PixelType*)p;
         }
 
         /**
