@@ -60,9 +60,9 @@ namespace OHOS {
         typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
         // 根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixFormat;
-        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, OHOS::RenderingBuffer> PixFormatComp; //
         typedef OHOS::PixfmtAlphaBlendRgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
-        typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderCompPre, OHOS::RenderingBuffer> PixFormatCompPre; //
         typedef OHOS::PixfmtBgra32 pixfmt;
 
         // 根据像素处理的模板处理基础渲染器
