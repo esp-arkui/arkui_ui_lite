@@ -80,7 +80,14 @@ public:
     void UIKitCanvasTestDrawPath032();
     void UIKitCanvasTestDrawPath033();
     void UIKitCanvasTestDrawPath034();
+    void RM008UIKitCanvasFillStyleTest001();
+    void RM008UIKitCanvasFillStyleTest002();
+    void RM008UIKitCanvasFillStyleTest003();
+    void RM008UIKitCanvasFillStyleTest004();
     void RM009LineCapDrawPath();
+    void RM009LineJoinDrawPath();
+    void RM009LineDashDrawPath();
+    void RM009StrokeAndClearRectDrawPath();
 
 private:
     const static int16_t GAP = 10;

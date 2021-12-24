@@ -74,10 +74,14 @@ public:
           strokeColor_(Color::White()),
           opacity_(OPA_OPAQUE),
           strokeWidth_(2),
-          changeFlage(false),
-          isDashMode(false),
+          changeFlage_(false),
+          lineJoin_(LineJoinEnum::ROUND_JOIN),
           lineCap_(LineCapEnum::BUTT_CAP),
-          lineJoin_(LineJoinEnum::ROUND_JOIN)
+          isDashMode_(false),
+          dashOffset_(0),
+          dashArray_(nullptr),
+          ndashes_(0),
+          miterLimit_(0)
     {}
 
 
@@ -117,6 +121,32 @@ public:
         opacity_ = paint.opacity_;
         lineCap_ = paint.lineCap_;
         lineJoin_= paint.lineJoin_;
+        isDashMode_ = paint.isDashMode_;
+        dashOffset_ = paint.dashOffset_;
+        dashArray_ = paint.dashArray_;
+        ndashes_ = paint.ndashes_;
+
+        if (isDashMode_ && ndashes_ > 0) {
+            dashArray_ = new float[ndashes_];
+            if (dashArray_) {
+                if (memset_s(dashArray_, ndashes_ * sizeof(float), 0, ndashes_ * sizeof(float)) != EOF) {
+                }
+                for (unsigned int i = 0; i < ndashes_; i++) {
+                    dashArray_[i] = paint.dashArray_[i];
+                }
+            } else {
+                ndashes_ = 0;
+                dashOffset_ = 0;
+                isDashMode_ = false;
+            }
+        } else {
+            dashArray_ = nullptr;
+        }
+        miterLimit_ = paint.ndashes_;
+        linearGradientPoint_ = paint.linearGradientPoint_;
+        radialGradientPoint_ = paint.radialGradientPoint_;
+        stopAndColors_ = paint.getStopAndColor();
+        gradientflag = paint.gradientflag;
     }
 
 
@@ -143,7 +173,51 @@ public:
         FILL_STYLE,
         /** Stroke and fill */
         STROKE_FILL_STYLE,
+        /** 渐变 */
+        GRADIENT,
+        /** 图像模式 */
+        PATTERN
     };
+
+
+    struct LinearGradientPoint {
+        /**  开始点坐标x  */
+        double x0;
+        /**  开始点坐标y  */
+        double y0;
+        /**  结束点坐标x  */
+        double x1;
+        /**  结束点坐标y  */
+        double y1;
+    };
+
+    struct RadialGradientPoint {
+        /**  开始圆点坐标x  */
+        double x0;
+        /**  开始圆点坐标y  */
+        double y0;
+        /**  开始圆半径r0  */
+        double r0;
+        /**  结束圆点坐标x  */
+        double x1;
+        /**  结束圆点坐标y  */
+        double y1;
+        /**  开始圆半径r0  */
+        double r1;
+    };
+
+    struct StopAndColor {
+        /** 介于 0.0 与 1.0 之间的值，表示渐变中开始与结束之间的位置。  */
+        double stop;
+        /** 在结束位置显示的颜色值 */
+        ColorType color;
+    };
+    enum Gradient {
+        Linear,
+        Radial
+    };
+
+
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -156,6 +230,18 @@ public:
     void SetStyle(PaintStyle style)
     {
         style_ = style;
+    }
+
+    void StrokeStyle(ColorType color){
+        SetStrokeColor(color);
+    }
+
+    void FillStyle(ColorType color){
+        SetFillColor(color);
+    }
+
+    void StrokeStyle(PaintStyle style){
+        SetStyle(style);
     }
 
     /**
@@ -280,6 +366,11 @@ public:
         return opacity_;
     }
 
+    bool GetChangeFlag() const
+    {
+        return changeFlage_;
+    }
+
     /**
      * @brief 设置笔帽类型.
      * @see GetLineCap
@@ -288,7 +379,7 @@ public:
      */
     void SetLineCap(LineCapEnum lineCap){
         lineCap_ = lineCap;
-        changeFlage = true;
+        changeFlage_ = true;
     }
     /**
      * @brief 获取笔帽类型.
@@ -311,7 +402,23 @@ public:
     void SetLineJoin(LineJoinEnum lineJoin)
     {
         lineJoin_=lineJoin;
-        changeFlage = true;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief 设置路径连接处的尖角的间距限制.
+     * @see GetMiterLimit
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetMiterLimit(double miterLimit)
+    {
+        miterLimit_ = miterLimit;
+        changeFlage_ = true;
+    }
+
+    double GetMiterLimit() const
+    {
+        return miterLimit_;
     }
     /**
      * @brief 获取笔的路径连接处的风格样式.
@@ -324,16 +431,165 @@ public:
         return lineJoin_;
     }
 
+    bool IsLineDash() const
+    {
+        return isDashMode_;
+    }
+
+    /**
+     * @brief 设置点划线的数组和数量.
+     * @param lineDashs 表示点划线数组,ndash 表示点划线数量
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetLineDash(float* lineDashs, const unsigned int ndash)
+    {
+        if (ndash < 0) {
+            GRAPHIC_LOGE("SetLineDash fail,because ndash < =0");
+            return;
+        }
+        ClearLineDash();
+        if (lineDashs == nullptr || ndash == 0) {
+            return;
+        }
+        ndashes_ = ndash;
+        isDashMode_ = true;
+        dashArray_ = new float[ndashes_];
+        if (dashArray_) {
+            if (memset_s(dashArray_, ndashes_ * sizeof(float), 0, ndashes_ * sizeof(float)) != EOF) {
+            }
+            for (unsigned int iIndex = 0; iIndex < ndashes_; iIndex++) {
+                dashArray_[iIndex] = lineDashs[iIndex];
+            }
+        } else {
+            ndashes_ = 0;
+            dashOffset_ = 0;
+            isDashMode_ = false;
+        }
+        changeFlage_ = true;
+    }
+
+    /**
+     * @brief 获取dash数组
+     * @return
+     */
+    float* GetLineDash() const
+    {
+        return dashArray_;
+    }
+
+    float GetLineDashOffset() const
+    {
+        return dashOffset_;
+    }
+
+    /**
+     * @brief 设置dash模式起点的偏移量
+     * @see GetLineDashOffset
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetLineDashOffset(float offset)
+    {
+        dashOffset_ = offset; //dash 点偏移量
+        changeFlage_ = true;
+        isDashMode_ = true;
+    }
+
+    /**
+     * @brief 获取dash数组长度
+     * @return
+     */
+    unsigned int GetLineDashCount() const
+    {
+        return ndashes_;
+    }
+
+    /**
+     * @brief 清空点划线的，改用实现绘制.
+     * @since 1.0
+     * @version 1.0
+     */
+    void ClearLineDash(void)
+    {
+        dashOffset_ = 0;
+        ndashes_ = 0;
+        isDashMode_ = false;
+        if (dashArray_ != nullptr) {
+            delete[] dashArray_;
+            dashArray_ = nullptr;
+        }
+    }
+
+
+    void createLinearGradient(double startx, double starty, double endx, double endy)
+    {
+        gradientflag = Linear;
+        linearGradientPoint_.x0 = startx;
+        linearGradientPoint_.y0 = starty;
+        linearGradientPoint_.x1 = endx;
+        linearGradientPoint_.y1 = endy;
+    }
+
+    void addColorStop(double stop, ColorType color)
+    {
+        StopAndColor stopAndColor;
+        stopAndColor.stop = stop;
+        stopAndColor.color = color;
+        stopAndColors_.PushBack(stopAndColor);
+    }
+
+    void createRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y,
+                              double end_r)
+    {
+        gradientflag = Radial;
+        radialGradientPoint_.x0 = start_x;
+        radialGradientPoint_.y0 = start_y;
+        radialGradientPoint_.r0 = start_r;
+        radialGradientPoint_.x1 = end_x;
+        radialGradientPoint_.y1 = end_y;
+        radialGradientPoint_.r1 = end_r;
+    }
+
+    List<StopAndColor> getStopAndColor() const
+    {
+        return stopAndColors_;
+    }
+
+    LinearGradientPoint GetLinearGradientPoint() const
+    {
+        return linearGradientPoint_;
+    }
+
+    RadialGradientPoint GetRadialGradientPoint() const
+    {
+        return radialGradientPoint_;
+    }
+
+    Gradient GetGradient() const
+    {
+        return gradientflag;
+    }
+
 private:
     PaintStyle style_;
     ColorType fillColor_;
     ColorType strokeColor_;
     uint8_t opacity_;
     uint16_t strokeWidth_;
-    bool changeFlage;
-    bool isDashMode;
+    bool changeFlage_;
     LineJoinEnum lineJoin_;
     LineCapEnum lineCap_;
+    bool isDashMode_;//是否是dash模式的线段
+    float dashOffset_;//dash 点偏移量
+    float* dashArray_;//dash 点数组
+    unsigned int ndashes_;//dashArray的长度
+    double miterLimit_; //设置路径连接处的尖角的间距限制
+    LinearGradientPoint linearGradientPoint_;
+    RadialGradientPoint radialGradientPoint_;
+    List<StopAndColor> stopAndColors_;
+    Gradient gradientflag;
+
 };
 
 /**
@@ -475,6 +731,25 @@ public:
      * @version 1.0
      */
     void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
+    /**
+     * @brief 绘制矩形路径无填充
+     * @param startPoint 起点
+     * @param height 高度
+     * @param width 宽度
+     * @param paint 画笔
+     */
+    void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
+    /**
+     * @brief 清除矩形内的像素
+     * @param startPoint 起点
+     * @param height 高度
+     * @param width 宽度
+     * @param paint 画笔
+     */
+    void ClearRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
 
     /**
      * @brief Draws a circle.
@@ -639,6 +914,12 @@ public:
      * @version 5.0
      */
     void DrawPath(const Paint& paint);
+
+    /**
+     * @brief 填充多边形路径
+     * @param paint
+     */
+    void FillPath(const Paint& paint);
 
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 protected:
@@ -810,6 +1091,48 @@ protected:
 
     static void InitRendAndTransform(BufferInfo& gfxDstBuffer,RenderingBuffer& renderBuffer, const Rect& rect,
                                      TransAffine& transform, const Style& style);
+
+    static void DoFillPath(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style);
+
+    static void DoRender(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style,
+                           const bool& isStroke);
+
+
+
+
+    /**
+     * 组装参数设置线宽，LineCap，LineJoin
+     */
+    template<class LineStyle>
+    static void LineStyleCalc(DepictStroke<LineStyle> & strokeLineStyle, const Paint& paint){
+        strokeLineStyle.Width(paint.GetStrokeWidth());//线条样式相关
+        strokeLineStyle.LineCap(paint.GetLineCap());
+        strokeLineStyle.LineJoin(paint.GetLineJoin());
+        if(paint.GetMiterLimit() > 0){
+            strokeLineStyle.MiterLimit(paint.GetMiterLimit());
+        }
+    };
+
+    /**
+     * 设置linedash样式
+     */
+    template<class LineDashStyle>
+    static void LineDashStyleCalc(DepictDash<LineDashStyle> & dashStyle, const Paint& paint){
+        for (unsigned int i = 0; i < paint.GetLineDashCount(); i += TWO_STEP) {
+            dashStyle.AddDash(paint.GetLineDash()[i], paint.GetLineDash()[i + 1]);
+        }
+        dashStyle.DashStart(paint.GetLineDashOffset());
+    };
 
 };
 } // namespace OHOS

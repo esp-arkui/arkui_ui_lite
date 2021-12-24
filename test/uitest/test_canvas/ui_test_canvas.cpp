@@ -39,6 +39,12 @@ void UITestCanvas::TearDown()
 const UIView* UITestCanvas::GetTestView()
 {
     RM009LineCapDrawPath();
+    RM009LineJoinDrawPath();
+    RM009LineDashDrawPath();
+    RM009StrokeAndClearRectDrawPath();
+    RM008UIKitCanvasFillStyleTest001();
+    RM008UIKitCanvasFillStyleTest002();
+    RM008UIKitCanvasFillStyleTest003();
 //    UIKitCanvasTestDrawLine001();
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
@@ -935,7 +941,7 @@ void UITestCanvas::RM009LineCapDrawPath(){
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetStrokeWidth(10);
+    paint.SetStrokeWidth(12);
     paint.SetStrokeColor(Color::Green());
     paint.SetLineCap(LineCapEnum::BUTT_CAP);
 
@@ -990,6 +996,257 @@ void UITestCanvas::RM009LineCapDrawPath(){
     canvas->LineTo({300, 100});
     canvas->DrawPath(paint);
 }
+void UITestCanvas::RM009LineJoinDrawPath(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM009LineJoin_圆角_斜角_尖角_限制尖角长度");
+    UICanvas* canvas = CreateCanvas();
 
+    Paint paint;
+    paint.SetStrokeWidth(10);
+    paint.SetStrokeColor(Color::Green());
+    paint.SetLineJoin(LineJoinEnum::ROUND_JOIN);
+
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({40, 40});
+    canvas->LineTo({60, 80});
+    canvas->DrawPath(paint);
+
+    paint.SetLineJoin(LineJoinEnum::BEVEL_JOIN);
+
+    canvas->BeginPath();
+    canvas->MoveTo({100, 20});
+    canvas->LineTo({100, 80});
+    canvas->LineTo({120, 40});
+    canvas->LineTo({140, 80});
+    canvas->DrawPath(paint);
+
+    paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
+    canvas->BeginPath();
+    canvas->MoveTo({180, 20});
+    canvas->LineTo({180, 80});
+    canvas->LineTo({200, 40});
+    canvas->LineTo({220, 80});
+    canvas->DrawPath(paint);
+
+    //TODO::当斜接角度超过MiterLimit时应该转化为平角
+    paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
+    paint.SetMiterLimit(0.1);
+    canvas->BeginPath();
+    canvas->MoveTo({260, 20});
+    canvas->LineTo({260, 80});
+    canvas->LineTo({280, 40});
+    canvas->LineTo({330, 40});
+    canvas->DrawPath(paint);
+}
+void UITestCanvas::RM009LineDashDrawPath(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM009LineDash_虚实线(10,5,5,2)_更改虚实线起点的偏移量(5)");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStrokeWidth(2);
+    paint.SetStrokeColor(Color::Green());
+    float ds2[] = {10, 5.0f, 5.0f, 2.0f};
+    paint.SetLineDash(ds2,4);
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({200, 20});
+    canvas->LineTo({200, 80});
+    canvas->LineTo({20, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.SetLineDashOffset(5);
+    canvas->BeginPath();
+    canvas->MoveTo({20, 120});
+    canvas->LineTo({200, 120});
+    canvas->LineTo({200, 180});
+    canvas->LineTo({20, 180});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+}
+
+void UITestCanvas::RM009StrokeAndClearRectDrawPath(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM009_StrokeRect_ClearRect");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStrokeWidth(2);
+    paint.SetStrokeColor(Color::Orange());
+    canvas->StrokeRect({10,10},40,50,paint);
+
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({30,60});
+    canvas->LineTo({200,60});
+    canvas->LineTo({200,200});
+    canvas->LineTo({30,200});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    canvas->ClearRect({50,80},100,70,paint);
+}
+
+void UITestCanvas::RM008UIKitCanvasFillStyleTest001(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_FillStyle_Solid_单色绘制多边形和填充多边形");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+
+    paint.SetStyle(Paint::STROKE_FILL_STYLE);
+    paint.SetStrokeWidth(2);
+    paint.SetStrokeColor(Color::Orange());
+    paint.SetFillColor(Color::Blue());
+    canvas->BeginPath();
+
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({60, 80});
+    canvas->LineTo({120, 20});
+    canvas->ArcTo({120, 100},80,0,180);
+    canvas->LineTo({120, 180});
+    canvas->LineTo({100, 70});
+    canvas->LineTo({20, 130});
+    canvas->LineTo({5, 80});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    canvas->DrawPath(paint);
+}
+
+void UITestCanvas::RM008UIKitCanvasFillStyleTest002(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_FillStyle_RM_013_Gradient_渐变填充多边形");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::GRADIENT);
+    //线性渐变
+    paint.createLinearGradient(50, 50, 150, 150);
+    paint.addColorStop(0, Color::Yellow());
+    paint.addColorStop(0.3, Color::White());
+    paint.addColorStop(0.6, Color::Green());
+    paint.addColorStop(1, Color::Blue());
+
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({60, 80});
+    canvas->LineTo({120, 20});
+    canvas->ArcTo({120, 100},80,0,180);
+    canvas->LineTo({120, 180});
+    canvas->LineTo({50, 120});
+    canvas->LineTo({20, 130});
+    canvas->LineTo({5, 80});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.createRadialGradient(300, 140, 5, 270, 100, 80);
+
+    canvas->BeginPath();
+    canvas->MoveTo({230, 20});
+    canvas->LineTo({270, 80});
+    canvas->LineTo({330, 20});
+    canvas->ArcTo({330, 100},80,0,180);
+    canvas->LineTo({330, 180});
+    canvas->LineTo({260, 120});
+    canvas->LineTo({230, 130});
+    canvas->LineTo({215, 80});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+}
+
+void UITestCanvas::RM008UIKitCanvasFillStyleTest003(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_StrokeStyle_RM_013_Gradient_渐变绘制多边形路径");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::GRADIENT);
+    paint.SetStrokeWidth(8);
+    //线性渐变
+    paint.createLinearGradient(50, 50, 150, 150);
+    paint.addColorStop(0, Color::Yellow());
+    paint.addColorStop(0.3, Color::White());
+    paint.addColorStop(0.6, Color::Green());
+    paint.addColorStop(1, Color::Blue());
+
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({60, 80});
+    canvas->LineTo({120, 20});
+    canvas->ArcTo({120, 100},80,0,180);
+    canvas->LineTo({120, 180});
+    canvas->LineTo({50, 120});
+    canvas->LineTo({20, 130});
+    canvas->LineTo({5, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.createRadialGradient(300, 140, 5, 270, 100, 80);
+
+    canvas->BeginPath();
+    canvas->MoveTo({230, 20});
+    canvas->LineTo({270, 80});
+    canvas->LineTo({330, 20});
+    canvas->ArcTo({330, 100},80,0,180);
+    canvas->LineTo({330, 180});
+    canvas->LineTo({260, 120});
+    canvas->LineTo({230, 130});
+    canvas->LineTo({215, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+}
+
+void UITestCanvas::RM008UIKitCanvasFillStyleTest004(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_FillStyle_Pattern_模式(图像)绘制多边形路径");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::GRADIENT);
+    paint.SetStrokeWidth(8);
+    //线性渐变
+    paint.createLinearGradient(50, 50, 150, 150);
+    paint.addColorStop(0, Color::Yellow());
+    paint.addColorStop(0.3, Color::White());
+    paint.addColorStop(0.6, Color::Green());
+    paint.addColorStop(1, Color::Blue());
+
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({60, 80});
+    canvas->LineTo({120, 20});
+    canvas->ArcTo({120, 100},80,0,180);
+    canvas->LineTo({120, 180});
+    canvas->LineTo({50, 120});
+    canvas->LineTo({20, 130});
+    canvas->LineTo({5, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.createRadialGradient(300, 140, 5, 270, 100, 80);
+
+    canvas->BeginPath();
+    canvas->MoveTo({230, 20});
+    canvas->LineTo({270, 80});
+    canvas->LineTo({330, 20});
+    canvas->ArcTo({330, 100},80,0,180);
+    canvas->LineTo({330, 180});
+    canvas->LineTo({260, 120});
+    canvas->LineTo({230, 130});
+    canvas->LineTo({215, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+}
 
 } // namespace OHOS
