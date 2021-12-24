@@ -61,9 +61,9 @@ namespace OHOS {
          */
         static GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* pColor)
         {
-            pColor[Order::BLUE] = ColorType::Demultiply(pColor[Order::BLUE], pColor[Order::ALPHA]);
-            pColor[Order::RED] = ColorType::Demultiply(pColor[Order::RED], pColor[Order::ALPHA]);
-            pColor[Order::GREEN] = ColorType::Demultiply(pColor[Order::GREEN], pColor[Order::ALPHA]);
+            pColor[Order::BLUE] = ColorType::DividMultiply(pColor[Order::BLUE], pColor[Order::ALPHA]);
+            pColor[Order::RED] = ColorType::DividMultiply(pColor[Order::RED], pColor[Order::ALPHA]);
+            pColor[Order::GREEN] = ColorType::DividMultiply(pColor[Order::GREEN], pColor[Order::ALPHA]);
         }
     };
 
