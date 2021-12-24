@@ -80,14 +80,19 @@ public:
     void UIKitCanvasTestDrawPath032();
     void UIKitCanvasTestDrawPath033();
     void UIKitCanvasTestDrawPath034();
-    void RM008UIKitCanvasFillStyleTest001();
-    void RM008UIKitCanvasFillStyleTest002();
-    void RM008UIKitCanvasFillStyleTest003();
-    void RM008UIKitCanvasFillStyleTest004();
+    void RM008UIKitCanvasTest001();
+    void RM008UIKitCanvasTest002();
+    void RM008UIKitCanvasTest003();
+    void RM008UIKitCanvasTest004();
+    void RM008UIKitCanvasTest005();
+    void RM008UIKitCanvasTest006();
+    void RM008UIKitCanvasTest007();
+    void RM008UIKitCanvasShadowTest008();
     void RM009LineCapDrawPath();
     void RM009LineJoinDrawPath();
     void RM009LineDashDrawPath();
     void RM009StrokeAndClearRectDrawPath();
+    void RM011StrokeText001();
 
 private:
     const static int16_t GAP = 10;

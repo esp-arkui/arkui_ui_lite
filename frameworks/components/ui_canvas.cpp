@@ -26,9 +26,14 @@
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
 
 #include <render/graphic_render_pixfmt_rgba_comp.h>
 
+#include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
+
+#include <gfx_utils/graphics/graphic_filter/graphic_filter_blur.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h>
 
 
 namespace OHOS {
@@ -449,6 +454,28 @@ void UICanvas::DrawPath(const Paint& paint)
     }
     pathParam->path = vertices_;
 
+    if(paint.GetStyle()==Paint::PATTERN){
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
+        }
+
+        imageParam->image->SetSrc(paint.GetPatternImage());
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = {0, 0};
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+        pathParam->imageParam = imageParam;
+    }
+
     DrawCmd cmd;
     cmd.paint = paint;
     cmd.param = pathParam;
@@ -466,6 +493,28 @@ void UICanvas::FillPath(const Paint& paint)
         return;
     }
     pathParam->path = vertices_;
+
+    if(paint.GetStyle()==Paint::PATTERN){
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
+        }
+
+        imageParam->image->SetSrc(paint.GetPatternImage());
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = {0, 0};
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+        pathParam->imageParam = imageParam;
+    }
 
     DrawCmd cmd;
     cmd.paint = paint;
@@ -778,6 +827,9 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
     if (param == nullptr) {
          return;
     }
+    if(paint.HaveShadow()){
+        DoDrawShadow(gfxDstBuffer,param,paint,rect,invalidatedArea,style,isStroke);
+    }
     TransAffine transform;
     RenderingBuffer renderBuffer;
      //初始化buffer和 m_transform
@@ -843,28 +895,25 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
        paint.GetStyle()==Paint::FILL_STYLE||
        paint.GetStyle()==Paint::STROKE_FILL_STYLE){
 
-
-
-
-        Rgba8Color strokeColor;
+        Rgba8Color rgba8Color;
         if(isStroke){
             if(paint.GetStyle()==Paint::STROKE_STYLE||
                paint.GetStyle()==Paint::STROKE_FILL_STYLE){
-                strokeColor.redValue = paint.GetStrokeColor().red;
-                strokeColor.greenValue = paint.GetStrokeColor().green;
-                strokeColor.blueValue = paint.GetStrokeColor().blue;
-                strokeColor.alphaValue = paint.GetStrokeColor().alpha;
+                rgba8Color.redValue = paint.GetStrokeColor().red;
+                rgba8Color.greenValue = paint.GetStrokeColor().green;
+                rgba8Color.blueValue = paint.GetStrokeColor().blue;
+                rgba8Color.alphaValue = paint.GetStrokeColor().alpha;
             }
         }else{
             if(paint.GetStyle()==Paint::FILL_STYLE||
                paint.GetStyle()==Paint::STROKE_FILL_STYLE){
-                strokeColor.redValue = paint.GetFillColor().red;
-                strokeColor.greenValue = paint.GetFillColor().green;
-                strokeColor.blueValue = paint.GetFillColor().blue;
-                strokeColor.alphaValue = paint.GetFillColor().alpha;
+                rgba8Color.redValue = paint.GetFillColor().red;
+                rgba8Color.greenValue = paint.GetFillColor().green;
+                rgba8Color.blueValue = paint.GetFillColor().blue;
+                rgba8Color.alphaValue = paint.GetFillColor().alpha;
             }
         }
-        RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, strokeColor);
+        RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, rgba8Color);
     }
 
     if(paint.GetStyle()==Paint::GRADIENT){
@@ -879,7 +928,6 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
         typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate, GradientColorMode> LinearGradientSpan;
         // 设定放射渐变的线段生成器
         typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate, GradientColorMode> RadialGradientSpan;
-
 
         typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
         typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, RenderingBuffer> PixFormatComp;
@@ -942,7 +990,156 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
 
     }
 
+    if(paint.GetStyle()==Paint::PATTERN){
 
+        ImageParam* imageParam =pathParam->imageParam;
+        if (imageParam->image == nullptr) {
+            return;
+        }
+        // 渲染器缓冲区
+        typedef OHOS::RenderingBuffer PatternBuffer;
+        // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        typedef OHOS::ImageAccessorWrap<PixFormat, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
+        // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        typedef OHOS::ImageAccessorRepeatX<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
+        // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        typedef OHOS::ImageAccessorRepeatY<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
+        // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        typedef OHOS::ImageAccessorNoRepeat<PixFormat> imgSourceTypeNoRepeat;
+        // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        //  x,y轴都重复
+        typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
+        //  x轴重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
+        //  y轴重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
+        // 不重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
+
+        PatternBuffer patternBuffer;
+        uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
+        patternBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data,imageParam->width,imageParam->height,imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
+        PixFormat img_pixf(patternBuffer); // 获取图片
+
+        if(paint.GetPatternRepeatMode()==Paint::REPEAT){
+            ImgSourceTypeRepeat img_src(img_pixf);
+            spanPatternTypeRepeat m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBase, allocator, m_spanPatternType);
+        }
+        if(paint.GetPatternRepeatMode()==Paint::REPEAT_X){
+            imgSourceTypeRepeatX img_src(img_pixf);
+            spanPatternTypeRepeatX m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBase, allocator, m_spanPatternType);
+        }
+        if(paint.GetPatternRepeatMode()==Paint::REPEAT_Y){
+            imgSourceTypeRepeatY img_src(img_pixf);
+            spanPatternTypeRepeatY m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBase, allocator, m_spanPatternType);
+        }
+        if(paint.GetPatternRepeatMode()==Paint::NO_REPEAT){
+            imgSourceTypeNoRepeat img_src(img_pixf);
+            spanPatternTypeNoRepeat m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBase, allocator, m_spanPatternType);
+        }
+    }
+
+}
+
+void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                          const Rect& invalidatedArea, const Style& style, const bool& isStroke)
+{
+
+    if (param == nullptr) {
+         return;
+    }
+    TransAffine transform;
+    RenderingBuffer renderBuffer;
+     //初始化buffer和 m_transform
+    InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style);
+
+    transform.Translate(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
+
+    typedef DepictCurve<UICanvasVertices> UICanvasPath;
+    RasterizerScanlineAntiAlias<> rasterizer;
+    ScanlineUnPackedContainer m_scanline;
+    RectD bbox;
+
+    PathParam* pathParam = static_cast<PathParam*>(param);
+    UICanvasPath canvasPath(*pathParam->path);
+    if(isStroke){
+        if(paint.IsLineDash()){
+            typedef DepictDash<UICanvasPath> DashStyle;
+            typedef DepictStroke<DashStyle> StrokeDashStyle;
+            typedef DepictTransform<StrokeDashStyle> StrokeDashTransform;
+            DashStyle dashStyle(canvasPath);
+            LineDashStyleCalc(dashStyle,paint);
+            StrokeDashStyle strokeDashStyle(dashStyle);
+            LineStyleCalc(strokeDashStyle,paint);
+            StrokeDashTransform strokeDashTransform(strokeDashStyle,transform);
+            BoundingRectSingle(strokeDashTransform, 0, &bbox.x1, &bbox.y1, &bbox.x2, &bbox.y2);
+            rasterizer.Reset();
+            rasterizer.AddPath(strokeDashTransform);
+
+        }else{
+            typedef DepictStroke<UICanvasPath> StrokeLineStyle;
+            typedef DepictTransform<StrokeLineStyle> StrokeTransform;
+            StrokeLineStyle strokeLineStyle(canvasPath);
+            LineStyleCalc(strokeLineStyle,paint);
+
+            StrokeTransform strokeTransform(strokeLineStyle,transform);
+            BoundingRectSingle(strokeTransform, 0, &bbox.x1, &bbox.y1, &bbox.x2, &bbox.y2);
+
+            rasterizer.Reset();
+            rasterizer.AddPath(strokeTransform);
+        }
+    }else{
+        typedef OHOS::DepictTransform<UICanvasPath> PathTransform;
+        PathTransform  pathTransform(canvasPath,transform);
+        BoundingRectSingle(pathTransform, 0, &bbox.x1, &bbox.y1, &bbox.x2, &bbox.y2);
+        rasterizer.Reset();
+        rasterizer.AddPath(pathTransform);
+    }
+
+
+    typedef Rgba8 Rgba8Color;
+    //组装renderbase
+    // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+    typedef OrderBgra ComponentOrder;
+    // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+    typedef BlenderRgba<Rgba8Color, ComponentOrder> Blender;
+    typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
+    typedef RendererBase<PixFormat> RendererBase;
+    typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
+
+    PixFormat m_pixFormat(renderBuffer);
+    RendererBase m_renBase(m_pixFormat);
+    SpanAllocator allocator;
+
+    m_renBase.ResetClipping(true);
+    m_renBase.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+
+    Rgba8Color rgba8Color;
+    rgba8Color.redValue = paint.GetShadowColor().red;
+    rgba8Color.greenValue = paint.GetShadowColor().green;
+    rgba8Color.blueValue = paint.GetShadowColor().blue;
+    rgba8Color.alphaValue = paint.GetShadowColor().alpha;
+
+    RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, rgba8Color);
+
+    typedef OHOS::StackBlur<Rgba8Color, OHOS::StackBlurCalcRGBA<>> DrawBlur;
+    typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
+    DrawBlur drawBlur;
+    bbox.x1 -= paint.GetShadowBlur();
+    bbox.y1 -= paint.GetShadowBlur();
+    bbox.x2 += paint.GetShadowBlur();
+    bbox.y2 += paint.GetShadowBlur();
+    RenderingBuffer shadowBuffer;
+    PixfmtAlphaBlendRgba pixf2(shadowBuffer);
+
+    Rect shadowRect ={int16_t(bbox.x1),int16_t(bbox.y1),int16_t(bbox.x2),int16_t(bbox.y2)};
+    shadowRect.Intersect(shadowRect,invalidatedArea);
+    pixf2.Attach(m_pixFormat, shadowRect.GetLeft(),shadowRect.GetTop(),shadowRect.GetRight(),shadowRect.GetBottom());
+    drawBlur.Blur(pixf2, OHOS::Uround(paint.GetShadowBlur()));
 }
 
 void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,RenderingBuffer& renderBuffer, const Rect& rect,
@@ -953,6 +1150,71 @@ void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,RenderingBuffer& re
     transform.Reset();
     transform.Translate(realLeft,realTop);//偏移到画布上
     renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr),gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
+}
+
+void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint)
+{
+    if (text == nullptr) {
+        return;
+    }
+    if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
+        TextParam* textParam = new TextParam;
+        if (textParam == nullptr) {
+            GRAPHIC_LOGE("new TextParam fail");
+            return;
+        }
+        textParam->text = text;
+        textParam->fontStyle = fontStyle;
+        textParam->fontOpa = paint.GetOpacity();
+        textParam->fontColor = paint.GetFillColor();
+        textParam->position = point;
+//        textParam->isDrawTrans = paint.IsTransform();
+        DrawCmd cmd;
+        cmd.param = textParam;
+        cmd.DeleteParam = DeleteTextParam;
+        cmd.DrawGraphics = DoDrawText;
+        cmd.paint = paint;
+        drawCmdList_.PushBack(cmd);
+        Invalidate();
+    }
+}
+
+void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                          const Rect& invalidatedArea, const Style& style)
+{
+    TextParam* textParam = static_cast<TextParam*>(param);
+    if (textParam == nullptr) {
+        return;
+    }
+    if (textParam->fontStyle.fontSize <= 0) {
+        return;
+    }
+    Text* text = textParam->textComment;
+    text->SetText(textParam->text);
+    text->SetFont(textParam->fontStyle.fontName, textParam->fontStyle.fontSize);
+    text->SetDirect(static_cast<UITextLanguageDirect>(textParam->fontStyle.direct));
+    text->SetAlign(static_cast<UITextLanguageAlignment>(textParam->fontStyle.align));
+
+    Point start;
+    Rect textRect = invalidatedArea;
+    GetAbsolutePosition(textParam->position, rect, style, start);
+    textRect.SetPosition(start.x, start.y);
+    Style drawStyle = style;
+    drawStyle.textColor_ = textParam->fontColor;
+    drawStyle.lineColor_ = textParam->fontColor;
+    drawStyle.bgColor_ = textParam->fontColor;
+    drawStyle.SetStyle(STYLE_LETTER_SPACE, textParam->fontStyle.letterSpace);
+    text->ReMeasureTextSize(textRect, drawStyle);
+    if (text->GetTextSize().x == 0 || text->GetTextSize().y == 0) {
+        return;
+    }
+    textRect.SetWidth(text->GetTextSize().x);
+    textRect.SetHeight(text->GetTextSize().y);
+    OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
+
+    text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle,
+                 Text::TEXT_ELLIPSIS_END_INV, opa);
+
 }
 
 } // namespace OHOS

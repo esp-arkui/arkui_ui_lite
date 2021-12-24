@@ -38,13 +38,20 @@ void UITestCanvas::TearDown()
 
 const UIView* UITestCanvas::GetTestView()
 {
-    RM009LineCapDrawPath();
-    RM009LineJoinDrawPath();
-    RM009LineDashDrawPath();
-    RM009StrokeAndClearRectDrawPath();
-    RM008UIKitCanvasFillStyleTest001();
-    RM008UIKitCanvasFillStyleTest002();
-    RM008UIKitCanvasFillStyleTest003();
+
+//    RM008UIKitCanvasTest001();
+//    RM008UIKitCanvasTest002();
+//    RM008UIKitCanvasTest003();
+//    RM008UIKitCanvasTest004();
+//    RM008UIKitCanvasTest005();
+//    RM008UIKitCanvasTest006();
+//    RM008UIKitCanvasTest007();
+//    RM008UIKitCanvasShadowTest008();
+//    RM009LineCapDrawPath();
+//    RM009LineJoinDrawPath();
+//    RM009LineDashDrawPath();
+//    RM009StrokeAndClearRectDrawPath();
+    RM011StrokeText001();
 //    UIKitCanvasTestDrawLine001();
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
@@ -57,7 +64,7 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawCircle003();
 //    UIKitCanvasTestDrawArc001();
 //    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawLabel001();
 //    UIKitCanvasTestDrawSector001();
 //    UIKitCanvasTestClear001();
 //    UIKitCanvasTestDrawPath001();
@@ -314,7 +321,7 @@ void UITestCanvas::UIKitCanvasTestDrawLabel001()
     paint.SetFillColor(Color::Blue());
     UICanvas::FontStyle fontStyle;
     fontStyle.align = TEXT_ALIGNMENT_RIGHT;
-    fontStyle.direct = TEXT_DIRECT_RTL;
+    fontStyle.direct = TEXT_DIRECT_LTR;
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = 30;    // 30: font size
     fontStyle.letterSpace = 10; // 10 letter space
@@ -1094,7 +1101,7 @@ void UITestCanvas::RM009StrokeAndClearRectDrawPath(){
     canvas->ClearRect({50,80},100,70,paint);
 }
 
-void UITestCanvas::RM008UIKitCanvasFillStyleTest001(){
+void UITestCanvas::RM008UIKitCanvasTest001(){
     if (container_ == nullptr) {
         return;
     }
@@ -1121,7 +1128,7 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest001(){
     canvas->DrawPath(paint);
 }
 
-void UITestCanvas::RM008UIKitCanvasFillStyleTest002(){
+void UITestCanvas::RM008UIKitCanvasTest002(){
     if (container_ == nullptr) {
         return;
     }
@@ -1147,7 +1154,7 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest002(){
     canvas->LineTo({5, 80});
     canvas->ClosePath();
     canvas->FillPath(paint);
-
+    //放射渐变
     paint.createRadialGradient(300, 140, 5, 270, 100, 80);
 
     canvas->BeginPath();
@@ -1163,7 +1170,7 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest002(){
     canvas->FillPath(paint);
 }
 
-void UITestCanvas::RM008UIKitCanvasFillStyleTest003(){
+void UITestCanvas::RM008UIKitCanvasTest003(){
     if (container_ == nullptr) {
         return;
     }
@@ -1190,7 +1197,7 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest003(){
     canvas->LineTo({5, 80});
     canvas->ClosePath();
     canvas->DrawPath(paint);
-
+    //放射渐变
     paint.createRadialGradient(300, 140, 5, 270, 100, 80);
 
     canvas->BeginPath();
@@ -1206,22 +1213,16 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest003(){
     canvas->DrawPath(paint);
 }
 
-void UITestCanvas::RM008UIKitCanvasFillStyleTest004(){
+void UITestCanvas::RM008UIKitCanvasTest004(){
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("RM008_FillStyle_Pattern_模式(图像)绘制多边形路径");
+    CreateTitleLabel("RM008_Pattern_模式REPEAT(图像)绘制多边形路径和填充");
     UICanvas* canvas = CreateCanvas();
     Paint paint;
-    paint.SetStyle(Paint::GRADIENT);
+    paint.SetStyle(Paint::PATTERN);
     paint.SetStrokeWidth(8);
-    //线性渐变
-    paint.createLinearGradient(50, 50, 150, 150);
-    paint.addColorStop(0, Color::Yellow());
-    paint.addColorStop(0.3, Color::White());
-    paint.addColorStop(0.6, Color::Green());
-    paint.addColorStop(1, Color::Blue());
-
+    paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT);
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
     canvas->LineTo({60, 80});
@@ -1234,7 +1235,39 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest004(){
     canvas->ClosePath();
     canvas->DrawPath(paint);
 
-    paint.createRadialGradient(300, 140, 5, 270, 100, 80);
+    canvas->BeginPath();
+    canvas->MoveTo({230, 20});
+    canvas->LineTo({270, 80});
+    canvas->LineTo({330, 20});
+    canvas->ArcTo({330, 100},80,0,180);
+    canvas->LineTo({330, 180});
+    canvas->LineTo({260, 120});
+    canvas->LineTo({230, 130});
+    canvas->LineTo({215, 80});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+}
+void UITestCanvas::RM008UIKitCanvasTest005(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_Pattern_模式REPEAT_X(图像)绘制多边形路径和填充");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_X);
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({60, 80});
+    canvas->LineTo({120, 20});
+    canvas->ArcTo({120, 100},80,0,180);
+    canvas->LineTo({120, 180});
+    canvas->LineTo({50, 120});
+    canvas->LineTo({20, 130});
+    canvas->LineTo({5, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
 
     canvas->BeginPath();
     canvas->MoveTo({230, 20});
@@ -1246,7 +1279,147 @@ void UITestCanvas::RM008UIKitCanvasFillStyleTest004(){
     canvas->LineTo({230, 130});
     canvas->LineTo({215, 80});
     canvas->ClosePath();
+    canvas->FillPath(paint);
+}
+void UITestCanvas::RM008UIKitCanvasTest006(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_Pattern_模式REPEAT_Y(图像)绘制多边形路径和填充");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_Y);
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 60});
+    canvas->LineTo({200, 60});
+    canvas->LineTo({200, 20});
+    canvas->ClosePath();
     canvas->DrawPath(paint);
+
+    canvas->BeginPath();
+    canvas->MoveTo({20, 80});
+    canvas->LineTo({20, 180});
+    canvas->LineTo({200, 180});
+    canvas->LineTo({200, 80});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+}
+void UITestCanvas::RM008UIKitCanvasTest007(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_Pattern_模式NO_REPEAT(图像)绘制多边形路径和填充");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetStyle(Paint::PATTERN);
+    paint.SetStrokeWidth(8);
+    paint.CreatePattern(RED_IMAGE_PATH, Paint::NO_REPEAT);
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 60});
+    canvas->LineTo({200, 60});
+    canvas->LineTo({200, 20});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    canvas->BeginPath();
+    canvas->MoveTo({20, 80});
+    canvas->LineTo({20, 180});
+    canvas->LineTo({200, 180});
+    canvas->LineTo({200, 80});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+}
+
+void UITestCanvas::RM008UIKitCanvasShadowTest008(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM008_阴影不偏移_偏移_改变模糊级别_改变模糊颜色");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.FillStyle(Color::Orange());
+    paint.SetStrokeWidth(8);
+    paint.SetShadowBlur(5);
+    paint.SetShadowColor(Color::Black());
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 60});
+    canvas->LineTo({100, 60});
+    canvas->LineTo({100, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetShadowOffsetX(20);
+    paint.SetShadowOffsetY(10);
+    canvas->BeginPath();
+    canvas->MoveTo({120, 20});
+    canvas->LineTo({120, 60});
+    canvas->LineTo({200, 60});
+    canvas->LineTo({200, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetShadowOffsetX(0);
+    paint.SetShadowOffsetY(0);
+    canvas->BeginPath();
+    canvas->MoveTo({20, 80});
+    canvas->LineTo({20, 120});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({100, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+
+    paint.SetShadowOffsetX(20);
+    paint.SetShadowOffsetY(10);
+    canvas->BeginPath();
+    canvas->MoveTo({120, 80});
+    canvas->LineTo({120, 120});
+    canvas->LineTo({200, 120});
+    canvas->LineTo({200, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.SetShadowBlur(15);
+    paint.SetShadowOffsetX(20);
+    paint.SetShadowOffsetY(10);
+    canvas->BeginPath();
+    canvas->MoveTo({250, 20});
+    canvas->LineTo({250, 60});
+    canvas->LineTo({330, 60});
+    canvas->LineTo({330, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetShadowBlur(5);
+    paint.SetShadowColor(Color::Blue());
+    paint.SetShadowOffsetX(20);
+    paint.SetShadowOffsetY(10);
+    canvas->BeginPath();
+    canvas->MoveTo({250, 80});
+    canvas->LineTo({250, 120});
+    canvas->LineTo({330, 120});
+    canvas->LineTo({330, 80});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+}
+
+void UITestCanvas::RM011StrokeText001(){
+    CreateTitleLabel("测试中文");
+    UICanvas* canvas = CreateCanvas();
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = 15;
+    fontStyle.letterSpace = 2;
+    Paint paint;
+    paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
+    canvas->StrokeText("中国 你好，鸿蒙。。", {0, 20}, fontStyle, paint);
 }
 
 } // namespace OHOS

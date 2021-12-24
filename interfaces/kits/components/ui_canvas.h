@@ -81,7 +81,9 @@ public:
           dashOffset_(0),
           dashArray_(nullptr),
           ndashes_(0),
-          miterLimit_(0)
+          miterLimit_(0),
+          shadowColor(Color::Black()),
+          haveShadow(false)
     {}
 
 
@@ -147,6 +149,12 @@ public:
         radialGradientPoint_ = paint.radialGradientPoint_;
         stopAndColors_ = paint.getStopAndColor();
         gradientflag = paint.gradientflag;
+        patternRepeat_ = paint.patternRepeat_;
+        shadowBlurRadius= paint.shadowBlurRadius;
+        shadowOffsetX = paint.shadowOffsetX;
+        shadowOffsetY = paint.shadowOffsetY;
+        shadowColor = paint.shadowColor;
+        haveShadow = paint.haveShadow;
     }
 
 
@@ -217,7 +225,18 @@ public:
         Radial
     };
 
-
+    /**
+     * repeat 铺满整个画布
+     * repeat-x 在画布的x轴重复
+     * repeat-y 在画布的y轴重复
+     * no-repeat 在画布不重复
+     */
+    enum PatternRepeatMode {
+        REPEAT,
+        REPEAT_X,
+        REPEAT_Y,
+        NO_REPEAT,
+    };
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -233,14 +252,19 @@ public:
     }
 
     void StrokeStyle(ColorType color){
+        SetStyle(Paint::STROKE_STYLE);
         SetStrokeColor(color);
     }
 
     void FillStyle(ColorType color){
+        SetStyle(Paint::FILL_STYLE);
         SetFillColor(color);
     }
 
     void StrokeStyle(PaintStyle style){
+        SetStyle(style);
+    }
+    void FillStyle(PaintStyle style){
         SetStyle(style);
     }
 
@@ -571,6 +595,109 @@ public:
         return gradientflag;
     }
 
+    /*
+     * 设置图元用图案填充样式
+     * @param img 表示填充的图案，text表示填充样式
+     */
+    void CreatePattern(const char* img, PatternRepeatMode patternRepeat)
+    {
+        image = img;
+        patternRepeat_ = patternRepeat;
+        changeFlage_ = true;
+    }
+
+    const char* GetPatternImage() const
+    {
+        return image;
+    }
+
+    PatternRepeatMode GetPatternRepeatMode() const
+    {
+        return patternRepeat_;
+    }
+
+    /**
+     * @brief 设置阴影模糊级别.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowBlur(double radius)
+    {
+        shadowBlurRadius = radius;
+        changeFlage_ = true;
+    }
+
+    /**
+     * @brief 获取阴影模糊级别.
+     * @since 1.0
+     * @version 1.0
+     */
+    double GetShadowBlur() const
+    {
+        return shadowBlurRadius;
+    }
+    /**
+     * @brief 获取阴影横坐标偏移量.
+     * @since 1.0
+     * @version 1.0
+     */
+    double GetShadowOffsetX() const
+    {
+        return shadowOffsetX;
+    }
+    /**
+     * @brief 设置阴影横坐标偏移量.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowOffsetX(double offset)
+    {
+        shadowOffsetX = offset;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief 获取阴影纵坐标偏移量.
+     * @since 1.0
+     * @version 1.0
+     */
+    double GetShadowOffsetY() const
+    {
+        return shadowOffsetY;
+    }
+    /**
+     * @brief 设置阴影纵坐标偏移量.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowOffsetY(double offset)
+    {
+        shadowOffsetY = offset;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief 获取阴影的颜色值.
+     * @since 1.0
+     * @version 1.0
+     */
+    ColorType GetShadowColor() const
+    {
+        return shadowColor;
+    }
+    /**
+     * @brief 设置阴影的颜色值.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowColor(ColorType color)
+    {
+        shadowColor = color;
+        changeFlage_ = true;
+        haveShadow = true;
+    }
+    bool HaveShadow() const
+    {
+        return haveShadow;
+    }
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -589,6 +716,13 @@ private:
     RadialGradientPoint radialGradientPoint_;
     List<StopAndColor> stopAndColors_;
     Gradient gradientflag;
+    PatternRepeatMode patternRepeat_;
+    const char* image;
+    double shadowBlurRadius;                  //设置阴影模糊半径
+    double shadowOffsetX;                     //设置阴影横坐标偏移量
+    double shadowOffsetY;                     //设置阴影纵坐标偏移量
+    ColorType shadowColor;                    //设置阴影色彩
+    bool haveShadow;                          //当前是否有阴影
 
 };
 
@@ -921,6 +1055,9 @@ public:
      */
     void FillPath(const Paint& paint);
 
+    /*  在画布上绘制文本 */
+    void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
+
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 protected:
     constexpr static uint8_t MAX_CURVE_WIDTH = 3;
@@ -964,6 +1101,31 @@ protected:
 
     struct PathParam : public HeapBase {
         UICanvasVertices* path;
+        ImageParam * imageParam;
+    };
+
+    struct TextParam : public HeapBase {
+        const char* text;
+        Point position;
+        Color32 fontColor;
+        uint8_t fontOpa;
+        FontStyle fontStyle;
+        Text* textComment;
+        TransformMap drawTransMap;
+//        bool isDrawTrans;
+
+        TextParam()
+        {
+            textComment = new Text;
+        }
+
+        ~TextParam()
+        {
+            if (textComment) {
+                delete textComment;
+                textComment = nullptr;
+            }
+        };
     };
 
     struct DrawCmd : public HeapBase {
@@ -1026,7 +1188,14 @@ protected:
     {
         PathParam* pathParam = static_cast<PathParam*>(param);
         pathParam->path->FreeAll();
+        DeleteImageParam(pathParam->imageParam);
         delete pathParam;
+    }
+
+    static void DeleteTextParam(void* param)
+    {
+        TextParam* textParam = static_cast<TextParam*>(param);
+        delete textParam;
     }
 
     static void DoDrawLine(BufferInfo& gfxDstBuffer,
@@ -1106,9 +1275,15 @@ protected:
                            const Rect& invalidatedArea,
                            const Style& style,
                            const bool& isStroke);
-
-
-
+    static void DoDrawShadow(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style,
+                           const bool& isStroke);
+    static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                           const Rect& invalidatedArea, const Style& style);
 
     /**
      * 组装参数设置线宽，LineCap，LineJoin
