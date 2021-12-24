@@ -72,7 +72,6 @@ namespace {
     const double END_X = 150.0;
     const double END_Y = 100.0;
     const double END_R = 80.0;
-    const char* RED_IMAGE_PATH = "/user/data/red.png";
     const char* PATTERN_REPEAT_TYPE = "repeat";
     const double COLOR_STOP_0 = 0.0;
     const double COLOR_STOP_1 = 0.3;
@@ -1079,8 +1078,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_001, TestSize.Level0)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetStartPosition().x, POS_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, POS_Y);
 }
 
 /**
@@ -1861,7 +1858,7 @@ HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_001, TestSize.Level1)
         return;
     }
     gradientControl_->createLinearGradient(START_X,START_Y,END_X,END_Y);
-    paint_->fillStyle(*gradientControl_);
+    paint_->FillStyle(*gradientControl_);
     GradientControl gradientControl = paint_->getGradientControl();
     EXPECT_EQ(gradientControl.getLinearGradientPoint().x0,START_X);
     EXPECT_EQ(gradientControl.getLinearGradientPoint().y0,START_Y);
@@ -1880,7 +1877,7 @@ HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_001, TestSize.Level1)
         return;
     }
     gradientControl_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
-    paint_->fillStyle(*gradientControl_);
+    paint_->FillStyle(*gradientControl_);
     GradientControl gradientcontrol = paint_->getGradientControl();
     EXPECT_EQ(gradientcontrol.getRadialGradientPoint().x0,START_X);
     EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y0,START_Y);
@@ -1896,7 +1893,7 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->createPattern(RED_IMAGE_PATH,PATTERN_REPEAT_TYPE);
+    paint_->CreatePattern(RED_IMAGE_PATH,PATTERN_REPEAT_TYPE);
     EXPECT_EQ(paint_->GetPatternImagePath(),RED_IMAGE_PATH);
     EXPECT_EQ(((paint_->GetPatternRepeatType() == 0)?PATTERN_REPEAT_TYPE:"false"), 
                PATTERN_REPEAT_TYPE);
@@ -1921,7 +1918,7 @@ HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
     gradientControl_->addColorStop(COLOR_STOP_1, colorStop1);
     gradientControl_->addColorStop(COLOR_STOP_2, colorStop2);
     gradientControl_->addColorStop(COLOR_STOP_3, colorStop3);
-    paint_->fillStyle(*gradientControl_);
+    paint_->FillStyle(*gradientControl_);
     GradientControl gradientControl = paint_->getGradientControl();
     List<OHOS::GradientControl::StopAndColor> stopAndColor = gradientControl.getStopAndColor();
     EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_0);
