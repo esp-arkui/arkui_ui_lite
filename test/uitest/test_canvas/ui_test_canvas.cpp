@@ -156,8 +156,8 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Blue());
         paint.SetFillColor(Color::Red());
 
-        canvas->DrawCircle({180, 180}, 40, paint);
-        canvas->SetRotate(-30, paint);
+        canvas->DrawCircle({40, 40}, 40, paint);
+        //canvas->SetRotate(-30, paint);
         paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
         //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
@@ -569,10 +569,10 @@ namespace OHOS {
         canvas->SetDrawGraphicsContext(paint);
         canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
         paint.Rotate(10);
-        canvas->DrawImage({200, 20}, GIF_IMAGE_PATH, paint,100,100);
+        canvas->DrawImage({200, 20}, GIF_IMAGE_PATH, paint, 100, 100);
         canvas->ResetTransForm(paint);
         paint.Rotate(-10);
-        canvas->DrawImage({100, 20}, RED_IMAGE_PATH, paint,50,50);
+        canvas->DrawImage({100, 20}, RED_IMAGE_PATH, paint, 50, 50);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawLabel001()

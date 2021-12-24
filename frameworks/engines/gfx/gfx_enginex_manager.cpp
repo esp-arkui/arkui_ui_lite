@@ -640,8 +640,8 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::DrawShadow(
-            double x, double y, double angle, double scaleX, double scaleY,
-            double transLateX, double transLateY)
+        double x, double y, double angle, double scaleX, double scaleY,
+        double transLateX, double transLateY)
     {
         m_rasterizer.Reset();
         OHOS::TransAffine transform(m_transform.scaleX, m_transform.shearY,

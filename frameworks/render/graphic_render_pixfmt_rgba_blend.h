@@ -24,6 +24,10 @@
 #include "render/graphic_render_buffer.h"
 #include "render/graphic_render_pixfmt_base.h"
 namespace OHOS {
+    enum {
+        NUM_COMPONENTS = 4,
+        PIX_STEP = 4
+    };
     /**
      * @file graphic_geometry_pixfmt_rgba.h
      *
@@ -150,14 +154,10 @@ namespace OHOS {
         using CalcType = typename ColorType::CalcType;
 
         enum {
-            NUM_COMPONENTS = 4,
-            PIX_STEP = 4,
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP
         };
-
         struct PixelType {
             ValueType colors[NUM_COMPONENTS];
-
             /**
              * @brief 设置颜色.
              * @param r，g，b，a 颜色分量
@@ -247,14 +247,14 @@ namespace OHOS {
             }
         };
 
-    private:
+    protected:
         /**
          * @brief 用颜色及覆盖率混合到指定像素.
          *
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
+        virtual GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
         {
             blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
         }
@@ -265,7 +265,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color)
         {
             blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
@@ -275,7 +275,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
         {
             if (!color.IsTransparent()) {
                 if (color.IsOpaque() && cover == COVER_MASK) {
@@ -291,7 +291,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0.
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color)
         {
             if (!color.IsTransparent()) {
                 if (color.IsOpaque()) {
@@ -315,7 +315,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Attach(RbufType& rb)
+        virtual void Attach(RbufType& rb)
         {
             rbuf_ = &rb;
         }
@@ -344,7 +344,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE unsigned Width() const
+        virtual GRAPHIC_GEOMETRY_INLINE unsigned Width() const
         {
             return rbuf_->GetWidth();
         }
@@ -355,7 +355,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        GRAPHIC_GEOMETRY_INLINE unsigned Height() const
+        virtual GRAPHIC_GEOMETRY_INLINE unsigned Height() const
         {
             return rbuf_->GetHeight();
         }
@@ -366,7 +366,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        GRAPHIC_GEOMETRY_INLINE int Stride() const
+        virtual GRAPHIC_GEOMETRY_INLINE int Stride() const
         {
             return rbuf_->GetStride();
         }
@@ -377,9 +377,9 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
+        virtual GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
         {
-            return rbuf_->row_ptr(y);
+            return rbuf_->RowPtr(y);
         }
 
         /**
@@ -388,7 +388,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
+        virtual GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
         {
             return rbuf_->RowPtr(y);
         }
@@ -399,7 +399,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        GRAPHIC_GEOMETRY_INLINE RowData Row(int y) const
+        virtual GRAPHIC_GEOMETRY_INLINE RowData Row(int y) const
         {
             return rbuf_->Row(y);
         }
@@ -410,7 +410,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
+        virtual GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
         {
             return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
@@ -421,7 +421,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
+        virtual GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
         {
             return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
@@ -432,7 +432,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
+        virtual GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
         {
             return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
         }
@@ -443,7 +443,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
+        virtual GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {
             int8u* pixelPtr = rbuf_->RowPtr(y);
             return pixelPtr ? (PixelType*)(pixelPtr + sizeof(ValueType) * (x * PIX_STEP)) : 0;
@@ -488,7 +488,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
+        virtual GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
         {
             if (const PixelType* pixelPtr = PixValuePtr(x, y)) {
                 return pixelPtr->GetPixelColor();
@@ -502,7 +502,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& color)
         {
             PixValuePtr(x, y, 1)->SetPixelColor(color);
         }
@@ -513,7 +513,7 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, int8u cover)
+        virtual GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, int8u cover)
         {
             CopyOrBlendPix(PixValuePtr(x, y, 1), color, cover);
         }
@@ -523,9 +523,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
-                                               unsigned len,
-                                               const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
+                                                       unsigned len,
+                                                       const ColorType& color)
         {
             PixelType vPixelValue;
             vPixelValue.SetPixelColor(color);
@@ -542,9 +542,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
-                                               unsigned len,
-                                               const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
+                                                       unsigned len,
+                                                       const ColorType& color)
         {
             PixelType vPixelValue;
             vPixelValue.SetPixelColor(color);
@@ -559,10 +559,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void BlendHline(int x, int y,
-                        unsigned len,
-                        const ColorType& color,
-                        int8u cover)
+        virtual void BlendHline(int x, int y,
+                                unsigned len,
+                                const ColorType& color,
+                                int8u cover)
         {
             if (!color.IsTransparent()) {
                 PixelType* p = PixValuePtr(x, y, len);
@@ -595,10 +595,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void BlendVline(int x, int y,
-                        unsigned len,
-                        const ColorType& color,
-                        int8u cover)
+        virtual void BlendVline(int x, int y,
+                                unsigned len,
+                                const ColorType& color,
+                                int8u cover)
         {
             if (!color.IsTransparent()) {
                 if (color.IsOpaque() && cover == COVER_MASK) {
@@ -627,10 +627,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void BlendSolidHspan(int x, int y,
-                             unsigned len,
-                             const ColorType& color,
-                             const int8u* covers)
+        virtual void BlendSolidHspan(int x, int y,
+                                     unsigned len,
+                                     const ColorType& color,
+                                     const int8u* covers)
         {
             if (!color.IsTransparent()) {
                 PixelType* pixelPtr = PixValuePtr(x, y, len);
@@ -651,10 +651,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void BlendSolidVspan(int x, int y,
-                             unsigned len,
-                             const ColorType& color,
-                             const int8u* covers)
+        virtual void BlendSolidVspan(int x, int y,
+                                     unsigned len,
+                                     const ColorType& color,
+                                     const int8u* covers)
         {
             if (!color.IsTransparent()) {
                 do {
@@ -675,9 +675,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void CopyColorHspan(int x, int y,
-                            unsigned len,
-                            const ColorType* colors)
+        virtual void CopyColorHspan(int x, int y,
+                                    unsigned len,
+                                    const ColorType* colors)
         {
             PixelType* pixelPtr = PixValuePtr(x, y, len);
             do {
@@ -692,9 +692,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void CopyColorVspan(int x, int y,
-                            unsigned len,
-                            const ColorType* colors)
+        virtual void CopyColorVspan(int x, int y,
+                                    unsigned len,
+                                    const ColorType* colors)
         {
             do {
                 PixValuePtr(x, y++, 1)->SetPixelColor(*colors++);
@@ -707,11 +707,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void BlendColorHspan(int x, int y,
-                             unsigned len,
-                             const ColorType* colors,
-                             const int8u* covers,
-                             int8u cover)
+        virtual void BlendColorHspan(int x, int y,
+                                     unsigned len,
+                                     const ColorType* colors,
+                                     const int8u* covers,
+                                     int8u cover)
         {
             PixelType* pixelPtr = PixValuePtr(x, y, len);
             if (covers) {
@@ -740,11 +740,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void BlendColorVspan(int x, int y,
-                             unsigned len,
-                             const ColorType* colors,
-                             const int8u* covers,
-                             int8u cover)
+        virtual void BlendColorVspan(int x, int y,
+                                     unsigned len,
+                                     const ColorType* colors,
+                                     const int8u* covers,
+                                     int8u cover)
         {
             if (covers) {
                 do {
@@ -770,16 +770,16 @@ namespace OHOS {
          * @version 1.0
          */
         template <class Function>
-        void ForEachPixel(Function f)
+        void ForEachPixel(Function emitFunc)
         {
             for (unsigned y = 0; y < Height(); ++y) {
-                RowData r = rbuf_->row(y);
+                RowData r = rbuf_->Row(y);
                 if (r.ptr) {
                     unsigned len = r.x2 - r.x1 + 1;
-                    PixelType* p = PixValuePtr(r.x1, y, len);
+                    PixelType* pixelPtr = PixValuePtr(r.x1, y, len);
                     do {
-                        f(p->colors);
-                        p = p->Next();
+                        emitFunc(pixelPtr->colors);
+                        pixelPtr = pixelPtr->Next();
                     } while (--len);
                 }
             }
@@ -790,7 +790,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Premultiply()
+        virtual void Premultiply()
         {
             ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
         }
@@ -800,7 +800,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Demultiply()
+        virtual void Demultiply()
         {
             ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
         }
@@ -941,12 +941,10 @@ namespace OHOS {
             }
         }
 
-    private:
+    protected:
         RbufType* rbuf_;
         Blender blender_;
     };
-
-    const unsigned COMP_OP_VALUE = 3;
 
     template <class Blender, class RenBuf>
     class PixfmtCustomBlendRgba : public HeapBase {
@@ -959,19 +957,23 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
         enum {
-            NUM_COMPONENTS = 4,
-            PIX_STEP = 4,
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
+            COMP_OP_VALUE = 3
         };
         struct PixelType {
-            ValueType c[NUM_COMPONENTS];
-
-            void Set(ValueType r, ValueType g, ValueType b, ValueType a)
+            ValueType colors[NUM_COMPONENTS];
+            /**
+             * @brief 设置颜色.
+             * @param r，g，b，a 颜色分量
+             * @since 1.0
+             * @version 1.0
+             */
+            void SetPixelColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
             {
-                c[OrderType::RED] = r;
-                c[OrderType::GREEN] = g;
-                c[OrderType::BLUE] = b;
-                c[OrderType::ALPHA] = a;
+                colors[OrderType::RED] = redValue;
+                colors[OrderType::GREEN] = greenValue;
+                colors[OrderType::BLUE] = blueValue;
+                colors[OrderType::ALPHA] = alphaValue;
             }
             /**
              * @brief 设置颜色.
@@ -979,63 +981,80 @@ namespace OHOS {
              * @since 1.0
              * @version 1.0
              */
-            void Set(const ColorType& color)
+            void SetPixelColor(const ColorType& color)
             {
-                Set(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
-            }
-            /**
-             * @brief 设置颜色.
-             * @param r,g,b,a 颜色分量
-             * @since 1.0
-             * @version 1.0
-             */
-            void Get(ValueType& r, ValueType& g, ValueType& b, ValueType& a) const
-            {
-                r = c[OrderType::RED];
-                g = c[OrderType::GREEN];
-                b = c[OrderType::BLUE];
-                a = c[OrderType::ALPHA];
+                SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
             }
             /**
              * @brief 获取颜色.
-             * @return 颜色值
+             * @param r，g，b，a 颜色分量
              * @since 1.0
              * @version 1.0
              */
-            ColorType Get() const
+            void GetPixelColor(ValueType& red, ValueType& green, ValueType& blue, ValueType& alpha) const
             {
-                return ColorType(
-                    c[OrderType::RED],
-                    c[OrderType::GREEN],
-                    c[OrderType::BLUE],
-                    c[OrderType::ALPHA]);
+                red = colors[OrderType::RED];
+                green = colors[OrderType::GREEN];
+                blue = colors[OrderType::BLUE];
+                alpha = colors[OrderType::ALPHA];
             }
-
+            /**
+             * @brief 获取颜色.
+             * @return 颜色
+             * @since 1.0
+             * @version 1.0
+             */
+            ColorType GetPixelColor() const
+            {
+                return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
+                                 colors[OrderType::BLUE], colors[OrderType::ALPHA]);
+            }
+            /**
+            * @brief 获取下一个像素的颜色分量.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
             PixelType* Next()
             {
-                return (PixelType*)(c + PIX_STEP);
+                return (PixelType*)(colors + PIX_STEP);
             }
-
+            /**
+            * @brief 获取下一个像素的颜色分量首地址.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
             const PixelType* Next() const
             {
-                return (const PixelType*)(c + PIX_STEP);
+                return (const PixelType*)(colors + PIX_STEP);
             }
-
+            /**
+            * @brief 获取第n个像素的颜色分量首地址.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
             PixelType* Advance(int n)
             {
-                return (PixelType*)(c + n * PIX_STEP);
+                return (PixelType*)(colors + n * PIX_STEP);
             }
-
+            /**
+            * @brief 获取第n个像素的颜色分量首地址.
+            *
+            * @since 1.0
+            * @version 1.0
+            */
             const PixelType* Advance(int n) const
             {
-                return (const PixelType*)(c + n * PIX_STEP);
+                return (const PixelType*)(colors + n * PIX_STEP);
             }
         };
 
     private:
         GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
         {
-            blender_.BlendPix(compOp_, p->c, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
+            blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
         }
 
         GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
@@ -1136,7 +1155,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
         {
-            return rbuf_->row_ptr(y);
+            return rbuf_->RowPtr(y);
         }
         /**
          * @brief 通过纵坐标获取行数据.
@@ -1156,7 +1175,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
         {
-            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
         /**
          * @brief 像素坐标转为像素位指针.
@@ -1166,7 +1185,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
         {
-            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
         /**
          * @brief 像素坐标转为像素类型指针.
@@ -1553,5 +1572,4 @@ namespace OHOS {
         unsigned compOp_;
     };
 } // namespace OHOS
-
 #endif

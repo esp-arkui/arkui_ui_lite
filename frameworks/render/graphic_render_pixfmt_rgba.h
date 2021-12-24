@@ -53,15 +53,23 @@ namespace OHOS {
         END_OF_COMP_OP_E
     };
 
+#ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
+    typedef rgba32 ColorTyping;
+    using BlenderRgba32 = RgbaBlender<Rgba32, OrderRgba>;
+    using BlenderArgb32 = RgbaBlender<Rgba32, OrderArgb>;
+    using BlenderAbgr32 = RgbaBlender<Rgba32, OrderAbgr>;
+    using BlenderBgra32 = RgbaBlender<Rgba32, OrderBgra>;
+#else
+    typedef Rgba8 ColorTyping;
     using BlenderRgba32 = RgbaBlender<Rgba8, OrderRgba>;
     using BlenderArgb32 = RgbaBlender<Rgba8, OrderArgb>;
     using BlenderAbgr32 = RgbaBlender<Rgba8, OrderAbgr>;
     using BlenderBgra32 = RgbaBlender<Rgba8, OrderBgra>;
-
-    using PixfmtRgba32 = PixfmtAlphaBlendRgba<BlenderRgba32, RenderingBuffer>;
-    using PixfmtArgb32 = PixfmtAlphaBlendRgba<BlenderArgb32, RenderingBuffer>;
-    using PixfmtAbgr32 = PixfmtAlphaBlendRgba<BlenderAbgr32, RenderingBuffer>;
-    using PixfmtBgra32 = PixfmtAlphaBlendRgba<BlenderBgra32, RenderingBuffer>;
+#endif
+    using PixfmtRgba32 = PixfmtCustomBlendRgba<BlenderRgba32, RenderingBuffer>;
+    using PixfmtArgb32 = PixfmtCustomBlendRgba<BlenderArgb32, RenderingBuffer>;
+    using PixfmtAbgr32 = PixfmtCustomBlendRgba<BlenderAbgr32, RenderingBuffer>;
+    using PixfmtBgra32 = PixfmtCustomBlendRgba<BlenderBgra32, RenderingBuffer>;
 } // namespace OHOS
 
 #endif
