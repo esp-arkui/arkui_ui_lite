@@ -24,6 +24,17 @@
 #include "render/graphic_render_buffer.h"
 #include "render/graphic_render_pixfmt_base.h"
 namespace OHOS {
+
+#define BASE_PIXFMT_BLEND_USING_DEF \
+    using RbufType = RenBuf;\
+    using RowData = typename RbufType::rowData;\
+    using BlenderType = Blender;\
+    using ColorType = typename BlenderType::ColorType;\
+    using OrderType = typename BlenderType::OrderType;\
+    using ValueType = typename ColorType::ValueType;\
+    using CalcType = typename ColorType::CalcType;\
+    using PixelType = PixelType<ValueType,OrderType,ColorType>;\
+
     enum {
         NUM_COMPONENTS = 4,
         PIX_STEP = 4
@@ -142,109 +153,104 @@ namespace OHOS {
         }
     };
 
+    template<class ValueType,class OrderType,class ColorType>
+    struct PixelType {
+        ValueType colors[NUM_COMPONENTS];
+        /**
+         * @brief 设置颜色.
+         * @param r，g，b，a 颜色分量
+         * @since 1.0
+         * @version 1.0
+         */
+        void SetPixelColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
+        {
+            colors[OrderType::RED] = redValue;
+            colors[OrderType::GREEN] = greenValue;
+            colors[OrderType::BLUE] = blueValue;
+            colors[OrderType::ALPHA] = alphaValue;
+        }
+        /**
+         * @brief 设置颜色.
+         * @param color 颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        void SetPixelColor(const ColorType& color)
+        {
+            SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+        }
+        /**
+         * @brief 获取颜色.
+         * @param r，g，b，a 颜色分量
+         * @since 1.0
+         * @version 1.0
+         */
+        void GetPixelColor(ValueType& red, ValueType& green, ValueType& blue, ValueType& alpha) const
+        {
+            red = colors[OrderType::RED];
+            green = colors[OrderType::GREEN];
+            blue = colors[OrderType::BLUE];
+            alpha = colors[OrderType::ALPHA];
+        }
+        /**
+         * @brief 获取颜色.
+         * @return 颜色
+         * @since 1.0
+         * @version 1.0
+         */
+        ColorType GetPixelColor() const
+        {
+            return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
+                             colors[OrderType::BLUE], colors[OrderType::ALPHA]);
+        }
+        /**
+        * @brief 获取下一个像素的颜色分量.
+        *
+        * @since 1.0
+        * @version 1.0
+        */
+        PixelType* Next()
+        {
+            return (PixelType*)(colors + PIX_STEP);
+        }
+        /**
+        * @brief 获取下一个像素的颜色分量首地址.
+        *
+        * @since 1.0
+        * @version 1.0
+        */
+        const PixelType* Next() const
+        {
+            return (const PixelType*)(colors + PIX_STEP);
+        }
+        /**
+        * @brief 获取第n个像素的颜色分量首地址.
+        *
+        * @since 1.0
+        * @version 1.0
+        */
+        PixelType* Advance(int n)
+        {
+            return (PixelType*)(colors + n * PIX_STEP);
+        }
+        /**
+        * @brief 获取第n个像素的颜色分量首地址.
+        *
+        * @since 1.0
+        * @version 1.0
+        */
+        const PixelType* Advance(int n) const
+        {
+            return (const PixelType*)(colors + n * PIX_STEP);
+        }
+    };
+
     template <class Blender, class RenBuf>
     class PixfmtAlphaBlendRgba : public HeapBase {
     public:
-        using RbufType = RenBuf;
-        using RowData = typename RbufType::rowData;
-        using BlenderType = Blender;
-        using ColorType = typename BlenderType::ColorType;
-        using OrderType = typename BlenderType::OrderType;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
-
+        BASE_PIXFMT_BLEND_USING_DEF
         enum {
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP
-        };
-        struct PixelType {
-            ValueType colors[NUM_COMPONENTS];
-            /**
-             * @brief 设置颜色.
-             * @param r，g，b，a 颜色分量
-             * @since 1.0
-             * @version 1.0
-             */
-            void SetPixelColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
-            {
-                colors[OrderType::RED] = redValue;
-                colors[OrderType::GREEN] = greenValue;
-                colors[OrderType::BLUE] = blueValue;
-                colors[OrderType::ALPHA] = alphaValue;
-            }
-            /**
-             * @brief 设置颜色.
-             * @param color 颜色
-             * @since 1.0
-             * @version 1.0
-             */
-            void SetPixelColor(const ColorType& color)
-            {
-                SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
-            }
-            /**
-             * @brief 获取颜色.
-             * @param r，g，b，a 颜色分量
-             * @since 1.0
-             * @version 1.0
-             */
-            void GetPixelColor(ValueType& red, ValueType& green, ValueType& blue, ValueType& alpha) const
-            {
-                red = colors[OrderType::RED];
-                green = colors[OrderType::GREEN];
-                blue = colors[OrderType::BLUE];
-                alpha = colors[OrderType::ALPHA];
-            }
-            /**
-             * @brief 获取颜色.
-             * @return 颜色
-             * @since 1.0
-             * @version 1.0
-             */
-            ColorType GetPixelColor() const
-            {
-                return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
-                                 colors[OrderType::BLUE], colors[OrderType::ALPHA]);
-            }
-            /**
-            * @brief 获取下一个像素的颜色分量.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            PixelType* Next()
-            {
-                return (PixelType*)(colors + PIX_STEP);
-            }
-            /**
-            * @brief 获取下一个像素的颜色分量首地址.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            const PixelType* Next() const
-            {
-                return (const PixelType*)(colors + PIX_STEP);
-            }
-            /**
-            * @brief 获取第n个像素的颜色分量首地址.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            PixelType* Advance(int n)
-            {
-                return (PixelType*)(colors + n * PIX_STEP);
-            }
-            /**
-            * @brief 获取第n个像素的颜色分量首地址.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            const PixelType* Advance(int n) const
-            {
-                return (const PixelType*)(colors + n * PIX_STEP);
-            }
         };
 
     protected:
@@ -537,23 +543,6 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始打竖顺序设置len长度的像素.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
-                                                       unsigned len,
-                                                       const ColorType& color)
-        {
-            PixelType vPixelValue;
-            vPixelValue.SetPixelColor(color);
-            do {
-                *PixValuePtr(x, y++, 1) = vPixelValue;
-            } while (--len);
-        }
-
-        /**
          * @brief 从(x, y)开始打横顺序混合len长度的像素.
          *
          * @since 1.0
@@ -583,38 +572,6 @@ namespace OHOS {
                         do {
                             BlendPix(p, color, cover);
                             p = p->Next();
-                        } while (--len);
-                    }
-                }
-            }
-        }
-
-        /**
-         * @brief 从(x, y)开始打竖顺序混合len长度的像素.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void BlendVline(int x, int y,
-                                unsigned len,
-                                const ColorType& color,
-                                int8u cover)
-        {
-            if (!color.IsTransparent()) {
-                if (color.IsOpaque() && cover == COVER_MASK) {
-                    PixelType pixelValue;
-                    pixelValue.SetPixelColor(color);
-                    do {
-                        *PixValuePtr(x, y++, 1) = pixelValue;
-                    } while (--len);
-                } else {
-                    if (cover == COVER_MASK) {
-                        do {
-                            BlendPix(PixValuePtr(x, y++, 1), color, color.alphaValue);
-                        } while (--len);
-                    } else {
-                        do {
-                            BlendPix(PixValuePtr(x, y++, 1), color, cover);
                         } while (--len);
                     }
                 }
@@ -735,35 +692,6 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始纵向混合len长度的一系列颜色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void BlendColorVspan(int x, int y,
-                                     unsigned len,
-                                     const ColorType* colors,
-                                     const int8u* covers,
-                                     int8u cover)
-        {
-            if (covers) {
-                do {
-                    CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, *covers++);
-                } while (--len);
-            } else {
-                if (cover == COVER_MASK) {
-                    do {
-                        CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++);
-                    } while (--len);
-                } else {
-                    do {
-                        CopyOrBlendPix(PixValuePtr(x, y++, 1), *colors++, cover);
-                    } while (--len);
-                }
-            }
-        }
-
-        /**
          * @brief 每一像素执行一遍Function函数.
          *
          * @since 1.0
@@ -784,56 +712,7 @@ namespace OHOS {
                 }
             }
         }
-        /**
-         * @brief 对像素上的颜色分量预乘.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void Premultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
-        }
-        /**
-         * @brief 对像素上的颜色分量解复用.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void Demultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
-        }
 
-        template <class GammaLut>
-        void ApplyGammaDir(const GammaLut& g)
-        {
-            ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
-        }
-
-        template <class GammaLut>
-        void ApplyGammaInv(const GammaLut& g)
-        {
-            ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
-        }
-        /**
-         * @brief 把源像素拷贝到rbuf_.
-         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,len 要拷贝的长度
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class RenBuf2>
-        void CopyFrom(const RenBuf2& from,
-                      int xdst, int ydst,
-                      int xsrc, int ysrc,
-                      unsigned len)
-        {
-            if (const int8u* p = from.row_ptr(ysrc)) {
-                if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
-                              len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOK) {
-                }
-            }
-        }
         /**
          * @brief 把源像素及覆盖率混合到rbuf_.
          * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
@@ -877,69 +756,6 @@ namespace OHOS {
                 }
             }
         }
-        /**
-         * @brief 把源像素及覆盖率混合到rbuf_.
-         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
-         *        len 要混合的长度 cover 覆盖率
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class SrcPixelFormatRenderer>
-        void BlendFromColor(const SrcPixelFormatRenderer& from,
-                            const ColorType& color,
-                            int xdst, int ydst,
-                            int xsrc, int ysrc,
-                            unsigned len,
-                            int8u cover)
-        {
-            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-            using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
-
-            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-                PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-                do {
-                    CopyOrBlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
-                    psrc = psrc->Next();
-                    pdst = pdst->Next();
-                } while (--len);
-            }
-        }
-        /**
-         * @brief 把源像素及覆盖率混合到rbuf_.
-         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
-         *        len 要混合的长度 cover 覆盖率
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class SrcPixelFormatRenderer>
-        void BlendFromLut(const SrcPixelFormatRenderer& from,
-                          const ColorType* colorLut,
-                          int xdst, int ydst,
-                          int xsrc, int ysrc,
-                          unsigned len,
-                          int8u cover)
-        {
-            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-
-            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-                PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-                if (cover == COVER_MASK) {
-                    do {
-                        CopyOrBlendPix(pdst, colorLut[psrc->c[0]]);
-                        psrc = psrc->Next();
-                        pdst = pdst->Next();
-                    } while (--len);
-                } else {
-                    do {
-                        CopyOrBlendPix(pdst, colorLut[psrc->c[0]], cover);
-                        psrc = psrc->Next();
-                        pdst = pdst->Next();
-                    } while (--len);
-                }
-            }
-        }
 
     protected:
         RbufType* rbuf_;
@@ -949,123 +765,16 @@ namespace OHOS {
     template <class Blender, class RenBuf>
     class PixfmtCustomBlendRgba : public HeapBase {
     public:
-        using RbufType = RenBuf;
-        using RowData = typename RbufType::rowData;
-        using BlenderType = Blender;
-        using ColorType = typename BlenderType::ColorType;
-        using OrderType = typename BlenderType::OrderType;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
+        BASE_PIXFMT_BLEND_USING_DEF
         enum {
             PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
             COMP_OP_VALUE = 3
-        };
-        struct PixelType {
-            ValueType colors[NUM_COMPONENTS];
-            /**
-             * @brief 设置颜色.
-             * @param r，g，b，a 颜色分量
-             * @since 1.0
-             * @version 1.0
-             */
-            void SetPixelColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
-            {
-                colors[OrderType::RED] = redValue;
-                colors[OrderType::GREEN] = greenValue;
-                colors[OrderType::BLUE] = blueValue;
-                colors[OrderType::ALPHA] = alphaValue;
-            }
-            /**
-             * @brief 设置颜色.
-             * @param color 颜色
-             * @since 1.0
-             * @version 1.0
-             */
-            void SetPixelColor(const ColorType& color)
-            {
-                SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
-            }
-            /**
-             * @brief 获取颜色.
-             * @param r，g，b，a 颜色分量
-             * @since 1.0
-             * @version 1.0
-             */
-            void GetPixelColor(ValueType& red, ValueType& green, ValueType& blue, ValueType& alpha) const
-            {
-                red = colors[OrderType::RED];
-                green = colors[OrderType::GREEN];
-                blue = colors[OrderType::BLUE];
-                alpha = colors[OrderType::ALPHA];
-            }
-            /**
-             * @brief 获取颜色.
-             * @return 颜色
-             * @since 1.0
-             * @version 1.0
-             */
-            ColorType GetPixelColor() const
-            {
-                return ColorType(colors[OrderType::RED], colors[OrderType::GREEN],
-                                 colors[OrderType::BLUE], colors[OrderType::ALPHA]);
-            }
-            /**
-            * @brief 获取下一个像素的颜色分量.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            PixelType* Next()
-            {
-                return (PixelType*)(colors + PIX_STEP);
-            }
-            /**
-            * @brief 获取下一个像素的颜色分量首地址.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            const PixelType* Next() const
-            {
-                return (const PixelType*)(colors + PIX_STEP);
-            }
-            /**
-            * @brief 获取第n个像素的颜色分量首地址.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            PixelType* Advance(int n)
-            {
-                return (PixelType*)(colors + n * PIX_STEP);
-            }
-            /**
-            * @brief 获取第n个像素的颜色分量首地址.
-            *
-            * @since 1.0
-            * @version 1.0
-            */
-            const PixelType* Advance(int n) const
-            {
-                return (const PixelType*)(colors + n * PIX_STEP);
-            }
         };
 
     private:
         GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
         {
-            blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
-        }
-
-        GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
-        {
-            if (!c.IsTransparent()) {
-                if (c.IsOpaque() && cover == COVER_MASK) {
-                    p->Set(c.redValue, c.greenValue, c.blueValue, c.alphaValue);
-                } else {
-                    BlendPix(p, c, cover);
-                }
-            }
+            PixfmtCustomBlendRgba<Blender,RenBuf>::blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
         }
 
     public:
@@ -1218,40 +927,7 @@ namespace OHOS {
         {
             return (PixelType*)p;
         }
-        /**
-         * @brief 像素地址转为像素类型指针.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE static const PixelType* PixValuePtr(const void* p)
-        {
-            return (const PixelType*)p;
-        }
 
-        /**
-         * @brief 获取像素的颜色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE ColorType Pixel(int x, int y) const
-        {
-            if (const PixelType* p = PixValuePtr(x, y)) {
-                return p->Get();
-            }
-            return ColorType::NoColor();
-        }
-        /**
-         * @brief 把指定的颜色拷贝到像素.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
-        {
-            SetPixelColor(PixValuePtr(x, y, 1), c);
-        }
         /**
          * @brief 在(x, y)坐标的像素混合颜色颜色及覆盖率.
          *
@@ -1441,40 +1117,6 @@ namespace OHOS {
             }
         }
 
-        void Premultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
-        }
-
-        void Demultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
-        }
-
-        template <class GammaLut>
-        void ApplyGammaDir(const GammaLut& g)
-        {
-            ForEachPixel(ApplyGammaDirRgba<ColorType, OrderType, GammaLut>(g));
-        }
-
-        template <class GammaLut>
-        void ApplyGammaInv(const GammaLut& g)
-        {
-            ForEachPixel(ApplyGammaInvRgba<ColorType, OrderType, GammaLut>(g));
-        }
-
-        template <class RenBuf2>
-        void CopyFrom(const RenBuf2& from,
-                      int xdst, int ydst,
-                      int xsrc, int ysrc,
-                      unsigned len)
-        {
-            if (const int8u* p = from.RowPtr(ysrc)) {
-                if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
-                              len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOF) {
-                }
-            }
-        }
         /**
          * @brief 把源像素及覆盖率混合到rbuf_.
          * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
@@ -1507,61 +1149,6 @@ namespace OHOS {
                     BlendPix(pdst, psrc->GetPixelColor(), cover);
                     psrc = psrc->Advance(srcinc);
                     pdst = pdst->Advance(dstinc);
-                } while (--len);
-            }
-        }
-        /**
-         * @brief 把源像素及覆盖率混合到rbuf_.
-         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
-         *        len 要混合的长度 cover 覆盖率
-         * @since 1.0
-         * @version 1.0.
-         */
-        template <class SrcPixelFormatRenderer>
-        void BlendFromColor(const SrcPixelFormatRenderer& from,
-                            const ColorType& color,
-                            int xdst, int ydst,
-                            int xsrc, int ysrc,
-                            unsigned len,
-                            int8u cover)
-        {
-            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-            using SrcColorType = typename SrcPixelFormatRenderer::ColorType;
-
-            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-                PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-                do {
-                    BlendPix(pdst, color, SrcColorType::ScaleCover(cover, psrc->c[0]));
-                    psrc = psrc->Next();
-                    pdst = pdst->Next();
-                } while (--len);
-            }
-        }
-        /**
-         * @brief 把源像素及覆盖率混合到rbuf_.
-         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
-         *        len 要混合的长度 cover 覆盖率
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class SrcPixelFormatRenderer>
-        void BlendFromLut(const SrcPixelFormatRenderer& from,
-                          const ColorType* colorLut,
-                          int xdst, int ydst,
-                          int xsrc, int ysrc,
-                          unsigned len,
-                          int8u cover)
-        {
-            using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-
-            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-                PixelType* pdst = PixValuePtr(xdst, ydst, len);
-
-                do {
-                    BlendPix(pdst, colorLut[psrc->c[0]], cover);
-                    psrc = psrc->Next();
-                    pdst = pdst->Next();
                 } while (--len);
             }
         }
