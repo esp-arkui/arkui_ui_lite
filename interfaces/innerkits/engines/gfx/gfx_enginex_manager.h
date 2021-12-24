@@ -224,7 +224,6 @@ namespace OHOS {
             BLENDNONE = -1,
             /** 混合透明度 */
             BLENDALPHA = OHOS::END_OF_COMP_OP_E,
-            BLENDCLEAR = OHOS::COMP_OP_CLEAR,
             BLENDSRC = OHOS::COMP_OP_SRC,
             BLENDDST = OHOS::COMP_OP_DST,
             /** 默认。在目标图像上显示源图像。 */
@@ -245,20 +244,8 @@ namespace OHOS {
             BLENDDSTATOP = OHOS::COMP_OP_DST_ATOP,
             /** 使用异或操作对源图像与目标图像进行组合。 */
             BLENDXOR = OHOS::COMP_OP_XOR,
-            BLENDADD = OHOS::COMP_OP_PLUS,
-            BLENDMULTIPLY = OHOS::COMP_OP_MULTIPLY,
-            BLENDSCREEN = OHOS::COMP_OP_SCREEN,
-            BLENDOVERLAY = OHOS::COMP_OP_OVERLAY,
-            BLENDDARKEN = OHOS::COMP_OP_DARKEN,
+            /** 显示源图像 + 目标图像。 */
             BLENDLIGHTEN = OHOS::COMP_OP_LIGHTEN,
-            BLENDCOLORDODGE = OHOS::COMP_OP_COLOR_DODGE,
-            BLENDCOLORBURN = OHOS::COMP_OP_COLOR_BURN,
-            /**  显示源图像 + 目标图像 -硬 */
-            BLENDHARDLIGHT = OHOS::COMP_OP_HARD_LIGHT,
-            /** 显示源图像 + 目标图像 -软 */
-            BLENDSOFTLIGHT = OHOS::COMP_OP_SOFT_LIGHT,
-            BLENDDIFFERENCE = OHOS::COMP_OP_DIFFERENCE,
-            BLENDEXCLUSION = OHOS::COMP_OP_EXCLUSION,
             BLENDCOPY = 1000
         };
 
