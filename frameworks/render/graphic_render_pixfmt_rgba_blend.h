@@ -323,9 +323,8 @@ namespace OHOS {
         {}
 
         ATTACH_FUNCTION_DEF
+
         GET_SIZE_FRUNCTION_DEF
-
-
 
         /**
           * @brief 返回窗口一行的字节数.
@@ -793,8 +792,6 @@ namespace OHOS {
             return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
         }
 
-
-
         /**
          * @brief 从(x, y)横向开始混合len长度的线性颜色及覆盖率.
          *
@@ -872,9 +869,6 @@ namespace OHOS {
                 p = p->Next();
             } while (--len);
         }
-
-
-
 
         /**
          * @brief 把源像素及覆盖率混合到rbuf_.
