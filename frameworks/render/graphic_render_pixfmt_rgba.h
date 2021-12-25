@@ -41,7 +41,7 @@ namespace OHOS {
         END_OF_COMP_OP_E
     };
 
-#ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
+#ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
     using ColorTyping = rgba32;
     using BlenderRgba32 = RgbaBlender<Rgba32, OrderRgba>;
     using BlenderArgb32 = RgbaBlender<Rgba32, OrderArgb>;

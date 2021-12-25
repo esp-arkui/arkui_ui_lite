@@ -46,8 +46,12 @@ namespace OHOS {
         m_imageBlendColor(0, 0, 0),
         m_fillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM),
         m_lineColor(0, 0, 0),
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         m_lineCap(CAPROUND),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         m_lineJoin(JOINROUND),
+#endif
         m_fillGradientMatrix(),
         m_lineGradientMatrix(),
         m_fillRadialMatrix(),
@@ -85,8 +89,12 @@ namespace OHOS {
         shadowBlurRadius_(0),
         dDashOffset(0)
     {
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         SetLineCap(m_lineCap);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         SetLineJoin(m_lineJoin);
+#endif
     }
 
     BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine) :
@@ -125,8 +133,12 @@ namespace OHOS {
         m_antiAliasGamma = baseGfxExtendEngine.m_antiAliasGamma;
         m_fillColor = baseGfxExtendEngine.m_fillColor;
         m_lineColor = baseGfxExtendEngine.m_lineColor;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         m_lineCap = baseGfxExtendEngine.m_lineCap;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         m_lineJoin = baseGfxExtendEngine.m_lineJoin;
+#endif
         m_miterLimit = baseGfxExtendEngine.m_miterLimit;
         m_fillGradientFlag = baseGfxExtendEngine.SOLID;
         m_lineGradientFlag = baseGfxExtendEngine.SOLID;
@@ -172,8 +184,12 @@ namespace OHOS {
         SetLineColor(0, 0, 0);
         SetFillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM);
         ClipBox(0, 0, width, height);
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         SetLineCap(CAPROUND);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         SetLineJoin(JOINROUND);
+#endif
         m_masterAlpha = 1.0;
         m_antiAliasGamma = 1.0;
         m_rasterizer.GammaFunction(OHOS::GammaNone());
@@ -459,7 +475,7 @@ namespace OHOS {
     {
         return m_lineWidth;
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
     void BaseGfxExtendEngine::SetLineCap(LineCap cap)
     {
         m_lineCap = cap;
@@ -474,7 +490,8 @@ namespace OHOS {
     {
         return m_lineCap;
     }
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
     void BaseGfxExtendEngine::SetLineJoin(LineJoin join)
     {
         m_lineJoin = join;
@@ -504,7 +521,7 @@ namespace OHOS {
     {
         return m_miterLimit;
     }
-
+#endif
     void BaseGfxExtendEngine::AddLine(double x1, double y1, double x2, double y2)
     {
         m_path.MoveTo(x1, y1);
@@ -548,12 +565,13 @@ namespace OHOS {
         m_path.ClosePolygon();
         Stroke();
     }
-
     void BaseGfxExtendEngine::Round(double cx, double cy, double radius)
     {
         m_path.RemoveAll();
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         OHOS::BezierArc arc(cx, cy, radius, radius, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
+#endif
         m_path.ClosePolygon();
         DrawPath(FILLANDSTROKE);
     }
@@ -680,8 +698,10 @@ namespace OHOS {
                                          double transLateX, double transLateY)
     {
         m_path.RemoveAll();
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
+#endif
         m_path.ClosePolygon();
         DrawShadow(x, y, angle, scaleX, scaleY, transLateX, transLateY);
     }

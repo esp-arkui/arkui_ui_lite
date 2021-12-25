@@ -277,7 +277,9 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Green());
         paint = canvas->Restore();
         canvas->LineWidth(5, paint);
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(BaseGfxExtendEngine::CAPROUND);
+#endif
         canvas->SetStartPosition({150, 80});
         canvas->DrawLine({50, 100}, paint);
         paint.SetStrokeColor(Color::Green());
@@ -296,8 +298,12 @@ namespace OHOS {
         canvas->SetDrawGraphicsContext(paint);
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
         canvas->LineWidth(10, paint);
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(BaseGfxExtendEngine::CAPROUND);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(BaseGfxExtendEngine::JOINBEVEL);
+#endif
         paint.SetStrokeColor(Color::Blue());
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         canvas->BeginPath();
@@ -308,9 +314,13 @@ namespace OHOS {
         canvas->DrawPath(paint);
 
         canvas->LineWidth(8, paint);
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(BaseGfxExtendEngine::CAPSQUARE);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOPIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(BaseGfxExtendEngine::JOINMITER);
         paint.SetMiterLimit(5);
+#endif
         paint.SetStrokeColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({5, 30});

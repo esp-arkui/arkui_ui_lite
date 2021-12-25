@@ -167,8 +167,13 @@ namespace OHOS {
          */
         Paint() :
             style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()), strokeColor_(Color::White()),
-            opacity_(OPA_OPAQUE), strokeWidth_(2), lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
+            opacity_(OPA_OPAQUE), strokeWidth_(2),
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+            lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
+#endif
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
             shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
             transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
@@ -210,9 +215,13 @@ namespace OHOS {
             strokeColor_ = paint.strokeColor_;
             opacity_ = paint.opacity_;
             strokeWidth_ = paint.strokeWidth_;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             lineCap_ = paint.lineCap_;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             lineJoin_ = paint.lineJoin_;
             miterLimit_ = paint.miterLimit_;
+#endif
             globalAlpha = paint.globalAlpha;
             dashOffset = paint.dashOffset;
             isDrawDash = paint.isDrawDash;
@@ -439,7 +448,7 @@ namespace OHOS {
         {
             return opacity_;
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
          * @brief 设置路径连接处的尖角的间距限制.
          * @see GetMiterLimit
@@ -454,26 +463,6 @@ namespace OHOS {
         double GetMiterLimit() const
         {
             return miterLimit_;
-        }
-        /**
-         * @brief 设置笔帽类型.
-         * @see GetLineCap
-         * @since 1.0
-         * @version 1.0
-         */
-        void SetLineCap(BaseGfxExtendEngine::LineCap lineCap)
-        {
-            lineCap_ = lineCap;
-        }
-        /**
-         * @brief 获取笔帽类型.
-         * @see SetLineCap
-         * @since 1.0
-         * @version 1.0
-         */
-        BaseGfxExtendEngine::LineCap GetLineCap() const
-        {
-            return lineCap_;
         }
         /**
          * @brief 设置笔的路径连接处的风格样式.
@@ -495,6 +484,30 @@ namespace OHOS {
         {
             return lineJoin_;
         }
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+        /**
+         * @brief 设置笔帽类型.
+         * @see GetLineCap
+         * @since 1.0
+         * @version 1.0
+         */
+        void SetLineCap(BaseGfxExtendEngine::LineCap lineCap)
+        {
+            lineCap_ = lineCap;
+        }
+        /**
+         * @brief 获取笔帽类型.
+         * @see SetLineCap
+         * @since 1.0
+         * @version 1.0
+         */
+        BaseGfxExtendEngine::LineCap GetLineCap() const
+        {
+            return lineCap_;
+        }
+#endif
+
         /**
          * @brief 设置点划线的偏移量.
          * @see GetLineDashOffset
@@ -750,7 +763,7 @@ namespace OHOS {
                 patternRepeat = NO_REPEAT;
             }
         }
-         /*
+        /*
          * 获取图元填充用图案路径
          */
         const char* GetPatternImagePath()
@@ -860,11 +873,15 @@ namespace OHOS {
         ColorType fillColor_;
         ColorType strokeColor_;
         uint8_t opacity_;
-        uint16_t strokeWidth_;                   //设置线宽
-        BaseGfxExtendEngine::LineCap lineCap_;   //设置笔帽
+        uint16_t strokeWidth_; //设置线宽
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+        BaseGfxExtendEngine::LineCap lineCap_; //设置笔帽
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         BaseGfxExtendEngine::LineJoin lineJoin_; //设置笔的路径连接处的风格样式
         double miterLimit_;                      //设置路径连接处的尖角的间距限制
-        float dashOffset;                        //dash 点偏移量
+#endif
+        float dashOffset; //dash 点偏移量
         bool isDrawDash;
         float* dashArray; //dash 点数组
         unsigned int ndashes;
@@ -1107,7 +1124,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void DrawImage(const Point& startPoint, const char* image, const Paint& paint, int16_t width =-1, int16_t height = -1);
+        void DrawImage(const Point& startPoint, const char* image, const Paint& paint, int16_t width = -1, int16_t height = -1);
 
         /**
          * @brief Draws an image.
@@ -1570,7 +1587,7 @@ namespace OHOS {
                 delete imageParam->gifImageAnimator;
                 imageParam->gifImageAnimator = nullptr;
             }
-            if(imageParam->path != nullptr){
+            if (imageParam->path != nullptr) {
                 delete[] imageParam->path;
                 imageParam->path = nullptr;
             }

@@ -496,7 +496,7 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint,int16_t width, int16_t height)
+    void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint, int16_t width, int16_t height)
     {
         if (image == nullptr) {
             return;
@@ -533,7 +533,7 @@ namespace OHOS {
 
         imageParam->newWidth = width;
         imageParam->newHeight = height;
-		DrawCmd cmd;
+        DrawCmd cmd;
         cmd.paint = paint;
         cmd.param = imageParam;
         cmd.DeleteParam = DeleteImageParam;
@@ -770,6 +770,7 @@ namespace OHOS {
         if (m_graphics == nullptr) {
             return;
         }
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         if (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE) {
             BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
                                                    paint.GetStrokeColor(), paint.GetOpacity());
@@ -781,6 +782,7 @@ namespace OHOS {
             m_graphics->NoFill();
             m_graphics->Line(start.x, start.y, end.x, end.y);
         }
+#endif
     }
 
     void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
@@ -1445,12 +1447,12 @@ namespace OHOS {
         if (graphics == nullptr) {
             return;
         }
-        int16_t width =imageParam->width;
-        int16_t height =imageParam->height;
-        if(imageParam->newWidth >= 0){
+        int16_t width = imageParam->width;
+        int16_t height = imageParam->height;
+        if (imageParam->newWidth >= 0) {
             width = imageParam->newWidth;
         }
-        if(imageParam->newHeight >= 0){
+        if (imageParam->newHeight >= 0) {
             height = imageParam->newHeight;
         }
         Rect trunc(invalidatedArea);
@@ -1662,8 +1664,14 @@ namespace OHOS {
         ListNode<Point>* pointIter = path->points_.Begin();
         ListNode<ArcParam>* arcIter = path->arcParam_.Begin();
         ListNode<PathCmd>* iter = path->cmd_.Begin();
-        bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
-        bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
+        bool isLineJoin = true;
+        bool isLineCap = true;
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+        isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+        isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
+#endif
         if ((!isLineJoin || !isLineCap) &&
             !(static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) &&
             (!static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) &&
@@ -1671,11 +1679,15 @@ namespace OHOS {
             m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
                                      paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             m_graphics->SetLineCap(paint.GetLineCap());
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             m_graphics->SetLineJoin(paint.GetLineJoin());
             if (paint.GetLineJoin() == BaseGfxExtendEngine::JOINMITER) {
                 m_graphics->SetMiterLimit(paint.GetMiterLimit());
             }
+#endif
             m_graphics->NoFill();
         }
 
@@ -1801,23 +1813,32 @@ namespace OHOS {
             m_graphics->SetLineDash(nullptr, 0);
         }
 
-
         Point pathEnd = {COORD_MIN, COORD_MIN};
 
         ListNode<Point>* pointIter = path->points_.Begin();
         ListNode<ArcParam>* arcIter = path->arcParam_.Begin();
         ListNode<PathCmd>* iter = path->cmd_.Begin();
-        bool isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
-        bool isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
+        bool isLineJoin = true;
+        bool isLineCap = true;
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+        isLineJoin = (paint.GetLineJoin() == BaseGfxExtendEngine::LineJoin::JOINNONE);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+        isLineCap = (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE);
+#endif
         if (!isLineJoin || !isLineCap) {
             m_graphics->SetLineColor(paint.GetStrokeColor().red, paint.GetStrokeColor().green,
                                      paint.GetStrokeColor().blue, paint.GetStrokeColor().alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             m_graphics->SetLineCap(paint.GetLineCap());
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             m_graphics->SetLineJoin(paint.GetLineJoin());
             if (paint.GetLineJoin() == BaseGfxExtendEngine::JOINMITER) {
                 m_graphics->SetMiterLimit(paint.GetMiterLimit());
             }
+#endif
         }
         if (paint.GetFillColor().alpha) {
             m_graphics->SetFillColor(paint.GetFillColor().red, paint.GetFillColor().green, paint.GetFillColor().blue,
