@@ -830,62 +830,9 @@ namespace OHOS {
         {
             return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
         }
-        /**
-         * @brief 像素坐标转为像素类型指针.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
-        {
-            int8u* p = rbuf_->row_ptr(y);
-            return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
-        }
 
-        /**
-         * @brief 在(x, y)坐标的像素混合颜色颜色及覆盖率.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, int8u cover)
-        {
-            BlendPix(PixValuePtr(x, y, 1), color, cover);
-        }
-        /**
-         * @brief 从(x, y)横向向开始拷贝len长度的线性颜色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
-                                               unsigned len,
-                                               const ColorType& c)
-        {
-            PixelType v;
-            v.Set(c);
-            PixelType* p = PixValuePtr(x, y, len);
-            do {
-                *p = v;
-                p = p->Next();
-            } while (--len);
-        }
-        /**
-         * @brief 从(x, y)纵向开始拷贝len长度的线性颜色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE void CopyVline(int x, int y,
-                                               unsigned len,
-                                               const ColorType& c)
-        {
-            PixelType v;
-            v.Set(c);
-            do {
-                *PixValuePtr(x, y++, 1) = v;
-            } while (--len);
-        }
+
+
         /**
          * @brief 从(x, y)横向开始混合len长度的线性颜色及覆盖率.
          *
@@ -943,37 +890,8 @@ namespace OHOS {
                 BlendPix(PixValuePtr(x, y++, 1), c, *covers++);
             } while (--len);
         }
-        /**
-         * @brief 从(x, y)横向开始拷贝len长度的一系列颜色及覆盖率.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        void CopyColorHspan(int x, int y,
-                            unsigned len,
-                            const ColorType* colors)
-        {
-            PixelType* p = PixValuePtr(x, y, len);
 
-            do {
-                p->Set(*colors++);
-                p = p->Next();
-            } while (--len);
-        }
-        /**
-         * @brief 从(x, y)纵向开始拷贝len长度的一系列颜色.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        void CopyColorVspan(int x, int y,
-                            unsigned len,
-                            const ColorType* colors)
-        {
-            do {
-                PixValuePtr(x, y++, 1)->Set(*colors++);
-            } while (--len);
-        }
+
         /**
          * @brief 从(x, y)开始横向混合len长度的一系列颜色及覆盖率.
          *
@@ -992,44 +910,9 @@ namespace OHOS {
                 p = p->Next();
             } while (--len);
         }
-        /**
-         * @brief 从(x, y)开始纵向混合len长度的一系列颜色及覆盖率.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        void BlendColorVspan(int x, int y, unsigned len,
-                             const ColorType* colors,
-                             const int8u* covers,
-                             int8u cover)
-        {
-            do {
-                BlendPix(PixValuePtr(x, y++, 1), *colors++, covers ? *covers++ : cover);
-            } while (--len);
-        }
 
-        /**
-         * @brief 每一像素执行一遍Function函数.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class Function>
-        void ForEachPixel(Function f)
-        {
-            unsigned y;
-            for (y = 0; y < Height(); ++y) {
-                RowData r = rbuf_->row(y);
-                if (r.ptr) {
-                    unsigned len = r.x2 - r.x1 + 1;
-                    PixelType* p = PixValuePtr(r.x1, y, len);
-                    do {
-                        f(p->c);
-                        p = p->Next();
-                    } while (--len);
-                }
-            }
-        }
+
+
 
         /**
          * @brief 把源像素及覆盖率混合到rbuf_.
