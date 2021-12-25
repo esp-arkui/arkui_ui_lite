@@ -766,23 +766,24 @@ namespace OHOS {
         GetAbsolutePosition(lineParam->start, rect, style, start);
         GetAbsolutePosition(lineParam->end, rect, style, end);
 
-        BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
-        if (m_graphics == nullptr) {
-            return;
-        }
-#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
-        if (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE) {
+        if (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPBUTT || paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE) {
             BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
                                                    paint.GetStrokeColor(), paint.GetOpacity());
         } else {
+            BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
+            if (m_graphics == nullptr) {
+                return;
+            }
+
             ColorType colorType = paint.GetStrokeColor();
             m_graphics->SetLineColor(colorType.red, colorType.green, colorType.blue, colorType.alpha);
             m_graphics->SetLineWidth(paint.GetStrokeWidth());
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             m_graphics->SetLineCap(paint.GetLineCap());
+#endif
             m_graphics->NoFill();
             m_graphics->Line(start.x, start.y, end.x, end.y);
         }
-#endif
     }
 
     void UICanvas::DoDrawCurve(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,

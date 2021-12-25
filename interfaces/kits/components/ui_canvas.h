@@ -172,8 +172,9 @@ namespace OHOS {
             lineCap_(BaseGfxExtendEngine::LineCap::CAPBUTT),
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
-            lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0), dashOffset(0.0), isDrawDash(false),
+            lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0),
 #endif
+            dashOffset(0.0), isDrawDash(false),
             dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
             shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
             transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
@@ -459,32 +460,12 @@ namespace OHOS {
         {
             miterLimit_ = miterLimit;
         }
-
-        double GetMiterLimit() const
-        {
-            return miterLimit_;
-        }
-        /**
-         * @brief 设置笔的路径连接处的风格样式.
-         * @see GetLineJoin
-         * @since 1.0
-         * @version 1.0
-         */
         void SetLineJoin(BaseGfxExtendEngine::LineJoin lineJoin)
         {
             lineJoin_ = lineJoin;
         }
-        /**
-         * @brief 获取笔的路径连接处的风格样式.
-         * @see SetLineJoin
-         * @since 1.0
-         * @version 1.0
-         */
-        BaseGfxExtendEngine::LineJoin GetLineJoin() const
-        {
-            return lineJoin_;
-        }
 #endif
+
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
          * @brief 设置笔帽类型.
@@ -496,6 +477,34 @@ namespace OHOS {
         {
             lineCap_ = lineCap;
         }
+#endif
+
+        double GetMiterLimit() const
+        {
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+            return miterLimit_;
+#endif
+            return 0.0;
+        }
+        /**
+         * @brief 设置笔的路径连接处的风格样式.
+         * @see GetLineJoin
+         * @since 1.0
+         * @version 1.0
+         */
+        /**
+        * @brief 获取笔的路径连接处的风格样式.
+        * @see SetLineJoin
+        * @since 1.0
+        * @version 1.0
+        */
+        BaseGfxExtendEngine::LineJoin GetLineJoin() const
+        {
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+            return lineJoin_;
+#endif
+            return BaseGfxExtendEngine::LineJoin::JOINNONE;
+        }
         /**
          * @brief 获取笔帽类型.
          * @see SetLineCap
@@ -504,10 +513,11 @@ namespace OHOS {
          */
         BaseGfxExtendEngine::LineCap GetLineCap() const
         {
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             return lineCap_;
-        }
 #endif
-
+            return BaseGfxExtendEngine::LineCap::CAPNONE;
+        }
         /**
          * @brief 设置点划线的偏移量.
          * @see GetLineDashOffset
