@@ -317,9 +317,10 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(BaseGfxExtendEngine::CAPSQUARE);
 #endif
-#if GRAPHIC_GEOMETYR_ENABLE_LINEJOPIN_STYLES_VERTEX_SOURCE
+
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(BaseGfxExtendEngine::JOINMITER);
-        paint.SetMiterLimit(5);
+        paint.SetMiterLimit(1);
 #endif
         paint.SetStrokeColor(Color::Green());
         canvas->BeginPath();
