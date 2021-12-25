@@ -28,44 +28,6 @@ namespace OHOS {
         NUM_COMPONENTS = 4,
         PIX_STEP = 4
     };
-    /**
-     * @file graphic_geometry_pixfmt_rgba.h
-     *
-     * @brief Defines 颜色分量倍增器.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class ColorT, class Order>
-    struct RgbaMultiplier {
-        using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
-        /**
-         * @brief 颜色分量与Alpha相乘.
-         * @param pColor 颜色
-         * @since 1.0
-         * @version 1.0
-         */
-        static GRAPHIC_GEOMETRY_INLINE void Premultiply(ValueType* pColor)
-        {
-            pColor[Order::BLUE] = ColorType::Multiply(pColor[Order::BLUE], pColor[Order::ALPHA]);
-            pColor[Order::RED] = ColorType::Multiply(pColor[Order::RED], pColor[Order::ALPHA]);
-            pColor[Order::GREEN] = ColorType::Multiply(pColor[Order::GREEN], pColor[Order::ALPHA]);
-        }
-
-        /**
-         * @brief 颜色分量与Alpha解复用.
-         * @param pColor 颜色
-         * @since 1.0
-         * @version 1.0.
-         */
-        static GRAPHIC_GEOMETRY_INLINE void Demultiply(ValueType* pColor)
-        {
-            pColor[Order::BLUE] = ColorType::DividMultiply(pColor[Order::BLUE], pColor[Order::ALPHA]);
-            pColor[Order::RED] = ColorType::DividMultiply(pColor[Order::RED], pColor[Order::ALPHA]);
-            pColor[Order::GREEN] = ColorType::DividMultiply(pColor[Order::GREEN], pColor[Order::ALPHA]);
-        }
-    };
 
     template <class ColorT, class Order>
     struct RgbaBlender {
@@ -784,26 +746,6 @@ namespace OHOS {
                 }
             }
         }
-        /**
-         * @brief 对像素上的颜色分量预乘.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void Premultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
-        }
-        /**
-         * @brief 对像素上的颜色分量解复用.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        virtual void Demultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
-        }
 
         template <class GammaLut>
         void ApplyGammaDir(const GammaLut& g)
@@ -1439,16 +1381,6 @@ namespace OHOS {
                     } while (--len);
                 }
             }
-        }
-
-        void Premultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Premultiply);
-        }
-
-        void Demultiply()
-        {
-            ForEachPixel(RgbaMultiplier<ColorType, OrderType>::Demultiply);
         }
 
         template <class GammaLut>

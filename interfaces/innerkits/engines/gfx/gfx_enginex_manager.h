@@ -16,7 +16,6 @@
 #ifndef GFX_GRAPGICS_MANAGER_INCLUDED
 #define GFX_GRAPGICS_MANAGER_INCLUDED
 
-#include "gfx_utils/color.h"
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
 #include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
@@ -40,10 +39,11 @@
 #include <render/graphic_render_scanline.h>
 
 #include "gfx_engine_manager.h"
+#include "gfx_utils/color.h"
 
 namespace OHOS {
     class BaseGfxExtendEngine : public BaseGfxEngine {
-#ifdef BaseGfxExtendEngine_USE_FLOAT_FORMAT
+#ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
         typedef OHOS::rgba32 ColorType;
 #else
         typedef OHOS::Rgba8 ColorType;
@@ -135,33 +135,33 @@ namespace OHOS {
             /** 放射渐变 */
             RADIAL
         };
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
          * @brief 两条线相交时，所创建的拐角类型
          */
-        enum LineJoin {
+        enum LineJoin{
             JOINNONE = -1,
             /** 创建尖角 */
             JOINMITER = OHOS::MITER_JOIN,
             /** 创建圆角 */
             JOINROUND = OHOS::ROUND_JOIN,
             /** 创建斜角 */
-            JOINBEVEL = OHOS::BEVEL_JOIN
-        };
+            JOINBEVEL = OHOS::BEVEL_JOIN};
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
          * @brief 线条末端线帽的样式。
          */
-        enum LineCap {
+        enum LineCap{
             CAPNONE = -1,
             /** 向线条的每个末端添加平直的边缘 */
             CAPBUTT = OHOS::BUTT_CAP,
             /** 向线条的每个末端添加正方形线帽 */
             CAPSQUARE = OHOS::SQUARE_CAP,
             /** 向线条的每个末端添加圆形线帽 */
-            CAPROUND = OHOS::ROUND_CAP
-        };
-
+            CAPROUND = OHOS::ROUND_CAP};
+#endif
         /**
          * @brief 绘制的类型
          */
@@ -475,6 +475,7 @@ namespace OHOS {
          * @return
          */
         double GetLineWidth() const;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
          * @brief 设置线条末端线帽样式
          * @param cap 具体线帽样式
@@ -485,6 +486,8 @@ namespace OHOS {
          */
         LineCap GetLineCap() const;
 
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
          * @brief 设置交点拐角类型
          */
@@ -501,6 +504,7 @@ namespace OHOS {
          * @brief 返回最大斜接长度
          */
         double GetMiterLimit() const;
+#endif
         /**
          * @brief 重置转换
          */
@@ -899,8 +903,12 @@ namespace OHOS {
         Color m_fillColor;       // 图像需要填充颜色
         Color m_lineColor;       // 线条需要填充颜色
         color_func_type m_fillRadialGradient;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCap m_lineCap;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         LineJoin m_lineJoin;
+#endif
         Gradient m_fillGradientFlag;
         Gradient m_lineGradientFlag;
         interpolator_type m_interpolator_type;
