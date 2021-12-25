@@ -1462,7 +1462,7 @@ namespace OHOS {
             double y = start.y;
             double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
             uint8_t formatType = imageParam->image->GetImgType();
-            graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
+            graphics->TransformImage(imageBuffer, parallelogram);
 
         } else {
             double x = start.x;
@@ -1471,7 +1471,7 @@ namespace OHOS {
             double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
             uint8_t formatType = imageParam->image->GetImgType();
             StartTransform(rect, invalidatedArea, paint);
-            graphics->TransformImage(imageBuffer, parallelogram, formatType != 0);
+            graphics->TransformImage(imageBuffer, parallelogram);
         }
     }
 
@@ -1598,7 +1598,7 @@ namespace OHOS {
             double parallelogram[6] = {x, y, x + textRect.GetWidth(), y, x + textRect.GetWidth(), y + textRect.GetHeight()};
 
             StartTransform(rect, invalidatedArea, paint);
-            graphicsContext->TransformImage(imageBuffer, parallelogram, false);
+            graphicsContext->TransformImage(imageBuffer, parallelogram);
             //graphicsContext->ResetTransformations();
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)pGfxMapBuffer->virAddr);
         }

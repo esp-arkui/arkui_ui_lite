@@ -26,58 +26,58 @@
 namespace OHOS {
 
 #define BASE_PIXFMT_BLEND_USING_DEF \
-    using RbufType = RenBuf;\
-    using RowData = typename RbufType::rowData;\
-    using BlenderType = Blender;\
-    using ColorType = typename BlenderType::ColorType;\
-    using OrderType = typename BlenderType::OrderType;\
-    using ValueType = typename ColorType::ValueType;\
-    using CalcType = typename ColorType::CalcType;\
-    using PixelType = PixelType<ValueType,OrderType,ColorType>;\
+    using RbufType = RenBuf; \
+    using RowData = typename RbufType::rowData; \
+    using BlenderType = Blender; \
+    using ColorType = typename BlenderType::ColorType; \
+    using OrderType = typename BlenderType::OrderType; \
+    using ValueType = typename ColorType::ValueType; \
+    using CalcType = typename ColorType::CalcType; \
+    using PixelType = PixelType<ValueType, OrderType, ColorType>;
 
 // 把像素附加到绘制区.
-# define ATTACH_FUNCTION_DEF \
-    virtual void Attach(RbufType& rb)\
-    {\
-        rbuf_ = &rb;\
-    }\
-    \
-    template <class PixFmt> \
-    bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2)\
-    {\
-        RectI r(x1, y1, x2, y2);\
-        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) {\
-            int stride = pixf.Stride();\
-            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1),\
-                          (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride);\
-            return true;\
-        }\
-        return false;\
-    }\
-
-        //获取每屏幕（绘制缓冲区）大小
-#define GET_SIZE_FRUNCTION_DEF \
-        virtual GRAPHIC_GEOMETRY_INLINE unsigned Width() const\
-        {\
-            return rbuf_->GetWidth();\
-        }\
+#define ATTACH_FUNCTION_DEF \
+    virtual void Attach(RbufType& rb) \
+    { \
+        rbuf_ = &rb; \
+    } \
 \
-        virtual GRAPHIC_GEOMETRY_INLINE unsigned Height() const\
-        {\
-            return rbuf_->GetHeight();\
-        }\
+    template <class PixFmt> \
+    bool Attach(PixFmt& pixf, int x1, int y1, int x2, int y2) \
+    { \
+        RectI r(x1, y1, x2, y2); \
+        if (r.Clip(RectI(0, 0, pixf.Width() - 1, pixf.Height() - 1))) { \
+            int stride = pixf.Stride(); \
+            rbuf_->Attach(pixf.PixPtr(r.x1, stride < 0 ? r.y2 : r.y1), \
+                          (r.x2 - r.x1) + 1, (r.y2 - r.y1) + 1, stride); \
+            return true; \
+        } \
+        return false; \
+    }
+
+    //获取每屏幕（绘制缓冲区）大小
+#define GET_SIZE_FRUNCTION_DEF \
+    virtual GRAPHIC_GEOMETRY_INLINE unsigned Width() const \
+    { \
+        return rbuf_->GetWidth(); \
+    } \
+\
+    virtual GRAPHIC_GEOMETRY_INLINE unsigned Height() const \
+    { \
+        return rbuf_->GetHeight(); \
+    }
 
 // 指针转为像素类型指针
 #define PIX_PTR_FUNCTION_DEF \
-    virtual GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)\
-    {\
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);\
-    }\
-    \
-    virtual GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const\
-    {\
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);\
-    }\
+    virtual GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y) \
+    { \
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP); \
+    } \
+\
+    virtual GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const \
+    { \
+        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP); \
+    }
 
     enum {
         NUM_COMPONENTS = 4,
@@ -120,7 +120,7 @@ namespace OHOS {
     };
 
     template <class ColorT, class Order>
-    struct RgbaPreBlender {
+    struct RgbaPrelerpBlender {
         using ColorType = ColorT;
         using OrderType = Order;
         using ValueType = typename ColorType::ValueType;
@@ -159,7 +159,7 @@ namespace OHOS {
         }
     };
 
-    template<class ValueType,class OrderType,class ColorType>
+    template <class ValueType, class OrderType, class ColorType>
     struct PixelType {
         ValueType colors[NUM_COMPONENTS];
         /**
@@ -370,7 +370,7 @@ namespace OHOS {
             return rbuf_->Row(y);
         }
 
-       PIX_PTR_FUNCTION_DEF
+        PIX_PTR_FUNCTION_DEF
 
         /**
          * @brief 指针转为像素类型指针.
@@ -714,7 +714,7 @@ namespace OHOS {
     private:
         GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
         {
-            PixfmtCustomBlendRgba<Blender,RenBuf>::blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
+            PixfmtCustomBlendRgba<Blender, RenBuf>::blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue, c.blueValue, c.alphaValue, cover);
         }
 
     public:
@@ -849,7 +849,6 @@ namespace OHOS {
                 BlendPix(PixValuePtr(x, y++, 1), c, *covers++);
             } while (--len);
         }
-
 
         /**
          * @brief 从(x, y)开始横向混合len长度的一系列颜色及覆盖率.

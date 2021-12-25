@@ -38,8 +38,8 @@
 #include <cmath>
 #include <cstring>
 
-#include "gfx_utils/heap_base.h"
 #include "gfx_utils/graphic_math.h"
+#include "gfx_utils/heap_base.h"
 #include "render/graphic_render_buffer.h"
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_pixfmt_rgba_blend.h"
@@ -366,7 +366,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
             ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
         {
-            RgbaPreBlender<ColorT, Order>::BlendPix(pColor, r, g, b, a, cover);
+            RgbaPrelerpBlender<ColorT, Order>::BlendPix(pColor, r, g, b, a, cover);
         }
     };
     template <class ColorT, class Order>
