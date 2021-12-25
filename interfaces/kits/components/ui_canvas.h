@@ -83,7 +83,9 @@ public:
           ndashes_(0),
           miterLimit_(0),
           shadowColor(Color::Black()),
-          haveShadow(false)
+          haveShadow(false),
+          globalAlpha_(1.0),
+          globalCompositeOperation_(SOURCE_OVER)
     {}
 
 
@@ -147,7 +149,7 @@ public:
         miterLimit_ = paint.ndashes_;
         linearGradientPoint_ = paint.linearGradientPoint_;
         radialGradientPoint_ = paint.radialGradientPoint_;
-        stopAndColors_ = paint.getStopAndColor();
+        stopAndColors_ = paint.stopAndColors_;
         gradientflag = paint.gradientflag;
         patternRepeat_ = paint.patternRepeat_;
         shadowBlurRadius= paint.shadowBlurRadius;
@@ -155,6 +157,8 @@ public:
         shadowOffsetY = paint.shadowOffsetY;
         shadowColor = paint.shadowColor;
         haveShadow = paint.haveShadow;
+        globalAlpha_ = paint.globalAlpha_;
+        globalCompositeOperation_ = paint.globalCompositeOperation_;
     }
 
 
@@ -237,6 +241,21 @@ public:
         REPEAT_Y,
         NO_REPEAT,
     };
+
+    enum GlobalCompositeOperation {
+        SOURCE_OVER,        // 默认。在目标图像上显示源图像。
+        SOURCE_ATOP,        // 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。
+        SOURCE_IN,          // 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。
+        SOURCE_OUT,         // 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。
+        DESTINATION_OVER,   // 在源图像上显示目标图像。
+        DESTINATION_ATOP,   // 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。
+        DESTINATION_IN,     // 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。
+        DESTINATION_OUT,    // 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。
+        LIGHTER,            // 显示源图像 + 目标图像。
+        COPY,               // 显示源图像。忽略目标图像。
+        XOR                 // 使用异或操作对源图像与目标图像进行组合。
+    };
+
 
     /**
      * @brief Sets the paint style of a closed graph.
@@ -553,6 +572,7 @@ public:
         linearGradientPoint_.y0 = starty;
         linearGradientPoint_.x1 = endx;
         linearGradientPoint_.y1 = endy;
+        changeFlage_ = true;
     }
 
     void addColorStop(double stop, ColorType color)
@@ -573,6 +593,7 @@ public:
         radialGradientPoint_.x1 = end_x;
         radialGradientPoint_.y1 = end_y;
         radialGradientPoint_.r1 = end_r;
+        changeFlage_ = true;
     }
 
     List<StopAndColor> getStopAndColor() const
@@ -698,6 +719,44 @@ public:
     {
         return haveShadow;
     }
+    /**
+     * @brief 设置当前绘图的alpha
+     */
+    void SetGlobalAlpha(float alphaPercentage){
+
+        if(alphaPercentage > 1){
+            globalAlpha_ = 1.0;
+            return ;
+        }
+        if(alphaPercentage < 0){
+            globalAlpha_ = 0.0;
+            return ;
+        }
+        globalAlpha_ = alphaPercentage;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief 返回当前绘图的alpha
+     */
+    float GetGlobalAlpha() const{
+        return globalAlpha_;
+    }
+
+    /**
+     * @brief 设置混合模式
+     */
+    void SetGlobalCompositeOperation(GlobalCompositeOperation globalCompositeOperation) {
+        globalCompositeOperation_ = globalCompositeOperation;
+        changeFlage_ = true;
+    }
+
+    /**
+     * @brief 获取混合模式
+     */
+    GlobalCompositeOperation GetGlobalCompositeOperation() const{
+        return globalCompositeOperation_;
+    }
+
 private:
     PaintStyle style_;
     ColorType fillColor_;
@@ -723,7 +782,8 @@ private:
     double shadowOffsetY;                     //设置阴影纵坐标偏移量
     ColorType shadowColor;                    //设置阴影色彩
     bool haveShadow;                          //当前是否有阴影
-
+    float globalAlpha_;                       //当前绘图的透明度0-1 百分比
+    GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
 };
 
 /**
@@ -1101,7 +1161,7 @@ protected:
 
     struct PathParam : public HeapBase {
         UICanvasVertices* path;
-        ImageParam * imageParam;
+        ImageParam * imageParam =nullptr;
     };
 
     struct TextParam : public HeapBase {
@@ -1188,7 +1248,9 @@ protected:
     {
         PathParam* pathParam = static_cast<PathParam*>(param);
         pathParam->path->FreeAll();
-        DeleteImageParam(pathParam->imageParam);
+        if (pathParam->imageParam != nullptr) {
+            DeleteImageParam(pathParam->imageParam);
+        }
         delete pathParam;
     }
 
@@ -1269,6 +1331,13 @@ protected:
                            const Style& style);
 
     static void DoRender(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style,
+                           const bool& isStroke);
+    static void DoRenderBlend(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
                            const Rect& rect,

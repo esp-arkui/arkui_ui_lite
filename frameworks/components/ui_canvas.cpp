@@ -810,14 +810,22 @@ void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer,
 void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint,
                           const Rect& rect, const Rect& invalidatedArea, const Style& style)
 {
-    DoRender(gfxDstBuffer,param,paint,rect,invalidatedArea,style,true);
+    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_OVER){
+        DoRender(gfxDstBuffer,param,paint,rect,invalidatedArea,style,true);
+    }else{
+        DoRenderBlend(gfxDstBuffer,param,paint,rect,invalidatedArea,style,true);
+    }
 }
 
 
 void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint,
                           const Rect& rect, const Rect& invalidatedArea, const Style& style)
 {
-    DoRender(gfxDstBuffer,param,paint,rect,invalidatedArea,style,false);
+    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_OVER){
+        DoRender(gfxDstBuffer,param,paint,rect,invalidatedArea,style,false);
+    }else{
+        DoRenderBlend(gfxDstBuffer,param,paint,rect,invalidatedArea,style,false);
+    }
 }
 
 void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
@@ -902,7 +910,7 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
                 rgba8Color.redValue = paint.GetStrokeColor().red;
                 rgba8Color.greenValue = paint.GetStrokeColor().green;
                 rgba8Color.blueValue = paint.GetStrokeColor().blue;
-                rgba8Color.alphaValue = paint.GetStrokeColor().alpha;
+                rgba8Color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
             }
         }else{
             if(paint.GetStyle()==Paint::FILL_STYLE||
@@ -910,7 +918,7 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
                 rgba8Color.redValue = paint.GetFillColor().red;
                 rgba8Color.greenValue = paint.GetFillColor().green;
                 rgba8Color.blueValue = paint.GetFillColor().blue;
-                rgba8Color.alphaValue = paint.GetFillColor().alpha;
+                rgba8Color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
             }
         }
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, rgba8Color);
@@ -950,7 +958,7 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
         for (; count < paint.getStopAndColor().Size(); count++) {
             ColorType stopColor = iter->data_.color;
             gradientColorMode.AddColor(iter->data_.stop, Rgba8Color(stopColor.red, stopColor.green,
-                                                                             stopColor.blue, stopColor.alpha));
+                                                                             stopColor.blue, stopColor.alpha * paint.GetGlobalAlpha()));
             iter = iter->next_;
         }
         gradientColorMode.BuildLut();
@@ -1043,7 +1051,263 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
         }
     }
 
+//    if(paint.GetGlobalCompositeOperation()!=Paint::SOURCE_OVER){
+//        DoRenderBlend(gfxDstBuffer,param,paint,rect,invalidatedArea,style,false);
+//    }
+
 }
+
+void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                          const Rect& invalidatedArea, const Style& style, const bool& isStroke)
+{
+
+    if (param == nullptr) {
+         return;
+    }
+    if(paint.HaveShadow()){
+        DoDrawShadow(gfxDstBuffer,param,paint,rect,invalidatedArea,style,isStroke);
+    }
+    TransAffine transform;
+    RenderingBuffer renderBuffer;
+
+
+
+
+    typedef Rgba8 Rgba8Color;
+    //组装renderbase
+    // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+    typedef OrderBgra ComponentOrder;
+    // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+    typedef BlenderRgba<Rgba8Color, ComponentOrder> Blender;
+    typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
+    typedef RendererBase<PixFormat> RendererBasePre;
+    typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
+
+    PixFormat m_pixFormat(renderBuffer);
+    RendererBasePre m_renBasePre(m_pixFormat);
+
+
+
+
+
+
+
+     //初始化buffer和 m_transform
+    InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style);
+
+    typedef DepictCurve<UICanvasVertices> UICanvasPath;
+    RasterizerScanlineAntiAlias<> rasterizer;
+    ScanlineUnPackedContainer m_scanline;
+
+    PathParam* pathParam = static_cast<PathParam*>(param);
+    UICanvasPath canvasPath(*pathParam->path);
+    if(isStroke){
+        if(paint.IsLineDash()){
+            typedef DepictDash<UICanvasPath> DashStyle;
+            typedef DepictStroke<DashStyle> StrokeDashStyle;
+            typedef DepictTransform<StrokeDashStyle> StrokeDashTransform;
+            DashStyle dashStyle(canvasPath);
+            LineDashStyleCalc(dashStyle,paint);
+            StrokeDashStyle strokeDashStyle(dashStyle);
+            LineStyleCalc(strokeDashStyle,paint);
+            StrokeDashTransform strokeDashTransform(strokeDashStyle,transform);
+            rasterizer.Reset();
+            rasterizer.AddPath(strokeDashTransform);
+
+        }else{
+            typedef DepictStroke<UICanvasPath> StrokeLineStyle;
+            typedef DepictTransform<StrokeLineStyle> StrokeTransform;
+            StrokeLineStyle strokeLineStyle(canvasPath);
+            LineStyleCalc(strokeLineStyle,paint);
+
+            StrokeTransform strokeTransform(strokeLineStyle,transform);
+            rasterizer.Reset();
+            rasterizer.AddPath(strokeTransform);
+        }
+    }else{
+        typedef OHOS::DepictTransform<UICanvasPath> PathTransform;
+        PathTransform  pathTransform(canvasPath,transform);
+        rasterizer.Reset();
+        rasterizer.AddPath(pathTransform);
+    }
+
+
+    typedef Rgba8 Rgba8Color;
+    //组装renderbase
+    // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+    typedef OrderBgra ComponentOrder;
+    // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+    typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderCom;
+    typedef PixfmtCustomBlendRgba<BlenderCom, RenderingBuffer> PixFormatCom;
+    typedef RendererBase<PixFormatCom> RendererBaseCom;
+    typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
+
+    PixFormatCom pixFormatCom(renderBuffer);
+    RendererBaseCom renBaseCom(pixFormatCom);
+    SpanAllocator allocator;
+
+    m_renBasePre.BlendFrom(renBaseCom);
+
+    renBaseCom.ResetClipping(true);
+    renBaseCom.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+
+    pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
+
+
+    if(paint.GetStyle()==Paint::STROKE_STYLE||
+       paint.GetStyle()==Paint::FILL_STYLE||
+       paint.GetStyle()==Paint::STROKE_FILL_STYLE){
+
+        Rgba8Color rgba8Color;
+        if(isStroke){
+            if(paint.GetStyle()==Paint::STROKE_STYLE||
+               paint.GetStyle()==Paint::STROKE_FILL_STYLE){
+                rgba8Color.redValue = paint.GetStrokeColor().red;
+                rgba8Color.greenValue = paint.GetStrokeColor().green;
+                rgba8Color.blueValue = paint.GetStrokeColor().blue;
+                rgba8Color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
+            }
+        }else{
+            if(paint.GetStyle()==Paint::FILL_STYLE||
+               paint.GetStyle()==Paint::STROKE_FILL_STYLE){
+                rgba8Color.redValue = paint.GetFillColor().red;
+                rgba8Color.greenValue = paint.GetFillColor().green;
+                rgba8Color.blueValue = paint.GetFillColor().blue;
+                rgba8Color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
+            }
+        }
+        RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBaseCom, rgba8Color);
+    }
+
+    if(paint.GetStyle()==Paint::GRADIENT){
+        // 设定线段分配器
+        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
+        typedef GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> GradientColorMode;
+        // 设定放射渐变的算法
+        typedef GradientRadialCalculate RadialGradientCalculate;
+        // 设定线段插值器
+        typedef SpanInterpolatorLinear<> InterpolatorType;
+        // 设定线性渐变的线段生成器
+        typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate, GradientColorMode> LinearGradientSpan;
+        // 设定放射渐变的线段生成器
+        typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate, GradientColorMode> RadialGradientSpan;
+
+        typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, RenderingBuffer> PixFormatComp;
+        typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
+
+        PixFormatComp pixFormatComp(renderBuffer);
+        RendererBaseComp m_renBaseComp(pixFormatComp);
+
+        m_renBaseComp.ResetClipping(true);
+        m_renBaseComp.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+        TransAffine gradientMatrix;
+        InterpolatorType interpolatorType(gradientMatrix);
+        GradientLinearCalculate gradientLinearCalculate;
+
+        GradientColorMode gradientColorMode;
+
+        gradientColorMode.RemoveAll();
+        ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
+        uint16_t count = 0;
+        for (; count < paint.getStopAndColor().Size(); count++) {
+            ColorType stopColor = iter->data_.color;
+            gradientColorMode.AddColor(iter->data_.stop, Rgba8Color(stopColor.red, stopColor.green,
+                                                                             stopColor.blue, stopColor.alpha * paint.GetGlobalAlpha()));
+            iter = iter->next_;
+        }
+        gradientColorMode.BuildLut();
+
+
+        double d1;
+        double d2;
+
+        if(paint.GetGradient()==Paint::Linear){
+            Paint::LinearGradientPoint linearPoint =paint.GetLinearGradientPoint();
+
+            double angle = atan2(linearPoint.y1 - linearPoint.y0, linearPoint.x1 - linearPoint.x0);
+            gradientMatrix.Reset();
+            gradientMatrix *= OHOS::TransAffineRotation(angle);
+            gradientMatrix *= OHOS::TransAffineTranslation(linearPoint.x0, linearPoint.y0);
+            gradientMatrix *= transform;
+            gradientMatrix.Invert();
+            d1 = 0.0;
+            d2 = sqrt((linearPoint.x1 - linearPoint.x0) * (linearPoint.x1 - linearPoint.x0) + (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
+
+            LinearGradientSpan span(interpolatorType,gradientLinearCalculate,gradientColorMode,d1,d2);
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBaseComp, allocator, span);
+        }
+
+        if(paint.GetGradient()==Paint::Radial){
+            Paint::RadialGradientPoint radialPoint =paint.GetRadialGradientPoint();
+            gradientMatrix.Reset();
+            gradientMatrix *= OHOS::TransAffineTranslation(radialPoint.x1, radialPoint.y1);
+            gradientMatrix *= transform;
+            gradientMatrix.Invert();
+            d1 = radialPoint.r0;
+            d2 = radialPoint.r1;
+            GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1, radialPoint.y0 - radialPoint.y1);
+            RadialGradientSpan span(interpolatorType,gradientRadialCalculate,gradientColorMode,d1,d2);
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBaseComp, allocator, span);
+        }
+
+    }
+
+    if(paint.GetStyle()==Paint::PATTERN){
+
+        ImageParam* imageParam =pathParam->imageParam;
+        if (imageParam->image == nullptr) {
+            return;
+        }
+        // 渲染器缓冲区
+        typedef OHOS::RenderingBuffer PatternBuffer;
+        // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        typedef OHOS::ImageAccessorWrap<PixFormat, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
+        // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        typedef OHOS::ImageAccessorRepeatX<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
+        // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        typedef OHOS::ImageAccessorRepeatY<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
+        // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        typedef OHOS::ImageAccessorNoRepeat<PixFormat> imgSourceTypeNoRepeat;
+        // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        //  x,y轴都重复
+        typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
+        //  x轴重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
+        //  y轴重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
+        // 不重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
+
+        PatternBuffer patternBuffer;
+        uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
+        patternBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data,imageParam->width,imageParam->height,imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
+        PixFormat img_pixf(patternBuffer); // 获取图片
+
+        if(paint.GetPatternRepeatMode()==Paint::REPEAT){
+            ImgSourceTypeRepeat img_src(img_pixf);
+            spanPatternTypeRepeat m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBasePre, allocator, m_spanPatternType);
+        }
+        if(paint.GetPatternRepeatMode()==Paint::REPEAT_X){
+            imgSourceTypeRepeatX img_src(img_pixf);
+            spanPatternTypeRepeatX m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBasePre, allocator, m_spanPatternType);
+        }
+        if(paint.GetPatternRepeatMode()==Paint::REPEAT_Y){
+            imgSourceTypeRepeatY img_src(img_pixf);
+            spanPatternTypeRepeatY m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBasePre, allocator, m_spanPatternType);
+        }
+        if(paint.GetPatternRepeatMode()==Paint::NO_REPEAT){
+            imgSourceTypeNoRepeat img_src(img_pixf);
+            spanPatternTypeNoRepeat m_spanPatternType(img_src, 0-rect.GetLeft(), 0-rect.GetTop());
+            RenderScanlinesAntiAlias(rasterizer, m_scanline, m_renBasePre, allocator, m_spanPatternType);
+        }
+    }
+
+}
+
 
 void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                           const Rect& invalidatedArea, const Style& style, const bool& isStroke)
@@ -1122,7 +1386,7 @@ void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer, void* param, const Paint& 
     rgba8Color.redValue = paint.GetShadowColor().red;
     rgba8Color.greenValue = paint.GetShadowColor().green;
     rgba8Color.blueValue = paint.GetShadowColor().blue;
-    rgba8Color.alphaValue = paint.GetShadowColor().alpha;
+    rgba8Color.alphaValue = paint.GetShadowColor().alpha * paint.GetGlobalAlpha();
 
     RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, rgba8Color);
 

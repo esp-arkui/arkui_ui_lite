@@ -93,6 +93,8 @@ public:
     void RM009LineDashDrawPath();
     void RM009StrokeAndClearRectDrawPath();
     void RM011StrokeText001();
+    void RM012globalAlpha001();
+    void RM012GlobalCompositeOperation002();
 
 private:
     const static int16_t GAP = 10;

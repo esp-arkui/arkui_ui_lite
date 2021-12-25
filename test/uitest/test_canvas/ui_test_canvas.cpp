@@ -51,7 +51,9 @@ const UIView* UITestCanvas::GetTestView()
 //    RM009LineJoinDrawPath();
 //    RM009LineDashDrawPath();
 //    RM009StrokeAndClearRectDrawPath();
-    RM011StrokeText001();
+//    RM011StrokeText001();
+//    RM012globalAlpha001();
+    RM012GlobalCompositeOperation002();
 //    UIKitCanvasTestDrawLine001();
 //    UIKitCanvasTestDrawLine002();
 //    UIKitCanvasTestDrawCurve001();
@@ -64,7 +66,7 @@ const UIView* UITestCanvas::GetTestView()
 //    UIKitCanvasTestDrawCircle003();
 //    UIKitCanvasTestDrawArc001();
 //    UIKitCanvasTestDrawImage001();
-    UIKitCanvasTestDrawLabel001();
+//    UIKitCanvasTestDrawLabel001();
 //    UIKitCanvasTestDrawSector001();
 //    UIKitCanvasTestClear001();
 //    UIKitCanvasTestDrawPath001();
@@ -1421,5 +1423,70 @@ void UITestCanvas::RM011StrokeText001(){
     paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
     canvas->StrokeText("中国 你好，鸿蒙。。", {0, 20}, fontStyle, paint);
 }
+void UITestCanvas::RM012globalAlpha001(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置图像透明度_红不透明_绿蓝_一半透明度");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalAlpha(0.2);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetFillColor(Color::Blue());
+    canvas->BeginPath();
+    canvas->MoveTo({180, 100});
+    canvas->LineTo({180, 160});
+    canvas->LineTo({310, 160});
+    canvas->LineTo({310, 100});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+}
+
+void UITestCanvas::RM012GlobalCompositeOperation002(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置GlobalCompositeOperation");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
+//    paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
+
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+}
+
 
 } // namespace OHOS
