@@ -605,7 +605,7 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX1, double dstY1, double dstX2, double dstY2, bool isComposite)
+                                             double dstX1, double dstY1, double dstX2, double dstY2)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -614,11 +614,11 @@ namespace OHOS {
         LineTo(dstX1, dstY2);
         ClosePolygon();
         double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isComposite);
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
     }
 
     void BaseGfxExtendEngine::TransformImage(
-        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isComposite)
+        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -628,11 +628,11 @@ namespace OHOS {
         ClosePolygon();
         double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
 
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
     }
 
     void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             const double* parallelogram, bool isComposite)
+                                             const double* parallelogram)
     {
         ResetPath();
         MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
@@ -641,10 +641,10 @@ namespace OHOS {
         LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
                parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isComposite);
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
     }
 
-    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram, bool isComposite)
+    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram)
     {
         ResetPath();
         MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
@@ -654,7 +654,7 @@ namespace OHOS {
                parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
 
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
     }
 
     void BaseGfxExtendEngine::DrawShadow(
@@ -888,7 +888,7 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::RenderImage(const Image& img, int x1, int y1, int x2, int y2,
-                                          const double* parl, bool isComposite)
+                                          const double* parl)
     {
         OHOS::TransAffine mtx((double)x1,
                               (double)y1,
@@ -905,17 +905,9 @@ namespace OHOS {
         Interpolator interpolator(mtx);
 
         if (m_blendMode == BLENDALPHA) {
-            if (isComposite) {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBasePre, interpolator);
-            } else {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBase, interpolator);
-            }
+            BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBase, interpolator);
         } else {
-            if (isComposite) {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseCompPre, interpolator);
-            } else {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseComp, interpolator);
-            }
+            BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseComp, interpolator);
         }
     }
 
@@ -948,18 +940,6 @@ namespace OHOS {
             m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         } else {
             m_renBaseCompPre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-        }
-    }
-
-    void BaseGfxExtendEngine::BlendImage(Image& img, double dstX, double dstY, unsigned alpha)
-    {
-        WorldToScreen(dstX, dstY);
-        PixFormat pixF(img.renBuf);
-        m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        if (m_blendMode == BLENDALPHA) {
-            m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        } else {
-            m_renBaseCompPre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
         }
     }
 
@@ -1012,27 +992,19 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX, double dstY, unsigned alpha, bool isComposite)
+                                             double dstX, double dstY, unsigned alpha)
     {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
         Rect r(imgX1, imgY1, imgX2, imgY2);
-        if (isComposite) {
-            m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-        } else {
-            m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-        }
+        m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
     }
 
-    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isComposite)
+    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha)
     {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
-        if (isComposite) {
-            m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        } else {
-            m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        }
+        m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
     }
 
     bool BaseGfxExtendEngine::BoundingRectSingle(unsigned int path_id, RectD* rect, PathTransform& path)

@@ -419,41 +419,6 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从src中复制一段到缓冲区
-         * @param src 一段缓冲区
-         * @param rectSrcPtr 矩形边界
-         * @param dx 需要复制的x长度
-         * @param dy 需要复制的y长度
-         */
-        template <class RenBuf>
-        void CopyFrom(const RenBuf& src, const RectI* rectSrcPtr = 0, int dx = 0, int dy = 0)
-        {
-            RectI rsrc(0, 0, src.GetWidth(), src.GetHeight());
-            if (rectSrcPtr) {
-                rsrc.x1 = rectSrcPtr->x1;
-                rsrc.y1 = rectSrcPtr->y1;
-                rsrc.x2 = rectSrcPtr->x2 + 1;
-                rsrc.y2 = rectSrcPtr->y2 + 1;
-            }
-            RectI rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
-            RectI rect = ClipRectArea(rdst, rsrc, src.GetWidth(), src.GetHeight());
-            if (rect.x2 > 0) {
-                int incy = 1;
-                if (rdst.y1 > rsrc.y1) {
-                    rsrc.y1 += rect.y2 - 1;
-                    rdst.y1 += rect.y2 - 1;
-                    incy = -1;
-                }
-                while (rect.y2 > 0) {
-                    pixfmtType->CopyFrom(src, rdst.x1, rdst.y1, rsrc.x1, rsrc.y1, rect.x2);
-                    rdst.y1 += incy;
-                    rsrc.y1 += incy;
-                    --rect.y2;
-                }
-            }
-        }
-
-        /**
          * @brief 从src中取一段到缓冲区进行混合
          * @param src 一段缓冲区
          * @param rectSrcPtr 矩形边界
@@ -509,6 +474,7 @@ namespace OHOS {
                 }
             }
         }
+
     private:
         pixfmt_type* pixfmtType;
         RectI clipBox;

@@ -148,28 +148,6 @@ namespace OHOS {
         }
 
         /**
-         * 从另一rendering_buffer中复制数据
-         */
-        template <class RenBuf>
-        void CopyFrom(const RenBuf& renBuf)
-        {
-            unsigned h = GetHeight();
-            if (renBuf.height() < h) {
-                h = renBuf.height();
-            }
-            unsigned lStride = GetStrideAbs();
-            if (renBuf.stride_abs() < lStride) {
-                lStride = renBuf.stride_abs();
-            }
-            lStride *= sizeof(T);
-            unsigned y;
-            unsigned w = GetWidth();
-            for (y = 0; y < h; y++) {
-                memcpy_s(RowPtr(0, y, w), lStride, renBuf.row_ptr(y), lStride);
-            }
-        }
-
-        /**
          * @brief Clear 以value值填充整个内存块
          * @param value
          */

@@ -55,7 +55,7 @@ namespace OHOS {
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba模式处理颜色
         typedef OHOS::CompOpAdaptorRgba<ColorType, ComponentOrder> BlenderComp;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba_pre模式处理颜色
-        typedef OHOS::RgbaPreBlender<ColorType, ComponentOrder> BlenderPre;
+        typedef OHOS::RgbaPrelerpBlender<ColorType, ComponentOrder> BlenderPre;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据comp_op_adaptor_rgba_pre模式处理颜色
         typedef OHOS::CompOpAdaptorRgbaPre<ColorType, ComponentOrder> BlenderCompPre;
         // 根据pixfmt_alpha_blend_rgba的像素处理模式处理RenderingBuffer对应的缓冲区
@@ -645,20 +645,17 @@ namespace OHOS {
          * @param isComposite 是否抗锯齿
          */
         void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX1, double dstY1,
-                            double dstX2, double dstY2, bool isComposite = true);
-        void TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2,
-                            bool isComposite = true);
-        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, const double* parallelogram,
-                            bool isComposite = true);
-        void TransformImage(const Image& img, const double* parallelogram, bool isComposite = true);
+                            double dstX2, double dstY2);
+        void TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2);
+        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, const double* parallelogram);
+        void TransformImage(const Image& img, const double* parallelogram);
 
         void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
                         unsigned alpha = 255);
-        void BlendImage(Image& img, double dstX, double dstY, unsigned alpha = 255);
 
         void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
-                            unsigned alpha, bool isComposite = false);
-        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isComposite = false);
+                            unsigned alpha);
+        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha);
 
         /**
          * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
@@ -844,7 +841,7 @@ namespace OHOS {
          * @param parl
          * @param isComposite
          */
-        void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl, bool isComposite = true);
+        void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
 
         /**
          * @brief 重置LineDash相关配置
