@@ -741,12 +741,12 @@ namespace OHOS {
                             BaseGfxExtendEngine::XMINYMIN);
         return true;
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
     void UICanvas::SetLineDash(float* dashArray, unsigned int ndash, Paint& paint)
     {
         paint.SetLineDash(dashArray, ndash);
     }
-
+#endif
     void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
     {
         point.x = prePoint.x + rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
@@ -854,12 +854,14 @@ namespace OHOS {
         if (m_graphics == nullptr) {
             return;
         }
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (paint.IsLineDash()) {
             m_graphics->SetLineDashOffset(paint.GetLineDashOffset());
             m_graphics->SetLineDash(paint.GetLineDash(), paint.GetLineDashCount());
         } else {
             m_graphics->SetLineDash(nullptr, 0);
         }
+#endif
         m_graphics->SetLineColor(drawStyle.bgColor_.red, drawStyle.bgColor_.green, drawStyle.bgColor_.blue,
                                  drawStyle.bgOpa_);
         m_graphics->SetLineWidth(lineWidth);
@@ -1215,12 +1217,14 @@ namespace OHOS {
             drawStyle.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
             drawStyle.lineColor_ = paint.GetStrokeColor();
             drawStyle.lineOpa_ = paint.GetOpacity();
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             if (paint.IsLineDash()) {
                 m_graphics->SetLineDashOffset(paint.GetLineDashOffset());
                 m_graphics->SetLineDash(paint.GetLineDash(), paint.GetLineDashCount());
             } else {
                 m_graphics->SetLineDash(nullptr, 0);
             }
+#endif
             m_graphics->SetLineWidth(drawStyle.lineWidth_);
             m_graphics->SetLineColor(drawStyle.lineColor_.red, drawStyle.lineColor_.green, drawStyle.lineColor_.blue,
                                      drawStyle.lineOpa_);
@@ -1807,13 +1811,14 @@ namespace OHOS {
         if (m_graphics == nullptr) {
             return;
         }
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (paint.IsLineDash()) {
             m_graphics->SetLineDashOffset(paint.GetLineDashOffset());
             m_graphics->SetLineDash(paint.GetLineDash(), paint.GetLineDashCount());
         } else {
             m_graphics->SetLineDash(nullptr, 0);
         }
-
+#endif
         Point pathEnd = {COORD_MIN, COORD_MIN};
 
         ListNode<Point>* pointIter = path->points_.Begin();

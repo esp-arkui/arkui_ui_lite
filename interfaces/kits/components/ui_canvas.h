@@ -174,8 +174,10 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             lineJoin_(BaseGfxExtendEngine::LineJoin::JOINMITER), miterLimit_(10.0),
 #endif
-            dashOffset(0.0), isDrawDash(false),
-            dashArray(nullptr), ndashes(0), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
+            dashOffset(0.0), dashArray(nullptr), ndashes(0),
+#endif
+            isDrawDash(false), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
             shadowColor(Color::Black()), blendMode(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER), transformCenterX(0),
             transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
         {
@@ -224,23 +226,11 @@ namespace OHOS {
             miterLimit_ = paint.miterLimit_;
 #endif
             globalAlpha = paint.globalAlpha;
-            dashOffset = paint.dashOffset;
             isDrawDash = paint.isDrawDash;
-            shadowColor = paint.shadowColor;
-            shadowOffsetX = paint.shadowOffsetX;
-            shadowOffsetY = paint.shadowOffsetY;
-            shadowBlurRadius = paint.shadowBlurRadius;
-            ndashes = (paint.ndashes + 1) & ~1;
-            blendMode = paint.blendMode;
-            m_transform = paint.m_transform;
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
 
-            transformCenterX = paint.transformCenterX;
-            transformCenterY = paint.transformCenterY;
-            rotateAngle = paint.rotateAngle;
-            scaleX = paint.scaleX;
-            scaleY = paint.scaleY;
-            transLateX = paint.transLateX;
-            transLateY = paint.transLateY;
+            dashOffset = paint.dashOffset;
+            ndashes = (paint.ndashes + 1) & ~1;
             if (isDrawDash && ndashes > 0) {
                 dashArray = new float[ndashes];
                 if (dashArray) {
@@ -260,15 +250,35 @@ namespace OHOS {
             } else {
                 dashArray = nullptr;
             }
+#endif
+
+            shadowColor = paint.shadowColor;
+            shadowOffsetX = paint.shadowOffsetX;
+            shadowOffsetY = paint.shadowOffsetY;
+            shadowBlurRadius = paint.shadowBlurRadius;
+
+            blendMode = paint.blendMode;
+            m_transform = paint.m_transform;
+
+            transformCenterX = paint.transformCenterX;
+            transformCenterY = paint.transformCenterY;
+            rotateAngle = paint.rotateAngle;
+            scaleX = paint.scaleX;
+            scaleY = paint.scaleY;
+            transLateX = paint.transLateX;
+            transLateY = paint.transLateY;
+
             gradientControl = paint.getGradientControl();
             patternRepeat = paint.patternRepeat;
         }
         const Paint& operator=(const Paint& paint)
         {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             if (dashArray != nullptr) {
                 delete[] dashArray;
                 dashArray = nullptr;
             }
+#endif
             Init(paint);
             return *this;
         }
@@ -280,10 +290,12 @@ namespace OHOS {
          */
         virtual ~Paint()
         {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             if (dashArray != nullptr) {
                 delete[] dashArray;
                 dashArray = nullptr;
             }
+#endif
         }
 
         /**
@@ -518,6 +530,7 @@ namespace OHOS {
 #endif
             return BaseGfxExtendEngine::LineCap::CAPNONE;
         }
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         /**
          * @brief 设置点划线的偏移量.
          * @see GetLineDashOffset
@@ -586,21 +599,20 @@ namespace OHOS {
                 dashArray = nullptr;
             }
         }
-
+        float* GetLineDash() const
+        {
+            return dashArray;
+        }
+        unsigned int GetLineDashCount() const
+        {
+            return ndashes;
+        }
+#endif
         bool IsLineDash() const
         {
             return isDrawDash;
         }
 
-        float* GetLineDash() const
-        {
-            return dashArray;
-        }
-
-        unsigned int GetLineDashCount() const
-        {
-            return ndashes;
-        }
         /**
          * @brief 设置全局alpha度.
          * @since 1.0
@@ -891,10 +903,12 @@ namespace OHOS {
         BaseGfxExtendEngine::LineJoin lineJoin_; //设置笔的路径连接处的风格样式
         double miterLimit_;                      //设置路径连接处的尖角的间距限制
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         float dashOffset; //dash 点偏移量
-        bool isDrawDash;
         float* dashArray; //dash 点数组
         unsigned int ndashes;
+#endif
+        bool isDrawDash;
         float globalAlpha;                        //设置图元全局alpha
         double shadowBlurRadius;                  //设置阴影模糊半径
         double shadowOffsetX;                     //设置阴影横坐标偏移量
@@ -1289,6 +1303,7 @@ namespace OHOS {
             }
             paint.SetGlobalAlpha(globalAlpha);
         }
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         /**
          * @brief 获取点划线的数组和数量.
          * @since 1.0
@@ -1299,6 +1314,7 @@ namespace OHOS {
             nDashes = paint.GetLineDashCount();
             return paint.GetLineDash();
         }
+
         /**
          * @brief 设置点划线的偏移量.
          * @param dashOffset 表示点划线偏移量
@@ -1309,6 +1325,7 @@ namespace OHOS {
         {
             paint.SetLineDashOffset(dashOffset);
         }
+#endif
         /**
          * @brief 设置线的宽度.
          * @param lineWidth 表示线的宽度
@@ -1400,6 +1417,7 @@ namespace OHOS {
         {
             paint.SetTransform(sx, shy, shx, sy, tx, ty);
         }
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         /**
          * @brief 设置点划线的偏移量.
          * @see GetLineDashOffset
@@ -1421,6 +1439,7 @@ namespace OHOS {
             //return m_graphics->GetLineDashOffset();
             return paint.GetLineDashOffset();
         }
+#endif
         void SetDrawGraphicsContext(Paint& paint)
         {
             paint.SetDrawGraphicsContext(&this->m_graphics);

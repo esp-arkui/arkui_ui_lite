@@ -896,12 +896,16 @@ namespace OHOS {
         interpolator_type m_interpolator_type;
         gradient_func_type m_radialGradientFunction;
         ConvCurve m_convCurve;
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         ConvDashCurve m_convDashCurve;
-        ConvStroke m_convStroke;
         ConvDashStroke m_convDashStroke;
+        DashStrokeTransform m_dashStrokeTransform;
+#endif
+        ConvStroke m_convStroke;
+
         PathTransform m_pathTransform;
         StrokeTransform m_strokeTransform;
-        DashStrokeTransform m_dashStrokeTransform;
+
         StackBlur m_stack_blur;
         ColorType shadowColor_;
         double m_masterAlpha;

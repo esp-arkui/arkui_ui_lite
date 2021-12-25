@@ -207,18 +207,24 @@ namespace OHOS {
         paint.SetOpacity(200); //0 是完全透明 255 不透明
 
         canvas->LineWidth(2, paint);
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         canvas->LineDashOffset(10, paint);
         float ds[] = {5, 3.1f, 1.2f, 5.5f};
         canvas->SetLineDash(ds, 4, paint);
+#endif
         canvas->DrawCircle({50, 50}, 40, paint);
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         unsigned nDashes = 0;
         float* fLineDashes = canvas->GetLineDash(paint, nDashes);
+
         float ds2[] = {3, 5.1f, 2.2f, 4.5f};
         canvas->SetLineDash(ds2, 4, paint);
+#endif
         paint.SetOpacity(255); //0 是完全透明 255 不透明
         canvas->StrokeRect({100, 100}, 11140, 100, paint);
-
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         canvas->SetLineDash(nullptr, 0, paint);
+#endif
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Blue());
         canvas->StrokeRect({20, 20}, 150, 100, paint);

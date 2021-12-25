@@ -72,12 +72,15 @@ namespace OHOS {
         m_path(),
         m_transform(),
         m_convCurve(m_path),
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         m_convDashCurve(m_convCurve),
-        m_convStroke(m_convCurve),
         m_convDashStroke(m_convDashCurve),
+        m_dashStrokeTransform(m_convDashStroke, m_transform),
+#endif
+        m_convStroke(m_convCurve),
+
         m_pathTransform(m_convCurve, m_transform),
         m_strokeTransform(m_convStroke, m_transform),
-        m_dashStrokeTransform(m_convDashStroke, m_transform),
         m_evenOddFlag(false),
         is_dash(false),
         ndashes(0),
@@ -106,12 +109,15 @@ namespace OHOS {
         m_lineGradientInterpolator(m_lineGradientMatrix),
         m_path(baseGfxExtendEngine.m_path),
         m_convCurve(m_path),
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         m_convDashCurve(m_convCurve),
-        m_convStroke(m_convCurve),
         m_convDashStroke(m_convDashCurve),
+        m_dashStrokeTransform(m_convDashStroke, m_transform),
+#endif
+        m_convStroke(m_convCurve),
         m_pathTransform(m_convCurve, m_transform),
-        m_strokeTransform(m_convStroke, m_transform),
-        m_dashStrokeTransform(m_convDashStroke, m_transform)
+        m_strokeTransform(m_convStroke, m_transform)
+
     {
         m_rbuf = baseGfxExtendEngine.m_rbuf;
         m_pixFormat = PixFormat(m_rbuf);
@@ -314,7 +320,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
+#endif
         }
     }
 
@@ -331,7 +339,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
+#endif
         }
     }
 
@@ -359,7 +369,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
+#endif
         }
     }
 
@@ -467,7 +479,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.Width(w);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.Width(w);
+#endif
         }
     }
 
@@ -482,7 +496,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.LineCap((OHOS::LineCapEnum)cap);
         } else {
+#    if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.LineCap((OHOS::LineCapEnum)cap);
+#    endif
         }
     }
 
@@ -491,6 +507,7 @@ namespace OHOS {
         return m_lineCap;
     }
 #endif
+
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
     void BaseGfxExtendEngine::SetLineJoin(LineJoin join)
     {
@@ -498,7 +515,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.LineJoin((OHOS::LineJoinEnum)join);
         } else {
+#    if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.LineJoin((OHOS::LineJoinEnum)join);
+#    endif
         }
     }
 
@@ -513,7 +532,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.MiterLimit(limitValue);
         } else {
+#    if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.MiterLimit(limitValue);
+#    endif
         }
     }
 
@@ -728,11 +749,13 @@ namespace OHOS {
                     if (!this->is_dash) {
                         m_rasterizer.AddPath(m_strokeTransform);
                     } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                         for (unsigned int i = 0; i < this->ndashes; i += OHOS::TWO_STEP) {
                             m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
                         m_convDashCurve.DashStart(dDashOffset);
                         m_rasterizer.AddPath(m_dashStrokeTransform);
+#endif
                     }
                     Render(false);
                 }
@@ -748,11 +771,13 @@ namespace OHOS {
                     if (!this->is_dash) {
                         m_rasterizer.AddPath(m_strokeTransform);
                     } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                         for (unsigned int i = 0; i < this->ndashes; i += OHOS::TWO_STEP) {
                             m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
                         m_convDashCurve.DashStart(dDashOffset);
                         m_rasterizer.AddPath(m_dashStrokeTransform);
+#endif
                     }
                     Render(false);
                 }
