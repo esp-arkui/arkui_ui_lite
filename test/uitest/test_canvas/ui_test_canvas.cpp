@@ -320,7 +320,7 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(BaseGfxExtendEngine::JOINMITER);
-        paint.SetMiterLimit(1);
+        paint.SetMiterLimit(4);
 #endif
         paint.SetStrokeColor(Color::Green());
         canvas->BeginPath();
