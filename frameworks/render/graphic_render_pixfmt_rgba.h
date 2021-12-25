@@ -26,7 +26,6 @@
 
 namespace OHOS {
     enum CompOpEnum {
-        COMP_OP_CLEAR,
         COMP_OP_SRC,
         COMP_OP_DST,
         COMP_OP_SRC_OVER,
@@ -38,18 +37,7 @@ namespace OHOS {
         COMP_OP_SRC_ATOP,
         COMP_OP_DST_ATOP,
         COMP_OP_XOR,
-        COMP_OP_PLUS,
-        COMP_OP_MULTIPLY,
-        COMP_OP_SCREEN,
-        COMP_OP_OVERLAY,
-        COMP_OP_DARKEN,
         COMP_OP_LIGHTEN,
-        COMP_OP_COLOR_DODGE,
-        COMP_OP_COLOR_BURN,
-        COMP_OP_HARD_LIGHT,
-        COMP_OP_SOFT_LIGHT,
-        COMP_OP_DIFFERENCE,
-        COMP_OP_EXCLUSION,
         END_OF_COMP_OP_E
     };
 
