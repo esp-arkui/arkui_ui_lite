@@ -609,7 +609,7 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
  * @tc.desc: Verify SetLineCap function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -631,11 +631,60 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level0)
 }
 
 /**
+ * @tc.name: UICanvasSetLineCap_002
+ * @tc.desc: Verify SetLineCap function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetLineCap_002, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPBUTT);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPBUTT);
+
+    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPSQUARE);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPSQUARE);
+
+    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPROUND);
+
+    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPNONE);
+}
+
+/**
  * @tc.name: UICanvasSetLineJoin_001
  * @tc.desc: Verify SetLineJoin function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINMITER);
+
+    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINROUND);
+
+    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+
+    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINNONE);
+}
+
+/**
+ * @tc.name: UICanvasSetLineJoin_002
+ * @tc.desc: Verify SetLineJoin function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetLineJoin_002, TestSize.Level0)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -659,7 +708,28 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level0)
  * @tc.desc: Verify SetLineDashOffset function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetLineDashOffset(LINE_OFFSET1);
+    EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET1);
+
+    paint_->SetLineDashOffset(LINE_OFFSET2);
+    EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET2);
+
+    paint_->SetLineDashOffset(LINE_OFFSET3);
+    EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET3);
+}
+
+/**
+ * @tc.name: UICanvasSetLineDashOffset_002
+ * @tc.desc: Verify SetLineDashOffset function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_002, TestSize.Level0)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -710,7 +780,28 @@ HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
  * @tc.desc: Verify MiterLimit function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasMiterLimit_001, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasMiterLimit_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetMiterLimit(MITERLIMIT1);
+    EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT1);
+
+    paint_->SetMiterLimit(MITERLIMIT2);
+    EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT2);
+
+    paint_->SetMiterLimit(MITERLIMIT3);
+    EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT3);
+}
+
+/**
+ * @tc.name: UICanvasMiterLimit_002
+ * @tc.desc: Verify MiterLimit function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
