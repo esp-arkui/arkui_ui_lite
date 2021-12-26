@@ -35,19 +35,10 @@
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 #define GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 
-#include "gfx_utils/graphics/graphic_color/graphic_color_rgba.h"
+#include "gfx_utils/color.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-    struct PixfmtGrayTag {
-    };
-
-    struct PixfmtRgbTag {
-    };
-
-    struct PixfmtRgbaTag {
-    };
-
     /**
      *
      * @brief Defines Blenderbase.
@@ -64,14 +55,14 @@ namespace OHOS {
          * @brief 把颜色分量设置给颜色.
          * @param r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
-        static void Set(ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a)
+        static void SetBlendColor(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
         {
-            pColor[OrderType::RED] = r;
-            pColor[OrderType::GREEN] = g;
-            pColor[OrderType::BLUE] = b;
-            pColor[OrderType::ALPHA] = a;
+            pColor[OrderType::RED] = redValue;
+            pColor[OrderType::GREEN] = greenValue;
+            pColor[OrderType::BLUE] = blueValue;
+            pColor[OrderType::ALPHA] = alphaValue;
         }
 
         /**
@@ -80,12 +71,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static void Set(ValueType* pColor, const Rgba& color)
+        static void SetBlendColor(ValueType* pColor, const Rgba& color)
         {
-            pColor[OrderType::RED] = ColorType::FromDouble(color.redValue);
-            pColor[OrderType::GREEN] = ColorType::FromDouble(color.greenValue);
-            pColor[OrderType::BLUE] = ColorType::FromDouble(color.blueValue);
-            pColor[OrderType::ALPHA] = ColorType::FromDouble(color.alphaValue);
+            pColor[OrderType::RED] = ColorType::FromFloat(color.redValue);
+            pColor[OrderType::GREEN] = ColorType::FromFloat(color.greenValue);
+            pColor[OrderType::BLUE] = ColorType::FromFloat(color.blueValue);
+            pColor[OrderType::ALPHA] = ColorType::FromFloat(color.alphaValue);
         }
 
         /**
@@ -93,22 +84,22 @@ namespace OHOS {
          * @return 返回颜色
          * @param r,g,b,a 颜色分量,cover 覆盖率
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
-        static Rgba Get(ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue, CoverType cover = COVER_FULL)
         {
             if (cover > COVER_NONE) {
-                Rgba c(ColorType::ToDouble(r), ColorType::ToDouble(g), ColorType::ToDouble(b), ColorType::ToDouble(a));
+                Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue), ColorType::ToFloat(blueValue), ColorType::ToFloat(alphaValue));
 
                 if (cover < COVER_FULL) {
-                    double x = double(cover) / COVER_FULL;
-                    c.redValue *= x;
-                    c.greenValue *= x;
-                    c.blueValue *= x;
-                    c.alphaValue *= x;
+                    float coverX = float(cover) / COVER_FULL;
+                    resultColor.redValue *= coverX;
+                    resultColor.greenValue *= coverX;
+                    resultColor.blueValue *= coverX;
+                    resultColor.alphaValue *= coverX;
                 }
 
-                return c;
+                return resultColor;
             } else {
                 return Rgba::NoColor();
             }
@@ -121,10 +112,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba Get(const ValueType* pColor, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(const ValueType* pColor, CoverType cover = COVER_FULL)
         {
-            return Get(pColor[OrderType::RED], pColor[OrderType::GREEN],
-                pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
+            return GetBlendColor(pColor[OrderType::RED], pColor[OrderType::GREEN],
+                                 pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);
         }
     };
 } // namespace OHOS

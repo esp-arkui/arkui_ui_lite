@@ -27,7 +27,8 @@ namespace OHOS {
         using ValueType = typename ColorType::ValueType;
         using CalcType = typename ColorType::CalcType;
 
-        PixfmtTransposer() : pixf_(0)
+        PixfmtTransposer() :
+            pixf_(0)
         {}
 
         /**
@@ -36,7 +37,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit PixfmtTransposer(PixfmtType& pixf) : pixf_(&pixf)
+        explicit PixfmtTransposer(PixfmtType& pixf) :
+            pixf_(&pixf)
         {}
 
         /**
@@ -87,7 +89,7 @@ namespace OHOS {
          * @brief 设置指定坐标颜色
          *
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         GRAPHIC_GEOMETRY_INLINE void CopyPixel(int x, int y, const ColorType& c)
         {

@@ -97,7 +97,6 @@ public:
     void RM011CanvasRotate001();
     void RM012globalAlpha001();
     void RM012GlobalCompositeOperation002();
-    void RM012GlobalCompositeOperation003();
 private:
     const static int16_t GAP = 10;
     const static int16_t TITLE_HEIGHT = 29;

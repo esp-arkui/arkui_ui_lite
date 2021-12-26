@@ -153,7 +153,7 @@ HEADERS += \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.tpp \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_color/graphic_color_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/color.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_clip_operate.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_functions.h \
@@ -225,9 +225,7 @@ HEADERS += \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_blend.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_comp.h \
-    ../../../../frameworks/render/graphic_render_pixfmt_rgba_conv.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_gamma.h \
-    ../../../../frameworks/render/graphic_render_pixfmt_rgba_multi.h \
     ../../../../frameworks/render/graphic_render_pixfmt_transposer.h \
     ../../../../frameworks/render/graphic_render_scanline.h \
     ../../../../interfaces/innerkits/common/graphic_startup.h \

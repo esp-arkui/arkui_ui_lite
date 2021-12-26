@@ -19,10 +19,12 @@ static const double g_approxScale = 2.0;
 namespace OHOS {
     BaseGfxExtendEngine::~BaseGfxExtendEngine()
     {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (dashes) {
             delete[] dashes;
             dashes = NULL;
         }
+#endif
     }
 
     BaseGfxExtendEngine::BaseGfxExtendEngine() :
@@ -41,18 +43,26 @@ namespace OHOS {
         m_renSolidComp(m_renBaseComp),
         m_allocator(),
         m_clipBox(0, 0, 0, 0),
-        m_blendMode(BLENDALPHA),
-        m_imageBlendMode(BLENDDST),
+        m_blendMode(BLEND_ALPHA),
+        m_imageBlendMode(BLEND_DST),
         m_imageBlendColor(0, 0, 0),
         m_fillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM),
         m_lineColor(0, 0, 0),
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         m_lineCap(CAPROUND),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         m_lineJoin(JOINROUND),
+        m_miterLimit(OHOS::DEFAULTMITERLIMIT),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientMatrix(),
         m_lineGradientMatrix(),
         m_fillRadialMatrix(),
+#endif
         m_antiAliasGamma(1.0),
-        m_miterLimit(OHOS::DEFAULTMITERLIMIT),
+
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientD1(0.0),
         m_lineGradientD1(0.0),
         m_fillGradientInterpolator(m_fillGradientMatrix),
@@ -60,50 +70,66 @@ namespace OHOS {
         m_linearGradientFunction(),
         m_fillGradientFlag(SOLID),
         m_lineGradientFlag(SOLID),
+
         m_interpolator_type(m_fillRadialMatrix),
         m_radialGradientFunction(),
         m_fillGradientD2(0.0),
         m_lineGradientD2(0.0),
+#endif
         m_lineWidth(1),
         m_path(),
         m_transform(),
         m_convCurve(m_path),
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
+
         m_convDashCurve(m_convCurve),
-        m_convStroke(m_convCurve),
         m_convDashStroke(m_convDashCurve),
-        m_pathTransform(m_convCurve, m_transform),
-        m_strokeTransform(m_convStroke, m_transform),
         m_dashStrokeTransform(m_convDashStroke, m_transform),
-        m_evenOddFlag(false),
-        is_dash(false),
         ndashes(0),
         dashes(nullptr),
+        dDashOffset(0),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         shadowColor_(Color(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM)),
-        m_masterAlpha(1.0),
         shadowOffsetY_(0),
         shadowOffsetX_(0),
         shadowBlurRadius_(0),
-        dDashOffset(0)
+#endif
+        m_convStroke(m_convCurve),
+        m_pathTransform(m_convCurve, m_transform),
+        m_strokeTransform(m_convStroke, m_transform),
+        m_evenOddFlag(false),
+        is_dash(false),
+        m_masterAlpha(1.0)
     {
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         SetLineCap(m_lineCap);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         SetLineJoin(m_lineJoin);
+#endif
     }
 
     BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine) :
         m_scanline(),
         m_rasterizer(),
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientMatrix(baseGfxExtendEngine.m_fillGradientMatrix),
         m_lineGradientMatrix(baseGfxExtendEngine.m_lineGradientMatrix),
         m_fillGradientInterpolator(m_fillGradientMatrix),
         m_lineGradientInterpolator(m_lineGradientMatrix),
+#endif
         m_path(baseGfxExtendEngine.m_path),
         m_convCurve(m_path),
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         m_convDashCurve(m_convCurve),
-        m_convStroke(m_convCurve),
         m_convDashStroke(m_convDashCurve),
+        m_dashStrokeTransform(m_convDashStroke, m_transform),
+#endif
+        m_convStroke(m_convCurve),
         m_pathTransform(m_convCurve, m_transform),
-        m_strokeTransform(m_convStroke, m_transform),
-        m_dashStrokeTransform(m_convDashStroke, m_transform)
+        m_strokeTransform(m_convStroke, m_transform)
+
     {
         m_rbuf = baseGfxExtendEngine.m_rbuf;
         m_pixFormat = PixFormat(m_rbuf);
@@ -119,15 +145,20 @@ namespace OHOS {
         m_allocator = baseGfxExtendEngine.m_allocator;
         m_clipBox = baseGfxExtendEngine.m_clipBox;
         m_blendMode = baseGfxExtendEngine.m_blendMode;
-        m_imageBlendMode = baseGfxExtendEngine.BLENDDST;
+        m_imageBlendMode = OHOS::BlendMode::BLEND_DST;
         m_imageBlendColor = baseGfxExtendEngine.m_imageBlendColor;
         m_masterAlpha = baseGfxExtendEngine.m_masterAlpha;
         m_antiAliasGamma = baseGfxExtendEngine.m_antiAliasGamma;
         m_fillColor = baseGfxExtendEngine.m_fillColor;
         m_lineColor = baseGfxExtendEngine.m_lineColor;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         m_lineCap = baseGfxExtendEngine.m_lineCap;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         m_lineJoin = baseGfxExtendEngine.m_lineJoin;
         m_miterLimit = baseGfxExtendEngine.m_miterLimit;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientFlag = baseGfxExtendEngine.SOLID;
         m_lineGradientFlag = baseGfxExtendEngine.SOLID;
         m_fillGradientD1 = baseGfxExtendEngine.m_fillGradientD1;
@@ -136,14 +167,18 @@ namespace OHOS {
         m_lineGradientD2 = baseGfxExtendEngine.m_lineGradientD2;
         m_linearGradientFunction = baseGfxExtendEngine.m_linearGradientFunction;
         m_radialGradientFunction = baseGfxExtendEngine.m_radialGradientFunction;
+#endif
         m_lineWidth = baseGfxExtendEngine.m_lineWidth;
         m_evenOddFlag = baseGfxExtendEngine.m_evenOddFlag;
         m_transform = baseGfxExtendEngine.m_transform;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         shadowBlurRadius_ = baseGfxExtendEngine.shadowBlurRadius_;
         shadowColor_ = baseGfxExtendEngine.shadowColor_;
         shadowOffsetX_ = baseGfxExtendEngine.shadowOffsetX_;
         shadowOffsetY_ = baseGfxExtendEngine.shadowOffsetY_;
+#endif
         is_dash = baseGfxExtendEngine.is_dash;
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (is_dash) {
             ndashes = baseGfxExtendEngine.ndashes;
             dDashOffset = baseGfxExtendEngine.dDashOffset;
@@ -158,6 +193,7 @@ namespace OHOS {
                 is_dash = false;
             }
         }
+#endif
     }
 
     void BaseGfxExtendEngine::Attach(unsigned char* buf, unsigned width, unsigned height, int stride)
@@ -172,12 +208,16 @@ namespace OHOS {
         SetLineColor(0, 0, 0);
         SetFillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM);
         ClipBox(0, 0, width, height);
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         SetLineCap(CAPROUND);
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         SetLineJoin(JOINROUND);
+#endif
         m_masterAlpha = 1.0;
         m_antiAliasGamma = 1.0;
         m_rasterizer.GammaFunction(OHOS::GammaNone());
-        m_blendMode = BLENDALPHA;
+        m_blendMode = BLEND_ALPHA;
     }
 
     void BaseGfxExtendEngine::Attach(Image& img)
@@ -211,7 +251,7 @@ namespace OHOS {
         m_pixFormatCompPre.CompOp(bMode);
     }
 
-    BaseGfxExtendEngine::BlendMode BaseGfxExtendEngine::GetBlendMode() const
+    OHOS::BlendMode BaseGfxExtendEngine::GetBlendMode() const
     {
         return m_blendMode;
     }
@@ -298,7 +338,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
+#endif
         }
     }
 
@@ -315,7 +357,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
+#endif
         }
     }
 
@@ -343,14 +387,18 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.ApproximationScale(WorldToScreen(1.0) * g_approxScale);
+#endif
         }
     }
 
     void BaseGfxExtendEngine::SetFillColor(Color color)
     {
         m_fillColor = color;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientFlag = SOLID;
+#endif
     }
 
     void BaseGfxExtendEngine::SetFillColor(unsigned read, unsigned green, unsigned blue, unsigned alpha)
@@ -366,7 +414,9 @@ namespace OHOS {
     void BaseGfxExtendEngine::SetLineColor(Color color)
     {
         m_lineColor = color;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_lineGradientFlag = SOLID;
+#endif
     }
 
     void BaseGfxExtendEngine::SetLineColor(unsigned read, unsigned green, unsigned blue, unsigned alpha)
@@ -397,7 +447,7 @@ namespace OHOS {
     {
         SetLineColor(Color(color.red, color.green, color.blue, color.alpha));
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void BaseGfxExtendEngine::RemoveAllColor()
     {
         m_fillRadialGradient.RemoveAll();
@@ -441,7 +491,7 @@ namespace OHOS {
         m_fillGradientFlag = LINEAR;
         m_fillColor = Color(0, 0, 0);
     }
-
+#endif
     void BaseGfxExtendEngine::SetLineWidth(double w)
     {
         if (w < 0.0) {
@@ -451,7 +501,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.Width(w);
         } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.Width(w);
+#endif
         }
     }
 
@@ -459,14 +511,16 @@ namespace OHOS {
     {
         return m_lineWidth;
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
     void BaseGfxExtendEngine::SetLineCap(LineCap cap)
     {
         m_lineCap = cap;
         if (!this->is_dash) {
             m_convStroke.LineCap((OHOS::LineCapEnum)cap);
         } else {
+#    if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.LineCap((OHOS::LineCapEnum)cap);
+#    endif
         }
     }
 
@@ -474,14 +528,18 @@ namespace OHOS {
     {
         return m_lineCap;
     }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
     void BaseGfxExtendEngine::SetLineJoin(LineJoin join)
     {
         m_lineJoin = join;
         if (!this->is_dash) {
             m_convStroke.LineJoin((OHOS::LineJoinEnum)join);
         } else {
+#    if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.LineJoin((OHOS::LineJoinEnum)join);
+#    endif
         }
     }
 
@@ -496,7 +554,9 @@ namespace OHOS {
         if (!this->is_dash) {
             m_convStroke.MiterLimit(limitValue);
         } else {
+#    if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             m_convDashStroke.MiterLimit(limitValue);
+#    endif
         }
     }
 
@@ -504,7 +564,7 @@ namespace OHOS {
     {
         return m_miterLimit;
     }
-
+#endif
     void BaseGfxExtendEngine::AddLine(double x1, double y1, double x2, double y2)
     {
         m_path.MoveTo(x1, y1);
@@ -548,12 +608,13 @@ namespace OHOS {
         m_path.ClosePolygon();
         Stroke();
     }
-
     void BaseGfxExtendEngine::Round(double cx, double cy, double radius)
     {
         m_path.RemoveAll();
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         OHOS::BezierArc arc(cx, cy, radius, radius, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
+#endif
         m_path.ClosePolygon();
         DrawPath(FILLANDSTROKE);
     }
@@ -587,7 +648,7 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX1, double dstY1, double dstX2, double dstY2, bool isComposite)
+                                             double dstX1, double dstY1, double dstX2, double dstY2)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -596,11 +657,11 @@ namespace OHOS {
         LineTo(dstX1, dstY2);
         ClosePolygon();
         double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isComposite);
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
     }
 
     void BaseGfxExtendEngine::TransformImage(
-        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2, bool isComposite)
+        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2)
     {
         ResetPath();
         MoveTo(dstX1, dstY1);
@@ -610,11 +671,11 @@ namespace OHOS {
         ClosePolygon();
         double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
 
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
     }
 
     void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             const double* parallelogram, bool isComposite)
+                                             const double* parallelogram)
     {
         ResetPath();
         MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
@@ -623,10 +684,10 @@ namespace OHOS {
         LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
                parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram, isComposite);
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
     }
 
-    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram, bool isComposite)
+    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram)
     {
         ResetPath();
         MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
@@ -636,9 +697,9 @@ namespace OHOS {
                parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
         ClosePolygon();
 
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram, isComposite);
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     void BaseGfxExtendEngine::DrawShadow(
         double x, double y, double angle, double scaleX, double scaleY,
         double transLateX, double transLateY)
@@ -671,7 +732,9 @@ namespace OHOS {
             RenderingBuffer m_rbuf_window;
             PixFormat pixf2(m_rbuf_window);
             pixf2.Attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
+#    if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
             m_stack_blur.Blur(pixf2, OHOS::Uround(shadowBlurRadius_));
+#    endif
         }
         m_rasterizer.Reset();
     }
@@ -680,8 +743,10 @@ namespace OHOS {
                                          double transLateX, double transLateY)
     {
         m_path.RemoveAll();
+#    if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
+#    endif
         m_path.ClosePolygon();
         DrawShadow(x, y, angle, scaleX, scaleY, transLateX, transLateY);
     }
@@ -691,7 +756,7 @@ namespace OHOS {
         m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
         m_transform *= OHOS::TransAffineTranslation(x, y);
     }
-
+#endif
     void BaseGfxExtendEngine::DrawPath(DrawPathFlag flag)
     {
         m_rasterizer.Reset();
@@ -708,11 +773,13 @@ namespace OHOS {
                     if (!this->is_dash) {
                         m_rasterizer.AddPath(m_strokeTransform);
                     } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                         for (unsigned int i = 0; i < this->ndashes; i += OHOS::TWO_STEP) {
                             m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
                         m_convDashCurve.DashStart(dDashOffset);
                         m_rasterizer.AddPath(m_dashStrokeTransform);
+#endif
                     }
                     Render(false);
                 }
@@ -728,11 +795,13 @@ namespace OHOS {
                     if (!this->is_dash) {
                         m_rasterizer.AddPath(m_strokeTransform);
                     } else {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                         for (unsigned int i = 0; i < this->ndashes; i += OHOS::TWO_STEP) {
                             m_convDashCurve.AddDash(dashes[i], dashes[i + 1]);
                         }
                         m_convDashCurve.DashStart(dDashOffset);
                         m_rasterizer.AddPath(m_dashStrokeTransform);
+#endif
                     }
                     Render(false);
                 }
@@ -760,6 +829,7 @@ namespace OHOS {
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, bool fillColor)
         {
             using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
                                                                            BaseGfxExtendEngine::LinearGradientSpan>;
             using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -783,6 +853,7 @@ namespace OHOS {
 
                     OHOS::RenderScanlinesAntiAlias(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
                 }
+                return;
             } else if (gr.m_fillGradientFlag == BaseGfxExtendEngine::RADIAL) {
                 if (fillColor) {
                     BaseGfxExtendEngine::RadialGradientSpan span(
@@ -802,10 +873,11 @@ namespace OHOS {
                         gr.m_fillGradientD2);
                     OHOS::RenderScanlinesAntiAlias(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
                 }
-            } else {
-                renSolid.SetColor(fillColor ? gr.m_fillColor : gr.m_lineColor);
-                OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, renSolid);
+                return;
             }
+#endif
+            renSolid.SetColor(fillColor ? gr.m_fillColor : gr.m_lineColor);
+            OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, renSolid);
         }
 
         template <class BaseRenderer, class SolidRenderer, class Rasterizer, class Scanline>
@@ -813,6 +885,7 @@ namespace OHOS {
                            SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
             using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
                                                                            BaseGfxExtendEngine::LinearGradientSpan>;
             using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -827,6 +900,7 @@ namespace OHOS {
                     gr.m_fillGradientD2);
                 RendererLinearGradient ren(renBase, gr.m_allocator, span);
                 OHOS::RenderScanlines(ras, sl, ren);
+                return;
             } else {
                 if (gr.m_fillGradientFlag == BaseGfxExtendEngine::RADIAL) {
                     BaseGfxExtendEngine::RadialGradientSpan span(
@@ -837,11 +911,12 @@ namespace OHOS {
                         gr.m_fillGradientD2);
                     RendererRadialGradient ren(renBase, gr.m_allocator, span);
                     OHOS::RenderScanlines(ras, sl, ren);
-                } else {
-                    renSolid.color(gr.m_fillColor);
-                    OHOS::RenderScanlines(ras, sl, renSolid);
+                    return;
                 }
             }
+#endif
+            renSolid.color(gr.m_fillColor);
+            OHOS::RenderScanlines(ras, sl, renSolid);
         }
 
         template <class BaseRenderer, class Interpolator>
@@ -860,7 +935,7 @@ namespace OHOS {
 
     void BaseGfxExtendEngine::Render(bool fillColor)
     {
-        if (m_blendMode == BLENDALPHA) {
+        if (m_blendMode == BLEND_ALPHA) {
             BaseGfxExtendEngineRenderer::render(*this, m_renBase, m_renSolid, fillColor);
         } else {
             BaseGfxExtendEngineRenderer::render(*this, m_renBaseComp, m_renSolidComp, fillColor);
@@ -868,7 +943,7 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::RenderImage(const Image& img, int x1, int y1, int x2, int y2,
-                                          const double* parl, bool isComposite)
+                                          const double* parl)
     {
         OHOS::TransAffine mtx((double)x1,
                               (double)y1,
@@ -884,18 +959,10 @@ namespace OHOS {
         typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
         Interpolator interpolator(mtx);
 
-        if (m_blendMode == BLENDALPHA) {
-            if (isComposite) {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBasePre, interpolator);
-            } else {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBase, interpolator);
-            }
+        if (m_blendMode == BLEND_ALPHA) {
+            BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBase, interpolator);
         } else {
-            if (isComposite) {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseCompPre, interpolator);
-            } else {
-                BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseComp, interpolator);
-            }
+            BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseComp, interpolator);
         }
     }
 
@@ -924,22 +991,10 @@ namespace OHOS {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
         Rect r(imgX1, imgY1, imgX2, imgY2);
-        if (m_blendMode == BLENDALPHA) {
+        if (m_blendMode == BLEND_ALPHA) {
             m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         } else {
             m_renBaseCompPre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-        }
-    }
-
-    void BaseGfxExtendEngine::BlendImage(Image& img, double dstX, double dstY, unsigned alpha)
-    {
-        WorldToScreen(dstX, dstY);
-        PixFormat pixF(img.renBuf);
-        m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        if (m_blendMode == BLENDALPHA) {
-            m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        } else {
-            m_renBaseCompPre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
         }
     }
 
@@ -992,27 +1047,19 @@ namespace OHOS {
     }
 
     void BaseGfxExtendEngine::BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX, double dstY, unsigned alpha, bool isComposite)
+                                             double dstX, double dstY, unsigned alpha)
     {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
         Rect r(imgX1, imgY1, imgX2, imgY2);
-        if (isComposite) {
-            m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-        } else {
-            m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-        }
+        m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
     }
 
-    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha, bool isComposite)
+    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha)
     {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
-        if (isComposite) {
-            m_renBasePre.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        } else {
-            m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-        }
+        m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
     }
 
     bool BaseGfxExtendEngine::BoundingRectSingle(unsigned int path_id, RectD* rect, PathTransform& path)

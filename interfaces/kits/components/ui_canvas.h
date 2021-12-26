@@ -48,7 +48,6 @@
 #include "render/graphic_render_buffer.h"
 #include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
 #include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
-#include <gfx_utils/graphics/graphic_color/graphic_color_rgba.h>
 #include <render/graphic_render_pixfmt_rgba_blend.h>
 #include "render/graphic_render_scanline.h"
 

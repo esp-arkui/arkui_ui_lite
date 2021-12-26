@@ -26,21 +26,52 @@
 
 namespace OHOS {
     class BaseGfxEngine;
-    enum BlendMode
-    {
-        BLEND_MODE,     /* no blending */
-        BLEND_SRC,      /* S */
-        BLEND_DST,      /* D */
-        BLEND_SRC_OVER, /* S + (1 - Sa) * D */
-        BLEND_DST_OVER, /* (1 - Da) * S + D */
-        BLEND_SRC_IN,   /* Da * S */
-        BLEND_DST_IN,   /* Sa * D */
-        BLEND_SRC_OUT,  /* S * (1 - Da) */
-        BLEND_DST_OUT,  /* D * (1 - Sa) */
-        BLEND_SCREEN,   /* S + D - S * D */
-        BLEND_MULTIPLY, /* S * (1 - Da) + D * (1 - Sa) + S * D */
-        BLEND_ADDITIVE, /* S + D */
-        BLEND_SUBTRACT, /* D * (1 - S) */
+
+    enum BlendMode {
+        /** 不混合 */
+        BLEND_MODE = -1,
+        /** S */
+        BLEND_SRC,
+        /** D */
+        BLEND_DST,
+        /** 默认。在目标图像上显示源图像。 */
+        /** S + (1 - Sa) * D */
+        BLEND_SRC_OVER,
+        /** 在源图像上显示目标图像。 */
+        /** (1 - Da) * S + D */
+        BLEND_DST_OVER,
+        /** 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。 */
+        /** Da * S */
+        BLEND_SRC_IN,
+        /** 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。 */
+        /** Sa * D */
+        BLEND_DST_IN,
+        /** 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。 */
+        /** S * (1 - Da) */
+        BLEND_SRC_OUT,
+        /** 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。 */
+        /** D * (1 - Sa) */
+        BLEND_DST_OUT,
+        /** 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。 */
+        BLEND_SRC_ATOP,
+        /** 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。 */
+        BLEND_DST_ATOP,
+        /** 使用异或操作对源图像与目标图像进行组合。 */
+        BLEND_XOR,
+        /** 显示源图像 + 目标图像。 */
+        BLEND_LIGHTEN,
+        /** 混合透明度 */
+        BLEND_ALPHA,
+        /** S + D - S * D */
+        BLEND_SCREEN,
+        /** S * (1 - Da) + D * (1 - Sa) + S * D */
+        BLEND_MULTIPLY,
+        /** S + D */
+        BLEND_ADDITIVE,
+        /** D * (1 - S) */
+        BLEND_SUBTRACT,
+        /** 显示源图像。忽略目标图像。 */
+        BLEND_COPY = 1000
     };
 
 #ifndef TRANSFORMOPTION
@@ -75,8 +106,7 @@ namespace OHOS {
         TransformAlgorithm algorithm;
     };
 
-    enum BufferInfoUsage
-    {
+    enum BufferInfoUsage {
         BUFFER_FB_SURFACE,
         BUFFER_MAP_SURFACE,
         BUFFER_SNAPSHOT_SURFACE

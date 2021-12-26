@@ -116,7 +116,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief RowPtr 获取行首地址
+         * @brief row_ptr 获取行首地址
          */
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned)
@@ -124,7 +124,7 @@ namespace OHOS {
             return start_ + y * (int64)bufStride_;
         }
         /**
-         * @brief RowPtr 返回指向第y行起点的指针
+         * @brief row_ptr 返回指向第y行起点的指针
          */
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int y)
@@ -132,7 +132,7 @@ namespace OHOS {
             return start_ + y * (int64)bufStride_;
         }
         /**
-         * @brief RowPtr 返回指向第y行起点的指针
+         * @brief row_ptr 返回指向第y行起点的指针
          */
         GRAPHIC_GEOMETRY_INLINE const T* RowPtr(int y) const
         {
@@ -145,28 +145,6 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE rowData Row(int y) const
         {
             return rowData(0, width_ - 1, RowPtr(y));
-        }
-
-        /**
-         * 从另一rendering_buffer中复制数据
-         */
-        template <class RenBuf>
-        void CopyFrom(const RenBuf& renBuf)
-        {
-            unsigned h = GetHeight();
-            if (renBuf.height() < h) {
-                h = renBuf.height();
-            }
-            unsigned lStride = GetStrideAbs();
-            if (renBuf.stride_abs() < lStride) {
-                lStride = renBuf.stride_abs();
-            }
-            lStride *= sizeof(T);
-            unsigned y;
-            unsigned w = GetWidth();
-            for (y = 0; y < h; y++) {
-                memcpy_s(RowPtr(0, y, w), lStride, renBuf.RowPtr(y), lStride);
-            }
         }
 
         /**
