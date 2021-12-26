@@ -577,7 +577,7 @@ namespace OHOS {
          * @brief 关闭多边形路径
          */
         void ClosePolygon();
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         /**
          * @brief 绘制阴影
          * @param x
@@ -589,7 +589,49 @@ namespace OHOS {
         void DrawShadow(double x, double y, double angle, double scaleX, double scaleY, double transLateX = 0, double transLateY = 0);
         void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double angle, double scaleX,
                         double scaleY, double transLateX = 0, double transLateY = 0);
-
+        /**
+         * @brief 设置阴影的颜色
+         * @param red 红色
+         * @param green 绿色
+         * @param blue 蓝色
+         * @param alpha 透明度
+         */
+        void SetShadowColor(unsigned red, unsigned green, unsigned blue, unsigned alpha = 255)
+        {
+            shadowColor_ = Color(red, green, blue, alpha);
+        }
+        /**
+         * @brief 设置阴影的x轴偏移量
+         */
+        void SetShadowOffsetX(double x)
+        {
+            shadowOffsetX_ = x;
+        }
+        /**
+         * @brief 设置阴影的y轴偏移量
+         */
+        void SetShadowOffsetY(double y)
+        {
+            shadowOffsetY_ = y;
+        }
+        /**
+         * @brief 设置阴影的偏移量
+         * @param x x轴偏移量
+         * @param y y轴偏移量
+         */
+        void SetShadowOffset(double x, double y)
+        {
+            shadowOffsetX_ = x;
+            shadowOffsetY_ = y;
+        }
+        /**
+         * @brief 设置阴影模糊半径
+         */
+        void SetShadowBlurRadius(double radius)
+        {
+            shadowBlurRadius_ = radius;
+        }
+#endif
         /**
          * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
          * @param flag 绘制模式 默认填充和绘制路径都有
@@ -659,7 +701,7 @@ namespace OHOS {
         {
             return Angle * OHOS::PI / OHOS::BOXER;
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         /**
          * @brief 设置lineDash的起始位置偏移量
          * @param dDashOffset 要偏移的位置
@@ -701,15 +743,6 @@ namespace OHOS {
                 is_dash = false;
             }
         }
-
-        /**
-         * @brief 返回是否是dash的划线模式
-         */
-        bool IsLineDash() const
-        {
-            return is_dash;
-        }
-
         /**
          * @brief 获取lineDash的虚实线长度数组
          */
@@ -727,54 +760,33 @@ namespace OHOS {
         }
 
         /**
+         * @brief 重置LineDash相关配置
+         */
+        void ClearLineDash(void)
+        {
+            dDashOffset = 0;
+            ndashes = 0;
+            is_dash = false;
+            if (dashes) {
+                delete[] dashes;
+                dashes = NULL;
+            }
+        }
+#endif
+        /**
+         * @brief 返回是否是dash的划线模式
+         */
+        bool IsLineDash() const
+        {
+            return is_dash;
+        }
+
+        /**
          * @brief 返回渲染器
          */
         OHOS::RenderingBuffer GetRenderBuffer() const
         {
             return m_rbuf;
-        }
-
-        /**
-         * @brief 设置阴影的颜色
-         * @param red 红色
-         * @param green 绿色
-         * @param blue 蓝色
-         * @param alpha 透明度
-         */
-        void SetShadowColor(unsigned red, unsigned green, unsigned blue, unsigned alpha = 255)
-        {
-            shadowColor_ = Color(red, green, blue, alpha);
-        }
-        /**
-         * @brief 设置阴影的x轴偏移量
-         */
-        void SetShadowOffsetX(double x)
-        {
-            shadowOffsetX_ = x;
-        }
-        /**
-         * @brief 设置阴影的y轴偏移量
-         */
-        void SetShadowOffsetY(double y)
-        {
-            shadowOffsetY_ = y;
-        }
-        /**
-         * @brief 设置阴影的偏移量
-         * @param x x轴偏移量
-         * @param y y轴偏移量
-         */
-        void SetShadowOffset(double x, double y)
-        {
-            shadowOffsetX_ = x;
-            shadowOffsetY_ = y;
-        }
-        /**
-         * @brief 设置阴影模糊半径
-         */
-        void SetShadowBlurRadius(double radius)
-        {
-            shadowBlurRadius_ = radius;
         }
 
         /**
@@ -812,19 +824,6 @@ namespace OHOS {
          */
         void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
 
-        /**
-         * @brief 重置LineDash相关配置
-         */
-        void ClearLineDash(void)
-        {
-            dDashOffset = 0;
-            ndashes = 0;
-            is_dash = false;
-            if (dashes) {
-                delete[] dashes;
-                dashes = NULL;
-            }
-        }
         OHOS::RenderingBuffer m_rbuf;                     // 渲染器缓冲区
         OHOS::ScanlineUnPackedContainer m_scanline;       // 扫描线不合并相同扫描线
         OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; // 光栅
@@ -869,6 +868,9 @@ namespace OHOS {
         ConvDashCurve m_convDashCurve;
         ConvDashStroke m_convDashStroke;
         DashStrokeTransform m_dashStrokeTransform;
+        unsigned int ndashes;
+        float* dashes;
+        float dDashOffset;
 #endif
         ConvStroke m_convStroke;
 
@@ -877,7 +879,7 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         StackBlur m_stack_blur;
 #endif
-        ColorType shadowColor_;
+
         double m_masterAlpha;
         double m_antiAliasGamma;
         double m_miterLimit;
@@ -886,14 +888,14 @@ namespace OHOS {
         double m_fillGradientD2;
         double m_lineGradientD2;
         double m_lineWidth;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+        ColorType shadowColor_;
         double shadowOffsetY_;
         double shadowOffsetX_;
         double shadowBlurRadius_;
+#endif
         bool m_evenOddFlag;
         bool is_dash;
-        unsigned int ndashes;
-        float* dashes;
-        float dDashOffset;
     };
 
     /**

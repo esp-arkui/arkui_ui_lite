@@ -961,6 +961,7 @@ namespace OHOS {
             if (paint.GetRotateAngle() != 0) {
                 rotateAngle = paint.GetRotateAngle();
             }
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
             if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
                 m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -976,7 +977,7 @@ namespace OHOS {
                                        paint.GetScaleX(),
                                        paint.GetScaleY());
             }
-
+#endif
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
             m_graphics->NoLine();
             setGradient(*m_graphics, paint, rect, style); // 填充颜色
@@ -1249,6 +1250,7 @@ namespace OHOS {
 
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
             m_graphics->SetBlendMode(paint.GetGlobalCompositeOperation());
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
             if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
                 m_graphics->SetShadowBlurRadius(paint.GetShadowBlurRadius());
                 m_graphics->SetShadowOffset(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -1259,6 +1261,7 @@ namespace OHOS {
                                        paint.GetScaleX(), paint.GetScaleY(), paint.GetTransLateX(),
                                        paint.GetTransLateY());
             }
+#endif
             m_graphics->Round(arcInfo.center.x, arcInfo.center.y, arcInfo.radius);
         }
 
@@ -1949,7 +1952,7 @@ namespace OHOS {
                 default: break;
             }
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         if (paint.GetShadowOffsetX() != 0 || paint.GetShadowOffsetY() != 0) {
             double transFormCenterX = 0, transFormCenterY = 0, rotateAngle = 0;
             transFormCenterX = paint.GetTransformCenterX() + rect.GetX() - invalidatedArea.GetX();
@@ -1965,7 +1968,7 @@ namespace OHOS {
                                    paint.GetScaleY(), paint.GetTransLateX(),
                                    paint.GetTransLateY());
         }
-
+#endif
         StartTransform(rect, invalidatedArea, paint);
         setGradient(*m_graphics, paint, rect, style); // 填充颜色
         m_graphics->DrawPath(BaseGfxExtendEngine::FILLANDSTROKE);

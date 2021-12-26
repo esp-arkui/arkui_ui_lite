@@ -177,8 +177,12 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             dashOffset(0.0), dashArray(nullptr), ndashes(0),
 #endif
-            isDrawDash(false), globalAlpha(1.0f), shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
-            shadowColor(Color::Black()), blendMode(OHOS::BlendMode::BLEND_SRC_OVER), transformCenterX(0),
+            isDrawDash(false), globalAlpha(1.0f),
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+            shadowBlurRadius(0), shadowOffsetX(0), shadowOffsetY(0),
+            shadowColor(Color::Black()),
+#endif
+            blendMode(OHOS::BlendMode::BLEND_SRC_OVER), transformCenterX(0),
             transformCenterY(0.0), rotateAngle(0.0), scaleX(0.0), scaleY(0.0), transLateX(0.0), transLateY(0.0)
         {
             m_graphics = nullptr;
@@ -909,11 +913,11 @@ namespace OHOS {
         unsigned int ndashes;
 #endif
         bool isDrawDash;
-        float globalAlpha;                        //设置图元全局alpha
-        double shadowBlurRadius;                  //设置阴影模糊半径
-        double shadowOffsetX;                     //设置阴影横坐标偏移量
-        double shadowOffsetY;                     //设置阴影纵坐标偏移量
-        ColorType shadowColor;                    //设置阴影色彩
+        float globalAlpha;         //设置图元全局alpha
+        double shadowBlurRadius;   //设置阴影模糊半径
+        double shadowOffsetX;      //设置阴影横坐标偏移量
+        double shadowOffsetY;      //设置阴影纵坐标偏移量
+        ColorType shadowColor;     //设置阴影色彩
         OHOS::BlendMode blendMode; //设置多图元混合渲染模式
         BaseGfxExtendEngine* m_graphics;
         /* 用于操作变换矩阵 */

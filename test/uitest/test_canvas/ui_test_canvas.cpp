@@ -363,13 +363,14 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Red());
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         //paint.SetFillColor(Color::Green());
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
         paint.SetShadowOffsetX(100);
         paint.SetShadowOffsetY(120);
-        paint.SetTransformCenter(60, 60);
-
         paint.SetShadowBlurRadius(5);
+#endif
+        paint.SetTransformCenter(60, 60);
         gradientControl.createLinearGradient(60, 60, 160, 110);
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.3, Color::White());
@@ -414,13 +415,13 @@ namespace OHOS {
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
         paint.SetShadowOffsetX(10);
         paint.SetShadowOffsetY(10);
         paint.SetShadowBlurRadius(5);
-
+#endif
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeWidth(30); // 30: line width
         // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
@@ -506,11 +507,13 @@ namespace OHOS {
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
-        paint.SetShadowColor(Color::Black());
         paint.SetStrokeWidth(1);
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+        paint.SetShadowColor(Color::Black());
         paint.SetShadowOffsetX(10);
         paint.SetShadowOffsetY(10);
         paint.SetShadowBlurRadius(5);
+#endif
         paint.SetStrokeColor(Color::Yellow());
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeWidth(10); // 10: line width

@@ -19,10 +19,12 @@ static const double g_approxScale = 2.0;
 namespace OHOS {
     BaseGfxExtendEngine::~BaseGfxExtendEngine()
     {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (dashes) {
             delete[] dashes;
             dashes = NULL;
         }
+#endif
     }
 
     BaseGfxExtendEngine::BaseGfxExtendEngine() :
@@ -76,21 +78,22 @@ namespace OHOS {
         m_convDashCurve(m_convCurve),
         m_convDashStroke(m_convDashCurve),
         m_dashStrokeTransform(m_convDashStroke, m_transform),
+        ndashes(0),
+        dashes(nullptr),
+        dDashOffset(0),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+        shadowColor_(Color(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM)),
+        shadowOffsetY_(0),
+        shadowOffsetX_(0),
+        shadowBlurRadius_(0),
 #endif
         m_convStroke(m_convCurve),
-
         m_pathTransform(m_convCurve, m_transform),
         m_strokeTransform(m_convStroke, m_transform),
         m_evenOddFlag(false),
         is_dash(false),
-        ndashes(0),
-        dashes(nullptr),
-        shadowColor_(Color(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM)),
-        m_masterAlpha(1.0),
-        shadowOffsetY_(0),
-        shadowOffsetX_(0),
-        shadowBlurRadius_(0),
-        dDashOffset(0)
+        m_masterAlpha(1.0)
     {
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         SetLineCap(m_lineCap);
@@ -157,11 +160,14 @@ namespace OHOS {
         m_lineWidth = baseGfxExtendEngine.m_lineWidth;
         m_evenOddFlag = baseGfxExtendEngine.m_evenOddFlag;
         m_transform = baseGfxExtendEngine.m_transform;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         shadowBlurRadius_ = baseGfxExtendEngine.shadowBlurRadius_;
         shadowColor_ = baseGfxExtendEngine.shadowColor_;
         shadowOffsetX_ = baseGfxExtendEngine.shadowOffsetX_;
         shadowOffsetY_ = baseGfxExtendEngine.shadowOffsetY_;
+#endif
         is_dash = baseGfxExtendEngine.is_dash;
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (is_dash) {
             ndashes = baseGfxExtendEngine.ndashes;
             dDashOffset = baseGfxExtendEngine.dDashOffset;
@@ -176,6 +182,7 @@ namespace OHOS {
                 is_dash = false;
             }
         }
+#endif
     }
 
     void BaseGfxExtendEngine::Attach(unsigned char* buf, unsigned width, unsigned height, int stride)
@@ -677,7 +684,7 @@ namespace OHOS {
 
         RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     void BaseGfxExtendEngine::DrawShadow(
         double x, double y, double angle, double scaleX, double scaleY,
         double transLateX, double transLateY)
@@ -710,9 +717,9 @@ namespace OHOS {
             RenderingBuffer m_rbuf_window;
             PixFormat pixf2(m_rbuf_window);
             pixf2.Attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
-#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
+#    if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
             m_stack_blur.Blur(pixf2, OHOS::Uround(shadowBlurRadius_));
-#endif
+#    endif
         }
         m_rasterizer.Reset();
     }
@@ -721,10 +728,10 @@ namespace OHOS {
                                          double transLateX, double transLateY)
     {
         m_path.RemoveAll();
-#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
+#    if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         OHOS::BezierArc arc(cx, cy, rx, ry, 0, OHOS::TWO_TIMES * Pi());
         m_path.ConcatPath(arc, 0);
-#endif
+#    endif
         m_path.ClosePolygon();
         DrawShadow(x, y, angle, scaleX, scaleY, transLateX, transLateY);
     }
@@ -734,7 +741,7 @@ namespace OHOS {
         m_transform *= OHOS::TransAffineScaling(scaleX, scaleY);
         m_transform *= OHOS::TransAffineTranslation(x, y);
     }
-
+#endif
     void BaseGfxExtendEngine::DrawPath(DrawPathFlag flag)
     {
         m_rasterizer.Reset();
