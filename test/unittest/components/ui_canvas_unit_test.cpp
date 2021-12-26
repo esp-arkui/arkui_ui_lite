@@ -2051,4 +2051,78 @@ HWTEST_F(UICanvasTest, UICanvasStrokeStyle_001, TestSize.Level1)
     paint_->SetStyle(Paint::PaintStyle::PATTERN);
     EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
 }
+
+
+/**
+ * @tc.name: UICanvasSetRotate_001
+ * @tc.desc: Verify SetRotate function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetRotate_001, TestSize.Level0)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->SetRotate(ROTATE, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(paint_->GetRotateAngle(), ROTATE);
+}
+
+
+/**
+ * @tc.name: UICanvasSetRotate_002
+ * @tc.desc: Verify SetRotate function, equal.
+ * @tc.type: FUNC
+ */
+HWTEST_F(UICanvasTest, UICanvasSetRotate_002, TestSize.Level1)
+{
+    if (canvas_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+
+    UICanvas::FontStyle fontStyle;
+    fontStyle.align = TEXT_ALIGNMENT_CENTER;
+    fontStyle.direct = TEXT_DIRECT_LTR;
+    fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
+    fontStyle.fontSize = FONT_SIZE;
+    fontStyle.letterSpace = LETTER_SPACE;
+
+    canvas_->SetDrawGraphicsContext(*paint_);
+    canvas_->SetRotate(ROTATE, *paint_);
+    canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+
+    EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
+    EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
+    EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
+    EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
+    EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
+    EXPECT_EQ(paint_->GetRotateAngle(), ROTATE);
+}
+
 } // namespace OHOS
