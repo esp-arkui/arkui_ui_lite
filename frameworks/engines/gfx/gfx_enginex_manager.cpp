@@ -710,7 +710,9 @@ namespace OHOS {
             RenderingBuffer m_rbuf_window;
             PixFormat pixf2(m_rbuf_window);
             pixf2.Attach(m_pixFormat, int(bbox.x1), int(bbox.y1), int(bbox.x2), int(bbox.y2));
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
             m_stack_blur.Blur(pixf2, OHOS::Uround(shadowBlurRadius_));
+#endif
         }
         m_rasterizer.Reset();
     }

@@ -1465,7 +1465,6 @@ namespace OHOS {
             double x = start.x;
             double y = start.y;
             double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
-            uint8_t formatType = imageParam->image->GetImgType();
             graphics->TransformImage(imageBuffer, parallelogram);
 
         } else {
@@ -1473,7 +1472,6 @@ namespace OHOS {
             double y = start.y;
 
             double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
-            uint8_t formatType = imageParam->image->GetImgType();
             StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram);
         }
