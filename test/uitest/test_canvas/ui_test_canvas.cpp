@@ -55,7 +55,8 @@ const UIView* UITestCanvas::GetTestView()
     RM011CanvasScale001();
     RM011CanvasRotate001();
     RM012globalAlpha001();
-    RM012GlobalCompositeOperation002();
+    RM012SaveOrRestore002();
+    RM012GlobalCompositeOperation003();
     UIKitCanvasTestDrawLine001();
     UIKitCanvasTestDrawLine002();
     UIKitCanvasTestDrawCurve001();
@@ -309,8 +310,14 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
 
     Paint paint;
     paint.SetOpacity(127); // 127: opacity
+    paint.Rotate(20);
     // {200, 50}: start point coordinates
-    canvas->DrawImage({ 200, 50 }, GREEN_IMAGE_PATH, paint);
+    canvas->DrawImage({ 0, 60 }, RED_IMAGE_PATH, paint);
+
+    paint.Rotate(-20);
+    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+    paint.Rotate(10);
+    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
@@ -1045,7 +1052,7 @@ void UITestCanvas::RM009LineJoinDrawPath(){
 
     //TODO::当斜接角度超过MiterLimit时应该转化为平角
     paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
-    paint.SetMiterLimit(0.1);
+    paint.SetMiterLimit(4);
     canvas->BeginPath();
     canvas->MoveTo({260, 20});
     canvas->LineTo({260, 80});
@@ -1414,7 +1421,7 @@ void UITestCanvas::RM008UIKitCanvasShadowTest008(){
 }
 
 void UITestCanvas::RM011StrokeText001(){
-    CreateTitleLabel("测试中文");
+    CreateTitleLabel("RM011_StrokeText_多国文字加旋转放大");
     UICanvas* canvas = CreateCanvas();
     UICanvas::FontStyle fontStyle;
     fontStyle.align = TEXT_ALIGNMENT_CENTER;
@@ -1423,8 +1430,20 @@ void UITestCanvas::RM011StrokeText001(){
     fontStyle.fontSize = 15;
     fontStyle.letterSpace = 2;
     Paint paint;
-    paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
-    canvas->StrokeText("中国 你好，鸿蒙。。", {0, 20}, fontStyle, paint);
+    paint.SetFillColor(Color::Blue());
+    canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0, 20}, fontStyle, paint);
+    canvas->StrokeText("西班牙语：Hong Meng, test", {0, 40}, fontStyle, paint);
+    canvas->StrokeText("法语：HongMeng, test", {0, 60}, fontStyle, paint);
+    canvas->StrokeText("瓜拉尼语：mitapoañda, pens", {0, 80}, fontStyle, paint);
+    canvas->StrokeText("荷兰语：Hongmeng, kom op.", {0, 100}, fontStyle, paint);
+    canvas->StrokeText("樊瓦什语：Кайалла", {0, 120}, fontStyle, paint);
+    canvas->StrokeText("白俄罗斯语：Прывітанне", {0, 140}, fontStyle, paint);
+    canvas->StrokeText("希腊语：Γεια.", {0, 80}, fontStyle, paint);
+    canvas->StrokeText("瑞典语:Hej, Hongmeng.", {0, 160}, fontStyle, paint);
+    canvas->StrokeText("俄语: Привет, hongmon ", {0, 180}, fontStyle, paint);
+    paint.Scale(2,1);
+    paint.Rotate(45);
+    canvas->StrokeText("中国 你好，鸿蒙。。", {20, 0}, fontStyle, paint);
 }
 void UITestCanvas::RM011CanvasScale001(){
     if (container_ == nullptr) {
@@ -1557,7 +1576,7 @@ void UITestCanvas::RM012globalAlpha001(){
     canvas->FillPath(paint);
 }
 
-void UITestCanvas::RM012GlobalCompositeOperation002(){
+void UITestCanvas::RM012GlobalCompositeOperation003(){
     if (container_ == nullptr) {
         return;
     }
@@ -1774,7 +1793,46 @@ void UITestCanvas::RM012GlobalCompositeOperation002(){
     canvas->LineTo({200, 195});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
+
+void UITestCanvas::RM012SaveOrRestore002(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置图像透明度_红不透明_绿蓝_一半透明度Save_Restore");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalAlpha(0.2);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    canvas->Save(paint);
+    paint.SetFillColor(Color::Blue());
+    canvas->BeginPath();
+    canvas->MoveTo({180, 100});
+    canvas->LineTo({180, 160});
+    canvas->LineTo({310, 160});
+    canvas->LineTo({310, 100});
+    canvas->ClosePath();
+    paint=canvas->Restore();
+    canvas->FillPath(paint);
 
 
 }
+
 } // namespace OHOS

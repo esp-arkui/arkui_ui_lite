@@ -422,18 +422,18 @@ namespace OHOS {
 
     template <class ColorT, class Order>
     typename CompOpTableRgba<ColorT, Order>::CompOpFuncType CompOpTableRgba<ColorT, Order>::g_compOpFunc[] = {
-        CompOpRgbaSrc<ColorT, Order>::BlendPix,
-        CompOpRgbaDst<ColorT, Order>::BlendPix,
         CompOpRgbaSrcOver<ColorT, Order>::BlendPix,
-        CompOpRgbaDstOver<ColorT, Order>::BlendPix,
-        CompOpRgbaSrcIn<ColorT, Order>::BlendPix,
-        CompOpRgbaDstIn<ColorT, Order>::BlendPix,
-        CompOpRgbaSrcOut<ColorT, Order>::BlendPix,
-        CompOpRgbaDstOut<ColorT, Order>::BlendPix,
         CompOpRgbaSrcAtop<ColorT, Order>::BlendPix,
+        CompOpRgbaSrcIn<ColorT, Order>::BlendPix,
+        CompOpRgbaSrcOut<ColorT, Order>::BlendPix,
+        CompOpRgbaDstOver<ColorT, Order>::BlendPix,
         CompOpRgbaDstAtop<ColorT, Order>::BlendPix,
-        CompOpRgbaXor<ColorT, Order>::BlendPix,
+        CompOpRgbaDstIn<ColorT, Order>::BlendPix,
+        CompOpRgbaDstOut<ColorT, Order>::BlendPix,
         CompOpRgbaLighten<ColorT, Order>::BlendPix,
+        CompOpRgbaSrc<ColorT, Order>::BlendPix,
+        CompOpRgbaXor<ColorT, Order>::BlendPix,
+        CompOpRgbaDst<ColorT, Order>::BlendPix,
         0};
 
     template <class ColorT, class Order>
