@@ -217,39 +217,6 @@ namespace OHOS {
             NO_REPEAT,
         };
 
-        /**
-         * 混合模式
-         */
-        enum BlendMode {
-            /** 不混合 */
-            BLENDNONE = -1,
-            /** 混合透明度 */
-            BLENDALPHA = OHOS::END_OF_COMP_OP_E,
-            BLENDSRC = OHOS::COMP_OP_SRC,
-            BLENDDST = OHOS::COMP_OP_DST,
-            /** 默认。在目标图像上显示源图像。 */
-            BLENDSRCOVER = OHOS::COMP_OP_SRC_OVER,
-            /** 在源图像上显示目标图像。 */
-            BLENDDSTOVER = OHOS::COMP_OP_DST_OVER,
-            /** 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。 */
-            BLENDSRCIN = OHOS::COMP_OP_SRC_IN,
-            /** 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。 */
-            BLENDDSTIN = OHOS::COMP_OP_DST_IN,
-            /** 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。 */
-            BLENDSRCOUT = OHOS::COMP_OP_SRC_OUT,
-            /** 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。 */
-            BLENDDSTOUT = OHOS::COMP_OP_DST_OUT,
-            /** 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。 */
-            BLENDSRCATOP = OHOS::COMP_OP_SRC_ATOP,
-            /** 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。 */
-            BLENDDSTATOP = OHOS::COMP_OP_DST_ATOP,
-            /** 使用异或操作对源图像与目标图像进行组合。 */
-            BLENDXOR = OHOS::COMP_OP_XOR,
-            /** 显示源图像 + 目标图像。 */
-            BLENDLIGHTEN = OHOS::COMP_OP_LIGHTEN,
-            BLENDCOPY = 1000
-        };
-
         struct Transformations {
             double affineMatrix[6];
         };

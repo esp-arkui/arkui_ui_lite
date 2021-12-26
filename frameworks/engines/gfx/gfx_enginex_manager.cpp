@@ -41,8 +41,8 @@ namespace OHOS {
         m_renSolidComp(m_renBaseComp),
         m_allocator(),
         m_clipBox(0, 0, 0, 0),
-        m_blendMode(BLENDALPHA),
-        m_imageBlendMode(BLENDDST),
+        m_blendMode(BLEND_ALPHA),
+        m_imageBlendMode(BLEND_DST),
         m_imageBlendColor(0, 0, 0),
         m_fillColor(OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM, OHOS::MAX_COLOR_NUM),
         m_lineColor(0, 0, 0),
@@ -133,7 +133,7 @@ namespace OHOS {
         m_allocator = baseGfxExtendEngine.m_allocator;
         m_clipBox = baseGfxExtendEngine.m_clipBox;
         m_blendMode = baseGfxExtendEngine.m_blendMode;
-        m_imageBlendMode = baseGfxExtendEngine.BLENDDST;
+        m_imageBlendMode = OHOS::BlendMode::BLEND_DST;
         m_imageBlendColor = baseGfxExtendEngine.m_imageBlendColor;
         m_masterAlpha = baseGfxExtendEngine.m_masterAlpha;
         m_antiAliasGamma = baseGfxExtendEngine.m_antiAliasGamma;
@@ -199,7 +199,7 @@ namespace OHOS {
         m_masterAlpha = 1.0;
         m_antiAliasGamma = 1.0;
         m_rasterizer.GammaFunction(OHOS::GammaNone());
-        m_blendMode = BLENDALPHA;
+        m_blendMode = BLEND_ALPHA;
     }
 
     void BaseGfxExtendEngine::Attach(Image& img)
@@ -233,7 +233,7 @@ namespace OHOS {
         m_pixFormatCompPre.CompOp(bMode);
     }
 
-    BaseGfxExtendEngine::BlendMode BaseGfxExtendEngine::GetBlendMode() const
+    OHOS::BlendMode BaseGfxExtendEngine::GetBlendMode() const
     {
         return m_blendMode;
     }
@@ -907,7 +907,7 @@ namespace OHOS {
 
     void BaseGfxExtendEngine::Render(bool fillColor)
     {
-        if (m_blendMode == BLENDALPHA) {
+        if (m_blendMode == BLEND_ALPHA) {
             BaseGfxExtendEngineRenderer::render(*this, m_renBase, m_renSolid, fillColor);
         } else {
             BaseGfxExtendEngineRenderer::render(*this, m_renBaseComp, m_renSolidComp, fillColor);
@@ -931,7 +931,7 @@ namespace OHOS {
         typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
         Interpolator interpolator(mtx);
 
-        if (m_blendMode == BLENDALPHA) {
+        if (m_blendMode == BLEND_ALPHA) {
             BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBase, interpolator);
         } else {
             BaseGfxExtendEngineRenderer::renderImage(*this, img, m_renBaseComp, interpolator);
@@ -963,7 +963,7 @@ namespace OHOS {
         WorldToScreen(dstX, dstY);
         PixFormat pixF(img.renBuf);
         Rect r(imgX1, imgY1, imgX2, imgY2);
-        if (m_blendMode == BLENDALPHA) {
+        if (m_blendMode == BLEND_ALPHA) {
             m_renBasePre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         } else {
             m_renBaseCompPre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);

@@ -158,9 +158,9 @@ namespace OHOS {
 
         canvas->DrawCircle({40, 40}, 40, paint);
         //canvas->SetRotate(-30, paint);
-        paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOUT);
-        //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendSrcIn);
-        //paint.globalCompositeOperation(BaseGfxExtendEngine::BlendMode::BlendOverlay);
+        paint.SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_OUT);
+        //paint.SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_COPY);
+        //paint.SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_IN);
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetStrokeColor(Color::Red());
         paint.SetFillColor(Color::GetColorFromRGB(0, 255, 0));

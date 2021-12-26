@@ -641,7 +641,7 @@ namespace OHOS {
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
                 if (curDraw->data_.paint.GetGlobalCompositeOperation() !=
-                    BaseGfxExtendEngine::BlendMode::BLENDSRCOVER) {
+                    OHOS::BlendMode::BLEND_SRC_OVER) {
                     isChangeBlend = true;
                     break;
                 }
@@ -674,14 +674,14 @@ namespace OHOS {
             for (curDraw = drawCmdList_.Begin(); curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
                 if (isChangeBlend) {
-                    if (BaseGfxExtendEngine::BlendMode::BLENDCOPY ==
+                    if (OHOS::BlendMode::BLEND_COPY ==
                         curDraw->data_.paint.GetGlobalCompositeOperation()) {
                         BaseGfxEngine::GetInstance()->DrawRect(*gfxMapBuffer, rect, invalidatedArea, *style_, opaScale_);
 
-                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+                        curDraw->data_.paint.SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_OVER);
                         curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
                                                     curDraw->data_.paint, rect, trunc, *style_);
-                        curDraw->data_.paint.SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+                        curDraw->data_.paint.SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_COPY);
                         continue;
                     }
                     curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
@@ -1232,7 +1232,7 @@ namespace OHOS {
         }
 
         if (paint.GetGlobalAlpha() == 1.0f && !paint.IsLineDash() &&
-            paint.GetGlobalCompositeOperation() == BaseGfxExtendEngine::BlendMode::BLENDNONE) {
+            paint.GetGlobalCompositeOperation() == OHOS::BLEND_MODE) {
             BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                                   CapType::CAP_NONE);
         } else {
