@@ -23,7 +23,8 @@
 #include "gfx_utils/graphic_log.h"
 #include "gif_lib.h"
 #include "securec.h"
-
+//#include <ctime>
+//#include <iostream>
 namespace OHOS {
     UICanvas::UICanvasPath::~UICanvasPath()
     {
@@ -1461,22 +1462,22 @@ namespace OHOS {
             height = imageParam->newHeight;
         }
         Rect trunc(invalidatedArea);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
         if (!paint.IsTransform()) {
-            double x = start.x;
-            double y = start.y;
-            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
-            uint8_t formatType = imageParam->image->GetImgType();
-            graphics->TransformImage(imageBuffer, parallelogram);
-
+            Rect cordsTmp;
+            cordsTmp.SetPosition(start.x, start.y);
+            cordsTmp.SetHeight(imageParam->height);
+            cordsTmp.SetWidth(imageParam->width);
+            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
+                                  imageParam->image->GetImageInfo(), style, opa);
         } else {
             double x = start.x;
             double y = start.y;
-
-            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
-            uint8_t formatType = imageParam->image->GetImgType();
+            double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
             StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram);
         }
+#endif
     }
 
     void UICanvas::StartTransform(const Rect& rect, const Rect& invalidatedArea, const Paint& paint)

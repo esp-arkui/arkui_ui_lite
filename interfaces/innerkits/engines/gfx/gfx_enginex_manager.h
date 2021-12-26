@@ -96,7 +96,9 @@ namespace OHOS {
         typedef OHOS::DepictStroke<ConvDashCurve> ConvDashStroke;
         typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
         typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
+#    if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
+#    endif
         // 渲染器缓冲区
         typedef OHOS::RenderingBuffer RenderingBuffer;
         // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
@@ -872,8 +874,9 @@ namespace OHOS {
 
         PathTransform m_pathTransform;
         StrokeTransform m_strokeTransform;
-
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         StackBlur m_stack_blur;
+#endif
         ColorType shadowColor_;
         double m_masterAlpha;
         double m_antiAliasGamma;
