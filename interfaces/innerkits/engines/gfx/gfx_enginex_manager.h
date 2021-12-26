@@ -114,6 +114,7 @@ namespace OHOS {
         // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
         typedef OHOS::ImageAccessorNoRepeat<pixfmt> imgSourceTypeNoRepeat;
         // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         //  x,y轴都重复
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
         //  x轴重复
@@ -122,7 +123,7 @@ namespace OHOS {
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
         // 不重复
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
-
+#endif
     public:
         friend class BaseGfxExtendEngineRenderer;
         typedef OHOS::Srgba8 Color;
@@ -646,7 +647,11 @@ namespace OHOS {
          * @brief 绘制路径
          */
         void Stroke();
-
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
+        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
+                            unsigned alpha);
+        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha);
+#endif
         /**
          * @brief 变换图像
          * @param img 图像
@@ -668,11 +673,7 @@ namespace OHOS {
 
         void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
                         unsigned alpha = 255);
-
-        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
-                            unsigned alpha);
-        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha);
-
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /**
          * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
          * @param img 图像相关信息
@@ -689,6 +690,7 @@ namespace OHOS {
          * @param pattternMode 有四种模式
          */
         void PatternImageStroke(Image& img, double offsetX, double offsetY, const char* pattternMode);
+#endif
         /**
          * @brief 返回 π
          */

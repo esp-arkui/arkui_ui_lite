@@ -647,58 +647,6 @@ namespace OHOS {
         m_path.ClosePolygon();
     }
 
-    void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX1, double dstY1, double dstX2, double dstY2)
-    {
-        ResetPath();
-        MoveTo(dstX1, dstY1);
-        LineTo(dstX2, dstY1);
-        LineTo(dstX2, dstY2);
-        LineTo(dstX1, dstY2);
-        ClosePolygon();
-        double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
-    }
-
-    void BaseGfxExtendEngine::TransformImage(
-        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2)
-    {
-        ResetPath();
-        MoveTo(dstX1, dstY1);
-        LineTo(dstX2, dstY1);
-        LineTo(dstX2, dstY2);
-        LineTo(dstX1, dstY2);
-        ClosePolygon();
-        double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
-
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
-    }
-
-    void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             const double* parallelogram)
-    {
-        ResetPath();
-        MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
-        LineTo(parallelogram[OHOS::INDEX_TWO], parallelogram[OHOS::INDEX_THREE]);
-        LineTo(parallelogram[OHOS::INDEX_FOUR], parallelogram[OHOS::INDEX_FIVE]);
-        LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
-               parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
-        ClosePolygon();
-        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
-    }
-
-    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram)
-    {
-        ResetPath();
-        MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
-        LineTo(parallelogram[OHOS::INDEX_TWO], parallelogram[OHOS::INDEX_THREE]);
-        LineTo(parallelogram[OHOS::INDEX_FOUR], parallelogram[OHOS::INDEX_FIVE]);
-        LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
-               parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
-        ClosePolygon();
-
-        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
-    }
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     void BaseGfxExtendEngine::DrawShadow(
         double x, double y, double angle, double scaleX, double scaleY,
@@ -997,7 +945,84 @@ namespace OHOS {
             m_renBaseCompPre.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
         }
     }
+    void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
+                                             double dstX1, double dstY1, double dstX2, double dstY2)
+    {
+        ResetPath();
+        MoveTo(dstX1, dstY1);
+        LineTo(dstX2, dstY1);
+        LineTo(dstX2, dstY2);
+        LineTo(dstX1, dstY2);
+        ClosePolygon();
+        double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
+    }
 
+    void BaseGfxExtendEngine::TransformImage(
+        const Image& img, double dstX1, double dstY1, double dstX2, double dstY2)
+    {
+        ResetPath();
+        MoveTo(dstX1, dstY1);
+        LineTo(dstX2, dstY1);
+        LineTo(dstX2, dstY2);
+        LineTo(dstX1, dstY2);
+        ClosePolygon();
+        double parallelogram[OHOS::INDEX_SIX] = {dstX1, dstY1, dstX2, dstY1, dstX2, dstY2};
+
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
+    }
+
+    void BaseGfxExtendEngine::TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
+                                             const double* parallelogram)
+    {
+        ResetPath();
+        MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
+        LineTo(parallelogram[OHOS::INDEX_TWO], parallelogram[OHOS::INDEX_THREE]);
+        LineTo(parallelogram[OHOS::INDEX_FOUR], parallelogram[OHOS::INDEX_FIVE]);
+        LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
+               parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
+        ClosePolygon();
+        RenderImage(img, imgX1, imgY1, imgX2, imgY2, parallelogram);
+    }
+
+    void BaseGfxExtendEngine::TransformImage(const Image& img, const double* parallelogram)
+    {
+        ResetPath();
+        MoveTo(parallelogram[OHOS::INDEX_ZERO], parallelogram[OHOS::INDEX_ONE]);
+        LineTo(parallelogram[OHOS::INDEX_TWO], parallelogram[OHOS::INDEX_THREE]);
+        LineTo(parallelogram[OHOS::INDEX_FOUR], parallelogram[OHOS::INDEX_FIVE]);
+        LineTo(parallelogram[OHOS::INDEX_ZERO] + parallelogram[OHOS::INDEX_FOUR] - parallelogram[OHOS::INDEX_TWO],
+               parallelogram[OHOS::INDEX_ONE] + parallelogram[OHOS::INDEX_FIVE] - parallelogram[OHOS::INDEX_THREE]);
+        ClosePolygon();
+
+        RenderImage(img, 0, 0, img.renBuf.GetWidth(), img.renBuf.GetHeight(), parallelogram);
+    }
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
+    void BaseGfxExtendEngine::BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
+                                             double dstX, double dstY, unsigned alpha)
+    {
+        WorldToScreen(dstX, dstY);
+        PixFormat pixF(img.renBuf);
+        Rect r(imgX1, imgY1, imgX2, imgY2);
+        if (m_blendMode == BLEND_ALPHA) {
+            m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
+        } else {
+            m_renBaseComp.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
+        }
+    }
+
+    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha)
+    {
+        WorldToScreen(dstX, dstY);
+        PixFormat pixF(img.renBuf);
+        if (m_blendMode == BLEND_ALPHA) {
+            m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
+        } else {
+            m_renBaseComp.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
+        }
+    }
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     void BaseGfxExtendEngine::PatternImageFill(Image& img, double offsetX, double offsetY, const char* pattternMode)
     {
         WorldToScreen(offsetX, offsetY);
@@ -1045,23 +1070,7 @@ namespace OHOS {
             OHOS::RenderScanlinesAntiAlias(m_rasterizer, m_scanline, m_renBase, m_allocator, m_spanPatternType);
         }
     }
-
-    void BaseGfxExtendEngine::BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2,
-                                             double dstX, double dstY, unsigned alpha)
-    {
-        WorldToScreen(dstX, dstY);
-        PixFormat pixF(img.renBuf);
-        Rect r(imgX1, imgY1, imgX2, imgY2);
-        m_renBase.BlendFrom(pixF, &r, int(dstX) - imgX1, int(dstY) - imgY1, alpha);
-    }
-
-    void BaseGfxExtendEngine::BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha)
-    {
-        WorldToScreen(dstX, dstY);
-        PixFormat pixF(img.renBuf);
-        m_renBase.BlendFrom(pixF, 0, int(dstX), int(dstY), alpha);
-    }
-
+#endif
     bool BaseGfxExtendEngine::BoundingRectSingle(unsigned int path_id, RectD* rect, PathTransform& path)
     {
         return OHOS::BoundingRectSingle(path, path_id, &rect->x1, &rect->y1, &rect->x2, &rect->y2);

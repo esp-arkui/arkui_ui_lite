@@ -1003,6 +1003,7 @@ namespace OHOS {
         m_graphics.BuildLut();
     }
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     void UICanvas::FillPattern(const Paint& paint)
     {
         if (strcmp(paint.image, "") == 0) {
@@ -1098,6 +1099,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
         Invalidate();
     }
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void UICanvas::Gradient(const Paint& paint)
     {
@@ -1119,9 +1121,11 @@ namespace OHOS {
 #endif
     void UICanvas::Fill(const Paint& paint)
     {
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
             FillPattern(paint);
         }
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) {
             Gradient(paint);
@@ -1131,9 +1135,11 @@ namespace OHOS {
 
     void UICanvas::Stroke(const Paint& paint)
     {
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
             StrokePattern(paint);
         }
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) {
             Gradient(paint);
@@ -1299,7 +1305,7 @@ namespace OHOS {
         BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcInfo, invalidatedArea, drawStyle, OPA_OPAQUE,
                                               CapType::CAP_NONE);
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     void UICanvas::DoDrawPattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                  const Rect& invalidatedArea, const Style& style)
     {
@@ -1368,6 +1374,7 @@ namespace OHOS {
             m_graphics->PatternImageStroke(imageBuffer, start.x, start.y, "no-repeat");
         }
     }
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void UICanvas::DoGradient(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                               const Rect& invalidatedArea, const Style& style)
@@ -1434,6 +1441,7 @@ namespace OHOS {
         }
     }
 #endif
+
     void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style)
     {

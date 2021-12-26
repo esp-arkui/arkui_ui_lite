@@ -1676,11 +1676,12 @@ namespace OHOS {
 
         /* 绘制图元时，开始执行变换操作 */
         static void StartTransform(const Rect& rect, const Rect& invalidatedArea, const Paint& paint);
-
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         static void DoDrawPattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                   const Rect& invalidatedArea, const Style& style);
         static void DoStrokePattern(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                     const Rect& invalidatedArea, const Style& style);
+#endif
         static void DoDrawLabel(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                 const Rect& invalidatedArea, const Style& style);
 
