@@ -27,57 +27,41 @@
 namespace OHOS {
     class BaseGfxEngine;
 
-    enum CompOpEnum {
-        COMP_OP_SRC,
-        COMP_OP_DST,
-        COMP_OP_SRC_OVER,
-        COMP_OP_DST_OVER,
-        COMP_OP_SRC_IN,
-        COMP_OP_DST_IN,
-        COMP_OP_SRC_OUT,
-        COMP_OP_DST_OUT,
-        COMP_OP_SRC_ATOP,
-        COMP_OP_DST_ATOP,
-        COMP_OP_XOR,
-        COMP_OP_LIGHTEN,
-        END_OF_COMP_OP_E
-    };
-
     enum BlendMode {
         /** 不混合 */
         BLEND_MODE = -1,
-        /** 混合透明度 */
-        BLEND_ALPHA = OHOS::END_OF_COMP_OP_E,
         /** S */
-        BLEND_SRC = OHOS::COMP_OP_SRC,
+        BLEND_SRC,
         /** D */
-        BLEND_DST = OHOS::COMP_OP_DST,
+        BLEND_DST,
         /** 默认。在目标图像上显示源图像。 */
         /** S + (1 - Sa) * D */
-        BLEND_SRC_OVER = OHOS::COMP_OP_SRC_OVER,
+        BLEND_SRC_OVER,
         /** 在源图像上显示目标图像。 */
         /** (1 - Da) * S + D */
-        BLEND_DST_OVER = OHOS::COMP_OP_DST_OVER,
+        BLEND_DST_OVER,
         /** 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。 */
         /** Da * S */
-        BLEND_SRC_IN = OHOS::COMP_OP_SRC_IN,
+        BLEND_SRC_IN,
         /** 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。 */
         /** Sa * D */
-        BLEND_DST_IN = OHOS::COMP_OP_DST_IN,
+        BLEND_DST_IN,
         /** 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。 */
         /** S * (1 - Da) */
-        BLEND_SRC_OUT = OHOS::COMP_OP_SRC_OUT,
+        BLEND_SRC_OUT,
         /** 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。 */
         /** D * (1 - Sa) */
-        BLEND_DST_OUT = OHOS::COMP_OP_DST_OUT,
+        BLEND_DST_OUT,
         /** 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。 */
-        BLEND_SRC_ATOP = OHOS::COMP_OP_SRC_ATOP,
+        BLEND_SRC_ATOP,
         /** 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。 */
-        BLEND_DST_ATOP = OHOS::COMP_OP_DST_ATOP,
+        BLEND_DST_ATOP,
         /** 使用异或操作对源图像与目标图像进行组合。 */
-        BLEND_XOR = OHOS::COMP_OP_XOR,
+        BLEND_XOR,
         /** 显示源图像 + 目标图像。 */
-        BLEND_LIGHTEN = OHOS::COMP_OP_LIGHTEN,
+        BLEND_LIGHTEN,
+        /** 混合透明度 */
+        BLEND_ALPHA,
         /** S + D - S * D */
         BLEND_SCREEN,
         /** S * (1 - Da) + D * (1 - Sa) + S * D */
@@ -122,8 +106,7 @@ namespace OHOS {
         TransformAlgorithm algorithm;
     };
 
-    enum BufferInfoUsage
-    {
+    enum BufferInfoUsage {
         BUFFER_FB_SURFACE,
         BUFFER_MAP_SURFACE,
         BUFFER_SNAPSHOT_SURFACE

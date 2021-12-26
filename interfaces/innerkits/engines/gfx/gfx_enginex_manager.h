@@ -14,40 +14,40 @@
  */
 
 #ifndef GFX_GRAPGICS_MANAGER_INCLUDED
-#    define GFX_GRAPGICS_MANAGER_INCLUDED
+#define GFX_GRAPGICS_MANAGER_INCLUDED
 
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_transform.h>
-#    include <gfx_utils/graphics/graphic_filter/graphic_filter_blur.h>
-#    include <gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h>
-#    include <gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h>
-#    include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
-#    include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
-#    include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
-#    include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
-#    include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
-#    include <render/graphic_render_base.h>
-#    include <render/graphic_render_pixfmt_rgba.h>
-#    include <render/graphic_render_scanline.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_transform.h>
+#include <gfx_utils/graphics/graphic_filter/graphic_filter_blur.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
+#include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
+#include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
+#include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
+#include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
+#include <render/graphic_render_base.h>
+#include <render/graphic_render_pixfmt_rgba.h>
+#include <render/graphic_render_scanline.h>
 
-#    include "gfx_engine_manager.h"
-#    include "gfx_utils/color.h"
+#include "gfx_engine_manager.h"
+#include "gfx_utils/color.h"
 
 namespace OHOS {
     class BaseGfxExtendEngine : public BaseGfxEngine {
-#    ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
+#ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
         typedef OHOS::rgba32 ColorType;
-#    else
+#else
         typedef OHOS::Rgba8 ColorType;
-#    endif
+#endif
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OHOS::OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
@@ -75,12 +75,14 @@ namespace OHOS {
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
         // 设定线段分配器
         typedef OHOS::SpanFillColorAllocator<ColorType> SpanAllocator;
-        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
-        typedef OHOS::GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
-        // 设定放射渐变的算法
-        typedef OHOS::GradientRadialCalculate gradient_func_type;
         // 设定线段插值器
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
+        typedef OHOS::GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
+
+        // 设定放射渐变的算法
+        typedef OHOS::GradientRadialCalculate gradient_func_type;
         // 设定线性渐变的线段生成器
         typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate,
                                             color_func_type>
@@ -89,6 +91,8 @@ namespace OHOS {
         typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type>
             RadialGradientSpan;
 
+#endif
+
         typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
         typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
         typedef OHOS::DepictDash<ConvCurve> ConvDashCurve;
@@ -96,9 +100,9 @@ namespace OHOS {
         typedef OHOS::DepictStroke<ConvDashCurve> ConvDashStroke;
         typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
         typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
-#    if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
-#    endif
+#endif
         // 渲染器缓冲区
         typedef OHOS::RenderingBuffer RenderingBuffer;
         // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
@@ -110,6 +114,7 @@ namespace OHOS {
         // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
         typedef OHOS::ImageAccessorNoRepeat<pixfmt> imgSourceTypeNoRepeat;
         // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         //  x,y轴都重复
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeat> spanPatternTypeRepeat;
         //  x轴重复
@@ -118,25 +123,25 @@ namespace OHOS {
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
         // 不重复
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
-
+#endif
     public:
         friend class BaseGfxExtendEngineRenderer;
         typedef OHOS::Srgba8 Color;
         typedef OHOS::RectI Rect;
         typedef OHOS::RectD RectD;
         typedef OHOS::TransAffine Affine;
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * 渐变的模式
          */
-        enum Gradient {
+        enum Gradient{
             /** 单色 */
             SOLID,
             /** 线性渐变 */
             LINEAR,
             /** 放射渐变 */
-            RADIAL
-        };
+            RADIAL};
+#endif
         /**
          * @brief 两条线相交时，所创建的拐角类型
          */
@@ -162,7 +167,7 @@ namespace OHOS {
             /** 向线条的每个末端添加圆形线帽 */
             CAPROUND = OHOS::ROUND_CAP
         };
-#endif
+
         /**
          * @brief 绘制的类型
          */
@@ -394,7 +399,7 @@ namespace OHOS {
          * @param color  offset所在位置的颜色
          */
         void AddColor(double offset, Color color);
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * @brief 根据渐变颜色构建color_type数组
          * 数组长度0-255
@@ -421,6 +426,7 @@ namespace OHOS {
          * @param end_y 线性终点坐标y
          */
         void SetLinearGradient(double start_x, double start_y, double end_x, double end_y);
+#endif
         /**
          * @brief 设置线条宽度
          */
@@ -577,7 +583,7 @@ namespace OHOS {
          * @brief 关闭多边形路径
          */
         void ClosePolygon();
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         /**
          * @brief 绘制阴影
          * @param x
@@ -589,151 +595,6 @@ namespace OHOS {
         void DrawShadow(double x, double y, double angle, double scaleX, double scaleY, double transLateX = 0, double transLateY = 0);
         void DrawShadow(int16_t cx, int16_t cy, int16_t rx, int16_t ry, double x, double y, double angle, double scaleX,
                         double scaleY, double transLateX = 0, double transLateY = 0);
-
-        /**
-         * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
-         * @param flag 绘制模式 默认填充和绘制路径都有
-         */
-        void DrawPath(DrawPathFlag flag = FILLANDSTROKE);
-        /**
-         * @brief 绘制路径
-         */
-        void Stroke();
-
-        /**
-         * @brief 变换图像
-         * @param img 图像
-         * @param imgX1 图像左上角x
-         * @param imgY1 图像左上角y
-         * @param imgX2 图像右下角x
-         * @param imgY2 图像右下角y
-         * @param dstX1 合法区域的左上角x
-         * @param dstY1 合法区域的左上角y
-         * @param dstX2 合法区域的右下角x
-         * @param dstY2 合法区域的右下角y
-         * @param isComposite 是否抗锯齿
-         */
-        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX1, double dstY1,
-                            double dstX2, double dstY2);
-        void TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2);
-        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, const double* parallelogram);
-        void TransformImage(const Image& img, const double* parallelogram);
-
-        void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
-                        unsigned alpha = 255);
-
-        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
-                            unsigned alpha);
-        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha);
-
-        /**
-         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
-         * @param img 图像相关信息
-         * @param dstX x方向偏移量
-         * @param dstY y方向偏移量
-         * @param pattternMode 有四种模式
-         */
-        void PatternImageFill(Image& img, double offsetX, double offsetY, const char* pattternMode);
-        /**
-         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充路径
-         * @param img 图像相关信息
-         * @param dstX x方向偏移量
-         * @param dstY y方向偏移量
-         * @param pattternMode 有四种模式
-         */
-        void PatternImageStroke(Image& img, double offsetX, double offsetY, const char* pattternMode);
-        /**
-         * @brief 返回 π
-         */
-        static double Pi()
-        {
-            return OHOS::PI;
-        }
-
-        /**
-         * @brief 角度转换为弧度
-         * @param  Angle 规定要转换的角度。
-         * @return 返回弧度
-         */
-        static double Deg2Rad(double Angle)
-        {
-            return Angle * OHOS::PI / OHOS::BOXER;
-        }
-
-        /**
-         * @brief 设置lineDash的起始位置偏移量
-         * @param dDashOffset 要偏移的位置
-         */
-        void SetLineDashOffset(float dDashOffset)
-        {
-            this->dDashOffset = dDashOffset;
-        }
-        /**
-         * @brief 获得lineDash的起始位置偏移量
-         */
-        float GetLineDashOffset() const
-        {
-            return dDashOffset;
-        }
-
-        /**
-         * @brief 设置lineDash的虚实线的长度
-         * @param dashArray 虚实线长度的数组
-         * @param ndash 数组长度
-         */
-        void SetLineDash(const float* dashArray, unsigned int ndash)
-        {
-            ClearLineDash();
-            if (dashArray == nullptr || ndash == 0) {
-                return;
-            }
-            is_dash = true;
-            ndashes = (ndash + 1) & ~1;
-            dashes = new float[ndashes];
-            if (dashes) {
-                memset(dashes, 0, ndashes * sizeof(float));
-                for (unsigned int i = 0; i < ndash; i++) {
-                    dashes[i] = dashArray[i];
-                }
-            } else {
-                ndashes = 0;
-                dDashOffset = 0;
-                is_dash = false;
-            }
-        }
-
-        /**
-         * @brief 返回是否是dash的划线模式
-         */
-        bool IsLineDash() const
-        {
-            return is_dash;
-        }
-
-        /**
-         * @brief 获取lineDash的虚实线长度数组
-         */
-        float* GetLineDash() const
-        {
-            return dashes;
-        }
-
-        /**
-         * @brief 获取lineDash的虚实线长度数组的长度
-         */
-        unsigned int GetLineDashCount() const
-        {
-            return ndashes;
-        }
-
-        /**
-         * @brief 返回渲染器
-         */
-        OHOS::RenderingBuffer GetRenderBuffer() const
-        {
-            return m_rbuf;
-        }
-
         /**
          * @brief 设置阴影的颜色
          * @param red 红色
@@ -776,6 +637,164 @@ namespace OHOS {
         {
             shadowBlurRadius_ = radius;
         }
+#endif
+        /**
+         * @brief 根据路径和flag确认绘制路径还是填充路径内区域，或者两者兼备
+         * @param flag 绘制模式 默认填充和绘制路径都有
+         */
+        void DrawPath(DrawPathFlag flag = FILLANDSTROKE);
+        /**
+         * @brief 绘制路径
+         */
+        void Stroke();
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
+        void BlendFromImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
+                            unsigned alpha);
+        void BlendFromImage(Image& img, double dstX, double dstY, unsigned alpha);
+#endif
+        /**
+         * @brief 变换图像
+         * @param img 图像
+         * @param imgX1 图像左上角x
+         * @param imgY1 图像左上角y
+         * @param imgX2 图像右下角x
+         * @param imgY2 图像右下角y
+         * @param dstX1 合法区域的左上角x
+         * @param dstY1 合法区域的左上角y
+         * @param dstX2 合法区域的右下角x
+         * @param dstY2 合法区域的右下角y
+         * @param isComposite 是否抗锯齿
+         */
+        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX1, double dstY1,
+                            double dstX2, double dstY2);
+        void TransformImage(const Image& img, double dstX1, double dstY1, double dstX2, double dstY2);
+        void TransformImage(const Image& img, int imgX1, int imgY1, int imgX2, int imgY2, const double* parallelogram);
+        void TransformImage(const Image& img, const double* parallelogram);
+
+        void BlendImage(Image& img, int imgX1, int imgY1, int imgX2, int imgY2, double dstX, double dstY,
+                        unsigned alpha = 255);
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
+        /**
+         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充图形
+         * @param img 图像相关信息
+         * @param dstX x方向偏移量
+         * @param dstY y方向偏移量
+         * @param pattternMode 有四种模式
+         */
+        void PatternImageFill(Image& img, double offsetX, double offsetY, const char* pattternMode);
+        /**
+         * @brief 根据pattternMode模式在指定的方向内重复指定的元素 填充路径
+         * @param img 图像相关信息
+         * @param dstX x方向偏移量
+         * @param dstY y方向偏移量
+         * @param pattternMode 有四种模式
+         */
+        void PatternImageStroke(Image& img, double offsetX, double offsetY, const char* pattternMode);
+#endif
+        /**
+         * @brief 返回 π
+         */
+        static double Pi()
+        {
+            return OHOS::PI;
+        }
+
+        /**
+         * @brief 角度转换为弧度
+         * @param  Angle 规定要转换的角度。
+         * @return 返回弧度
+         */
+        static double Deg2Rad(double Angle)
+        {
+            return Angle * OHOS::PI / OHOS::BOXER;
+        }
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
+        /**
+         * @brief 设置lineDash的起始位置偏移量
+         * @param dDashOffset 要偏移的位置
+         */
+        void SetLineDashOffset(float dDashOffset)
+        {
+            this->dDashOffset = dDashOffset;
+        }
+        /**
+         * @brief 获得lineDash的起始位置偏移量
+         */
+        float GetLineDashOffset() const
+        {
+            return dDashOffset;
+        }
+
+        /**
+         * @brief 设置lineDash的虚实线的长度
+         * @param dashArray 虚实线长度的数组
+         * @param ndash 数组长度
+         */
+        void SetLineDash(const float* dashArray, unsigned int ndash)
+        {
+            ClearLineDash();
+            if (dashArray == nullptr || ndash == 0) {
+                return;
+            }
+            is_dash = true;
+            ndashes = (ndash + 1) & ~1;
+            dashes = new float[ndashes];
+            if (dashes) {
+                memset(dashes, 0, ndashes * sizeof(float));
+                for (unsigned int i = 0; i < ndash; i++) {
+                    dashes[i] = dashArray[i];
+                }
+            } else {
+                ndashes = 0;
+                dDashOffset = 0;
+                is_dash = false;
+            }
+        }
+        /**
+         * @brief 获取lineDash的虚实线长度数组
+         */
+        float* GetLineDash() const
+        {
+            return dashes;
+        }
+
+        /**
+         * @brief 获取lineDash的虚实线长度数组的长度
+         */
+        unsigned int GetLineDashCount() const
+        {
+            return ndashes;
+        }
+
+        /**
+         * @brief 重置LineDash相关配置
+         */
+        void ClearLineDash(void)
+        {
+            dDashOffset = 0;
+            ndashes = 0;
+            is_dash = false;
+            if (dashes) {
+                delete[] dashes;
+                dashes = NULL;
+            }
+        }
+#endif
+        /**
+         * @brief 返回是否是dash的划线模式
+         */
+        bool IsLineDash() const
+        {
+            return is_dash;
+        }
+
+        /**
+         * @brief 返回渲染器
+         */
+        OHOS::RenderingBuffer GetRenderBuffer() const
+        {
+            return m_rbuf;
+        }
 
         /**
          * @brief 设置单个矩形边界
@@ -812,28 +831,18 @@ namespace OHOS {
          */
         void RenderImage(const Image& img, int x1, int y1, int x2, int y2, const double* parl);
 
-        /**
-         * @brief 重置LineDash相关配置
-         */
-        void ClearLineDash(void)
-        {
-            dDashOffset = 0;
-            ndashes = 0;
-            is_dash = false;
-            if (dashes) {
-                delete[] dashes;
-                dashes = NULL;
-            }
-        }
         OHOS::RenderingBuffer m_rbuf;                     // 渲染器缓冲区
         OHOS::ScanlineUnPackedContainer m_scanline;       // 扫描线不合并相同扫描线
         OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; // 光栅
-        OHOS::TransAffine m_fillGradientMatrix;           // 放射渐变的矩阵
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+        OHOS::TransAffine m_fillGradientMatrix; // 放射渐变的矩阵
         OHOS::TransAffine m_lineGradientMatrix;
         OHOS::TransAffine m_fillRadialMatrix;
+
         OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
         OHOS::SpanInterpolatorLinear<> m_lineGradientInterpolator;
         OHOS::GradientLinearCalculate m_linearGradientFunction;
+#endif
         OHOS::PathStorage m_path;
         OHOS::TransAffine m_transform;
         PixFormat m_pixFormat;
@@ -853,22 +862,30 @@ namespace OHOS {
         Color m_imageBlendColor; // 图像混合颜色
         Color m_fillColor;       // 图像需要填充颜色
         Color m_lineColor;       // 线条需要填充颜色
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         color_func_type m_fillRadialGradient;
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCap m_lineCap;
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         LineJoin m_lineJoin;
+        double m_miterLimit;
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         Gradient m_fillGradientFlag;
         Gradient m_lineGradientFlag;
         interpolator_type m_interpolator_type;
         gradient_func_type m_radialGradientFunction;
+#endif
         ConvCurve m_convCurve;
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         ConvDashCurve m_convDashCurve;
         ConvDashStroke m_convDashStroke;
         DashStrokeTransform m_dashStrokeTransform;
+        unsigned int ndashes;
+        float* dashes;
+        float dDashOffset;
 #endif
         ConvStroke m_convStroke;
 
@@ -877,23 +894,24 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         StackBlur m_stack_blur;
 #endif
-        ColorType shadowColor_;
+
         double m_masterAlpha;
         double m_antiAliasGamma;
-        double m_miterLimit;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         double m_fillGradientD1;
         double m_lineGradientD1;
         double m_fillGradientD2;
         double m_lineGradientD2;
+#endif
         double m_lineWidth;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+        ColorType shadowColor_;
         double shadowOffsetY_;
         double shadowOffsetX_;
         double shadowBlurRadius_;
+#endif
         bool m_evenOddFlag;
         bool is_dash;
-        unsigned int ndashes;
-        float* dashes;
-        float dDashOffset;
     };
 
     /**
@@ -913,3 +931,4 @@ namespace OHOS {
         return !(c1 == c2);
     }
 } // namespace OHOS
+#endif
