@@ -25,22 +25,6 @@
 #include "render/graphic_render_pixfmt_base.h"
 
 namespace OHOS {
-    enum CompOpEnum {
-        COMP_OP_SRC,
-        COMP_OP_DST,
-        COMP_OP_SRC_OVER,
-        COMP_OP_DST_OVER,
-        COMP_OP_SRC_IN,
-        COMP_OP_DST_IN,
-        COMP_OP_SRC_OUT,
-        COMP_OP_DST_OUT,
-        COMP_OP_SRC_ATOP,
-        COMP_OP_DST_ATOP,
-        COMP_OP_XOR,
-        COMP_OP_LIGHTEN,
-        END_OF_COMP_OP_E
-    };
-
 #ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
     using ColorTyping = rgba32;
     using BlenderRgba32 = RgbaBlender<Rgba32, OrderRgba>;
