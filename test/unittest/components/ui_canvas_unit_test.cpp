@@ -1606,8 +1606,8 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_001, TestSize.Level0)
     }
 
     canvas_->SetDrawGraphicsContext(*paint_);
-    paint_->SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_COPY);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_COPY);
 }
 
 /**
@@ -1634,14 +1634,14 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_002, TestSize.Level1)
     color = Color::Red();
     paint_->SetFillColor(color);
     canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
-    paint_->SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_COPY);
     paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint_->SetStrokeColor(color);
     color = Color::Blue();
     paint_->SetFillColor(color);
     canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
 
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), BaseGfxExtendEngine::BlendMode::BLENDCOPY);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_COPY);
 }
 
 /**
@@ -1662,8 +1662,8 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_001, TestSize.Level0)
     }
 
     canvas_->SetDrawGraphicsContext(*paint_);
-    paint_->SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_OVER);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_SRC_OVER);
 }
 
 /**
@@ -1690,14 +1690,14 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
     paint_->SetFillColor(color);
     canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
-    paint_->SetGlobalCompositeOperation(BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_OVER);
     paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint_->SetStrokeColor(color);
     color = Color::Red();
     paint_->SetFillColor(color);
     canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
 
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), BaseGfxExtendEngine::BlendMode::BLENDSRCOVER);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_SRC_OVER);
 }
 
 /**
