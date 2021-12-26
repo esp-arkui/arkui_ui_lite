@@ -359,7 +359,9 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         GradientControl gradientControl;
+#endif
         paint.SetStrokeColor(Color::Red());
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         //paint.SetFillColor(Color::Green());
@@ -371,12 +373,14 @@ namespace OHOS {
         paint.SetShadowBlurRadius(5);
 #endif
         paint.SetTransformCenter(60, 60);
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         gradientControl.createLinearGradient(60, 60, 160, 110);
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.3, Color::White());
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
         paint.FillStyle(gradientControl);
+#endif
         //canvas->SetRotate(10.0, paint);
         //canvas->SetScale(2.0, 2.0, paint);
         canvas->BeginPath();
@@ -1700,16 +1704,19 @@ namespace OHOS {
 
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
+        paint.SetStrokeWidth(2);
+        paint.SetStrokeColor(Color::White());
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         GradientControl gradientControl;
         paint.SetStyle(Paint::PaintStyle::FILL_GRADIENT);
-        paint.SetStrokeWidth(2);
         gradientControl.createLinearGradient(100, 50, 200, 150);
-        paint.SetStrokeColor(Color::White());
+
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.3, Color::White());
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
         paint.FillStyle(gradientControl);
+#endif
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1745,17 +1752,21 @@ namespace OHOS {
 
         Paint paint;
         canvas->SetDrawGraphicsContext(paint);
-        GradientControl gradientControl;
-        paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeWidth(8);
-        gradientControl.createLinearGradient(100, 50, 200, 150);
         paint.SetStrokeColor(Color::White());
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+        GradientControl gradientControl;
+        paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
+
+        gradientControl.createLinearGradient(100, 50, 200, 150);
+
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.3, Color::White());
         gradientControl.addColorStop(0.6, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
         paint.FillStyle(gradientControl);
+#endif
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1792,15 +1803,17 @@ namespace OHOS {
         canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::FILL_GRADIENT);
         paint.SetStrokeWidth(2);
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         GradientControl gradientControl;
         gradientControl.createRadialGradient(180, 140, 10, 150, 100, 80);
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.4, Color::Gray());
         gradientControl.addColorStop(0.8, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
-        paint.SetStrokeColor(Color::White());
-        paint.FillStyle(gradientControl);
 
+        paint.FillStyle(gradientControl);
+#endif
+        paint.SetStrokeColor(Color::White());
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;
@@ -1833,15 +1846,16 @@ namespace OHOS {
         canvas->SetDrawGraphicsContext(paint);
         paint.SetStyle(Paint::PaintStyle::STROKE_GRADIENT);
         paint.SetStrokeWidth(8);
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         GradientControl gradientControl;
         gradientControl.createRadialGradient(180, 140, 10, 150, 100, 80);
         gradientControl.addColorStop(0, Color::Yellow());
         gradientControl.addColorStop(0.4, Color::Gray());
         gradientControl.addColorStop(0.8, Color::Green());
         gradientControl.addColorStop(1, Color::Blue());
-        paint.SetStrokeColor(Color::White());
         paint.FillStyle(gradientControl);
-
+#endif
+        paint.SetStrokeColor(Color::White());
         //----------------------------------------五角星----------------------------------------------------------------//
         int32_t rot = 0;
         int32_t outerR = 80;

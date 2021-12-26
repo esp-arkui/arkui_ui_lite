@@ -14,40 +14,40 @@
  */
 
 #ifndef GFX_GRAPGICS_MANAGER_INCLUDED
-#    define GFX_GRAPGICS_MANAGER_INCLUDED
+#define GFX_GRAPGICS_MANAGER_INCLUDED
 
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
-#    include <gfx_utils/graphics/graphic_depict/graphic_depict_transform.h>
-#    include <gfx_utils/graphics/graphic_filter/graphic_filter_blur.h>
-#    include <gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h>
-#    include <gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h>
-#    include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
-#    include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
-#    include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
-#    include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
-#    include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
-#    include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
-#    include <render/graphic_render_base.h>
-#    include <render/graphic_render_pixfmt_rgba.h>
-#    include <render/graphic_render_scanline.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_curve.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_dash.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h>
+#include <gfx_utils/graphics/graphic_depict/graphic_depict_transform.h>
+#include <gfx_utils/graphics/graphic_filter/graphic_filter_blur.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h>
+#include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
+#include <gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h>
+#include <gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h>
+#include <gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h>
+#include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
+#include <render/graphic_render_base.h>
+#include <render/graphic_render_pixfmt_rgba.h>
+#include <render/graphic_render_scanline.h>
 
-#    include "gfx_engine_manager.h"
-#    include "gfx_utils/color.h"
+#include "gfx_engine_manager.h"
+#include "gfx_utils/color.h"
 
 namespace OHOS {
     class BaseGfxExtendEngine : public BaseGfxEngine {
-#    ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
+#ifdef GRAPHIC_GEOMETYR_ENABLE_FLOAT_FORMAT
         typedef OHOS::rgba32 ColorType;
-#    else
+#else
         typedef OHOS::Rgba8 ColorType;
-#    endif
+#endif
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OHOS::OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
@@ -75,12 +75,14 @@ namespace OHOS {
         typedef OHOS::RendererScanlineAntiAliasSolid<RendererBaseComp> RendererSolidComp;
         // 设定线段分配器
         typedef OHOS::SpanFillColorAllocator<ColorType> SpanAllocator;
-        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
-        typedef OHOS::GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
-        // 设定放射渐变的算法
-        typedef OHOS::GradientRadialCalculate gradient_func_type;
         // 设定线段插值器
         typedef OHOS::SpanInterpolatorLinear<> interpolator_type;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
+        typedef OHOS::GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> color_func_type;
+
+        // 设定放射渐变的算法
+        typedef OHOS::GradientRadialCalculate gradient_func_type;
         // 设定线性渐变的线段生成器
         typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, OHOS::GradientLinearCalculate,
                                             color_func_type>
@@ -89,6 +91,8 @@ namespace OHOS {
         typedef OHOS::SpanFillColorGradient<ColorType, OHOS::SpanInterpolatorLinear<>, gradient_func_type, color_func_type>
             RadialGradientSpan;
 
+#endif
+
         typedef OHOS::DepictCurve<OHOS::PathStorage> ConvCurve;
         typedef OHOS::DepictStroke<ConvCurve> ConvStroke;
         typedef OHOS::DepictDash<ConvCurve> ConvDashCurve;
@@ -96,9 +100,9 @@ namespace OHOS {
         typedef OHOS::DepictStroke<ConvDashCurve> ConvDashStroke;
         typedef OHOS::DepictTransform<ConvStroke> StrokeTransform;
         typedef OHOS::DepictTransform<ConvDashStroke> DashStrokeTransform;
-#    if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         typedef OHOS::StackBlur<ColorType, OHOS::StackBlurCalcRGBA<>> StackBlur;
-#    endif
+#endif
         // 渲染器缓冲区
         typedef OHOS::RenderingBuffer RenderingBuffer;
         // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
@@ -125,18 +129,18 @@ namespace OHOS {
         typedef OHOS::RectI Rect;
         typedef OHOS::RectD RectD;
         typedef OHOS::TransAffine Affine;
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * 渐变的模式
          */
-        enum Gradient {
+        enum Gradient{
             /** 单色 */
             SOLID,
             /** 线性渐变 */
             LINEAR,
             /** 放射渐变 */
-            RADIAL
-        };
+            RADIAL};
+#endif
         /**
          * @brief 两条线相交时，所创建的拐角类型
          */
@@ -162,7 +166,7 @@ namespace OHOS {
             /** 向线条的每个末端添加圆形线帽 */
             CAPROUND = OHOS::ROUND_CAP
         };
-#endif
+
         /**
          * @brief 绘制的类型
          */
@@ -394,7 +398,7 @@ namespace OHOS {
          * @param color  offset所在位置的颜色
          */
         void AddColor(double offset, Color color);
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * @brief 根据渐变颜色构建color_type数组
          * 数组长度0-255
@@ -421,6 +425,7 @@ namespace OHOS {
          * @param end_y 线性终点坐标y
          */
         void SetLinearGradient(double start_x, double start_y, double end_x, double end_y);
+#endif
         /**
          * @brief 设置线条宽度
          */
@@ -827,12 +832,15 @@ namespace OHOS {
         OHOS::RenderingBuffer m_rbuf;                     // 渲染器缓冲区
         OHOS::ScanlineUnPackedContainer m_scanline;       // 扫描线不合并相同扫描线
         OHOS::RasterizerScanlineAntiAlias<> m_rasterizer; // 光栅
-        OHOS::TransAffine m_fillGradientMatrix;           // 放射渐变的矩阵
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+        OHOS::TransAffine m_fillGradientMatrix; // 放射渐变的矩阵
         OHOS::TransAffine m_lineGradientMatrix;
         OHOS::TransAffine m_fillRadialMatrix;
+
         OHOS::SpanInterpolatorLinear<> m_fillGradientInterpolator;
         OHOS::SpanInterpolatorLinear<> m_lineGradientInterpolator;
         OHOS::GradientLinearCalculate m_linearGradientFunction;
+#endif
         OHOS::PathStorage m_path;
         OHOS::TransAffine m_transform;
         PixFormat m_pixFormat;
@@ -852,17 +860,22 @@ namespace OHOS {
         Color m_imageBlendColor; // 图像混合颜色
         Color m_fillColor;       // 图像需要填充颜色
         Color m_lineColor;       // 线条需要填充颜色
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         color_func_type m_fillRadialGradient;
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCap m_lineCap;
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         LineJoin m_lineJoin;
+        double m_miterLimit;
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         Gradient m_fillGradientFlag;
         Gradient m_lineGradientFlag;
         interpolator_type m_interpolator_type;
         gradient_func_type m_radialGradientFunction;
+#endif
         ConvCurve m_convCurve;
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         ConvDashCurve m_convDashCurve;
@@ -882,11 +895,12 @@ namespace OHOS {
 
         double m_masterAlpha;
         double m_antiAliasGamma;
-        double m_miterLimit;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         double m_fillGradientD1;
         double m_lineGradientD1;
         double m_fillGradientD2;
         double m_lineGradientD2;
+#endif
         double m_lineWidth;
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         ColorType shadowColor_;
@@ -915,3 +929,4 @@ namespace OHOS {
         return !(c1 == c2);
     }
 } // namespace OHOS
+#endif

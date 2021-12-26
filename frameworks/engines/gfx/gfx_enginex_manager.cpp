@@ -53,12 +53,16 @@ namespace OHOS {
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         m_lineJoin(JOINROUND),
+        m_miterLimit(OHOS::DEFAULTMITERLIMIT),
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientMatrix(),
         m_lineGradientMatrix(),
         m_fillRadialMatrix(),
+#endif
         m_antiAliasGamma(1.0),
-        m_miterLimit(OHOS::DEFAULTMITERLIMIT),
+
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientD1(0.0),
         m_lineGradientD1(0.0),
         m_fillGradientInterpolator(m_fillGradientMatrix),
@@ -66,15 +70,18 @@ namespace OHOS {
         m_linearGradientFunction(),
         m_fillGradientFlag(SOLID),
         m_lineGradientFlag(SOLID),
+
         m_interpolator_type(m_fillRadialMatrix),
         m_radialGradientFunction(),
         m_fillGradientD2(0.0),
         m_lineGradientD2(0.0),
+#endif
         m_lineWidth(1),
         m_path(),
         m_transform(),
         m_convCurve(m_path),
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
+
         m_convDashCurve(m_convCurve),
         m_convDashStroke(m_convDashCurve),
         m_dashStrokeTransform(m_convDashStroke, m_transform),
@@ -106,10 +113,12 @@ namespace OHOS {
     BaseGfxExtendEngine::BaseGfxExtendEngine(const BaseGfxExtendEngine& baseGfxExtendEngine) :
         m_scanline(),
         m_rasterizer(),
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientMatrix(baseGfxExtendEngine.m_fillGradientMatrix),
         m_lineGradientMatrix(baseGfxExtendEngine.m_lineGradientMatrix),
         m_fillGradientInterpolator(m_fillGradientMatrix),
         m_lineGradientInterpolator(m_lineGradientMatrix),
+#endif
         m_path(baseGfxExtendEngine.m_path),
         m_convCurve(m_path),
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
@@ -147,8 +156,9 @@ namespace OHOS {
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         m_lineJoin = baseGfxExtendEngine.m_lineJoin;
-#endif
         m_miterLimit = baseGfxExtendEngine.m_miterLimit;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientFlag = baseGfxExtendEngine.SOLID;
         m_lineGradientFlag = baseGfxExtendEngine.SOLID;
         m_fillGradientD1 = baseGfxExtendEngine.m_fillGradientD1;
@@ -157,6 +167,7 @@ namespace OHOS {
         m_lineGradientD2 = baseGfxExtendEngine.m_lineGradientD2;
         m_linearGradientFunction = baseGfxExtendEngine.m_linearGradientFunction;
         m_radialGradientFunction = baseGfxExtendEngine.m_radialGradientFunction;
+#endif
         m_lineWidth = baseGfxExtendEngine.m_lineWidth;
         m_evenOddFlag = baseGfxExtendEngine.m_evenOddFlag;
         m_transform = baseGfxExtendEngine.m_transform;
@@ -385,7 +396,9 @@ namespace OHOS {
     void BaseGfxExtendEngine::SetFillColor(Color color)
     {
         m_fillColor = color;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_fillGradientFlag = SOLID;
+#endif
     }
 
     void BaseGfxExtendEngine::SetFillColor(unsigned read, unsigned green, unsigned blue, unsigned alpha)
@@ -401,7 +414,9 @@ namespace OHOS {
     void BaseGfxExtendEngine::SetLineColor(Color color)
     {
         m_lineColor = color;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         m_lineGradientFlag = SOLID;
+#endif
     }
 
     void BaseGfxExtendEngine::SetLineColor(unsigned read, unsigned green, unsigned blue, unsigned alpha)
@@ -432,7 +447,7 @@ namespace OHOS {
     {
         SetLineColor(Color(color.red, color.green, color.blue, color.alpha));
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void BaseGfxExtendEngine::RemoveAllColor()
     {
         m_fillRadialGradient.RemoveAll();
@@ -476,7 +491,7 @@ namespace OHOS {
         m_fillGradientFlag = LINEAR;
         m_fillColor = Color(0, 0, 0);
     }
-
+#endif
     void BaseGfxExtendEngine::SetLineWidth(double w)
     {
         if (w < 0.0) {
@@ -814,6 +829,7 @@ namespace OHOS {
         void static render(BaseGfxExtendEngine& gr, BaseRenderer& renBase, SolidRenderer& renSolid, bool fillColor)
         {
             using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
                                                                            BaseGfxExtendEngine::LinearGradientSpan>;
             using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -837,6 +853,7 @@ namespace OHOS {
 
                     OHOS::RenderScanlinesAntiAlias(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
                 }
+                return;
             } else if (gr.m_fillGradientFlag == BaseGfxExtendEngine::RADIAL) {
                 if (fillColor) {
                     BaseGfxExtendEngine::RadialGradientSpan span(
@@ -856,10 +873,11 @@ namespace OHOS {
                         gr.m_fillGradientD2);
                     OHOS::RenderScanlinesAntiAlias(gr.m_rasterizer, gr.m_scanline, renBase, gr.m_allocator, span);
                 }
-            } else {
-                renSolid.SetColor(fillColor ? gr.m_fillColor : gr.m_lineColor);
-                OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, renSolid);
+                return;
             }
+#endif
+            renSolid.SetColor(fillColor ? gr.m_fillColor : gr.m_lineColor);
+            OHOS::RenderScanlines(gr.m_rasterizer, gr.m_scanline, renSolid);
         }
 
         template <class BaseRenderer, class SolidRenderer, class Rasterizer, class Scanline>
@@ -867,6 +885,7 @@ namespace OHOS {
                            SolidRenderer& renSolid, Rasterizer& ras, Scanline& sl)
         {
             using SpanAllocatorType = OHOS::SpanFillColorAllocator<BaseGfxExtendEngine::ColorType>;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             using RendererLinearGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
                                                                            BaseGfxExtendEngine::LinearGradientSpan>;
             using RendererRadialGradient = OHOS::RendererScanlineAntiAlias<BaseRenderer, SpanAllocatorType,
@@ -881,6 +900,7 @@ namespace OHOS {
                     gr.m_fillGradientD2);
                 RendererLinearGradient ren(renBase, gr.m_allocator, span);
                 OHOS::RenderScanlines(ras, sl, ren);
+                return;
             } else {
                 if (gr.m_fillGradientFlag == BaseGfxExtendEngine::RADIAL) {
                     BaseGfxExtendEngine::RadialGradientSpan span(
@@ -891,11 +911,12 @@ namespace OHOS {
                         gr.m_fillGradientD2);
                     RendererRadialGradient ren(renBase, gr.m_allocator, span);
                     OHOS::RenderScanlines(ras, sl, ren);
-                } else {
-                    renSolid.color(gr.m_fillColor);
-                    OHOS::RenderScanlines(ras, sl, renSolid);
+                    return;
                 }
             }
+#endif
+            renSolid.color(gr.m_fillColor);
+            OHOS::RenderScanlines(ras, sl, renSolid);
         }
 
         template <class BaseRenderer, class Interpolator>

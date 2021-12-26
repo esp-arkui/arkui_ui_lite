@@ -767,7 +767,7 @@ namespace OHOS {
         GetAbsolutePosition(lineParam->start, rect, style, start);
         GetAbsolutePosition(lineParam->end, rect, style, end);
 
-        if (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPBUTT || paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE) {
+        if (paint.GetLineCap() == BaseGfxExtendEngine::LineCap::CAPNONE) {
             BaseGfxEngine::GetInstance()->DrawLine(gfxDstBuffer, start, end, invalidatedArea, paint.GetStrokeWidth(),
                                                    paint.GetStrokeColor(), paint.GetOpacity());
         } else {
@@ -887,6 +887,7 @@ namespace OHOS {
         int16_t lineWidth = static_cast<int16_t>(paint.GetStrokeWidth());
 
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_GRADIENT) {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             BaseGfxExtendEngine* m_graphics = paint.GetDrawGraphicsContext();
             if (m_graphics == nullptr) {
                 return;
@@ -896,6 +897,7 @@ namespace OHOS {
             setGradient(*m_graphics, paint, rect, style); // 填充颜色
             m_graphics->SetLineWidth(lineWidth);
             m_graphics->Rectstroke(start.x, start.y, start.x + rectParam->width, start.y + rectParam->height);
+#endif
         } else {
             Point start;
             GetAbsolutePosition(rectParam->start, rect, style, start);
@@ -980,11 +982,13 @@ namespace OHOS {
 #endif
             m_graphics->SetMasterAlpha((double)paint.GetGlobalAlpha());
             m_graphics->NoLine();
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             setGradient(*m_graphics, paint, rect, style); // 填充颜色
+#endif
             m_graphics->Rectangle(start.x, start.y, start.x + rectParam->width, start.y + rectParam->height);
         }
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void UICanvas::addColorGradient(BaseGfxExtendEngine& m_graphics, List<GradientControl::StopAndColor>& stopAndColors)
     {
         m_graphics.RemoveAllColor();
@@ -998,7 +1002,7 @@ namespace OHOS {
         }
         m_graphics.BuildLut();
     }
-
+#endif
     void UICanvas::FillPattern(const Paint& paint)
     {
         if (strcmp(paint.image, "") == 0) {
@@ -1094,6 +1098,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
         Invalidate();
     }
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void UICanvas::Gradient(const Paint& paint)
     {
         PathParam* param = new PathParam;
@@ -1111,15 +1116,17 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd2);
         Invalidate();
     }
-
+#endif
     void UICanvas::Fill(const Paint& paint)
     {
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
             FillPattern(paint);
         }
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::FILL_GRADIENT)) {
             Gradient(paint);
         }
+#endif
     }
 
     void UICanvas::Stroke(const Paint& paint)
@@ -1127,11 +1134,13 @@ namespace OHOS {
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::PATTERN)) {
             StrokePattern(paint);
         }
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         if (static_cast<uint8_t>(paint.GetStyle() & Paint::PaintStyle::STROKE_GRADIENT)) {
             Gradient(paint);
         }
+#endif
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void UICanvas::setGradient(BaseGfxExtendEngine& m_graphics, const Paint& paint, const Rect& rect,
                                const Style& style)
     {
@@ -1184,7 +1193,7 @@ namespace OHOS {
             m_graphics.SetFillColor(BaseGfxExtendEngine::Color(color.red, color.green, color.blue, color.alpha));
         }
     }
-
+#endif
     void UICanvas::DoDrawCircle(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                 const Rect& invalidatedArea, const Style& style)
     {
@@ -1359,7 +1368,7 @@ namespace OHOS {
             m_graphics->PatternImageStroke(imageBuffer, start.x, start.y, "no-repeat");
         }
     }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void UICanvas::DoGradient(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                               const Rect& invalidatedArea, const Style& style)
     {
@@ -1424,7 +1433,7 @@ namespace OHOS {
             m_graphics->Stroke();
         }
     }
-
+#endif
     void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style)
     {
@@ -1970,7 +1979,9 @@ namespace OHOS {
         }
 #endif
         StartTransform(rect, invalidatedArea, paint);
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         setGradient(*m_graphics, paint, rect, style); // 填充颜色
+#endif
         m_graphics->DrawPath(BaseGfxExtendEngine::FILLANDSTROKE);
     }
 } // namespace OHOS

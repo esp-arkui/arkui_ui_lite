@@ -50,6 +50,7 @@
 #include "gfx_utils/list.h"
 #include "ui_image_view.h"
 namespace OHOS {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     /**
      * @brief Defines the basic styles of graphs drawn on canvases.
      *
@@ -156,6 +157,7 @@ namespace OHOS {
         RadialGradientPoint radialGradientPoint_;
         List<StopAndColor> stopAndColors_;
     };
+#endif
 
     class Paint : public HeapBase {
     public:
@@ -271,8 +273,9 @@ namespace OHOS {
             scaleY = paint.scaleY;
             transLateX = paint.transLateX;
             transLateY = paint.transLateY;
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             gradientControl = paint.getGradientControl();
+#endif
             patternRepeat = paint.patternRepeat;
         }
         const Paint& operator=(const Paint& paint)
@@ -301,7 +304,6 @@ namespace OHOS {
             }
 #endif
         }
-
         /**
          * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
          */
@@ -316,7 +318,6 @@ namespace OHOS {
             STROKE_GRADIENT = 8,
             FILL_GRADIENT = 16,
         };
-
         /**
          * @brief 线性渐变所需要的起止点
          */
@@ -423,7 +424,9 @@ namespace OHOS {
          */
         void SetFillColor(ColorType color)
         {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             gradientControl.gradientflag = GradientControl::Solid;
+#endif
             fillColor_ = color;
         }
 
@@ -804,6 +807,7 @@ namespace OHOS {
         {
             return patternRepeat;
         }
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /*
          * 设置图元填充样式
          * @param GradientControl表示渐变控制器
@@ -812,6 +816,7 @@ namespace OHOS {
         {
             gradientControl = ctrl;
         }
+#endif
         /*
          * 设置图元填充样式颜色
          * @param ColorType表示颜色值类型
@@ -879,12 +884,12 @@ namespace OHOS {
         {
             return !m_transform.IsIdentity();
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         GradientControl getGradientControl() const
         {
             return gradientControl;
         }
-
+#endif
         BaseGfxExtendEngine* GetDrawGraphicsContext() const
         {
             return m_graphics;
@@ -922,7 +927,9 @@ namespace OHOS {
         BaseGfxExtendEngine* m_graphics;
         /* 用于操作变换矩阵 */
         OHOS::TransAffine m_transform;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         GradientControl gradientControl;
+#endif
         double transformCenterX;
         double transformCenterY;
         double rotateAngle;
@@ -1349,10 +1356,12 @@ namespace OHOS {
          * @brief 绘制路径渐变和pattern模式
          */
         void Stroke(const Paint& paint);
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * @brief 根据设置模式去绘制路径或者填充
          */
         void Gradient(const Paint& paint);
+#endif
         /**
          * @brief 根据pattern模式填充路径绘制的区域
          */
@@ -1684,7 +1693,7 @@ namespace OHOS {
         static void GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point);
         static void DoDrawLineJoin(BufferInfo& gfxDstBuffer, const Point& center, const Rect& invalidatedArea,
                                    const Paint& paint);
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         static void addColorGradient(BaseGfxExtendEngine& m_graphics,
                                      List<GradientControl::StopAndColor>& stopAndColors);
 
@@ -1692,7 +1701,7 @@ namespace OHOS {
                                 const Style& style);
         static void DoGradient(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
-
+#endif
         static void BlitMapBuffer(BufferInfo& gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& curViewRect,
                                   TransformMap& transMap, const Rect& invalidatedArea);
         static bool IsGif(const char* src);
