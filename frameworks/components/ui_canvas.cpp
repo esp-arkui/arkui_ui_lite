@@ -1469,31 +1469,15 @@ namespace OHOS {
             cordsTmp.SetHeight(imageParam->height);
             cordsTmp.SetWidth(imageParam->width);
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-            imageParam->image->GetImageInfo(), style, opa);
+                                  imageParam->image->GetImageInfo(), style, opa);
         } else {
             double x = start.x;
             double y = start.y;
             double parallelogram[6] = {x, y, x + imageParam->width, y, x + imageParam->width, y + imageParam->height};
-            uint8_t formatType = imageParam->image->GetImgType();
-            StartTransform(rect, invalidatedArea, paint);
-            graphics->TransformImage(imageBuffer, parallelogram);
-        }
-#else
-        if (!paint.IsTransform()) {
-            double x = start.x;
-            double y = start.y;
-            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
-            graphics->TransformImage(imageBuffer, parallelogram);
-        } else {
-            double x = start.x;
-            double y = start.y;
-
-            double parallelogram[6] = {x, y, x + width, y, x + width, y + height};
             StartTransform(rect, invalidatedArea, paint);
             graphics->TransformImage(imageBuffer, parallelogram);
         }
 #endif
-
     }
 
     void UICanvas::StartTransform(const Rect& rect, const Rect& invalidatedArea, const Paint& paint)
