@@ -116,7 +116,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief row_ptr 获取行首地址
+         * @brief RowPtr 获取行首地址
          */
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned)
@@ -124,7 +124,7 @@ namespace OHOS {
             return start_ + y * (int64)bufStride_;
         }
         /**
-         * @brief row_ptr 返回指向第y行起点的指针
+         * @brief RowPtr 返回指向第y行起点的指针
          */
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int y)
@@ -132,7 +132,7 @@ namespace OHOS {
             return start_ + y * (int64)bufStride_;
         }
         /**
-         * @brief row_ptr 返回指向第y行起点的指针
+         * @brief RowPtr 返回指向第y行起点的指针
          */
         GRAPHIC_GEOMETRY_INLINE const T* RowPtr(int y) const
         {
@@ -165,7 +165,7 @@ namespace OHOS {
             unsigned y;
             unsigned w = GetWidth();
             for (y = 0; y < h; y++) {
-                memcpy_s(RowPtr(0, y, w), lStride, renBuf.row_ptr(y), lStride);
+                memcpy_s(RowPtr(0, y, w), lStride, renBuf.RowPtr(y), lStride);
             }
         }
 

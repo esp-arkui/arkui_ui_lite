@@ -39,70 +39,72 @@ void UITestCanvas::TearDown()
 const UIView* UITestCanvas::GetTestView()
 {
 
-//    RM008UIKitCanvasTest001();
-//    RM008UIKitCanvasTest002();
-//    RM008UIKitCanvasTest003();
-//    RM008UIKitCanvasTest004();
-//    RM008UIKitCanvasTest005();
-//    RM008UIKitCanvasTest006();
-//    RM008UIKitCanvasTest007();
-//    RM008UIKitCanvasShadowTest008();
-//    RM009LineCapDrawPath();
-//    RM009LineJoinDrawPath();
-//    RM009LineDashDrawPath();
-//    RM009StrokeAndClearRectDrawPath();
-//    RM011StrokeText001();
-//    RM012globalAlpha001();
+    RM008UIKitCanvasTest001();
+    RM008UIKitCanvasTest002();
+    RM008UIKitCanvasTest003();
+    RM008UIKitCanvasTest004();
+    RM008UIKitCanvasTest005();
+    RM008UIKitCanvasTest006();
+    RM008UIKitCanvasTest007();
+    RM008UIKitCanvasShadowTest008();
+    RM009LineCapDrawPath();
+    RM009LineJoinDrawPath();
+    RM009LineDashDrawPath();
+    RM009StrokeAndClearRectDrawPath();
+    RM011StrokeText001();
+    RM011CanvasScale001();
+    RM011CanvasRotate001();
+    RM012globalAlpha001();
     RM012GlobalCompositeOperation002();
-//    UIKitCanvasTestDrawLine001();
-//    UIKitCanvasTestDrawLine002();
-//    UIKitCanvasTestDrawCurve001();
-//    UIKitCanvasTestDrawCurve002();
-//    UIKitCanvasTestDrawRect001();
-//    UIKitCanvasTestDrawRect002();
-//    UIKitCanvasTestDrawRect003();
-//    UIKitCanvasTestDrawCircle001();
-//    UIKitCanvasTestDrawCircle002();
-//    UIKitCanvasTestDrawCircle003();
-//    UIKitCanvasTestDrawArc001();
-//    UIKitCanvasTestDrawImage001();
-//    UIKitCanvasTestDrawLabel001();
-//    UIKitCanvasTestDrawSector001();
-//    UIKitCanvasTestClear001();
-//    UIKitCanvasTestDrawPath001();
-//    UIKitCanvasTestDrawPath002();
-//    UIKitCanvasTestDrawPath003();
-//    UIKitCanvasTestDrawPath004();
-//    UIKitCanvasTestDrawPath005();
-//    UIKitCanvasTestDrawPath006();
-//    UIKitCanvasTestDrawPath007();
-//    UIKitCanvasTestDrawPath008();
-//    UIKitCanvasTestDrawPath009();
-//    UIKitCanvasTestDrawPath010();
-//    UIKitCanvasTestDrawPath011();
-//    UIKitCanvasTestDrawPath012();
-//    UIKitCanvasTestDrawPath013();
-//    UIKitCanvasTestDrawPath014();
-//    UIKitCanvasTestDrawPath015();
-//    UIKitCanvasTestDrawPath016();
-//    UIKitCanvasTestDrawPath017();
-//    UIKitCanvasTestDrawPath018();
-//    UIKitCanvasTestDrawPath019();
-//    UIKitCanvasTestDrawPath020();
-//    UIKitCanvasTestDrawPath021();
-//    UIKitCanvasTestDrawPath022();
-//    UIKitCanvasTestDrawPath023();
-//    UIKitCanvasTestDrawPath024();
-//    UIKitCanvasTestDrawPath025();
-//    UIKitCanvasTestDrawPath026();
-//    UIKitCanvasTestDrawPath027();
-//    UIKitCanvasTestDrawPath028();
-//    UIKitCanvasTestDrawPath029();
-//    UIKitCanvasTestDrawPath030();
-//    UIKitCanvasTestDrawPath031();
-//    UIKitCanvasTestDrawPath032();
-//    UIKitCanvasTestDrawPath033();
-//    UIKitCanvasTestDrawPath034();
+    UIKitCanvasTestDrawLine001();
+    UIKitCanvasTestDrawLine002();
+    UIKitCanvasTestDrawCurve001();
+    UIKitCanvasTestDrawCurve002();
+    UIKitCanvasTestDrawRect001();
+    UIKitCanvasTestDrawRect002();
+    UIKitCanvasTestDrawRect003();
+    UIKitCanvasTestDrawCircle001();
+    UIKitCanvasTestDrawCircle002();
+    UIKitCanvasTestDrawCircle003();
+    UIKitCanvasTestDrawArc001();
+    UIKitCanvasTestDrawImage001();
+    UIKitCanvasTestDrawLabel001();
+    UIKitCanvasTestDrawSector001();
+    UIKitCanvasTestClear001();
+    UIKitCanvasTestDrawPath001();
+    UIKitCanvasTestDrawPath002();
+    UIKitCanvasTestDrawPath003();
+    UIKitCanvasTestDrawPath004();
+    UIKitCanvasTestDrawPath005();
+    UIKitCanvasTestDrawPath006();
+    UIKitCanvasTestDrawPath007();
+    UIKitCanvasTestDrawPath008();
+    UIKitCanvasTestDrawPath009();
+    UIKitCanvasTestDrawPath010();
+    UIKitCanvasTestDrawPath011();
+    UIKitCanvasTestDrawPath012();
+    UIKitCanvasTestDrawPath013();
+    UIKitCanvasTestDrawPath014();
+    UIKitCanvasTestDrawPath015();
+    UIKitCanvasTestDrawPath016();
+    UIKitCanvasTestDrawPath017();
+    UIKitCanvasTestDrawPath018();
+    UIKitCanvasTestDrawPath019();
+    UIKitCanvasTestDrawPath020();
+    UIKitCanvasTestDrawPath021();
+    UIKitCanvasTestDrawPath022();
+    UIKitCanvasTestDrawPath023();
+    UIKitCanvasTestDrawPath024();
+    UIKitCanvasTestDrawPath025();
+    UIKitCanvasTestDrawPath026();
+    UIKitCanvasTestDrawPath027();
+    UIKitCanvasTestDrawPath028();
+    UIKitCanvasTestDrawPath029();
+    UIKitCanvasTestDrawPath030();
+    UIKitCanvasTestDrawPath031();
+    UIKitCanvasTestDrawPath032();
+    UIKitCanvasTestDrawPath033();
+    UIKitCanvasTestDrawPath034();
 
     return container_;
 }
@@ -1260,6 +1262,7 @@ void UITestCanvas::RM008UIKitCanvasTest005(){
     paint.SetStrokeWidth(8);
     paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_X);
     canvas->BeginPath();
+
     canvas->MoveTo({20, 20});
     canvas->LineTo({60, 80});
     canvas->LineTo({120, 20});
@@ -1423,6 +1426,101 @@ void UITestCanvas::RM011StrokeText001(){
     paint.SetFillColor(Color::GetColorFromRGBA(255, 255, 0, 255));
     canvas->StrokeText("中国 你好，鸿蒙。。", {0, 20}, fontStyle, paint);
 }
+void UITestCanvas::RM011CanvasScale001(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM011放大和缩小Scale");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.StrokeStyle(Color::Red());
+    paint.SetStrokeWidth(3);
+    canvas->BeginPath();
+    canvas->MoveTo({5, 5});
+    canvas->LineTo({50, 5});
+    canvas->LineTo({50, 35});
+    canvas->LineTo({5, 35});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+    paint.StrokeStyle(Color::Green());
+    paint.SetGlobalAlpha(0.5);
+    paint.Scale(2,4);
+    canvas->BeginPath();
+    canvas->MoveTo({5, 5});
+    canvas->LineTo({50, 5});
+    canvas->LineTo({50, 35});
+    canvas->LineTo({5, 35});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+    paint.StrokeStyle(Color::Blue());
+    paint.SetGlobalAlpha(0.5);
+    paint.Scale(0.5,0.5);
+    canvas->BeginPath();
+    canvas->MoveTo({5, 5});
+    canvas->LineTo({50, 5});
+    canvas->LineTo({50, 35});
+    canvas->LineTo({5, 35});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+}
+void UITestCanvas::RM011CanvasRotate001(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM011原(红)_旋转(绿)_平移(蓝)_单位矩阵(黄)_重置矩阵后再设置矩阵（橘色）");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.StrokeStyle(Color::Red());
+    paint.SetStrokeWidth(3);
+    canvas->BeginPath();
+    canvas->MoveTo({15, 15});
+    canvas->LineTo({60, 15});
+    canvas->LineTo({60, 45});
+    canvas->LineTo({15, 45});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+    paint.StrokeStyle(Color::Green());
+    paint.Rotate(20);
+    canvas->BeginPath();
+    canvas->MoveTo({15, 15});
+    canvas->LineTo({60, 15});
+    canvas->LineTo({60, 45});
+    canvas->LineTo({15, 45});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.Translate(50,50);
+    paint.StrokeStyle(Color::Blue());
+    canvas->BeginPath();
+    canvas->MoveTo({15, 15});
+    canvas->LineTo({60, 15});
+    canvas->LineTo({60, 45});
+    canvas->LineTo({15, 45});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.Transform(1,0.5,0.5,2,0,0);
+    paint.StrokeStyle(Color::Yellow());
+    canvas->BeginPath();
+    canvas->MoveTo({15, 15});
+    canvas->LineTo({60, 15});
+    canvas->LineTo({60, 45});
+    canvas->LineTo({15, 45});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+    paint.SetTransform(1,0.5,0.5,2,0,0);
+    paint.StrokeStyle(Color::Orange());
+    canvas->BeginPath();
+    canvas->MoveTo({15, 15});
+    canvas->LineTo({60, 15});
+    canvas->LineTo({60, 45});
+    canvas->LineTo({15, 45});
+    canvas->ClosePath();
+    canvas->DrawPath(paint);
+
+}
+
 void UITestCanvas::RM012globalAlpha001(){
     if (container_ == nullptr) {
         return;
@@ -1463,28 +1561,280 @@ void UITestCanvas::RM012GlobalCompositeOperation002(){
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("RM012_设置GlobalCompositeOperation");
+    CreateTitleLabel("RM012_设置Composite");
     UICanvas* canvas = CreateCanvas();
+
     Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({20, 20});
-    canvas->LineTo({20, 80});
-    canvas->LineTo({150, 80});
-    canvas->LineTo({150, 20});
+    canvas->MoveTo({10, 10});
+    canvas->LineTo({10, 50});
+    canvas->LineTo({50, 50});
+    canvas->LineTo({50, 10});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({30, 30});
+    canvas->LineTo({30, 70});
+    canvas->LineTo({70, 70});
+    canvas->LineTo({70, 30});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({90, 10});
+    canvas->LineTo({90, 50});
+    canvas->LineTo({130, 50});
+    canvas->LineTo({130, 10});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
-//    paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
-
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({100, 60});
-    canvas->LineTo({100, 120});
-    canvas->LineTo({230, 120});
-    canvas->LineTo({230, 60});
+    canvas->MoveTo({110, 30});
+    canvas->LineTo({110, 70});
+    canvas->LineTo({150, 70});
+    canvas->LineTo({150, 30});
     canvas->ClosePath();
     canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({170, 10});
+    canvas->LineTo({170, 50});
+    canvas->LineTo({210, 50});
+    canvas->LineTo({210, 10});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({190, 30});
+    canvas->LineTo({190, 70});
+    canvas->LineTo({230, 70});
+    canvas->LineTo({230, 30});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({250, 10});
+    canvas->LineTo({250, 50});
+    canvas->LineTo({290, 50});
+    canvas->LineTo({290, 10});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OUT);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({280, 30});
+    canvas->LineTo({280, 70});
+    canvas->LineTo({310, 70});
+    canvas->LineTo({310, 30});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({330, 10});
+    canvas->LineTo({330, 50});
+    canvas->LineTo({370, 50});
+    canvas->LineTo({370, 10});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::DESTINATION_OVER);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({360, 30});
+    canvas->LineTo({360, 70});
+    canvas->LineTo({390, 70});
+    canvas->LineTo({390, 30});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({10, 90});
+    canvas->LineTo({10, 130});
+    canvas->LineTo({50, 130});
+    canvas->LineTo({50, 90});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::DESTINATION_ATOP);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({30, 110});
+    canvas->LineTo({30, 150});
+    canvas->LineTo({70, 150});
+    canvas->LineTo({70, 110});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({90, 90});
+    canvas->LineTo({90, 130});
+    canvas->LineTo({130, 130});
+    canvas->LineTo({130, 90});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::DESTINATION_IN);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({110, 110});
+    canvas->LineTo({110, 150});
+    canvas->LineTo({150, 150});
+    canvas->LineTo({150, 110});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({170, 90});
+    canvas->LineTo({170, 130});
+    canvas->LineTo({210, 130});
+    canvas->LineTo({210, 90});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::DESTINATION_OUT);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({190, 110});
+    canvas->LineTo({190, 150});
+    canvas->LineTo({230, 150});
+    canvas->LineTo({230, 110});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({250, 90});
+    canvas->LineTo({250, 130});
+    canvas->LineTo({290, 130});
+    canvas->LineTo({290, 90});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::LIGHTER);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({270, 110});
+    canvas->LineTo({270, 150});
+    canvas->LineTo({310, 150});
+    canvas->LineTo({310, 110});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({330, 90});
+    canvas->LineTo({330, 130});
+    canvas->LineTo({370, 130});
+    canvas->LineTo({370, 90});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::XOR);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({350, 110});
+    canvas->LineTo({350, 150});
+    canvas->LineTo({390, 150});
+    canvas->LineTo({390, 110});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({180, 155});
+    canvas->LineTo({220, 155});
+    canvas->LineTo({220, 195});
+    canvas->LineTo({180, 195});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::COPY);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({200, 155});
+    canvas->LineTo({240, 155});
+    canvas->LineTo({240, 195});
+    canvas->LineTo({200, 195});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+
+}
+
+void UITestCanvas::RM012GlobalCompositeOperation003(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置Composite");
+    UICanvas* canvas = new UICanvas();
+    canvas->SetHeight(80);
+    canvas->SetWidth(80);
+    canvas->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, positionY_);
+    canvas->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
+    container_->Add(canvas);
+
+    Paint paint;
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({10, 10});
+    canvas->LineTo({10, 50});
+    canvas->LineTo({50, 50});
+    canvas->LineTo({50, 10});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({30, 30});
+    canvas->LineTo({30, 70});
+    canvas->LineTo({70, 70});
+    canvas->LineTo({70, 30});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+    UICanvas* canvas2 = new UICanvas();
+    canvas2->SetHeight(80);
+    canvas2->SetWidth(80);
+    canvas2->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE+90, positionY_);
+    canvas2->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
+    container_->Add(canvas2);
+    positionY_ += CANVAS_HEIGHT + GAP;
+
+    Paint paint2;
+    paint2.SetFillColor(Color::Red());
+    canvas2->BeginPath();
+    canvas2->MoveTo({10, 10});
+    canvas2->LineTo({10, 50});
+    canvas2->LineTo({50, 50});
+    canvas2->LineTo({50, 10});
+    canvas2->ClosePath();
+    canvas2->FillPath(paint2);
+    paint2.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
+    paint2.SetFillColor(Color::Green());
+    canvas2->BeginPath();
+    canvas2->MoveTo({30, 30});
+    canvas2->LineTo({30, 70});
+    canvas2->LineTo({70, 70});
+    canvas2->LineTo({70, 30});
+    canvas2->ClosePath();
+    canvas2->FillPath(paint2);
 
 }
 

@@ -423,7 +423,7 @@ namespace OHOS {
           */
         GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
         {
-            return rbuf_->row_ptr(y);
+            return rbuf_->RowPtr(y);
         }
 
         /**
@@ -894,8 +894,8 @@ namespace OHOS {
                       int xsrc, int ysrc,
                       unsigned len)
         {
-            if (const int8u* p = from.row_ptr(ysrc)) {
-                if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
+            if (const int8u* p = from.RowPtr(ysrc)) {
+                if (memmove_s(rbuf_->RowPtr(xdst, ydst, len) + xdst * PIX_WIDTH,
                               len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOK) {
                 }
             }
@@ -1192,7 +1192,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
         {
-            return rbuf_->row_ptr(y);
+            return rbuf_->RowPtr(y);
         }
         /**
          * @brief 通过纵坐标获取行地址.
@@ -1202,7 +1202,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
         {
-            return rbuf_->row_ptr(y);
+            return rbuf_->RowPtr(y);
         }
         /**
          * @brief 通过纵坐标获取行数据.
@@ -1222,7 +1222,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y)
         {
-            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
         /**
          * @brief 像素坐标转为像素位指针.
@@ -1232,7 +1232,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const
         {
-            return rbuf_->row_ptr(y) + sizeof(ValueType) * (x * PIX_STEP);
+            return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP);
         }
         /**
          * @brief 像素坐标转为像素类型指针.
@@ -1252,7 +1252,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {
-            int8u* p = rbuf_->row_ptr(y);
+            int8u* p = rbuf_->RowPtr(y);
             return p ? (PixelType*)(p + sizeof(ValueType) * (x * PIX_STEP)) : 0;
         }
         /**
@@ -1526,7 +1526,7 @@ namespace OHOS {
                       unsigned len)
         {
             if (const int8u* p = from.RowPtr(ysrc)) {
-                if (memmove_s(rbuf_->row_ptr(xdst, ydst, len) + xdst * PIX_WIDTH,
+                if (memmove_s(rbuf_->RowPtr(xdst, ydst, len) + xdst * PIX_WIDTH,
                               len * PIX_WIDTH, p + xsrc * PIX_WIDTH, len * PIX_WIDTH) != EOF) {
                 }
             }

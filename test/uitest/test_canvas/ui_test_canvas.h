@@ -93,9 +93,11 @@ public:
     void RM009LineDashDrawPath();
     void RM009StrokeAndClearRectDrawPath();
     void RM011StrokeText001();
+    void RM011CanvasScale001();
+    void RM011CanvasRotate001();
     void RM012globalAlpha001();
     void RM012GlobalCompositeOperation002();
-
+    void RM012GlobalCompositeOperation003();
 private:
     const static int16_t GAP = 10;
     const static int16_t TITLE_HEIGHT = 29;
