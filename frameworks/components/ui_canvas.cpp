@@ -861,7 +861,7 @@ void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
     cordsTmp.SetHeight(imageParam->height);
     cordsTmp.SetWidth(imageParam->width);
 
-    if (paint.GetChangeFlag() || !paint.IsTransform()) {
+    if (paint.GetChangeFlag()) {
         TransAffine transform;
         RenderingBuffer renderBuffer;
         //初始化buffer和 m_transform
