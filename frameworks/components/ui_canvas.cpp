@@ -864,7 +864,7 @@ void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
     if (paint.GetChangeFlag()) {
         TransAffine transform;
         RenderingBuffer renderBuffer;
-        //初始化buffer和 m_transform
+        //初始化buffer和 m_transform.
         InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
         transform.Translate(imageParam->start.x, imageParam->start.y);
         RenderingBuffer imageRendBuffer;

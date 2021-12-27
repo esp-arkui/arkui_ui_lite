@@ -864,7 +864,7 @@ public:
     }
 
 private:
-    /* 是否经过变换，即是不是单位矩阵 */
+    /* 是否经过变换，即是不是单位矩阵. */
     bool IsTransform() const
     {
         return rotateAngle_ ==0.0 && scaleX_ == 1.0 && shearX_ == 0.0 && shearY_ == 0.0
