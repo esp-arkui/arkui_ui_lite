@@ -77,6 +77,7 @@ namespace {
     const double COLOR_STOP_1 = 0.3;
     const double COLOR_STOP_2 = 0.6;
     const double COLOR_STOP_3 = 1.0;
+    const float ROTATE = 10.0;
 }
 
 class TestUICanvas : public UICanvas {
