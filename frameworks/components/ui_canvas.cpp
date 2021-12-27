@@ -1228,6 +1228,7 @@ void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle&
         cmd.paint = paint;
         drawCmdList_.PushBack(cmd);
         Invalidate();
+        SetStartPosition(point);
     }
 }
 
