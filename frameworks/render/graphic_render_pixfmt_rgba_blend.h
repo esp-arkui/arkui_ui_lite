@@ -869,6 +869,21 @@ namespace OHOS {
             } while (--len);
         }
 
+        GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
+                                   unsigned len,
+                                   const ColorType& covers)
+        {
+            PixelType v;
+            v.SetPixelColor(covers);
+            PixelType* p = PixValuePtr(x, y, len);
+            do
+            {
+                *p = v;
+                p = p->Next();
+            }
+            while (--len);
+        }
+
         /**
          * @brief 把源像素及覆盖率混合到rbuf_.
          * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,

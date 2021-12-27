@@ -632,7 +632,6 @@ void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc)
     renBasePre.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
     pixFormatPre.CompOp(Paint::SOURCE_OVER);
     renBasePre.BlendFrom(pixFormatCom);
-
     BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
     delete gfxMapBuffer;
     gfxMapBuffer = nullptr;
@@ -923,11 +922,11 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
                           const Rect& invalidatedArea,
                           const Style& style)
 {
-    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
-        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-    } else {
+//    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+//        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+//    } else {
         DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-    }
+//    }
 }
 
 void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
@@ -937,11 +936,11 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
                           const Rect& invalidatedArea,
                           const Style& style)
 {
-    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
-        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
-    } else {
+//    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+//        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+//    } else {
         DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
-    }
+//    }
 }
 
 void UICanvas::SetRasterizer(void* param,
@@ -1081,6 +1080,7 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
     //初始化buffer和 m_transform
     InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
+
     typedef Rgba8 Rgba8Color;
     // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
     typedef OrderBgra ComponentOrder;
@@ -1102,6 +1102,17 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
                        invalidatedArea.GetBottom());
 
     pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
+
+    if(paint.GetGlobalCompositeOperation()==Paint::COPY||
+            paint.GetGlobalCompositeOperation()==Paint::SOURCE_IN){
+        Rgba8Color rgba8Color1;
+        rgba8Color1.redValue = 0;
+        rgba8Color1.greenValue = 0;
+        rgba8Color1.blueValue = 0;
+        rgba8Color1.alphaValue = 0;
+        renBaseCom.Clear(rgba8Color1);
+    }
+
 
     if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
         paint.GetStyle() == Paint::STROKE_FILL_STYLE) {

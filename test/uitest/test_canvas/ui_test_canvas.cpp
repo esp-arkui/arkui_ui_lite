@@ -39,73 +39,75 @@ void UITestCanvas::TearDown()
 const UIView* UITestCanvas::GetTestView()
 {
 
-    RM008UIKitCanvasTest001();
-    RM008UIKitCanvasTest002();
-    RM008UIKitCanvasTest003();
-    RM008UIKitCanvasTest004();
-    RM008UIKitCanvasTest005();
-    RM008UIKitCanvasTest006();
-    RM008UIKitCanvasTest007();
-    RM008UIKitCanvasShadowTest008();
-    RM009LineCapDrawPath();
-    RM009LineJoinDrawPath();
-    RM009LineDashDrawPath();
-    RM009StrokeAndClearRectDrawPath();
-    RM011StrokeText001();
-    RM011CanvasScale001();
-    RM011CanvasRotate001();
-    RM012globalAlpha001();
-    RM012SaveOrRestore002();
+//    RM008UIKitCanvasTest001();
+//    RM008UIKitCanvasTest002();
+//    RM008UIKitCanvasTest003();
+//    RM008UIKitCanvasTest004();
+//    RM008UIKitCanvasTest005();
+//    RM008UIKitCanvasTest006();
+//    RM008UIKitCanvasTest007();
+//    RM008UIKitCanvasShadowTest008();
+//    RM009LineCapDrawPath();
+//    RM009LineJoinDrawPath();
+//    RM009LineDashDrawPath();
+//    RM009StrokeAndClearRectDrawPath();
+//    RM011StrokeText001();
+//    RM011CanvasScale001();
+//    RM011CanvasRotate001();
+//    RM012globalAlpha001();
+//    RM012SaveOrRestore002();
     RM012GlobalCompositeOperation003();
-    UIKitCanvasTestDrawLine001();
-    UIKitCanvasTestDrawLine002();
-    UIKitCanvasTestDrawCurve001();
-    UIKitCanvasTestDrawCurve002();
-    UIKitCanvasTestDrawRect001();
-    UIKitCanvasTestDrawRect002();
-    UIKitCanvasTestDrawRect003();
-    UIKitCanvasTestDrawCircle001();
-    UIKitCanvasTestDrawCircle002();
-    UIKitCanvasTestDrawCircle003();
-    UIKitCanvasTestDrawArc001();
-    UIKitCanvasTestDrawImage001();
-    UIKitCanvasTestDrawLabel001();
-    UIKitCanvasTestDrawSector001();
-    UIKitCanvasTestClear001();
-    UIKitCanvasTestDrawPath001();
-    UIKitCanvasTestDrawPath002();
-    UIKitCanvasTestDrawPath003();
-    UIKitCanvasTestDrawPath004();
-    UIKitCanvasTestDrawPath005();
-    UIKitCanvasTestDrawPath006();
-    UIKitCanvasTestDrawPath007();
-    UIKitCanvasTestDrawPath008();
-    UIKitCanvasTestDrawPath009();
-    UIKitCanvasTestDrawPath010();
-    UIKitCanvasTestDrawPath011();
-    UIKitCanvasTestDrawPath012();
-    UIKitCanvasTestDrawPath013();
-    UIKitCanvasTestDrawPath014();
-    UIKitCanvasTestDrawPath015();
-    UIKitCanvasTestDrawPath016();
-    UIKitCanvasTestDrawPath017();
-    UIKitCanvasTestDrawPath018();
-    UIKitCanvasTestDrawPath019();
-    UIKitCanvasTestDrawPath020();
-    UIKitCanvasTestDrawPath021();
-    UIKitCanvasTestDrawPath022();
-    UIKitCanvasTestDrawPath023();
-    UIKitCanvasTestDrawPath024();
-    UIKitCanvasTestDrawPath025();
-    UIKitCanvasTestDrawPath026();
-    UIKitCanvasTestDrawPath027();
-    UIKitCanvasTestDrawPath028();
-    UIKitCanvasTestDrawPath029();
-    UIKitCanvasTestDrawPath030();
-    UIKitCanvasTestDrawPath031();
-    UIKitCanvasTestDrawPath032();
-    UIKitCanvasTestDrawPath033();
-    UIKitCanvasTestDrawPath034();
+    RM012GlobalCompositeOperationSOURCE_IN();
+    RM012GlobalCompositeOperationCopy();
+//    UIKitCanvasTestDrawLine001();
+//    UIKitCanvasTestDrawLine002();
+//    UIKitCanvasTestDrawCurve001();
+//    UIKitCanvasTestDrawCurve002();
+//    UIKitCanvasTestDrawRect001();
+//    UIKitCanvasTestDrawRect002();
+//    UIKitCanvasTestDrawRect003();
+//    UIKitCanvasTestDrawCircle001();
+//    UIKitCanvasTestDrawCircle002();
+//    UIKitCanvasTestDrawCircle003();
+//    UIKitCanvasTestDrawArc001();
+//    UIKitCanvasTestDrawImage001();
+//    UIKitCanvasTestDrawLabel001();
+//    UIKitCanvasTestDrawSector001();
+//    UIKitCanvasTestClear001();
+//    UIKitCanvasTestDrawPath001();
+//    UIKitCanvasTestDrawPath002();
+//    UIKitCanvasTestDrawPath003();
+//    UIKitCanvasTestDrawPath004();
+//    UIKitCanvasTestDrawPath005();
+//    UIKitCanvasTestDrawPath006();
+//    UIKitCanvasTestDrawPath007();
+//    UIKitCanvasTestDrawPath008();
+//    UIKitCanvasTestDrawPath009();
+//    UIKitCanvasTestDrawPath010();
+//    UIKitCanvasTestDrawPath011();
+//    UIKitCanvasTestDrawPath012();
+//    UIKitCanvasTestDrawPath013();
+//    UIKitCanvasTestDrawPath014();
+//    UIKitCanvasTestDrawPath015();
+//    UIKitCanvasTestDrawPath016();
+//    UIKitCanvasTestDrawPath017();
+//    UIKitCanvasTestDrawPath018();
+//    UIKitCanvasTestDrawPath019();
+//    UIKitCanvasTestDrawPath020();
+//    UIKitCanvasTestDrawPath021();
+//    UIKitCanvasTestDrawPath022();
+//    UIKitCanvasTestDrawPath023();
+//    UIKitCanvasTestDrawPath024();
+//    UIKitCanvasTestDrawPath025();
+//    UIKitCanvasTestDrawPath026();
+//    UIKitCanvasTestDrawPath027();
+//    UIKitCanvasTestDrawPath028();
+//    UIKitCanvasTestDrawPath029();
+//    UIKitCanvasTestDrawPath030();
+//    UIKitCanvasTestDrawPath031();
+//    UIKitCanvasTestDrawPath032();
+//    UIKitCanvasTestDrawPath033();
+//    UIKitCanvasTestDrawPath034();
 
     return container_;
 }
@@ -309,15 +311,16 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-    paint.SetOpacity(127); // 127: opacity
+//    paint.SetOpacity(127); // 127: opacity
     paint.Rotate(20);
     // {200, 50}: start point coordinates
-    canvas->DrawImage({ 0, 60 }, RED_IMAGE_PATH, paint);
+//    canvas->DrawImage({ 0, 60 }, RED_IMAGE_PATH, paint);
 
-    paint.Rotate(-20);
+    paint.Scale(0.4,0.4);
+//    paint.Rotate(-20);
     canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
-    paint.Rotate(10);
-    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+//    paint.Rotate(10);
+//    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
@@ -1624,25 +1627,6 @@ void UITestCanvas::RM012GlobalCompositeOperation003(){
     paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({170, 10});
-    canvas->LineTo({170, 50});
-    canvas->LineTo({210, 50});
-    canvas->LineTo({210, 10});
-    canvas->ClosePath();
-    canvas->FillPath(paint);
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
-    paint.SetFillColor(Color::Green());
-    canvas->BeginPath();
-    canvas->MoveTo({190, 30});
-    canvas->LineTo({190, 70});
-    canvas->LineTo({230, 70});
-    canvas->LineTo({230, 30});
-    canvas->ClosePath();
-    canvas->FillPath(paint);
-
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
-    paint.SetFillColor(Color::Red());
-    canvas->BeginPath();
     canvas->MoveTo({250, 10});
     canvas->LineTo({250, 50});
     canvas->LineTo({290, 50});
@@ -1774,25 +1758,60 @@ void UITestCanvas::RM012GlobalCompositeOperation003(){
     canvas->LineTo({390, 110});
     canvas->ClosePath();
     canvas->FillPath(paint);
-
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+}
+void UITestCanvas::RM012GlobalCompositeOperationSOURCE_IN(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置Composite_SOURCE_IN_只显示第二个图源绿色");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({180, 155});
-    canvas->LineTo({220, 155});
-    canvas->LineTo({220, 195});
-    canvas->LineTo({180, 195});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+}
+void UITestCanvas::RM012GlobalCompositeOperationCopy(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置Composite_COPY_只显示第二个图源绿色");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
+//    paint.SetGlobalAlpha(0.2);
     paint.SetGlobalCompositeOperation(Paint::COPY);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({200, 155});
-    canvas->LineTo({240, 155});
-    canvas->LineTo({240, 195});
-    canvas->LineTo({200, 195});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+
 }
 
 void UITestCanvas::RM012SaveOrRestore002(){
