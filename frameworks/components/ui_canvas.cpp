@@ -1103,14 +1103,26 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
 
     pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
 
-    if(paint.GetGlobalCompositeOperation()==Paint::COPY||
-            paint.GetGlobalCompositeOperation()==Paint::SOURCE_IN){
+    if(paint.GetGlobalCompositeOperation()==Paint::COPY){
         Rgba8Color rgba8Color1;
         rgba8Color1.redValue = 0;
         rgba8Color1.greenValue = 0;
         rgba8Color1.blueValue = 0;
         rgba8Color1.alphaValue = 0;
         renBaseCom.Clear(rgba8Color1);
+    }
+
+
+    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_IN){
+        Rgba8Color rgba8Color1;
+        rgba8Color1.redValue = 0;
+        rgba8Color1.greenValue = 0;
+        rgba8Color1.blueValue = 0;
+        rgba8Color1.alphaValue = 0;
+//        renBaseCom.Clear(rgba8Color1);
+        ScanlineUnPackedContainer m_scanline;
+//        renBaseCom.
+        RenderScanlinesAntiAliasSolidReverse(rasterizer,m_scanline,renBaseCom,rgba8Color1,rgba8Color1);
     }
 
 

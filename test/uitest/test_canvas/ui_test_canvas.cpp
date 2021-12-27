@@ -1769,9 +1769,9 @@ void UITestCanvas::RM012GlobalCompositeOperationSOURCE_IN(){
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
-    canvas->LineTo({20, 80});
-    canvas->LineTo({150, 80});
-    canvas->LineTo({150, 20});
+    canvas->LineTo({20, 150});
+    canvas->LineTo({300, 150});
+    canvas->LineTo({300, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);

@@ -78,34 +78,57 @@ namespace OHOS {
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
     void RenderScanlinesAntiAliasSolidReverse(Rasterizer& raster, Scanline& scanline,
-                                       BaseRenderer& renBase, const ColorT& color)
+                                       BaseRenderer& renBase, const ColorT& color1,const ColorT& color2)
     {
         if (raster.RewindScanlines()) {
-            typename BaseRenderer::color_type ren_color = color;
+            typename BaseRenderer::color_type ren_color1 = color1;
+            typename BaseRenderer::color_type ren_color2 = color2;
 
-            scanline.Reset(raster.MinX(), raster.MaxX());
-            while (raster.SweepScanline(scanline)) {
-                int y = scanline.GetYLevel();
-                unsigned num_spans = scanline.NumSpans();
-                typename Scanline::ConstIterator span = scanline.Begin();
+            for(int i=0;i<raster.MinY();i++){
+                renBase.BlendHline(0, i, (unsigned)(renBase.GetXmax()-renBase.GetXmin()),
+                                   ren_color2,
+                                   COVER_FULL);
 
-                while (true) {
-                    int x = span->x;
-                    if (span->spanLength > 0) {
-                        renBase.BlendSolidHspan(x, y, (unsigned)span->spanLength,
-                                                ren_color,
-                                                span->covers);
-                    } else {
-                        renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
-                                           ren_color,
-                                           *(span->covers));
-                    }
-                    if (--num_spans == 0) {
-                        break;
-                    }
-                    ++span;
-                }
             }
+
+            for(int i= raster.MaxY();i<renBase.GetYmax();i++){
+                renBase.BlendHline(0, i, (unsigned)(renBase.GetXmax()-renBase.GetXmin()),
+                                   ren_color2,
+                                   COVER_FULL);
+
+            }
+
+
+//            scanline.Reset(raster.MinX(), raster.MaxX());
+//            while (raster.SweepScanline(scanline)) {
+//                int y = scanline.GetYLevel();
+
+//                for(int i=0;i<y;i++){
+//                    renBase.BlendHline(0, y, renBase.GetXmax(),
+//                                       ren_color2,
+//                                       COVER_FULL);
+//                }
+
+//                unsigned num_spans = scanline.NumSpans();
+//                typename Scanline::ConstIterator span = scanline.Begin();
+
+//                while (true) {
+//                    int x = span->x;
+//                    if (span->spanLength > 0) {
+//                        renBase.BlendSolidHspan(x, y, (unsigned)span->spanLength,
+//                                                ren_color2,
+//                                                span->covers);
+//                    } else {
+//                        renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
+//                                           ren_color2,
+//                                           *(span->covers));
+//                    }
+//                    if (--num_spans == 0) {
+//                        break;
+//                    }
+//                    ++span;
+//                }
+//            }
         }
     }
 
