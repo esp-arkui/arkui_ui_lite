@@ -16,6 +16,7 @@
 #include "components/root_view.h"
 #include "components/ui_canvas.h"
 #include "components/ui_view_group.h"
+#include "components/ui_view_group.h"
 
 #include <climits>
 #include <gtest/gtest.h>
@@ -1014,7 +1015,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1065,7 +1066,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1116,7 +1117,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
