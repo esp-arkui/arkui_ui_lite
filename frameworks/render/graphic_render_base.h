@@ -33,7 +33,7 @@ namespace OHOS {
     public:
         typedef PixelFormat pixfmt_type;
         typedef typename pixfmt_type::ColorType color_type;
-        typedef typename pixfmt_type::RowData rowData;
+        typedef typename pixfmt_type::RowData RowData;
 
         RendererBase() :
             pixfmtType(0), clipBox(1, 1, 0, 0)
@@ -56,7 +56,7 @@ namespace OHOS {
         /**
          * @brief 获取需要渲染的宽度
          */
-        unsigned GetWidth() const
+        unsigned Width() const
         {
             return pixfmtType->Width();
         }
@@ -64,7 +64,7 @@ namespace OHOS {
         /**
          * @brief 获取需要渲染的高度
          */
-        unsigned GetHeight() const
+        unsigned Height() const
         {
             return pixfmtType->Height();
         }
@@ -81,7 +81,7 @@ namespace OHOS {
         {
             RectI cb(x1, y1, x2, y2);
             cb.Normalize();
-            if (cb.Clip(RectI(0, 0, GetWidth() - 1, GetHeight() - 1))) {
+            if (cb.Clip(RectI(0, 0, Width() - 1, Height() - 1))) {
                 clipBox = cb;
                 return true;
             }
@@ -96,7 +96,7 @@ namespace OHOS {
         void ResetClipping(bool visibility)
         {
             if (visibility) {
-                ClipBoxNaked(0, 0, GetWidth() - 1, GetHeight() - 1);
+                ClipBoxNaked(0, 0, Width() - 1, Height() - 1);
             } else {
                 ClipBoxNaked(1, 1, 0, 0);
             }
@@ -172,9 +172,9 @@ namespace OHOS {
         void Clear(const color_type& color)
         {
             unsigned y;
-            if (GetWidth()) {
-                for (y = 0; y < GetHeight(); y++) {
-                    pixfmtType->CopyHline(0, y, GetWidth(), color);
+            if (Width()) {
+                for (y = 0; y < Height(); y++) {
+                    pixfmtType->CopyHline(0, y, Width(), color);
                 }
             }
         }
@@ -186,9 +186,9 @@ namespace OHOS {
         void Fill(const color_type& color)
         {
             unsigned y;
-            if (GetWidth()) {
-                for (y = 0; y < GetHeight(); y++) {
-                    pixfmtType->blend_hline(0, y, GetWidth(), color, COVER_MASK);
+            if (Width()) {
+                for (y = 0; y < Height(); y++) {
+                    pixfmtType->blend_hline(0, y, Width(), color, COVER_MASK);
                 }
             }
         }

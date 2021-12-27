@@ -113,7 +113,6 @@ SOURCES += \
     ../../../../frameworks/draw/draw_rect.cpp \
     ../../../../frameworks/draw/draw_triangle.cpp \
     ../../../../frameworks/draw/draw_utils.cpp \
-    ../../../../frameworks/engines/gfx/gfx_enginex_manager.cpp \
     ../../../../frameworks/events/event.cpp \
     ../../../../frameworks/font/base_font.cpp \
     ../../../../frameworks/font/glyphs_manager.cpp \
@@ -235,7 +234,6 @@ HEADERS += \
     ../../../../interfaces/innerkits/dock/focus_manager.h \
     ../../../../interfaces/innerkits/dock/rotate_input_device.h \
     ../../../../interfaces/innerkits/dock/vibrator_manager.h \
-    ../../../../interfaces/innerkits/engines/gfx/gfx_enginex_manager.h \
     ../../../../interfaces/innerkits/font/ui_font_builder.h \
     ../../../../interfaces/innerkits/engines/gfx/gfx_engine_manager.h \
     ../../../../interfaces/kits/animator/animator.h \
