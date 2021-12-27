@@ -14,12 +14,14 @@
  */
 
 #include "components/ui_canvas.h"
+
+#include <draw/clip_utils.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
+
 #include "common/image.h"
 #include "draw/draw_arc.h"
 #include "draw/draw_image.h"
 #include "gfx_utils/graphic_log.h"
-#include <draw/clip_utils.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
 
 namespace OHOS {
 
@@ -30,18 +32,18 @@ void UICanvas::BeginPath()
 
 void UICanvas::MoveTo(const Point& point)
 {
-    if(vertices_==nullptr){
-        return ;
+    if (vertices_ == nullptr) {
+        return;
     }
-    vertices_->MoveTo(point.x,point.y);
+    vertices_->MoveTo(point.x, point.y);
 }
 
 void UICanvas::LineTo(const Point& point)
 {
-    if(vertices_==nullptr){
-        return ;
+    if (vertices_ == nullptr) {
+        return;
     }
-    vertices_->LineTo(point.x,point.y);
+    vertices_->LineTo(point.x, point.y);
 }
 
 void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle)
@@ -69,7 +71,7 @@ void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, i
         start = startAngle;
         end = endAngle;
     }
-    vertices_->ArcTo(radius, radius,( end -  start), 0, 1,float(center.x + sinma), float(center.y - cosma));
+    vertices_->ArcTo(radius, radius, (end - start), 0, 1, float(center.x + sinma), float(center.y - cosma));
 }
 
 void UICanvas::AddRect(const Point& point, int16_t height, int16_t width)
@@ -191,7 +193,7 @@ void UICanvas::DrawCurve(const Point& startPoint,
 
 void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
 {
-    if(!paint.GetChangeFlag()){
+    if (!paint.GetChangeFlag()) {
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
             RectParam* rectParam = new RectParam;
             if (rectParam == nullptr) {
@@ -227,7 +229,7 @@ void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, 
             cmd.DrawGraphics = DoFillRect;
             drawCmdList_.PushBack(cmd);
         }
-    }else {
+    } else {
         BeginPath();
         MoveTo(startPoint);
         LineTo({static_cast<int16_t>(startPoint.x + width), startPoint.y});
@@ -240,8 +242,9 @@ void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, 
     Invalidate();
 }
 
-void UICanvas::StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint){
-    if(!paint.GetChangeFlag()){
+void UICanvas::StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
+{
+    if (!paint.GetChangeFlag()) {
         RectParam* rectParam = new RectParam;
         if (rectParam == nullptr) {
             GRAPHIC_LOGE("new RectParam fail");
@@ -257,7 +260,7 @@ void UICanvas::StrokeRect(const Point& startPoint, int16_t height, int16_t width
         cmd.DeleteParam = DeleteRectParam;
         cmd.DrawGraphics = DoDrawRect;
         drawCmdList_.PushBack(cmd);
-    }else{
+    } else {
         BeginPath();
         MoveTo(startPoint);
         LineTo({static_cast<int16_t>(startPoint.x + width), startPoint.y});
@@ -268,7 +271,8 @@ void UICanvas::StrokeRect(const Point& startPoint, int16_t height, int16_t width
     }
 }
 
-void UICanvas::ClearRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint){
+void UICanvas::ClearRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
+{
     Paint paint_;
     paint_.SetFillColor(this->style_->bgColor_);
     paint_.SetStyle(Paint::FILL_STYLE);
@@ -283,14 +287,14 @@ void UICanvas::ClearRect(const Point& startPoint, int16_t height, int16_t width,
 
 void UICanvas::DrawCircle(const Point& center, uint16_t radius, const Paint& paint)
 {
-    if(paint.GetChangeFlag()){
+    if (paint.GetChangeFlag()) {
         vertices_->RemoveAll();
-        OHOS::BezierArc arc(center.x, center.y, radius, radius, 0,TWO_TIMES * PI);
+        OHOS::BezierArc arc(center.x, center.y, radius, radius, 0, TWO_TIMES * PI);
         vertices_->ConcatPath(arc, 0);
         vertices_->ClosePolygon();
         FillPath(paint);
 
-    }else{
+    } else {
         CircleParam* circleParam = new CircleParam;
         if (circleParam == nullptr) {
             GRAPHIC_LOGE("new CircleParam fail");
@@ -329,10 +333,10 @@ void UICanvas::DrawSector(const Point& center,
 void UICanvas::DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint)
 {
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
-        if(paint.GetChangeFlag()){
-            ArcTo(center,radius,startAngle,endAngle);
+        if (paint.GetChangeFlag()) {
+            ArcTo(center, radius, startAngle, endAngle);
             DrawPath(paint);
-        }else{
+        } else {
             ArcParam* arcParam = new ArcParam;
             if (arcParam == nullptr) {
                 GRAPHIC_LOGE("new ArcParam fail");
@@ -472,12 +476,12 @@ void UICanvas::DrawPath(const Paint& paint)
         GRAPHIC_LOGE("new LineParam fail");
         return;
     }
-    if(vertices_==nullptr){
+    if (vertices_ == nullptr) {
         return;
     }
     pathParam->vertices = vertices_;
 
-    if(paint.GetStyle()==Paint::PATTERN){
+    if (paint.GetStyle() == Paint::PATTERN) {
         ImageParam* imageParam = new ImageParam;
         if (imageParam == nullptr) {
             GRAPHIC_LOGE("new ImageParam fail");
@@ -515,13 +519,13 @@ void UICanvas::FillPath(const Paint& paint)
         GRAPHIC_LOGE("new LineParam fail");
         return;
     }
-    if(vertices_==nullptr){
+    if (vertices_ == nullptr) {
         return;
     }
 
     pathParam->vertices = vertices_;
 
-    if(paint.GetStyle()==Paint::PATTERN){
+    if (paint.GetStyle() == Paint::PATTERN) {
         ImageParam* imageParam = new ImageParam;
         if (imageParam == nullptr) {
             GRAPHIC_LOGE("new ImageParam fail");
@@ -566,15 +570,15 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
         bool isChangeBlend = false;
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             // 应该是实现画布的处理机制..
-            if (curDraw->data_.paint.GetGlobalCompositeOperation() !=Paint::SOURCE_OVER) {
+            if (curDraw->data_.paint.GetGlobalCompositeOperation() != Paint::SOURCE_OVER) {
                 isChangeBlend = true;
                 break;
             }
         }
 
         if (isChangeBlend) {
-            OnBlendDraw(gfxDstBuffer,trunc);
-        }else{
+            OnBlendDraw(gfxDstBuffer, trunc);
+        } else {
             curDraw = drawCmdList_.Begin();
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 param = curDraw->data_.param;
@@ -584,12 +588,12 @@ void UICanvas::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     }
 }
 
-void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer,const Rect& trunc)
+void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc)
 {
     BufferInfo* gfxMapBuffer = new BufferInfo();
     Rect rect = GetOrigRect();
     void* param = nullptr;
-    CopyBuffer(*gfxMapBuffer,gfxDstBuffer);
+    CopyBuffer(*gfxMapBuffer, gfxDstBuffer);
     ListNode<DrawCmd>* curDraw = curDraw = drawCmdList_.Begin();
     for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
         param = curDraw->data_.param;
@@ -599,10 +603,11 @@ void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer,const Rect& trunc)
     RenderingBuffer renderBuffer;
     RenderingBuffer renderBufferPre;
 
-
-     //初始化buffer和 m_transform
-    renderBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr),gfxMapBuffer->width,gfxMapBuffer->height,gfxMapBuffer->stride);
-    renderBufferPre.Attach(static_cast<uint8_t*>(gfxDstBuffer.phyAddr),gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
+    //初始化buffer和 m_transform
+    renderBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr), gfxMapBuffer->width, gfxMapBuffer->height,
+                        gfxMapBuffer->stride);
+    renderBufferPre.Attach(static_cast<uint8_t*>(gfxDstBuffer.phyAddr), gfxDstBuffer.width, gfxDstBuffer.height,
+                           gfxDstBuffer.stride);
     typedef Rgba8 Rgba8Color;
     //组装renderbase
     // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
@@ -619,12 +624,12 @@ void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer,const Rect& trunc)
     typedef OHOS::RendererBase<PixFormatPre> RendererBasePre;
     PixFormatPre pixFormatPre(renderBufferPre);
     RendererBasePre renBasePre(pixFormatPre);
-    RectI truncRect ={trunc.GetLeft(),trunc.GetTop(),trunc.GetRight(),trunc.GetBottom()};
+    RectI truncRect = {trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom()};
     renBaseCom.ResetClipping(true);
-    renBaseCom.ClipBox(trunc.GetLeft(),trunc.GetTop(),trunc.GetRight(),trunc.GetBottom());
+    renBaseCom.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
 
     renBasePre.ResetClipping(true);
-    renBasePre.ClipBox(trunc.GetLeft(),trunc.GetTop(),trunc.GetRight(),trunc.GetBottom());
+    renBasePre.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
     pixFormatPre.CompOp(Paint::SOURCE_OVER);
     renBasePre.BlendFrom(pixFormatCom);
 
@@ -856,23 +861,20 @@ void UICanvas::DoDrawImage(BufferInfo& gfxDstBuffer,
     cordsTmp.SetHeight(imageParam->height);
     cordsTmp.SetWidth(imageParam->width);
 
-    if(paint.GetChangeFlag()){
-
+    if (paint.GetChangeFlag() || !paint.IsTransform()) {
         TransAffine transform;
         RenderingBuffer renderBuffer;
-         //初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style,paint);
-        transform.Translate(imageParam->start.x,imageParam->start.y);
+        //初始化buffer和 m_transform
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
+        transform.Translate(imageParam->start.x, imageParam->start.y);
         RenderingBuffer imageRendBuffer;
         uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
-        imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data,
-                             imageParam->width,
-                             imageParam->height,
-                             imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-        DoRenderImage(renderBuffer,paint,invalidatedArea,transform,imageRendBuffer);
-    }else{
-        DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea,
-                              imageParam->image->GetImageInfo(), style, paint.GetOpacity());
+        imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data, imageParam->width,
+                               imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
+        DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
+    } else {
+        DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
+                              paint.GetOpacity());
     }
 }
 
@@ -911,27 +913,34 @@ void UICanvas::DoDrawLineJoin(BufferInfo& gfxDstBuffer,
     style.lineColor_ = paint.GetStrokeColor();
     style.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
     style.lineOpa_ = OPA_OPAQUE;
-    BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcinfo, invalidatedArea, style, OPA_OPAQUE,
-                                          CapType::CAP_NONE);
+    BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcinfo, invalidatedArea, style, OPA_OPAQUE, CapType::CAP_NONE);
 }
 
-void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint,
-                          const Rect& rect, const Rect& invalidatedArea, const Style& style)
+void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
+                          void* param,
+                          const Paint& paint,
+                          const Rect& rect,
+                          const Rect& invalidatedArea,
+                          const Style& style)
 {
-    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_OVER){
-        DoRender(gfxDstBuffer,param,paint,rect,invalidatedArea,style,true);
-    }else{
-        DoRenderBlend(gfxDstBuffer,param,paint,rect,invalidatedArea,style,true);
+    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+    } else {
+        DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
     }
 }
 
-void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer, void* param, const Paint& paint,
-                          const Rect& rect, const Rect& invalidatedArea, const Style& style)
+void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
+                          void* param,
+                          const Paint& paint,
+                          const Rect& rect,
+                          const Rect& invalidatedArea,
+                          const Style& style)
 {
-    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_OVER){
-        DoRender(gfxDstBuffer,param,paint,rect,invalidatedArea,style,false);
-    }else{
-        DoRenderBlend(gfxDstBuffer,param,paint,rect,invalidatedArea,style,false);
+    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+    } else {
+        DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
     }
 }
 
@@ -942,63 +951,66 @@ void UICanvas::SetRasterizer(void* param,
                              const bool& isStroke)
 {
     if (param == nullptr) {
-         return;
+        return;
     }
     PathParam* pathParam = static_cast<PathParam*>(param);
     typedef DepictCurve<UICanvasVertices> UICanvasPath;
     UICanvasPath canvasPath(*pathParam->vertices);
-    if(isStroke){
-        if(paint.IsLineDash()){
+    if (isStroke) {
+        if (paint.IsLineDash()) {
             typedef DepictDash<UICanvasPath> DashStyle;
             typedef DepictStroke<DashStyle> StrokeDashStyle;
             typedef DepictTransform<StrokeDashStyle> StrokeDashTransform;
             DashStyle dashStyle(canvasPath);
-            LineDashStyleCalc(dashStyle,paint);
+            LineDashStyleCalc(dashStyle, paint);
             StrokeDashStyle strokeDashStyle(dashStyle);
-            LineStyleCalc(strokeDashStyle,paint);
-            StrokeDashTransform strokeDashTransform(strokeDashStyle,transform);
+            LineStyleCalc(strokeDashStyle, paint);
+            StrokeDashTransform strokeDashTransform(strokeDashStyle, transform);
             rasterizer.Reset();
             rasterizer.AddPath(strokeDashTransform);
 
-        }else{
+        } else {
             typedef DepictStroke<UICanvasPath> StrokeLineStyle;
             typedef DepictTransform<StrokeLineStyle> StrokeTransform;
             StrokeLineStyle strokeLineStyle(canvasPath);
-            LineStyleCalc(strokeLineStyle,paint);
+            LineStyleCalc(strokeLineStyle, paint);
 
-            StrokeTransform strokeTransform(strokeLineStyle,transform);
+            StrokeTransform strokeTransform(strokeLineStyle, transform);
             rasterizer.Reset();
             rasterizer.AddPath(strokeTransform);
         }
-    }else{
+    } else {
         typedef OHOS::DepictTransform<UICanvasPath> PathTransform;
-        PathTransform  pathTransform(canvasPath,transform);
+        PathTransform pathTransform(canvasPath, transform);
         rasterizer.Reset();
         rasterizer.AddPath(pathTransform);
     }
 }
 
-void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
-                          const Rect& invalidatedArea, const Style& style, const bool& isStroke)
+void UICanvas::DoRender(BufferInfo& gfxDstBuffer,
+                        void* param,
+                        const Paint& paint,
+                        const Rect& rect,
+                        const Rect& invalidatedArea,
+                        const Style& style,
+                        const bool& isStroke)
 {
-
     if (param == nullptr) {
-         return;
+        return;
     }
-    if(paint.HaveShadow()){
-        DoDrawShadow(gfxDstBuffer,param,paint,rect,invalidatedArea,style,isStroke);
+    if (paint.HaveShadow()) {
+        DoDrawShadow(gfxDstBuffer, param, paint, rect, invalidatedArea, style, isStroke);
     }
     TransAffine transform;
     RenderingBuffer renderBuffer;
-     //初始化buffer和 m_transform
-    InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style,paint);
-
+    //初始化buffer和 m_transform
+    InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
     RasterizerScanlineAntiAlias<> rasterizer;
     ScanlineUnPackedContainer m_scanline;
 
     PathParam* pathParam = static_cast<PathParam*>(param);
-    SetRasterizer(param,paint,rasterizer,transform,isStroke);
+    SetRasterizer(param, paint, rasterizer, transform, isStroke);
 
     typedef Rgba8 Rgba8Color;
     //组装renderbase
@@ -1015,24 +1027,22 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
     SpanAllocator allocator;
 
     renBase.ResetClipping(true);
-    renBase.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+    renBase.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
+                    invalidatedArea.GetBottom());
 
-    if(paint.GetStyle()==Paint::STROKE_STYLE||
-       paint.GetStyle()==Paint::FILL_STYLE||
-       paint.GetStyle()==Paint::STROKE_FILL_STYLE){
-//        RenderSolid(paint,rasterizer,renBase,isStroke);
+    if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
+        paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+        //        RenderSolid(paint,rasterizer,renBase,isStroke);
         Rgba8Color rgba8Color;
-        if(isStroke){
-            if(paint.GetStyle()==Paint::STROKE_STYLE||
-               paint.GetStyle()==Paint::STROKE_FILL_STYLE){
+        if (isStroke) {
+            if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
                 rgba8Color.redValue = paint.GetStrokeColor().red;
                 rgba8Color.greenValue = paint.GetStrokeColor().green;
                 rgba8Color.blueValue = paint.GetStrokeColor().blue;
                 rgba8Color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
             }
-        }else{
-            if(paint.GetStyle()==Paint::FILL_STYLE||
-               paint.GetStyle()==Paint::STROKE_FILL_STYLE){
+        } else {
+            if (paint.GetStyle() == Paint::FILL_STYLE || paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
                 rgba8Color.redValue = paint.GetFillColor().red;
                 rgba8Color.greenValue = paint.GetFillColor().green;
                 rgba8Color.blueValue = paint.GetFillColor().blue;
@@ -1040,34 +1050,36 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer, void* param, const Paint& pain
             }
         }
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, rgba8Color);
-
     }
 
-    if(paint.GetStyle()==Paint::GRADIENT){
-        RenderGradient(paint,rasterizer,transform,renBase,renderBuffer,allocator,invalidatedArea);
+    if (paint.GetStyle() == Paint::GRADIENT) {
+        RenderGradient(paint, rasterizer, transform, renBase, renderBuffer, allocator, invalidatedArea);
     }
 
-    if(paint.GetStyle()==Paint::PATTERN){
-        RenderPattern(paint,pathParam->imageParam,rasterizer,renBase,allocator,rect);
+    if (paint.GetStyle() == Paint::PATTERN) {
+        RenderPattern(paint, pathParam->imageParam, rasterizer, renBase, allocator, rect);
     }
-
 }
 
-void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
-                          const Rect& invalidatedArea, const Style& style, const bool& isStroke)
+void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
+                             void* param,
+                             const Paint& paint,
+                             const Rect& rect,
+                             const Rect& invalidatedArea,
+                             const Style& style,
+                             const bool& isStroke)
 {
-
     if (param == nullptr) {
-         return;
+        return;
     }
-    if(paint.HaveShadow()){
-        DoDrawShadow(gfxDstBuffer,param,paint,rect,invalidatedArea,style,isStroke);
+    if (paint.HaveShadow()) {
+        DoDrawShadow(gfxDstBuffer, param, paint, rect, invalidatedArea, style, isStroke);
     }
     TransAffine transform;
     RenderingBuffer renderBuffer;
 
-     //初始化buffer和 m_transform
-    InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style,paint);
+    //初始化buffer和 m_transform
+    InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
     typedef Rgba8 Rgba8Color;
     // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
@@ -1084,47 +1096,50 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer, void* param, const Paint&
     ScanlineUnPackedContainer m_scanline;
 
     PathParam* pathParam = static_cast<PathParam*>(param);
-    SetRasterizer(param,paint,rasterizer,transform,isStroke);
+    SetRasterizer(param, paint, rasterizer, transform, isStroke);
     renBaseCom.ResetClipping(true);
-    renBaseCom.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+    renBaseCom.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
+                       invalidatedArea.GetBottom());
 
     pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
 
-    if(paint.GetStyle()==Paint::STROKE_STYLE||
-       paint.GetStyle()==Paint::FILL_STYLE||
-       paint.GetStyle()==Paint::STROKE_FILL_STYLE){
-        RenderSolid(paint,rasterizer,renBaseCom,isStroke);
+    if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
+        paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+        RenderSolid(paint, rasterizer, renBaseCom, isStroke);
     }
 
-    if(paint.GetStyle()==Paint::GRADIENT){
-        RenderGradient(paint,rasterizer,transform,renBaseCom,renderBuffer,allocator,invalidatedArea);
+    if (paint.GetStyle() == Paint::GRADIENT) {
+        RenderGradient(paint, rasterizer, transform, renBaseCom, renderBuffer, allocator, invalidatedArea);
     }
 
-    if(paint.GetStyle()==Paint::PATTERN){
-        RenderPattern(paint,pathParam->imageParam,rasterizer,renBaseCom,allocator,rect);
+    if (paint.GetStyle() == Paint::PATTERN) {
+        RenderPattern(paint, pathParam->imageParam, rasterizer, renBaseCom, allocator, rect);
     }
-
 }
 
-void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
-                          const Rect& invalidatedArea, const Style& style, const bool& isStroke)
+void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer,
+                            void* param,
+                            const Paint& paint,
+                            const Rect& rect,
+                            const Rect& invalidatedArea,
+                            const Style& style,
+                            const bool& isStroke)
 {
-
     if (param == nullptr) {
-         return;
+        return;
     }
     TransAffine transform;
     RenderingBuffer renderBuffer;
-     //初始化buffer和 m_transform
-    InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style,paint);
+    //初始化buffer和 m_transform
+    InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
     transform.Translate(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
 
     RasterizerScanlineAntiAlias<> rasterizer;
     ScanlineUnPackedContainer m_scanline;
 
-    SetRasterizer(param,paint,rasterizer,transform,isStroke);
-    RectD bbox(rasterizer.MinX(),rasterizer.MinY(),rasterizer.MaxX(),rasterizer.MaxY());
+    SetRasterizer(param, paint, rasterizer, transform, isStroke);
+    RectD bbox(rasterizer.MinX(), rasterizer.MinY(), rasterizer.MaxX(), rasterizer.MaxY());
 
     typedef Rgba8 Rgba8Color;
     //组装renderbase
@@ -1141,7 +1156,8 @@ void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer, void* param, const Paint& 
     SpanAllocator allocator;
 
     m_renBase.ResetClipping(true);
-    m_renBase.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+    m_renBase.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
+                      invalidatedArea.GetBottom());
 
     Rgba8Color rgba8Color;
     rgba8Color.redValue = paint.GetShadowColor().red;
@@ -1161,26 +1177,31 @@ void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer, void* param, const Paint& 
     RenderingBuffer shadowBuffer;
     PixfmtAlphaBlendRgba pixf2(shadowBuffer);
 
-    Rect shadowRect ={int16_t(bbox.x1),int16_t(bbox.y1),int16_t(bbox.x2),int16_t(bbox.y2)};
-    shadowRect.Intersect(shadowRect,invalidatedArea);
-    pixf2.Attach(m_pixFormat, shadowRect.GetLeft(),shadowRect.GetTop(),shadowRect.GetRight(),shadowRect.GetBottom());
+    Rect shadowRect = {int16_t(bbox.x1), int16_t(bbox.y1), int16_t(bbox.x2), int16_t(bbox.y2)};
+    shadowRect.Intersect(shadowRect, invalidatedArea);
+    pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(), shadowRect.GetRight(), shadowRect.GetBottom());
     drawBlur.Blur(pixf2, OHOS::Uround(paint.GetShadowBlur()));
 }
 
-void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,RenderingBuffer& renderBuffer, const Rect& rect,
-                                    TransAffine& transform, const Style& style,const Paint& paint)
+void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,
+                                    RenderingBuffer& renderBuffer,
+                                    const Rect& rect,
+                                    TransAffine& transform,
+                                    const Style& style,
+                                    const Paint& paint)
 {
     int16_t realLeft = rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
     int16_t realTop = rect.GetTop() + style.paddingTop_ + style.borderWidth_;
     transform.Reset();
-    transform.shearX=paint.GetshearX();
-    transform.shearY=paint.GetshearY();
+    transform.shearX = paint.GetshearX();
+    transform.shearY = paint.GetshearY();
     transform.Rotate(paint.GetRotate() * PI / OHOS::BOXER); //跟偏移
-    transform.Translate(realLeft,realTop);//偏移到画布上
+    transform.Translate(realLeft, realTop);                 //偏移到画布上
     transform.scaleX = paint.GetScaleX();
-    transform.scaleY = paint.GetScaleY();//GetRotate
-    transform.Translate(paint.GetTranslateX(),paint.GetTranslateY());
-    renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.phyAddr),gfxDstBuffer.width,gfxDstBuffer.height,gfxDstBuffer.stride);
+    transform.scaleY = paint.GetScaleY(); // GetRotate
+    transform.Translate(paint.GetTranslateX(), paint.GetTranslateY());
+    renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.phyAddr), gfxDstBuffer.width, gfxDstBuffer.height,
+                        gfxDstBuffer.stride);
 }
 
 void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint)
@@ -1199,7 +1220,6 @@ void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle&
         textParam->fontOpa = paint.GetOpacity();
         textParam->fontColor = paint.GetFillColor();
         textParam->position = point;
-//        textParam->isDrawTrans = paint.IsTransform();
         DrawCmd cmd;
         cmd.param = textParam;
         cmd.DeleteParam = DeleteTextParam;
@@ -1210,8 +1230,12 @@ void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle&
     }
 }
 
-void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
-                          const Rect& invalidatedArea, const Style& style)
+void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer,
+                          void* param,
+                          const Paint& paint,
+                          const Rect& rect,
+                          const Rect& invalidatedArea,
+                          const Style& style)
 {
     TextParam* textParam = static_cast<TextParam*>(param);
     if (textParam == nullptr) {
@@ -1222,7 +1246,7 @@ void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& pa
     }
     Text* text = textParam->textComment;
     text->SetText(textParam->text);
-    text->SetFont(textParam->fontStyle.fontName, textParam->fontStyle.fontSize*paint.GetScaleX());
+    text->SetFont(textParam->fontStyle.fontName, textParam->fontStyle.fontSize * paint.GetScaleX());
     text->SetDirect(static_cast<UITextLanguageDirect>(textParam->fontStyle.direct));
     text->SetAlign(static_cast<UITextLanguageAlignment>(textParam->fontStyle.align));
 
@@ -1243,7 +1267,7 @@ void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& pa
     textRect.SetHeight(text->GetTextSize().y);
     OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
 
-    if(paint.GetChangeFlag()){
+    if (paint.GetChangeFlag()) {
         BufferInfo* gfxMapBuffer = new BufferInfo();
 
         Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
@@ -1272,31 +1296,31 @@ void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& pa
 
         TransAffine transform;
         RenderingBuffer renderBuffer;
-         //初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer,renderBuffer,rect,transform,style,paint);
+        //初始化buffer和 m_transform
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
-        transform.Translate(textParam->position.x,textParam->position.y);
-        if(paint.GetScaleX()!=0){
-            transform.scaleX *= 1/paint.GetScaleX();
+        transform.Translate(textParam->position.x, textParam->position.y);
+        if (paint.GetScaleX() != 0) {
+            transform.scaleX *= 1 / paint.GetScaleX();
         }
-        transform.Translate(textParam->position.x,textParam->position.y);
+        transform.Translate(textParam->position.x, textParam->position.y);
         RenderingBuffer imageRendBuffer;
-        imageRendBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr),gfxMapBuffer->width,gfxMapBuffer->height,gfxMapBuffer->stride);
-        DoRenderImage(renderBuffer,paint,invalidatedArea,transform,imageRendBuffer);
+        imageRendBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr), gfxMapBuffer->width, gfxMapBuffer->height,
+                               gfxMapBuffer->stride);
+        DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
         delete gfxMapBuffer;
         gfxMapBuffer = nullptr;
-    }else{
-        text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle,
-                     Text::TEXT_ELLIPSIS_END_INV, opa);
+    } else {
+        text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
     }
 }
 
 void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
-                              const Paint& paint,
-                              const Rect& invalidatedArea,
-                              TransAffine& transform,
-                              RenderingBuffer& imageBuffer)
+                             const Paint& paint,
+                             const Rect& invalidatedArea,
+                             TransAffine& transform,
+                             RenderingBuffer& imageBuffer)
 {
     Rect cordsTmp;
     cordsTmp.SetPosition(0, 0);
@@ -1315,7 +1339,7 @@ void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
     vertices->LineTo(cordsTmp.GetLeft(), cordsTmp.GetBottom());
     vertices->ClosePolygon();
     pathParam->vertices = vertices;
-    SetRasterizer(pathParam,paint,rasterizer,transform,false);
+    SetRasterizer(pathParam, paint, rasterizer, transform, false);
 
     typedef Rgba8 Rgba8Color;
     //组装renderbase
@@ -1332,17 +1356,15 @@ void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
     SpanAllocator allocator;
 
     renBase.ResetClipping(true);
-    renBase.ClipBox(invalidatedArea.GetLeft(),invalidatedArea.GetTop(),invalidatedArea.GetRight(),invalidatedArea.GetBottom());
+    renBase.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
+                    invalidatedArea.GetBottom());
 
-    double parallelogram[OHOS::INDEX_SIX] = {double(cordsTmp.GetLeft()), double(cordsTmp.GetTop()),
+    double parallelogram[OHOS::INDEX_SIX] = {double(cordsTmp.GetLeft()),  double(cordsTmp.GetTop()),
                                              double(cordsTmp.GetRight()), double(cordsTmp.GetTop()),
                                              double(cordsTmp.GetRight()), double(cordsTmp.GetBottom())};
 
-    OHOS::TransAffine mtx((double)cordsTmp.GetLeft(),
-                          (double)cordsTmp.GetTop(),
-                          (double)cordsTmp.GetRight(),
-                          (double)cordsTmp.GetBottom(),
-                          parallelogram);
+    OHOS::TransAffine mtx((double)cordsTmp.GetLeft(), (double)cordsTmp.GetTop(), (double)cordsTmp.GetRight(),
+                          (double)cordsTmp.GetBottom(), parallelogram);
     mtx *= transform;
     mtx.Invert();
     typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
@@ -1360,7 +1382,7 @@ void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
     DeletePathParam(pathParam);
 }
 
-void UICanvas::CopyBuffer(BufferInfo& gfxMapBuffer,BufferInfo& gfxDstBuffer)
+void UICanvas::CopyBuffer(BufferInfo& gfxMapBuffer, BufferInfo& gfxDstBuffer)
 {
     uint8_t destByteSize;
     if (memcpy_s(&gfxMapBuffer, sizeof(BufferInfo), &gfxDstBuffer, sizeof(BufferInfo)) != 0) {

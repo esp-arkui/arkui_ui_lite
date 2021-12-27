@@ -448,7 +448,9 @@ public:
      */
     void SetLineCap(LineCapEnum lineCap){
         lineCap_ = lineCap;
-        changeFlage_ = true;
+        if(NONE_CAP != lineCap) {
+            changeFlage_ = true;
+        }
     }
     /**
      * @brief 获取笔帽类型.
@@ -471,7 +473,9 @@ public:
     void SetLineJoin(LineJoinEnum lineJoin)
     {
         lineJoin_=lineJoin;
-        changeFlage_ = true;
+        if(lineJoin != MITER_NONE) {
+            changeFlage_ = true;
+        }
     }
     /**
      * @brief 设置路径连接处的尖角的间距限制.
@@ -788,7 +792,7 @@ public:
     {
         scaleX_ *= scaleX;
         scaleY_ *= scaleY;
-        changeFlage_ = true;
+        //changeFlage_ = true;
     }
 
     double GetScaleX() const
@@ -805,7 +809,7 @@ public:
     void Rotate(float angle)
     {
         rotateAngle_ += angle;
-        changeFlage_ = true;
+        //changeFlage_ = true;
     }
     double GetRotate() const
     {
@@ -817,7 +821,7 @@ public:
     {
         transLateX_ += x;
         transLateY_ += y;
-        changeFlage_ = true;
+        //changeFlage_ = true;
     }
 
     /* 获取重新映射画布上的x 位置 */
@@ -841,7 +845,7 @@ public:
         transLateX_ = 0.0;   // X轴方向偏移像素
         transLateY_ = 0.0;   // Y轴方向偏移像素
         Transform(scaleX,shearX,shearY,scaleY,transLateX,transLateY);
-        changeFlage_ = true;
+        //changeFlage_ = true;
     }
 
     /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -853,9 +857,14 @@ public:
         scaleY_ *= scaleY;           // y轴方向放大或缩小倍数
         transLateX_ += transLateX;   // X轴方向偏移像素
         transLateY_ += transLateY;   // Y轴方向偏移像素
-        changeFlage_ = true;
+        //changeFlage_ = true;
     }
-
+    /* 是否经过变换，即是不是单位矩阵 */
+    bool IsTransform() const
+    {
+        return rotateAngle_ ==0.0 && scaleX_ == 1.0 && shearX_ == 0.0 && shearY_ == 0.0
+                && scaleY_ == 1.0 && transLateX_ == 0.0 && transLateY_ == 0.0;
+    }
     double GetshearX() const {
         return shearX_;
     }
