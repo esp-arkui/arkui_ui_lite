@@ -448,9 +448,7 @@ public:
      */
     void SetLineCap(LineCapEnum lineCap){
         lineCap_ = lineCap;
-        if(NONE_CAP != lineCap) {
-            changeFlage_ = true;
-        }
+        changeFlage_ = true;
     }
     /**
      * @brief 获取笔帽类型.
@@ -473,9 +471,7 @@ public:
     void SetLineJoin(LineJoinEnum lineJoin)
     {
         lineJoin_=lineJoin;
-        if(lineJoin != MITER_NONE) {
-            changeFlage_ = true;
-        }
+        changeFlage_ = true;
     }
     /**
      * @brief 设置路径连接处的尖角的间距限制.
