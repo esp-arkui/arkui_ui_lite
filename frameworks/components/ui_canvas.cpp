@@ -1230,6 +1230,21 @@ void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle&
     }
 }
 
+Point UICanvas::MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint)
+{
+    Text* textCompent = new Text;
+    textCompent->SetText(text);
+    textCompent->SetFont(fontStyle.fontName, fontStyle.fontSize);
+    textCompent->SetDirect(static_cast<UITextLanguageDirect>(fontStyle.direct));
+    textCompent->SetAlign(static_cast<UITextLanguageAlignment>(fontStyle.align));
+    Style drawStyle;
+    drawStyle.SetStyle(STYLE_LETTER_SPACE, fontStyle.letterSpace);
+    textCompent->ReMeasureTextSize(this->GetRect(), drawStyle);
+    Point textSize = textCompent->GetTextSize();
+    delete textCompent;
+    return textSize;
+}
+
 void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer,
                           void* param,
                           const Paint& paint,

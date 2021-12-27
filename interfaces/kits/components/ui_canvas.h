@@ -1238,6 +1238,9 @@ public:
     /*  在画布上绘制文本 */
     void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
 
+    /* 返回包含指定文本宽度的对象 */
+    Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
+
     /* 保存历史状态 */
     void Save(Paint& paint)
     {
