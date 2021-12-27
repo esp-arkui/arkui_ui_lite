@@ -36,7 +36,7 @@
 #ifndef GRAPHIC_LITE_UI_CANVAS_H
 #define GRAPHIC_LITE_UI_CANVAS_H
 
-#include <fcntl.h>
+
 #include "common/image.h"
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"
@@ -63,7 +63,8 @@
 #include <draw/draw_utils.h>
 #include "animator/gif_canvas_image_animator.h"
 #include "gif_lib.h"
-
+#include "gfx_utils/file.h"
+#include <fcntl.h>
 
 namespace OHOS {
 /**

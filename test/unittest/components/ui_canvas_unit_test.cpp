@@ -16,6 +16,7 @@
 #include "components/root_view.h"
 #include "components/ui_canvas.h"
 #include "components/ui_view_group.h"
+#include "components/ui_view_group.h"
 
 #include <climits>
 #include <gtest/gtest.h>
@@ -613,17 +614,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level1)
         return;
     }
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPBUTT);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPBUTT);
+    paint_->SetLineCap(LineCapEnum::CAPBUTT);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPBUTT);
     
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPSQUARE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPSQUARE);
+    paint_->SetLineCap(LineCapEnum::CAPSQUARE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPSQUARE);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPROUND);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPROUND);
+    paint_->SetLineCap(LineCapEnum::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
     
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPNONE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPNONE);
+    paint_->SetLineCap(LineCapEnum::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
   
 }
 
@@ -639,17 +640,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_002, TestSize.Level0)
         return;
     }
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPBUTT);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPBUTT);
+    paint_->SetLineCap(LineCapEnum::CAPBUTT);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPBUTT);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPSQUARE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPSQUARE);
+    paint_->SetLineCap(LineCapEnum::CAPSQUARE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPSQUARE);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPROUND);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPROUND);
+    paint_->SetLineCap(LineCapEnum::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPNONE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPNONE);
+    paint_->SetLineCap(LineCapEnum::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
 }
 
 /**
@@ -663,17 +664,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINMITER);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINMITER);
+    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINROUND);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINROUND);
+    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINBEVEL);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINNONE);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINNONE);
+    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
 }
 
 /**
@@ -687,17 +688,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINMITER);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINMITER);
+    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINROUND);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINROUND);
+    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINBEVEL);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINNONE);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINNONE);
+    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
 }
 
 /**
@@ -758,7 +759,6 @@ HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->LineWidth(LineWidth1, *paint_);
     EXPECT_EQ(paint_->GetStrokeWidth(), LineWidth1);
 
@@ -851,7 +851,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_->SetDrawGraphicsContext(*paint_);
 
     const int32_t dashCount = 4;
     float dash[dashCount] = {1, 1.5, 2, 2.5};
@@ -900,7 +899,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level1)
     viewGroup->SetPosition(0, 0);
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
@@ -911,7 +909,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level1)
     viewGroup->SetPosition(10, 20);
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -946,7 +943,6 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Red());
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
@@ -964,7 +960,6 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     viewGroup->SetHeight(HEIGHT);
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Blue());
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1001,7 +996,6 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1018,13 +1012,12 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
     
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1054,7 +1047,6 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1071,13 +1063,12 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1107,7 +1098,6 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1124,13 +1114,12 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
