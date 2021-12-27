@@ -612,18 +612,16 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level1)
         return;
     }
 
-    paint_->SetLineCap(LineCapEnum::CAPBUTT);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPBUTT);
+    paint_->SetLineCap(LineCapEnum::BUTT_CAP);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::BUTT_CAP);
     
-    paint_->SetLineCap(LineCapEnum::CAPSQUARE);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPSQUARE);
+    paint_->SetLineCap(LineCapEnum::SQUARE_CAP);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::SQUARE_CAP);
 
-    paint_->SetLineCap(LineCapEnum::CAPROUND);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
-    
-    paint_->SetLineCap(LineCapEnum::CAPNONE);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+    paint_->SetLineCap(LineCapEnum::ROUND_CAP);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::ROUND_CAP);
   
+ 
 }
 
 /**
@@ -637,18 +635,16 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
+    paint_->SetLineCap(LineCapEnum::ROUND_CAP);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::ROUND_CAP);
 
-    paint_->SetLineCap(LineCapEnum::CAPBUTT);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPBUTT);
+    paint_->SetLineCap(LineCapEnum::BUTT_CAP);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::BUTT_CAP);
 
-    paint_->SetLineCap(LineCapEnum::CAPSQUARE);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPSQUARE);
+    paint_->SetLineCap(LineCapEnum::SQUARE_CAP);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::SQUARE_CAP);
 
-    paint_->SetLineCap(LineCapEnum::CAPROUND);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
-
-    paint_->SetLineCap(LineCapEnum::CAPNONE);
-    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+   
 }
 
 /**
@@ -662,17 +658,15 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
+    paint_->SetLineJoin(LineJoinEnum::MITER_JOIN);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::MITER_JOIN);
 
-    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
+    paint_->SetLineJoin(LineJoinEnum::ROUND_JOIN);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::ROUND_JOIN);
 
-    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
+    paint_->SetLineJoin(LineJoinEnum::BEVEL_JOIN);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::BEVEL_JOIN);
 
-    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
 }
 
 /**
@@ -686,17 +680,16 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
 
-    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
+    paint_->SetLineJoin(LineJoinEnum::BEVEL_JOIN);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::BEVEL_JOIN);
 
-    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
+    paint_->SetLineJoin(LineJoinEnum::MITER_JOIN);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::MITER_JOIN);
 
-    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
+    paint_->SetLineJoin(LineJoinEnum::ROUND_JOIN);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::ROUND_JOIN);
+
 }
 
 /**
