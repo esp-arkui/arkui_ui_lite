@@ -316,8 +316,8 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
 
     paint.Rotate(-20);
     canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
-    paint.Rotate(10);
-    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+    paint.Rotate(30);
+    canvas->DrawImage({100, 100}, GIF_IMAGE_PATH, paint);
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
