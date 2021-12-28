@@ -811,7 +811,7 @@ namespace OHOS {
             rotateAngle_ += angle;
         changeFlage_ = true;
         }
-        double GetRotate() const
+    	float GetRotate() const
         {
             return rotateAngle_;
         }
@@ -900,7 +900,7 @@ namespace OHOS {
         double scaleY_;                                     //y轴方向放大或缩小倍数
         double shearX_;                                     //水平倾斜绘图
         double shearY_;                                     //垂直倾斜绘图
-        double rotateAngle_;                                //旋转角度，单位度数
+    	float rotateAngle_;                     //旋转角度，单位度数
         int16_t transLateX_;                                //X轴方向偏移像素
         int16_t transLateY_;                                //Y轴方向偏移像素
     };
