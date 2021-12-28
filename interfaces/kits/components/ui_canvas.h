@@ -36,7 +36,7 @@
 #ifndef GRAPHIC_LITE_UI_CANVAS_H
 #define GRAPHIC_LITE_UI_CANVAS_H
 
-#include <fcntl.h>
+
 #include "common/image.h"
 #include "components/ui_label.h"
 #include "gfx_utils/list.h"
@@ -63,7 +63,8 @@
 #include <draw/draw_utils.h>
 #include "animator/gif_canvas_image_animator.h"
 #include "gif_lib.h"
-
+#include "gfx_utils/file.h"
+#include <fcntl.h>
 
 namespace OHOS {
 /**
@@ -166,11 +167,15 @@ public:
             dashArray_ = nullptr;
         }
         miterLimit_ = paint.ndashes_;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         linearGradientPoint_ = paint.linearGradientPoint_;
         radialGradientPoint_ = paint.radialGradientPoint_;
         stopAndColors_ = paint.stopAndColors_;
         gradientflag = paint.gradientflag;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         patternRepeat_ = paint.patternRepeat_;
+#endif
         shadowBlurRadius= paint.shadowBlurRadius;
         shadowOffsetX = paint.shadowOffsetX;
         shadowOffsetY = paint.shadowOffsetY;
@@ -590,7 +595,7 @@ public:
         }
     }
 
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     void createLinearGradient(double startx, double starty, double endx, double endy)
     {
         gradientflag = Linear;
@@ -641,7 +646,8 @@ public:
     {
         return gradientflag;
     }
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     /*
      * 设置图元用图案填充样式
      * @param img 表示填充的图案，text表示填充样式
@@ -662,7 +668,7 @@ public:
     {
         return patternRepeat_;
     }
-
+#endif
     /**
      * @brief 设置阴影模糊级别.
      * @since 1.0
@@ -867,8 +873,8 @@ private:
     /* 是否经过变换，即是不是单位矩阵. */
     bool IsTransform() const
     {
-        return rotateAngle_ ==0.0 && scaleX_ == 1.0 && shearX_ == 0.0 && shearY_ == 0.0
-                && scaleY_ == 1.0 && transLateX_ == 0.0 && transLateY_ == 0.0;
+        return !(rotateAngle_ ==0.0 && scaleX_ == 1.0 && shearX_ == 0.0 &&
+                 shearY_ == 0.0 && scaleY_ == 1.0 && transLateX_ == 0.0 && transLateY_ == 0.0);
     }
     PaintStyle style_;
     ColorType fillColor_;
@@ -883,11 +889,15 @@ private:
     float* dashArray_;//dash 点数组
     unsigned int ndashes_;//dashArray的长度
     double miterLimit_; //设置路径连接处的尖角的间距限制
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     LinearGradientPoint linearGradientPoint_;
     RadialGradientPoint radialGradientPoint_;
     List<StopAndColor> stopAndColors_;
     Gradient gradientflag;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     PatternRepeatMode patternRepeat_;
+#endif
     const char* image;
     double shadowBlurRadius;                  //设置阴影模糊半径
     double shadowOffsetX;                     //设置阴影横坐标偏移量
@@ -1440,13 +1450,14 @@ protected:
                           const Rect& rect,
                           const Rect& invalidatedArea,
                           const Style& style);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
     static void DoDrawImage(BufferInfo& gfxDstBuffer,
                             void* param,
                             const Paint& paint,
                             const Rect& rect,
                             const Rect& invalidatedArea,
                             const Style& style);
-
+#endif
     static void DoRenderImage(RenderingBuffer& renderBuffer,
                                const Paint& paint,
                                const Rect& invalidatedArea,
@@ -1575,7 +1586,7 @@ protected:
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, rgba8Color);
     }
 
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     /**
      * 渲染渐变
      */
@@ -1659,7 +1670,8 @@ protected:
             RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, span);
         }
     };
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     /**
      * 渲染Pattern模式
      */
@@ -1736,6 +1748,7 @@ protected:
             RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, m_spanPatternType);
         }
     }
+#endif
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

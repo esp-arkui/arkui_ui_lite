@@ -1150,12 +1150,13 @@ void UITestCanvas::RM008UIKitCanvasTest002(){
     Paint paint;
     paint.SetStyle(Paint::GRADIENT);
     //线性渐变
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     paint.createLinearGradient(50, 50, 150, 150);
     paint.addColorStop(0, Color::Yellow());
     paint.addColorStop(0.3, Color::White());
     paint.addColorStop(0.6, Color::Green());
     paint.addColorStop(1, Color::Blue());
-
+#endif
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
     canvas->LineTo({60, 80});
@@ -1168,8 +1169,9 @@ void UITestCanvas::RM008UIKitCanvasTest002(){
     canvas->ClosePath();
     canvas->FillPath(paint);
     //放射渐变
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     paint.createRadialGradient(300, 140, 5, 270, 100, 80);
-
+#endif
     canvas->BeginPath();
     canvas->MoveTo({230, 20});
     canvas->LineTo({270, 80});
@@ -1193,12 +1195,13 @@ void UITestCanvas::RM008UIKitCanvasTest003(){
     paint.SetStyle(Paint::GRADIENT);
     paint.SetStrokeWidth(8);
     //线性渐变
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     paint.createLinearGradient(50, 50, 150, 150);
     paint.addColorStop(0, Color::Yellow());
     paint.addColorStop(0.3, Color::White());
     paint.addColorStop(0.6, Color::Green());
     paint.addColorStop(1, Color::Blue());
-
+#endif
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
     canvas->LineTo({60, 80});
@@ -1211,8 +1214,9 @@ void UITestCanvas::RM008UIKitCanvasTest003(){
     canvas->ClosePath();
     canvas->DrawPath(paint);
     //放射渐变
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     paint.createRadialGradient(300, 140, 5, 270, 100, 80);
-
+#endif
     canvas->BeginPath();
     canvas->MoveTo({230, 20});
     canvas->LineTo({270, 80});
@@ -1235,7 +1239,9 @@ void UITestCanvas::RM008UIKitCanvasTest004(){
     Paint paint;
     paint.SetStyle(Paint::PATTERN);
     paint.SetStrokeWidth(8);
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT);
+#endif
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
     canvas->LineTo({60, 80});
@@ -1269,7 +1275,9 @@ void UITestCanvas::RM008UIKitCanvasTest005(){
     Paint paint;
     paint.SetStyle(Paint::PATTERN);
     paint.SetStrokeWidth(8);
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_X);
+#endif
     canvas->BeginPath();
 
     canvas->MoveTo({20, 20});
@@ -1304,7 +1312,9 @@ void UITestCanvas::RM008UIKitCanvasTest006(){
     Paint paint;
     paint.SetStyle(Paint::PATTERN);
     paint.SetStrokeWidth(8);
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_Y);
+#endif
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
     canvas->LineTo({20, 60});
@@ -1330,7 +1340,9 @@ void UITestCanvas::RM008UIKitCanvasTest007(){
     Paint paint;
     paint.SetStyle(Paint::PATTERN);
     paint.SetStrokeWidth(8);
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     paint.CreatePattern(RED_IMAGE_PATH, Paint::NO_REPEAT);
+#endif
     canvas->BeginPath();
     canvas->MoveTo({20, 20});
     canvas->LineTo({20, 60});

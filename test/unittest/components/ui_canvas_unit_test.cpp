@@ -78,6 +78,8 @@ namespace {
     const double COLOR_STOP_2 = 0.6;
     const double COLOR_STOP_3 = 1.0;
     const float ROTATE = 10.0;
+    const int16_t LINE_X = 30;
+    const int16_t LINE_Y = 70;
 }
 
 class TestUICanvas : public UICanvas {
@@ -1139,7 +1141,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_001, TestSize.Level0)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1171,7 +1172,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_002, TestSize.Level1)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1206,7 +1206,6 @@ HWTEST_F(UICanvasTest, UICanvasMeasureText_001, TestSize.Level0)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1238,7 +1237,6 @@ HWTEST_F(UICanvasTest, UICanvasMeasureText_002, TestSize.Level1)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
     Point textSize = canvas_->MeasureText("hello world", fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1272,8 +1270,7 @@ HWTEST_F(UICanvasTest, UICanvasSetScale_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetScale(SCALE_X, SCALE_Y, *paint_);
+    paint_->Scale(SCALE_X, SCALE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1308,8 +1305,7 @@ HWTEST_F(UICanvasTest, UICanvasSetScale_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetScale(SCALE_X, SCALE_Y, *paint_);
+    paint_->Scale(SCALE_X, SCALE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1345,16 +1341,15 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTranslate(TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Translate(TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1381,8 +1376,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTranslate(TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Translate(TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1390,8 +1384,8 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1418,20 +1412,19 @@ HWTEST_F(UICanvasTest, UICanvasTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1458,8 +1451,7 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1467,12 +1459,12 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1499,20 +1491,19 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1539,8 +1530,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1548,12 +1538,12 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1573,7 +1563,7 @@ HWTEST_F(UICanvasTest, UICanvasGlobalAlpha_001, TestSize.Level0)
         return;
     }
 
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
 }
 
@@ -1597,12 +1587,11 @@ HWTEST_F(UICanvasTest, UICanvasGlobalAlpha_002, TestSize.Level1)
     ColorType color = Color::Red();
     paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
     paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
     color = Color::Green();
     paint_->SetFillColor(color);
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
 
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
@@ -1625,8 +1614,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalAlpha_001, TestSize.Level0)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
 }
 
@@ -1649,8 +1637,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalAlpha_002, TestSize.Level1)
     ColorType color = Color::Green();
     paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
 
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
@@ -1673,7 +1660,6 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_001, TestSize.Level0)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
     paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
     EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
 }
@@ -1695,19 +1681,25 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_002, TestSize.Level1)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     ColorType color = Color::Blue();
-    paint_->SetStrokeColor(color);
-    color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
+    canvas_->BeginPath();
+    canvas_->MoveTo({START1_X, START1_Y});
+    canvas_->LineTo({START1_X, POS_Y});
+    canvas_->LineTo({POS_X, POS_Y});
+    canvas_->LineTo({POS_X, START1_Y});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
     paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
-    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
-    paint_->SetStrokeColor(color);
-    color = Color::Blue();
+    ColorType color = Color::Green();
     paint_->SetFillColor(color);
-    canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
+    canvas_->BeginPath();
+    canvas_->MoveTo({LINE_X, LINE_X});
+    canvas_->LineTo({LINE_X, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_X});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
 
     EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
 }
@@ -1729,7 +1721,6 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_001, TestSize.Level0)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
     paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
     EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
 }
@@ -1751,20 +1742,25 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
         return;
     }
 
-    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
-    ColorType color = Color::Red();
-    paint_->SetStrokeColor(color);
-    color = Color::Blue();
+    ColorType color = Color::Blue();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
+    canvas_->BeginPath();
+    canvas_->MoveTo({LINE_X, LINE_X});
+    canvas_->LineTo({LINE_X, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_X});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
     paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
-    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
-    paint_->SetStrokeColor(color);
-    color = Color::Red();
+    ColorType color = Color::Green();
     paint_->SetFillColor(color);
-    canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
-
+    canvas_->BeginPath();
+    canvas_->MoveTo({START1_X, START1_Y});
+    canvas_->LineTo({START1_X, POS_Y});
+    canvas_->LineTo({POS_X, POS_Y});
+    canvas_->LineTo({POS_X, START1_Y});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
     EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
 }
 
@@ -1787,7 +1783,6 @@ HWTEST_F(UICanvasTest, UICanvasSave_001, TestSize.Level0)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     EXPECT_EQ(paint_->GetFillColor().full, color.full);
 }
@@ -1811,7 +1806,6 @@ HWTEST_F(UICanvasTest, UICanvasSave_002, TestSize.Level1)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
     *paint_ = canvas_->Restore();
@@ -1839,7 +1833,6 @@ HWTEST_F(UICanvasTest, UICanvasRestore_001, TestSize.Level0)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     *paint_ = canvas_->Restore();
 
@@ -1865,7 +1858,6 @@ HWTEST_F(UICanvasTest, UICanvasRestore_002, TestSize.Level1)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     canvas_->DrawRect({POS_X, POS_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
     *paint_ = canvas_->Restore();
@@ -2121,8 +2113,7 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetRotate(ROTATE, *paint_);
+    paint_->Rotate(ROTATE);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -2157,8 +2148,7 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetRotate(ROTATE, *paint_);
+    paint_->Rotate(ROTATE);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
