@@ -319,16 +319,16 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     UICanvas* canvas = CreateCanvas();
 
     Paint paint;
-//    paint.SetOpacity(127); // 127: opacity
+    paint.SetOpacity(127); // 127: opacity
     paint.Rotate(20);
     // {200, 50}: start point coordinates
-//    canvas->DrawImage({ 0, 60 }, RED_IMAGE_PATH, paint);
+    canvas->DrawImage({ 0, 60 }, RED_IMAGE_PATH, paint);
 
-    paint.Scale(0.4,0.4);
-//    paint.Rotate(-20);
+    paint.Rotate(-20);
     canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
-//    paint.Rotate(10);
-//    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+    paint.Rotate(10);
+    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
