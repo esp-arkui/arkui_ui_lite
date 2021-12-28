@@ -96,7 +96,6 @@ public:
     void RM011CanvasScale001();
     void RM011CanvasRotate001();
     void RM012globalAlpha001();
-    void RM012GlobalCompositeOperation003();
     void RM012GlobalCompositeOperationSOURCE_OVER();
     void RM012GlobalCompositeOperationSOURCE_ATOP();
     void RM012GlobalCompositeOperationSOURCE_IN();
