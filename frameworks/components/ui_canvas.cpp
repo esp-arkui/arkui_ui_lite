@@ -406,7 +406,7 @@ void UICanvas::DrawLabel(const Point& startPoint,
         Invalidate();
     }
 }
-
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
 void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint& paint)
 {
     if (image == nullptr) {
@@ -468,6 +468,7 @@ bool UICanvas::IsGif(const char* src)
     }
     return false;
 }
+#endif
 
 void UICanvas::DrawPath(const Paint& paint)
 {

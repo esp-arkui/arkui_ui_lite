@@ -312,12 +312,14 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
     paint.SetOpacity(127); // 127: opacity
     paint.Rotate(20);
     // {200, 50}: start point coordinates
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
     canvas->DrawImage({ 0, 60 }, RED_IMAGE_PATH, paint);
 
     paint.Rotate(-20);
     canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
     paint.Rotate(30);
     canvas->DrawImage({100, 100}, GIF_IMAGE_PATH, paint);
+#endif
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()

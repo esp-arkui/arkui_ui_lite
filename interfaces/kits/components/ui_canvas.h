@@ -1112,6 +1112,7 @@ public:
      */
     void DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
     /**
      * @brief Draws an image.
      *
@@ -1124,6 +1125,7 @@ public:
     void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
     bool IsGif(const char* src);
+#endif
     /**
      * @brief Defines the font style.
      */
