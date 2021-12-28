@@ -56,7 +56,6 @@ namespace {
     const int16_t IMAGE_Y = 10;
     const int16_t IMAGE_WIDTH = 20;
     const int16_t IMAGE_HEIGHT = 10;
-    const int16_t LineWidth1 = 5;
     const uint8_t FONT_SIZE = 15;
     const int16_t LETTER_SPACE = 2;
     const float SCALE_X = 0.5;
@@ -77,7 +76,7 @@ namespace {
     const double COLOR_STOP_1 = 0.3;
     const double COLOR_STOP_2 = 0.6;
     const double COLOR_STOP_3 = 1.0;
-    const float ROTATE = 10.0;
+    const float ROTATE = 10;
     const int16_t LINE_X = 30;
     const int16_t LINE_Y = 70;
 }
@@ -87,15 +86,19 @@ public:
     TestUICanvas() {}
     virtual ~TestUICanvas() {}
 
-    const UICanvasPath* GetPath() const
+    const UICanvasVertices* GetPath() const
     {
-        return path_;
+        return vertices_;
     }
 
     Point GetStartPos() const
     {
-        if (path_ != nullptr) {
-            return path_->startPos_;
+        double x;
+        double y;
+        if (GetPath() != nullptr) {
+            vertices_->Rewind(0);
+            vertices_->Vertex( &x, &y);
+            return { (int16_t)x, (int16_t)y };
         } else {
             return { COORD_MIN, COORD_MIN };
         }
@@ -103,8 +106,12 @@ public:
 
     Point GetEndPos() const
     {
-        if (path_ != nullptr) {
-            return path_->points_.Tail()->data_;
+        double x;
+        double y;
+        if (GetPath() != nullptr) {
+            // return vertices_->points_.Tail()->data_;
+            vertices_->LastVertex(&x, &y);
+            return { (int16_t)x, (int16_t)y };
         } else {
             return { COORD_MIN, COORD_MIN };
         }
@@ -622,8 +629,18 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level1)
 
     paint_->SetLineCap(LineCapEnum::ROUND_CAP);
     EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::ROUND_CAP);
+
   
- 
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+  
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+  
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+  
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+  
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
+  
 }
 
 /**
@@ -646,7 +663,11 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_002, TestSize.Level0)
     paint_->SetLineCap(LineCapEnum::SQUARE_CAP);
     EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::SQUARE_CAP);
 
-   
+    paint_->SetLineCap(LineCapEnum::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
+
+    paint_->SetLineCap(LineCapEnum::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
 }
 
 /**
@@ -666,9 +687,11 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level1)
     paint_->SetLineJoin(LineJoinEnum::ROUND_JOIN);
     EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::ROUND_JOIN);
 
-    paint_->SetLineJoin(LineJoinEnum::BEVEL_JOIN);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::BEVEL_JOIN);
+    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
 
+    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
 }
 
 /**
@@ -682,15 +705,14 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
+    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
 
-    paint_->SetLineJoin(LineJoinEnum::BEVEL_JOIN);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::BEVEL_JOIN);
+    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
 
-    paint_->SetLineJoin(LineJoinEnum::MITER_JOIN);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::MITER_JOIN);
-
-    paint_->SetLineJoin(LineJoinEnum::ROUND_JOIN);
-    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::ROUND_JOIN);
+    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
 
 }
 
@@ -737,33 +759,7 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_002, TestSize.Level0)
 
 }
 
-/**
- * @tc.name: UICanvasLineWidth_001
- * @tc.desc: Verify LineWidth function, equal.
- * @tc.type: FUNC
- */
-HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
-{
-    if (paint_ == nullptr) {
-        EXPECT_EQ(1, 0);
-        return;
-    }
-    if (canvas_ == nullptr) {
-        EXPECT_EQ(1, 0);
-        return;
-    }
-    canvas_->LineWidth(LineWidth1, *paint_);
-    EXPECT_EQ(paint_->GetStrokeWidth(), LineWidth1);
 
-    paint_->SetLineDashOffset(LINE_OFFSET1);
-    EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET1);
-
-    paint_->SetLineDashOffset(LINE_OFFSET2);
-    EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET2);
-
-    paint_->SetLineDashOffset(LINE_OFFSET3);
-    EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET3);
-}
 
 /**
  * @tc.name: UICanvasMiterLimit_001
@@ -809,11 +805,11 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
 }
 
 /**
- * @tc.name: UICanvasMiterLimit_002
+ * @tc.name: UICanvasMiterLimit_003
  * @tc.desc: Verify MiterLimit function, equal.
  * @tc.type: FUNC
  */
-HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
+HWTEST_F(UICanvasTest, UICanvasMiterLimit_003, TestSize.Level0)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -847,13 +843,13 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
 
     const int32_t dashCount = 4;
     float dash[dashCount] = {1, 1.5, 2, 2.5};
-    canvas_->SetLineDash(dash, dashCount, *paint_);
+    paint_->SetLineDash(dash, dashCount);
     EXPECT_EQ(paint_->GetLineDashCount(), dashCount);
 
     paint_->ClearLineDash();
     EXPECT_EQ(paint_->GetLineDashCount(), 0);
     
-    canvas_->SetLineDash(dash, dashCount, *paint_);
+    paint_->SetLineDash(dash, dashCount);
     int32_t dashLen = paint_->GetLineDashCount();
     float* dashArr = paint_->GetLineDash();
     for (int32_t i = 0; i < dashLen; i++) {
@@ -1237,7 +1233,7 @@ HWTEST_F(UICanvasTest, UICanvasMeasureText_002, TestSize.Level1)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    Point textSize = canvas_->MeasureText("hello world", fontStyle, *paint_);
+    canvas_->MeasureText("hello world", fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1681,25 +1677,25 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_002, TestSize.Level1)
         return;
     }
 
-    ColorType color = Color::Blue();
-    paint_->SetFillColor(color);
+
+    paint_->SetFillColor(Color::Blue());
     canvas_->BeginPath();
     canvas_->MoveTo({START1_X, START1_Y});
     canvas_->LineTo({START1_X, POS_Y});
     canvas_->LineTo({POS_X, POS_Y});
     canvas_->LineTo({POS_X, START1_Y});
     canvas_->ClosePath();
-    canvas_->FillPath(paint_);
+    canvas_->FillPath(*paint_);
     paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
-    ColorType color = Color::Green();
-    paint_->SetFillColor(color);
+
+    paint_->SetFillColor(Color::Green());
     canvas_->BeginPath();
     canvas_->MoveTo({LINE_X, LINE_X});
     canvas_->LineTo({LINE_X, LINE_Y});
     canvas_->LineTo({LINE_Y, LINE_Y});
     canvas_->LineTo({LINE_Y, LINE_X});
     canvas_->ClosePath();
-    canvas_->FillPath(paint_);
+    canvas_->FillPath(*paint_);
 
     EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
 }
@@ -1742,25 +1738,25 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
         return;
     }
 
-    ColorType color = Color::Blue();
-    paint_->SetFillColor(color);
+    
+    paint_->SetFillColor(Color::Blue());
     canvas_->BeginPath();
     canvas_->MoveTo({LINE_X, LINE_X});
     canvas_->LineTo({LINE_X, LINE_Y});
     canvas_->LineTo({LINE_Y, LINE_Y});
     canvas_->LineTo({LINE_Y, LINE_X});
     canvas_->ClosePath();
-    canvas_->FillPath(paint_);
+    canvas_->FillPath(*paint_);
     paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
-    ColorType color = Color::Green();
-    paint_->SetFillColor(color);
+    
+    paint_->SetFillColor(Color::Green());
     canvas_->BeginPath();
     canvas_->MoveTo({START1_X, START1_Y});
     canvas_->LineTo({START1_X, POS_Y});
     canvas_->LineTo({POS_X, POS_Y});
     canvas_->LineTo({POS_X, START1_Y});
     canvas_->ClosePath();
-    canvas_->FillPath(paint_);
+    canvas_->FillPath(*paint_);
     EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
 }
 
@@ -2120,7 +2116,7 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_001, TestSize.Level0)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(paint_->GetRotateAngle(), ROTATE);
+    EXPECT_EQ(paint_->GetRotate(), ROTATE);
 }
 
 
@@ -2156,7 +2152,7 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(paint_->GetRotateAngle(), ROTATE);
+    EXPECT_EQ(paint_->GetRotate(), ROTATE);
 }
 
 } // namespace OHOS
