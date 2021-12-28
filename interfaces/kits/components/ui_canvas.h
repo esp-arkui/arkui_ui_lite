@@ -1298,7 +1298,7 @@ protected:
     };
 
     struct PathParam : public HeapBase {
-        UICanvasVertices* vertices;
+        UICanvasVertices* vertices =nullptr;
         ImageParam * imageParam =nullptr;
     };
 
@@ -1390,7 +1390,10 @@ protected:
     static void DeletePathParam(void* param)
     {
         PathParam* pathParam = static_cast<PathParam*>(param);
-        pathParam->vertices->FreeAll();
+        if (pathParam->vertices != nullptr) {
+            pathParam->vertices->FreeAll();
+            pathParam->vertices=nullptr;
+        }
         if (pathParam->imageParam != nullptr) {
             DeleteImageParam(pathParam->imageParam);
         }

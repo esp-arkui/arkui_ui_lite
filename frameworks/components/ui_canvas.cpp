@@ -1201,7 +1201,7 @@ void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,
     transform.scaleX = paint.GetScaleX();
     transform.scaleY = paint.GetScaleY(); // GetRotate
     transform.Translate(paint.GetTranslateX(), paint.GetTranslateY());
-    renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.phyAddr), gfxDstBuffer.width, gfxDstBuffer.height,
+    renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                         gfxDstBuffer.stride);
 }
 
