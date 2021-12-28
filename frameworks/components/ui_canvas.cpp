@@ -289,6 +289,9 @@ namespace OHOS {
     {
         if (paint.GetChangeFlag()) {
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
+        if(vertices_==nullptr){
+            vertices_ = new UICanvasVertices();
+        }
             vertices_->RemoveAll();
             OHOS::BezierArc arc(center.x, center.y, radius, radius, 0, TWO_TIMES * PI);
             vertices_->ConcatPath(arc, 0);
@@ -593,12 +596,10 @@ bool UICanvas::IsGif(const char* src)
     {
         BufferInfo* gfxMapBuffer = new BufferInfo();
         Rect rect = GetOrigRect();
-        void* param = nullptr;
         CopyBuffer(*gfxMapBuffer, gfxDstBuffer);
         ListNode<DrawCmd>* curDraw = curDraw = drawCmdList_.Begin();
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
-            param = curDraw->data_.param;
-            curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
+        curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_);
         }
 
         RenderingBuffer renderBuffer;
@@ -945,18 +946,14 @@ bool UICanvas::IsGif(const char* src)
         }
     }
 
-    void UICanvas::SetRasterizer(void* param,
+void UICanvas::SetRasterizer(UICanvasVertices& vertices,
                                  const Paint& paint,
                                  RasterizerScanlineAntiAlias<>& rasterizer,
                                  TransAffine& transform,
                                  const bool& isStroke)
     {
-        if (param == nullptr) {
-            return;
-        }
-        PathParam* pathParam = static_cast<PathParam*>(param);
         typedef DepictCurve<UICanvasVertices> UICanvasPath;
-        UICanvasPath canvasPath(*pathParam->vertices);
+    	UICanvasPath canvasPath(vertices);
         if (isStroke) {
             if (paint.IsLineDash()) {
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
@@ -1014,7 +1011,7 @@ bool UICanvas::IsGif(const char* src)
         ScanlineUnPackedContainer m_scanline;
 
         PathParam* pathParam = static_cast<PathParam*>(param);
-        SetRasterizer(param, paint, rasterizer, transform, isStroke);
+    	SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
 
         typedef Rgba8 Rgba8Color;
         //组装renderbase
@@ -1104,12 +1101,31 @@ bool UICanvas::IsGif(const char* src)
         ScanlineUnPackedContainer m_scanline;
 
         PathParam* pathParam = static_cast<PathParam*>(param);
-        SetRasterizer(param, paint, rasterizer, transform, isStroke);
+        SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
         renBaseCom.ResetClipping(true);
         renBaseCom.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
                            invalidatedArea.GetBottom());
 
         pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
+
+    if(paint.GetGlobalCompositeOperation()==Paint::COPY){
+        Rgba8Color rgba8Color;
+        rgba8Color.redValue = 0;
+        rgba8Color.greenValue = 0;
+        rgba8Color.blueValue = 0;
+        rgba8Color.alphaValue = 0;
+        renBaseCom.Clear(rgba8Color);
+    }
+
+    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_IN||
+        paint.GetGlobalCompositeOperation()==Paint::SOURCE_OUT){
+        Rgba8Color rgba8Color1;
+        rgba8Color1.redValue = style.bgColor_.red;
+        rgba8Color1.greenValue = style.bgColor_.green;
+        rgba8Color1.blueValue = style.bgColor_.blue;
+        rgba8Color1.alphaValue = style.bgColor_.alpha;
+        renBaseCom.ReplaceColor(rgba8Color1);
+    }
 
         if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
             paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
@@ -1124,9 +1140,20 @@ bool UICanvas::IsGif(const char* src)
         if (paint.GetStyle() == Paint::PATTERN) {
             RenderPattern(paint, pathParam->imageParam, rasterizer, renBaseCom, allocator, rect);
         }
-#endif
+
+    if(paint.GetGlobalCompositeOperation()==Paint::DESTINATION_ATOP||
+       paint.GetGlobalCompositeOperation()==Paint::DESTINATION_IN){
+        Rgba8Color rgba8Color;
+        rgba8Color.redValue = 0;
+        rgba8Color.greenValue = 0;
+        rgba8Color.blueValue = 0;
+        rgba8Color.alphaValue = 0;
+        RenderClipAntiAliasSolid(rasterizer,m_scanline,renBaseCom,rgba8Color);
     }
 
+
+    }
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer,
                                 void* param,
@@ -1149,8 +1176,8 @@ bool UICanvas::IsGif(const char* src)
 
         RasterizerScanlineAntiAlias<> rasterizer;
         ScanlineUnPackedContainer m_scanline;
-
-        SetRasterizer(param, paint, rasterizer, transform, isStroke);
+    	PathParam* pathParam = static_cast<PathParam*>(param);
+    	SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
         RectD bbox(rasterizer.MinX(), rasterizer.MinY(), rasterizer.MaxX(), rasterizer.MaxY());
 
         typedef Rgba8 Rgba8Color;
@@ -1178,10 +1205,11 @@ bool UICanvas::IsGif(const char* src)
         rgba8Color.alphaValue = paint.GetShadowColor().alpha * paint.GetGlobalAlpha();
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, rgba8Color);
-#    if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         typedef OHOS::StackBlur<Rgba8Color, OHOS::StackBlurCalcRGBA<>> DrawBlur;
-        DrawBlur drawBlur;
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
+        DrawBlur drawBlur;
+
 
         bbox.x1 -= paint.GetShadowBlur();
         bbox.y1 -= paint.GetShadowBlur();
@@ -1194,7 +1222,7 @@ bool UICanvas::IsGif(const char* src)
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(), shadowRect.GetRight(), shadowRect.GetBottom());
         drawBlur.Blur(pixf2, OHOS::Uround(paint.GetShadowBlur()));
-#    endif
+#endif
 #endif
     }
 #endif
@@ -1346,16 +1374,14 @@ bool UICanvas::IsGif(const char* src)
         RasterizerScanlineAntiAlias<> rasterizer;
         ScanlineUnPackedContainer m_scanline;
 
-        PathParam* pathParam = new PathParam;
-        UICanvasVertices* vertices = new UICanvasVertices();
-        vertices->RemoveAll();
-        vertices->MoveTo(cordsTmp.GetLeft(), cordsTmp.GetTop());
-        vertices->LineTo(cordsTmp.GetRight(), cordsTmp.GetTop());
-        vertices->LineTo(cordsTmp.GetRight(), cordsTmp.GetBottom());
-        vertices->LineTo(cordsTmp.GetLeft(), cordsTmp.GetBottom());
-        vertices->ClosePolygon();
-        pathParam->vertices = vertices;
-        SetRasterizer(pathParam, paint, rasterizer, transform, false);
+        UICanvasVertices vertices;
+        vertices.RemoveAll();
+        vertices.MoveTo(cordsTmp.GetLeft(), cordsTmp.GetTop());
+        vertices.LineTo(cordsTmp.GetRight(), cordsTmp.GetTop());
+        vertices.LineTo(cordsTmp.GetRight(), cordsTmp.GetBottom());
+        vertices.LineTo(cordsTmp.GetLeft(), cordsTmp.GetBottom());
+        vertices.ClosePolygon();
+        SetRasterizer(vertices, paint, rasterizer, transform, false);
 
         typedef Rgba8 Rgba8Color;
         //组装renderbase
@@ -1395,9 +1421,8 @@ bool UICanvas::IsGif(const char* src)
         ImgSourceType source(imagPixfmtCom);
         SpanGenType sg(source, interpolator);
         OHOS::RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, sg);
-        DeletePathParam(pathParam);
-    }
-
+        vertices.FreeAll();
+}
     void UICanvas::CopyBuffer(BufferInfo& gfxMapBuffer, BufferInfo& gfxDstBuffer)
     {
         uint8_t destByteSize;
