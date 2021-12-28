@@ -45,7 +45,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    template <class ColorT, class Order = void>
+    template <class ColorT, class Order = OrderBgra>
     struct BlenderBase {
         using ColorType = ColorT;
         using OrderType = Order;

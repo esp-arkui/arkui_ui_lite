@@ -15,14 +15,13 @@
 
 #include "components/ui_canvas.h"
 
+#include <draw/clip_utils.h>
+#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
 
 #include "common/image.h"
 #include "draw/draw_arc.h"
 #include "draw/draw_image.h"
 #include "gfx_utils/graphic_log.h"
-#include <draw/clip_utils.h>
-#include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
-
 
 namespace OHOS {
 
