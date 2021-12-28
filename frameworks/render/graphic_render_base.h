@@ -174,7 +174,7 @@ namespace OHOS {
             unsigned y;
             if (Width()) {
                 for (y = 0; y < Height(); y++) {
-                    pixfmtType->ReplaceHlineColor(0, y, Width(), color);
+                    pixfmtType->CopyHline(0, y, Width(), color);
                 }
             }
         }
