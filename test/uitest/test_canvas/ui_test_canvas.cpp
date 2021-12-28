@@ -56,7 +56,17 @@ const UIView* UITestCanvas::GetTestView()
     RM011CanvasRotate001();
     RM012globalAlpha001();
     RM012SaveOrRestore002();
-    RM012GlobalCompositeOperation003();
+    RM012GlobalCompositeOperationSOURCE_OVER();
+    RM012GlobalCompositeOperationSOURCE_ATOP();
+    RM012GlobalCompositeOperationSOURCE_IN();
+    RM012GlobalCompositeOperationSOURCE_OUT();
+    RM012GlobalCompositeOperationDESTINATION_OVER();
+    RM012GlobalCompositeOperationDESTINATION_ATOP();
+    RM012GlobalCompositeOperationDESTINATION_IN();
+    RM012GlobalCompositeOperationDESTINATION_OUT();
+    RM012GlobalCompositeOperationLIGHTER();
+    RM012GlobalCompositeOperationCopy();
+    RM012GlobalCompositeOperationXOR();
     UIKitCanvasTestDrawLine001();
     UIKitCanvasTestDrawLine002();
     UIKitCanvasTestDrawCurve001();
@@ -316,8 +326,9 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
 
     paint.Rotate(-20);
     canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
-    paint.Rotate(30);
-    canvas->DrawImage({100, 100}, GIF_IMAGE_PATH, paint);
+    paint.Rotate(10);
+    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+
 }
 
 void UITestCanvas::UIKitCanvasTestDrawLabel001()
@@ -1576,223 +1587,290 @@ void UITestCanvas::RM012globalAlpha001(){
     canvas->FillPath(paint);
 }
 
-void UITestCanvas::RM012GlobalCompositeOperation003(){
+void UITestCanvas::RM012GlobalCompositeOperationSOURCE_OVER(){
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("RM012_设置Composite");
+    CreateTitleLabel("RM012_设置混合_SOURCE_OVER_第二个图源在第一个图源之上");
     UICanvas* canvas = CreateCanvas();
-
     Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({10, 10});
-    canvas->LineTo({10, 50});
-    canvas->LineTo({50, 50});
-    canvas->LineTo({50, 10});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({30, 30});
-    canvas->LineTo({30, 70});
-    canvas->LineTo({70, 70});
-    canvas->LineTo({70, 30});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
 
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+void UITestCanvas::RM012GlobalCompositeOperationSOURCE_ATOP(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_SOURCE_ATOP_第一个图源和与第二个图源相交部分");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({90, 10});
-    canvas->LineTo({90, 50});
-    canvas->LineTo({130, 50});
-    canvas->LineTo({130, 10});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({110, 30});
-    canvas->LineTo({110, 70});
-    canvas->LineTo({150, 70});
-    canvas->LineTo({150, 30});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
-
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+}
+void UITestCanvas::RM012GlobalCompositeOperationSOURCE_IN(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_SOURCE_IN_只显示两个xiang交部分显示第二个图源颜色");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({170, 10});
-    canvas->LineTo({170, 50});
-    canvas->LineTo({210, 50});
-    canvas->LineTo({210, 10});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({190, 30});
-    canvas->LineTo({190, 70});
-    canvas->LineTo({230, 70});
-    canvas->LineTo({230, 30});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
 
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+}
+void UITestCanvas::RM012GlobalCompositeOperationSOURCE_OUT(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_SOURCE_OUT_只显示第二个图源的第一个不相交部分");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({250, 10});
-    canvas->LineTo({250, 50});
-    canvas->LineTo({290, 50});
-    canvas->LineTo({290, 10});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::SOURCE_OUT);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({280, 30});
-    canvas->LineTo({280, 70});
-    canvas->LineTo({310, 70});
-    canvas->LineTo({310, 30});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
 
-
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+}
+void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_OVER(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_DESTINATION_OVER_源图像在目标图像之上");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({330, 10});
-    canvas->LineTo({330, 50});
-    canvas->LineTo({370, 50});
-    canvas->LineTo({370, 10});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::DESTINATION_OVER);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({360, 30});
-    canvas->LineTo({360, 70});
-    canvas->LineTo({390, 70});
-    canvas->LineTo({390, 30});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
 
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_ATOP(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_DESTINATION_ATOP_在源图像上显示目标图像");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({10, 90});
-    canvas->LineTo({10, 130});
-    canvas->LineTo({50, 130});
-    canvas->LineTo({50, 90});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::DESTINATION_ATOP);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({30, 110});
-    canvas->LineTo({30, 150});
-    canvas->LineTo({70, 150});
-    canvas->LineTo({70, 110});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
 
-
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_IN(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_DESTINATION_IN_在源图像上显示目标图像");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({90, 90});
-    canvas->LineTo({90, 130});
-    canvas->LineTo({130, 130});
-    canvas->LineTo({130, 90});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::DESTINATION_IN);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({110, 110});
-    canvas->LineTo({110, 150});
-    canvas->LineTo({150, 150});
-    canvas->LineTo({150, 110});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
 
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_OUT(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_DESTINATION_OUT_在源图像上显示目标图像");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({170, 90});
-    canvas->LineTo({170, 130});
-    canvas->LineTo({210, 130});
-    canvas->LineTo({210, 90});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::DESTINATION_OUT);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({190, 110});
-    canvas->LineTo({190, 150});
-    canvas->LineTo({230, 150});
-    canvas->LineTo({230, 110});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
 
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+void UITestCanvas::RM012GlobalCompositeOperationLIGHTER(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_LIGHTER_显示源图像 + 目标图像相交部分混合");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({250, 90});
-    canvas->LineTo({250, 130});
-    canvas->LineTo({290, 130});
-    canvas->LineTo({290, 90});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::LIGHTER);
-    paint.SetFillColor(Color::Green());
+    paint.SetFillColor(Color::Blue());
     canvas->BeginPath();
-    canvas->MoveTo({270, 110});
-    canvas->LineTo({270, 150});
-    canvas->LineTo({310, 150});
-    canvas->LineTo({310, 110});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
 
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+void UITestCanvas::RM012GlobalCompositeOperationCopy(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_COPY_只显示第二个图源绿色");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
     paint.SetFillColor(Color::Red());
     canvas->BeginPath();
-    canvas->MoveTo({330, 90});
-    canvas->LineTo({330, 130});
-    canvas->LineTo({370, 130});
-    canvas->LineTo({370, 90});
-    canvas->ClosePath();
-    canvas->FillPath(paint);
-    paint.SetGlobalCompositeOperation(Paint::XOR);
-    paint.SetFillColor(Color::Green());
-    canvas->BeginPath();
-    canvas->MoveTo({350, 110});
-    canvas->LineTo({350, 150});
-    canvas->LineTo({390, 150});
-    canvas->LineTo({390, 110});
-    canvas->ClosePath();
-    canvas->FillPath(paint);
-
-    paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
-    paint.SetFillColor(Color::Red());
-    canvas->BeginPath();
-    canvas->MoveTo({180, 155});
-    canvas->LineTo({220, 155});
-    canvas->LineTo({220, 195});
-    canvas->LineTo({180, 195});
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
     canvas->ClosePath();
     canvas->FillPath(paint);
     paint.SetGlobalCompositeOperation(Paint::COPY);
     paint.SetFillColor(Color::Green());
     canvas->BeginPath();
-    canvas->MoveTo({200, 155});
-    canvas->LineTo({240, 155});
-    canvas->LineTo({240, 195});
-    canvas->LineTo({200, 195});
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
     canvas->ClosePath();
     canvas->FillPath(paint);
+}
+
+void UITestCanvas::RM012GlobalCompositeOperationXOR(){
+    if (container_ == nullptr) {
+        return;
+    }
+    CreateTitleLabel("RM012_设置混合_XOR_相交部分不显示");
+    UICanvas* canvas = CreateCanvas();
+    Paint paint;
+    paint.SetFillColor(Color::Red());
+    canvas->BeginPath();
+    canvas->MoveTo({20, 20});
+    canvas->LineTo({20, 80});
+    canvas->LineTo({150, 80});
+    canvas->LineTo({150, 20});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+    paint.SetGlobalCompositeOperation(Paint::XOR);
+    paint.SetFillColor(Color::Green());
+    canvas->BeginPath();
+    canvas->MoveTo({100, 60});
+    canvas->LineTo({100, 120});
+    canvas->LineTo({230, 120});
+    canvas->LineTo({230, 60});
+    canvas->ClosePath();
+    canvas->FillPath(paint);
+
 }
 
 void UITestCanvas::RM012SaveOrRestore002(){

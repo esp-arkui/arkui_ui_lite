@@ -82,8 +82,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        Paint() :
-            style_(PaintStyle::STROKE_FILL_STYLE),
+        Paint() 
+			: style_(PaintStyle::STROKE_FILL_STYLE),
             fillColor_(Color::Black()),
             strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE),
@@ -792,7 +792,7 @@ namespace OHOS {
         {
             scaleX_ *= scaleX;
             scaleY_ *= scaleY;
-            changeFlage_ = IsTransform();
+        changeFlage_ = true;
         }
 
         double GetScaleX() const
@@ -809,7 +809,7 @@ namespace OHOS {
         void Rotate(float angle)
         {
             rotateAngle_ += angle;
-            changeFlage_ = IsTransform();
+        changeFlage_ = true;
         }
         double GetRotate() const
         {
@@ -821,7 +821,7 @@ namespace OHOS {
         {
             transLateX_ += x;
             transLateY_ += y;
-            changeFlage_ = IsTransform();
+        changeFlage_ = true;
         }
 
         /* 获取重新映射画布上的x 位置 */
@@ -845,7 +845,7 @@ namespace OHOS {
             transLateX_ = 0.0; // X轴方向偏移像素
             transLateY_ = 0.0; // Y轴方向偏移像素
             Transform(scaleX, shearX, shearY, scaleY, transLateX, transLateY);
-            changeFlage_ = IsTransform();
+        changeFlage_ = true;
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -857,7 +857,7 @@ namespace OHOS {
             scaleY_ *= scaleY;         // y轴方向放大或缩小倍数
             transLateX_ += transLateX; // X轴方向偏移像素
             transLateY_ += transLateY; // Y轴方向偏移像素
-            changeFlage_ = IsTransform();
+        changeFlage_ = true;
         }
 
         double GetshearX() const
@@ -870,12 +870,6 @@ namespace OHOS {
         }
 
     private:
-        /* 是否经过变换，即是不是单位矩阵. */
-        bool IsTransform() const
-        {
-            return !(rotateAngle_ == 0.0 && scaleX_ == 1.0 && shearX_ == 0.0 &&
-                     shearY_ == 0.0 && scaleY_ == 1.0 && transLateX_ == 0.0 && transLateY_ == 0.0);
-        }
         PaintStyle style_;
         ColorType fillColor_;
         ColorType strokeColor_;
@@ -1456,7 +1450,6 @@ namespace OHOS {
                                   const Rect& invalidatedArea,
                                   TransAffine& transform,
                                   RenderingBuffer& imageBuffer);
-
         static void DoDrawLabel(BufferInfo& gfxDstBuffer,
                                 void* param,
                                 const Paint& paint,
@@ -1485,7 +1478,7 @@ namespace OHOS {
                                const Rect& invalidatedArea,
                                const Style& style);
 
-        static void SetRasterizer(void* param,
+        static void SetRasterizer(UICanvasVertices& vertices,
                                   const Paint& paint,
                                   RasterizerScanlineAntiAlias<>& rasterizer,
                                   TransAffine& transform,
