@@ -1128,6 +1128,7 @@ bool UICanvas::IsGif(const char* src)
 #endif
     }
 
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer,
                                 void* param,
                                 const Paint& paint,
@@ -1197,6 +1198,7 @@ bool UICanvas::IsGif(const char* src)
 #    endif
 #endif
     }
+#endif
 
     void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,
                                         RenderingBuffer& renderBuffer,
