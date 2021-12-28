@@ -16,6 +16,7 @@
 #include "components/root_view.h"
 #include "components/ui_canvas.h"
 #include "components/ui_view_group.h"
+#include "components/ui_view_group.h"
 
 #include <climits>
 #include <gtest/gtest.h>
@@ -72,12 +73,13 @@ namespace {
     const double END_X = 150.0;
     const double END_Y = 100.0;
     const double END_R = 80.0;
-    const char* PATTERN_REPEAT_TYPE = "repeat";
     const double COLOR_STOP_0 = 0.0;
     const double COLOR_STOP_1 = 0.3;
     const double COLOR_STOP_2 = 0.6;
     const double COLOR_STOP_3 = 1.0;
     const float ROTATE = 10.0;
+    const int16_t LINE_X = 30;
+    const int16_t LINE_Y = 70;
 }
 
 class TestUICanvas : public UICanvas {
@@ -117,12 +119,10 @@ public:
     void TearDown();
     static Paint* paint_;
     static TestUICanvas* canvas_;
-    static GradientControl* gradientControl_;
 };
 
 Paint* UICanvasTest::paint_ = nullptr;
 TestUICanvas* UICanvasTest::canvas_ = nullptr;
-GradientControl* UICanvasTest::gradientControl_ = nullptr;
 void UICanvasTest::SetUp()
 {
     if (paint_ == nullptr) {
@@ -130,9 +130,6 @@ void UICanvasTest::SetUp()
     }
     if (canvas_ == nullptr) {
         canvas_ = new TestUICanvas();
-    }
-    if (gradientControl_ == nullptr) {
-        gradientControl_ = new GradientControl();
     }
 }
 
@@ -617,17 +614,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level1)
         return;
     }
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPBUTT);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPBUTT);
+    paint_->SetLineCap(LineCapEnum::CAPBUTT);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPBUTT);
     
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPSQUARE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPSQUARE);
+    paint_->SetLineCap(LineCapEnum::CAPSQUARE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPSQUARE);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPROUND);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPROUND);
+    paint_->SetLineCap(LineCapEnum::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
     
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPNONE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPNONE);
+    paint_->SetLineCap(LineCapEnum::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
   
 }
 
@@ -643,17 +640,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_002, TestSize.Level0)
         return;
     }
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPBUTT);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPBUTT);
+    paint_->SetLineCap(LineCapEnum::CAPBUTT);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPBUTT);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPSQUARE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPSQUARE);
+    paint_->SetLineCap(LineCapEnum::CAPSQUARE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPSQUARE);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPROUND);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPROUND);
+    paint_->SetLineCap(LineCapEnum::CAPROUND);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPROUND);
 
-    paint_->SetLineCap(BaseGfxExtendEngine::LineCap::CAPNONE);
-    EXPECT_EQ(paint_->GetLineCap(), BaseGfxExtendEngine::LineCap::CAPNONE);
+    paint_->SetLineCap(LineCapEnum::CAPNONE);
+    EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::CAPNONE);
 }
 
 /**
@@ -667,17 +664,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINMITER);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINMITER);
+    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINROUND);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINROUND);
+    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINBEVEL);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINNONE);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINNONE);
+    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
 }
 
 /**
@@ -691,17 +688,17 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINMITER);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINMITER);
+    paint_->SetLineJoin(LineJoinEnum::JOINMITER);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINMITER);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINROUND);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINROUND);
+    paint_->SetLineJoin(LineJoinEnum::JOINROUND);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINROUND);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINBEVEL);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINBEVEL);
+    paint_->SetLineJoin(LineJoinEnum::JOINBEVEL);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINBEVEL);
 
-    paint_->SetLineJoin(BaseGfxExtendEngine::LineJoin::JOINNONE);
-    EXPECT_EQ(paint_->GetLineJoin(), BaseGfxExtendEngine::LineJoin::JOINNONE);
+    paint_->SetLineJoin(LineJoinEnum::JOINNONE);
+    EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::JOINNONE);
 }
 
 /**
@@ -762,7 +759,6 @@ HWTEST_F(UICanvasTest, UICanvasLineWidth_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->LineWidth(LineWidth1, *paint_);
     EXPECT_EQ(paint_->GetStrokeWidth(), LineWidth1);
 
@@ -855,7 +851,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    canvas_->SetDrawGraphicsContext(*paint_);
 
     const int32_t dashCount = 4;
     float dash[dashCount] = {1, 1.5, 2, 2.5};
@@ -904,7 +899,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level1)
     viewGroup->SetPosition(0, 0);
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->StrokeRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
@@ -915,7 +909,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeRect_001, TestSize.Level1)
     viewGroup->SetPosition(10, 20);
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -950,7 +943,6 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Red());
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
@@ -968,7 +960,6 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     viewGroup->SetHeight(HEIGHT);
     paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint.SetFillColor(Color::Blue());
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1005,7 +996,6 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1022,13 +1012,12 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
     
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, JPEG_IMAGE_PATH, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1058,7 +1047,6 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1075,13 +1063,12 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, PNG_1_PALETTE_IMAGE_PATH, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1111,7 +1098,6 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, 0);
@@ -1128,13 +1114,12 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
     viewGroup->SetWidth(WIDTH);
     viewGroup->SetHeight(HEIGHT);
 
-    canvas_->SetDrawGraphicsContext(paint);
     canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
     viewGroup->Add(canvas_);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
 
-    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    canvas_->DrawImage({IMAGE_X, IMAGE_Y}, GIF_IMAGE_PATH1, paint);
     EXPECT_EQ(canvas_->GetStartPosition().x, IMAGE_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
@@ -1163,7 +1148,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_001, TestSize.Level0)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1195,7 +1179,6 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_002, TestSize.Level1)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1230,7 +1213,6 @@ HWTEST_F(UICanvasTest, UICanvasMeasureText_001, TestSize.Level0)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1262,7 +1244,6 @@ HWTEST_F(UICanvasTest, UICanvasMeasureText_002, TestSize.Level1)
     fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
-    canvas_->SetDrawGraphicsContext(*paint_);
     Point textSize = canvas_->MeasureText("hello world", fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1296,8 +1277,7 @@ HWTEST_F(UICanvasTest, UICanvasSetScale_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetScale(SCALE_X, SCALE_Y, *paint_);
+    paint_->Scale(SCALE_X, SCALE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1332,8 +1312,7 @@ HWTEST_F(UICanvasTest, UICanvasSetScale_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetScale(SCALE_X, SCALE_Y, *paint_);
+    paint_->Scale(SCALE_X, SCALE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1369,16 +1348,15 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTranslate(TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Translate(TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1405,8 +1383,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTranslate(TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Translate(TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1414,8 +1391,8 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1442,20 +1419,19 @@ HWTEST_F(UICanvasTest, UICanvasTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1482,8 +1458,7 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1491,12 +1466,12 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1523,20 +1498,19 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1563,8 +1537,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y, *paint_);
+    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1572,12 +1545,12 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.fontName, DEFAULT_VECTOR_FONT_FILENAME);
     EXPECT_EQ(fontStyle.fontSize, FONT_SIZE);
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleX, SCALE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).scaleY, SCALE_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearX, SHEAR_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).shearY, SHEAR_Y);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateX, TRANSLATE_X);
-    EXPECT_EQ(canvas_->GetTransform(*paint_).translateY, TRANSLATE_Y);
+    EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
+    EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
+    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
+    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
+    EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
+    EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
 
 /**
@@ -1597,7 +1570,7 @@ HWTEST_F(UICanvasTest, UICanvasGlobalAlpha_001, TestSize.Level0)
         return;
     }
 
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
 }
 
@@ -1621,12 +1594,11 @@ HWTEST_F(UICanvasTest, UICanvasGlobalAlpha_002, TestSize.Level1)
     ColorType color = Color::Red();
     paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
     paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
     color = Color::Green();
     paint_->SetFillColor(color);
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
 
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
@@ -1649,8 +1621,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalAlpha_001, TestSize.Level0)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
 }
 
@@ -1673,8 +1644,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalAlpha_002, TestSize.Level1)
     ColorType color = Color::Green();
     paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->GlobalAlpha(GLOBALALPHA, *paint_);
+    paint_->SetGlobalAlpha(GLOBALALPHA);
     canvas_->DrawRect({POS_X, POS_Y}, WIDTH, HEIGHT, *paint_);
 
     EXPECT_EQ(paint_->GetGlobalAlpha(), GLOBALALPHA);
@@ -1697,9 +1667,8 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_001, TestSize.Level0)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_COPY);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_COPY);
+    paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
 }
 
 /**
@@ -1719,21 +1688,27 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_002, TestSize.Level1)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
     ColorType color = Color::Blue();
-    paint_->SetStrokeColor(color);
-    color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
-    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_COPY);
-    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
-    paint_->SetStrokeColor(color);
-    color = Color::Blue();
+    canvas_->BeginPath();
+    canvas_->MoveTo({START1_X, START1_Y});
+    canvas_->LineTo({START1_X, POS_Y});
+    canvas_->LineTo({POS_X, POS_Y});
+    canvas_->LineTo({POS_X, START1_Y});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
+    paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
+    ColorType color = Color::Green();
     paint_->SetFillColor(color);
-    canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
+    canvas_->BeginPath();
+    canvas_->MoveTo({LINE_X, LINE_X});
+    canvas_->LineTo({LINE_X, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_X});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
 
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_COPY);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
 }
 
 /**
@@ -1753,9 +1728,8 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_001, TestSize.Level0)
         return;
     }
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_OVER);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_SRC_OVER);
+    paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
 }
 
 /**
@@ -1775,21 +1749,26 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
         return;
     }
 
-    paint_->SetStyle(Paint::PaintStyle::FILL_STYLE);
-    ColorType color = Color::Red();
-    paint_->SetStrokeColor(color);
-    color = Color::Blue();
+    ColorType color = Color::Blue();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->DrawCircle({POS_X, POS_Y}, RADIUS, *paint_);
-    paint_->SetGlobalCompositeOperation(OHOS::BlendMode::BLEND_SRC_OVER);
-    paint_->SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
-    paint_->SetStrokeColor(color);
-    color = Color::Red();
+    canvas_->BeginPath();
+    canvas_->MoveTo({LINE_X, LINE_X});
+    canvas_->LineTo({LINE_X, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_Y});
+    canvas_->LineTo({LINE_Y, LINE_X});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
+    paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
+    ColorType color = Color::Green();
     paint_->SetFillColor(color);
-    canvas_->DrawCircle({CENTER_X, CENTER_Y}, RADIUS, *paint_);
-
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::BlendMode::BLEND_SRC_OVER);
+    canvas_->BeginPath();
+    canvas_->MoveTo({START1_X, START1_Y});
+    canvas_->LineTo({START1_X, POS_Y});
+    canvas_->LineTo({POS_X, POS_Y});
+    canvas_->LineTo({POS_X, START1_Y});
+    canvas_->ClosePath();
+    canvas_->FillPath(paint_);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
 }
 
 /**
@@ -1811,7 +1790,6 @@ HWTEST_F(UICanvasTest, UICanvasSave_001, TestSize.Level0)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     EXPECT_EQ(paint_->GetFillColor().full, color.full);
 }
@@ -1835,7 +1813,6 @@ HWTEST_F(UICanvasTest, UICanvasSave_002, TestSize.Level1)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
     *paint_ = canvas_->Restore();
@@ -1863,7 +1840,6 @@ HWTEST_F(UICanvasTest, UICanvasRestore_001, TestSize.Level0)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     *paint_ = canvas_->Restore();
 
@@ -1889,7 +1865,6 @@ HWTEST_F(UICanvasTest, UICanvasRestore_002, TestSize.Level1)
 
     ColorType color = Color::Red();
     paint_->SetFillColor(color);
-    canvas_->SetDrawGraphicsContext(*paint_);
     canvas_->Save(*paint_);
     canvas_->DrawRect({POS_X, POS_Y}, RECT_WIDTH, RECT_HEIGHT, *paint_);
     *paint_ = canvas_->Restore();
@@ -1908,6 +1883,17 @@ HWTEST_F(UICanvasTest, UICanvasShadowColor_001, TestSize.Level1)
     paint_->SetShadowColor(color);
     EXPECT_EQ(paint_->GetShadowColor().full, color.full);
 }
+HWTEST_F(UICanvasTest, UICanvasShadowColor_002, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    ColorType color = Color::Red();
+    paint_->SetShadowColor(color);
+    EXPECT_EQ(paint_->GetShadowColor().full, color.full);
+}
+
 
 HWTEST_F(UICanvasTest, UICanvasShadowBlur_001, TestSize.Level1)
 {
@@ -1915,11 +1901,31 @@ HWTEST_F(UICanvasTest, UICanvasShadowBlur_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetShadowBlurRadius(RADIUS);
-    EXPECT_EQ(paint_->GetShadowBlurRadius(),RADIUS);
+    paint_->SetShadowBlur(RADIUS);
+    EXPECT_EQ(paint_->GetShadowBlur(),RADIUS);
+}
+
+HWTEST_F(UICanvasTest, UICanvasShadowBlur_002, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetShadowBlur(RADIUS);
+    EXPECT_EQ(paint_->GetShadowBlur(),RADIUS);
 }
 
 HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_001, TestSize.Level1)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->SetShadowOffsetX(RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetX(),RADIUS);
+}
+
+HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_002, TestSize.Level0)
 {
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
@@ -1939,44 +1945,76 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_001, TestSize.Level1)
     EXPECT_EQ(paint_->GetShadowOffsetY(),RADIUS);
 }
 
-HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_001, TestSize.Level1)
+HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_002, TestSize.Level0)
 {
-    if (gradientControl_ == nullptr) {
-        EXPECT_EQ(1, 0);
-        return;
-    }
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
     }
-    gradientControl_->createLinearGradient(START_X,START_Y,END_X,END_Y);
-    paint_->FillStyle(*gradientControl_);
-    GradientControl gradientControl = paint_->getGradientControl();
-    EXPECT_EQ(gradientControl.getLinearGradientPoint().x0,START_X);
-    EXPECT_EQ(gradientControl.getLinearGradientPoint().y0,START_Y);
-    EXPECT_EQ(gradientControl.getLinearGradientPoint().x1,END_X);
-    EXPECT_EQ(gradientControl.getLinearGradientPoint().y1,END_Y);
+    paint_->SetShadowOffsetY(RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetY(),RADIUS);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_001, TestSize.Level1)
+{
+    
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->SetStyle(Paint::GRADIENT);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x0,START_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y0,START_Y);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x1,END_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y1,END_Y);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_002, TestSize.Level0)
+{
+    
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->SetStyle(Paint::GRADIENT);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x0,START_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y0,START_Y);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x1,END_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y1,END_Y);
 }
 
 HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_001, TestSize.Level1)
 {
-    if (gradientControl_ == nullptr) {
-        EXPECT_EQ(1, 0);
-        return;
-    }
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
     }
-    gradientControl_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
-    paint_->FillStyle(*gradientControl_);
-    GradientControl gradientcontrol = paint_->getGradientControl();
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().x0,START_X);
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y0,START_Y);
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().r0,START_R);
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().x1,END_X);
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().y1,END_Y);
-    EXPECT_EQ(gradientcontrol.getRadialGradientPoint().r1,END_R);
+    paint_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
+    paint_->SetStyle(Paint::GRADIENT);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x0,START_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y0,START_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r0,START_R);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x1,END_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y1,END_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r1,END_R);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_002, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
+    paint_->SetStyle(Paint::GRADIENT);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x0,START_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y0,START_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r0,START_R);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x1,END_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y1,END_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r1,END_R);
 }
 
 HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
@@ -1985,18 +2023,24 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->CreatePattern(RED_IMAGE_PATH,PATTERN_REPEAT_TYPE);
-    EXPECT_EQ(paint_->GetPatternImagePath(),RED_IMAGE_PATH);
-    EXPECT_EQ(((paint_->GetPatternRepeatType() == 0)?PATTERN_REPEAT_TYPE:"false"), 
-               PATTERN_REPEAT_TYPE);
+    paint_->CreatePattern(RED_IMAGE_PATH,Paint::REPEAT);
+    EXPECT_EQ(paint_->GetPatternImage(),RED_IMAGE_PATH);
+    EXPECT_EQ(paint_->GetPatternRepeatMode(), Paint::REPEAT);
+}
+
+HWTEST_F(UICanvasTest, UICanvasCreatePattern_002, TestSize.Level0)
+{
+    if (paint_ == nullptr) {
+        EXPECT_EQ(1, 0);
+        return;
+    }
+    paint_->CreatePattern(RED_IMAGE_PATH,Paint::REPEAT);
+    EXPECT_EQ(paint_->GetPatternImage(),RED_IMAGE_PATH);
+    EXPECT_EQ(paint_->GetPatternRepeatMode(), Paint::REPEAT);
 }
 
 HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
 {
-    if (gradientControl_ == nullptr) {
-        EXPECT_EQ(1, 0);
-        return;
-    }
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
@@ -2005,14 +2049,12 @@ HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
     ColorType colorStop1 = Color::White();
     ColorType colorStop2 = Color::Green();
     ColorType colorStop3 = Color::Blue();
-    gradientControl_->createLinearGradient(START_X,START_Y,END_X,END_Y);
-    gradientControl_->addColorStop(COLOR_STOP_0, colorStop0);
-    gradientControl_->addColorStop(COLOR_STOP_1, colorStop1);
-    gradientControl_->addColorStop(COLOR_STOP_2, colorStop2);
-    gradientControl_->addColorStop(COLOR_STOP_3, colorStop3);
-    paint_->FillStyle(*gradientControl_);
-    GradientControl gradientControl = paint_->getGradientControl();
-    List<OHOS::GradientControl::StopAndColor> stopAndColor = gradientControl.getStopAndColor();
+    paint_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->addColorStop(COLOR_STOP_0, colorStop0);
+    paint_->addColorStop(COLOR_STOP_1, colorStop1);
+    paint_->addColorStop(COLOR_STOP_2, colorStop2);
+    paint_->addColorStop(COLOR_STOP_3, colorStop3);
+    List<Paint::StopAndColor> stopAndColor = paint_->getStopAndColor();
     EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_0);
     EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop0.full);
     stopAndColor.PopFront();
@@ -2034,8 +2076,8 @@ HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
-    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    paint_->SetStyle(Paint::PaintStyle::GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::GRADIENT);
     paint_->SetStyle(Paint::PaintStyle::PATTERN);
     EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
 }
@@ -2047,8 +2089,8 @@ HWTEST_F(UICanvasTest, UICanvasStrokeStyle_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->SetStyle(Paint::PaintStyle::FILL_GRADIENT);
-    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::FILL_GRADIENT);
+    paint_->SetStyle(Paint::PaintStyle::GRADIENT);
+    EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::GRADIENT);
     paint_->SetStyle(Paint::PaintStyle::PATTERN);
     EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
 }
@@ -2078,8 +2120,7 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetRotate(ROTATE, *paint_);
+    paint_->Rotate(ROTATE);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -2114,8 +2155,7 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    canvas_->SetDrawGraphicsContext(*paint_);
-    canvas_->SetRotate(ROTATE, *paint_);
+    paint_->Rotate(ROTATE);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
