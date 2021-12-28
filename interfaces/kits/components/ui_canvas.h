@@ -1443,6 +1443,12 @@ protected:
                                const Rect& invalidatedArea,
                                TransAffine& transform,
                                RenderingBuffer& imageBuffer);
+    static void DoClipImage(RenderingBuffer& renderBuffer,
+                            UICanvasVertices& vertices,
+                                 const Paint& paint,
+                                 const Rect& invalidatedArea,
+                                 TransAffine& transform,
+                                 RenderingBuffer& imageBuffer);
 
     static void DoDrawLabel(BufferInfo& gfxDstBuffer,
                             void* param,
@@ -1472,7 +1478,7 @@ protected:
                            const Rect& invalidatedArea,
                            const Style& style);
 
-    static void SetRasterizer(void* param,
+    static void SetRasterizer(UICanvasVertices& vertices,
                               const Paint& paint,
                               RasterizerScanlineAntiAlias<>& rasterizer,
                               TransAffine& transform,

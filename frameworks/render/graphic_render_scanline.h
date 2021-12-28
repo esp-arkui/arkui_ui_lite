@@ -74,61 +74,76 @@ namespace OHOS {
         }
     }
 
-
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
-    void RenderScanlinesAntiAliasSolidReverse(Rasterizer& raster, Scanline& scanline,
-                                       BaseRenderer& renBase, const ColorT& color1,const ColorT& color2)
+    void RenderClipAntiAliasSolid(Rasterizer& raster, Scanline& scanline,
+                                       BaseRenderer& renBase, const ColorT& color)
     {
         if (raster.RewindScanlines()) {
-            typename BaseRenderer::color_type ren_color1 = color1;
-            typename BaseRenderer::color_type ren_color2 = color2;
+            typename BaseRenderer::color_type ren_color = color;
 
-            for(int i=0;i<raster.MinY();i++){
-                renBase.BlendHline(0, i, (unsigned)(renBase.GetXmax()-renBase.GetXmin()),
-                                   ren_color2,
+            //需要裁减的图形上方
+            for(int y = 0; y < raster.MinY();y++){
+                renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
+                                   ren_color,
                                    COVER_FULL);
-
             }
 
-            for(int i= raster.MaxY();i<renBase.GetYmax();i++){
-                renBase.BlendHline(0, i, (unsigned)(renBase.GetXmax()-renBase.GetXmin()),
-                                   ren_color2,
+            //需要裁减的图形下方
+            for(int y = raster.MaxY(); y < renBase.Height();y++){
+                renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
+                                   ren_color,
                                    COVER_FULL);
+            }
+            //需要裁减的图形左方和右方
+            for(int y = raster.MinY(); y < raster.MaxY();y++){
+                for(int x =0 ;x<renBase.Width();x++){
+                    //裁减图形的左侧
+                    if(x<raster.MinX()){
+                        renBase.BlendHline(x, y, (unsigned)(raster.MinX()-x-1),
+                                           ren_color,
+                                           COVER_FULL);
+                        x=raster.MinX();
+                    }
+                    //裁减图形的右侧
+                    if(x > raster.MaxX()){
+                        renBase.BlendHline(raster.MaxX(), y, (unsigned)(renBase.Width()-raster.MaxX()),
+                                           ren_color,
+                                           COVER_FULL);
+                        x=renBase.Width();
 
+                    }
+                }
             }
 
-
-//            scanline.Reset(raster.MinX(), raster.MaxX());
-//            while (raster.SweepScanline(scanline)) {
-//                int y = scanline.GetYLevel();
-
-//                for(int i=0;i<y;i++){
-//                    renBase.BlendHline(0, y, renBase.GetXmax(),
-//                                       ren_color2,
-//                                       COVER_FULL);
-//                }
-
-//                unsigned num_spans = scanline.NumSpans();
-//                typename Scanline::ConstIterator span = scanline.Begin();
-
-//                while (true) {
-//                    int x = span->x;
-//                    if (span->spanLength > 0) {
-//                        renBase.BlendSolidHspan(x, y, (unsigned)span->spanLength,
-//                                                ren_color2,
-//                                                span->covers);
-//                    } else {
-//                        renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
-//                                           ren_color2,
-//                                           *(span->covers));
-//                    }
-//                    if (--num_spans == 0) {
-//                        break;
-//                    }
-//                    ++span;
-//                }
-//            }
+            scanline.Reset(raster.MinX(), raster.MaxX());
+            while (raster.SweepScanline(scanline)) {
+                int y = scanline.GetYLevel();
+                unsigned num_spans = scanline.NumSpans();
+                typename Scanline::ConstIterator span = scanline.Begin();
+                int preX=0;
+                while (true) {
+                    int x = span->x;
+                    if(preX < x){
+                        if(span->spanLength > 0){
+                            renBase.BlendHline(preX, y, (unsigned)(x-preX),
+                                               ren_color,
+                                               COVER_FULL);
+                        }else{
+                            renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
+                                               ren_color,
+                                               *(span->covers));
+                        }
+                        preX = x+(span->spanLength>0 ? span->spanLength :-span->spanLength);
+                    }
+                    if (--num_spans == 0) {
+                        preX=0;
+                        break;
+                    }
+                    ++span;
+                    preX=0;
+                }
+            }
         }
     }
 

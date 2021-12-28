@@ -288,6 +288,9 @@ void UICanvas::ClearRect(const Point& startPoint, int16_t height, int16_t width,
 void UICanvas::DrawCircle(const Point& center, uint16_t radius, const Paint& paint)
 {
     if (paint.GetChangeFlag()) {
+        if(vertices_==nullptr){
+            vertices_ = new UICanvasVertices();
+        }
         vertices_->RemoveAll();
         OHOS::BezierArc arc(center.x, center.y, radius, radius, 0, TWO_TIMES * PI);
         vertices_->ConcatPath(arc, 0);
@@ -592,12 +595,10 @@ void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc)
 {
     BufferInfo* gfxMapBuffer = new BufferInfo();
     Rect rect = GetOrigRect();
-    void* param = nullptr;
     CopyBuffer(*gfxMapBuffer, gfxDstBuffer);
     ListNode<DrawCmd>* curDraw = curDraw = drawCmdList_.Begin();
     for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
-        param = curDraw->data_.param;
-        curDraw->data_.DrawGraphics(*gfxMapBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
+        curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_);
     }
 
     RenderingBuffer renderBuffer;
@@ -632,6 +633,7 @@ void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc)
     renBasePre.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
     pixFormatPre.CompOp(Paint::SOURCE_OVER);
     renBasePre.BlendFrom(pixFormatCom);
+
     BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
     delete gfxMapBuffer;
     gfxMapBuffer = nullptr;
@@ -922,11 +924,11 @@ void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
                           const Rect& invalidatedArea,
                           const Style& style)
 {
-//    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
-//        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-//    } else {
+    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+    } else {
         DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-//    }
+    }
 }
 
 void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
@@ -936,25 +938,21 @@ void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
                           const Rect& invalidatedArea,
                           const Style& style)
 {
-//    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
-//        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
-//    } else {
+    if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+    } else {
         DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
-//    }
+    }
 }
 
-void UICanvas::SetRasterizer(void* param,
+void UICanvas::SetRasterizer(UICanvasVertices& vertices,
                              const Paint& paint,
                              RasterizerScanlineAntiAlias<>& rasterizer,
                              TransAffine& transform,
                              const bool& isStroke)
 {
-    if (param == nullptr) {
-        return;
-    }
-    PathParam* pathParam = static_cast<PathParam*>(param);
     typedef DepictCurve<UICanvasVertices> UICanvasPath;
-    UICanvasPath canvasPath(*pathParam->vertices);
+    UICanvasPath canvasPath(vertices);
     if (isStroke) {
         if (paint.IsLineDash()) {
             typedef DepictDash<UICanvasPath> DashStyle;
@@ -1009,7 +1007,7 @@ void UICanvas::DoRender(BufferInfo& gfxDstBuffer,
     ScanlineUnPackedContainer m_scanline;
 
     PathParam* pathParam = static_cast<PathParam*>(param);
-    SetRasterizer(param, paint, rasterizer, transform, isStroke);
+    SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
 
     typedef Rgba8 Rgba8Color;
     //组装renderbase
@@ -1080,7 +1078,6 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
     //初始化buffer和 m_transform
     InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
-
     typedef Rgba8 Rgba8Color;
     // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
     typedef OrderBgra ComponentOrder;
@@ -1096,7 +1093,7 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
     ScanlineUnPackedContainer m_scanline;
 
     PathParam* pathParam = static_cast<PathParam*>(param);
-    SetRasterizer(param, paint, rasterizer, transform, isStroke);
+    SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
     renBaseCom.ResetClipping(true);
     renBaseCom.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
                        invalidatedArea.GetBottom());
@@ -1104,27 +1101,23 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
     pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
 
     if(paint.GetGlobalCompositeOperation()==Paint::COPY){
-        Rgba8Color rgba8Color1;
-        rgba8Color1.redValue = 0;
-        rgba8Color1.greenValue = 0;
-        rgba8Color1.blueValue = 0;
-        rgba8Color1.alphaValue = 0;
-        renBaseCom.Clear(rgba8Color1);
+        Rgba8Color rgba8Color;
+        rgba8Color.redValue = 0;
+        rgba8Color.greenValue = 0;
+        rgba8Color.blueValue = 0;
+        rgba8Color.alphaValue = 0;
+        renBaseCom.Clear(rgba8Color);
     }
 
-
-    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_IN){
+    if(paint.GetGlobalCompositeOperation()==Paint::SOURCE_IN||
+       paint.GetGlobalCompositeOperation()==Paint::SOURCE_OUT){
         Rgba8Color rgba8Color1;
-        rgba8Color1.redValue = 0;
-        rgba8Color1.greenValue = 0;
-        rgba8Color1.blueValue = 0;
-        rgba8Color1.alphaValue = 0;
-//        renBaseCom.Clear(rgba8Color1);
-        ScanlineUnPackedContainer m_scanline;
-//        renBaseCom.
-        RenderScanlinesAntiAliasSolidReverse(rasterizer,m_scanline,renBaseCom,rgba8Color1,rgba8Color1);
+        rgba8Color1.redValue = style.bgColor_.red;
+        rgba8Color1.greenValue = style.bgColor_.green;
+        rgba8Color1.blueValue = style.bgColor_.blue;
+        rgba8Color1.alphaValue = style.bgColor_.alpha;
+        renBaseCom.ReplaceColor(rgba8Color1);
     }
-
 
     if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
         paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
@@ -1138,6 +1131,18 @@ void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
     if (paint.GetStyle() == Paint::PATTERN) {
         RenderPattern(paint, pathParam->imageParam, rasterizer, renBaseCom, allocator, rect);
     }
+
+    if(paint.GetGlobalCompositeOperation()==Paint::DESTINATION_ATOP||
+       paint.GetGlobalCompositeOperation()==Paint::DESTINATION_IN){
+        Rgba8Color rgba8Color;
+        rgba8Color.redValue = 0;
+        rgba8Color.greenValue = 0;
+        rgba8Color.blueValue = 0;
+        rgba8Color.alphaValue = 0;
+        RenderClipAntiAliasSolid(rasterizer,m_scanline,renBaseCom,rgba8Color);
+    }
+
+
 }
 
 void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer,
@@ -1160,8 +1165,8 @@ void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer,
 
     RasterizerScanlineAntiAlias<> rasterizer;
     ScanlineUnPackedContainer m_scanline;
-
-    SetRasterizer(param, paint, rasterizer, transform, isStroke);
+    PathParam* pathParam = static_cast<PathParam*>(param);
+    SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
     RectD bbox(rasterizer.MinX(), rasterizer.MinY(), rasterizer.MaxX(), rasterizer.MaxY());
 
     typedef Rgba8 Rgba8Color;
@@ -1353,16 +1358,16 @@ void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
     RasterizerScanlineAntiAlias<> rasterizer;
     ScanlineUnPackedContainer m_scanline;
 
-    PathParam* pathParam = new PathParam;
-    UICanvasVertices* vertices = new UICanvasVertices();
-    vertices->RemoveAll();
-    vertices->MoveTo(cordsTmp.GetLeft(), cordsTmp.GetTop());
-    vertices->LineTo(cordsTmp.GetRight(), cordsTmp.GetTop());
-    vertices->LineTo(cordsTmp.GetRight(), cordsTmp.GetBottom());
-    vertices->LineTo(cordsTmp.GetLeft(), cordsTmp.GetBottom());
-    vertices->ClosePolygon();
-    pathParam->vertices = vertices;
-    SetRasterizer(pathParam, paint, rasterizer, transform, false);
+//    PathParam* pathParam = new PathParam;
+    UICanvasVertices vertices;
+    vertices.RemoveAll();
+    vertices.MoveTo(cordsTmp.GetLeft(), cordsTmp.GetTop());
+    vertices.LineTo(cordsTmp.GetRight(), cordsTmp.GetTop());
+    vertices.LineTo(cordsTmp.GetRight(), cordsTmp.GetBottom());
+    vertices.LineTo(cordsTmp.GetLeft(), cordsTmp.GetBottom());
+    vertices.ClosePolygon();
+//    pathParam->vertices = vertices;
+    SetRasterizer(vertices, paint, rasterizer, transform, false);
 
     typedef Rgba8 Rgba8Color;
     //组装renderbase
@@ -1402,7 +1407,64 @@ void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
     ImgSourceType source(imagPixfmtCom);
     SpanGenType sg(source, interpolator);
     OHOS::RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, sg);
-    DeletePathParam(pathParam);
+//    DeletePathParam(pathParam);
+}
+
+
+void UICanvas::DoClipImage(RenderingBuffer& renderBuffer,
+                           UICanvasVertices& vertices,
+                             const Paint& paint,
+                             const Rect& invalidatedArea,
+                             TransAffine& transform,
+                             RenderingBuffer& imageBuffer)
+{
+    Rect cordsTmp;
+    cordsTmp.SetPosition(0, 0);
+    cordsTmp.SetHeight(imageBuffer.GetHeight());
+    cordsTmp.SetWidth(imageBuffer.GetWidth());
+
+    RasterizerScanlineAntiAlias<> rasterizer;
+    ScanlineUnPackedContainer m_scanline;
+    SetRasterizer(vertices, paint, rasterizer, transform, false);
+
+    typedef Rgba8 Rgba8Color;
+    //组装renderbase
+    // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+    typedef OrderBgra ComponentOrder;
+    // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+    typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
+    typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
+    typedef RendererBase<PixFormat> RendererBase;
+    typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
+
+    PixFormat m_pixFormat(renderBuffer);
+    RendererBase renBase(m_pixFormat);
+    SpanAllocator allocator;
+
+    renBase.ResetClipping(true);
+    renBase.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
+                    invalidatedArea.GetBottom());
+
+    double parallelogram[OHOS::INDEX_SIX] = {double(cordsTmp.GetLeft()),  double(cordsTmp.GetTop()),
+                                             double(cordsTmp.GetRight()), double(cordsTmp.GetTop()),
+                                             double(cordsTmp.GetRight()), double(cordsTmp.GetBottom())};
+
+    OHOS::TransAffine mtx((double)cordsTmp.GetLeft(), (double)cordsTmp.GetTop(), (double)cordsTmp.GetRight(),
+                          (double)cordsTmp.GetBottom(), parallelogram);
+    mtx *= transform;
+    mtx.Invert();
+    typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
+    Interpolator interpolator(mtx);
+    // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+    typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderCom;
+    typedef PixfmtCustomBlendRgba<BlenderCom, RenderingBuffer> PixFormatCom;
+    typedef OHOS::ImageAccessorClone<PixFormatCom> ImgSourceType;
+    typedef SpanImageRgba<ImgSourceType, Interpolator> SpanGenType;
+
+    PixFormatCom imagPixfmtCom(imageBuffer);
+    ImgSourceType source(imagPixfmtCom);
+    SpanGenType sg(source, interpolator);
+    OHOS::RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, sg);
 }
 
 void UICanvas::CopyBuffer(BufferInfo& gfxMapBuffer, BufferInfo& gfxDstBuffer)

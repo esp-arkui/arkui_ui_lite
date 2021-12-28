@@ -97,8 +97,17 @@ public:
     void RM011CanvasRotate001();
     void RM012globalAlpha001();
     void RM012GlobalCompositeOperation003();
+    void RM012GlobalCompositeOperationSOURCE_OVER();
+    void RM012GlobalCompositeOperationSOURCE_ATOP();
     void RM012GlobalCompositeOperationSOURCE_IN();
+    void RM012GlobalCompositeOperationSOURCE_OUT();
+    void RM012GlobalCompositeOperationDESTINATION_OVER();
+    void RM012GlobalCompositeOperationDESTINATION_ATOP();
+    void RM012GlobalCompositeOperationDESTINATION_IN();
+    void RM012GlobalCompositeOperationDESTINATION_OUT();
+    void RM012GlobalCompositeOperationLIGHTER();
     void RM012GlobalCompositeOperationCopy();
+    void RM012GlobalCompositeOperationXOR();
     void RM012SaveOrRestore002();
 private:
     const static int16_t GAP = 10;
