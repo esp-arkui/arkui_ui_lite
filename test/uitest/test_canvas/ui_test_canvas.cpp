@@ -1347,6 +1347,7 @@ void UITestCanvas::RM008UIKitCanvasTest007(){
 }
 
 void UITestCanvas::RM008UIKitCanvasShadowTest008(){
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     if (container_ == nullptr) {
         return;
     }
@@ -1418,6 +1419,7 @@ void UITestCanvas::RM008UIKitCanvasShadowTest008(){
     canvas->LineTo({330, 80});
     canvas->ClosePath();
     canvas->DrawPath(paint);
+#endif
 }
 
 void UITestCanvas::RM011StrokeText001(){

@@ -95,8 +95,10 @@ public:
           dashArray_(nullptr),
           ndashes_(0),
           miterLimit_(0),
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
           shadowColor(Color::Black()),
           haveShadow(false),
+#endif
           globalAlpha_(1.0),
           globalCompositeOperation_(SOURCE_OVER),
           scaleX_(1.0),
@@ -172,11 +174,13 @@ public:
         stopAndColors_ = paint.stopAndColors_;
         gradientflag = paint.gradientflag;
         patternRepeat_ = paint.patternRepeat_;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         shadowBlurRadius= paint.shadowBlurRadius;
         shadowOffsetX = paint.shadowOffsetX;
         shadowOffsetY = paint.shadowOffsetY;
         shadowColor = paint.shadowColor;
         haveShadow = paint.haveShadow;
+#endif
         globalAlpha_ = paint.globalAlpha_;
         globalCompositeOperation_ = paint.globalCompositeOperation_;
         scaleX_ = paint.scaleX_;
@@ -664,6 +668,7 @@ public:
         return patternRepeat_;
     }
 
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     /**
      * @brief 设置阴影模糊级别.
      * @since 1.0
@@ -684,6 +689,7 @@ public:
     {
         return shadowBlurRadius;
     }
+
     /**
      * @brief 获取阴影横坐标偏移量.
      * @since 1.0
@@ -746,6 +752,7 @@ public:
     {
         return haveShadow;
     }
+#endif
     /**
      * @brief 设置当前绘图的alpha
      */
@@ -890,11 +897,13 @@ private:
     Gradient gradientflag;
     PatternRepeatMode patternRepeat_;
     const char* image;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     double shadowBlurRadius;                  //设置阴影模糊半径
     double shadowOffsetX;                     //设置阴影横坐标偏移量
     double shadowOffsetY;                     //设置阴影纵坐标偏移量
     ColorType shadowColor;                    //设置阴影色彩
     bool haveShadow;                          //当前是否有阴影
+#endif
     float globalAlpha_;                       //当前绘图的透明度0-1 百分比
     GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
     double scaleX_;                          //x轴方向放大或缩小倍数
@@ -1500,6 +1509,7 @@ protected:
                            const Rect& invalidatedArea,
                            const Style& style,
                            const bool& isStroke);
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     static void DoDrawShadow(BufferInfo& gfxDstBuffer,
                            void* param,
                            const Paint& paint,
@@ -1507,6 +1517,7 @@ protected:
                            const Rect& invalidatedArea,
                            const Style& style,
                            const bool& isStroke);
+#endif
     static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                            const Rect& invalidatedArea, const Style& style);
     /**
