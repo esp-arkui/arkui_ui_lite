@@ -221,7 +221,6 @@ HEADERS += \
     ../../../../frameworks/render/graphic_render_base.h \
     ../../../../frameworks/render/graphic_render_buffer.h \
     ../../../../frameworks/render/graphic_render_pixfmt_base.h \
-    ../../../../frameworks/render/graphic_render_pixfmt_rgba.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_blend.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_comp.h \
     ../../../../frameworks/render/graphic_render_pixfmt_rgba_gamma.h \

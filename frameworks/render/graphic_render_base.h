@@ -174,7 +174,21 @@ namespace OHOS {
             unsigned y;
             if (Width()) {
                 for (y = 0; y < Height(); y++) {
-                    pixfmtType->CopyHline(0, y, Width(), color);
+                    pixfmtType->ReplaceHlineColor(0, y, Width(), color);
+                }
+            }
+        }
+
+        /**
+         * @brief ReplaceColor 替换原本有颜色的区域的颜色为color
+         * @param c 颜色
+         */
+        void ReplaceColor(const color_type& color)
+        {
+            unsigned y;
+            if (Width()) {
+                for (y = 0; y < Height(); y++) {
+                    pixfmtType->ReplaceHlineColor(0, y, Width(), color);
                 }
             }
         }
