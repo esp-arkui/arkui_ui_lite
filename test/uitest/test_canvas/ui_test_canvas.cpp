@@ -493,7 +493,7 @@ void UITestCanvas::UIKitCanvasTestDrawPath008()
     Paint paint;
     canvas->BeginPath();
     canvas->MoveTo({ START1_X, START1_Y });
-    canvas->AddRect({ RECT_X, RECT_Y }, RECT_HEIGHT, RECT_WIDTH);
+    canvas->AddRect({ RECT_X, RECT_Y }, -100, -100);
     canvas->DrawPath(paint);
 }
 
@@ -1400,6 +1400,7 @@ void UITestCanvas::RM008UIKitCanvasShadowTest008(){
     canvas->ClosePath();
     canvas->FillPath(paint);
 
+    paint.StrokeStyle(Color::Orange());
     paint.SetShadowOffsetX(0);
     paint.SetShadowOffsetY(0);
     canvas->BeginPath();
@@ -1421,6 +1422,7 @@ void UITestCanvas::RM008UIKitCanvasShadowTest008(){
     canvas->ClosePath();
     canvas->DrawPath(paint);
 
+    paint.FillStyle(Color::Orange());
     paint.SetShadowBlur(15);
     paint.SetShadowOffsetX(20);
     paint.SetShadowOffsetY(10);
@@ -1432,6 +1434,7 @@ void UITestCanvas::RM008UIKitCanvasShadowTest008(){
     canvas->ClosePath();
     canvas->FillPath(paint);
 
+    paint.StrokeStyle(Color::Orange());
     paint.SetShadowBlur(5);
     paint.SetShadowColor(Color::Blue());
     paint.SetShadowOffsetX(20);

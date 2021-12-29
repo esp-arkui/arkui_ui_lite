@@ -17,6 +17,7 @@
 
 #include <draw/clip_utils.h>
 #include <gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h>
+#include <gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h>
 
 #include "common/image.h"
 #include "draw/draw_arc.h"
@@ -80,10 +81,22 @@ namespace OHOS {
             return;
         }
 
+        int16_t right= static_cast<int16_t>(point.x + width);
+        int16_t bottom= static_cast<int16_t>(point.y + height);
+
+        float fright = (float)width+(float)point.x;
+        float fbottom = (float)height+(float)point.y;
+
+        if(fright > INT16_MAX){
+            right += 3;
+        }
+        if(fbottom > INT16_MAX){
+            bottom += 3;
+        }
         MoveTo(point);
-        LineTo({static_cast<int16_t>(point.x + width), point.y});
-        LineTo({static_cast<int16_t>(point.x + width), static_cast<int16_t>(point.y + height)});
-        LineTo({point.x, static_cast<int16_t>(point.y + height)});
+        LineTo({right, point.y});
+        LineTo({right, bottom});
+        LineTo({point.x, bottom});
         ClosePath();
     }
 
@@ -1010,7 +1023,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
                                  const bool& isStroke)
     {
         typedef DepictCurve<UICanvasVertices> UICanvasPath;
-    	UICanvasPath canvasPath(vertices);
+        UICanvasPath canvasPath(vertices);
         if (isStroke) {
             if (paint.IsLineDash()) {
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
@@ -1068,6 +1081,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         ScanlineUnPackedContainer m_scanline;
 
         PathParam* pathParam = static_cast<PathParam*>(param);
+        rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
     	SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
 
         typedef Rgba8 Rgba8Color;
@@ -1090,24 +1104,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
 
         if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
             paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-            //        RenderSolid(paint,rasterizer,renBase,isStroke);
-            Rgba8Color rgba8Color;
-            if (isStroke) {
-                if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    rgba8Color.redValue = paint.GetStrokeColor().red;
-                    rgba8Color.greenValue = paint.GetStrokeColor().green;
-                    rgba8Color.blueValue = paint.GetStrokeColor().blue;
-                    rgba8Color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
-                }
-            } else {
-                if (paint.GetStyle() == Paint::FILL_STYLE || paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    rgba8Color.redValue = paint.GetFillColor().red;
-                    rgba8Color.greenValue = paint.GetFillColor().green;
-                    rgba8Color.blueValue = paint.GetFillColor().blue;
-                    rgba8Color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
-                }
-            }
-            RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, rgba8Color);
+            RenderSolid(paint,rasterizer,renBase,isStroke);
         }
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         if (paint.GetStyle() == Paint::GRADIENT) {
@@ -1141,7 +1138,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         RenderingBuffer renderBuffer;
 
         //初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,transform, style, paint);
 
         typedef Rgba8 Rgba8Color;
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
@@ -1158,6 +1155,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         ScanlineUnPackedContainer m_scanline;
 
         PathParam* pathParam = static_cast<PathParam*>(param);
+        rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
         SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
         renBaseCom.ResetClipping(true);
         renBaseCom.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
@@ -1234,6 +1232,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         RasterizerScanlineAntiAlias<> rasterizer;
         ScanlineUnPackedContainer m_scanline;
     	PathParam* pathParam = static_cast<PathParam*>(param);
+        rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
     	SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
         RectD bbox(rasterizer.MinX(), rasterizer.MinY(), rasterizer.MaxX(), rasterizer.MaxY());
 
@@ -1255,13 +1254,13 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         m_renBase.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
                           invalidatedArea.GetBottom());
 
-        Rgba8Color rgba8Color;
-        rgba8Color.redValue = paint.GetShadowColor().red;
-        rgba8Color.greenValue = paint.GetShadowColor().green;
-        rgba8Color.blueValue = paint.GetShadowColor().blue;
-        rgba8Color.alphaValue = paint.GetShadowColor().alpha * paint.GetGlobalAlpha();
+        Rgba8Color shadowColor;
+        shadowColor.redValue = paint.GetShadowColor().red;
+        shadowColor.greenValue = paint.GetShadowColor().green;
+        shadowColor.blueValue = paint.GetShadowColor().blue;
+        shadowColor.alphaValue = paint.GetShadowColor().alpha * paint.GetGlobalAlpha();
 
-        RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, rgba8Color);
+        RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         typedef OHOS::StackBlur<Rgba8Color, OHOS::StackBlurCalcRGBA<>> DrawBlur;
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
@@ -1295,14 +1294,8 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         int16_t realTop = rect.GetTop() + style.paddingTop_ + style.borderWidth_;
         transform.Reset();
         transform*=paint.GetTransAffine();
-//        transform.shearX = paint.GetshearX();
-//        transform.shearY = paint.GetshearY();
-//        transform.Rotate(paint.GetRotate() * PI / OHOS::BOXER); //跟偏移
         transform.Translate(realLeft, realTop);                 //偏移到画布上
-//        transform.scaleX = paint.GetScaleX();
-//        transform.scaleY = paint.GetScaleY(); // GetRotate
-//        transform.Translate(paint.GetTranslateX(), paint.GetTranslateY());
-    renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
+        renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                             gfxDstBuffer.stride);
     }
 
