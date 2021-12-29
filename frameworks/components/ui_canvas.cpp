@@ -937,7 +937,7 @@ bool UICanvas::IsGif(const char* src)
             TransAffine transform;
             RenderingBuffer renderBuffer;
             //初始化buffer和 m_transform.
-            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,invalidatedArea, transform, style, paint);
+            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
             transform.Translate(imageParam->start.x, imageParam->start.y);
             RenderingBuffer imageRendBuffer;
             uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
@@ -1075,7 +1075,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         TransAffine transform;
         RenderingBuffer renderBuffer;
         //初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,invalidatedArea, transform, style, paint);
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
         RasterizerScanlineAntiAlias<> rasterizer;
         ScanlineUnPackedContainer m_scanline;
@@ -1138,7 +1138,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         RenderingBuffer renderBuffer;
 
         //初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,invalidatedArea, transform, style, paint);
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,transform, style, paint);
 
         typedef Rgba8 Rgba8Color;
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
@@ -1225,7 +1225,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         TransAffine transform;
         RenderingBuffer renderBuffer;
         //初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,invalidatedArea, transform, style, paint);
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
         transform.Translate(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
 
@@ -1286,7 +1286,6 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
     void UICanvas::InitRendAndTransform(BufferInfo& gfxDstBuffer,
                                         RenderingBuffer& renderBuffer,
                                         const Rect& rect,
-                                        const Rect& invalidatedArea,
                                         TransAffine& transform,
                                         const Style& style,
                                         const Paint& paint)
@@ -1298,28 +1297,6 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         transform.Translate(realLeft, realTop);                 //偏移到画布上
         renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                             gfxDstBuffer.stride);
-//        uint8_t* destBuf = static_cast<uint8_t*>(gfxDstBuffer.virAddr);
-//           if (gfxDstBuffer.virAddr == nullptr) {
-//               return;
-//           }
-
-//           ColorMode mode = gfxDstBuffer.mode;
-//           int32_t offset = static_cast<int32_t>(invalidatedArea.GetTop()) * gfxDstBuffer.width +
-//                   invalidatedArea.GetLeft();
-//           uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-//           destBuf += offset * destByteSize;
-//           renderBuffer.Attach(destBuf,invalidatedArea.GetWidth(),
-//                              invalidatedArea.GetHeight(),gfxDstBuffer.stride);
-
-
-//           TransViewPort vp;
-//           vp.PreserveAspectRatio(0.0, 0.0, OHOS::ASPECT_RATIO_MEET);
-//           vp.WorldViewPort(rect.GetLeft(), rect.GetTop(),rect.GetWidth()-1, rect.GetHeight()-1);
-//           int16_t posViewLeft=rect.GetX()-invalidatedArea.GetX();
-//           int16_t posViewTop=rect.GetY()-invalidatedArea.GetY();
-//           vp.DeviceViewPort(realLeft, realTop,rect.GetWidth()-1, rect.GetHeight()-1);
-//           transform *= vp.ToAffine();
-
     }
 
     void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint)
@@ -1430,7 +1407,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
             TransAffine transform;
             RenderingBuffer renderBuffer;
             //初始化buffer和 m_transform
-            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect,invalidatedArea, transform, style, paint);
+            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
             transform.Translate(textParam->position.x, textParam->position.y);
             if (paint.GetScaleX() != 0) {

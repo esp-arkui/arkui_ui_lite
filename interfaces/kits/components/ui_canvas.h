@@ -1493,7 +1493,7 @@ namespace OHOS {
                                    const Rect& invalidatedArea,
                                    const Paint& paint);
 
-        static void InitRendAndTransform(BufferInfo& gfxDstBuffer, RenderingBuffer& renderBuffer, const Rect& rect,const Rect& invalidatedArea,
+        static void InitRendAndTransform(BufferInfo& gfxDstBuffer, RenderingBuffer& renderBuffer, const Rect& rect,
                                          TransAffine& transform, const Style& style, const Paint& paint);
 
         static void DoFillPath(BufferInfo& gfxDstBuffer,
