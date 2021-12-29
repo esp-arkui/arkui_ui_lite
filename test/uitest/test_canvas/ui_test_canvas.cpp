@@ -1147,7 +1147,7 @@ void UITestCanvas::RM008UIKitCanvasTest001(){
     canvas->LineTo({20, 130});
     canvas->LineTo({5, 80});
     canvas->ClosePath();
-    // canvas->FillPath(paint);
+    canvas->FillPath(paint);
     canvas->DrawPath(paint);
 }
 
