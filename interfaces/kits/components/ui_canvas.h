@@ -1493,7 +1493,7 @@ namespace OHOS {
                                    const Rect& invalidatedArea,
                                    const Paint& paint);
 
-        static void InitRendAndTransform(BufferInfo& gfxDstBuffer, RenderingBuffer& renderBuffer, const Rect& rect,
+        static void InitRendAndTransform(BufferInfo& gfxDstBuffer, RenderingBuffer& renderBuffer, const Rect& rect,const Rect& invalidatedArea,
                                          TransAffine& transform, const Style& style, const Paint& paint);
 
         static void DoFillPath(BufferInfo& gfxDstBuffer,
@@ -1553,6 +1553,7 @@ namespace OHOS {
             if (paint.GetMiterLimit() > 0) {
                 strokeLineStyle.MiterLimit(paint.GetMiterLimit());
             }
+//            strokeLineStyle.ApproximationScale(2.0);
         };
 
         /**
@@ -1565,6 +1566,7 @@ namespace OHOS {
                 dashStyle.AddDash(paint.GetLineDash()[i], paint.GetLineDash()[i + 1]);
             }
             dashStyle.DashStart(paint.GetLineDashOffset());
+//            dashStyle.ApproximationScale(2.0);
         };
 
         /**
@@ -1578,25 +1580,25 @@ namespace OHOS {
         {
             typedef Rgba8 Rgba8Color;
             ScanlineUnPackedContainer m_scanline;
-            Rgba8Color rgba8Color;
+            Rgba8Color color;
             if (isStroke) {
                 if (paint.GetStyle() == Paint::STROKE_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    rgba8Color.redValue = paint.GetStrokeColor().red;
-                    rgba8Color.greenValue = paint.GetStrokeColor().green;
-                    rgba8Color.blueValue = paint.GetStrokeColor().blue;
-                    rgba8Color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
+                    color.redValue = paint.GetStrokeColor().red;
+                    color.greenValue = paint.GetStrokeColor().green;
+                    color.blueValue = paint.GetStrokeColor().blue;
+                    color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
                 }
             } else {
                 if (paint.GetStyle() == Paint::FILL_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    rgba8Color.redValue = paint.GetFillColor().red;
-                    rgba8Color.greenValue = paint.GetFillColor().green;
-                    rgba8Color.blueValue = paint.GetFillColor().blue;
-                    rgba8Color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
+                    color.redValue = paint.GetFillColor().red;
+                    color.greenValue = paint.GetFillColor().green;
+                    color.blueValue = paint.GetFillColor().blue;
+                    color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
                 }
             }
-            RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, rgba8Color);
+            RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, color);
         }
 
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
