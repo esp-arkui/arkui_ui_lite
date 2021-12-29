@@ -663,9 +663,9 @@ bool UICanvas::IsGif(const char* src)
         RenderingBuffer renderBufferPre;
 
         //初始化buffer和 m_transform
-        renderBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr), gfxMapBuffer->width, gfxMapBuffer->height,
+        renderBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->virAddr), gfxMapBuffer->width, gfxMapBuffer->height,
                             gfxMapBuffer->stride);
-        renderBufferPre.Attach(static_cast<uint8_t*>(gfxDstBuffer.phyAddr), gfxDstBuffer.width, gfxDstBuffer.height,
+        renderBufferPre.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                                gfxDstBuffer.stride);
         typedef Rgba8 Rgba8Color;
         //组装renderbase
