@@ -327,8 +327,8 @@ void UITestCanvas::UIKitCanvasTestDrawImage001()
 
     paint.Rotate(-20);
     canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
-    paint.Rotate(10);
-    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
+    paint.Rotate(-45);
+    canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint,100,100);
 #endif
 }
 
@@ -1554,7 +1554,7 @@ void UITestCanvas::RM011CanvasRotate001(){
     canvas->ClosePath();
     canvas->DrawPath(paint);
 
-    paint.SetTransform(1,0.5,0.5,2,0,0);
+    paint.SetTransform(1,0,0,2,0,0);
     paint.StrokeStyle(Color::Orange());
     canvas->BeginPath();
     canvas->MoveTo({15, 15});

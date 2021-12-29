@@ -450,6 +450,63 @@ void UICanvas::DrawImage(const Point& startPoint, const char* image, const Paint
         Invalidate();
     }
 
+
+void UICanvas::DrawImage(const Point& startPoint, const char* image,Paint& paint,int16_t width,int16_t height)
+{
+    if (image == nullptr) {
+        return;
+    }
+
+        ImageParam* imageParam = new ImageParam;
+        if (imageParam == nullptr) {
+            GRAPHIC_LOGE("new ImageParam fail");
+            return;
+        }
+        imageParam->image = new Image();
+        if (imageParam->image == nullptr) {
+            delete imageParam;
+            imageParam = nullptr;
+            return;
+        }
+
+        imageParam->image->SetSrc(image);
+        ImageHeader header = {0};
+        imageParam->image->GetHeader(header);
+        imageParam->start = startPoint;
+        imageParam->height = header.height;
+        imageParam->width = header.width;
+
+        if (IsGif(image)) {
+            imageParam->gifImageAnimator = new GifCanvasImageAnimator(imageParam, this, image);
+            imageParam->gifImageAnimator->Start();
+            imageParam->height = imageParam->gifImageAnimator->GetSize().y;
+            imageParam->width = imageParam->gifImageAnimator->GetSize().x;
+        }
+
+        float scaleX=1.0;
+        float scaleY=1.0;
+
+        if(width>0&&imageParam->width>0){
+            scaleX = (float)width/(float)imageParam->width;
+        }
+
+        if(height>0&&imageParam->height>0){
+            scaleY = (float)height/(float)imageParam->height;
+        }
+
+        paint.Scale(scaleX,scaleY);
+
+        DrawCmd cmd;
+        cmd.paint = paint;
+        cmd.param = imageParam;
+        cmd.DeleteParam = DeleteImageParam;
+        cmd.DrawGraphics = DoDrawImage;
+        drawCmdList_.PushBack(cmd);
+
+        Invalidate();
+    }
+
+
 bool UICanvas::IsGif(const char* src)
 {
     if (src == nullptr) {
@@ -1237,13 +1294,14 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
         int16_t realLeft = rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
         int16_t realTop = rect.GetTop() + style.paddingTop_ + style.borderWidth_;
         transform.Reset();
-        transform.shearX = paint.GetshearX();
-        transform.shearY = paint.GetshearY();
-        transform.Rotate(paint.GetRotate() * PI / OHOS::BOXER); //跟偏移
+        transform*=paint.GetTransAffine();
+//        transform.shearX = paint.GetshearX();
+//        transform.shearY = paint.GetshearY();
+//        transform.Rotate(paint.GetRotate() * PI / OHOS::BOXER); //跟偏移
         transform.Translate(realLeft, realTop);                 //偏移到画布上
-        transform.scaleX = paint.GetScaleX();
-        transform.scaleY = paint.GetScaleY(); // GetRotate
-        transform.Translate(paint.GetTranslateX(), paint.GetTranslateY());
+//        transform.scaleX = paint.GetScaleX();
+//        transform.scaleY = paint.GetScaleY(); // GetRotate
+//        transform.Translate(paint.GetTranslateX(), paint.GetTranslateY());
     renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                             gfxDstBuffer.stride);
     }
@@ -1360,7 +1418,7 @@ void UICanvas::SetRasterizer(UICanvasVertices& vertices,
 
             transform.Translate(textParam->position.x, textParam->position.y);
             if (paint.GetScaleX() != 0) {
-                transform.scaleX *= 1 / paint.GetScaleX();
+                transform.scaleX_ *= 1 / paint.GetScaleX();
             }
             transform.Translate(textParam->position.x, textParam->position.y);
             RenderingBuffer imageRendBuffer;

@@ -102,13 +102,7 @@ namespace OHOS {
 #endif
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
-            scaleX_(1.0),
-            scaleY_(1.0),
-            shearX_(0.0),
-            shearY_(0.0),
-            rotateAngle_(0.0),
-            transLateX_(0),
-            transLateY_(0)
+            rotateAngle_(0)
         {}
 
         Paint(const Paint& paint)
@@ -186,13 +180,8 @@ namespace OHOS {
 #endif
             globalAlpha_ = paint.globalAlpha_;
             globalCompositeOperation_ = paint.globalCompositeOperation_;
-            scaleX_ = paint.scaleX_;
-            scaleY_ = paint.scaleY_;
-            shearX_ = paint.shearX_;
-            shearY_ = paint.shearY_;
             rotateAngle_ = paint.rotateAngle_;
-            transLateX_ = paint.transLateX_;
-            transLateY_ = paint.transLateY_;
+            transfrom_ = paint.transfrom_;
         }
 
         /**
@@ -806,83 +795,99 @@ namespace OHOS {
         /* 缩放当前绘图至更大或更小 */
         void Scale(float scaleX, float scaleY)
         {
-            scaleX_ *= scaleX;
-            scaleY_ *= scaleY;
-        changeFlage_ = true;
+            changeFlage_ = true;
+
+            if(rotateAngle_ > 0.0|| rotateAngle_ < 0){
+                transfrom_.Rotate(-rotateAngle_ * PI / OHOS::BOXER);
+                transfrom_.Scale(scaleX,scaleY);
+                transfrom_.Rotate(rotateAngle_ * PI / OHOS::BOXER);
+            }else{
+              transfrom_.Scale(scaleX,scaleY);
+            }
         }
 
         double GetScaleX() const
         {
-            return scaleX_;
+            return transfrom_.scaleX_;
         }
 
         double GetScaleY() const
         {
-            return scaleY_;
+            return transfrom_.scaleY_;
         }
 
         /* 旋转当前绘图 */
         void Rotate(float angle)
         {
-            rotateAngle_ += angle;
-        changeFlage_ = true;
-        }
-    	float GetRotate() const
-        {
-            return rotateAngle_;
+            changeFlage_ = true;
+            transfrom_.Rotate(angle * PI / OHOS::BOXER);
+            rotateAngle_ +=angle;
         }
 
+        void Rotate(float angle,int16_t x,int16_t y)
+        {
+            changeFlage_ = true;
+            transfrom_.Translate(-x,-y);
+            transfrom_.Rotate(angle * PI / OHOS::BOXER);
+            rotateAngle_ +=angle;
+            transfrom_.Translate(x,y);
+        }
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)
         {
-            transLateX_ += x;
-            transLateY_ += y;
-        changeFlage_ = true;
+            changeFlage_ = true;
+            transfrom_.Translate(x,y);
         }
 
         /* 获取重新映射画布上的x 位置 */
         int16_t GetTranslateX() const
         {
-            return transLateX_;
+            return transfrom_.translateX;
         }
         /* 获取重新映射画布上的y 位置 */
         int16_t GetTranslateY() const
         {
-            return transLateY_;
+            return transfrom_.translateY;
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
         void SetTransform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
-            scaleX_ = 1.0;     // x轴方向放大或缩小倍数
-            shearX_ = 0.0;     // x倾斜
-            shearY_ = 0.0;     // y倾斜
-            scaleY_ = 1.0;     // y轴方向放大或缩小倍数
-            transLateX_ = 0.0; // X轴方向偏移像素
-            transLateY_ = 0.0; // Y轴方向偏移像素
+            transfrom_.Reset();
+            rotateAngle_ = 0;
             Transform(scaleX, shearX, shearY, scaleY, transLateX, transLateY);
-        changeFlage_ = true;
+            changeFlage_ = true;
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
-            scaleX_ *= scaleX;         // x轴方向放大或缩小倍数
-            shearX_ *= shearX;         // x倾斜
-            shearY_ *= shearY;         // y倾斜
-            scaleY_ *= scaleY;         // y轴方向放大或缩小倍数
-            transLateX_ += transLateX; // X轴方向偏移像素
-            transLateY_ += transLateY; // Y轴方向偏移像素
-        changeFlage_ = true;
+            changeFlage_ = true;
+            transLateX += transfrom_.translateX;
+            transLateY += transfrom_.translateY;
+            transfrom_.Translate(-transfrom_.translateX,-transfrom_.translateY);
+            Scale(scaleX,scaleY);
+            transfrom_.Translate(transLateX,transLateY);
+            transfrom_.shearX += shearX;
+            transfrom_.shearY += shearY;
         }
 
         double GetshearX() const
         {
-            return shearX_;
+            return transfrom_.shearX;
         }
         double GetshearY() const
         {
-            return shearY_;
+            return transfrom_.shearY;
+        }
+        TransAffine GetTransAffine() const
+        {
+            return transfrom_;
+        }
+
+        float GetRotateAngle() const
+        {
+            return rotateAngle_;
         }
 
     private:
@@ -916,13 +921,8 @@ namespace OHOS {
 #endif
         float globalAlpha_;                                 //当前绘图的透明度0-1 百分比
         GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
-        double scaleX_;                                     //x轴方向放大或缩小倍数
-        double scaleY_;                                     //y轴方向放大或缩小倍数
-        double shearX_;                                     //水平倾斜绘图
-        double shearY_;                                     //垂直倾斜绘图
-    	float rotateAngle_;                     //旋转角度，单位度数
-        int16_t transLateX_;                                //X轴方向偏移像素
-        int16_t transLateY_;                                //Y轴方向偏移像素
+        float rotateAngle_;                     //旋转角度，单位度数
+        TransAffine transfrom_;                             //矩阵
     };
 
     /**
@@ -1143,6 +1143,8 @@ namespace OHOS {
      * @version 1.0
      */
         void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
+
+        void DrawImage(const Point& startPoint, const char* image, Paint& paint,int16_t width,int16_t height);
 
     bool IsGif(const char* src);
 #endif
