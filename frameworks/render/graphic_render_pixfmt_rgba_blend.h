@@ -428,6 +428,11 @@ namespace OHOS {
             ((PixelType*)pixelPtr)->SetPixelColor(color);
         }
 
+        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+        {
+            ((PixelType*)p)->SetPixelColor(c);
+        }
+
         /**
          * @brief 获取一个像素的颜色.
          *
@@ -935,6 +940,11 @@ namespace OHOS {
                     pdst = pdst->Advance(dstinc);
                 } while (--len);
             }
+        }
+
+        GRAPHIC_GEOMETRY_INLINE static void MakePix(int8u* p, const ColorType& c)
+        {
+            ((PixelType*)p)->SetPixelColor(c);
         }
 
     private:
