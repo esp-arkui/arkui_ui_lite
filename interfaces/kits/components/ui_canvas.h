@@ -96,8 +96,10 @@ namespace OHOS {
             dashArray_(nullptr),
             ndashes_(0),
             miterLimit_(0),
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
             shadowColor(Color::Black()),
             haveShadow(false),
+#endif
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
             scaleX_(1.0),
@@ -166,16 +168,22 @@ namespace OHOS {
                 dashArray_ = nullptr;
             }
             miterLimit_ = paint.ndashes_;
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             linearGradientPoint_ = paint.linearGradientPoint_;
             radialGradientPoint_ = paint.radialGradientPoint_;
             stopAndColors_ = paint.stopAndColors_;
             gradientflag = paint.gradientflag;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
             patternRepeat_ = paint.patternRepeat_;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
             shadowBlurRadius = paint.shadowBlurRadius;
             shadowOffsetX = paint.shadowOffsetX;
             shadowOffsetY = paint.shadowOffsetY;
             shadowColor = paint.shadowColor;
             haveShadow = paint.haveShadow;
+#endif
             globalAlpha_ = paint.globalAlpha_;
             globalCompositeOperation_ = paint.globalCompositeOperation_;
             scaleX_ = paint.scaleX_;
@@ -592,15 +600,16 @@ namespace OHOS {
             }
         }
 
-        void createLinearGradient(double startx, double starty, double endx, double endy)
-        {
-            gradientflag = Linear;
-            linearGradientPoint_.x0 = startx;
-            linearGradientPoint_.y0 = starty;
-            linearGradientPoint_.x1 = endx;
-            linearGradientPoint_.y1 = endy;
-            changeFlage_ = true;
-        }
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+    void createLinearGradient(double startx, double starty, double endx, double endy)
+    {
+        gradientflag = Linear;
+        linearGradientPoint_.x0 = startx;
+        linearGradientPoint_.y0 = starty;
+        linearGradientPoint_.x1 = endx;
+        linearGradientPoint_.y1 = endy;
+        changeFlage_ = true;
+    }
 
         void addColorStop(double stop, ColorType color)
         {
@@ -638,12 +647,13 @@ namespace OHOS {
             return radialGradientPoint_;
         }
 
-        Gradient GetGradient() const
-        {
-            return gradientflag;
-        }
-
-        /*
+    Gradient GetGradient() const
+    {
+        return gradientflag;
+    }
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
+    /*
      * 设置图元用图案填充样式
      * @param img 表示填充的图案，text表示填充样式
      */
@@ -659,12 +669,16 @@ namespace OHOS {
             return image;
         }
 
-        PatternRepeatMode GetPatternRepeatMode() const
-        {
-            return patternRepeat_;
-        }
+    PatternRepeatMode GetPatternRepeatMode() const
+    {
+        return patternRepeat_;
+    }
+#endif
 
-        /**
+
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+
+    /**
      * @brief 设置阴影模糊级别.
      * @since 1.0
      * @version 1.0
@@ -680,11 +694,12 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        double GetShadowBlur() const
-        {
-            return shadowBlurRadius;
-        }
-        /**
+    double GetShadowBlur() const
+    {
+        return shadowBlurRadius;
+    }
+
+    /**
      * @brief 获取阴影横坐标偏移量.
      * @since 1.0
      * @version 1.0
@@ -736,17 +751,18 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        void SetShadowColor(ColorType color)
-        {
-            shadowColor = color;
-            changeFlage_ = true;
-            haveShadow = true;
-        }
-        bool HaveShadow() const
-        {
-            return haveShadow;
-        }
-        /**
+    void SetShadowColor(ColorType color)
+    {
+        shadowColor = color;
+        changeFlage_ = true;
+        haveShadow = true;
+    }
+    bool HaveShadow() const
+    {
+        return haveShadow;
+    }
+#endif
+    /**
      * @brief 设置当前绘图的alpha
      */
         void SetGlobalAlpha(float alphaPercentage)
@@ -811,7 +827,7 @@ namespace OHOS {
             rotateAngle_ += angle;
         changeFlage_ = true;
         }
-        double GetRotate() const
+    	float GetRotate() const
         {
             return rotateAngle_;
         }
@@ -883,24 +899,28 @@ namespace OHOS {
         float* dashArray_;     //dash 点数组
         unsigned int ndashes_; //dashArray的长度
         double miterLimit_;    //设置路径连接处的尖角的间距限制
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         LinearGradientPoint linearGradientPoint_;
         RadialGradientPoint radialGradientPoint_;
         List<StopAndColor> stopAndColors_;
         Gradient gradientflag;
         PatternRepeatMode patternRepeat_;
+#endif
         const char* image;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         double shadowBlurRadius;                            //设置阴影模糊半径
         double shadowOffsetX;                               //设置阴影横坐标偏移量
         double shadowOffsetY;                               //设置阴影纵坐标偏移量
         ColorType shadowColor;                              //设置阴影色彩
         bool haveShadow;                                    //当前是否有阴影
+#endif
         float globalAlpha_;                                 //当前绘图的透明度0-1 百分比
         GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
         double scaleX_;                                     //x轴方向放大或缩小倍数
         double scaleY_;                                     //y轴方向放大或缩小倍数
         double shearX_;                                     //水平倾斜绘图
         double shearY_;                                     //垂直倾斜绘图
-        double rotateAngle_;                                //旋转角度，单位度数
+    	float rotateAngle_;                     //旋转角度，单位度数
         int16_t transLateX_;                                //X轴方向偏移像素
         int16_t transLateY_;                                //Y轴方向偏移像素
     };
@@ -1112,7 +1132,8 @@ namespace OHOS {
      */
         void DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
-        /**
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
+    /**
      * @brief Draws an image.
      *
      * @param startPoint Indicates the coordinates of the start point.
@@ -1123,8 +1144,9 @@ namespace OHOS {
      */
         void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
-        bool IsGif(const char* src);
-        /**
+    bool IsGif(const char* src);
+#endif
+    /**
      * @brief Defines the font style.
      */
         struct FontStyle {
@@ -1438,13 +1460,14 @@ namespace OHOS {
                               const Rect& rect,
                               const Rect& invalidatedArea,
                               const Style& style);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
         static void DoDrawImage(BufferInfo& gfxDstBuffer,
                                 void* param,
                                 const Paint& paint,
                                 const Rect& rect,
                                 const Rect& invalidatedArea,
                                 const Style& style);
-
+#endif
         static void DoRenderImage(RenderingBuffer& renderBuffer,
                                   const Paint& paint,
                                   const Rect& invalidatedArea,
@@ -1484,30 +1507,32 @@ namespace OHOS {
                                   TransAffine& transform,
                                   const bool& isStroke);
 
-        static void DoRender(BufferInfo& gfxDstBuffer,
-                             void* param,
-                             const Paint& paint,
-                             const Rect& rect,
-                             const Rect& invalidatedArea,
-                             const Style& style,
-                             const bool& isStroke);
-        static void DoRenderBlend(BufferInfo& gfxDstBuffer,
-                                  void* param,
-                                  const Paint& paint,
-                                  const Rect& rect,
-                                  const Rect& invalidatedArea,
-                                  const Style& style,
-                                  const bool& isStroke);
-        static void DoDrawShadow(BufferInfo& gfxDstBuffer,
-                                 void* param,
-                                 const Paint& paint,
-                                 const Rect& rect,
-                                 const Rect& invalidatedArea,
-                                 const Style& style,
-                                 const bool& isStroke);
-        static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
-                               const Rect& invalidatedArea, const Style& style);
-        /**
+    static void DoRender(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style,
+                           const bool& isStroke);
+    static void DoRenderBlend(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style,
+                           const bool& isStroke);
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+    static void DoDrawShadow(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style,
+                           const bool& isStroke);
+#endif
+    static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                           const Rect& invalidatedArea, const Style& style);
+    /**
      * @brief CopyBuffer 复制buffer
      * @param gfxMapBuffer 复制后的buffer
      * @param gfxDstBuffer 原buffer
@@ -1572,7 +1597,8 @@ namespace OHOS {
             RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, rgba8Color);
         }
 
-        /**
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+    /**
      * 渲染渐变
      */
         template <class Pixfmt, class color>
@@ -1655,7 +1681,8 @@ namespace OHOS {
                 RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, span);
             }
         };
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /**
      * 渲染Pattern模式
      */
@@ -1732,6 +1759,7 @@ namespace OHOS {
                 RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, m_spanPatternType);
             }
         }
+#endif
     };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H
