@@ -156,10 +156,10 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE void BlendVline(int x, int y,
                                                 unsigned len,
-                                                const ColorType& c,
+                                                const ColorType& color,
                                                 int8u cover)
         {
-            pixf_->BlendHline(y, x, len, c, cover);
+            pixf_->BlendHline(y, x, len, color, cover);
         }
 
         /**

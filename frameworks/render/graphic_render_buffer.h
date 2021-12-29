@@ -119,7 +119,7 @@ namespace OHOS {
          * @brief row_ptr 获取行首地址
          */
 
-        GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned)
+        GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned = 1)
         {
             return start_ + y * (int64)bufStride_;
         }

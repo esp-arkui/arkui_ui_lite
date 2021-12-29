@@ -277,37 +277,6 @@ namespace OHOS {
         }
 
         /**
-         * @brief BlendSolidVspan 渲染x轴一定范围内实线的扫描线
-         * @param x 扫描线 x轴开始坐标
-         * @param y 扫描线 y轴坐标
-         * @param len 扫描线长度
-         * @param color 渲染扫描线的颜色
-         * @param colors 扫描线对应颜色数组
-         */
-        void BlendSolidVspan(int x, int y, int len, const color_type& color, const CoverType* covers)
-        {
-            if (x > GetXmax() || x < GetXmin()) {
-                return;
-            }
-
-            if (y < GetYmin()) {
-                len -= GetYmin() - y;
-                if (len <= 0) {
-                    return;
-                }
-                covers += GetYmin() - y;
-                y = GetYmin();
-            }
-            if (y + len > GetYmax()) {
-                len = GetYmax() - y + 1;
-                if (len <= 0) {
-                    return;
-                }
-            }
-            pixfmtType->blend_solid_vspan(x, y, len, color, covers);
-        }
-
-        /**
          * @brief CopyColorHspan 复制一定y轴范围内颜色
          * @param x 扫描线 x轴开始坐标
          * @param y 扫描线 y轴坐标
