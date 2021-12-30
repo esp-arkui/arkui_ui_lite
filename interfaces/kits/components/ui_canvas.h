@@ -111,26 +111,26 @@ namespace OHOS {
         }
 
         /*
-     * 对于数据成员进行初始化
-     * style_;       paint style
-     * fillColor_;   设置笔的填充颜色
-     * strokeColor_; 设置笔的线条颜色
-     * opacity_;     设置透明度
-     * strokeWidth_; 设置线宽
-     * lineCap_;     设置笔帽
-     * lineJoin_;    设置笔的路径连接处的风格样式
-     * miterLimit_;  设置路径连接处的尖角的间距限制
-     * dashOffset;   dash 点偏移量
-     * isDrawDash;   是否绘制点划线
-     * dashArray;    dash 点数组
-     * ndashes;      点划线数量
-     * globalAlpha;  设置图元全局alpha
-     * shadowBlurRadius;  设置阴影模糊半径
-     * shadowOffsetX;     设置阴影横坐标偏移量
-     * shadowOffsetY;     设置阴影纵坐标偏移量
-     * shadowColor;       设置阴影色彩
-     * blendMode;     设置多图元混合渲染模式
-     */
+         * 对于数据成员进行初始化
+         * style_;       paint style
+         * fillColor_;   设置笔的填充颜色
+         * strokeColor_; 设置笔的线条颜色
+         * opacity_;     设置透明度
+         * strokeWidth_; 设置线宽
+         * lineCap_;     设置笔帽
+         * lineJoin_;    设置笔的路径连接处的风格样式
+         * miterLimit_;  设置路径连接处的尖角的间距限制
+         * dashOffset;   dash 点偏移量
+         * isDrawDash;   是否绘制点划线
+         * dashArray;    dash 点数组
+         * ndashes;      点划线数量
+         * globalAlpha;  设置图元全局alpha
+         * shadowBlurRadius;  设置阴影模糊半径
+         * shadowOffsetX;     设置阴影横坐标偏移量
+         * shadowOffsetY;     设置阴影纵坐标偏移量
+         * shadowColor;       设置阴影色彩
+         * blendMode;     设置多图元混合渲染模式
+         */
         void Init(const Paint& paint)
         {
             style_ = paint.style_;
@@ -185,11 +185,11 @@ namespace OHOS {
         }
 
         /**
-     * @brief A destructor used to delete the <b>Paint</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief A destructor used to delete the <b>Paint</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         virtual ~Paint()
         {}
 
@@ -199,8 +199,8 @@ namespace OHOS {
             return *this;
         }
         /**
-     * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
-     */
+         * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
+         */
         enum PaintStyle {
             /** Stroke only */
             STROKE_STYLE = 1,
@@ -252,11 +252,11 @@ namespace OHOS {
         };
 
         /**
-     * repeat 铺满整个画布
-     * repeat-x 在画布的x轴重复
-     * repeat-y 在画布的y轴重复
-     * no-repeat 在画布不重复
-     */
+         * repeat 铺满整个画布
+         * repeat-x 在画布的x轴重复
+         * repeat-y 在画布的y轴重复
+         * no-repeat 在画布不重复
+         */
         enum PatternRepeatMode {
             REPEAT,
             REPEAT_X,
@@ -279,13 +279,13 @@ namespace OHOS {
         };
 
         /**
-     * @brief Sets the paint style of a closed graph.
-     *
-     * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link PaintStyle}.
-     * @see GetStyle
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the paint style of a closed graph.
+         *
+         * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link PaintStyle}.
+         * @see GetStyle
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStyle(PaintStyle style)
         {
             style_ = style;
@@ -313,94 +313,94 @@ namespace OHOS {
         }
 
         /**
-     * @brief Obtains the paint style of a closed graph.
-     *
-     * @return Returns the paint style. For details, see {@link PaintStyle}.
-     * @see SetStyle
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the paint style of a closed graph.
+         *
+         * @return Returns the paint style. For details, see {@link PaintStyle}.
+         * @see SetStyle
+         * @since 1.0
+         * @version 1.0
+         */
         PaintStyle GetStyle() const
         {
             return style_;
         }
 
         /**
-     * @brief Sets the width of a line or border.
-     *
-     * @param width Indicates the line width when a line is drawn or the border width when a closed graph is drawn.
-     *        The width is extended to both sides.
-     * @see GetStrokeWidth
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the width of a line or border.
+         *
+         * @param width Indicates the line width when a line is drawn or the border width when a closed graph is drawn.
+         *        The width is extended to both sides.
+         * @see GetStrokeWidth
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStrokeWidth(uint16_t width)
         {
             strokeWidth_ = width;
         }
 
         /**
-     * @brief Obtains the width of a line or border.
-     *
-     * @return Returns the line width if a line is drawn or the border width if a closed graph is drawn.
-     * @see SetStrokeWidth
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the width of a line or border.
+         *
+         * @return Returns the line width if a line is drawn or the border width if a closed graph is drawn.
+         * @see SetStrokeWidth
+         * @since 1.0
+         * @version 1.0
+         */
         uint16_t GetStrokeWidth() const
         {
             return strokeWidth_;
         }
 
         /**
-     * @brief Sets the color of a line or border.
-     *
-     * @param color Indicates the line color when a line is drawn or the border color when a closed graph is drawn.
-     * @see GetStrokeColor
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the color of a line or border.
+         *
+         * @param color Indicates the line color when a line is drawn or the border color when a closed graph is drawn.
+         * @see GetStrokeColor
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStrokeColor(ColorType color)
         {
             strokeColor_ = color;
         }
 
         /**
-     * @brief Obtains the color of a line or border.
-     *
-     * @return Returns the line color if a line is drawn or the border color if a closed graph is drawn.
-     * @see SetStrokeWidth
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the color of a line or border.
+         *
+         * @return Returns the line color if a line is drawn or the border color if a closed graph is drawn.
+         * @see SetStrokeWidth
+         * @since 1.0
+         * @version 1.0
+         */
         ColorType GetStrokeColor() const
         {
             return strokeColor_;
         }
 
         /**
-     * @brief Sets fill color.
-     *
-     * This function is valid only for closed graphs.
-     *
-     * @param color Indicates the fill color to set.
-     * @see GetFillColor
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets fill color.
+         *
+         * This function is valid only for closed graphs.
+         *
+         * @param color Indicates the fill color to set.
+         * @see GetFillColor
+         * @since 1.0
+         * @version 1.0
+         */
         void SetFillColor(ColorType color)
         {
             fillColor_ = color;
         }
 
         /**
-     * @brief Obtains the fill color.
-     *
-     * @return Returns the fill color.
-     * @see SetFillColor
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the fill color.
+         *
+         * @return Returns the fill color.
+         * @see SetFillColor
+         * @since 1.0
+         * @version 1.0
+         */
         ColorType GetFillColor() const
         {
             return fillColor_;
