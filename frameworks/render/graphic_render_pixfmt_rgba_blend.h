@@ -105,7 +105,8 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
         {
-            NeonBlendPipeLine::NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
+            NeonBlendPipeLine mNeonBlendPipeLine;
+            mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -116,7 +117,8 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
         {
-            NeonBlendPipeLine::NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha);
+            NeonBlendPipeLine mNeonBlendPipeLine;
+            mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha);
         }
 #endif
         /**
@@ -164,7 +166,8 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
         {
-            NeonBlendPipeLine::NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
+            NeonBlendPipeLine mNeonBlendPipeLine;
+            mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -175,7 +178,8 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
         {
-            NeonBlendPipeLine::NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha);
+            NeonBlendPipeLine mNeonBlendPipeLine;
+            mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha);
         }
 #endif
         /**
