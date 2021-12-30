@@ -38,7 +38,7 @@ config("graphic_define_config") {
     "ENABLE_MULTI_FONT=0",
     "DEFAULT_ANIMATION=1"
   ]
-  if (ohos_kernel_type == "litos_a") {
+  if (ohos_kernel_type == "liteos_a") {
     defines += [ 
       "GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE=1",
       "GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE=1",
@@ -54,7 +54,7 @@ config("graphic_define_config") {
       "GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE=1",
     ]
   }
-  if (ohos_kernel_type == "litos_m") {
+  if (ohos_kernel_type == "liteos_m") {
     defines += [ 
       "GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE=1",
       "GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE=1",
