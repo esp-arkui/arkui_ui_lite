@@ -316,17 +316,17 @@ namespace OHOS {
 
     protected:
 #ifdef ARM_NEON_OPT
-        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* pixelColors, const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color)
         {
             blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
-        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* pixelColors, const ColorType& color, unsigned cover)
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color, unsigned cover)
         {
             blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
         }
-        virtual GRAPHIC_GEOMETRY_INLINE void NeonSetPixelColor(ValueType* pixelColors, const ColorType& color)
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonSetPixelColor(PixelType* pixelColors, const ColorType& color)
         {
-            NeonBlendPipeLine::StoreBuf_ARGB8888(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+            OHOS::SetPixelColor_ARGB8888(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
 #endif
 
