@@ -908,6 +908,8 @@ namespace OHOS {
         RadialGradientPoint radialGradientPoint_;
         List<StopAndColor> stopAndColors_;
         Gradient gradientflag;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         PatternRepeatMode patternRepeat_;
 #endif
         const char* image;
