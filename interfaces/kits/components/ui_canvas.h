@@ -916,7 +916,7 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         double shadowBlurRadius; //设置阴影模糊半径
         double shadowOffsetX;    //设置阴影横坐标偏移量
-        double shadowOffsetY;    //设置阴影纵坐标偏移量
+        double shadowOffsetY;    //设置阴影纵坐标偏移量。
         ColorType shadowColor;   //设置阴影色彩
         bool haveShadow;         //当前是否有阴影
 #endif
