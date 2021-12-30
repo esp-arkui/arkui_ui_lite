@@ -36,7 +36,7 @@
 #define GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED
 
 #include "gfx_utils/color.h"
-#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "gfx_utils/graphics/common/graphic_common_basics.h"
 
 namespace OHOS {
     /**

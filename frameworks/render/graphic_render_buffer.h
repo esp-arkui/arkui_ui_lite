@@ -25,7 +25,7 @@
 
 #include <cstring>
 
-#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
+#include "gfx_utils/graphics/vertexprimitive/graphic_geometry_array.h"
 
 namespace OHOS {
     /**

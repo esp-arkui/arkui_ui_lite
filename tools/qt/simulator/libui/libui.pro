@@ -30,13 +30,13 @@ DESTDIR = ../libs
 
 SOURCES += \
     ../../../../../utils/frameworks/graphic_timer.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_geometry/graphic_geometry_rounded_rect.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_transform/graphic_transform_trans_affine.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.cpp \
-    ../../../../../utils/frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.cpp \
+    ../../../../../utils/frameworks/graphics/transform/graphic_transform_trans_affine.cpp \
+    ../../../../../utils/frameworks/graphics/vertexgenerate/graphic_vertex_generate_dash.cpp \
+    ../../../../../utils/frameworks/graphics/vertexgenerate/graphic_vertex_generate_stroke.cpp \
+    ../../../../../utils/frameworks/graphics/vertexprimitive/graphic_geometry_arc.cpp \
+    ../../../../../utils/frameworks/graphics/vertexprimitive/graphic_geometry_bezier_arc.cpp \
+    ../../../../../utils/frameworks/graphics/vertexprimitive/graphic_geometry_curves.cpp \
+    ../../../../../utils/frameworks/graphics/vertexprimitive/graphic_geometry_rounded_rect.cpp \
     ../../../../frameworks/animator/animator.cpp \
     ../../../../frameworks/animator/gif_canvas_image_animator.cpp \
     ../../../../frameworks/animator/animator_manager.cpp \
@@ -155,6 +155,32 @@ HEADERS += \
     ../../../../../utils/interfaces/innerkits/graphic_neon_utils.h \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
     ../../../../../utils/interfaces/kits/gfx_utils/color.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/common/graphic_common_basics.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/common/graphic_common_clip_operate.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/common/graphic_common_gamma_functions.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/common/graphic_common_gamma_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/common/graphic_common_math.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/depiction/graphic_depict_adaptor_vertex_generate.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/depiction/graphic_depict_curve.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/depiction/graphic_depict_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/depiction/graphic_depict_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/depiction/graphic_depict_transform.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_bezier_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_bounding_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_curves.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_dda_line.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_ellipse.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_math_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_path_storage.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_plaindata_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_plaindata_blockvector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_plaindata_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_range_adapter.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_rounded_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_shorten_path.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_vertex_sequence.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_clip_operate.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_functions.h \
@@ -197,6 +223,46 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/imagefilter/graphic_filter_blur.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/rasterizer/graphic_rasterizer_cells_antialias.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/rasterizer/graphic_rasterizer_scanline_antialias.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/rasterizer/graphic_rasterizer_scanline_clip.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/scanline/graphic_geometry_scanline.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_base.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_gradient.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_gradient_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_image_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_interpolator.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_pattern_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_base.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_gradient.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_gradient_lut.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_image_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_interpolator.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_pattern_rgba.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/transform/graphic_transform_affine.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/transform/graphic_transform_image_accessors.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/transform/graphic_transform_viewport.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertex_generate/graphic_vertex_generate_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertex_generate/graphic_vertex_generate_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexgenerate/graphic_vertex_generate_dash.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexgenerate/graphic_vertex_generate_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_bezier_arc.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_bounding_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_curves.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_dda_line.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_ellipse.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_math_stroke.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_path_storage.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_plaindata_array.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_plaindata_blockvector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_plaindata_vector.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_range_adapter.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_rounded_rect.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_shorten_path.h \
+    ../../../../../utils/interfaces/kits/gfx_utils/graphics/vertexprimitive/graphic_geometry_vertex_sequence.h \
     ../../../../frameworks/common/typed_text.h \
     ../../../../frameworks/core/render_manager.h \
     ../../../../frameworks/default_resource/check_box_res.h \

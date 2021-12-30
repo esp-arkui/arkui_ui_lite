@@ -15,7 +15,7 @@
 #ifndef AGG_PIXFMT_TRANSPOSER_INCLUDED
 #define AGG_PIXFMT_TRANSPOSER_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "gfx_utils/graphics/common/graphic_common_basics.h"
 #include "gfx_utils/heap_base.h"
 namespace OHOS {
     template <class PixFmt>

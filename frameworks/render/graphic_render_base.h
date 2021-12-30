@@ -23,7 +23,7 @@
 #ifndef RENDERER_BASE_INCLUDED
 #define RENDERER_BASE_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "gfx_utils/graphics/common/graphic_common_basics.h"
 #include "render/graphic_render_buffer.h"
 
 namespace OHOS {
