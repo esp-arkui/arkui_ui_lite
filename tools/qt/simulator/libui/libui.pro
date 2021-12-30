@@ -148,9 +148,6 @@ SOURCES += \
     ../../../../../../../third_party/cJSON/cJSON.c \
 
 HEADERS += \
-    ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_cells_antialias.tpp \
-    ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.tpp \
-    ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
     ../../../../../utils/interfaces/innerkits/graphic_neon_pipeline.h \
     ../../../../../utils/interfaces/innerkits/graphic_neon_utils.h \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
@@ -181,60 +178,12 @@ HEADERS += \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_rounded_rect.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_shorten_path.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/geometry/graphic_geometry_vertex_sequence.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_clip_operate.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_functions.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_math.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_adaptor_vertex_generate.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_curve.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_dash.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_stroke.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_depict/graphic_depict_transform.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_filter/graphic_filter_blur.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_arc.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_bezier_arc.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_bounding_rect.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_ellipse.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_path_storage.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_array.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_blockvector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_vector.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_range_adapter.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_geometry/graphic_geometry_vertex_sequence.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_cells_antialias.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_scanline/graphic_geometry_scanline.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_base.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_gradient_lut.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_image_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_interpolator.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_spancolor_fill/graphic_spancolor_fill_pattern_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_affine.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_image_accessors.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_transform/graphic_transform_viewport.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/imagefilter/graphic_filter_blur.h \
+   ../../../../../utils/interfaces/kits/gfx_utils/graphics/imagefilter/graphic_filter_blur.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/rasterizer/graphic_rasterizer_cells_antialias.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/rasterizer/graphic_rasterizer_scanline_antialias.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/rasterizer/graphic_rasterizer_scanline_clip.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/scanline/graphic_geometry_scanline.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_base.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_gradient.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_gradient_lut.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_image_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_interpolator.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolor_fill/graphic_spancolor_fill_pattern_rgba.h \
-    ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_base.h \
+     ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_base.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_gradient.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_gradient_lut.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_image_rgba.h \
