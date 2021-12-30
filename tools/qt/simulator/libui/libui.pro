@@ -151,6 +151,8 @@ HEADERS += \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_cells_antialias.tpp \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_antialias.tpp \
     ../../../../../utils/frameworks/graphics/graphic_rasterizer/graphic_rasterizer_scanline_clip.h \
+    ../../../../../utils/interfaces/innerkits/graphic_neon_pipeline.h \
+    ../../../../../utils/interfaces/innerkits/graphic_neon_utils.h \
     ../../../../../utils/interfaces/innerkits/graphic_timer.h \
     ../../../../../utils/interfaces/kits/gfx_utils/color.h \
     ../../../../../utils/interfaces/kits/gfx_utils/graphics/graphic_common/graphic_common_basics.h \
