@@ -20,6 +20,7 @@
 #include <cstring>
 #include <typeinfo>
 
+#include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_render_pixfmt_rgba_gamma.h"
 #include "render/graphic_render_buffer.h"
@@ -105,8 +106,6 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -117,8 +116,6 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha);
         }
 #endif
         /**
@@ -166,8 +163,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
+            BaseGfxEngine::GetInstance()->BlendLerpPix<ValueType>(pColor, cr, cg, cb, alpha, cover);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -178,8 +174,6 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha);
         }
 #endif
         /**

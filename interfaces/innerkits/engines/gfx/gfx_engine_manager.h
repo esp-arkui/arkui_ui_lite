@@ -16,6 +16,7 @@
 #ifndef GRAPHIC_LITE_GFX_ENGINE_MANAGER_H
 #define GRAPHIC_LITE_GFX_ENGINE_MANAGER_H
 
+#include "draw/draw_utils.h"
 #include "gfx_utils/geometry2d.h"
 #include "gfx_utils/graphic_buffer.h"
 #include "gfx_utils/graphic_math.h"
@@ -23,7 +24,6 @@
 #include "gfx_utils/heap_base.h"
 #include "gfx_utils/style.h"
 #include "gfx_utils/transform.h"
-
 namespace OHOS {
     class BaseGfxEngine;
 
@@ -191,7 +191,33 @@ namespace OHOS {
         {
             return screenShape_;
         }
+#ifdef ARM_NEON_OPT
+        template <class ValueType>
+        void BlendLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
+                          ValueType alpha, CoverType cover)
+        {
+            DrawUtils::GetInstance()->BlendLerpPix<ValueType>(pColor, cr, cg, cb, alpha, cover);
+        }
+        template <class ValueType>
+        void BlendLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
+                          ValueType alpha)
+        {
+            DrawUtils::GetInstance()->BlendLerpPix<ValueType>(pColor, cr, cg, cb, alpha);
+        }
 
+        template <class ValueType>
+        void BlendPreLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
+                             ValueType alpha, CoverType cover)
+        {
+            DrawUtils::GetInstance()->BlendPreLerpPix<ValueType>(pColor, cr, cg, cb, alpha, cover);
+        }
+        template <class ValueType>
+        void BlendPreLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
+                             ValueType alpha)
+        {
+            DrawUtils::GetInstance()->BlendPreLerpPix<ValueType>(pColor, cr, cg, cb, alpha);
+        }
+#endif
         static BaseGfxEngine* GetInstance()
         {
             return baseEngine_;
