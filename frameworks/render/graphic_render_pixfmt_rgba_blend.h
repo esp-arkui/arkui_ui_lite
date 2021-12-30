@@ -18,7 +18,6 @@
 
 #include <cmath>
 #include <cstring>
-#include <typeinfo>
 
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/heap_base.h"
@@ -106,6 +105,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
         {
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t)cover);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -116,6 +116,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
         {
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha);
         }
 #endif
         /**
@@ -163,7 +164,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
         {
-            BaseGfxEngine::GetInstance()->BlendLerpPix<ValueType>(pColor, cr, cg, cb, alpha, cover);
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t)cover);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -174,6 +175,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
         {
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha);
         }
 #endif
         /**
@@ -738,32 +740,30 @@ namespace OHOS {
                        int8u cover)
         {
             using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
-            if (typeid(SrcPixelType) == typeid(float) || typeid(SrcPixelType) == typeid(Rgba)) {
-            } else {
-                if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
-                    PixelType* pdst = PixValuePtr(xdst, ydst, len);
 
-                    int srcinc = 1;
-                    int dstinc = 1;
-                    if (xdst > xsrc) {
-                        psrc = psrc->Advance(len - 1);
-                        pdst = pdst->Advance(len - 1);
-                        srcinc = -1;
-                        dstinc = -1;
+            if (const SrcPixelType* psrc = from.PixValuePtr(xsrc, ysrc)) {
+                PixelType* pdst = PixValuePtr(xdst, ydst, len);
+
+                int srcinc = 1;
+                int dstinc = 1;
+                if (xdst > xsrc) {
+                    psrc = psrc->Advance(len - 1);
+                    pdst = pdst->Advance(len - 1);
+                    srcinc = -1;
+                    dstinc = -1;
+                }
+                //int16_t step = NEON_STEP_8 * GetByteSizeByColorMode(mode);
+                if (cover == COVER_MASK) {
+                    for (int16_t i = 0; i < len; ++i) {
+                        CopyOrBlendPix(pdst, psrc->GetPixelColor());
+                        psrc = psrc->Advance(srcinc);
+                        pdst = pdst->Advance(dstinc);
                     }
-                    //int16_t step = NEON_STEP_8 * GetByteSizeByColorMode(mode);
-                    if (cover == COVER_MASK) {
-                        for (int16_t i = 0; i < len; ++i) {
-                            CopyOrBlendPix(pdst, psrc->GetPixelColor());
-                            psrc = psrc->Advance(srcinc);
-                            pdst = pdst->Advance(dstinc);
-                        }
-                    } else {
-                        for (int16_t i = 0; i < len; ++i) {
-                            CopyOrBlendPix(pdst, psrc->GetPixelColor(), cover);
-                            psrc = psrc->Advance(srcinc);
-                            pdst = pdst->Advance(dstinc);
-                        }
+                } else {
+                    for (int16_t i = 0; i < len; ++i) {
+                        CopyOrBlendPix(pdst, psrc->GetPixelColor(), cover);
+                        psrc = psrc->Advance(srcinc);
+                        pdst = pdst->Advance(dstinc);
                     }
                 }
             }

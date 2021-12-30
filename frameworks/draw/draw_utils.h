@@ -24,10 +24,6 @@
 #include "gfx_utils/style.h"
 #include "gfx_utils/transform.h"
 
-#ifdef ARM_NEON_OPT
-#    include "graphic_neon_pipeline.h"
-#    include "graphic_neon_utils.h"
-#endif
 namespace OHOS {
 #define SWAP_INT16(x, y) \
     do { \
@@ -298,34 +294,18 @@ namespace OHOS {
                                   const ColorType& color,
                                   const OpacityType& opa) const;
 #ifdef ARM_NEON_OPT
-        template <class ValueType>
-        void BlendLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                          ValueType alpha, CoverType cover)
-        {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
-        }
-        template <class ValueType>
-        void BlendLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                          ValueType alpha)
-        {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha);
-        }
-        template <class ValueType>
-        void BlendPreLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                             ValueType alpha, CoverType cover)
-        {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
-        }
-        template <class ValueType>
-        void BlendPreLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                             ValueType alpha)
-        {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha);
-        }
+
+        void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                          uint8_t alpha, uint8_t cover);
+
+        void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                          uint8_t alpha);
+
+        void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                             uint8_t alpha, uint8_t cover);
+
+        void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                             uint8_t alpha);
 #endif
     private:
         using DrawTriangleTransformFuc = void (*)(const TriangleScanInfo& triangle, const ColorMode bufferMode);

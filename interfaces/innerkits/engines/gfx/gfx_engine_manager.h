@@ -16,7 +16,6 @@
 #ifndef GRAPHIC_LITE_GFX_ENGINE_MANAGER_H
 #define GRAPHIC_LITE_GFX_ENGINE_MANAGER_H
 
-#include "draw/draw_utils.h"
 #include "gfx_utils/geometry2d.h"
 #include "gfx_utils/graphic_buffer.h"
 #include "gfx_utils/graphic_math.h"
@@ -192,31 +191,17 @@ namespace OHOS {
             return screenShape_;
         }
 #ifdef ARM_NEON_OPT
-        template <class ValueType>
-        void BlendLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                          ValueType alpha, CoverType cover)
-        {
-            DrawUtils::GetInstance()->BlendLerpPix<ValueType>(pColor, cr, cg, cb, alpha, cover);
-        }
-        template <class ValueType>
-        void BlendLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                          ValueType alpha)
-        {
-            DrawUtils::GetInstance()->BlendLerpPix<ValueType>(pColor, cr, cg, cb, alpha);
-        }
+        void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                          uint8_t alpha, uint8_t cover);
 
-        template <class ValueType>
-        void BlendPreLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                             ValueType alpha, CoverType cover)
-        {
-            DrawUtils::GetInstance()->BlendPreLerpPix<ValueType>(pColor, cr, cg, cb, alpha, cover);
-        }
-        template <class ValueType>
-        void BlendPreLerpPix(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb,
-                             ValueType alpha)
-        {
-            DrawUtils::GetInstance()->BlendPreLerpPix<ValueType>(pColor, cr, cg, cb, alpha);
-        }
+        void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                          uint8_t alpha);
+
+        void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                             uint8_t alpha, uint8_t cover);
+
+        void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                             uint8_t alpha);
 #endif
         static BaseGfxEngine* GetInstance()
         {
