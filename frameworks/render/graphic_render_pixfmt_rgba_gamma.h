@@ -20,7 +20,7 @@
 * @brief Defines .
 *
 * @since 1.0
-* @version 1.0
+* @version 1.0.
 */
 
 /**
@@ -39,8 +39,8 @@
 #include <cstring>
 
 #include "gfx_utils/heap_base.h"
-#include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_buffer.h"
+#include "render/graphic_render_pixfmt_base.h"
 namespace OHOS {
     template <class ColorT, class Order, class GammaLut>
     class ApplyGammaDirRgba : public HeapBase {
@@ -48,7 +48,8 @@ namespace OHOS {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
 
-        ApplyGammaDirRgba(const GammaLut& gamma) : gamma_(gamma)
+        ApplyGammaDirRgba(const GammaLut& gamma) :
+            gamma_(gamma)
         {}
 
         GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)
@@ -68,7 +69,8 @@ namespace OHOS {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
 
-        ApplyGammaInvRgba(const GammaLut& gamma) : gamma_(gamma)
+        ApplyGammaInvRgba(const GammaLut& gamma) :
+            gamma_(gamma)
         {}
 
         GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)

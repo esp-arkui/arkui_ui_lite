@@ -17,7 +17,7 @@
 * @file rendering_buffer.h
 * @brief Defines 渲染器缓冲
 * @since 1.0
-* @version 1.0
+* @version 1.0.
 */
 
 #ifndef RENDERING_BUFFER_INCLUDED

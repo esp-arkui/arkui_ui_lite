@@ -29,7 +29,7 @@
  * @brief Defines 定义了像素与颜色分量转换的操作方法.
  *
  * @since 1.0
- * @version 1.0
+ * @version 1.0.
  */
 
 #ifndef GRAPHIC_GEOMETRY_PIXFMT_BASE_INCLUDED

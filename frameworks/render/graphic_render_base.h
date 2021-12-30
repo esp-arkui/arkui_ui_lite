@@ -17,7 +17,7 @@
  * @file renderer_base.h
  * @brief Defines 基础渲染器
  * @since 1.0
- * @version 1.0
+ * @version 1.0.
  */
 
 #ifndef RENDERER_BASE_INCLUDED

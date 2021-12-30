@@ -10,7 +10,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License..
  */
 
 /**
@@ -76,41 +76,40 @@ namespace OHOS {
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
     void RenderClipAntiAliasSolid(Rasterizer& raster, Scanline& scanline,
-                                       BaseRenderer& renBase, const ColorT& color)
+                                  BaseRenderer& renBase, const ColorT& color)
     {
         if (raster.RewindScanlines()) {
             typename BaseRenderer::color_type ren_color = color;
 
             //需要裁减的图形上方
-            for(int y = 0; y < raster.MinY();y++){
+            for (int y = 0; y < raster.MinY(); y++) {
                 renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
                                    ren_color,
                                    COVER_FULL);
             }
 
             //需要裁减的图形下方
-            for(int y = raster.MaxY(); y < renBase.Height();y++){
+            for (int y = raster.MaxY(); y < renBase.Height(); y++) {
                 renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
                                    ren_color,
                                    COVER_FULL);
             }
             //需要裁减的图形左方和右方
-            for(int y = raster.MinY(); y < raster.MaxY();y++){
-                for(int x =0 ;x<renBase.Width();x++){
+            for (int y = raster.MinY(); y < raster.MaxY(); y++) {
+                for (int x = 0; x < renBase.Width(); x++) {
                     //裁减图形的左侧
-                    if(x<raster.MinX()){
-                        renBase.BlendHline(x, y, (unsigned)(raster.MinX()-x-1),
+                    if (x < raster.MinX()) {
+                        renBase.BlendHline(x, y, (unsigned)(raster.MinX() - x - 1),
                                            ren_color,
                                            COVER_FULL);
-                        x=raster.MinX();
+                        x = raster.MinX();
                     }
                     //裁减图形的右侧
-                    if(x > raster.MaxX()){
-                        renBase.BlendHline(raster.MaxX(), y, (unsigned)(renBase.Width()-raster.MaxX()),
+                    if (x > raster.MaxX()) {
+                        renBase.BlendHline(raster.MaxX(), y, (unsigned)(renBase.Width() - raster.MaxX()),
                                            ren_color,
                                            COVER_FULL);
-                        x=renBase.Width();
-
+                        x = renBase.Width();
                     }
                 }
             }
@@ -120,32 +119,31 @@ namespace OHOS {
                 int y = scanline.GetYLevel();
                 unsigned num_spans = scanline.NumSpans();
                 typename Scanline::ConstIterator span = scanline.Begin();
-                int preX=0;
+                int preX = 0;
                 while (true) {
                     int x = span->x;
-                    if(preX < x){
-                        if(span->spanLength > 0){
-                            renBase.BlendHline(preX, y, (unsigned)(x-preX),
+                    if (preX < x) {
+                        if (span->spanLength > 0) {
+                            renBase.BlendHline(preX, y, (unsigned)(x - preX),
                                                ren_color,
                                                COVER_FULL);
-                        }else{
+                        } else {
                             renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
                                                ren_color,
                                                *(span->covers));
                         }
-                        preX = x+(span->spanLength>0 ? span->spanLength :-span->spanLength);
+                        preX = x + (span->spanLength > 0 ? span->spanLength : -span->spanLength);
                     }
                     if (--num_spans == 0) {
-                        preX=0;
+                        preX = 0;
                         break;
                     }
                     ++span;
-                    preX=0;
+                    preX = 0;
                 }
             }
         }
     }
-
 
     /**
      * @brief 渲染抗锯齿的扫描线
