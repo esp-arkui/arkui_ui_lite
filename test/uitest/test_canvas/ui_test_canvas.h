@@ -134,6 +134,22 @@ namespace OHOS {
         static constexpr int16_t RECT_Y = 50;
         static constexpr int16_t RECT_WIDTH = 100;
         static constexpr int16_t RECT_HEIGHT = 50;
+        static constexpr int16_t LINE3_X = 5;
+        static constexpr int16_t LINE3_Y = 35;
+        static constexpr int16_t LINE4_X = 50;
+        static constexpr int16_t LINE4_Y = 5;
+        static constexpr int16_t LINE5_X = 50;
+        static constexpr int16_t LINE5_Y = 35;
+        static constexpr int16_t LINE6_X = 60;
+        static constexpr int16_t LINE6_Y = 15;
+        static constexpr int16_t LINE7_X = 60;
+        static constexpr int16_t LINE7_Y = 45;
+        static constexpr int16_t LINE8_X = 15;
+        static constexpr int16_t LINE8_Y = 45;
+        static constexpr int16_t MOVE1_X = 5;
+        static constexpr int16_t MOVE1_Y = 5;
+        static constexpr int16_t MOVE2_X = 15;
+        static constexpr int16_t MOVE2_Y = 15;
         void CreateTitleLabel(const char* title);
         UICanvas* CreateCanvas();
 

@@ -493,7 +493,7 @@ namespace OHOS {
         Paint paint;
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
-        canvas->AddRect({RECT_X, RECT_Y}, -100, -100);
+        canvas->AddRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT);
         canvas->DrawPath(paint);
     }
 
@@ -1509,17 +1509,17 @@ namespace OHOS {
         canvas->MoveTo({5, 5});
         canvas->LineTo({50, 5});
         canvas->LineTo({50, 35});
-        canvas->LineTo({5, 35});
+        canvas->LineTo({LINE3_X, LINE3_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Blue());
         paint.SetGlobalAlpha(0.5);
         paint.Scale(0.5, 0.5);
         canvas->BeginPath();
-        canvas->MoveTo({5, 5});
-        canvas->LineTo({50, 5});
-        canvas->LineTo({50, 35});
-        canvas->LineTo({5, 35});
+        canvas->MoveTo({MOVE1_X, MOVE1_Y});
+        canvas->LineTo({LINE4_X, LINE4_Y});
+        canvas->LineTo({LINE5_X, LINE5_Y});
+        canvas->LineTo({LINE3_X, LINE3_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
     }
@@ -1534,10 +1534,10 @@ namespace OHOS {
         paint.StrokeStyle(Color::Red());
         paint.SetStrokeWidth(3);
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({MOVE2_X, MOVE2_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Green());
