@@ -48,6 +48,7 @@ Image::~Image()
         path_ = nullptr;
     }
     srcType_ = IMG_SRC_UNKNOWN;
+    imageType_ = ImageType::IMG_UNKNOWN;
 }
 
 void Image::GetHeader(ImageHeader& header) const
@@ -69,20 +70,29 @@ Image::ImageType Image::CheckImgType(const char* src)
     int32_t fd = open(src, O_RDONLY);
 #endif
     if (fd < 0) {
+        imageType_ = IMG_UNKNOWN;
         GRAPHIC_LOGE("can't open %s\n", src);
         return IMG_UNKNOWN;
     }
     if (read(fd, buf, IMG_BYTES_TO_CHECK) != IMG_BYTES_TO_CHECK) {
         close(fd);
+        imageType_ = IMG_UNKNOWN;
         return IMG_UNKNOWN;
     }
     close(fd);
     if (!png_sig_cmp(reinterpret_cast<png_const_bytep>(buf), 0, IMG_BYTES_TO_CHECK)) {
+        imageType_ = IMG_PNG;
         return IMG_PNG;
     // 0xFF 0xD8: JPEG file's header
     } else if ((static_cast<uint8_t>(buf[0]) == 0xFF) && (static_cast<uint8_t>(buf[1]) == 0xD8)) {
+        imageType_ = IMG_JPEG;
         return IMG_JPEG;
+    } else if ((static_cast<uint8_t>(buf[0]) == 0x47) && (static_cast<uint8_t>(buf[1]) == 0x49) &&
+          (static_cast<uint8_t>(buf[2]) == 0x46)) { // 2: array index of GIF file's header
+        imageType_ = IMG_GIF;
+        return IMG_GIF;
     }
+    imageType_ = IMG_UNKNOWN;
     return IMG_UNKNOWN;
 }
 #endif
@@ -222,6 +232,39 @@ bool Image::SetSrc(const ImageInfo* src)
         srcType_ = IMG_SRC_UNKNOWN;
     }
     return true;
+}
+
+bool Image::PreParse(const char *src)
+{
+    if (src == nullptr) {
+        return false;
+    }
+    const char* ptr = strrchr(src, '.');
+    if (ptr == nullptr) {
+        srcType_ = IMG_SRC_UNKNOWN;
+        return false;
+    }
+    if(path_ != nullptr){
+        UIFree((void*)path_);
+    }
+    char* path = (char*)UIMalloc(strlen(src) + 1);
+    strcpy_s(path, (size_t)strlen(src) + 1, src);
+    path_ = path;
+    bool isSucess = false;
+    ImageType imageType = CheckImgType(src);
+    if (imageType == IMG_PNG) {
+        isSucess = SetPNGSrc(src);
+    } else if (imageType == IMG_JPEG) {
+        isSucess = SetJPEGSrc(src);
+    }else if (imageType == IMG_GIF) {
+        imageType_ = imageType;
+        isSucess = true;
+    }else{
+        imageType_ = imageType;
+        srcType_ = IMG_SRC_UNKNOWN;
+        return false;
+    }
+    return isSucess;
 }
 
 void Image::DrawImage(BufferInfo& gfxDstBuffer,

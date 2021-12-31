@@ -83,9 +83,15 @@ void UITestGroup::AddTestCase(TestCaseInfo testCaseInfo)
 {
     testCaseList_.PushBack(testCaseInfo);
 }
-
 void UITestGroup::SetUpTestCase()
 {
+    testCaseList_.PushBack(TestCaseInfo{"Canvas", new UITestCanvas()});
+
+    testCaseList_.PushBack(TestCaseInfo{"Draw_Rect", new UITestDrawRect()});
+    testCaseList_.PushBack(TestCaseInfo{"Draw_Line", new UITestDrawLine()});
+
+    testCaseList_.PushBack(TestCaseInfo{"Anti_Aliasing", new UITestAntiAliasing()});
+
     testCaseList_.PushBack(TestCaseInfo{"Clip", new UITestClip()});
 #if ENABLE_ROTATE_INPUT
     testCaseList_.PushBack(TestCaseInfo{"Rotate_Input", new UITestRotateInput()});
@@ -108,11 +114,8 @@ void UITestGroup::SetUpTestCase()
     testCaseList_.PushBack(TestCaseInfo{"Circle_Progress", new UITestCircleProgress()});
     testCaseList_.PushBack(TestCaseInfo{"Slider", new UITestSlider()});
     testCaseList_.PushBack(TestCaseInfo{"Animator", new UITestAnimator()});
-    testCaseList_.PushBack(TestCaseInfo{"Canvas", new UITestCanvas()});
-    testCaseList_.PushBack(TestCaseInfo{"Draw_Rect", new UITestDrawRect()});
-    testCaseList_.PushBack(TestCaseInfo{"Draw_Line", new UITestDrawLine()});
+
     testCaseList_.PushBack(TestCaseInfo{UI_TEST_RENDER_ID, new UITestRender()});
-    testCaseList_.PushBack(TestCaseInfo{"Anti_Aliasing", new UITestAntiAliasing()});
     testCaseList_.PushBack(TestCaseInfo{"UIList", new UITestUIList()});
     testCaseList_.PushBack(TestCaseInfo{"UISwipeView", new UITestUISwipeView()});
     testCaseList_.PushBack(TestCaseInfo{"Image_Animator", new UITestImageAnimator()});
