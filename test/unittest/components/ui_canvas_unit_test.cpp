@@ -1059,6 +1059,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
  */
 HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
 {
+    // 图形测试
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
