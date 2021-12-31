@@ -1851,7 +1851,7 @@ HWTEST_F(UICanvasTest, UICanvasRestore_002, TestSize.Level1)
 
     EXPECT_EQ(paint_->GetFillColor().full, color.full);
 }
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
 HWTEST_F(UICanvasTest, UICanvasShadowColor_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
@@ -1872,6 +1872,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowColor_002, TestSize.Level0)
     paint_->SetShadowColor(color);
     EXPECT_EQ(paint_->GetShadowColor().full, color.full);
 }
+#endif
 
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
 HWTEST_F(UICanvasTest, UICanvasShadowBlur_001, TestSize.Level1)
