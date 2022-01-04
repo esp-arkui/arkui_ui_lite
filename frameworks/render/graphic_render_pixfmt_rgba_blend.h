@@ -356,7 +356,6 @@ namespace OHOS {
          */
         virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
         {
-
 #ifdef NEON_ARM_OPT
             blender_.NeonBlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
 #else
@@ -752,22 +751,16 @@ namespace OHOS {
 
                 int srcinc = 1;
                 int dstinc = 1;
-                if (xdst > xsrc) {
-                    psrc = psrc->Advance(len - 1);
-                    pdst = pdst->Advance(len - 1);
-                    srcinc = -1;
-                    dstinc = -1;
-                }
 
 #ifdef NEON_ARM_OPT
-                srcinc = dstinc= NEON_STEP_8;
+                srcinc = dstinc = NEON_STEP_8;
                 if (xdst > xsrc) {
-                    psrc = psrc->Advance(len - 1);
-                    pdst = pdst->Advance(len - 1);
+                    psrc = psrc->Advance(len - NEON_STEP_8);
+                    pdst = pdst->Advance(len - NEON_STEP_8);
                     srcinc = -NEON_STEP_8;
                     dstinc = -NEON_STEP_8;
                 }
-                int16_t step = NEON_STEP_8 * PIX_STEP;
+
                 while (len >= NEON_STEP_8) {
                     CopyOrBlendPix(pdst, psrc->GetPixelColor(), cover);
                     psrc = psrc->Advance(srcinc);
@@ -775,6 +768,13 @@ namespace OHOS {
                     len -= NEON_STEP_8;
                 };
 #endif
+
+                if (xdst > xsrc) {
+                    psrc = psrc->Advance(len - 1);
+                    pdst = pdst->Advance(len - 1);
+                    srcinc = -1;
+                    dstinc = -1;
+                }
                 if (cover == COVER_MASK) {
                     for (int16_t i = 0; i < len; ++i) {
                         CopyOrBlendPix(pdst, psrc->GetPixelColor());
