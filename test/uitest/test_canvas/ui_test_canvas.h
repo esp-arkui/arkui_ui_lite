@@ -134,6 +134,7 @@ namespace OHOS {
         static constexpr int16_t RECT_Y = 50;
         static constexpr int16_t RECT_WIDTH = 100;
         static constexpr int16_t RECT_HEIGHT = 50;
+
         void CreateTitleLabel(const char* title);
         UICanvas* CreateCanvas();
 

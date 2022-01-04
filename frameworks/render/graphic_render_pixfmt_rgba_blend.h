@@ -347,6 +347,7 @@ namespace OHOS {
         {
             blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
+
         /**
          * @brief 用颜色及覆盖率设置或混合到指定像素.
          *
@@ -355,6 +356,10 @@ namespace OHOS {
          */
         virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
         {
+
+#ifdef NEON_ARM_OPT
+            blender_.NeonBlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
+#else
             if (!color.IsTransparent()) {
                 if (color.IsOpaque() && cover == COVER_MASK) {
                     pixelPtr->SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
@@ -362,6 +367,7 @@ namespace OHOS {
                     blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
                 }
             }
+            #endif
         }
 
         /**
@@ -752,7 +758,23 @@ namespace OHOS {
                     srcinc = -1;
                     dstinc = -1;
                 }
-                //int16_t step = NEON_STEP_8 * GetByteSizeByColorMode(mode);
+
+#ifdef NEON_ARM_OPT
+                srcinc = dstinc= NEON_STEP_8;
+                if (xdst > xsrc) {
+                    psrc = psrc->Advance(len - 1);
+                    pdst = pdst->Advance(len - 1);
+                    srcinc = -NEON_STEP_8;
+                    dstinc = -NEON_STEP_8;
+                }
+                int16_t step = NEON_STEP_8 * PIX_STEP;
+                while (len >= NEON_STEP_8) {
+                    CopyOrBlendPix(pdst, psrc->GetPixelColor(), cover);
+                    psrc = psrc->Advance(srcinc);
+                    pdst = pdst->Advance(dstinc);
+                    len -= NEON_STEP_8;
+                };
+#endif
                 if (cover == COVER_MASK) {
                     for (int16_t i = 0; i < len; ++i) {
                         CopyOrBlendPix(pdst, psrc->GetPixelColor());
