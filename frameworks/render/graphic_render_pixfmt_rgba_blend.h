@@ -375,7 +375,7 @@ namespace OHOS {
         {
             blender_.NeonBlendPix(dstColors, srcColors, srcCovers);
         }
-        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, const ValueType& srcColors, int8u* srcCovers)
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, const ColorType& srcColors, int8u* srcCovers)
         {
             blender_.NeonBlendPix(dstColors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, srcCovers);
         }
