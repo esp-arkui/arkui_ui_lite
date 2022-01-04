@@ -138,7 +138,6 @@ namespace OHOS {
         static constexpr int16_t LINE3_Y = 35;
         static constexpr int16_t LINE4_X = 50;
         static constexpr int16_t LINE4_Y = 5;
-        static constexpr int16_t LINE5_X = 50;
         static constexpr int16_t LINE5_Y = 35;
         static constexpr int16_t LINE6_X = 60;
         static constexpr int16_t LINE6_Y = 15;
@@ -147,7 +146,6 @@ namespace OHOS {
         static constexpr int16_t LINE8_X = 15;
         static constexpr int16_t LINE8_Y = 45;
         static constexpr int16_t LINE9_X = 230;
-        static constexpr int16_t LINE9_Y = 120;
         static constexpr int16_t LINE10_Y = 60;
         static constexpr int16_t LINE11_X = 20;
         static constexpr int16_t LINE11_Y = 80;
@@ -159,21 +157,15 @@ namespace OHOS {
         static constexpr int16_t LINE15_X = 310;
         static constexpr int16_t LINE15_Y = 160;
         static constexpr int16_t LINE16_X = 310;
-        static constexpr int16_t LINE16_Y = 100;
         static constexpr int16_t LINE17_X = 80;
-        static constexpr int16_t LINE17_Y = 100;
         static constexpr int16_t LINE18_X = 240;
-        static constexpr int16_t LINE18_Y = 100;
         static constexpr int16_t LINE19_X = 40;
         static constexpr int16_t LINE20_X = 80;
-        static constexpr int16_t LINE20_Y = 120;
         static constexpr int16_t LINE21_X = 260;
-        static constexpr int16_t LINE21_Y = 100;
         static constexpr int16_t LINE22_X = 60;
         static constexpr int16_t LINE23_X = 80;
         static constexpr int16_t LINE23_Y = 140;
         static constexpr int16_t LINE24_X = 300;
-        static constexpr int16_t LINE24_Y = 100;
         static constexpr int16_t LINE25_X = 40;
         static constexpr int16_t LINE25_Y = 40;
         static constexpr int16_t LINE26_X = 120;
@@ -186,6 +178,7 @@ namespace OHOS {
         static constexpr int16_t LINE31_X = 330;
         static constexpr int16_t LINE32_X = 270;
         static constexpr int16_t LINE33_X = 215;
+        static constexpr int16_t LINE34_X = 250;
 
         static constexpr int16_t MOVE1_X = 5;
         static constexpr int16_t MOVE1_Y = 5;
@@ -221,11 +214,18 @@ namespace OHOS {
         static constexpr float SCALE_Y = 0.5;
         static constexpr float ROTATE_ANGLE = 20;
         static constexpr uint16_t STROKE_WIDTH = 3;
-        // uint16_t radius, int16_t startAngle, int16_t endAngle
-        static constexpr uint16_t ARC_RADIUS = 3;
+        static constexpr uint16_t ARC_RADIUS = 80;
         static constexpr int16_t START1_ANGLE = 0;
         static constexpr int16_t END1_ANGLE = 180;
 
+        static constexpr float SCALE1_X = 1;
+        static constexpr float SCALE1_Y = 2;
+        static constexpr float SHEAR_X = 0.5;
+        static constexpr float SHEAR_Y = 0.5;
+        static constexpr float TRANSLATE1_X = 0;
+        static constexpr float TRANSLATE1_Y = 0;
+        static constexpr float SHEAR1_X = 0;
+        static constexpr float SHEAR1_Y = 0;
         void CreateTitleLabel(const char* title);
         UICanvas* CreateCanvas();
 

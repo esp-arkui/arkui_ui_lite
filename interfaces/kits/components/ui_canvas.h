@@ -82,8 +82,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        Paint() :
-            style_(PaintStyle::STROKE_FILL_STYLE),
+        Paint() : style_(PaintStyle::STROKE_FILL_STYLE),
             fillColor_(Color::Black()),
             strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE),
