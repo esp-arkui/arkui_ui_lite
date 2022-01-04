@@ -405,6 +405,7 @@ HWTEST_F(UICanvasTest, UICanvasLineTo_002, TestSize.Level1)
     EXPECT_EQ(end.y, LINE2_Y);
 }
 
+#if GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
 /**
  * @tc.name: UICanvasArcTo_001
  * @tc.desc: Verify ArcTo function, equal.
@@ -487,6 +488,7 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_003, TestSize.Level1)
     EXPECT_EQ(end.x, MATH_ROUND(CENTER_X + sinma));
     EXPECT_EQ(end.y, MATH_ROUND(CENTER_Y - cosma));
 }
+#endif
 
 /**
  * @tc.name: UICanvasAddRect_001
@@ -609,6 +611,7 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     EXPECT_EQ(end.y, LINE2_Y);
 }
 
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
 /**
  * @tc.name: UICanvasSetLineCap_001
  * @tc.desc: Verify SetLineCap function, equal.
@@ -651,10 +654,10 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_002, TestSize.Level0)
 
     paint_->SetLineCap(LineCapEnum::SQUARE_CAP);
     EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::SQUARE_CAP);
-
-
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
 /**
  * @tc.name: UICanvasSetLineJoin_001
  * @tc.desc: Verify SetLineJoin function, equal.
@@ -696,9 +699,10 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_002, TestSize.Level0)
 
     paint_->SetLineJoin(LineJoinEnum::BEVEL_JOIN);
     EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::BEVEL_JOIN);
-
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
 /**
  * @tc.name: UICanvasSetLineDashOffset_001
  * @tc.desc: Verify SetLineDashOffset function, equal.
@@ -741,9 +745,9 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_002, TestSize.Level0)
     EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET3);
 
 }
+#endif
 
-
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
 /**
  * @tc.name: UICanvasMiterLimit_001
  * @tc.desc: Verify MiterLimit function, equal.
@@ -807,7 +811,9 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_003, TestSize.Level0)
     paint_->SetMiterLimit(MITERLIMIT3 + MITERLIMIT2);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT3 + MITERLIMIT2);
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
 /**
  * @tc.name: UICanvasSetLineDash_001
  * @tc.desc: Verify SetLineDash function, equal.
@@ -846,7 +852,7 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDash_001, TestSize.Level0)
 
     EXPECT_EQ(paint_->IsLineDash(), 0);
 }
-
+#endif
 /**
  * @tc.name: UICanvasStrokeRect_001
  * @tc.desc: Verify StrokeRect function, equal.
@@ -943,7 +949,7 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y - 10);
     viewGroup->Remove(canvas_);
 }
-
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
 /**
  * @tc.name: UICanvasDrawImage_001
  * @tc.desc: Verify DrawImage function, equal.
@@ -1053,6 +1059,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
  */
 HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
 {
+    // 图形测试
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
@@ -1096,6 +1103,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
     EXPECT_EQ(canvas_->GetStartPosition().y, IMAGE_Y);
     viewGroup->Remove(canvas_);
 }
+#endif
 
 /**
  * @tc.name: UICanvasStrokeText_001
@@ -1844,7 +1852,7 @@ HWTEST_F(UICanvasTest, UICanvasRestore_002, TestSize.Level1)
 
     EXPECT_EQ(paint_->GetFillColor().full, color.full);
 }
-
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
 HWTEST_F(UICanvasTest, UICanvasShadowColor_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
@@ -1865,8 +1873,9 @@ HWTEST_F(UICanvasTest, UICanvasShadowColor_002, TestSize.Level0)
     paint_->SetShadowColor(color);
     EXPECT_EQ(paint_->GetShadowColor().full, color.full);
 }
+#endif
 
-
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
 HWTEST_F(UICanvasTest, UICanvasShadowBlur_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
@@ -1886,7 +1895,9 @@ HWTEST_F(UICanvasTest, UICanvasShadowBlur_002, TestSize.Level0)
     paint_->SetShadowBlur(RADIUS);
     EXPECT_EQ(paint_->GetShadowBlur(),RADIUS);
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
 HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
@@ -1926,7 +1937,9 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_002, TestSize.Level0)
     paint_->SetShadowOffsetY(RADIUS);
     EXPECT_EQ(paint_->GetShadowOffsetY(),RADIUS);
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
 HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_001, TestSize.Level1)
 {
     
@@ -1988,7 +2001,9 @@ HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_002, TestSize.Level0)
     EXPECT_EQ(paint_->GetRadialGradientPoint().y1,END_Y);
     EXPECT_EQ(paint_->GetRadialGradientPoint().r1,END_R);
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
 HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
@@ -2010,7 +2025,9 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_002, TestSize.Level0)
     EXPECT_EQ(paint_->GetPatternImage(),RED_IMAGE_PATH);
     EXPECT_EQ(paint_->GetPatternRepeatMode(), Paint::REPEAT);
 }
+#endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
 HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
 {
     if (paint_ == nullptr) {
@@ -2066,7 +2083,7 @@ HWTEST_F(UICanvasTest, UICanvasStrokeStyle_001, TestSize.Level1)
     paint_->SetStyle(Paint::PaintStyle::PATTERN);
     EXPECT_EQ(paint_->GetStyle(), Paint::PaintStyle::PATTERN);
 }
-
+#endif
 
 /**
  * @tc.name: UICanvasSetRotate_001
