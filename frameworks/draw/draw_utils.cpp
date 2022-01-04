@@ -321,8 +321,8 @@ namespace OHOS {
         Rect subRect(posX + colStart, posY + rowStart, colEnd - 1 + posX, rowEnd - 1 + posY);
 
         uint8_t fontWeight = fontEngine->GetFontWeight(letterInfo.fontId);
-        BaseGfxEngine::GetInstance()->DrawLetter(gfxDstBuffer, fontMap, srcRect, subRect, fontWeight, letterInfo.color,
-                                                 letterInfo.opa);
+        BaseGfxEngine::GetInstance()->DrawLetter(gfxDstBuffer, fontMap, srcRect, subRect,
+                                                 fontWeight, letterInfo.color,letterInfo.opa);
         return;
     }
 
@@ -728,7 +728,8 @@ namespace OHOS {
 #if ENABLE_FIXED_POINT
                 int16_t intU = FO_TO_INTEGER(u);
                 int16_t intV = FO_TO_INTEGER(v);
-                if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0) && (intV < (in.info.header.height - 1))) {
+                if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0)
+                        && (intV < (in.info.header.height - 1))) {
                     int16_t intUPlus1 = intU + 1;
                     int16_t intVPlus1 = intV + 1;
 #else
@@ -830,7 +831,8 @@ namespace OHOS {
 #if ENABLE_FIXED_POINT
                 int16_t intU = FO_TO_INTEGER(u);
                 int16_t intV = FO_TO_INTEGER(v);
-                if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0) && (intV < (in.info.header.height - 1))) {
+                if ((u >= 0) && (intU < (in.info.header.width - 1))
+                        && (v >= 0) && (intV < (in.info.header.height - 1))) {
 #else
                 const int16_t intU = static_cast<int16_t>(u);
                 const int16_t intV = static_cast<int16_t>(v);
@@ -1071,7 +1073,8 @@ namespace OHOS {
                 const int32_t w4 = static_cast<int32_t>(decU * decV * 256.0f);             // 256:shift 8 bit left
 
 #    if ENABLE_ARM_MATH
-                const int32_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2) + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
+                const int32_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2)
+                        + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
                 const int32_t outG =
                     __SMUAD(p1.green, w1) + __SMUAD(p2.green, w2) + __SMUAD(p3.green, w3) + __SMUAD(p4.green, w4);
                 const int32_t outB =
@@ -1139,9 +1142,11 @@ namespace OHOS {
                 // parameters above are Q15 fixed-point number
 
 #if ENABLE_ARM_MATH
-                const int64_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2) + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
+                const int64_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2)
+                        + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
                 const int64_t outG =
-                    __SMUAD(p1.green, w1) + __SMUAD(p2.green, w2) + __SMUAD(p3.green, w3) + __SMUAD(p4.green, w4);
+                    __SMUAD(p1.green, w1) + __SMUAD(p2.green, w2)
+                        + __SMUAD(p3.green, w3) + __SMUAD(p4.green, w4);
                 const int64_t outB =
                     __SMUAD(p1.blue, w1) + __SMUAD(p2.blue, w2) + __SMUAD(p3.blue, w3) + __SMUAD(p4.blue, w4);
                 const int64_t outA =
@@ -1213,8 +1218,8 @@ namespace OHOS {
                 float32x4_t vV = vld1q_f32(arrayV);
                 int32x4_t vIntU = vcvtq_s32_f32(vU);
                 int32x4_t vIntV = vcvtq_s32_f32(vV);
-                int32x4_t vPx1 =
-                    vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)), vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
+                int32x4_t vPx1 = vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)),
+                                           vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
                 vst1q_s32(arrayPx1, vPx1);
                 float32x4_t vDecU = vsubq_f32(vU, vcvtq_f32_s32(vIntU));
                 float32x4_t vDecV = vsubq_f32(vV, vcvtq_f32_s32(vIntV));
@@ -1231,7 +1236,8 @@ namespace OHOS {
                 vIntU = vcvtq_s32_f32(vU);
                 vIntV = vcvtq_s32_f32(vV);
                 vPx1 =
-                    vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)), vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
+                    vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)),
+                              vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
                 vst1q_s32(arrayPx1 + NEON_STEP_4, vPx1);
                 vDecU = vsubq_f32(vU, vcvtq_f32_s32(vIntU));
                 vDecV = vsubq_f32(vV, vcvtq_f32_s32(vIntV));
@@ -1263,21 +1269,28 @@ namespace OHOS {
                 uint8x8x4_t v4p3 = vld4_u8(reinterpret_cast<uint8_t*>(arrayp3));
                 uint8x8x4_t v4p4 = vld4_u8(reinterpret_cast<uint8_t*>(arrayp4));
                 uint8x8_t vOutB =
-                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_B]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_B]), vW2) +
-                                    vmulq_u16(vmovl_u8(v4p3.val[NEON_B]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_B]), vW4),
+                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_B]), vW1)
+                                + vmulq_u16(vmovl_u8(v4p2.val[NEON_B]), vW2)
+                                + vmulq_u16(vmovl_u8(v4p3.val[NEON_B]), vW3)
+                                + vmulq_u16(vmovl_u8(v4p4.val[NEON_B]), vW4),
                                 8); // 8:shift 8 bit right
                 uint8x8_t vOutG =
-                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_G]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_G]), vW2) +
-                                    vmulq_u16(vmovl_u8(v4p3.val[NEON_G]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_G]), vW4),
+                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_G]), vW1)
+                                + vmulq_u16(vmovl_u8(v4p2.val[NEON_G]), vW2)
+                                + vmulq_u16(vmovl_u8(v4p3.val[NEON_G]), vW3)
+                                + vmulq_u16(vmovl_u8(v4p4.val[NEON_G]), vW4),
                                 8); // 8:shift 8 bit right
                 uint8x8_t vOutR =
-                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_R]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_R]), vW2) +
-                                    vmulq_u16(vmovl_u8(v4p3.val[NEON_R]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_R]), vW4),
+                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_R]), vW1)
+                                + vmulq_u16(vmovl_u8(v4p2.val[NEON_R]), vW2)
+                                + vmulq_u16(vmovl_u8(v4p3.val[NEON_R]), vW3)
+                                + vmulq_u16(vmovl_u8(v4p4.val[NEON_R]), vW4),
                                 8); // 8:shift 8 bit right
                 uint8x8_t vOutA =
-                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_A]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_A]), vW2) +
-                                    vmulq_u16(vmovl_u8(v4p3.val[NEON_A]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_A]), vW4),
-                                8); // 8:shift 8 bit right
+                    vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_A]), vW1)
+                                + vmulq_u16(vmovl_u8(v4p2.val[NEON_A]), vW2)
+                                + vmulq_u16(vmovl_u8(v4p3.val[NEON_A]), vW3)
+                                + vmulq_u16(vmovl_u8(v4p4.val[NEON_A]), vW4), 8); // 8:shift 8 bit right
                 vOutA = NeonMulDiv255(vdup_n_u8(in.opaScale), vOutA);
                 pipeLine.Invoke(screenBuffer, vOutR, vOutG, vOutB, vOutA);
             } else {
@@ -1370,7 +1383,8 @@ namespace OHOS {
                     const ColorType p1 = *(reinterpret_cast<ColorType*>(&imgHead[px1]));
                     const ColorType p2 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.pixelSize]));
                     const ColorType p3 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.srcLineWidth]));
-                    const ColorType p4 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.srcLineWidth + in.pixelSize]));
+                    const ColorType p4 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.srcLineWidth
+                                           + in.pixelSize]));
 #if ENABLE_FIXED_POINT
                     int64_t decU = FO_DECIMAL(u);
                     int64_t decV = FO_DECIMAL(v);
@@ -1478,7 +1492,8 @@ namespace OHOS {
                 float v = in.init.verticalV;
 #    endif
                 DEBUG_PERFORMANCE_TRACE("DrawTriangleTrueColorBilinear8888_neon");
-                DrawTriangleTrueColorBilinear8888InnerNeon(in, screenBuffer, xMax - xMin + 1, u, v, pipeLine, bufferMode);
+                DrawTriangleTrueColorBilinear8888InnerNeon(in, screenBuffer, xMax - xMin + 1, u, v,
+                                                           pipeLine, bufferMode);
             }
 #else
             {
@@ -1487,8 +1502,8 @@ namespace OHOS {
                 DrawFixedTriangleTrueColorBilinear8888Inner(in, screenBuffer, xMax - xMin + 1, bufferMode,
                                                             in.init.verticalU, in.init.verticalV);
 #    else
-                DrawTriangleTrueColorBilinear8888Inner(in, screenBuffer, xMax - xMin + 1, bufferMode, in.init.verticalU,
-                                                       in.init.verticalV);
+                DrawTriangleTrueColorBilinear8888Inner(in, screenBuffer, xMax - xMin + 1, bufferMode,
+                                                       in.init.verticalU, in.init.verticalV);
 #    endif
             }
 #endif
@@ -1840,7 +1855,8 @@ namespace OHOS {
         transMap.SetPolygon(polygon);
         Matrix3<float> matrix3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[1][0], matrix[1][1], matrix[1][3],
                                matrix[3][0], matrix[3][1], matrix[3][3]);
-        transMap.invMatrix_ = (matrix3 * (Matrix3<float>::Translate(Vector2<float>(rect.GetX(), rect.GetY())))).Inverse();
+        transMap.invMatrix_ = (matrix3 * (Matrix3<float>::Translate(Vector2<float>(rect.GetX(), rect.GetY()))))
+                .Inverse();
     }
 
     void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
@@ -1859,7 +1875,8 @@ namespace OHOS {
         }
         TransformDataInfo newDataInfo = dataInfo;
         TransformMap newTransMap = transMap;
-        // If the width and height of the rectangle of transMap are not equal to the width and height of the ImageHeader,
+        // If the width and height of the rectangle of transMap are not equal to the width
+        // and height of the ImageHeader,
         // a border of transparency values to the data cannot be added.
         if ((transMap.GetTransMapRect().GetWidth() == dataInfo.header.width) &&
             (transMap.GetTransMapRect().GetHeight() == dataInfo.header.height)) {
@@ -1968,7 +1985,8 @@ namespace OHOS {
         FillArea(gfxDstBuffer, rect, mask, true, nullptr);
     }
 
-    void DrawUtils::DrawWithBuffer(BufferInfo& gfxDstBuffer, const Rect& rect, const Rect& mask, const ColorType* colorBuf)
+    void DrawUtils::DrawWithBuffer(BufferInfo& gfxDstBuffer, const Rect& rect,
+                                   const Rect& mask, const ColorType* colorBuf)
     {
         FillArea(gfxDstBuffer, rect, mask, false, colorBuf);
     }

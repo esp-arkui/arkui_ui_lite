@@ -850,7 +850,8 @@ namespace OHOS {
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
-        void SetTransform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
+        void SetTransform(float scaleX, float shearX, float shearY, float scaleY,
+                          int16_t transLateX, int16_t transLateY)
         {
             transfrom_.Reset();
             rotateAngle_ = 0;
@@ -1558,7 +1559,6 @@ namespace OHOS {
                 strokeLineStyle.MiterLimit(paint.GetMiterLimit());
             }
 #endif
-            //            strokeLineStyle.ApproximationScale(2.0);
         };
 
         /**
@@ -1571,7 +1571,6 @@ namespace OHOS {
                 dashStyle.AddDash(paint.GetLineDash()[i], paint.GetLineDash()[i + 1]);
             }
             dashStyle.DashStart(paint.GetLineDashOffset());
-            //            dashStyle.ApproximationScale(2.0);
         };
 
         /**
@@ -1628,9 +1627,11 @@ namespace OHOS {
             // 设定线段插值器
             typedef SpanInterpolatorLinear<> InterpolatorType;
             // 设定线性渐变的线段生成器
-            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate, GradientColorMode> LinearGradientSpan;
+            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate,
+                    GradientColorMode> LinearGradientSpan;
             // 设定放射渐变的线段生成器
-            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate, GradientColorMode> RadialGradientSpan;
+            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
+                    GradientColorMode> RadialGradientSpan;
 
             ScanlineUnPackedContainer m_scanline;
             typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
@@ -1641,7 +1642,8 @@ namespace OHOS {
             RendererBaseComp m_renBaseComp(pixFormatComp);
 
             m_renBaseComp.ResetClipping(true);
-            m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(), invalidatedArea.GetBottom());
+            m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
+                                  invalidatedArea.GetRight(), invalidatedArea.GetBottom());
             TransAffine gradientMatrix;
             InterpolatorType interpolatorType(gradientMatrix);
             GradientLinearCalculate gradientLinearCalculate;
@@ -1685,8 +1687,10 @@ namespace OHOS {
                 gradientMatrix.Invert();
                 double startRadius = radialPoint.r0;
                 double endRadius = radialPoint.r1;
-                GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1, radialPoint.y0 - radialPoint.y1);
-                RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode, startRadius, endRadius);
+                GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1,
+                                                                radialPoint.y0 - radialPoint.y1);
+                RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
+                                        startRadius, endRadius);
                 RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, span);
             }
         };

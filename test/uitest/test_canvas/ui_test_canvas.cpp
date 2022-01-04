@@ -976,17 +976,17 @@ namespace OHOS {
         paint.SetLineCap(LineCapEnum::BUTT_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 20}); //竖线
+        canvas->MoveTo({20, 20}); // 竖线
         canvas->LineTo({20, 80});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 100}); //横线
+        canvas->MoveTo({20, 100}); // 横线
         canvas->LineTo({80, 100});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({180, 40}); //斜线
+        canvas->MoveTo({180, 40}); // 斜线
         canvas->LineTo({240, 100});
         canvas->DrawPath(paint);
 
@@ -994,17 +994,17 @@ namespace OHOS {
         paint.SetLineCap(LineCapEnum::SQUARE_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({40, 20}); //竖线
+        canvas->MoveTo({40, 20}); // 竖线
         canvas->LineTo({40, 80});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 120}); //横线
+        canvas->MoveTo({20, 120}); // 横线
         canvas->LineTo({80, 120});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({200, 40}); //斜线
+        canvas->MoveTo({200, 40}); // 斜线
         canvas->LineTo({260, 100});
         canvas->DrawPath(paint);
 
@@ -1012,17 +1012,17 @@ namespace OHOS {
         paint.SetLineCap(LineCapEnum::ROUND_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({60, 20}); //竖线
+        canvas->MoveTo({60, 20}); // 竖线
         canvas->LineTo({60, 80});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 140}); //横线
+        canvas->MoveTo({20, 140}); // 横线
         canvas->LineTo({80, 140});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({240, 40}); //斜线
+        canvas->MoveTo({240, 40}); // 斜线
         canvas->LineTo({300, 100});
         canvas->DrawPath(paint);
     }
@@ -1063,7 +1063,7 @@ namespace OHOS {
         canvas->LineTo({220, 80});
         canvas->DrawPath(paint);
 
-        //TODO::当斜接角度超过MiterLimit时应该转化为平角
+        // 当斜接角度超过MiterLimit时应该转化为平角
         paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
         paint.SetMiterLimit(4);
         canvas->BeginPath();
@@ -1164,7 +1164,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::GRADIENT);
-        //线性渐变
+        // 线性渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         paint.createLinearGradient(50, 50, 150, 150);
         paint.addColorStop(0, Color::Yellow());
@@ -1183,7 +1183,7 @@ namespace OHOS {
         canvas->LineTo({5, 80});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        //放射渐变
+        // 放射渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         paint.createRadialGradient(300, 140, 5, 270, 100, 80);
 #endif
@@ -1210,7 +1210,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::GRADIENT);
         paint.SetStrokeWidth(8);
-        //线性渐变
+        // 线性渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         paint.createLinearGradient(50, 50, 150, 150);
         paint.addColorStop(0, Color::Yellow());
@@ -1229,7 +1229,7 @@ namespace OHOS {
         canvas->LineTo({5, 80});
         canvas->ClosePath();
         canvas->DrawPath(paint);
-        //放射渐变
+        // 放射渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         paint.createRadialGradient(300, 140, 5, 270, 100, 80);
 #endif
@@ -1950,5 +1950,4 @@ namespace OHOS {
         paint = canvas->Restore();
         canvas->FillPath(paint);
     }
-
 } // namespace OHOS

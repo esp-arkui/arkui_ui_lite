@@ -244,7 +244,7 @@ bool Image::PreParse(const char *src)
         srcType_ = IMG_SRC_UNKNOWN;
         return false;
     }
-    if(path_ != nullptr){
+    if(path_ != nullptr) {
         UIFree((void*)path_);
     }
     char* path = (char*)UIMalloc(strlen(src) + 1);
@@ -256,10 +256,10 @@ bool Image::PreParse(const char *src)
         isSucess = SetPNGSrc(src);
     } else if (imageType == IMG_JPEG) {
         isSucess = SetJPEGSrc(src);
-    }else if (imageType == IMG_GIF) {
+    } else if (imageType == IMG_GIF) {
         imageType_ = imageType;
         isSucess = true;
-    }else{
+    } else {
         imageType_ = imageType;
         srcType_ = IMG_SRC_UNKNOWN;
         return false;

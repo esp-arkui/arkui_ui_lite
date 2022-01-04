@@ -30,7 +30,7 @@ const void GifCanvasImageAnimator::OpenGifFile(const char* src)
     /* 3 : when change single pixel to byte, the buffer should divided by 8, equal to shift right 3 bits. */
     uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(ARGB8888) >> 3;
     gifDataSize_ = gifFileType->SWidth * gifFileType->SHeight * pixelByteSize;
-    size_ = {(int16_t)gifFileType->SWidth , (int16_t)gifFileType->SHeight};
+    size_ = { (int16_t)gifFileType->SWidth , (int16_t)gifFileType->SHeight };
     gifImageData_ = static_cast<uint8_t*>(UIMalloc(gifDataSize_));
     if (gifImageData_ == nullptr) {
         CloseGifFile();
@@ -58,8 +58,8 @@ void GifCanvasImageAnimator::Callback(UIView* view)
     if (view == nullptr) {
         return;
     }
-    if(view == nullptr){
-     return;
+    if(view == nullptr) {
+        return;
     }
     uint32_t curTime = GetRunTime();
     if (curTime != 0) {
@@ -124,13 +124,17 @@ uint32_t GifCanvasImageAnimator::SetGifFrame(GifFileType* gifFileType, int32_t i
 }
 
 void GifCanvasImageAnimator::DealGifImageData(const GifFileType* gifFileType,
-                                        const GifImageDesc* gifImageDesc,
-                                        const SavedImage* savedImage,
-                                        GraphicsControlBlock gcb,
-                                        const ColorMapObject* colorMap) const
+                                              const GifImageDesc* gifImageDesc,
+                                              const SavedImage* savedImage,
+                                              GraphicsControlBlock gcb,
+                                              const ColorMapObject* colorMap)const
 {
-    if ((gifFileType == nullptr) || (gifImageDesc == nullptr) || (savedImage == nullptr) ||
-        (savedImage->RasterBits == nullptr) || (colorMap == nullptr) || (colorMap->Colors == nullptr)) {
+    if ((gifFileType == nullptr)
+            || (gifImageDesc == nullptr)
+            || (savedImage == nullptr)
+            || (savedImage->RasterBits == nullptr)
+            || (colorMap == nullptr)
+            || (colorMap->Colors == nullptr)) {
         return;
     }
     uint8_t colorIndex = 0;
@@ -138,8 +142,6 @@ void GifCanvasImageAnimator::DealGifImageData(const GifFileType* gifFileType,
     uint32_t index = 0;
     bool transparentColor = true;
     int32_t loc = 0;
-//    memset_s(gifImageData_,gifFileType->SHeight *  gifFileType->SWidth* 4,
-//             0, gifFileType->SHeight *  gifFileType->SWidth* 4);
     for (int32_t x = 0; x < gifFileType->SHeight; x++) {
         for (int32_t y = 0; y < gifFileType->SWidth; y++) {
             transparentColor = true;

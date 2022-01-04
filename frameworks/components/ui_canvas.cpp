@@ -25,7 +25,6 @@
 #include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
-
     void UICanvas::BeginPath()
     {
         vertices_ = new UICanvasVertices();
@@ -86,12 +85,12 @@ namespace OHOS {
 
         float fright = (float)width + (float)point.x;
         float fbottom = (float)height + (float)point.y;
-
+        const int16_t setup = 3;
         if (fright > INT16_MAX) {
-            right += 3;
+            right += setup;
         }
         if (fbottom > INT16_MAX) {
-            bottom += 3;
+            bottom += setup;
         }
         MoveTo(point);
         LineTo({right, point.y});
@@ -277,7 +276,8 @@ namespace OHOS {
             BeginPath();
             MoveTo(startPoint);
             LineTo({static_cast<int16_t>(startPoint.x + width), startPoint.y});
-            LineTo({static_cast<int16_t>(startPoint.x + width), static_cast<int16_t>(startPoint.y + height)});
+            LineTo({static_cast<int16_t>(startPoint.x + width),
+                    static_cast<int16_t>(startPoint.y + height)});
             LineTo({startPoint.x, static_cast<int16_t>(startPoint.y + height)});
             ClosePath();
             DrawPath(paint);
@@ -347,7 +347,8 @@ namespace OHOS {
         }
     }
 
-    void UICanvas::DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint)
+    void UICanvas::DrawArc(const Point& center, uint16_t radius, int16_t startAngle,
+                           int16_t endAngle, const Paint& paint)
     {
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
             if (paint.GetChangeFlag()) {
@@ -667,19 +668,20 @@ namespace OHOS {
         CopyBuffer(*gfxMapBuffer, gfxDstBuffer);
         ListNode<DrawCmd>* curDraw = curDraw = drawCmdList_.Begin();
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
-            curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_);
+            curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
+                                        curDraw->data_.paint, rect, trunc, *style_);
         }
 
         RenderingBuffer renderBuffer;
         RenderingBuffer renderBufferPre;
 
-        //初始化buffer和 m_transform
+        // 初始化buffer和 m_transform
         renderBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->virAddr), gfxMapBuffer->width, gfxMapBuffer->height,
                             gfxMapBuffer->stride);
         renderBufferPre.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                                gfxDstBuffer.stride);
         typedef Rgba8 Rgba8Color;
-        //组装renderbase
+        // 组装renderbase
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
@@ -754,8 +756,15 @@ namespace OHOS {
         GetAbsolutePosition(curveParam->control1, rect, style, control1);
         GetAbsolutePosition(curveParam->control2, rect, style, control2);
 
-        BaseGfxEngine::GetInstance()->DrawCubicBezier(gfxDstBuffer, start, control1, control2, end, invalidatedArea,
-                                                      paint.GetStrokeWidth(), paint.GetStrokeColor(), paint.GetOpacity());
+        BaseGfxEngine::GetInstance()->DrawCubicBezier(gfxDstBuffer,
+                                                      start,
+                                                      control1,
+                                                      control2,
+                                                      end,
+                                                      invalidatedArea,
+                                                      paint.GetStrokeWidth(),
+                                                      paint.GetStrokeColor(),
+                                                      paint.GetOpacity());
     }
 
     void UICanvas::DoDrawRect(BufferInfo& gfxDstBuffer,
@@ -934,7 +943,7 @@ namespace OHOS {
         if (paint.GetChangeFlag()) {
             TransAffine transform;
             RenderingBuffer renderBuffer;
-            //初始化buffer和 m_transform.
+            // 初始化buffer和 m_transform.
             InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
             transform.Translate(imageParam->start.x, imageParam->start.y);
             RenderingBuffer imageRendBuffer;
@@ -983,7 +992,8 @@ namespace OHOS {
         style.lineColor_ = paint.GetStrokeColor();
         style.lineWidth_ = static_cast<int16_t>(paint.GetStrokeWidth());
         style.lineOpa_ = OPA_OPAQUE;
-        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcinfo, invalidatedArea, style, OPA_OPAQUE, CapType::CAP_NONE);
+        BaseGfxEngine::GetInstance()->DrawArc(gfxDstBuffer, arcinfo, invalidatedArea,
+                                              style, OPA_OPAQUE, CapType::CAP_NONE);
     }
 
     void UICanvas::DoDrawPath(BufferInfo& gfxDstBuffer,
@@ -1072,7 +1082,7 @@ namespace OHOS {
 #endif
         TransAffine transform;
         RenderingBuffer renderBuffer;
-        //初始化buffer和 m_transform
+        // 初始化buffer和 m_transform
         InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
         RasterizerScanlineAntiAlias<> rasterizer;
@@ -1083,7 +1093,7 @@ namespace OHOS {
         SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
 
         typedef Rgba8 Rgba8Color;
-        //组装renderbase
+        // 组装renderbase
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
@@ -1135,7 +1145,7 @@ namespace OHOS {
         TransAffine transform;
         RenderingBuffer renderBuffer;
 
-        //初始化buffer和 m_transform
+        // 初始化buffer和 m_transform
         InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
         typedef Rgba8 Rgba8Color;
@@ -1221,7 +1231,7 @@ namespace OHOS {
 #    if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         TransAffine transform;
         RenderingBuffer renderBuffer;
-        //初始化buffer和 m_transform
+        // 初始化buffer和 m_transform
         InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
         transform.Translate(paint.GetShadowOffsetX(), paint.GetShadowOffsetY());
@@ -1234,7 +1244,7 @@ namespace OHOS {
         RectD bbox(rasterizer.MinX(), rasterizer.MinY(), rasterizer.MaxX(), rasterizer.MaxY());
 
         typedef Rgba8 Rgba8Color;
-        //组装renderbase
+        // 组装renderbase
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
@@ -1272,7 +1282,8 @@ namespace OHOS {
 
         Rect shadowRect = {int16_t(bbox.x1), int16_t(bbox.y1), int16_t(bbox.x2), int16_t(bbox.y2)};
         shadowRect.Intersect(shadowRect, invalidatedArea);
-        pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(), shadowRect.GetRight(), shadowRect.GetBottom());
+        pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
+                     shadowRect.GetRight(), shadowRect.GetBottom());
         drawBlur.Blur(pixf2, OHOS::Uround(paint.GetShadowBlur()));
 #        endif
 #    endif
@@ -1290,7 +1301,7 @@ namespace OHOS {
         int16_t realTop = rect.GetTop() + style.paddingTop_ + style.borderWidth_;
         transform.Reset();
         transform *= paint.GetTransAffine();
-        transform.Translate(realLeft, realTop); //偏移到画布上
+        transform.Translate(realLeft, realTop); // 偏移到画布上
         renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
                             gfxDstBuffer.stride);
     }
@@ -1402,7 +1413,7 @@ namespace OHOS {
 
             TransAffine transform;
             RenderingBuffer renderBuffer;
-            //初始化buffer和 m_transform
+            // 初始化buffer和 m_transform
             InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
 
             transform.Translate(textParam->position.x, textParam->position.y);
@@ -1411,14 +1422,15 @@ namespace OHOS {
             }
             transform.Translate(textParam->position.x, textParam->position.y);
             RenderingBuffer imageRendBuffer;
-            imageRendBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr), gfxMapBuffer->width, gfxMapBuffer->height,
-                                   gfxMapBuffer->stride);
+            imageRendBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr), gfxMapBuffer->width,
+                                   gfxMapBuffer->height, gfxMapBuffer->stride);
             DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
             delete gfxMapBuffer;
             gfxMapBuffer = nullptr;
         } else {
-            text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0, drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
+            text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0,
+                         drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
         }
     }
 
@@ -1446,7 +1458,7 @@ namespace OHOS {
         SetRasterizer(vertices, paint, rasterizer, transform, false);
 
         typedef Rgba8 Rgba8Color;
-        //组装renderbase
+        // 组装renderbase
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
