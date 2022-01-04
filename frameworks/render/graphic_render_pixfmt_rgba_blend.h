@@ -629,12 +629,12 @@ namespace OHOS {
             if (!color.IsTransparent()) {
                 PixelType* pPixel = PixValuePtr(x, y, len);
 #ifdef NEON_ARM_OPT
-                        int16_t step = NEON_STEP_8 * PIX_STEP;
-                        while (len >= NEON_STEP_8) {
-                            NeonBlendPix(pixelPtr, color, cover);
-                            pixelPtr = pixelPtr->colors + step;
-                            len -= NEON_STEP_8;
-                        };
+                int16_t step = NEON_STEP_8 * PIX_STEP;
+                while (len >= NEON_STEP_8) {
+                    NeonBlendPix(pixelPtr, color, cover);
+                    pixelPtr = pixelPtr->colors + step;
+                    len -= NEON_STEP_8;
+                };
 #endif
                 if (color.IsOpaque() && cover == COVER_MASK) {
                     for (int16_t iPixel = 0; iPixel < len; ++iPixel) {
