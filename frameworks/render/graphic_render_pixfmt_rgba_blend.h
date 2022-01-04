@@ -733,7 +733,7 @@ namespace OHOS {
         /**
          * @brief 把源像素及覆盖率混合到rbuf_.
          * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
-         *        len 要混合的长度 cover 覆盖率
+         *        len 要混合的长度 cover 覆盖率.
          * @since 1.0
          * @version 1.0
          */
@@ -776,13 +776,13 @@ namespace OHOS {
                     dstinc = -1;
                 }
                 if (cover == COVER_MASK) {
-                    for (int16_t i = 0; i < len; ++i) {
+                    for (int16_t i = 0; i < (int)len; ++i) {
                         CopyOrBlendPix(pdst, psrc->GetPixelColor());
                         psrc = psrc->Advance(srcinc);
                         pdst = pdst->Advance(dstinc);
                     }
                 } else {
-                    for (int16_t i = 0; i < len; ++i) {
+                    for (int16_t i = 0; i < (int)len; ++i) {
                         CopyOrBlendPix(pdst, psrc->GetPixelColor(), cover);
                         psrc = psrc->Advance(srcinc);
                         pdst = pdst->Advance(dstinc);
