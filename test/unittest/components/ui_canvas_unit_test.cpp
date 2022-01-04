@@ -109,7 +109,6 @@ public:
         double x;
         double y;
         if (GetPath() != nullptr) {
-            // return vertices_->points_.Tail()->data_;
             vertices_->LastVertex(&x, &y);
             return { (int16_t)x, (int16_t)y };
         } else {
@@ -424,14 +423,14 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_001, TestSize.Level0)
     float sinma = RADIUS * Sin(START_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - START_ANGLE);
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(start.y,  MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(start.x, CENTER_X + sinma);
+    EXPECT_EQ(start.y, CENTER_Y - cosma);
 
     sinma = RADIUS * Sin(END_ANGLE);
     cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(end.y, MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(end.x, CENTER_X + sinma);
+    EXPECT_EQ(end.y, CENTER_Y - cosma);
 }
 
 /**
@@ -452,8 +451,8 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_002, TestSize.Level1)
     float sinma = RADIUS * Sin(START_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - START_ANGLE);
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(start.y,  MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(start.x, CENTER_X + sinma);
+    EXPECT_EQ(start.y,  CENTER_Y - cosma);
 
     sinma = RADIUS * Sin(END_ANGLE);
     cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
@@ -485,8 +484,8 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_003, TestSize.Level1)
     float sinma = RADIUS * Sin(END_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(end.y, MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(end.x, CENTER_X + sinma);
+    EXPECT_EQ(end.y, CENTER_Y - cosma);
 }
 #endif
 
@@ -510,8 +509,8 @@ HWTEST_F(UICanvasTest, UICanvasAddRect_001, TestSize.Level0)
     EXPECT_EQ(start.y, RECT_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, RECT_X);
-    EXPECT_EQ(end.y, RECT_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 /**
@@ -536,8 +535,8 @@ HWTEST_F(UICanvasTest, UICanvasAddRect_002, TestSize.Level1)
     EXPECT_EQ(start.y, RECT_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, RECT_X);
-    EXPECT_EQ(end.y, RECT_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 /**
@@ -562,8 +561,8 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_001, TestSize.Level0)
     EXPECT_EQ(start.y, START1_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, START1_X);
-    EXPECT_EQ(end.y, START1_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 /**
@@ -595,8 +594,8 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     EXPECT_EQ(start.y, START1_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, START1_X);
-    EXPECT_EQ(end.y, START1_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 
     canvas_->BeginPath();
     canvas_->LineTo({ LINE2_X, LINE2_Y });
@@ -607,8 +606,8 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     EXPECT_EQ(start.y, LINE2_Y);
 
     end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, LINE2_X);
-    EXPECT_EQ(end.y, LINE2_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
@@ -677,7 +676,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineJoin_001, TestSize.Level1)
 
     paint_->SetLineJoin(LineJoinEnum::BEVEL_JOIN);
     EXPECT_EQ(paint_->GetLineJoin(), LineJoinEnum::BEVEL_JOIN);
-
 }
 
 /**
@@ -743,7 +741,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineDashOffset_002, TestSize.Level0)
 
     paint_->SetLineDashOffset(LINE_OFFSET3);
     EXPECT_EQ(paint_->GetLineDashOffset(), LINE_OFFSET3);
-
 }
 #endif
 
@@ -788,7 +785,6 @@ HWTEST_F(UICanvasTest, UICanvasMiterLimit_002, TestSize.Level0)
 
     paint_->SetMiterLimit(MITERLIMIT3);
     EXPECT_EQ(paint_->GetMiterLimit(), MITERLIMIT3);
-
 }
 
 /**
@@ -923,13 +919,13 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
 
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y);
 
     canvas_->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
                       RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X + RECT_X / 2);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y + RECT_Y / 2);
 
     viewGroup->Remove(canvas_);
 
@@ -940,13 +936,13 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     paint.SetFillColor(Color::Blue());
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
-    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
+    EXPECT_EQ(canvas_->GetStartPos().x, 0);
+    EXPECT_EQ(canvas_->GetStartPos().y, 0);
 
     canvas_->ClearRect({RECT_X - 10, RECT_Y - 10},
-                      RECT_HEIGHT +10, RECT_WIDTH +10, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X - 10);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y - 10);
+                       RECT_HEIGHT + 10, RECT_WIDTH + 10, paint);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X - 10);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y - 10);
     viewGroup->Remove(canvas_);
 }
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
@@ -1399,7 +1395,7 @@ HWTEST_F(UICanvasTest, UICanvasTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->Transform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1438,7 +1434,7 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->Transform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1478,7 +1474,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->SetTransform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1517,7 +1513,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->SetTransform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1942,32 +1938,30 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_002, TestSize.Level0)
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
 HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_001, TestSize.Level1)
 {
-    
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->createLinearGradient(START_X, START_Y, END_X, END_Y);
     paint_->SetStyle(Paint::GRADIENT);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().x0,START_X);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().y0,START_Y);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().x1,END_X);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().y1,END_Y);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x0, START_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y0, START_Y);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x1, END_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y1, END_Y);
 }
 
 HWTEST_F(UICanvasTest, UICanvasCreateLinearGradient_002, TestSize.Level0)
 {
-    
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->createLinearGradient(START_X, START_Y, END_X, END_Y);
     paint_->SetStyle(Paint::GRADIENT);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().x0,START_X);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().y0,START_Y);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().x1,END_X);
-    EXPECT_EQ(paint_->GetLinearGradientPoint().y1,END_Y);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x0, START_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y0, START_Y);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().x1, END_X);
+    EXPECT_EQ(paint_->GetLinearGradientPoint().y1, END_Y);
 }
 
 HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_001, TestSize.Level1)
@@ -1976,14 +1970,14 @@ HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
+    paint_->createRadialGradient(START_X, START_Y, START_R, END_X, END_Y, END_R);
     paint_->SetStyle(Paint::GRADIENT);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().x0,START_X);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().y0,START_Y);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().r0,START_R);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().x1,END_X);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().y1,END_Y);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().r1,END_R);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x0, START_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y0, START_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r0, START_R);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x1, END_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y1, END_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r1, END_R);
 }
 
 HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_002, TestSize.Level0)
@@ -1994,12 +1988,12 @@ HWTEST_F(UICanvasTest, UICanvasCreateRadialGradient_002, TestSize.Level0)
     }
     paint_->createRadialGradient(START_X,START_Y,START_R,END_X,END_Y,END_R);
     paint_->SetStyle(Paint::GRADIENT);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().x0,START_X);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().y0,START_Y);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().r0,START_R);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().x1,END_X);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().y1,END_Y);
-    EXPECT_EQ(paint_->GetRadialGradientPoint().r1,END_R);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x0, START_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y0, START_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r0, START_R);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().x1, END_X);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().y1, END_Y);
+    EXPECT_EQ(paint_->GetRadialGradientPoint().r1, END_R);
 }
 #endif
 
@@ -2010,8 +2004,8 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_001, TestSize.Level1)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->CreatePattern(RED_IMAGE_PATH,Paint::REPEAT);
-    EXPECT_EQ(paint_->GetPatternImage(),RED_IMAGE_PATH);
+    paint_->CreatePattern(RED_IMAGE_PATH, Paint::REPEAT);
+    EXPECT_EQ(paint_->GetPatternImage(), RED_IMAGE_PATH);
     EXPECT_EQ(paint_->GetPatternRepeatMode(), Paint::REPEAT);
 }
 
@@ -2021,7 +2015,7 @@ HWTEST_F(UICanvasTest, UICanvasCreatePattern_002, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    paint_->CreatePattern(RED_IMAGE_PATH,Paint::REPEAT);
+    paint_->CreatePattern(RED_IMAGE_PATH, Paint::REPEAT);
     EXPECT_EQ(paint_->GetPatternImage(),RED_IMAGE_PATH);
     EXPECT_EQ(paint_->GetPatternRepeatMode(), Paint::REPEAT);
 }
@@ -2038,29 +2032,28 @@ HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
     ColorType colorStop1 = Color::White();
     ColorType colorStop2 = Color::Green();
     ColorType colorStop3 = Color::Blue();
-    paint_->createLinearGradient(START_X,START_Y,END_X,END_Y);
+    paint_->createLinearGradient(START_X,START_Y, END_X, END_Y);
     paint_->addColorStop(COLOR_STOP_0, colorStop0);
     paint_->addColorStop(COLOR_STOP_1, colorStop1);
     paint_->addColorStop(COLOR_STOP_2, colorStop2);
     paint_->addColorStop(COLOR_STOP_3, colorStop3);
     List<Paint::StopAndColor> stopAndColor = paint_->getStopAndColor();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_0);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop0.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_0);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop0.full);
     stopAndColor.PopFront();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_1);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop1.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_1);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop1.full);
     stopAndColor.PopFront();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_2);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop2.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_2);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop2.full);
     stopAndColor.PopFront();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_3);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop3.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_3);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop3.full);
     stopAndColor.PopFront();
 }
 
 HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
 {
-    
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;
@@ -2154,5 +2147,4 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
     EXPECT_EQ(paint_->GetRotateAngle(), ROTATE);
 }
-
 } // namespace OHOS
