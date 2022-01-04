@@ -462,6 +462,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::DrawImage(const Point& startPoint, const char* image, Paint& paint, int16_t width, int16_t height)
@@ -517,6 +518,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     bool UICanvas::IsGif(const char* src)
@@ -1329,6 +1331,7 @@ namespace OHOS {
             cmd.paint = paint;
             drawCmdList_.PushBack(cmd);
             Invalidate();
+            SetStartPosition(point);
         }
     }
 

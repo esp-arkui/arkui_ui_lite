@@ -423,14 +423,14 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_001, TestSize.Level0)
     float sinma = RADIUS * Sin(START_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - START_ANGLE);
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(start.y,  MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(start.x, CENTER_X + sinma);
+    EXPECT_EQ(start.y, CENTER_Y - cosma);
 
     sinma = RADIUS * Sin(END_ANGLE);
     cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(end.y, MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(end.x, CENTER_X + sinma);
+    EXPECT_EQ(end.y, CENTER_Y - cosma);
 }
 
 /**
@@ -451,8 +451,8 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_002, TestSize.Level1)
     float sinma = RADIUS * Sin(START_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - START_ANGLE);
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(start.y,  MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(start.x, CENTER_X + sinma);
+    EXPECT_EQ(start.y,  CENTER_Y - cosma);
 
     sinma = RADIUS * Sin(END_ANGLE);
     cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
@@ -484,8 +484,8 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_003, TestSize.Level1)
     float sinma = RADIUS * Sin(END_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, MATH_ROUND(CENTER_X + sinma));
-    EXPECT_EQ(end.y, MATH_ROUND(CENTER_Y - cosma));
+    EXPECT_EQ(end.x, CENTER_X + sinma);
+    EXPECT_EQ(end.y, CENTER_Y - cosma);
 }
 #endif
 
@@ -509,8 +509,8 @@ HWTEST_F(UICanvasTest, UICanvasAddRect_001, TestSize.Level0)
     EXPECT_EQ(start.y, RECT_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, RECT_X);
-    EXPECT_EQ(end.y, RECT_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 /**
@@ -535,8 +535,8 @@ HWTEST_F(UICanvasTest, UICanvasAddRect_002, TestSize.Level1)
     EXPECT_EQ(start.y, RECT_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, RECT_X);
-    EXPECT_EQ(end.y, RECT_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 /**
@@ -561,8 +561,8 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_001, TestSize.Level0)
     EXPECT_EQ(start.y, START1_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, START1_X);
-    EXPECT_EQ(end.y, START1_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 /**
@@ -594,8 +594,8 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     EXPECT_EQ(start.y, START1_Y);
 
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, START1_X);
-    EXPECT_EQ(end.y, START1_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 
     canvas_->BeginPath();
     canvas_->LineTo({ LINE2_X, LINE2_Y });
@@ -606,8 +606,8 @@ HWTEST_F(UICanvasTest, UICanvasClosePath_002, TestSize.Level1)
     EXPECT_EQ(start.y, LINE2_Y);
 
     end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, LINE2_X);
-    EXPECT_EQ(end.y, LINE2_Y);
+    EXPECT_EQ(end.x, 0);
+    EXPECT_EQ(end.y, 0);
 }
 
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
@@ -919,13 +919,13 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
 
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y);
 
     canvas_->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
                       RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / 2);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / 2);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X + RECT_X / 2);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y + RECT_Y / 2);
 
     viewGroup->Remove(canvas_);
 
@@ -936,13 +936,13 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     paint.SetFillColor(Color::Blue());
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
-    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
+    EXPECT_EQ(canvas_->GetStartPos().x, 0);
+    EXPECT_EQ(canvas_->GetStartPos().y, 0);
 
     canvas_->ClearRect({RECT_X - 10, RECT_Y - 10},
                        RECT_HEIGHT + 10, RECT_WIDTH + 10, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X - 10);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y - 10);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X - 10);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y - 10);
     viewGroup->Remove(canvas_);
 }
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
@@ -1395,7 +1395,7 @@ HWTEST_F(UICanvasTest, UICanvasTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->Transform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1434,7 +1434,7 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->Transform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->Transform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
@@ -1474,7 +1474,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_001, TestSize.Level0)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->SetTransform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1513,7 +1513,7 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     fontStyle.fontSize = FONT_SIZE;
     fontStyle.letterSpace = LETTER_SPACE;
 
-    paint_->SetTransform(SCALE_X, SHEAR_Y, SHEAR_X, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+    paint_->SetTransform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
