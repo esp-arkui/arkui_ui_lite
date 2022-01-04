@@ -17,7 +17,6 @@
 
 #include <draw/clip_utils.h>
 #include <gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_image_rgba.h>
-#include <gfx_utils/graphics/transform/graphic_transform_viewport.h>
 
 #include "common/image.h"
 #include "draw/draw_arc.h"
