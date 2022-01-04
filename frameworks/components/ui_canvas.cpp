@@ -17,7 +17,6 @@
 
 #include <draw/clip_utils.h>
 #include <gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_image_rgba.h>
-#include <gfx_utils/graphics/transform/graphic_transform_viewport.h>
 
 #include "common/image.h"
 #include "draw/draw_arc.h"
@@ -461,6 +460,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::DrawImage(const Point& startPoint, const char* image, Paint& paint, int16_t width, int16_t height)
@@ -516,6 +516,7 @@ namespace OHOS {
         drawCmdList_.PushBack(cmd);
 
         Invalidate();
+        SetStartPosition(startPoint);
     }
 
     bool UICanvas::IsGif(const char* src)
@@ -934,7 +935,7 @@ namespace OHOS {
         if (paint.GetChangeFlag()) {
             TransAffine transform;
             RenderingBuffer renderBuffer;
-            //初始化buffer和 m_transform.
+            // 初始化buffer和 m_transform.
             InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
             transform.Translate(imageParam->start.x, imageParam->start.y);
             RenderingBuffer imageRendBuffer;
@@ -1318,6 +1319,7 @@ namespace OHOS {
             cmd.paint = paint;
             drawCmdList_.PushBack(cmd);
             Invalidate();
+            SetStartPosition(point);
         }
     }
 
