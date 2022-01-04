@@ -73,6 +73,42 @@ namespace OHOS {
         }
     }
 
+
+    template <class Rasterizer, class Scanline,
+              class BaseRenderer, class ColorT>
+    void RenderScanlinesAntiAliasSolidAnd(Rasterizer* raster, Scanline& scanline,
+                                       BaseRenderer& renBase, const ColorT& color)
+    {
+        if (raster->RewindScanlines()) {
+            typename BaseRenderer::color_type ren_color = color;
+
+            scanline.Reset(raster->MinX(), raster->MaxX());
+            while (raster->SweepScanline(scanline)) {
+                int y = scanline.GetYLevel();
+                unsigned num_spans = scanline.NumSpans();
+                typename Scanline::ConstIterator span = scanline.Begin();
+
+                while (true) {
+                    int x = span->x;
+                    if (span->spanLength > 0) {
+                        renBase.BlendSolidHspan(x, y, (unsigned)span->spanLength,
+                                                ren_color,
+                                                span->covers);
+                    } else {
+                        renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
+                                           ren_color,
+                                           *(span->covers));
+                    }
+                    if (--num_spans == 0) {
+                        break;
+                    }
+                    ++span;
+                }
+            }
+        }
+    }
+
+
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
     void RenderClipAntiAliasSolid(Rasterizer& raster, Scanline& scanline,

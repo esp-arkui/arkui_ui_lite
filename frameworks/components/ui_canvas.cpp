@@ -122,6 +122,9 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        rasterizers_.Clear();
+        colors_.Clear();
+        composite_.Clear();
     }
 
     void UICanvas::Clear()
@@ -139,6 +142,9 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        rasterizers_.Clear();
+        colors_.Clear();
+        composite_.Clear();
         Invalidate();
     }
 
@@ -638,17 +644,17 @@ namespace OHOS {
         Rect trunc = invalidatedArea;
         if (trunc.Intersect(trunc, coords)) {
             // 添加的处理机制的。。。
-            bool isChangeBlend = false;
+            bool haveComposite = false;
             for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                 // 应该是实现画布的处理机制..
-                if (curDraw->data_.paint.GetGlobalCompositeOperation() != Paint::SOURCE_OVER) {
-                    isChangeBlend = true;
+                if (curDraw->data_.paint.HaveComposite()) {
+                    haveComposite = true;
                     break;
                 }
             }
 
-            if (isChangeBlend) {
-                OnBlendDraw(gfxDstBuffer, trunc);
+            if (haveComposite) {
+                OnBlendDraw2(gfxDstBuffer, trunc);
             } else {
                 curDraw = drawCmdList_.Begin();
                 for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -705,6 +711,63 @@ namespace OHOS {
         BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
         delete gfxMapBuffer;
         gfxMapBuffer = nullptr;
+    }
+
+    void UICanvas::OnBlendDraw2(BufferInfo& gfxDstBuffer, const Rect& trunc)
+    {
+        Rect rect = GetOrigRect();
+        ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
+        for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
+            curDraw->data_.DrawGraphics(gfxDstBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_);
+        }
+
+
+        ListNode<ColorType>* colors = colors_.Begin();
+        ListNode<RasterizerScanlineAntiAlias<>*> *  rasterizers = rasterizers_.Begin();
+
+        ScanlineUnPackedContainer m_scanline;
+
+//        RasterizerScanlineAntiAlias<> rasterizer;
+
+
+
+//        ListNode<DrawCmd>* curDraw2 = drawCmdList_.Begin();
+//        for (; curDraw2 != drawCmdList_.End(); curDraw2 = curDraw2->next_) {
+
+//        }
+
+        RenderingBuffer renderBuffer;
+
+        renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
+                            gfxDstBuffer.stride);
+
+
+//        ListNode<DrawCmd>* curDraw2 = drawCmdList_.Begin();
+        for (; rasterizers != rasterizers_.End(); rasterizers = rasterizers->next_,colors = colors->next_) {
+            typedef Rgba8 Rgba8Color;
+            // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+            typedef OrderBgra Order;
+            // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+            typedef RgbaBlender<Rgba8Color, Order> Blender;
+            typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
+            typedef RendererBase<PixFormat> RendererBase;
+            PixFormat pixFormat(renderBuffer);
+            RendererBase renBase(pixFormat);
+            renBase.ResetClipping(true);
+            renBase.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(),trunc.GetBottom());
+
+//            RasterizerScanlineAntiAlias<> rasterizer;
+
+            Rgba8Color color;
+            color.redValue = colors->data_.red;
+            color.greenValue = colors->data_.green;
+            color.blueValue = colors->data_.blue;
+            color.alphaValue = colors->data_.alpha;
+//            rasterizers->data_.
+//            rasterizer(rasterizers->data_);
+            RenderScanlinesAntiAliasSolidAnd(rasterizers->data_, m_scanline, renBase, color);
+        }
+
     }
 
     void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
@@ -992,11 +1055,16 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-        if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+        if(paint.HaveComposite()){
+            DoRenderBlend2(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+        }else{
             DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-        } else {
-            DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
         }
+//        if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+//            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+//        } else {
+//            DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+//        }
     }
 
     void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
@@ -1006,11 +1074,18 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-        if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+//        if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
+//            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+//        } else {
+//            DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+//        }
+
+        if(paint.HaveComposite()){
+            DoRenderBlend2(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+        }else{
             DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
-        } else {
-            DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
         }
+
     }
 
     void UICanvas::SetRasterizer(UICanvasVertices& vertices,
@@ -1203,6 +1278,48 @@ namespace OHOS {
             RenderClipAntiAliasSolid(rasterizer, m_scanline, renBaseCom, rgba8Color);
         }
 #endif
+    }
+
+
+    void UICanvas::DoRenderBlend2(BufferInfo& gfxDstBuffer,
+                                 void* param,
+                                 const Paint& paint,
+                                 const Rect& rect,
+                                 const Rect& invalidatedArea,
+                                 const Style& style,
+                                 const bool& isStroke)
+    {
+        if (param == nullptr) {
+            return;
+        }
+        if (paint.HaveShadow()) {
+            DoDrawShadow(gfxDstBuffer, param, paint, rect, invalidatedArea, style, isStroke);
+        }
+        RasterizerScanlineAntiAlias<> rasterizer;
+        TransAffine transform;
+        RenderingBuffer renderBuffer;
+        //初始化buffer和 m_transform
+        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
+        PathParam* pathParam = static_cast<PathParam*>(param);
+        rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
+        SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
+        rasterizers_.PushBack(&rasterizer);
+
+        composite_.PushBack(paint.GetGlobalCompositeOperation());
+        if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
+            paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+            if (isStroke) {
+                if (paint.GetStyle() == Paint::STROKE_STYLE ||
+                    paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+                    colors_.PushBack(paint.GetStrokeColor());
+                }
+            } else {
+                if (paint.GetStyle() == Paint::FILL_STYLE ||
+                    paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+                    colors_.PushBack(paint.GetFillColor());
+                }
+            }
+        }
     }
 
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE

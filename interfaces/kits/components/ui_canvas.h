@@ -102,7 +102,8 @@ namespace OHOS {
 #endif
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
-            rotateAngle_(0)
+            rotateAngle_(0),
+            haveComposite_(false)
         {}
 
         Paint(const Paint& paint)
@@ -781,6 +782,9 @@ namespace OHOS {
         {
             globalCompositeOperation_ = globalCompositeOperation;
             changeFlage_ = true;
+            if(globalCompositeOperation!=SOURCE_OVER){
+                haveComposite_ = true;
+            }
         }
 
         /**
@@ -889,6 +893,11 @@ namespace OHOS {
             return rotateAngle_;
         }
 
+        bool HaveComposite() const
+        {
+            return haveComposite_;
+        }
+
     private:
         PaintStyle style_;
         ColorType fillColor_;
@@ -924,6 +933,7 @@ namespace OHOS {
         GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
         float rotateAngle_;                                 //旋转角度，单位度数
         TransAffine transfrom_;                             //矩阵
+        bool haveComposite_;
     };
 
     /**
@@ -932,6 +942,11 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
+
+    static List<RasterizerScanlineAntiAlias<>*> rasterizers_;
+    static List<ColorType> colors_;
+    static List<Paint::GlobalCompositeOperation> composite_;
+
     class UICanvas : public UIView {
     public:
         /**
@@ -1286,6 +1301,8 @@ namespace OHOS {
 
         void OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc);
 
+        void OnBlendDraw2(BufferInfo& gfxDstBuffer, const Rect& trunc);
+
         void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
     protected:
@@ -1359,6 +1376,8 @@ namespace OHOS {
         List<DrawCmd> drawCmdList_;
         // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
+
+
 
         static void DeleteLineParam(void* param)
         {
@@ -1518,6 +1537,13 @@ namespace OHOS {
                              const Style& style,
                              const bool& isStroke);
         static void DoRenderBlend(BufferInfo& gfxDstBuffer,
+                                  void* param,
+                                  const Paint& paint,
+                                  const Rect& rect,
+                                  const Rect& invalidatedArea,
+                                  const Style& style,
+                                  const bool& isStroke);
+        static void DoRenderBlend2(BufferInfo& gfxDstBuffer,
                                   void* param,
                                   const Paint& paint,
                                   const Rect& rect,
