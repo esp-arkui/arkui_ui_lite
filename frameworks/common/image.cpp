@@ -248,7 +248,11 @@ bool Image::PreParse(const char *src)
         UIFree((void*)path_);
     }
     char* path = (char*)UIMalloc(strlen(src) + 1);
-    strcpy_s(path, (size_t)strlen(src) + 1, src);
+    errno_t err = strcpy_s(path, (size_t)strlen(src) + 1, src);
+    if(err != EOK) {
+        UIFree((void*)path);
+        return false;
+    }
     path_ = path;
     bool isSucess = false;
     ImageType imageType = CheckImgType(src);

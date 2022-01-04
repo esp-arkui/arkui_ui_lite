@@ -97,6 +97,7 @@ namespace OHOS {
         LineTo({right, bottom});
         LineTo({point.x, bottom});
         ClosePath();
+
     }
 
     void UICanvas::ClosePath()

@@ -1879,7 +1879,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowBlur_001, TestSize.Level1)
         return;
     }
     paint_->SetShadowBlur(RADIUS);
-    EXPECT_EQ(paint_->GetShadowBlur(),RADIUS);
+    EXPECT_EQ(paint_->GetShadowBlur(), RADIUS);
 }
 
 HWTEST_F(UICanvasTest, UICanvasShadowBlur_002, TestSize.Level0)
@@ -1889,7 +1889,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowBlur_002, TestSize.Level0)
         return;
     }
     paint_->SetShadowBlur(RADIUS);
-    EXPECT_EQ(paint_->GetShadowBlur(),RADIUS);
+    EXPECT_EQ(paint_->GetShadowBlur(), RADIUS);
 }
 #endif
 
@@ -1901,7 +1901,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_001, TestSize.Level1)
         return;
     }
     paint_->SetShadowOffsetX(RADIUS);
-    EXPECT_EQ(paint_->GetShadowOffsetX(),RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetX(), RADIUS);
 }
 
 HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_002, TestSize.Level0)
@@ -1911,7 +1911,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetX_002, TestSize.Level0)
         return;
     }
     paint_->SetShadowOffsetX(RADIUS);
-    EXPECT_EQ(paint_->GetShadowOffsetX(),RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetX(), RADIUS);
 }
 
 HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_001, TestSize.Level1)
@@ -1921,7 +1921,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_001, TestSize.Level1)
         return;
     }
     paint_->SetShadowOffsetY(RADIUS);
-    EXPECT_EQ(paint_->GetShadowOffsetY(),RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetY(), RADIUS);
 }
 
 HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_002, TestSize.Level0)
@@ -1931,7 +1931,7 @@ HWTEST_F(UICanvasTest, UICanvasShadowOffsetY_002, TestSize.Level0)
         return;
     }
     paint_->SetShadowOffsetY(RADIUS);
-    EXPECT_EQ(paint_->GetShadowOffsetY(),RADIUS);
+    EXPECT_EQ(paint_->GetShadowOffsetY(), RADIUS);
 }
 #endif
 

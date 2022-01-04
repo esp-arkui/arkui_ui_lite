@@ -559,7 +559,7 @@ namespace OHOS {
      */
         void SetLineDashOffset(float offset)
         {
-            dashOffset_ = offset; //dash 点偏移量
+            dashOffset_ = offset; // dash 点偏移量
             changeFlage_ = true;
             isDashMode_ = true;
         }
@@ -899,11 +899,11 @@ namespace OHOS {
         bool changeFlage_;
         LineJoinEnum lineJoin_;
         LineCapEnum lineCap_;
-        bool isDashMode_;      //是否是dash模式的线段
-        float dashOffset_;     //dash 点偏移量
-        float* dashArray_;     //dash 点数组
-        unsigned int ndashes_; //dashArray的长度
-        double miterLimit_;    //设置路径连接处的尖角的间距限制
+        bool isDashMode_;      // 是否是dash模式的线段
+        float dashOffset_;     // dash 点偏移量
+        float* dashArray_;     // dash 点数组
+        unsigned int ndashes_; // dashArray的长度
+        double miterLimit_;    // 设置路径连接处的尖角的间距限制
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         LinearGradientPoint linearGradientPoint_;
         RadialGradientPoint radialGradientPoint_;
@@ -915,16 +915,16 @@ namespace OHOS {
 #endif
         const char* image;
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
-        double shadowBlurRadius; //设置阴影模糊半径
-        double shadowOffsetX;    //设置阴影横坐标偏移量
-        double shadowOffsetY;    //设置阴影纵坐标偏移量。
-        ColorType shadowColor;   //设置阴影色彩
-        bool haveShadow;         //当前是否有阴影
+        double shadowBlurRadius; // 设置阴影模糊半径
+        double shadowOffsetX;    // 设置阴影横坐标偏移量
+        double shadowOffsetY;    // 设置阴影纵坐标偏移量。
+        ColorType shadowColor;   // 设置阴影色彩
+        bool haveShadow;         // 当前是否有阴影
 #endif
-        float globalAlpha_;                                 //当前绘图的透明度0-1 百分比
-        GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
-        float rotateAngle_;                                 //旋转角度，单位度数
-        TransAffine transfrom_;                             //矩阵
+        float globalAlpha_;                                 // 当前绘图的透明度0-1 百分比
+        GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
+        float rotateAngle_;                                 // 旋转角度，单位度数
+        TransAffine transfrom_;                             // 矩阵
     };
 
     /**
@@ -1716,7 +1716,7 @@ namespace OHOS {
                 return;
             }
             typedef Rgba8 Rgba8Color;
-            //组装renderbase
+            // 组装renderbase
             // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
             typedef OrderBgra ComponentOrder;
             // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色

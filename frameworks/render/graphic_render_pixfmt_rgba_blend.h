@@ -802,7 +802,8 @@ namespace OHOS {
             rbuf_(0), compOp_(COMP_OP_VALUE)
         {}
         explicit PixfmtCustomBlendRgba(RbufType& rb, unsigned compOp = 3) :
-            rbuf_(&rb), compOp_(compOp)
+            rbuf_(&rb),
+            compOp_(compOp)
         {}
 
         ATTACH_FUNCTION_DEF

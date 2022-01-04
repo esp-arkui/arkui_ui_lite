@@ -24,8 +24,6 @@
 #ifndef GIF_CANVAS_IMAGE_ANIMATOR_H
 #define GIF_CANVAS_IMAGE_ANIMATOR_H
 
-#endif // GIF_CANVAS_IMAGE_ANIMATOR_H
-
 #include "animator.h"
 #include "gif_lib.h"
 #include "components/ui_view.h"
@@ -111,5 +109,5 @@ private:
     const char* src_;
     ImageParam* image_;
 };
-
 }
+#endif // GIF_CANVAS_IMAGE_ANIMATOR_H

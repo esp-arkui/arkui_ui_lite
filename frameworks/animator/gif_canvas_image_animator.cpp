@@ -14,8 +14,9 @@
  */
 
 #include "animator/gif_canvas_image_animator.h"
-#include "draw/draw_utils.h"
 #include <securec.h>
+#include "draw/draw_utils.h"
+
 namespace OHOS {
 const int HUNDREDTHS = 10;
 const int GIF_PIX_SIZE = 4;
