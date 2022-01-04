@@ -940,8 +940,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        UICanvas() :
-            startPoint_({0, 0}), vertices_(nullptr)
+        UICanvas() : startPoint_({0, 0}), vertices_(nullptr)
         {}
 
         /**

@@ -24,7 +24,8 @@ namespace OHOS {
     {
         if (container_ == nullptr) {
             container_ = new UIScrollView();
-            container_->Resize(Screen::GetInstance().GetWidth(), Screen::GetInstance().GetHeight() - BACK_BUTTON_HEIGHT);
+            container_->Resize(Screen::GetInstance().GetWidth(),
+                               Screen::GetInstance().GetHeight() - BACK_BUTTON_HEIGHT);
             container_->SetHorizontalScrollState(false);
             container_->SetThrowDrag(true);
         }
@@ -976,54 +977,54 @@ namespace OHOS {
         paint.SetLineCap(LineCapEnum::BUTT_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 20}); //竖线
-        canvas->LineTo({20, 80});
+        canvas->MoveTo({MOVE4_X, MOVE4_Y}); // 竖线
+        canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 100}); //横线
-        canvas->LineTo({80, 100});
+        canvas->MoveTo({MOVE6_X, MOVE6_Y}); // 横线
+        canvas->LineTo({LINE17_X, LINE17_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({180, 40}); //斜线
-        canvas->LineTo({240, 100});
+        canvas->MoveTo({MOVE7_X, MOVE7_Y}); // 斜线
+        canvas->LineTo({LINE18_X, LINE18_Y});
         canvas->DrawPath(paint);
 
         paint.SetStrokeColor(Color::Red());
         paint.SetLineCap(LineCapEnum::SQUARE_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({40, 20}); //竖线
-        canvas->LineTo({40, 80});
+        canvas->MoveTo({MOVE8_X, MOVE8_Y}); // 竖线
+        canvas->LineTo({LINE19_X, LINE19_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 120}); //横线
-        canvas->LineTo({80, 120});
+        canvas->MoveTo({MOVE9_X, MOVE9_Y}); // 横线
+        canvas->LineTo({LINE20_X, LINE20_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({200, 40}); //斜线
-        canvas->LineTo({260, 100});
+        canvas->MoveTo({MOVE10_X, MOVE10_Y}); // 斜线
+        canvas->LineTo({LINE21_X, LINE21_Y});
         canvas->DrawPath(paint);
 
         paint.SetStrokeColor(Color::Blue());
         paint.SetLineCap(LineCapEnum::ROUND_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({60, 20}); //竖线
-        canvas->LineTo({60, 80});
+        canvas->MoveTo({MOVE11_X, MOVE11_Y}); // 竖线
+        canvas->LineTo({LINE22_X, LINE22_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 140}); //横线
-        canvas->LineTo({80, 140});
+        canvas->MoveTo({MOVE12_X, MOVE12_Y}); // 横线
+        canvas->LineTo({LINE23_X, LINE23_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({240, 40}); //斜线
-        canvas->LineTo({300, 100});
+        canvas->MoveTo({MOVE13_X, MOVE13_Y}); // 斜线
+        canvas->LineTo({LINE24_X, LINE24_Y});
         canvas->DrawPath(paint);
     }
     void UITestCanvas::RM009LineJoinDrawPath()
@@ -1514,7 +1515,7 @@ namespace OHOS {
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Blue());
         paint.SetGlobalAlpha(0.5);
-        paint.Scale(0.5, 0.5);
+        paint.Scale(SCALE_X, SCALE_Y);
         canvas->BeginPath();
         canvas->MoveTo({MOVE1_X, MOVE1_Y});
         canvas->LineTo({LINE4_X, LINE4_Y});
@@ -1532,7 +1533,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.StrokeStyle(Color::Red());
-        paint.SetStrokeWidth(3);
+        paint.SetStrokeWidth(STROKE_WIDTH);
         canvas->BeginPath();
         canvas->MoveTo({MOVE2_X, MOVE2_Y});
         canvas->LineTo({LINE6_X, LINE6_Y});
@@ -1541,7 +1542,7 @@ namespace OHOS {
         canvas->ClosePath();
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Green());
-        paint.Rotate(20);
+        paint.Rotate(ROTATE_ANGLE);
         canvas->BeginPath();
         canvas->MoveTo({15, 15});
         canvas->LineTo({60, 15});
@@ -1550,33 +1551,33 @@ namespace OHOS {
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
-        paint.Translate(50, 50);
+        paint.Translate(TRANSLATE_X, TRANSLATE_Y);
         paint.StrokeStyle(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({MOVE2_X, MOVE2_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         paint.Transform(1, 0.5, 0.5, 2, 0, 0);
         paint.StrokeStyle(Color::Yellow());
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({MOVE2_X, MOVE2_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         paint.SetTransform(1, 0, 0, 2, 0, 0);
         paint.StrokeStyle(Color::Orange());
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({MOVE2_X, MOVE2_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
     }
@@ -1591,29 +1592,29 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({MOVE4_X, MOVE4_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE12_Y});
+        canvas->LineTo({LINE13_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         paint.SetGlobalAlpha(0.2);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({MOVE3_X, MOVE3_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE9_Y});
+        canvas->LineTo({LINE10_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({180, 100});
-        canvas->LineTo({180, 160});
-        canvas->LineTo({310, 160});
-        canvas->LineTo({310, 100});
+        canvas->MoveTo({MOVE5_X, MOVE5_Y});
+        canvas->LineTo({LINE14_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE15_Y});
+        canvas->LineTo({LINE16_X, LINE16_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1716,10 +1717,10 @@ namespace OHOS {
         paint.SetGlobalCompositeOperation(Paint::SOURCE_OUT);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({MOVE3_X, MOVE3_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE9_Y});
+        canvas->LineTo({LINE10_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1733,19 +1734,19 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({MOVE4_X, MOVE4_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE12_Y});
+        canvas->LineTo({LINE13_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::DESTINATION_OVER);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({MOVE3_X, MOVE3_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE9_Y});
+        canvas->LineTo({LINE10_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1760,19 +1761,19 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({MOVE4_X, MOVE4_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE12_Y});
+        canvas->LineTo({LINE13_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::DESTINATION_ATOP);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({MOVE3_X, MOVE3_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE9_Y});
+        canvas->LineTo({LINE10_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1922,30 +1923,30 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({MOVE4_X, MOVE4_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE12_Y});
+        canvas->LineTo({LINE13_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         paint.SetGlobalAlpha(0.2);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({MOVE3_X, MOVE3_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE9_Y});
+        canvas->LineTo({LINE10_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         canvas->Save(paint);
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({180, 100});
-        canvas->LineTo({180, 160});
-        canvas->LineTo({310, 160});
-        canvas->LineTo({310, 100});
+        canvas->MoveTo({MOVE5_X, MOVE5_Y});
+        canvas->LineTo({LINE14_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE15_Y});
+        canvas->LineTo({LINE16_X, LINE16_Y});
         canvas->ClosePath();
         paint = canvas->Restore();
         canvas->FillPath(paint);

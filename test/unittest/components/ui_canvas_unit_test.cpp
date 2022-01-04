@@ -2044,17 +2044,17 @@ HWTEST_F(UICanvasTest, UICanvasAddColorStop_001, TestSize.Level1)
     paint_->addColorStop(COLOR_STOP_2, colorStop2);
     paint_->addColorStop(COLOR_STOP_3, colorStop3);
     List<Paint::StopAndColor> stopAndColor = paint_->getStopAndColor();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_0);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop0.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_0);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop0.full);
     stopAndColor.PopFront();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_1);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop1.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_1);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop1.full);
     stopAndColor.PopFront();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_2);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop2.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_2);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop2.full);
     stopAndColor.PopFront();
-    EXPECT_EQ(stopAndColor.Head()->data_.stop,COLOR_STOP_3);
-    EXPECT_EQ(stopAndColor.Head()->data_.color.full,colorStop3.full);
+    EXPECT_EQ(stopAndColor.Head()->data_.stop, COLOR_STOP_3);
+    EXPECT_EQ(stopAndColor.Head()->data_.color.full, colorStop3.full);
     stopAndColor.PopFront();
 }
 
