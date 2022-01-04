@@ -118,7 +118,8 @@ uint32_t GifCanvasImageAnimator::SetGifFrame(GifFileType* gifFileType, int32_t i
 
     if (gcb.DelayTime >= 0) {
         imageView->Invalidate();
-        return static_cast<uint32_t>(gcb.DelayTime) * HUNDREDTHS; // 10: change hundredths (1/100) of a second to millisecond
+        // 10: change hundredths (1/100) of a second to millisecond
+        return static_cast<uint32_t>(gcb.DelayTime) * HUNDREDTHS;
     } else {
         return 0;
     }
