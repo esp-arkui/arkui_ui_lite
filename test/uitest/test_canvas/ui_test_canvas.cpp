@@ -1002,7 +1002,7 @@ namespace OHOS {
 
         canvas->BeginPath();
         canvas->MoveTo({LINE11_X, LINE26_X}); // 横线
-        canvas->LineTo({LINE20_X, LINE2_Y});
+        canvas->LineTo({LINE17_X, LINE2_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
@@ -1020,7 +1020,7 @@ namespace OHOS {
 
         canvas->BeginPath();
         canvas->MoveTo({LINE11_X, LINE23_Y}); // 横线
-        canvas->LineTo({LINE23_X, LINE23_Y});
+        canvas->LineTo({LINE17_X, LINE23_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
@@ -1523,7 +1523,7 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE3_X, LINE4_Y});
         canvas->LineTo({LINE4_X, LINE4_Y});
-        canvas->LineTo({LINE4_X, LINE5_Y});
+        canvas->LineTo({LINE4_X, LINE3_Y});
         canvas->LineTo({LINE3_X, LINE3_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
@@ -1542,7 +1542,7 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE8_X, LINE8_X});
         canvas->LineTo({LINE6_X, LINE6_Y});
-        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
         canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
@@ -1561,7 +1561,7 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE8_X, LINE6_Y});
         canvas->LineTo({LINE6_X, LINE6_Y});
-        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
         canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
@@ -1571,7 +1571,7 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE8_X, LINE6_Y});
         canvas->LineTo({LINE6_X, LINE6_Y});
-        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
         canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
@@ -1581,7 +1581,7 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE8_X, LINE6_Y});
         canvas->LineTo({LINE6_X, LINE6_Y});
-        canvas->LineTo({LINE7_X, LINE7_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
         canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
@@ -1600,7 +1600,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
@@ -1618,8 +1618,8 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE14_X, LINE1_Y});
         canvas->LineTo({LINE14_X, LINE14_Y});
-        canvas->LineTo({LINE15_X, LINE15_Y});
-        canvas->LineTo({LINE16_X, LINE1_Y});
+        canvas->LineTo({LINE15_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE1_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1637,7 +1637,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
@@ -1664,7 +1664,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
@@ -1690,7 +1690,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
@@ -1716,7 +1716,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::SOURCE_OUT);
@@ -1742,7 +1742,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::DESTINATION_OVER);
@@ -1769,7 +1769,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::DESTINATION_ATOP);
@@ -1796,7 +1796,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::DESTINATION_IN);
@@ -1823,7 +1823,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::DESTINATION_OUT);
@@ -1850,7 +1850,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::LIGHTER);
@@ -1877,7 +1877,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::COPY);
@@ -1904,7 +1904,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(Paint::XOR);
@@ -1931,7 +1931,7 @@ namespace OHOS {
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE12_X, LINE11_Y});
-        canvas->LineTo({LINE13_X, LINE13_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
@@ -1950,8 +1950,8 @@ namespace OHOS {
         canvas->BeginPath();
         canvas->MoveTo({LINE14_X, LINE1_Y});
         canvas->LineTo({LINE14_X, LINE14_Y});
-        canvas->LineTo({LINE15_X, LINE15_Y});
-        canvas->LineTo({LINE16_X, LINE1_Y});
+        canvas->LineTo({LINE15_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE1_Y});
         canvas->ClosePath();
         paint = canvas->Restore();
         canvas->FillPath(paint);
