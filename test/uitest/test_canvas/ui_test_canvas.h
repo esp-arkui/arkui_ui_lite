@@ -213,19 +213,27 @@ namespace OHOS {
         static constexpr float SCALE_X = 0.5;
         static constexpr float SCALE_Y = 0.5;
         static constexpr float ROTATE_ANGLE = 20;
-        static constexpr uint16_t STROKE_WIDTH = 3;
+        static constexpr float ROTATE45_ANGLE = 45;
+        static constexpr uint16_t STROKE3_WIDTH = 3;
+        static constexpr uint16_t STROKE8_WIDTH = 8;
         static constexpr uint16_t ARC_RADIUS = 80;
         static constexpr int16_t START1_ANGLE = 0;
         static constexpr int16_t END1_ANGLE = 180;
 
         static constexpr float SCALE1_X = 1;
-        static constexpr float SCALE1_Y = 2;
+        static constexpr float SCALE2_X = 2;
+        static constexpr float SCALE1_Y = 1;
+        static constexpr float SCALE2_Y = 2;
+        static constexpr float SCALE4_Y = 4;
         static constexpr float SHEAR_X = 0.5;
         static constexpr float SHEAR_Y = 0.5;
         static constexpr float TRANSLATE1_X = 0;
         static constexpr float TRANSLATE1_Y = 0;
         static constexpr float SHEAR1_X = 0;
         static constexpr float SHEAR1_Y = 0;
+        static constexpr float GLOBAL_ALPHA = 0.2;
+        static constexpr float GLOBAL1_ALPHA = 0.5;
+
         void CreateTitleLabel(const char* title);
         UICanvas* CreateCanvas();
 
