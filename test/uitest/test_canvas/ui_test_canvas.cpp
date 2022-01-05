@@ -1604,7 +1604,7 @@ namespace OHOS {
         canvas->ClosePath();
         canvas->FillPath(paint);
 
-        paint.SetGlobalAlpha(GLOBAL_ALPHA);
+        paint.SetGlobalAlpha(GLOBALALPHA2);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({MOVE3_X, MOVE3_Y});
@@ -1935,7 +1935,7 @@ namespace OHOS {
         canvas->ClosePath();
         canvas->FillPath(paint);
 
-        paint.SetGlobalAlpha(GLOBAL_ALPHA);
+        paint.SetGlobalAlpha(GLOBALALPHA2);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({MOVE3_X, MOVE3_Y});

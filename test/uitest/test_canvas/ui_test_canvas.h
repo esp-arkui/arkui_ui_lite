@@ -321,9 +321,10 @@ namespace OHOS {
         static constexpr int16_t HEIGHT_Y160 = 160;
         static constexpr int16_t HEIGHT_Y180 = 180;
         static constexpr int16_t HEIGHT_Y200 = 200;
-         static constexpr float GLOBALALPHA5 = 0.5;
-         static constexpr int16_t SCALE2 = 2;
-         static constexpr int16_t SCALE4 = 4;
+        static constexpr float GLOBALALPHA5 = 0.5;
+        static constexpr float GLOBALALPHA2 = 0.2;
+        static constexpr int16_t SCALE2 = 2;
+        static constexpr int16_t SCALE4 = 4;
         void CreateTitleLabel(const char* title);
         UICanvas* CreateCanvas();
 
