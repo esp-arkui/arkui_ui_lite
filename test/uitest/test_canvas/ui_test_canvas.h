@@ -116,7 +116,6 @@ namespace OHOS {
         const static int16_t TITLE_HEIGHT = 29;
         const static uint16_t CANVAS_WIDTH = 454;
         const static uint16_t CANVAS_HEIGHT = 200;
-
         static constexpr int16_t START1_X = 10;
         static constexpr int16_t START1_Y = 10;
         static constexpr int16_t START2_X = 80;
@@ -180,34 +179,6 @@ namespace OHOS {
         static constexpr int16_t LINE33_X = 215;
         static constexpr int16_t LINE34_X = 250;
 
-        static constexpr int16_t MOVE1_X = 5;
-        static constexpr int16_t MOVE1_Y = 5;
-        static constexpr int16_t MOVE2_X = 15;
-        static constexpr int16_t MOVE2_Y = 15;
-        static constexpr int16_t MOVE3_X = 100;
-        static constexpr int16_t MOVE3_Y = 60;
-        static constexpr int16_t MOVE4_X = 20;
-        static constexpr int16_t MOVE4_Y = 20;
-        static constexpr int16_t MOVE5_X = 180;
-        static constexpr int16_t MOVE5_Y = 100;
-        static constexpr int16_t MOVE6_X = 20;
-        static constexpr int16_t MOVE6_Y = 100;
-        static constexpr int16_t MOVE7_X = 180;
-        static constexpr int16_t MOVE7_Y = 40;
-        static constexpr int16_t MOVE8_X = 40;
-        static constexpr int16_t MOVE8_Y = 20;
-        static constexpr int16_t MOVE9_X = 20;
-        static constexpr int16_t MOVE9_Y = 120;
-        static constexpr int16_t MOVE10_X = 200;
-        static constexpr int16_t MOVE10_Y = 40;
-        static constexpr int16_t MOVE11_X = 60;
-        static constexpr int16_t MOVE11_Y = 20;
-        static constexpr int16_t MOVE12_X = 20;
-        static constexpr int16_t MOVE12_Y = 140;
-        static constexpr int16_t MOVE13_X = 240;
-        static constexpr int16_t MOVE13_Y = 40;
-        static constexpr int16_t MOVE14_X = 260;
-        static constexpr int16_t MOVE15_X = 230;
         static constexpr int16_t TRANSLATE_X = 50;
         static constexpr int16_t TRANSLATE_Y = 50;
         static constexpr float SCALE_X = 0.5;
