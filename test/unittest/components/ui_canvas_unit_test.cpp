@@ -423,14 +423,14 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_001, TestSize.Level0)
     float sinma = RADIUS * Sin(START_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - START_ANGLE);
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, CENTER_X + sinma);
-    EXPECT_EQ(start.y, CENTER_Y - cosma);
+    EXPECT_EQ(start.x, int16_t(CENTER_X + sinma));
+    EXPECT_EQ(start.y, int16_t(CENTER_Y - cosma));
 
     sinma = RADIUS * Sin(END_ANGLE);
     cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, CENTER_X + sinma);
-    EXPECT_EQ(end.y, CENTER_Y - cosma);
+    EXPECT_EQ(end.x, int16_t(CENTER_X + sinma));
+    EXPECT_EQ(end.y, int16_t(CENTER_Y - cosma));
 }
 
 /**
@@ -451,8 +451,8 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_002, TestSize.Level1)
     float sinma = RADIUS * Sin(START_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - START_ANGLE);
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, CENTER_X + sinma);
-    EXPECT_EQ(start.y,  CENTER_Y - cosma);
+    EXPECT_EQ(start.x, int16_t(CENTER_X + sinma));
+    EXPECT_EQ(start.y, int16_t(CENTER_Y - cosma));
 
     sinma = RADIUS * Sin(END_ANGLE);
     cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
@@ -484,8 +484,8 @@ HWTEST_F(UICanvasTest, UICanvasArcTo_003, TestSize.Level1)
     float sinma = RADIUS * Sin(END_ANGLE);
     float cosma = RADIUS * Sin(QUARTER_IN_DEGREE - END_ANGLE);
     Point end = canvas_->GetEndPos();
-    EXPECT_EQ(end.x, CENTER_X + sinma);
-    EXPECT_EQ(end.y, CENTER_Y - cosma);
+    EXPECT_EQ(end.x, int16_t(CENTER_X + sinma));
+    EXPECT_EQ(end.y, int16_t(CENTER_Y - cosma));
 }
 #endif
 
@@ -531,8 +531,8 @@ HWTEST_F(UICanvasTest, UICanvasAddRect_002, TestSize.Level1)
     canvas_->AddRect({ RECT_X, RECT_Y }, RECT_HEIGHT, RECT_WIDTH);
 
     Point start = canvas_->GetStartPos();
-    EXPECT_EQ(start.x, RECT_X);
-    EXPECT_EQ(start.y, RECT_Y);
+    EXPECT_EQ(start.x, START1_X);
+    EXPECT_EQ(start.y, START1_Y);
 
     Point end = canvas_->GetEndPos();
     EXPECT_EQ(end.x, 0);
@@ -919,9 +919,7 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
 
     canvas_->DrawRect({RECT_X, RECT_Y}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X);
-    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y);
-
+    
     canvas_->ClearRect({RECT_X + RECT_X / 2, RECT_Y + RECT_Y / 2},
                       RECT_HEIGHT / 2, RECT_WIDTH / 2, paint);
     EXPECT_EQ(canvas_->GetStartPos().x, RECT_X + RECT_X / 2);
@@ -936,8 +934,8 @@ HWTEST_F(UICanvasTest, UICanvasCleanRect_001, TestSize.Level1)
     paint.SetFillColor(Color::Blue());
     canvas_->StrokeRect({0, 0}, RECT_HEIGHT, RECT_WIDTH, paint);
     viewGroup->Add(canvas_);
-    EXPECT_EQ(canvas_->GetStartPos().x, 0);
-    EXPECT_EQ(canvas_->GetStartPos().y, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().x, 0);
+    EXPECT_EQ(canvas_->GetStartPosition().y, 0);
 
     canvas_->ClearRect({RECT_X - 10, RECT_Y - 10},
                        RECT_HEIGHT + 10, RECT_WIDTH + 10, paint);
@@ -977,8 +975,8 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_001, TestSize.Level1)
     
     canvas_->ClearRect({RECT_X + RECT_X / DOUBLENUMBER, RECT_Y + RECT_Y / DOUBLENUMBER},
                        RECT_HEIGHT / DOUBLENUMBER, RECT_WIDTH / DOUBLENUMBER, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / DOUBLENUMBER);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X + RECT_X / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y + RECT_Y / DOUBLENUMBER);
 
     viewGroup->Remove(canvas_);
 
@@ -1028,8 +1026,8 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_002, TestSize.Level1)
 
     canvas_->ClearRect({RECT_X + RECT_X / DOUBLENUMBER, RECT_Y + RECT_Y / DOUBLENUMBER},
                        RECT_HEIGHT / DOUBLENUMBER, RECT_WIDTH / DOUBLENUMBER, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / DOUBLENUMBER);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X + RECT_X / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y + RECT_Y / DOUBLENUMBER);
 
     viewGroup->Remove(canvas_);
 
@@ -1080,8 +1078,8 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
 
     canvas_->ClearRect({RECT_X + RECT_X / DOUBLENUMBER, RECT_Y + RECT_Y / DOUBLENUMBER},
                        RECT_HEIGHT / DOUBLENUMBER, RECT_WIDTH / DOUBLENUMBER, paint);
-    EXPECT_EQ(canvas_->GetStartPosition().x, RECT_X + RECT_X / DOUBLENUMBER);
-    EXPECT_EQ(canvas_->GetStartPosition().y, RECT_Y + RECT_Y / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPos().x, RECT_X + RECT_X / DOUBLENUMBER);
+    EXPECT_EQ(canvas_->GetStartPos().y, RECT_Y + RECT_Y / DOUBLENUMBER);
 
     viewGroup->Remove(canvas_);
 
