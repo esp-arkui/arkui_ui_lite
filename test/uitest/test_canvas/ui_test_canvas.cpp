@@ -1508,7 +1508,7 @@ namespace OHOS {
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Green());
         paint.SetGlobalAlpha(GLOBALALPHA5);
-        paint.Scale(2, 4);
+        paint.Scale(SCALE2, SCALE4);
         canvas->BeginPath();
         canvas->MoveTo({MOVETO5, MOVETO5});
         canvas->LineTo({LINET050, MOVETO5});

@@ -302,8 +302,6 @@ namespace OHOS {
         static constexpr int16_t LINEARGRADIENT100 = 100;
         static constexpr int16_t LINEARGRADIENT80 = 80;
         static constexpr int16_t LINEARGRADIENT270 = 270;
-        static constexpr float COLOR_STOP3 = 0.3;
-        static constexpr float COLOR_STOP6 = 0.6;
         static constexpr int16_t OFFSETX10 = 10;
         static constexpr int16_t OFFSETX20 = 20;
         static constexpr int16_t SHADOWBLUR15 = 15;
@@ -320,6 +318,7 @@ namespace OHOS {
         static constexpr int16_t HEIGHT_Y200 = 200;
          static constexpr float GLOBALALPHA5 = 0.5;
          static constexpr int16_t SCALE2 = 2;
+         static constexpr int16_t SCALE4 = 4;
         void CreateTitleLabel(const char* title);
         UICanvas* CreateCanvas();
 
