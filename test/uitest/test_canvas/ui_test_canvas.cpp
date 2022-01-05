@@ -58,15 +58,15 @@ namespace OHOS {
 //        RM012SaveOrRestore002();
 //        RM012GlobalCompositeOperationSOURCE_OVER();
         RM012GlobalCompositeOperationSOURCE_ATOP();
-        RM012GlobalCompositeOperationSOURCE_IN();
-        RM012GlobalCompositeOperationSOURCE_OUT();
-        RM012GlobalCompositeOperationDESTINATION_OVER();
+//        RM012GlobalCompositeOperationSOURCE_IN();
+//        RM012GlobalCompositeOperationSOURCE_OUT();
+//        RM012GlobalCompositeOperationDESTINATION_OVER();
         RM012GlobalCompositeOperationDESTINATION_ATOP();
-        RM012GlobalCompositeOperationDESTINATION_IN();
-        RM012GlobalCompositeOperationDESTINATION_OUT();
-        RM012GlobalCompositeOperationLIGHTER();
-        RM012GlobalCompositeOperationCopy();
-        RM012GlobalCompositeOperationXOR();
+//        RM012GlobalCompositeOperationDESTINATION_IN();
+//        RM012GlobalCompositeOperationDESTINATION_OUT();
+//        RM012GlobalCompositeOperationLIGHTER();
+//        RM012GlobalCompositeOperationCopy();
+//        RM012GlobalCompositeOperationXOR();
 //        UIKitCanvasTestDrawLine001();
 //        UIKitCanvasTestDrawLine002();
 //        UIKitCanvasTestDrawCurve001();
@@ -1670,8 +1670,8 @@ namespace OHOS {
 //        canvas->LineTo({230, 60});
 //        canvas->ClosePath();
 
-        canvas->DrawCircle({150,80},20,paint);
-        canvas->FillPath(paint);
+        canvas->DrawCircle({150,80},40,paint);
+//        canvas->FillPath(paint);
     }
     void UITestCanvas::RM012GlobalCompositeOperationSOURCE_IN()
     {
@@ -1762,12 +1762,13 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
-        canvas->ClosePath();
-        canvas->FillPath(paint);
+//        canvas->MoveTo({20, 20});
+//        canvas->LineTo({20, 80});
+//        canvas->LineTo({150, 80});
+//        canvas->LineTo({150, 20});
+//        canvas->ClosePath();
+//        canvas->FillPath(paint);
+        canvas->DrawCircle({150,80},40,paint);
         paint.SetGlobalCompositeOperation(DESTINATION_ATOP);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();

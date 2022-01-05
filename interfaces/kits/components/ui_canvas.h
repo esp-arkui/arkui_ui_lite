@@ -351,6 +351,7 @@ namespace OHOS {
         void SetStrokeColor(ColorType color)
         {
             strokeColor_ = color;
+            changeFlage_ = true;
         }
 
         /**
@@ -379,6 +380,7 @@ namespace OHOS {
         void SetFillColor(ColorType color)
         {
             fillColor_ = color;
+            changeFlage_ = true;
         }
 
         /**

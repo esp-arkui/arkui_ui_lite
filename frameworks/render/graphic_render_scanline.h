@@ -226,12 +226,12 @@ namespace OHOS {
     {
         switch(op)
         {
-//        case SOURCE_OVER          : sbool_unite_shapes_aa       (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
-        case SOURCE_ATOP         : sbool_unite_shapes_aa   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
+//        case SOURCE_OVER          : sbool_unite_shapes_aa   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
+        case SOURCE_ATOP          : sbool_unite_shapes_aa   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
 //        case Paint::SOURCE_IN         : sbool_xor_shapes_aa         (sg1, sg2, sl1, sl2, sl, ren); break;
 //        case Paint::SOURCE_OUT  : sbool_xor_shapes_saddle_aa  (sg1, sg2, sl1, sl2, sl, ren); break;
 //        case Paint::DESTINATION_OVER: sbool_xor_shapes_abs_diff_aa(sg1, sg2, sl1, sl2, sl, ren); break;
-//        case DESTINATION_ATOP   : sbool_unite_shapes_aa   (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
+        case DESTINATION_ATOP   : sbool_unite_shapes_aa   (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
 //        case Paint::DESTINATION_IN   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
 //        case Paint::DESTINATION_OUT   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
 //        case Paint::LIGHTER   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
@@ -300,7 +300,7 @@ namespace OHOS {
                                 if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength){
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
                                                             ren_color1,
-                                                            span2->covers);
+                                                            span1->covers);
                                 }
 
                                 // spa2   ------------------------
@@ -310,7 +310,7 @@ namespace OHOS {
                                    x1+span1->spanLength >= x2+span2->spanLength){
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)(span2->spanLength-(x1-x2)),
                                                             ren_color1,
-                                                            span2->covers);
+                                                            span1->covers);
                                 }
 
                                 // spa2              ------------------------
