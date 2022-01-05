@@ -56,7 +56,7 @@ namespace OHOS {
 //        RM011CanvasRotate001();
 //        RM012globalAlpha001();
 //        RM012SaveOrRestore002();
-        RM012GlobalCompositeOperationSOURCE_OVER();
+//        RM012GlobalCompositeOperationSOURCE_OVER();
         RM012GlobalCompositeOperationSOURCE_ATOP();
         RM012GlobalCompositeOperationSOURCE_IN();
         RM012GlobalCompositeOperationSOURCE_OUT();
@@ -1634,7 +1634,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
+        paint.SetGlobalCompositeOperation(SOURCE_OVER);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1661,14 +1661,16 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
+        paint.SetGlobalCompositeOperation(SOURCE_ATOP);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
-        canvas->ClosePath();
+//        canvas->MoveTo({100, 60});
+//        canvas->LineTo({100, 120});
+//        canvas->LineTo({230, 120});
+//        canvas->LineTo({230, 60});
+//        canvas->ClosePath();
+
+        canvas->DrawCircle({150,80},20,paint);
         canvas->FillPath(paint);
     }
     void UITestCanvas::RM012GlobalCompositeOperationSOURCE_IN()
@@ -1676,7 +1678,7 @@ namespace OHOS {
         if (container_ == nullptr) {
             return;
         }
-        CreateTitleLabel("RM012_设置混合_SOURCE_IN_只显示两个xiang交部分显示第二个图源颜色");
+        CreateTitleLabel("RM012_设置混合_SOURCE_IN_只显示两个相交部分显示第二个图源颜色");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetFillColor(Color::Red());
@@ -1687,7 +1689,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
+        paint.SetGlobalCompositeOperation(SOURCE_IN);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1713,7 +1715,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::SOURCE_OUT);
+        paint.SetGlobalCompositeOperation(SOURCE_OUT);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1739,7 +1741,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::DESTINATION_OVER);
+        paint.SetGlobalCompositeOperation(DESTINATION_OVER);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1766,7 +1768,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::DESTINATION_ATOP);
+        paint.SetGlobalCompositeOperation(DESTINATION_ATOP);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1793,7 +1795,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::DESTINATION_IN);
+        paint.SetGlobalCompositeOperation(DESTINATION_IN);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1820,7 +1822,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::DESTINATION_OUT);
+        paint.SetGlobalCompositeOperation(DESTINATION_OUT);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1847,7 +1849,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::LIGHTER);
+        paint.SetGlobalCompositeOperation(LIGHTER);
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1874,7 +1876,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::COPY);
+        paint.SetGlobalCompositeOperation(COPY);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});
@@ -1901,7 +1903,7 @@ namespace OHOS {
         canvas->LineTo({150, 20});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        paint.SetGlobalCompositeOperation(Paint::XOR);
+        paint.SetGlobalCompositeOperation(XOR);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
         canvas->MoveTo({100, 60});

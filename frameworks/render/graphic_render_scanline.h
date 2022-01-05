@@ -27,9 +27,28 @@
 #include <cstring>
 #include <limits>
 
+#include <components/ui_canvas.h>
+
 #include "render/graphic_render_base.h"
 
 namespace OHOS {
+
+
+
+//enum GlobalCompositeOperation {
+//    SOURCE_OVER,      // 默认。在目标图像上显示源图像。
+//    SOURCE_ATOP,      // 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。
+//    SOURCE_IN,        // 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。
+//    SOURCE_OUT,       // 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。
+//    DESTINATION_OVER, // 在源图像上显示目标图像。
+//    DESTINATION_ATOP, // 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。
+//    DESTINATION_IN,   // 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。
+//    DESTINATION_OUT,  // 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。
+//    LIGHTER,          // 显示源图像 + 目标图像。
+//    COPY,             // 显示源图像。忽略目标图像。
+//    XOR               // 使用异或操作对源图像与目标图像进行组合。
+//};
+
     /**
      * @brief 渲染实线的反走样扫描线
      * 通过scanline.begin获取第一个span,++span获取下一个span
@@ -49,41 +68,6 @@ namespace OHOS {
 
             scanline.Reset(raster.MinX(), raster.MaxX());
             while (raster.SweepScanline(scanline)) {
-                int y = scanline.GetYLevel();
-                unsigned num_spans = scanline.NumSpans();
-                typename Scanline::ConstIterator span = scanline.Begin();
-
-                while (true) {
-                    int x = span->x;
-                    if (span->spanLength > 0) {
-                        renBase.BlendSolidHspan(x, y, (unsigned)span->spanLength,
-                                                ren_color,
-                                                span->covers);
-                    } else {
-                        renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
-                                           ren_color,
-                                           *(span->covers));
-                    }
-                    if (--num_spans == 0) {
-                        break;
-                    }
-                    ++span;
-                }
-            }
-        }
-    }
-
-
-    template <class Rasterizer, class Scanline,
-              class BaseRenderer, class ColorT>
-    void RenderScanlinesAntiAliasSolidAnd(Rasterizer* raster, Scanline& scanline,
-                                       BaseRenderer& renBase, const ColorT& color)
-    {
-        if (raster->RewindScanlines()) {
-            typename BaseRenderer::color_type ren_color = color;
-
-            scanline.Reset(raster->MinX(), raster->MaxX());
-            while (raster->SweepScanline(scanline)) {
                 int y = scanline.GetYLevel();
                 unsigned num_spans = scanline.NumSpans();
                 typename Scanline::ConstIterator span = scanline.Begin();
@@ -228,6 +212,145 @@ namespace OHOS {
         }
     }
 
+
+    //===========================================================================================//
+
+
+    template<class Rasterizer,
+             class Scanline,
+             class BaseRenderer,
+             class ColorT>
+    void sbool_combine_shapes_aa(GlobalCompositeOperation op,
+                                 Rasterizer& raster1, Rasterizer& raster2,
+                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
+    {
+        switch(op)
+        {
+//        case SOURCE_OVER          : sbool_unite_shapes_aa       (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
+        case SOURCE_ATOP         : sbool_unite_shapes_aa   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
+//        case Paint::SOURCE_IN         : sbool_xor_shapes_aa         (sg1, sg2, sl1, sl2, sl, ren); break;
+//        case Paint::SOURCE_OUT  : sbool_xor_shapes_saddle_aa  (sg1, sg2, sl1, sl2, sl, ren); break;
+//        case Paint::DESTINATION_OVER: sbool_xor_shapes_abs_diff_aa(sg1, sg2, sl1, sl2, sl, ren); break;
+//        case DESTINATION_ATOP   : sbool_unite_shapes_aa   (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
+//        case Paint::DESTINATION_IN   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
+//        case Paint::DESTINATION_OUT   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
+//        case Paint::LIGHTER   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
+//        case Paint::COPY   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
+//        case Paint::XOR   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
+        }
+    }
+
+    template<class Rasterizer,
+             class Scanline,
+             class BaseRenderer,
+             class ColorT>
+    void sbool_unite_shapes_aa(Rasterizer& raster1, Rasterizer& raster2,
+                               Scanline& scanline1, Scanline& scanline2,
+                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
+    {
+        typename BaseRenderer::color_type ren_color1 = color1;
+        typename BaseRenderer::color_type ren_color2 = color2;
+        if (raster1.RewindScanlines()&&raster2.RewindScanlines()) {
+            scanline1.Reset(raster1.MinX(), raster1.MaxX());
+            scanline2.Reset(raster2.MinX(), raster2.MaxX());
+
+            int y1 = 0;
+            if(raster1.SweepScanline(scanline1)){
+                y1 = scanline1.GetYLevel();
+            }
+
+
+
+            while (raster2.SweepScanline(scanline2)) {
+                int y2 = scanline2.GetYLevel();
+                unsigned num_spans2 = scanline2.NumSpans();
+                typename Scanline::ConstIterator span2 = scanline2.Begin();
+
+                unsigned num_spans1;
+                typename Scanline::ConstIterator span1;
+
+                if(y1 == y2){
+                    num_spans1 = scanline1.NumSpans();
+                    span1 = scanline1.Begin();
+                }
+
+                if(y2 > y1){
+                    while(raster1.SweepScanline(scanline1)){
+                        y1 = scanline1.GetYLevel();
+                        if(y1 == y2){
+                            num_spans1 = scanline1.NumSpans();
+                            span1 = scanline1.Begin();
+                            break;
+                        }
+                    }
+                }
+
+                while (true) {
+                    int x2 = span2->x;
+                    if(y1 == y2){
+                        int x1 = span1->x;
+                        if (span2->spanLength > 0) {
+                            if(span1->spanLength > 0){
+                                renBase.BlendSolidHspan(x2, y2, (unsigned)span2->spanLength,
+                                                        ren_color2,
+                                                        span2->covers);
+                                // span1在span2中
+                                // spa2   ------------------------
+                                // spa1     -------------------
+                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength){
+                                    renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
+                                                            ren_color1,
+                                                            span2->covers);
+                                }
+
+                                // spa2   ------------------------
+                                // spa1                 -------------------
+                                if(x1>x2 &&
+                                   x1<x2+span2->spanLength &&
+                                   x1+span1->spanLength >= x2+span2->spanLength){
+                                    renBase.BlendSolidHspan(x1, y2, (unsigned)(span2->spanLength-(x1-x2)),
+                                                            ren_color1,
+                                                            span2->covers);
+                                }
+
+                                // spa2              ------------------------
+                                // spa1     -------------------
+                                if(x1<x2&&
+                                   x1+span1->spanLength > x2 &&
+                                   x1+span1->spanLength < x2+span2->spanLength){
+                                    renBase.BlendSolidHspan(x2, y2, (unsigned)(span1->spanLength-(x2-x1)),
+                                                            ren_color1,
+                                                            span2->covers);
+                                }
+                            }
+                        }
+                        ++span1;
+
+                    }else{
+                        if (span2->spanLength > 0) {
+                            renBase.BlendSolidHspan(x2, y2, (unsigned)span2->spanLength,
+                                                    ren_color2,
+                                                    span2->covers);
+                        } else {
+                            renBase.BlendHline(x2, y2, (unsigned)(x2 - span2->spanLength - 1),
+                                               ren_color2,
+                                               *(span2->covers));
+                        }
+                    }
+                    if (--num_spans2 == 0) {
+                        break;
+                    }
+                    ++span2;
+                }
+                if(y1 == y2){
+                    raster1.SweepScanline(scanline1);
+                    y1 = scanline1.GetYLevel();
+                    num_spans1 = scanline1.NumSpans();
+                    span1 = scanline1.Begin();
+                }
+            }
+        }
+    }
 } // namespace OHOS
 
 #endif
