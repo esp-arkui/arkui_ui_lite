@@ -36,11 +36,13 @@ namespace OHOS {
         typedef typename pixfmt_type::RowData RowData;
 
         RendererBase() :
-            pixfmtType(0), clipBox(1, 1, 0, 0)
+            pixfmtType(0),
+            clipBox(1, 1, 0, 0)
         {
         }
         explicit RendererBase(pixfmt_type& ren) :
-            pixfmtType(&ren), clipBox(0, 0, ren.Width() - 1, ren.Height() - 1)
+            pixfmtType(&ren),
+            clipBox(0, 0, ren.Width() - 1, ren.Height() - 1)
         {
         }
 
@@ -423,7 +425,6 @@ namespace OHOS {
 
             RectI rdst(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
             RectI rect = ClipRectArea(rdst, rsrc, src.Width(), src.Height());
-
             if (rect.x2 > 0) {
                 int incy = 1;
                 if (rdst.y1 > rsrc.y1) {
@@ -464,5 +465,4 @@ namespace OHOS {
     };
 
 } // namespace OHOS
-
 #endif
