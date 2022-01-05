@@ -1485,7 +1485,7 @@ namespace OHOS {
         canvas->StrokeText("希腊语：Γεια.", {0, HEIGHT_Y160}, fontStyle, paint);
         canvas->StrokeText("瑞典语:Hej, Hongmeng.", {0, HEIGHT_Y180}, fontStyle, paint);
         canvas->StrokeText("俄语: Привет, hongmon ", {0, HEIGHT_Y200}, fontStyle, paint);
-        paint.Scale(SCALE1_Y, 1);
+        paint.Scale(SCALE1_X, SCALE1_Y);
         paint.Rotate(ROTATE45);
         canvas->StrokeText("中国 你好，鸿蒙。。", {HEIGHT_Y20, 0}, fontStyle, paint);
     }
