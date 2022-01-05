@@ -1479,12 +1479,12 @@ namespace OHOS {
         renBase.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
                         invalidatedArea.GetBottom());
 
-        double parallelogram[OHOS::INDEX_SIX] = {double(cordsTmp.GetLeft()), double(cordsTmp.GetTop()),
-                                                 double(cordsTmp.GetRight()), double(cordsTmp.GetTop()),
-                                                 double(cordsTmp.GetRight()), double(cordsTmp.GetBottom())};
+        float parallelogram[OHOS::INDEX_SIX] = {float(cordsTmp.GetLeft()), float(cordsTmp.GetTop()),
+                                                 float(cordsTmp.GetRight()), float(cordsTmp.GetTop()),
+                                                 float(cordsTmp.GetRight()), float(cordsTmp.GetBottom())};
 
-        OHOS::TransAffine mtx((double)cordsTmp.GetLeft(), (double)cordsTmp.GetTop(), (double)cordsTmp.GetRight(),
-                              (double)cordsTmp.GetBottom(), parallelogram);
+        OHOS::TransAffine mtx((float)cordsTmp.GetLeft(), (float)cordsTmp.GetTop(), (float)cordsTmp.GetRight(),
+                              (float)cordsTmp.GetBottom(), parallelogram);
         mtx *= transform;
         mtx.Invert();
         typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
