@@ -171,7 +171,6 @@ namespace OHOS {
         static constexpr int16_t LINE32_X = 270;
         static constexpr int16_t LINE33_X = 215;
         static constexpr int16_t LINE34_X = 250;
-
         static constexpr int16_t TRANSLATE_X = 50;
         static constexpr int16_t TRANSLATE_Y = 50;
         static constexpr float SCALE_X = 0.5;
@@ -183,7 +182,6 @@ namespace OHOS {
         static constexpr uint16_t ARC_RADIUS = 80;
         static constexpr int16_t START1_ANGLE = 0;
         static constexpr int16_t END1_ANGLE = 180;
-
         static constexpr float SCALE1_X = 1;
         static constexpr float SCALE2_X = 2;
         static constexpr float SCALE1_Y = 1;
@@ -222,14 +220,14 @@ namespace OHOS {
         static constexpr int16_t ROTATE20 = 20;
         static constexpr int16_t ROTATE_20 = -20;
         static constexpr int16_t ROTATE_45 = -45;
-         static constexpr int16_t ROTATE45 = 45;
+        static constexpr int16_t ROTATE45 = 45;
         static constexpr int16_t IMAGE_START60 = 60;
         static constexpr int16_t IMAGE_START100 = 100;
         static constexpr int16_t IMAGE_START20 = 20;
         static constexpr int16_t IMAGE_WIDTH100 = 100;
         static constexpr int16_t IMAGE_HEIGHT100 = 100;
         static constexpr int16_t FONT_SIZE30 = 30;
-         static constexpr int16_t FONT_SIZE15 = 15;
+        static constexpr int16_t FONT_SIZE15 = 15;
         static constexpr int16_t FONT_LETTERSPACE = 10;
         static constexpr int16_t FONT_LETTERSPACE2 = 2;
         static constexpr int16_t LABEL_START50 = 50;
@@ -247,8 +245,8 @@ namespace OHOS {
         static constexpr int16_t MOVETO30 = 30;
         static constexpr int16_t MOVETO60 = 60;
         static constexpr int16_t LINET020 = 20;
-         static constexpr int16_t LINET050 = 50;
-         static constexpr int16_t LINET035 = 35;
+        static constexpr int16_t LINET050 = 50;
+        static constexpr int16_t LINET035 = 35;
         static constexpr int16_t LINET080 = 80;
         static constexpr int16_t LINET0100 = 100;
         static constexpr int16_t LINET0200 = 200;
@@ -256,7 +254,7 @@ namespace OHOS {
         static constexpr int16_t LINET0180 = 180;
         static constexpr int16_t LINE_DASH_OFFSET5 = 5;
         static constexpr int16_t STROKEWIDTH2 = 2;
-         static constexpr int16_t STROKEWIDTH3 = 3;
+        static constexpr int16_t STROKEWIDTH3 = 3;
         static constexpr int16_t STROKEWIDTH8 = 8;
         static constexpr int16_t RECT40 = 40;
         static constexpr int16_t RECT50 = 50;
