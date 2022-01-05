@@ -406,10 +406,6 @@ bool Image::SetJPEGSrc(const char* src)
 
 void Image::ReInitImageInfo(ImageInfo* imgInfo, bool mallocFlag)
 {
-    if (imageInfo_ == nullptr) {
-        return;
-    }
-
     if (mallocFlag_) {
         if (imageInfo_->data != nullptr) {
             UIFree(reinterpret_cast<void*>(const_cast<uint8_t*>(imageInfo_->data)));
