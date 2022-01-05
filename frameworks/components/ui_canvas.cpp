@@ -281,6 +281,7 @@ namespace OHOS {
             ClosePath();
             DrawPath(paint);
         }
+        SetStartPosition(startPoint);
     }
 
     void UICanvas::ClearRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
