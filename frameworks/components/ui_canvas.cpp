@@ -655,7 +655,7 @@ namespace OHOS {
             }
 
             if (haveComposite) {
-                OnBlendDraw2(gfxDstBuffer, trunc);
+                OnBlendDraw(gfxDstBuffer, trunc);
             } else {
                 curDraw = drawCmdList_.Begin();
                 for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -668,57 +668,7 @@ namespace OHOS {
 
     void UICanvas::OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc)
     {
-        BufferInfo* gfxMapBuffer = new BufferInfo();
         Rect rect = GetOrigRect();
-        CopyBuffer(*gfxMapBuffer, gfxDstBuffer);
-        ListNode<DrawCmd>* curDraw = curDraw = drawCmdList_.Begin();
-        for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
-            curDraw->data_.DrawGraphics(*gfxMapBuffer, curDraw->data_.param,
-                                        curDraw->data_.paint, rect, trunc, *style_);
-        }
-
-        RenderingBuffer renderBuffer;
-        RenderingBuffer renderBufferPre;
-
-        // 初始化buffer和 m_transform
-        renderBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->virAddr), gfxMapBuffer->width, gfxMapBuffer->height,
-                            gfxMapBuffer->stride);
-        renderBufferPre.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
-                               gfxDstBuffer.stride);
-        typedef Rgba8 Rgba8Color;
-        // 组装renderbase
-        // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
-        typedef OrderBgra ComponentOrder;
-        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-        typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
-        typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
-        typedef RendererBase<PixFormat> RendererBase;
-        PixFormat pixFormatCom(renderBuffer);
-        RendererBase renBaseCom(pixFormatCom);
-
-        typedef CompOpAdaptorRgbaPre<Rgba8Color, ComponentOrder> BlenderPre;
-        typedef PixfmtCustomBlendRgba<BlenderPre, OHOS::RenderingBuffer> PixFormatPre;
-        typedef OHOS::RendererBase<PixFormatPre> RendererBasePre;
-        PixFormatPre pixFormatPre(renderBufferPre);
-        RendererBasePre renBasePre(pixFormatPre);
-        RectI truncRect = {trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom()};
-        renBaseCom.ResetClipping(true);
-        renBaseCom.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
-
-        renBasePre.ResetClipping(true);
-        renBasePre.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
-        pixFormatPre.CompOp(SOURCE_OVER);
-        renBasePre.BlendFrom(pixFormatCom);
-
-        BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
-        delete gfxMapBuffer;
-        gfxMapBuffer = nullptr;
-    }
-
-    void UICanvas::OnBlendDraw2(BufferInfo& gfxDstBuffer, const Rect& trunc)
-    {
-        Rect rect = GetOrigRect();
-        ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         RenderingBuffer renderBuffer;
         TransAffine transform;
         typedef Rgba8 Rgba8Color;
@@ -741,6 +691,7 @@ namespace OHOS {
         }
         PathParam* pathParam = static_cast<PathParam*>(drawCmd.param);
 
+        ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, *style_, curDraw->data_.paint);
         blendRasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
         SetRasterizer(*pathParam->vertices, curDraw->data_.paint, blendRasterizer, transform, pathParam->isStroke);
@@ -748,26 +699,15 @@ namespace OHOS {
         if (pathParam->isStroke) {
             if (drawCmd.paint.GetStyle() == Paint::STROKE_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                blendColor.redValue = drawCmd.paint.GetStrokeColor().red;
-                blendColor.greenValue = drawCmd.paint.GetStrokeColor().green;
-                blendColor.blueValue = drawCmd.paint.GetStrokeColor().blue;
-                blendColor.alphaValue = drawCmd.paint.GetStrokeColor().alpha * drawCmd.paint.GetGlobalAlpha();
+                ChangeColor(blendColor,drawCmd.paint.GetStrokeColor(),drawCmd.paint.GetStrokeColor().alpha * drawCmd.paint.GetGlobalAlpha());
             }
         } else {
             if (drawCmd.paint.GetStyle() == Paint::FILL_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                blendColor.redValue = drawCmd.paint.GetFillColor().red;
-                blendColor.greenValue = drawCmd.paint.GetFillColor().green;
-                blendColor.blueValue = drawCmd.paint.GetFillColor().blue;
-                blendColor.alphaValue = drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha();
+                ChangeColor(blendColor,drawCmd.paint.GetFillColor(),drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha());
             }
         }
-
-
-        backColor.redValue = style_->bgColor_.red;
-        backColor.greenValue = style_->bgColor_.green;
-        backColor.blueValue = style_->bgColor_.blue;
-        backColor.alphaValue = style_->bgColor_.alpha;
+        ChangeColor(backColor,style_->bgColor_,style_->bgColor_.alpha);
 
         ScanlineUnPackedContainer scanline;
         typedef OrderBgra Order;
@@ -805,24 +745,18 @@ namespace OHOS {
             if (pathParam->isStroke) {
                 if (curDraw->data_.paint.GetStyle() == Paint::STROKE_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = curDraw->data_.paint.GetStrokeColor().red;
-                    color.greenValue = curDraw->data_.paint.GetStrokeColor().green;
-                    color.blueValue = curDraw->data_.paint.GetStrokeColor().blue;
-                    color.alphaValue = curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
+                    ChangeColor(color,curDraw->data_.paint.GetStrokeColor(),curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
                 }
             } else {
                 if (curDraw->data_.paint.GetStyle() == Paint::FILL_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = curDraw->data_.paint.GetFillColor().red;
-                    color.greenValue = curDraw->data_.paint.GetFillColor().green;
-                    color.blueValue = curDraw->data_.paint.GetFillColor().blue;
-                    color.alphaValue = curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
+                    ChangeColor(color,curDraw->data_.paint.GetFillColor(),curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
+
                 }
             }
 
             Scanline scanline1;
             Scanline scanline2;
-
 
             if(drawCmd.paint.GetGlobalCompositeOperation()==LIGHTER){
                 backColor.redValue = (blendColor.redValue+color.redValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.redValue+color.redValue);
@@ -830,8 +764,7 @@ namespace OHOS {
                 backColor.blueValue = (blendColor.blueValue+color.blueValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.blueValue+color.blueValue);
                 backColor.alphaValue = (blendColor.alphaValue+color.alphaValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.alphaValue+color.alphaValue);
             }
-
-            sbool_combine_shapes_aa(drawCmd.paint.GetGlobalCompositeOperation(),
+            BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),
                                     blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color,backColor);
         }
     }
@@ -1129,7 +1062,7 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+       DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
     }
 
     void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
@@ -1139,7 +1072,7 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+       DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
     }
 
     void UICanvas::SetRasterizer(UICanvasVertices& vertices,
@@ -1244,95 +1177,6 @@ namespace OHOS {
 #endif
     }
 
-    void UICanvas::DoRenderBlend(BufferInfo& gfxDstBuffer,
-                                 void* param,
-                                 const Paint& paint,
-                                 const Rect& rect,
-                                 const Rect& invalidatedArea,
-                                 const Style& style,
-                                 const bool& isStroke)
-    {
-        if (param == nullptr) {
-            return;
-        }
-#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
-        if (paint.HaveShadow()) {
-            DoDrawShadow(gfxDstBuffer, param, paint, rect, invalidatedArea, style, isStroke);
-        }
-#endif
-        TransAffine transform;
-        RenderingBuffer renderBuffer;
-
-        // 初始化buffer和 m_transform
-        InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
-
-        typedef Rgba8 Rgba8Color;
-        // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
-        typedef OrderBgra ComponentOrder;
-        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-        typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> Blender;
-        typedef PixfmtCustomBlendRgba<Blender, RenderingBuffer> PixFormat;
-        typedef RendererBase<PixFormat> RendererBasePre;
-        typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
-        SpanAllocator allocator;
-        PixFormat pixFormatCom(renderBuffer);
-        RendererBasePre renBaseCom(pixFormatCom);
-        RasterizerScanlineAntiAlias<> rasterizer;
-        ScanlineUnPackedContainer m_scanline;
-
-        PathParam* pathParam = static_cast<PathParam*>(param);
-        rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
-        SetRasterizer(*pathParam->vertices, paint, rasterizer, transform, isStroke);
-        renBaseCom.ResetClipping(true);
-        renBaseCom.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(),
-                           invalidatedArea.GetBottom());
-
-        pixFormatCom.CompOp(paint.GetGlobalCompositeOperation());
-
-        if (paint.GetGlobalCompositeOperation() == COPY) {
-            Rgba8Color rgba8Color;
-            rgba8Color.redValue = 0;
-            rgba8Color.greenValue = 0;
-            rgba8Color.blueValue = 0;
-            rgba8Color.alphaValue = 0;
-            renBaseCom.Clear(rgba8Color);
-        }
-
-        if (paint.GetGlobalCompositeOperation() == SOURCE_IN ||
-            paint.GetGlobalCompositeOperation() == SOURCE_OUT) {
-            Rgba8Color rgba8Color1;
-            rgba8Color1.redValue = style.bgColor_.red;
-            rgba8Color1.greenValue = style.bgColor_.green;
-            rgba8Color1.blueValue = style.bgColor_.blue;
-            rgba8Color1.alphaValue = style.bgColor_.alpha;
-            renBaseCom.ReplaceColor(rgba8Color1);
-        }
-
-        if (paint.GetStyle() == Paint::STROKE_STYLE || paint.GetStyle() == Paint::FILL_STYLE ||
-            paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-            RenderSolid(paint, rasterizer, renBaseCom, isStroke);
-        }
-#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        if (paint.GetStyle() == Paint::GRADIENT) {
-            RenderGradient(paint, rasterizer, transform, renBaseCom, renderBuffer, allocator, invalidatedArea);
-        }
-#endif
-#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
-        if (paint.GetStyle() == Paint::PATTERN) {
-            RenderPattern(paint, pathParam->imageParam, rasterizer, renBaseCom, allocator, rect);
-        }
-
-        if (paint.GetGlobalCompositeOperation() == DESTINATION_ATOP ||
-            paint.GetGlobalCompositeOperation() == DESTINATION_IN) {
-            Rgba8Color rgba8Color;
-            rgba8Color.redValue = 0;
-            rgba8Color.greenValue = 0;
-            rgba8Color.blueValue = 0;
-            rgba8Color.alphaValue = 0;
-            RenderClipAntiAliasSolid(rasterizer, m_scanline, renBaseCom, rgba8Color);
-        }
-#endif
-    }
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
     void UICanvas::DoDrawShadow(BufferInfo& gfxDstBuffer,
                                 void* param,
@@ -1379,10 +1223,7 @@ namespace OHOS {
                           invalidatedArea.GetBottom());
 
         Rgba8Color shadowColor;
-        shadowColor.redValue = paint.GetShadowColor().red;
-        shadowColor.greenValue = paint.GetShadowColor().green;
-        shadowColor.blueValue = paint.GetShadowColor().blue;
-        shadowColor.alphaValue = paint.GetShadowColor().alpha * paint.GetGlobalAlpha();
+        ChangeColor(shadowColor,paint.GetShadowColor(),paint.GetShadowColor().alpha * paint.GetGlobalAlpha());
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
 #        if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE

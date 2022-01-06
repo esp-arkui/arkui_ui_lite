@@ -1283,8 +1283,6 @@ namespace OHOS {
 
         void OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc);
 
-        void OnBlendDraw2(BufferInfo& gfxDstBuffer, const Rect& trunc);
-
         void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
     protected:
@@ -1519,13 +1517,6 @@ namespace OHOS {
                              const Rect& invalidatedArea,
                              const Style& style,
                              const bool& isStroke);
-        static void DoRenderBlend(BufferInfo& gfxDstBuffer,
-                                  void* param,
-                                  const Paint& paint,
-                                  const Rect& rect,
-                                  const Rect& invalidatedArea,
-                                  const Style& style,
-                                  const bool& isStroke);
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         static void DoDrawShadow(BufferInfo& gfxDstBuffer,
                                  void* param,
@@ -1589,18 +1580,12 @@ namespace OHOS {
             if (isStroke) {
                 if (paint.GetStyle() == Paint::STROKE_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = paint.GetStrokeColor().red;
-                    color.greenValue = paint.GetStrokeColor().green;
-                    color.blueValue = paint.GetStrokeColor().blue;
-                    color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
+                    ChangeColor(color,paint.GetStrokeColor(),paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
                 }
             } else {
                 if (paint.GetStyle() == Paint::FILL_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = paint.GetFillColor().red;
-                    color.greenValue = paint.GetFillColor().green;
-                    color.blueValue = paint.GetFillColor().blue;
-                    color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
+                    ChangeColor(color,paint.GetFillColor(),paint.GetFillColor().alpha * paint.GetGlobalAlpha());
                 }
             }
             RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, color);
@@ -1655,10 +1640,7 @@ namespace OHOS {
             for (; count < paint.getStopAndColor().Size(); count++) {
                 ColorType stopColor = iter->data_.color;
                 Srgba8 srgba8Color;
-                srgba8Color.redValue = stopColor.red;
-                srgba8Color.greenValue = stopColor.green;
-                srgba8Color.blueValue = stopColor.blue;
-                srgba8Color.alphaValue = stopColor.alpha * paint.GetGlobalAlpha();
+                ChangeColor(srgba8Color,stopColor,stopColor.alpha * paint.GetGlobalAlpha());
                 gradientColorMode.AddColor(iter->data_.stop, srgba8Color);
                 iter = iter->next_;
             }
@@ -1774,6 +1756,13 @@ namespace OHOS {
             }
         }
 #endif
+        template <class Color>
+        static void ChangeColor(Color& color,ColorType colorType,int8u alpha){
+            color.redValue = colorType.red;
+            color.greenValue = colorType.green;
+            color.blueValue = colorType.blue;
+            color.alphaValue = alpha;
+        }
     };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H
