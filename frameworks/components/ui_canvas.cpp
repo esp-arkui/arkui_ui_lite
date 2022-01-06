@@ -762,6 +762,12 @@ namespace OHOS {
             }
         }
 
+        if(drawCmd.paint.GetGlobalCompositeOperation()==DESTINATION_OUT){
+            blendColor.redValue = style_->bgColor_.red;
+            blendColor.greenValue = style_->bgColor_.green;
+            blendColor.blueValue = style_->bgColor_.blue;
+            blendColor.alphaValue = style_->bgColor_.alpha;
+        }
 
         ScanlineUnPackedContainer scanline;
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
@@ -804,18 +810,34 @@ namespace OHOS {
             if (pathParam->isStroke) {
                 if (curDraw->data_.paint.GetStyle() == Paint::STROKE_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = curDraw->data_.paint.GetStrokeColor().red;
-                    color.greenValue = curDraw->data_.paint.GetStrokeColor().green;
-                    color.blueValue = curDraw->data_.paint.GetStrokeColor().blue;
-                    color.alphaValue = curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
+                    if(drawCmd.paint.GetGlobalCompositeOperation()==SOURCE_OUT){
+                        color.redValue = style_->bgColor_.red;
+                        color.greenValue = style_->bgColor_.green;
+                        color.blueValue = style_->bgColor_.blue;
+                        color.alphaValue = style_->bgColor_.alpha;
+                    }else{
+                        color.redValue = curDraw->data_.paint.GetStrokeColor().red;
+                        color.greenValue = curDraw->data_.paint.GetStrokeColor().green;
+                        color.blueValue = curDraw->data_.paint.GetStrokeColor().blue;
+                        color.alphaValue = curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
+                    }
+
                 }
             } else {
                 if (curDraw->data_.paint.GetStyle() == Paint::FILL_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = curDraw->data_.paint.GetFillColor().red;
-                    color.greenValue = curDraw->data_.paint.GetFillColor().green;
-                    color.blueValue = curDraw->data_.paint.GetFillColor().blue;
-                    color.alphaValue = curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
+
+                    if(drawCmd.paint.GetGlobalCompositeOperation()==SOURCE_OUT){
+                        color.redValue = style_->bgColor_.red;
+                        color.greenValue = style_->bgColor_.green;
+                        color.blueValue = style_->bgColor_.blue;
+                        color.alphaValue = style_->bgColor_.alpha;
+                    }else{
+                        color.redValue = curDraw->data_.paint.GetFillColor().red;
+                        color.greenValue = curDraw->data_.paint.GetFillColor().green;
+                        color.blueValue = curDraw->data_.paint.GetFillColor().blue;
+                        color.alphaValue = curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
+                    }
                 }
             }
             typedef ScanlineUnPackedContainer Scanline;
@@ -823,6 +845,7 @@ namespace OHOS {
             Scanline scanline1;
             Scanline scanline2;
             GlobalCompositeOperation op = drawCmd.paint.GetGlobalCompositeOperation();
+
             sbool_combine_shapes_aa(op,blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color);
         }
 
@@ -1172,13 +1195,13 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-        if(paint.HaveComposite()){
-            DoRenderBlend2(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-        }else{
+//        if(paint.HaveComposite()){
+//            DoRenderBlend2(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+//        }else{
 //            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
-        }
+//        }
 //        if (paint.GetGlobalCompositeOperation() == Paint::SOURCE_OVER) {
-//            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
 //        } else {
 //            DoRenderBlend(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
 //        }
@@ -1198,9 +1221,9 @@ namespace OHOS {
 //        }
 
 //        if(paint.HaveComposite()){
-            DoRenderBlend2(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+//            DoRenderBlend2(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
 //        }else{
-//            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+            DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
 //        }
 
     }
