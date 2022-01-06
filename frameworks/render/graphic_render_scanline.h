@@ -27,6 +27,8 @@
 #include <cstring>
 #include <limits>
 
+#include <gfx_utils/graphics/scanline/graphic_geometry_scanline.h>
+
 #include "render/graphic_render_base.h"
 
 namespace OHOS {
@@ -248,7 +250,7 @@ namespace OHOS {
 
         int8u* cover1 = span1->covers;
         int8u* cover2 = span2->covers+(x1-x2);
-        int x3=x1;
+//        int x3=x1;
         for(unsigned i=0; i < len3;i++,cover1++,cover2++){
 
 //            if(*(cover2)!=COVER_FULL){

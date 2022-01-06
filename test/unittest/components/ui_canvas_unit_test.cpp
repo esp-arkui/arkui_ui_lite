@@ -1742,7 +1742,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
     canvas_->LineTo({POS_X, START1_Y});
     canvas_->ClosePath();
     canvas_->FillPath(*paint_);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::OURCE_OVER);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::SOURCE_OVER);
 }
 
 /**
