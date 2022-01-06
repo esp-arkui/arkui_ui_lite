@@ -1422,7 +1422,7 @@ namespace OHOS {
 
             transform.Translate(textParam->position.x, textParam->position.y);
             if (paint.GetScaleX() != 0) {
-                transform.scaleX_ *= 1 / paint.GetScaleX();
+                transform.SetData(0, transform.GetData()[0]*(1.0f / paint.GetScaleX()));
             }
             transform.Translate(textParam->position.x, textParam->position.y);
             RenderingBuffer imageRendBuffer;
