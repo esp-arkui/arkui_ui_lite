@@ -205,26 +205,22 @@ namespace OHOS {
              class ColorT>
     void sbool_combine_shapes_aa(GlobalCompositeOperation op,
                                  Rasterizer& raster1, Rasterizer& raster2,
-                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
+                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,const ColorT& color1,const ColorT& color2,const ColorT& color3)
     {
         switch(op)
         {
-//        case SOURCE_OVER          : sbool_unite_shapes_aa   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
         case SOURCE_ATOP       : BlendSourceAtop   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
-        case SOURCE_IN         : BlendSourceIn     (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
-        case SOURCE_OUT        : BlendSourceOver    (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
-        case DESTINATION_OVER  : BlendSourceOver   (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
+        case SOURCE_IN         : BlendSourceIn     (raster1, raster2, sl1, sl2, renBase,color1); break;
+        case SOURCE_OUT        : BlendSourceOver    (raster1, raster2, sl1, sl2, renBase,color1,color3); break;
+        case DESTINATION_OVER  : BlendSourceOver   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
         case DESTINATION_ATOP  : BlendSourceAtop   (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
-        case DESTINATION_IN    : BlendSourceIn     (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
-        case DESTINATION_OUT   : BlendSourceOver    (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
-//        case Paint::LIGHTER   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
-//        case Paint::COPY   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
-//        case Paint::XOR   : sbool_subtract_shapes_aa    (sg2, sg1, sl2, sl1, sl, ren); break;
+        case DESTINATION_IN    : BlendSourceIn     (raster2, raster1, sl2, sl1, renBase,color2); break;
+        case DESTINATION_OUT   : BlendSourceOver    (raster2, raster1, sl2, sl1, renBase,color2,color3); break;
+        case LIGHTER           : BlendLIGHTER    (raster1, raster2, sl1, sl2, renBase,color1,color2,color3); break;
+        case COPY              : RenderScanlinesAntiAliasSolid(raster1,sl1,renBase,color1); break;
+        case XOR               : BlendXOR   (raster1, raster2, sl1, sl2, renBase,color1,color2,color3); break;
         }
     }
-
-
-
 
     template<class Span>
     void calcinterScanline(ScanlineUnPackedContainer& scanline3,int x1,int x2,Span& span1,Span& span2){
@@ -243,6 +239,28 @@ namespace OHOS {
             }else{
                 scanline3.AddCell(x3++,*cover2);
             }
+        }
+    }
+
+    template<class Span>
+    void calcOutScanline(ScanlineUnPackedContainer& scanline3,int x1,int x2,Span& span1,Span& span2){
+
+        scanline3.Reset(x1,x1+span1->spanLength);
+
+        unsigned len3 = span1->spanLength;//
+
+        int8u* cover1 = span1->covers;
+        int8u* cover2 = span2->covers+(x1-x2);
+        int x3=x1;
+        for(unsigned i=0; i < len3;i++,cover1++,cover2++){
+
+//            if(*(cover2)!=COVER_FULL){
+//                scanline3.AddCell(x3++,*cover1);
+//            }else{
+//                scanline3.AddCell(x3++,*cover2);
+//            }
+
+            scanline3.AddCell(x1++,*cover1);
         }
     }
 
@@ -370,10 +388,9 @@ namespace OHOS {
              class ColorT>
     void BlendSourceIn(Rasterizer& raster1, Rasterizer& raster2,
                                Scanline& scanline1, Scanline& scanline2,
-                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
+                               BaseRenderer& renBase,const ColorT& color1)
     {
         typename BaseRenderer::color_type ren_color1 = color1;
-        typename BaseRenderer::color_type ren_color2 = color2;
         if (raster1.RewindScanlines()&&raster2.RewindScanlines()) {
             scanline1.Reset(raster1.MinX(), raster1.MaxX());
             scanline2.Reset(raster2.MinX(), raster2.MaxX());
@@ -529,7 +546,7 @@ namespace OHOS {
                                    x1<x2+span2->spanLength &&
                                    x1+span1->spanLength >= x2+span2->spanLength){
                                     ScanlineUnPackedContainer scanline3;
-                                    calcinterScanline(scanline3,x1,x2,span1,span2);
+                                    calcOutScanline(scanline3,x1,x2,span1,span2);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span3->spanLength,
                                                             ren_color1,
@@ -542,7 +559,7 @@ namespace OHOS {
                                    x1+span1->spanLength > x2 &&
                                    x1+span1->spanLength < x2+span2->spanLength){
                                     ScanlineUnPackedContainer scanline3;
-                                    calcinterScanline(scanline3,x2,x1,span2,span1);
+                                    calcOutScanline(scanline3,x2,x1,span2,span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
                                     renBase.BlendSolidHspan(x2, y2, (unsigned)span3->spanLength,
                                                             ren_color1,
@@ -577,8 +594,36 @@ namespace OHOS {
                                BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
     {
 
+        RenderScanlinesAntiAliasSolid(raster1,scanline1,renBase,color1);
+        RenderScanlinesAntiAliasSolid(raster2,scanline2,renBase,color2);
+    }
+
+    template<class Rasterizer,
+             class Scanline,
+             class BaseRenderer,
+             class ColorT>
+    void BlendXOR(Rasterizer& raster1, Rasterizer& raster2,
+                               Scanline& scanline1, Scanline& scanline2,
+                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2,const ColorT& color3)
+    {
+
         RenderScanlinesAntiAliasSolid(raster2,scanline2,renBase,color2);
         RenderScanlinesAntiAliasSolid(raster1,scanline1,renBase,color1);
+        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,color3);
+    }
+
+    template<class Rasterizer,
+             class Scanline,
+             class BaseRenderer,
+             class ColorT>
+    void BlendLIGHTER(Rasterizer& raster1, Rasterizer& raster2,
+                               Scanline& scanline1, Scanline& scanline2,
+                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2,const ColorT& color3)
+    {
+
+        RenderScanlinesAntiAliasSolid(raster2,scanline2,renBase,color2);
+        RenderScanlinesAntiAliasSolid(raster1,scanline1,renBase,color1);
+        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,color3);
     }
 
 

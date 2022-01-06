@@ -720,6 +720,7 @@ namespace OHOS {
         ListNode<DrawCmd>* curDrawEnd = drawCmdList_.Begin();
         RasterizerScanlineAntiAlias<> blendRasterizer;
         Rgba8Color blendColor;
+        Rgba8Color backColor;
         DrawCmd drawCmd;
         int count=0;
         for (; curDrawEnd != drawCmdList_.End(); curDrawEnd = curDrawEnd->next_) {
@@ -756,17 +757,14 @@ namespace OHOS {
             }
         }
 
-        if(drawCmd.paint.GetGlobalCompositeOperation()==DESTINATION_OUT){
-            blendColor.redValue = style_->bgColor_.red;
-            blendColor.greenValue = style_->bgColor_.green;
-            blendColor.blueValue = style_->bgColor_.blue;
-            blendColor.alphaValue = style_->bgColor_.alpha;
-        }
+
+        backColor.redValue = style_->bgColor_.red;
+        backColor.greenValue = style_->bgColor_.green;
+        backColor.blueValue = style_->bgColor_.blue;
+        backColor.alphaValue = style_->bgColor_.alpha;
 
         ScanlineUnPackedContainer scanline;
-        // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra Order;
-        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
         typedef RgbaBlender<Rgba8Color, Order> Blender;
         typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
         typedef RendererBase<PixFormat> RendererBase;
@@ -774,10 +772,7 @@ namespace OHOS {
         RendererBase renBase(pixFormat);
         renBase.ResetClipping(true);
         renBase.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(),trunc.GetBottom());
-
-
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
-
             if (curDraw->data_.paint.HaveComposite()) {
                 drawCmd = curDraw->data_;
                 count--;
@@ -785,7 +780,7 @@ namespace OHOS {
             if(count<=0){
                 continue;
             }
-
+            typedef ScanlineUnPackedContainer Scanline;
             RasterizerScanlineAntiAlias<> rasterizer;
             if (curDraw->data_.param == nullptr) {
                 continue;
@@ -804,104 +799,35 @@ namespace OHOS {
             if (pathParam->isStroke) {
                 if (curDraw->data_.paint.GetStyle() == Paint::STROKE_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    if(drawCmd.paint.GetGlobalCompositeOperation()==SOURCE_OUT){
-                        color.redValue = style_->bgColor_.red;
-                        color.greenValue = style_->bgColor_.green;
-                        color.blueValue = style_->bgColor_.blue;
-                        color.alphaValue = style_->bgColor_.alpha;
-                    }else{
-                        color.redValue = curDraw->data_.paint.GetStrokeColor().red;
-                        color.greenValue = curDraw->data_.paint.GetStrokeColor().green;
-                        color.blueValue = curDraw->data_.paint.GetStrokeColor().blue;
-                        color.alphaValue = curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
-                    }
-
+                    color.redValue = curDraw->data_.paint.GetStrokeColor().red;
+                    color.greenValue = curDraw->data_.paint.GetStrokeColor().green;
+                    color.blueValue = curDraw->data_.paint.GetStrokeColor().blue;
+                    color.alphaValue = curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
                 }
             } else {
                 if (curDraw->data_.paint.GetStyle() == Paint::FILL_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-
-                    if(drawCmd.paint.GetGlobalCompositeOperation()==SOURCE_OUT){
-                        color.redValue = style_->bgColor_.red;
-                        color.greenValue = style_->bgColor_.green;
-                        color.blueValue = style_->bgColor_.blue;
-                        color.alphaValue = style_->bgColor_.alpha;
-                    }else{
-                        color.redValue = curDraw->data_.paint.GetFillColor().red;
-                        color.greenValue = curDraw->data_.paint.GetFillColor().green;
-                        color.blueValue = curDraw->data_.paint.GetFillColor().blue;
-                        color.alphaValue = curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
-                    }
+                    color.redValue = curDraw->data_.paint.GetFillColor().red;
+                    color.greenValue = curDraw->data_.paint.GetFillColor().green;
+                    color.blueValue = curDraw->data_.paint.GetFillColor().blue;
+                    color.alphaValue = curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha();
                 }
             }
-            typedef ScanlineUnPackedContainer Scanline;
 
             Scanline scanline1;
             Scanline scanline2;
-            GlobalCompositeOperation op = drawCmd.paint.GetGlobalCompositeOperation();
 
-            sbool_combine_shapes_aa(op,blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color);
+
+            if(drawCmd.paint.GetGlobalCompositeOperation()==LIGHTER){
+                backColor.redValue = (blendColor.redValue+color.redValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.redValue+color.redValue);
+                backColor.greenValue = (blendColor.greenValue+color.greenValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.greenValue+color.greenValue);
+                backColor.blueValue = (blendColor.blueValue+color.blueValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.blueValue+color.blueValue);
+                backColor.alphaValue = (blendColor.alphaValue+color.alphaValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.alphaValue+color.alphaValue);
+            }
+
+            sbool_combine_shapes_aa(drawCmd.paint.GetGlobalCompositeOperation(),
+                                    blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color,backColor);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        ListNode<ColorType>* colors = colors_.Begin();
-//        ListNode<RasterizerScanlineAntiAlias<>*> *  rasterizers = rasterizers_.Begin();
-
-//        typedef ScanlineUnPackedContainer Scanline;
-//        ScanlineUnPackedContainer scanline;
-//        RasterizerScanlineAntiAlias<> rasterizer_;
-////        renderBuffer.Attach(static_cast<uint8_t*>(gfxDstBuffer.virAddr), gfxDstBuffer.width, gfxDstBuffer.height,
-////                            gfxDstBuffer.stride);
-////        for (; rasterizers != rasterizers_.End(); rasterizers = rasterizers->next_,colors = colors->next_) {
-//            typedef Rgba8 Rgba8Color;
-//            // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
-//            typedef OrderBgra Order;
-//            // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-//            typedef RgbaBlender<Rgba8Color, Order> Blender;
-//            typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
-//            typedef RendererBase<PixFormat> RendererBase;
-//            PixFormat pixFormat(renderBuffer);
-//            RendererBase renBase(pixFormat);
-//            renBase.ResetClipping(true);
-//            renBase.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(),trunc.GetBottom());
-
-//            Rgba8Color color;
-//            color.redValue = colors->data_.red;
-//            color.greenValue = colors->data_.green;
-//            color.blueValue = colors->data_.blue;
-//            color.alphaValue = colors->data_.alpha;
-
-//            Rgba8Color color2;
-//            color2.redValue = colors->next_->data_.red;
-//            color2.greenValue = colors->next_->data_.green;
-//            color2.blueValue = colors->next_->data_.blue;
-//            color2.alphaValue = colors->next_->data_.alpha;
-
-//            Scanline scanline1;
-//            Scanline scanline2;
-//            Scanline scanline3;
-//            RenderScanlinesAntiAliasSolidAnd(rasterizers->data_, scanline1, renBase, color);
-//            RenderScanlinesAntiAliasSolid(*(rasterizers->data_), scanline, renBase, color);
-//            sbool_combine_shapes_aa(SOURCE_OVER,rasterizers->data_,rasterizers->next_->data_,scanline1,scanline2,scanline3,renBase,color,color2);
-//        }
-
     }
 
     void UICanvas::GetAbsolutePosition(const Point& prePoint, const Rect& rect, const Style& style, Point& point)
