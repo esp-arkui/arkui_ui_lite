@@ -196,8 +196,6 @@ namespace OHOS {
     }
 
     //===========================================================================================//
-
-
     template<class Rasterizer,
              class Scanline,
              class BaseRenderer,
@@ -223,16 +221,12 @@ namespace OHOS {
 
     template<class Span>
     void calcinterScanline(ScanlineUnPackedContainer& scanline3,int x1,int x2,Span& span1,Span& span2){
-
         scanline3.Reset(x1,x2+span2->spanLength);
-
         unsigned len3 = x2+span2->spanLength-x1;
-
         int8u* cover1 = span1->covers;
         int8u* cover2 = span2->covers+(x1-x2);
         int x3=x1;
         for(unsigned i=0; i < len3;i++,cover1++,cover2++){
-
             if(*(cover1)!=COVER_FULL){
                 scanline3.AddCell(x3++,*cover1);
             }else{
@@ -243,22 +237,11 @@ namespace OHOS {
 
     template<class Span>
     void calcOutScanline(ScanlineUnPackedContainer& scanline3,int x1,int x2,Span& span1,Span& span2){
-
         scanline3.Reset(x1,x1+span1->spanLength);
-
-        unsigned len3 = span1->spanLength;//
-
+        unsigned len3 = span1->spanLength;
         int8u* cover1 = span1->covers;
         int8u* cover2 = span2->covers+(x1-x2);
-//        int x3=x1;
         for(unsigned i=0; i < len3;i++,cover1++,cover2++){
-
-//            if(*(cover2)!=COVER_FULL){
-//                scanline3.AddCell(x3++,*cover1);
-//            }else{
-//                scanline3.AddCell(x3++,*cover2);
-//            }
-
             scanline3.AddCell(x1++,*cover1);
         }
     }

@@ -50,7 +50,6 @@
 #include <gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_interpolator.h>
 #include <gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_pattern_rgba.h>
 #include <gfx_utils/graphics/transform/graphic_transform_image_accessors.h>
-#include <gfx_utils/graphics/vertexprimitive/graphic_geometry_bounding_rect.h>
 #include <gfx_utils/graphics/vertexprimitive/graphic_geometry_path_storage.h>
 #include <render/graphic_render_pixfmt_rgba_blend.h>
 #include <render/graphic_render_pixfmt_rgba_comp.h>
