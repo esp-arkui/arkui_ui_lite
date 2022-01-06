@@ -57,7 +57,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0.
          */
-        static void SetBlendColor(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
+        static void SetBlendColor(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue,
+                                  ValueType alphaValue)
         {
             pColor[OrderType::RED] = redValue;
             pColor[OrderType::GREEN] = greenValue;
@@ -86,10 +87,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0.
          */
-        static Rgba GetBlendColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(ValueType redValue, ValueType greenValue, ValueType blueValue,
+                                  ValueType alphaValue, CoverType cover = COVER_FULL)
         {
             if (cover > COVER_NONE) {
-                Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue), ColorType::ToFloat(blueValue), ColorType::ToFloat(alphaValue));
+                Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue),
+                                 ColorType::ToFloat(blueValue), ColorType::ToFloat(alphaValue));
 
                 if (cover < COVER_FULL) {
                     float coverX = float(cover) / COVER_FULL;

@@ -27,8 +27,6 @@
 #include <cstring>
 #include <limits>
 
-#include <components/ui_canvas.h>
-
 #include "render/graphic_render_base.h"
 
 namespace OHOS {
@@ -84,30 +82,30 @@ namespace OHOS {
         if (raster.RewindScanlines()) {
             typename BaseRenderer::color_type ren_color = color;
 
-            //需要裁减的图形上方
+            // 需要裁减的图形上方
             for (int y = 0; y < raster.MinY(); y++) {
                 renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
                                    ren_color,
                                    COVER_FULL);
             }
 
-            //需要裁减的图形下方
+            // 需要裁减的图形下方
             for (int y = raster.MaxY(); y < renBase.Height(); y++) {
                 renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
                                    ren_color,
                                    COVER_FULL);
             }
-            //需要裁减的图形左方和右方
+            // 需要裁减的图形左方和右方
             for (int y = raster.MinY(); y < raster.MaxY(); y++) {
                 for (int x = 0; x < renBase.Width(); x++) {
-                    //裁减图形的左侧
+                    // 裁减图形的左侧
                     if (x < raster.MinX()) {
                         renBase.BlendHline(x, y, (unsigned)(raster.MinX() - x - 1),
                                            ren_color,
                                            COVER_FULL);
                         x = raster.MinX();
                     }
-                    //裁减图形的右侧
+                    // 裁减图形的右侧
                     if (x > raster.MaxX()) {
                         renBase.BlendHline(raster.MaxX(), y, (unsigned)(renBase.Width() - raster.MaxX()),
                                            ren_color,
@@ -194,7 +192,6 @@ namespace OHOS {
             }
         }
     }
-
 
     //===========================================================================================//
 

@@ -198,7 +198,6 @@ void ClipPath::ArcInner(const PointF& center, float radius, int16_t startAngle, 
         float x3 = center.x + cosB;
         float y3 = center.y + sinB;
         int16_t addAngle = endAngle - startAngle;
-        // a = 4.0 * tan(angle / 4) / 3.0;
         float a = 4.0 * Sin(addAngle / 4.0) / Sin(QUARTER_IN_DEGREE - addAngle / 4.0) / 3.0;
         float x1 = x0 - a * (y0 - center.y);
         float y1 = y0 + a * (x0 - center.x);

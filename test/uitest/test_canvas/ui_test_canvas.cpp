@@ -24,7 +24,8 @@ namespace OHOS {
     {
         if (container_ == nullptr) {
             container_ = new UIScrollView();
-            container_->Resize(Screen::GetInstance().GetWidth(), Screen::GetInstance().GetHeight() - BACK_BUTTON_HEIGHT);
+            container_->Resize(Screen::GetInstance().GetWidth(),
+                               Screen::GetInstance().GetHeight() - BACK_BUTTON_HEIGHT);
             container_->SetHorizontalScrollState(false);
             container_->SetThrowDrag(true);
         }
@@ -39,23 +40,23 @@ namespace OHOS {
 
     const UIView* UITestCanvas::GetTestView()
     {
-//        RM008UIKitCanvasTest001();
-//        RM008UIKitCanvasTest002();
-//        RM008UIKitCanvasTest003();
-//        RM008UIKitCanvasTest004();
-//        RM008UIKitCanvasTest005();
-//        RM008UIKitCanvasTest006();
-//        RM008UIKitCanvasTest007();
-//        RM008UIKitCanvasShadowTest008();
-//        RM009LineCapDrawPath();
-//        RM009LineJoinDrawPath();
-//        RM009LineDashDrawPath();
-//        RM009StrokeAndClearRectDrawPath();
-//        RM011StrokeText001();
-//        RM011CanvasScale001();
-//        RM011CanvasRotate001();
-//        RM012globalAlpha001();
-//        RM012SaveOrRestore002();
+        RM008UIKitCanvasTest001();
+        RM008UIKitCanvasTest002();
+        RM008UIKitCanvasTest003();
+        RM008UIKitCanvasTest004();
+        RM008UIKitCanvasTest005();
+        RM008UIKitCanvasTest006();
+        RM008UIKitCanvasTest007();
+        RM008UIKitCanvasShadowTest008();
+        RM009LineCapDrawPath();
+        RM009LineJoinDrawPath();
+        RM009LineDashDrawPath();
+        RM009StrokeAndClearRectDrawPath();
+        RM011StrokeText001();
+        RM011CanvasScale001();
+        RM011CanvasRotate001();
+        RM012globalAlpha001();
+        RM012SaveOrRestore002();
         RM012GlobalCompositeOperationSOURCE_OVER();
         RM012GlobalCompositeOperationSOURCE_ATOP();
         RM012GlobalCompositeOperationSOURCE_IN();
@@ -67,55 +68,55 @@ namespace OHOS {
         RM012GlobalCompositeOperationLIGHTER();
         RM012GlobalCompositeOperationCopy();
         RM012GlobalCompositeOperationXOR();
-//        UIKitCanvasTestDrawLine001();
-//        UIKitCanvasTestDrawLine002();
-//        UIKitCanvasTestDrawCurve001();
-//        UIKitCanvasTestDrawCurve002();
-//        UIKitCanvasTestDrawRect001();
-//        UIKitCanvasTestDrawRect002();
-//        UIKitCanvasTestDrawRect003();
-//        UIKitCanvasTestDrawCircle001();
-//        UIKitCanvasTestDrawCircle002();
-//        UIKitCanvasTestDrawCircle003();
-//        UIKitCanvasTestDrawArc001();
-//        UIKitCanvasTestDrawImage001();
-//        UIKitCanvasTestDrawLabel001();
-//        UIKitCanvasTestDrawSector001();
-//        UIKitCanvasTestClear001();
-//        UIKitCanvasTestDrawPath001();
-//        UIKitCanvasTestDrawPath002();
-//        UIKitCanvasTestDrawPath003();
-//        UIKitCanvasTestDrawPath004();
-//        UIKitCanvasTestDrawPath005();
-//        UIKitCanvasTestDrawPath006();
-//        UIKitCanvasTestDrawPath007();
-//        UIKitCanvasTestDrawPath008();
-//        UIKitCanvasTestDrawPath009();
-//        UIKitCanvasTestDrawPath010();
-//        UIKitCanvasTestDrawPath011();
-//        UIKitCanvasTestDrawPath012();
-//        UIKitCanvasTestDrawPath013();
-//        UIKitCanvasTestDrawPath014();
-//        UIKitCanvasTestDrawPath015();
-//        UIKitCanvasTestDrawPath016();
-//        UIKitCanvasTestDrawPath017();
-//        UIKitCanvasTestDrawPath018();
-//        UIKitCanvasTestDrawPath019();
-//        UIKitCanvasTestDrawPath020();
-//        UIKitCanvasTestDrawPath021();
-//        UIKitCanvasTestDrawPath022();
-//        UIKitCanvasTestDrawPath023();
-//        UIKitCanvasTestDrawPath024();
-//        UIKitCanvasTestDrawPath025();
-//        UIKitCanvasTestDrawPath026();
-//        UIKitCanvasTestDrawPath027();
-//        UIKitCanvasTestDrawPath028();
-//        UIKitCanvasTestDrawPath029();
-//        UIKitCanvasTestDrawPath030();
-//        UIKitCanvasTestDrawPath031();
-//        UIKitCanvasTestDrawPath032();
-//        UIKitCanvasTestDrawPath033();
-//        UIKitCanvasTestDrawPath034();
+        UIKitCanvasTestDrawLine001();
+        UIKitCanvasTestDrawLine002();
+        UIKitCanvasTestDrawCurve001();
+        UIKitCanvasTestDrawCurve002();
+        UIKitCanvasTestDrawRect001();
+        UIKitCanvasTestDrawRect002();
+        UIKitCanvasTestDrawRect003();
+        UIKitCanvasTestDrawCircle001();
+        UIKitCanvasTestDrawCircle002();
+        UIKitCanvasTestDrawCircle003();
+        UIKitCanvasTestDrawArc001();
+        UIKitCanvasTestDrawImage001();
+        UIKitCanvasTestDrawLabel001();
+        UIKitCanvasTestDrawSector001();
+        UIKitCanvasTestClear001();
+        UIKitCanvasTestDrawPath001();
+        UIKitCanvasTestDrawPath002();
+        UIKitCanvasTestDrawPath003();
+        UIKitCanvasTestDrawPath004();
+        UIKitCanvasTestDrawPath005();
+        UIKitCanvasTestDrawPath006();
+        UIKitCanvasTestDrawPath007();
+        UIKitCanvasTestDrawPath008();
+        UIKitCanvasTestDrawPath009();
+        UIKitCanvasTestDrawPath010();
+        UIKitCanvasTestDrawPath011();
+        UIKitCanvasTestDrawPath012();
+        UIKitCanvasTestDrawPath013();
+        UIKitCanvasTestDrawPath014();
+        UIKitCanvasTestDrawPath015();
+        UIKitCanvasTestDrawPath016();
+        UIKitCanvasTestDrawPath017();
+        UIKitCanvasTestDrawPath018();
+        UIKitCanvasTestDrawPath019();
+        UIKitCanvasTestDrawPath020();
+        UIKitCanvasTestDrawPath021();
+        UIKitCanvasTestDrawPath022();
+        UIKitCanvasTestDrawPath023();
+        UIKitCanvasTestDrawPath024();
+        UIKitCanvasTestDrawPath025();
+        UIKitCanvasTestDrawPath026();
+        UIKitCanvasTestDrawPath027();
+        UIKitCanvasTestDrawPath028();
+        UIKitCanvasTestDrawPath029();
+        UIKitCanvasTestDrawPath030();
+        UIKitCanvasTestDrawPath031();
+        UIKitCanvasTestDrawPath032();
+        UIKitCanvasTestDrawPath033();
+        UIKitCanvasTestDrawPath034();
 
         return container_;
     }
@@ -127,7 +128,7 @@ namespace OHOS {
         titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
         titleLabel->SetText(title);
         container_->Add(titleLabel);
-        positionY_ += TITLE_HEIGHT + 8; // 8: gap
+        positionY_ += TITLE_HEIGHT + HEIGHT_GAP; // 8: gap
     }
 
     UICanvas* UITestCanvas::CreateCanvas()
@@ -151,7 +152,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
-        canvas->DrawLine({0, 10}, {50, 10}, paint);
+        canvas->DrawLine({0, START1_X}, {LINE4_X, START1_X}, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawLine002()
@@ -163,9 +164,10 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-        paint.SetStrokeWidth(5);            // 5: line width
-        canvas->SetStartPosition({50, 10}); // {50, 10}: Start point coordinates x, y;
-        canvas->DrawLine({100, 50}, paint); // {100, 50}: end point coordinates x, y
+
+        paint.SetStrokeWidth(LINE_WIDTH5);            // 5: line width
+        canvas->SetStartPosition({START_X, START_Y}); // {50, 10}: Start point coordinates x, y;
+        canvas->DrawLine({LINE2_X, RECT_Y}, paint); // {100, 50}: end point coordinates x, y
     }
 
     void UITestCanvas::UIKitCanvasTestDrawCurve001()
@@ -178,7 +180,7 @@ namespace OHOS {
 
         Paint paint;
         paint.SetStrokeColor(Color::Red());
-        canvas->DrawCurve({100, 50}, {150, 50}, {150, 50}, {150, 100}, paint);
+        canvas->DrawCurve({LINE2_X, RECT_Y}, {LINE12_X, RECT_Y}, {LINE12_X, RECT_Y}, {LINE12_X, LINE1_Y}, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawCurve002()
@@ -191,7 +193,7 @@ namespace OHOS {
 
         Paint paint;
         paint.SetStrokeColor(Color::Red());
-        canvas->DrawCurve({100, 50}, {150, 50}, {150, 100}, paint);
+        canvas->DrawCurve({LINE2_X, LINE_CURVE_Y}, {LINE12_X, LINE_CURVE_Y}, {LINE12_X, LINE1_Y}, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawRect001()
@@ -205,9 +207,9 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetFillColor(Color::Yellow());
-        paint.SetStrokeWidth(30); // 30: line width
+        paint.SetStrokeWidth(LINE_WIDTH30); // 30: line width
         // {100, 10}: left corner coordinates point, 50: width, 50: rectangle style
-        canvas->DrawRect({100, 10}, 50, 50, paint);
+        canvas->DrawRect({LINE1_Y, START1_Y}, LINE4_X, TRANSLATE_Y, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawRect002()
@@ -222,7 +224,7 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Blue());
         // {200, 10}: left corner coordinates point, 50: width, 50: rectangle style
-        canvas->DrawRect({200, 10}, 50, 50, paint);
+        canvas->DrawRect({LINE28_X, START2_Y}, LINE4_X, LINE_RECT_Y50, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawRect003()
@@ -238,7 +240,7 @@ namespace OHOS {
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeColor(Color::Blue());
         // {300, 10}: left corner coordinates point, 50: width, 50: rectangle style
-        canvas->DrawRect({300, 10}, 50, 50, paint);
+        canvas->DrawRect({LINE_RECT_X300, LINE_RECT_Y10}, LINE_RECT_WIDTH50, LINE_RECT_HEIGHT50, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawCircle001()
@@ -253,10 +255,10 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetStrokeColor(Color::Yellow());
         paint.SetFillColor(Color::Yellow());
-        paint.SetStrokeWidth(10); // 10: line width
-        paint.SetOpacity(127);    // 127: opacity
+        paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
+        paint.SetOpacity(OPARCITY_127);    // 127: opacity
         // {100, 100}: circle center coordinates, 30: circle radius
-        canvas->DrawCircle({100, 100}, 30, paint);
+        canvas->DrawCircle({LINE_CURVE_X100, LINE_CURVE_Y100}, LINE_CURVE_R30, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawCircle002()
@@ -270,10 +272,10 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Blue());
-        paint.SetStrokeWidth(10); // 10: line width
-        paint.SetOpacity(127);    // 127: opacity
+        paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
+        paint.SetOpacity(OPARCITY_127);    // 127: opacity
         // {200, 100}: circle center coordinates, 30: circle radius
-        canvas->DrawCircle({200, 100}, 30, paint);
+        canvas->DrawCircle({LINE_CURVE_X200, LINE_CURVE_Y100}, LINE_CURVE_R30, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawCircle003()
@@ -288,10 +290,10 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::STROKE_FILL_STYLE);
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeColor(Color::Blue());
-        paint.SetStrokeWidth(10); // 10: line width
-        paint.SetOpacity(127);    // 127: opacity
+        paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
+        paint.SetOpacity(OPARCITY_127);    // 127: opacity
         // {300, 100}: circle center coordinates, 30: circle radius
-        canvas->DrawCircle({300, 100}, 30, paint);
+        canvas->DrawCircle({LINE_CURVE_X300, LINE_CURVE_Y100}, LINE_CURVE_R30, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawArc001()
@@ -305,9 +307,9 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Red());
-        paint.SetStrokeWidth(10); // 10: line width
+        paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
         // {100, 150}: arc's center coordinates, 50: arc radius, 135: start angle, 270: end angle
-        canvas->DrawArc({100, 150}, 50, 135, 270, paint);
+        canvas->DrawArc({ARC_X100, ARC_Y150}, ARC_R50, ARC_ANGLE135, ARC_ANGLE270, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawImage001()
@@ -319,16 +321,16 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-        paint.SetOpacity(127); // 127: opacity
-        paint.Rotate(20);
+        paint.SetOpacity(OPARCITY_127); // 127: opacity
+        paint.Rotate(ROTATE20);
         // {200, 50}: start point coordinates
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
-        canvas->DrawImage({0, 60}, RED_IMAGE_PATH, paint);
+        canvas->DrawImage({0, IMAGE_START60}, RED_IMAGE_PATH, paint);
 
-        paint.Rotate(-20);
-        canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint);
-        paint.Rotate(-45);
-        canvas->DrawImage({100, 20}, GIF_IMAGE_PATH, paint, 100, 100);
+        paint.Rotate(ROTATE_20);
+        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint);
+        paint.Rotate(ROTATE_45);
+        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint, IMAGE_WIDTH100, IMAGE_HEIGHT100);
 #endif
     }
 
@@ -346,10 +348,10 @@ namespace OHOS {
         fontStyle.align = TEXT_ALIGNMENT_RIGHT;
         fontStyle.direct = TEXT_DIRECT_LTR;
         fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
-        fontStyle.fontSize = 30;    // 30: font size
-        fontStyle.letterSpace = 10; // 10 letter space
+        fontStyle.fontSize = FONT_SIZE30;    // 30: font size
+        fontStyle.letterSpace = FONT_LETTERSPACE; // 10 letter space
         // {50, 50}: start point coordinates, 100: max width
-        canvas->DrawLabel({50, 50}, "canvas绘制字体", 100, fontStyle, paint);
+        canvas->DrawLabel({LABEL_START50, LABEL_START50}, "canvas绘制字体", LABEL_WIDTH100, fontStyle, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestDrawSector001()
@@ -364,7 +366,7 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::FILL_STYLE);
         paint.SetFillColor(Color::Yellow());
         // {350, 150}: sector's center coordinates, 100: sector radius, 0: start angle, 30: end angle
-        canvas->DrawSector({350, 150}, 100, 0, 30, paint);
+        canvas->DrawSector({START_X350, START_Y150}, ARC_R100, 0, END_ANGLE30, paint);
     }
 
     void UITestCanvas::UIKitCanvasTestClear001()
@@ -377,7 +379,7 @@ namespace OHOS {
 
         Paint paint;
         // {0, 10}: Start point coordinates x, y; {50, 10}: end point coordinates x, y
-        canvas->DrawLine({0, 10}, {50, 10}, paint);
+        canvas->DrawLine({0, START_Y}, {TRANSLATE_X, START_Y}, paint);
         canvas->Clear();
     }
 
@@ -493,7 +495,7 @@ namespace OHOS {
         Paint paint;
         canvas->BeginPath();
         canvas->MoveTo({START1_X, START1_Y});
-        canvas->AddRect({RECT_X, RECT_Y}, -100, -100);
+        canvas->AddRect({RECT_X, RECT_Y}, RECT_WIDTH, RECT_HEIGHT);
         canvas->DrawPath(paint);
     }
 
@@ -976,54 +978,54 @@ namespace OHOS {
         paint.SetLineCap(LineCapEnum::BUTT_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 20}); //竖线
-        canvas->LineTo({20, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y}); // 竖线
+        canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 100}); //横线
-        canvas->LineTo({80, 100});
+        canvas->MoveTo({LINE11_X, LINE1_Y}); // 横线
+        canvas->LineTo({LINE17_X, LINE1_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({180, 40}); //斜线
-        canvas->LineTo({240, 100});
+        canvas->MoveTo({LINE26_Y, LINE25_Y}); // 斜线
+        canvas->LineTo({LINE18_X, LINE1_Y});
         canvas->DrawPath(paint);
 
         paint.SetStrokeColor(Color::Red());
         paint.SetLineCap(LineCapEnum::SQUARE_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({40, 20}); //竖线
-        canvas->LineTo({40, 80});
+        canvas->MoveTo({LINE1_X, LINE13_Y}); // 竖线
+        canvas->LineTo({LINE19_X, LINE11_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 120}); //横线
-        canvas->LineTo({80, 120});
+        canvas->MoveTo({LINE11_X, LINE26_X}); // 横线
+        canvas->LineTo({LINE17_X, LINE2_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({200, 40}); //斜线
-        canvas->LineTo({260, 100});
+        canvas->MoveTo({LINE28_X, LINE25_Y}); // 斜线
+        canvas->LineTo({LINE21_X, LINE1_Y});
         canvas->DrawPath(paint);
 
         paint.SetStrokeColor(Color::Blue());
         paint.SetLineCap(LineCapEnum::ROUND_CAP);
 
         canvas->BeginPath();
-        canvas->MoveTo({60, 20}); //竖线
-        canvas->LineTo({60, 80});
+        canvas->MoveTo({LINE22_X, LINE13_Y}); // 竖线
+        canvas->LineTo({LINE22_X, LINE11_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 140}); //横线
-        canvas->LineTo({80, 140});
+        canvas->MoveTo({LINE11_X, LINE23_Y}); // 横线
+        canvas->LineTo({LINE17_X, LINE23_Y});
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({240, 40}); //斜线
-        canvas->LineTo({300, 100});
+        canvas->MoveTo({LINE18_X, LINE25_Y}); // 斜线
+        canvas->LineTo({LINE24_X, LINE1_Y});
         canvas->DrawPath(paint);
     }
     void UITestCanvas::RM009LineJoinDrawPath()
@@ -1040,37 +1042,37 @@ namespace OHOS {
         paint.SetLineJoin(LineJoinEnum::ROUND_JOIN);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({40, 40});
-        canvas->LineTo({60, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE25_X, LINE25_X});
+        canvas->LineTo({LINE22_X, LINE11_Y});
         canvas->DrawPath(paint);
 
         paint.SetLineJoin(LineJoinEnum::BEVEL_JOIN);
 
         canvas->BeginPath();
-        canvas->MoveTo({100, 20});
-        canvas->LineTo({100, 80});
-        canvas->LineTo({120, 40});
-        canvas->LineTo({140, 80});
+        canvas->MoveTo({LINE1_Y, LINE13_Y});
+        canvas->LineTo({LINE2_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE25_Y});
+        canvas->LineTo({LINE27_X, LINE11_Y});
         canvas->DrawPath(paint);
 
         paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
         canvas->BeginPath();
-        canvas->MoveTo({180, 20});
-        canvas->LineTo({180, 80});
-        canvas->LineTo({200, 40});
-        canvas->LineTo({220, 80});
+        canvas->MoveTo({LINE14_X, LINE13_Y});
+        canvas->LineTo({LINE14_X, LINE11_Y});
+        canvas->LineTo({LINE28_X, LINE25_Y});
+        canvas->LineTo({LINE29_X, LINE11_Y});
         canvas->DrawPath(paint);
 
-        //TODO::当斜接角度超过MiterLimit时应该转化为平角
+        // 当斜接角度超过MiterLimit时应该转化为平角
         paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
         paint.SetMiterLimit(4);
         canvas->BeginPath();
-        canvas->MoveTo({260, 20});
-        canvas->LineTo({260, 80});
-        canvas->LineTo({280, 40});
-        canvas->LineTo({330, 40});
+        canvas->MoveTo({LINE21_X, LINE13_Y});
+        canvas->LineTo({LINE21_X, LINE11_Y});
+        canvas->LineTo({LINE30_X, LINE25_Y});
+        canvas->LineTo({LINE31_X, LINE25_Y});
         canvas->DrawPath(paint);
     }
     void UITestCanvas::RM009LineDashDrawPath()
@@ -1081,24 +1083,24 @@ namespace OHOS {
         CreateTitleLabel("RM009LineDash_虚实线(10,5,5,2)_更改虚实线起点的偏移量(5)");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
-        paint.SetStrokeWidth(2);
+        paint.SetStrokeWidth(DASH_LINE_WIDTH2);
         paint.SetStrokeColor(Color::Green());
-        float ds2[] = {10, 5.0f, 5.0f, 2.0f};
-        paint.SetLineDash(ds2, 4);
+        float ds2[] = {DASH10, DASH5, DASH5, DASH2};
+        paint.SetLineDash(ds2, DASH_COUNT);
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({200, 20});
-        canvas->LineTo({200, 80});
-        canvas->LineTo({20, 80});
+        canvas->MoveTo({MOVETO20, MOVETO20});
+        canvas->LineTo({LINET020, MOVETO20});
+        canvas->LineTo({LINET020, LINET080});
+        canvas->LineTo({LINET020, LINET080});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
-        paint.SetLineDashOffset(5);
+        paint.SetLineDashOffset(LINE_DASH_OFFSET5);
         canvas->BeginPath();
-        canvas->MoveTo({20, 120});
-        canvas->LineTo({200, 120});
-        canvas->LineTo({200, 180});
-        canvas->LineTo({20, 180});
+        canvas->MoveTo({MOVETO20, LINET0120});
+        canvas->LineTo({LINET0200, LINET0120});
+        canvas->LineTo({LINET0200, LINET0180});
+        canvas->LineTo({LINET020, LINET0180});
         canvas->ClosePath();
         canvas->DrawPath(paint);
     }
@@ -1111,20 +1113,20 @@ namespace OHOS {
         CreateTitleLabel("RM009_StrokeRect_ClearRect");
         UICanvas* canvas = CreateCanvas();
         Paint paint;
-        paint.SetStrokeWidth(2);
+        paint.SetStrokeWidth(STROKEWIDTH2);
         paint.SetStrokeColor(Color::Orange());
-        canvas->StrokeRect({10, 10}, 40, 50, paint);
+        canvas->StrokeRect({START1_X, START1_Y}, RECT40, RECT50, paint);
 
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({30, 60});
-        canvas->LineTo({200, 60});
-        canvas->LineTo({200, 200});
-        canvas->LineTo({30, 200});
+        canvas->MoveTo({MOVETO30, MOVETO60});
+        canvas->LineTo({LINET0200, MOVETO60});
+        canvas->LineTo({LINET0200, LINET0200});
+        canvas->LineTo({MOVETO30, LINET0200});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
-        canvas->ClearRect({50, 80}, 100, 70, paint);
+        canvas->ClearRect({RECT50, RECT80}, RECT100, RECT70, paint);
     }
 
     void UITestCanvas::RM008UIKitCanvasTest001()
@@ -1137,19 +1139,19 @@ namespace OHOS {
         Paint paint;
 
         paint.SetStyle(Paint::STROKE_FILL_STYLE);
-        paint.SetStrokeWidth(2);
+        paint.SetStrokeWidth(STROKEWIDTH2);
         paint.SetStrokeColor(Color::Orange());
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
 
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({60, 80});
-        canvas->LineTo({120, 20});
-        canvas->ArcTo({120, 100}, 80, 0, 180);
-        canvas->LineTo({120, 180});
-        canvas->LineTo({100, 70});
-        canvas->LineTo({20, 130});
-        canvas->LineTo({5, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE22_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE13_Y});
+        canvas->ArcTo({LINE26_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE26_X, LINE26_Y});
+        canvas->LineTo({LINE4_X, LINE2_Y});
+        canvas->LineTo({LINE11_X, LINE27_Y});
+        canvas->LineTo({LINE3_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         canvas->DrawPath(paint);
@@ -1164,38 +1166,39 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::GRADIENT);
-        //线性渐变
+        // 线性渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        paint.createLinearGradient(50, 50, 150, 150);
+        paint.createLinearGradient(LINEARGRADIENT50, LINEARGRADIENT50, LINEARGRADIENT150, LINEARGRADIENT150);
         paint.addColorStop(0, Color::Yellow());
-        paint.addColorStop(0.3, Color::White());
-        paint.addColorStop(0.6, Color::Green());
+        paint.addColorStop(COLOR_STOP3, Color::White());
+        paint.addColorStop(COLOR_STOP6, Color::Green());
         paint.addColorStop(1, Color::Blue());
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({60, 80});
-        canvas->LineTo({120, 20});
-        canvas->ArcTo({120, 100}, 80, 0, 180);
-        canvas->LineTo({120, 180});
-        canvas->LineTo({50, 120});
-        canvas->LineTo({20, 130});
-        canvas->LineTo({5, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE22_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE13_Y});
+        canvas->ArcTo({LINE26_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE26_X, LINE26_Y});
+        canvas->LineTo({LINE4_X, LINE2_Y});
+        canvas->LineTo({LINE11_X, LINE27_Y});
+        canvas->LineTo({LINE3_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
-        //放射渐变
+        // 放射渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         paint.createRadialGradient(300, 140, 5, 270, 100, 80);
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({230, 20});
-        canvas->LineTo({270, 80});
-        canvas->LineTo({330, 20});
-        canvas->ArcTo({330, 100}, 80, 0, 180);
-        canvas->LineTo({330, 180});
-        canvas->LineTo({260, 120});
-        canvas->LineTo({230, 130});
-        canvas->LineTo({215, 80});
+
+        canvas->MoveTo({LINE9_X, LINE13_Y});
+        canvas->LineTo({LINE32_X, LINE11_Y});
+        canvas->LineTo({LINE31_X, LINE13_Y});
+        canvas->ArcTo({LINE31_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE31_X, LINE26_Y});
+        canvas->LineTo({LINE21_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE27_Y});
+        canvas->LineTo({LINE33_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1210,38 +1213,39 @@ namespace OHOS {
         Paint paint;
         paint.SetStyle(Paint::GRADIENT);
         paint.SetStrokeWidth(8);
-        //线性渐变
+        // 线性渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        paint.createLinearGradient(50, 50, 150, 150);
+        paint.createLinearGradient(LINEARGRADIENT50, LINEARGRADIENT50, LINEARGRADIENT150, LINEARGRADIENT150);
         paint.addColorStop(0, Color::Yellow());
         paint.addColorStop(0.3, Color::White());
         paint.addColorStop(0.6, Color::Green());
         paint.addColorStop(1, Color::Blue());
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({60, 80});
-        canvas->LineTo({120, 20});
-        canvas->ArcTo({120, 100}, 80, 0, 180);
-        canvas->LineTo({120, 180});
-        canvas->LineTo({50, 120});
-        canvas->LineTo({20, 130});
-        canvas->LineTo({5, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE22_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE13_Y});
+        canvas->ArcTo({LINE26_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE26_X, LINE26_Y});
+        canvas->LineTo({LINE4_X, LINE2_Y});
+        canvas->LineTo({LINE11_X, LINE27_Y});
+        canvas->LineTo({LINE3_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
-        //放射渐变
+        // 放射渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        paint.createRadialGradient(300, 140, 5, 270, 100, 80);
+        paint.createRadialGradient(LINEARGRADIENT300, LINEARGRADIENT140, LINEARGRADIENT5,
+                                   LINEARGRADIENT270, LINEARGRADIENT100, LINEARGRADIENT80);
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({230, 20});
-        canvas->LineTo({270, 80});
-        canvas->LineTo({330, 20});
-        canvas->ArcTo({330, 100}, 80, 0, 180);
-        canvas->LineTo({330, 180});
-        canvas->LineTo({260, 120});
-        canvas->LineTo({230, 130});
-        canvas->LineTo({215, 80});
+        canvas->MoveTo({LINE9_X, LINE13_Y});
+        canvas->LineTo({LINE32_X, LINE11_Y});
+        canvas->LineTo({LINE31_X, LINE13_Y});
+        canvas->ArcTo({LINE31_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE31_X, LINE26_Y});
+        canvas->LineTo({LINE21_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE27_Y});
+        canvas->LineTo({LINE33_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
     }
@@ -1255,31 +1259,31 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::PATTERN);
-        paint.SetStrokeWidth(8);
+        paint.SetStrokeWidth(STROKEWIDTH8);
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT);
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({60, 80});
-        canvas->LineTo({120, 20});
-        canvas->ArcTo({120, 100}, 80, 0, 180);
-        canvas->LineTo({120, 180});
-        canvas->LineTo({50, 120});
-        canvas->LineTo({20, 130});
-        canvas->LineTo({5, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE22_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE13_Y});
+        canvas->ArcTo({LINE26_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE26_X, LINE26_Y});
+        canvas->LineTo({LINE4_X, LINE2_Y});
+        canvas->LineTo({LINE11_X, LINE27_Y});
+        canvas->LineTo({LINE3_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({230, 20});
-        canvas->LineTo({270, 80});
-        canvas->LineTo({330, 20});
-        canvas->ArcTo({330, 100}, 80, 0, 180);
-        canvas->LineTo({330, 180});
-        canvas->LineTo({260, 120});
-        canvas->LineTo({230, 130});
-        canvas->LineTo({215, 80});
+        canvas->MoveTo({LINE9_X, LINE13_Y});
+        canvas->LineTo({LINE32_X, LINE11_Y});
+        canvas->LineTo({LINE31_X, LINE13_Y});
+        canvas->ArcTo({LINE31_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE31_X, LINE26_Y});
+        canvas->LineTo({LINE21_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE27_Y});
+        canvas->LineTo({LINE33_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1292,32 +1296,32 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::PATTERN);
-        paint.SetStrokeWidth(8);
+        paint.SetStrokeWidth(STROKEWIDTH8);
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_X);
 #endif
         canvas->BeginPath();
 
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({60, 80});
-        canvas->LineTo({120, 20});
-        canvas->ArcTo({120, 100}, 80, 0, 180);
-        canvas->LineTo({120, 180});
-        canvas->LineTo({50, 120});
-        canvas->LineTo({20, 130});
-        canvas->LineTo({5, 80});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE22_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE13_Y});
+        canvas->ArcTo({LINE26_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE26_X, LINE26_Y});
+        canvas->LineTo({LINE4_X, LINE2_Y});
+        canvas->LineTo({LINE11_X, LINE27_Y});
+        canvas->LineTo({LINE3_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({230, 20});
-        canvas->LineTo({270, 80});
-        canvas->LineTo({330, 20});
-        canvas->ArcTo({330, 100}, 80, 0, 180);
-        canvas->LineTo({330, 180});
-        canvas->LineTo({260, 120});
-        canvas->LineTo({230, 130});
-        canvas->LineTo({215, 80});
+        canvas->MoveTo({LINE9_X, LINE13_Y});
+        canvas->LineTo({LINE32_X, LINE11_Y});
+        canvas->LineTo({LINE31_X, LINE13_Y});
+        canvas->ArcTo({LINE31_X, LINE1_Y}, ARC_RADIUS, START1_ANGLE, END1_ANGLE);
+        canvas->LineTo({LINE31_X, LINE26_Y});
+        canvas->LineTo({LINE21_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE27_Y});
+        canvas->LineTo({LINE33_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1330,23 +1334,23 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::PATTERN);
-        paint.SetStrokeWidth(8);
+        paint.SetStrokeWidth(STROKEWIDTH8);
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         paint.CreatePattern(RED_IMAGE_PATH, Paint::REPEAT_Y);
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 60});
-        canvas->LineTo({200, 60});
-        canvas->LineTo({200, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE10_Y});
+        canvas->LineTo({LINE28_X, LINE10_Y});
+        canvas->LineTo({LINE28_X, LINE13_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 80});
-        canvas->LineTo({20, 180});
-        canvas->LineTo({200, 180});
-        canvas->LineTo({200, 80});
+        canvas->MoveTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE11_X, LINE26_Y});
+        canvas->LineTo({LINE28_X, LINE26_Y});
+        canvas->LineTo({LINE28_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1359,23 +1363,23 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::PATTERN);
-        paint.SetStrokeWidth(8);
+        paint.SetStrokeWidth(STROKEWIDTH8);
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         paint.CreatePattern(RED_IMAGE_PATH, Paint::NO_REPEAT);
 #endif
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 60});
-        canvas->LineTo({200, 60});
-        canvas->LineTo({200, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE10_Y});
+        canvas->LineTo({LINE28_X, LINE10_Y});
+        canvas->LineTo({LINE28_X, LINE13_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         canvas->BeginPath();
-        canvas->MoveTo({20, 80});
-        canvas->LineTo({20, 180});
-        canvas->LineTo({200, 180});
-        canvas->LineTo({200, 80});
+        canvas->MoveTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE11_X, LINE26_Y});
+        canvas->LineTo({LINE28_X, LINE26_Y});
+        canvas->LineTo({LINE28_X, LINE11_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1390,24 +1394,24 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.FillStyle(Color::Orange());
-        paint.SetStrokeWidth(8);
-        paint.SetShadowBlur(5);
+        paint.SetStrokeWidth(STROKEWIDTH8);
+        paint.SetShadowBlur(LINEARGRADIENT5);
         paint.SetShadowColor(Color::Black());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 60});
-        canvas->LineTo({100, 60});
-        canvas->LineTo({100, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
-        paint.SetShadowOffsetX(20);
-        paint.SetShadowOffsetY(10);
+        paint.SetShadowOffsetX(OFFSETX20);
+        paint.SetShadowOffsetY(OFFSETX10);
         canvas->BeginPath();
-        canvas->MoveTo({120, 20});
-        canvas->LineTo({120, 60});
-        canvas->LineTo({200, 60});
-        canvas->LineTo({200, 20});
+        canvas->MoveTo({LINE26_X, LINE13_Y});
+        canvas->LineTo({LINE26_X, LINE10_Y});
+        canvas->LineTo({LINE28_X, LINE10_Y});
+        canvas->LineTo({LINE28_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
@@ -1415,45 +1419,45 @@ namespace OHOS {
         paint.SetShadowOffsetX(0);
         paint.SetShadowOffsetY(0);
         canvas->BeginPath();
-        canvas->MoveTo({20, 80});
-        canvas->LineTo({20, 120});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({100, 80});
+        canvas->MoveTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE11_X, LINE2_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE2_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
-        paint.SetShadowOffsetX(20);
-        paint.SetShadowOffsetY(10);
+        paint.SetShadowOffsetX(OFFSETX20);
+        paint.SetShadowOffsetY(OFFSETX10);
         canvas->BeginPath();
-        canvas->MoveTo({120, 80});
-        canvas->LineTo({120, 120});
-        canvas->LineTo({200, 120});
-        canvas->LineTo({200, 80});
+        canvas->MoveTo({LINE26_X, LINE11_Y});
+        canvas->LineTo({LINE26_X, LINE2_Y});
+        canvas->LineTo({LINE28_X, LINE2_Y});
+        canvas->LineTo({LINE28_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
         paint.FillStyle(Color::Orange());
-        paint.SetShadowBlur(15);
-        paint.SetShadowOffsetX(20);
-        paint.SetShadowOffsetY(10);
+        paint.SetShadowBlur(SHADOWBLUR15);
+        paint.SetShadowOffsetX(OFFSETX20);
+        paint.SetShadowOffsetY(OFFSETX10);
         canvas->BeginPath();
-        canvas->MoveTo({250, 20});
-        canvas->LineTo({250, 60});
-        canvas->LineTo({330, 60});
-        canvas->LineTo({330, 20});
+        canvas->MoveTo({LINE34_X, LINE13_Y});
+        canvas->LineTo({LINE34_X, LINE10_Y});
+        canvas->LineTo({LINE31_X, LINE10_Y});
+        canvas->LineTo({LINE31_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         paint.StrokeStyle(Color::Orange());
-        paint.SetShadowBlur(5);
+        paint.SetShadowBlur(SHADOWBLUR5);
         paint.SetShadowColor(Color::Blue());
-        paint.SetShadowOffsetX(20);
-        paint.SetShadowOffsetY(10);
+        paint.SetShadowOffsetX(OFFSETX20);
+        paint.SetShadowOffsetY(OFFSETX10);
         canvas->BeginPath();
-        canvas->MoveTo({250, 80});
-        canvas->LineTo({250, 120});
-        canvas->LineTo({330, 120});
-        canvas->LineTo({330, 80});
+        canvas->MoveTo({LINE34_X, LINE11_Y});
+        canvas->LineTo({LINE34_X, LINE26_X});
+        canvas->LineTo({LINE31_X, LINE26_X});
+        canvas->LineTo({LINE31_X, LINE11_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 #endif
@@ -1467,24 +1471,25 @@ namespace OHOS {
         fontStyle.align = TEXT_ALIGNMENT_CENTER;
         fontStyle.direct = TEXT_DIRECT_LTR;
         fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
-        fontStyle.fontSize = 15;
-        fontStyle.letterSpace = 2;
+        fontStyle.fontSize = FONT_SIZE15;
+        fontStyle.letterSpace = FONT_LETTERSPACE2;
         Paint paint;
         paint.SetFillColor(Color::Blue());
-        canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0, 20}, fontStyle, paint);
-        canvas->StrokeText("西班牙语：Hong Meng, test", {0, 40}, fontStyle, paint);
-        canvas->StrokeText("法语：HongMeng, test", {0, 60}, fontStyle, paint);
-        canvas->StrokeText("瓜拉尼语：mitapoañda, pens", {0, 80}, fontStyle, paint);
-        canvas->StrokeText("荷兰语：Hongmeng, kom op.", {0, 100}, fontStyle, paint);
-        canvas->StrokeText("樊瓦什语：Кайалла", {0, 120}, fontStyle, paint);
-        canvas->StrokeText("白俄罗斯语：Прывітанне", {0, 140}, fontStyle, paint);
-        canvas->StrokeText("希腊语：Γεια.", {0, 80}, fontStyle, paint);
-        canvas->StrokeText("瑞典语:Hej, Hongmeng.", {0, 160}, fontStyle, paint);
-        canvas->StrokeText("俄语: Привет, hongmon ", {0, 180}, fontStyle, paint);
-        paint.Scale(2, 1);
-        paint.Rotate(45);
-        canvas->StrokeText("中国 你好，鸿蒙。。", {20, 0}, fontStyle, paint);
+        canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0, HEIGHT_Y20}, fontStyle, paint);
+        canvas->StrokeText("西班牙语：Hong Meng, test", {0, HEIGHT_Y20}, fontStyle, paint);
+        canvas->StrokeText("法语：HongMeng, test", {0, HEIGHT_Y60}, fontStyle, paint);
+        canvas->StrokeText("瓜拉尼语：mitapoañda, pens", {0, HEIGHT_Y80}, fontStyle, paint);
+        canvas->StrokeText("荷兰语：Hongmeng, kom op.", {0, HEIGHT_Y100}, fontStyle, paint);
+        canvas->StrokeText("樊瓦什语：Кайалла", {0, HEIGHT_Y120}, fontStyle, paint);
+        canvas->StrokeText("白俄罗斯语：Прывітанне", {0, HEIGHT_Y140}, fontStyle, paint);
+        canvas->StrokeText("希腊语：Γεια.", {0, HEIGHT_Y160}, fontStyle, paint);
+        canvas->StrokeText("瑞典语:Hej, Hongmeng.", {0, HEIGHT_Y180}, fontStyle, paint);
+        canvas->StrokeText("俄语: Привет, hongmon ", {0, HEIGHT_Y200}, fontStyle, paint);
+        paint.Scale(SCALE1_X, SCALE1_Y);
+        paint.Rotate(ROTATE45);
+        canvas->StrokeText("中国 你好，鸿蒙。。", {HEIGHT_Y20, 0}, fontStyle, paint);
     }
+
     void UITestCanvas::RM011CanvasScale001()
     {
         if (container_ == nullptr) {
@@ -1494,35 +1499,36 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.StrokeStyle(Color::Red());
-        paint.SetStrokeWidth(3);
+        paint.SetStrokeWidth(STROKEWIDTH3);
         canvas->BeginPath();
-        canvas->MoveTo({5, 5});
-        canvas->LineTo({50, 5});
-        canvas->LineTo({50, 35});
-        canvas->LineTo({5, 35});
+        canvas->MoveTo({MOVETO5, MOVETO5});
+        canvas->LineTo({LINET050, MOVETO5});
+        canvas->LineTo({LINET050, LINET035});
+        canvas->LineTo({MOVETO5, LINET035});
         canvas->ClosePath();
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Green());
-        paint.SetGlobalAlpha(0.5);
-        paint.Scale(2, 4);
+        paint.SetGlobalAlpha(GLOBALALPHA5);
+        paint.Scale(SCALE2, SCALE4);
         canvas->BeginPath();
-        canvas->MoveTo({5, 5});
-        canvas->LineTo({50, 5});
-        canvas->LineTo({50, 35});
-        canvas->LineTo({5, 35});
+        canvas->MoveTo({MOVETO5, MOVETO5});
+        canvas->LineTo({LINET050, MOVETO5});
+        canvas->LineTo({LINET050, LINET035});
+        canvas->LineTo({LINE3_X, LINE3_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Blue());
-        paint.SetGlobalAlpha(0.5);
-        paint.Scale(0.5, 0.5);
+        paint.SetGlobalAlpha(GLOBALALPHA5);
+        paint.Scale(SCALE_X, SCALE_Y);
         canvas->BeginPath();
-        canvas->MoveTo({5, 5});
-        canvas->LineTo({50, 5});
-        canvas->LineTo({50, 35});
-        canvas->LineTo({5, 35});
+        canvas->MoveTo({LINE3_X, LINE4_Y});
+        canvas->LineTo({LINE4_X, LINE4_Y});
+        canvas->LineTo({LINE4_X, LINE3_Y});
+        canvas->LineTo({LINE3_X, LINE3_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
     }
+
     void UITestCanvas::RM011CanvasRotate001()
     {
         if (container_ == nullptr) {
@@ -1532,51 +1538,51 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.StrokeStyle(Color::Red());
-        paint.SetStrokeWidth(3);
+        paint.SetStrokeWidth(STROKE3_WIDTH);
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({LINE8_X, LINE8_X});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
         paint.StrokeStyle(Color::Green());
-        paint.Rotate(20);
+        paint.Rotate(ROTATE_ANGLE);
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({LINE8_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE7_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
-        paint.Translate(50, 50);
+        paint.Translate(TRANSLATE_X, TRANSLATE_Y);
         paint.StrokeStyle(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({LINE8_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
-        paint.Transform(1, 0.5, 0.5, 2, 0, 0);
+        paint.Transform(SCALE1_X, SHEAR_X, SHEAR_Y, SCALE2_Y, TRANSLATE1_X, TRANSLATE1_Y);
         paint.StrokeStyle(Color::Yellow());
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({LINE8_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
 
-        paint.SetTransform(1, 0, 0, 2, 0, 0);
+        paint.SetTransform(SCALE1_X, SHEAR1_X, SHEAR1_Y, SCALE2_Y, TRANSLATE1_X, TRANSLATE1_Y);
         paint.StrokeStyle(Color::Orange());
         canvas->BeginPath();
-        canvas->MoveTo({15, 15});
-        canvas->LineTo({60, 15});
-        canvas->LineTo({60, 45});
-        canvas->LineTo({15, 45});
+        canvas->MoveTo({LINE8_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE6_Y});
+        canvas->LineTo({LINE6_X, LINE7_Y});
+        canvas->LineTo({LINE8_X, LINE8_Y});
         canvas->ClosePath();
         canvas->DrawPath(paint);
     }
@@ -1591,29 +1597,29 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
-        paint.SetGlobalAlpha(0.2);
+        paint.SetGlobalAlpha(GLOBALALPHA2);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({180, 100});
-        canvas->LineTo({180, 160});
-        canvas->LineTo({310, 160});
-        canvas->LineTo({310, 100});
+        canvas->MoveTo({LINE14_X, LINE1_Y});
+        canvas->LineTo({LINE14_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE1_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1628,23 +1634,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(SOURCE_OVER);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::SOURCE_OVER);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
 
     void UITestCanvas::RM012GlobalCompositeOperationSOURCE_ATOP()
@@ -1657,23 +1661,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(SOURCE_ATOP);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::SOURCE_ATOP);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
     void UITestCanvas::RM012GlobalCompositeOperationSOURCE_IN()
     {
@@ -1685,23 +1687,22 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(SOURCE_IN);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::SOURCE_IN);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+
 
     }
     void UITestCanvas::RM012GlobalCompositeOperationSOURCE_OUT()
@@ -1714,23 +1715,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(SOURCE_OUT);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::SOURCE_OUT);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
     void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_OVER()
     {
@@ -1742,19 +1741,19 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(DESTINATION_OVER);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1769,23 +1768,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(DESTINATION_ATOP);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::DESTINATION_ATOP);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
 
     void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_IN()
@@ -1798,23 +1795,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(DESTINATION_IN);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::DESTINATION_IN);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
 
     void UITestCanvas::RM012GlobalCompositeOperationDESTINATION_OUT()
@@ -1827,23 +1822,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(DESTINATION_OUT);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::DESTINATION_OUT);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
 
     void UITestCanvas::RM012GlobalCompositeOperationLIGHTER()
@@ -1856,19 +1849,19 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(LIGHTER);
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1883,19 +1876,19 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
         paint.SetGlobalCompositeOperation(COPY);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
     }
@@ -1910,23 +1903,21 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-//        canvas->MoveTo({20, 20});
-//        canvas->LineTo({20, 80});
-//        canvas->LineTo({150, 80});
-//        canvas->LineTo({150, 20});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({110,40},40,paint);
-        paint.SetGlobalCompositeOperation(XOR);
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
+        paint.SetGlobalCompositeOperation(Paint::XOR);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-//        canvas->MoveTo({100, 60});
-//        canvas->LineTo({100, 120});
-//        canvas->LineTo({230, 120});
-//        canvas->LineTo({230, 60});
-//        canvas->ClosePath();
-//        canvas->FillPath(paint);
-        canvas->DrawCircle({150,80},40,paint);
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
+        canvas->ClosePath();
+        canvas->FillPath(paint);
     }
 
     void UITestCanvas::RM012SaveOrRestore002()
@@ -1939,33 +1930,32 @@ namespace OHOS {
         Paint paint;
         paint.SetFillColor(Color::Red());
         canvas->BeginPath();
-        canvas->MoveTo({20, 20});
-        canvas->LineTo({20, 80});
-        canvas->LineTo({150, 80});
-        canvas->LineTo({150, 20});
+        canvas->MoveTo({LINE11_X, LINE13_Y});
+        canvas->LineTo({LINE11_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE11_Y});
+        canvas->LineTo({LINE12_X, LINE13_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
-        paint.SetGlobalAlpha(0.2);
+        paint.SetGlobalAlpha(GLOBALALPHA2);
         paint.SetFillColor(Color::Green());
         canvas->BeginPath();
-        canvas->MoveTo({100, 60});
-        canvas->LineTo({100, 120});
-        canvas->LineTo({230, 120});
-        canvas->LineTo({230, 60});
+        canvas->MoveTo({LINE1_Y, LINE10_Y});
+        canvas->LineTo({LINE2_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE2_Y});
+        canvas->LineTo({LINE9_X, LINE10_Y});
         canvas->ClosePath();
         canvas->FillPath(paint);
 
         canvas->Save(paint);
         paint.SetFillColor(Color::Blue());
         canvas->BeginPath();
-        canvas->MoveTo({180, 100});
-        canvas->LineTo({180, 160});
-        canvas->LineTo({310, 160});
-        canvas->LineTo({310, 100});
+        canvas->MoveTo({LINE14_X, LINE1_Y});
+        canvas->LineTo({LINE14_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE14_Y});
+        canvas->LineTo({LINE15_X, LINE1_Y});
         canvas->ClosePath();
         paint = canvas->Restore();
         canvas->FillPath(paint);
     }
-
 } // namespace OHOS

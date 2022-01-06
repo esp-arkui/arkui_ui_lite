@@ -171,7 +171,7 @@ public:
 class ClipImageBlitter : public Blitter {
 public:
     explicit ClipImageBlitter(const ImageInfo* src) : src_(src) {}
-    virtual ~ClipImageBlitter() {}
+    virtual ~ClipImageBlitter() override {}
 
     void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
     void Finish() override;

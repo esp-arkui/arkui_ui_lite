@@ -82,8 +82,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        Paint() :
-            style_(PaintStyle::STROKE_FILL_STYLE),
+        Paint() : style_(PaintStyle::STROKE_FILL_STYLE),
             fillColor_(Color::Black()),
             strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE),
@@ -549,7 +548,7 @@ namespace OHOS {
      */
         void SetLineDashOffset(float offset)
         {
-            dashOffset_ = offset; //dash 点偏移量
+            dashOffset_ = offset; // dash 点偏移量
             changeFlage_ = true;
             isDashMode_ = true;
         }
@@ -843,7 +842,8 @@ namespace OHOS {
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
-        void SetTransform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
+        void SetTransform(float scaleX, float shearX, float shearY, float scaleY,
+                          int16_t transLateX, int16_t transLateY)
         {
             transfrom_.Reset();
             rotateAngle_ = 0;
@@ -896,11 +896,11 @@ namespace OHOS {
         bool changeFlage_;
         LineJoinEnum lineJoin_;
         LineCapEnum lineCap_;
-        bool isDashMode_;      //是否是dash模式的线段
-        float dashOffset_;     //dash 点偏移量
-        float* dashArray_;     //dash 点数组
-        unsigned int ndashes_; //dashArray的长度
-        double miterLimit_;    //设置路径连接处的尖角的间距限制
+        bool isDashMode_;      // 是否是dash模式的线段
+        float dashOffset_;     // dash 点偏移量
+        float* dashArray_;     // dash 点数组
+        unsigned int ndashes_; // dashArray的长度
+        double miterLimit_;    // 设置路径连接处的尖角的间距限制
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         LinearGradientPoint linearGradientPoint_;
         RadialGradientPoint radialGradientPoint_;
@@ -912,16 +912,16 @@ namespace OHOS {
 #endif
         const char* image;
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
-        double shadowBlurRadius; //设置阴影模糊半径
-        double shadowOffsetX;    //设置阴影横坐标偏移量
-        double shadowOffsetY;    //设置阴影纵坐标偏移量。
-        ColorType shadowColor;   //设置阴影色彩
-        bool haveShadow;         //当前是否有阴影
+        double shadowBlurRadius; // 设置阴影模糊半径
+        double shadowOffsetX;    // 设置阴影横坐标偏移量
+        double shadowOffsetY;    // 设置阴影纵坐标偏移量。
+        ColorType shadowColor;   // 设置阴影色彩
+        bool haveShadow;         // 当前是否有阴影
 #endif
-        float globalAlpha_;                                 //当前绘图的透明度0-1 百分比
-        GlobalCompositeOperation globalCompositeOperation_; //混合图像方式
-        float rotateAngle_;                                 //旋转角度，单位度数
-        TransAffine transfrom_;                             //矩阵
+        float globalAlpha_;                                 // 当前绘图的透明度0-1 百分比
+        GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
+        float rotateAngle_;                                 // 旋转角度，单位度数
+        TransAffine transfrom_;                             // 矩阵
         bool haveComposite_;
     };
 
@@ -939,8 +939,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        UICanvas() :
-            startPoint_({0, 0}), vertices_(nullptr)
+        UICanvas() : startPoint_({0, 0}), vertices_(nullptr)
         {}
 
         /**
@@ -1562,7 +1561,6 @@ namespace OHOS {
                 strokeLineStyle.MiterLimit(paint.GetMiterLimit());
             }
 #endif
-            //            strokeLineStyle.ApproximationScale(2.0);
         };
 
         /**
@@ -1575,7 +1573,6 @@ namespace OHOS {
                 dashStyle.AddDash(paint.GetLineDash()[i], paint.GetLineDash()[i + 1]);
             }
             dashStyle.DashStart(paint.GetLineDashOffset());
-            //            dashStyle.ApproximationScale(2.0);
         };
 
         /**
@@ -1632,9 +1629,11 @@ namespace OHOS {
             // 设定线段插值器
             typedef SpanInterpolatorLinear<> InterpolatorType;
             // 设定线性渐变的线段生成器
-            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate, GradientColorMode> LinearGradientSpan;
+            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate,
+                    GradientColorMode> LinearGradientSpan;
             // 设定放射渐变的线段生成器
-            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate, GradientColorMode> RadialGradientSpan;
+            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
+                    GradientColorMode> RadialGradientSpan;
 
             ScanlineUnPackedContainer m_scanline;
             typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
@@ -1645,7 +1644,8 @@ namespace OHOS {
             RendererBaseComp m_renBaseComp(pixFormatComp);
 
             m_renBaseComp.ResetClipping(true);
-            m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(), invalidatedArea.GetRight(), invalidatedArea.GetBottom());
+            m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
+                                  invalidatedArea.GetRight(), invalidatedArea.GetBottom());
             TransAffine gradientMatrix;
             InterpolatorType interpolatorType(gradientMatrix);
             GradientLinearCalculate gradientLinearCalculate;
@@ -1689,8 +1689,10 @@ namespace OHOS {
                 gradientMatrix.Invert();
                 double startRadius = radialPoint.r0;
                 double endRadius = radialPoint.r1;
-                GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1, radialPoint.y0 - radialPoint.y1);
-                RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode, startRadius, endRadius);
+                GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1,
+                                                                radialPoint.y0 - radialPoint.y1);
+                RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
+                                        startRadius, endRadius);
                 RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, span);
             }
         };
@@ -1716,7 +1718,7 @@ namespace OHOS {
                 return;
             }
             typedef Rgba8 Rgba8Color;
-            //组装renderbase
+            // 组装renderbase
             // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
             typedef OrderBgra ComponentOrder;
             // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
@@ -1772,13 +1774,6 @@ namespace OHOS {
                 RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, m_spanPatternType);
             }
         }
-
-        static void initRasterAndColorSoild(RasterizerScanlineAntiAlias<>& rasterizer,Rgba8 color){
-
-
-        }
-
-
 #endif
     };
 } // namespace OHOS

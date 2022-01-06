@@ -32,7 +32,6 @@ namespace OHOS {
      * 行访问器
      */
     template <class T>
-
     class RowAccessor {
     public:
         using rowData = ConstRowInfo<T>;
