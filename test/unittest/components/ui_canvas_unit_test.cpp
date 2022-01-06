@@ -1702,8 +1702,8 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_001, TestSize.Level0)
         return;
     }
 
-    paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
+    paint_->SetGlobalCompositeOperation(OHOS::SOURCE_OVER);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::SOURCE_OVER);
 }
 
 /**
@@ -1732,7 +1732,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
     canvas_->LineTo({LINE_Y, LINE_X});
     canvas_->ClosePath();
     canvas_->FillPath(*paint_);
-    paint_->SetGlobalCompositeOperation(OHOS::Paint::SOURCE_OVER);
+    paint_->SetGlobalCompositeOperation(OHOS::SOURCE_OVER);
     
     paint_->SetFillColor(Color::Green());
     canvas_->BeginPath();
@@ -1742,7 +1742,7 @@ HWTEST_F(UICanvasTest, UICanvasGetGlobalCompositeOperation_002, TestSize.Level1)
     canvas_->LineTo({POS_X, START1_Y});
     canvas_->ClosePath();
     canvas_->FillPath(*paint_);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::SOURCE_OVER);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::OURCE_OVER);
 }
 
 /**
