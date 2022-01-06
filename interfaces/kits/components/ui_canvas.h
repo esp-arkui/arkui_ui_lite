@@ -931,12 +931,6 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-
-    static List<RasterizerScanlineAntiAlias<>*> rasterizers_;
-//    static RasterizerScanlineAntiAlias<> * rasterizerss_;
-    static List<ColorType> colors_;
-    static List<GlobalCompositeOperation> composite_;
-
     class UICanvas : public UIView {
     public:
         /**
@@ -1528,13 +1522,6 @@ namespace OHOS {
                              const Style& style,
                              const bool& isStroke);
         static void DoRenderBlend(BufferInfo& gfxDstBuffer,
-                                  void* param,
-                                  const Paint& paint,
-                                  const Rect& rect,
-                                  const Rect& invalidatedArea,
-                                  const Style& style,
-                                  const bool& isStroke);
-        static void DoRenderBlend2(BufferInfo& gfxDstBuffer,
                                   void* param,
                                   const Paint& paint,
                                   const Rect& rect,
