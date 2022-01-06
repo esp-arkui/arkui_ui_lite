@@ -93,8 +93,8 @@ public:
 
     Point GetStartPos() const
     {
-        double x;
-        double y;
+        float x;
+        float y;
         if (GetPath() != nullptr) {
             vertices_->Rewind(0);
             vertices_->Vertex( &x, &y);
@@ -106,8 +106,8 @@ public:
 
     Point GetEndPos() const
     {
-        double x;
-        double y;
+        float x;
+        float y;
         if (GetPath() != nullptr) {
             vertices_->LastVertex(&x, &y);
             return { (int16_t)x, (int16_t)y };
@@ -1641,8 +1641,8 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_001, TestSize.Level0)
         return;
     }
 
-    paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
+    paint_->SetGlobalCompositeOperation(OHOS::COPY);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::COPY);
 }
 
 /**
@@ -1671,7 +1671,7 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_002, TestSize.Level1)
     canvas_->LineTo({POS_X, START1_Y});
     canvas_->ClosePath();
     canvas_->FillPath(*paint_);
-    paint_->SetGlobalCompositeOperation(OHOS::Paint::COPY);
+    paint_->SetGlobalCompositeOperation(OHOS::COPY);
 
     paint_->SetFillColor(Color::Green());
     canvas_->BeginPath();
@@ -1682,7 +1682,7 @@ HWTEST_F(UICanvasTest, UICanvasSetGlobalCompositeOperation_002, TestSize.Level1)
     canvas_->ClosePath();
     canvas_->FillPath(*paint_);
 
-    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::Paint::COPY);
+    EXPECT_EQ(paint_->GetGlobalCompositeOperation(), OHOS::COPY);
 }
 
 /**
