@@ -122,6 +122,7 @@ namespace OHOS {
     {
         free(buffer);
     }
+
 #ifdef ARM_NEON_OPT
     void BaseGfxEngine::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
     {
@@ -133,6 +134,20 @@ namespace OHOS {
         DrawUtils::GetInstance()->BlendLerpPix(pColor, cr, cg, cb, alpha);
     }
 
+    void BaseGfxEngine::BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
+    {
+        DrawUtils::GetInstance()->BlendLerpPix(dstColors, srcColors, srcCover);
+    }
+    void BaseGfxEngine::BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
+    {
+        DrawUtils::GetInstance()->BlendLerpPix(dstColors, srcColors, srcCovers);
+    }
+
+    void BaseGfxEngine::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
+    {
+        DrawUtils::GetInstance()->BlendLerpPix(pColor, cr, cg, cb, alpha，covers);
+    }
+
     void BaseGfxEngine::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
     {
         DrawUtils::GetInstance()->BlendPreLerpPix(pColor, cr, cg, cb, alpha, cover);
@@ -141,6 +156,19 @@ namespace OHOS {
     void BaseGfxEngine::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
     {
         DrawUtils::GetInstance()->BlendPreLerpPix(pColor, cr, cg, cb, alpha);
+    }
+    void BaseGfxEngine::BlendPreLerpPix(uint8_t *dstColors, uint8_t *srcColors, uint8_t srcCover)
+    {
+        DrawUtils::GetInstance()->BlendPreLerpPix(dstColors, srcColors, srcCover);
+    }
+
+    void BaseGfxEngine::BlendPreLerpPix(uint8_t *dstColors, uint8_t *srcColors, uint8_t *srcCovers)
+    {
+        DrawUtils::GetInstance()->BlendPreLerpPix(dstColors, srcColors, srcCovers);
+    }
+    void BaseGfxEngine::BlendPreLerpPix(uint8_t *pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t *covers)
+    {
+        DrawUtils::GetInstance()->BlendPreLerpPix(pColor, cr, cg, cb, alpha, covers);
     }
 #endif
 } // namespace OHOS

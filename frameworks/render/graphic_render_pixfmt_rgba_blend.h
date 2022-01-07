@@ -104,8 +104,7 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType* covers)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -133,15 +132,13 @@ namespace OHOS {
         }
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType srcCover)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
         }
 
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType* srcCovers)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
-        }
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
+         }
 #endif
         /**
          * @brief 用颜色分量混合像素.
@@ -188,8 +185,8 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType* covers)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonPreLerp_ARGB8888((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
+
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -218,14 +215,14 @@ namespace OHOS {
 
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType srcCover)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
-        }
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
+
+         }
 
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType* srcCovers)
         {
-            NeonBlendPipeLine mNeonBlendPipeLine;
-            mNeonBlendPipeLine.NeonLerp_ARGB8888((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
+
         }
 #endif
         /**
