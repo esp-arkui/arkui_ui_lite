@@ -541,6 +541,7 @@ namespace OHOS {
 #endif
         }
     }
+
 #ifdef ARM_NEON_OPT
     void DrawUtils::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
     {
@@ -553,6 +554,23 @@ namespace OHOS {
         NeonBlendPipeLine mNeonBlendPipeLine;
         mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha);
     }
+    void DrawUtils::BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
+    {
+        NeonBlendPipeLine mNeonBlendPipeLine;
+        mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors,srcColors,srcCover);
+    }
+
+    void DrawUtils::BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
+    {
+        NeonBlendPipeLine mNeonBlendPipeLine;
+        mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCovers);
+    }
+
+    void DrawUtils::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
+    {
+        NeonBlendPipeLine mNeonBlendPipeLine;
+        mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, covers);
+    }
 
     void DrawUtils::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
     {
@@ -564,6 +582,24 @@ namespace OHOS {
     {
         NeonBlendPipeLine mNeonBlendPipeLine;
         mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha);
+    }
+    void DrawUtils::BlendPreLerpPix(uint8_t *dstColors, uint8_t *srcColors, uint8_t srcCover)
+    {
+        NeonBlendPipeLine mNeonBlendPipeLine;
+        mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCover);
+    }
+
+    void DrawUtils::BlendPreLerpPix(uint8_t *dstColors, uint8_t *srcColors, uint8_t *srcCovers)
+    {
+        NeonBlendPipeLine mNeonBlendPipeLine;
+        mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCovers);
+
+    }
+
+    void DrawUtils::BlendPreLerpPix(uint8_t *pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t *covers)
+    {
+        NeonBlendPipeLine mNeonBlendPipeLine;
+        mNeonBlendPipeLine.NeonPreLerp_ARGB8888(pColor, cr, cg, cb, alpha, covers);
     }
 #endif
     void DrawUtils::BlendWithSoftWare(const uint8_t* src1,

@@ -50,7 +50,6 @@
 #include <gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_interpolator.h>
 #include <gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_pattern_rgba.h>
 #include <gfx_utils/graphics/transform/graphic_transform_image_accessors.h>
-#include <gfx_utils/graphics/vertexprimitive/graphic_geometry_bounding_rect.h>
 #include <gfx_utils/graphics/vertexprimitive/graphic_geometry_path_storage.h>
 #include <render/graphic_render_pixfmt_rgba_blend.h>
 #include <render/graphic_render_pixfmt_rgba_comp.h>
@@ -103,6 +102,7 @@ class UICanvas;
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
             rotateAngle_(0),
+            haveComposite_(false),
             uiCanvas_(nullptr)
         {}
 
@@ -183,6 +183,7 @@ class UICanvas;
             globalCompositeOperation_ = paint.globalCompositeOperation_;
             rotateAngle_ = paint.rotateAngle_;
             transfrom_ = paint.transfrom_;
+			haveComposite_ = paint.haveComposite_;
             uiCanvas_ = paint.uiCanvas_;
         }
 
@@ -264,20 +265,6 @@ class UICanvas;
             REPEAT_X,
             REPEAT_Y,
             NO_REPEAT,
-        };
-
-        enum GlobalCompositeOperation {
-            SOURCE_OVER,      // 默认。在目标图像上显示源图像。
-            SOURCE_ATOP,      // 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。
-            SOURCE_IN,        // 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。
-            SOURCE_OUT,       // 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。
-            DESTINATION_OVER, // 在源图像上显示目标图像。
-            DESTINATION_ATOP, // 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。
-            DESTINATION_IN,   // 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。
-            DESTINATION_OUT,  // 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。
-            LIGHTER,          // 显示源图像 + 目标图像。
-            COPY,             // 显示源图像。忽略目标图像。
-            XOR               // 使用异或操作对源图像与目标图像进行组合。
         };
 
         /**
@@ -365,6 +352,7 @@ class UICanvas;
         void SetStrokeColor(ColorType color)
         {
             strokeColor_ = color;
+            changeFlage_ = true;
         }
 
         /**
@@ -393,6 +381,7 @@ class UICanvas;
         void SetFillColor(ColorType color)
         {
             fillColor_ = color;
+            changeFlage_ = true;
         }
 
         /**
@@ -783,6 +772,9 @@ class UICanvas;
         {
             globalCompositeOperation_ = globalCompositeOperation;
             changeFlage_ = true;
+            if(globalCompositeOperation!=SOURCE_OVER){
+                haveComposite_ = true;
+            }
         }
 
         /**
@@ -901,7 +893,12 @@ class UICanvas;
         {
             return uiCanvas_;
         }
-
+		
+		bool HaveComposite() const
+        {
+            return haveComposite_;
+        }
+		
     private:
         PaintStyle style_;
         ColorType fillColor_;
@@ -937,6 +934,7 @@ class UICanvas;
         GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
         float rotateAngle_;                                 // 旋转角度，单位度数
         TransAffine transfrom_;                             // 矩阵
+		bool haveComposite_;
         UICanvas* uiCanvas_;
     };
 
@@ -1339,6 +1337,7 @@ class UICanvas;
         struct PathParam : public HeapBase {
             UICanvasVertices* vertices;
             ImageParam* imageParam = nullptr;
+            bool isStroke;
         };
 
         struct TextParam : public HeapBase {
@@ -1533,13 +1532,6 @@ class UICanvas;
                              const Rect& invalidatedArea,
                              const Style& style,
                              const bool& isStroke);
-        static void DoRenderBlend(BufferInfo& gfxDstBuffer,
-                                  void* param,
-                                  const Paint& paint,
-                                  const Rect& rect,
-                                  const Rect& invalidatedArea,
-                                  const Style& style,
-                                  const bool& isStroke);
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         static void DoDrawShadow(BufferInfo& gfxDstBuffer,
                                  void* param,
@@ -1606,18 +1598,12 @@ class UICanvas;
             if (isStroke) {
                 if (paint.GetStyle() == Paint::STROKE_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = paint.GetStrokeColor().red;
-                    color.greenValue = paint.GetStrokeColor().green;
-                    color.blueValue = paint.GetStrokeColor().blue;
-                    color.alphaValue = paint.GetStrokeColor().alpha * paint.GetGlobalAlpha();
+                    ChangeColor(color,paint.GetStrokeColor(),paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
                 }
             } else {
                 if (paint.GetStyle() == Paint::FILL_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    color.redValue = paint.GetFillColor().red;
-                    color.greenValue = paint.GetFillColor().green;
-                    color.blueValue = paint.GetFillColor().blue;
-                    color.alphaValue = paint.GetFillColor().alpha * paint.GetGlobalAlpha();
+                    ChangeColor(color,paint.GetFillColor(),paint.GetFillColor().alpha * paint.GetGlobalAlpha());
                 }
             }
             RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, color);
@@ -1672,10 +1658,7 @@ class UICanvas;
             for (; count < paint.getStopAndColor().Size(); count++) {
                 ColorType stopColor = iter->data_.color;
                 Srgba8 srgba8Color;
-                srgba8Color.redValue = stopColor.red;
-                srgba8Color.greenValue = stopColor.green;
-                srgba8Color.blueValue = stopColor.blue;
-                srgba8Color.alphaValue = stopColor.alpha * paint.GetGlobalAlpha();
+                ChangeColor(srgba8Color,stopColor,stopColor.alpha * paint.GetGlobalAlpha());
                 gradientColorMode.AddColor(iter->data_.stop, srgba8Color);
                 iter = iter->next_;
             }
@@ -1791,7 +1774,15 @@ class UICanvas;
             }
         }
 #endif
-        void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
+        template <class Color>
+        static void ChangeColor(Color& color,ColorType colorType,int8u alpha){
+            color.redValue = colorType.red;
+            color.greenValue = colorType.green;
+            color.blueValue = colorType.blue;
+            color.alphaValue = alpha;
+        }
+
+		void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
         BufferInfo* UpdateMapBufferInfo(const BufferInfo& srcBuff, const Rect& rect);
         void DestroyMapBufferInfo();
     };

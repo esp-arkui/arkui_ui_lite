@@ -301,11 +301,21 @@ namespace OHOS {
         void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
                           uint8_t alpha);
 
+        void BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover);
+
+        void BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers);
+
+        void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers);
+
+
         void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
                              uint8_t alpha, uint8_t cover);
 
         void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
                              uint8_t alpha);
+        void BlendPreLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover);
+        void BlendPreLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers);
+        void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers);
 #endif
     private:
         using DrawTriangleTransformFuc = void (*)(const TriangleScanInfo& triangle, const ColorMode bufferMode);
