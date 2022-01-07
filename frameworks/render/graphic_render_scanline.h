@@ -75,79 +75,6 @@ namespace OHOS {
         }
     }
 
-
-    template <class Rasterizer, class Scanline,
-              class BaseRenderer, class ColorT>
-    void RenderClipAntiAliasSolid(Rasterizer& raster, Scanline& scanline,
-                                  BaseRenderer& renBase, const ColorT& color)
-    {
-        if (raster.RewindScanlines()) {
-            typename BaseRenderer::color_type ren_color = color;
-
-            // 需要裁减的图形上方
-            for (int y = 0; y < raster.MinY(); y++) {
-                renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
-                                   ren_color,
-                                   COVER_FULL);
-            }
-
-            // 需要裁减的图形下方
-            for (int y = raster.MaxY(); y < renBase.Height(); y++) {
-                renBase.BlendHline(0, y, (unsigned)(renBase.Width()),
-                                   ren_color,
-                                   COVER_FULL);
-            }
-            // 需要裁减的图形左方和右方
-            for (int y = raster.MinY(); y < raster.MaxY(); y++) {
-                for (int x = 0; x < renBase.Width(); x++) {
-                    // 裁减图形的左侧
-                    if (x < raster.MinX()) {
-                        renBase.BlendHline(x, y, (unsigned)(raster.MinX() - x - 1),
-                                           ren_color,
-                                           COVER_FULL);
-                        x = raster.MinX();
-                    }
-                    // 裁减图形的右侧
-                    if (x > raster.MaxX()) {
-                        renBase.BlendHline(raster.MaxX(), y, (unsigned)(renBase.Width() - raster.MaxX()),
-                                           ren_color,
-                                           COVER_FULL);
-                        x = renBase.Width();
-                    }
-                }
-            }
-
-            scanline.Reset(raster.MinX(), raster.MaxX());
-            while (raster.SweepScanline(scanline)) {
-                int y = scanline.GetYLevel();
-                unsigned num_spans = scanline.NumSpans();
-                typename Scanline::ConstIterator span = scanline.Begin();
-                int preX = 0;
-                while (true) {
-                    int x = span->x;
-                    if (preX < x) {
-                        if (span->spanLength > 0) {
-                            renBase.BlendHline(preX, y, (unsigned)(x - preX),
-                                               ren_color,
-                                               COVER_FULL);
-                        } else {
-                            renBase.BlendHline(x, y, (unsigned)(x - span->spanLength - 1),
-                                               ren_color,
-                                               *(span->covers));
-                        }
-                        preX = x + (span->spanLength > 0 ? span->spanLength : -span->spanLength);
-                    }
-                    if (--num_spans == 0) {
-                        preX = 0;
-                        break;
-                    }
-                    ++span;
-                    preX = 0;
-                }
-            }
-        }
-    }
-
     /**
      * @brief 渲染抗锯齿的扫描线
      * 通过scanline.begin获取第一个span,++span获取下一个span
@@ -195,25 +122,24 @@ namespace OHOS {
         }
     }
 
-    //===========================================================================================//
     template<class Rasterizer,
              class Scanline,
              class BaseRenderer,
              class ColorT>
     void BlendScanLine(GlobalCompositeOperation op,
                                  Rasterizer& raster1, Rasterizer& raster2,
-                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,const ColorT& color1,const ColorT& color2,const ColorT& color3)
+                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
     {
         switch(op)
         {
         case SOURCE_ATOP       : BlendSourceAtop   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
         case SOURCE_IN         : BlendSourceIn     (raster1, raster2, sl1, sl2, renBase,color1); break;
-        case SOURCE_OUT        : BlendSourceOut   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
+        case SOURCE_OUT        : BlendSourceOut   (raster1, raster2, sl1, sl2, renBase,color1); break;
         case DESTINATION_OVER  : BlendSourceOver   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
         case DESTINATION_ATOP  : BlendSourceAtop   (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
         case DESTINATION_IN    : BlendSourceIn     (raster2, raster1, sl2, sl1, renBase,color2); break;
-        case DESTINATION_OUT   : BlendSourceOut    (raster2, raster1, sl2, sl1, renBase,color2,color1); break;
-        case LIGHTER           : BlendLIGHTER    (raster1, raster2, sl1, sl2, renBase,color1,color2,color3); break;
+        case DESTINATION_OUT   : BlendSourceOut    (raster2, raster1, sl2, sl1, renBase,color2); break;
+        case LIGHTER           : BlendLIGHTER    (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
         case COPY              : RenderScanlinesAntiAliasSolid(raster1,sl1,renBase,color1); break;
         case XOR               : BlendXOR   (raster1, raster2, sl1, sl2, renBase,color1,color2); break;
         }
@@ -508,7 +434,7 @@ namespace OHOS {
              class ColorT>
     void BlendSourceOut(Rasterizer& raster1, Rasterizer& raster2,
                                Scanline& scanline1, Scanline& scanline2,
-                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
+                               BaseRenderer& renBase,const ColorT& color1)
     {
         typename BaseRenderer::color_type ren_color1 = color1;
 
@@ -524,10 +450,10 @@ namespace OHOS {
 
             if(raster1.MinY()< raster2.MinY()){
                 do{
+                    y1 = scanline1.GetYLevel();
                     if(y1==raster2.MinY()){
                         break;
                     }
-                    y1 = scanline1.GetYLevel();
                     unsigned num_spans = scanline1.NumSpans();
                     typename Scanline::ConstIterator span = scanline1.Begin();
 
@@ -671,23 +597,6 @@ namespace OHOS {
     }
 
 
-
-//    template<class Rasterizer,
-//             class Scanline,
-//             class BaseRenderer,
-//             class ColorT>
-//    void BlendXOR(Rasterizer& raster1, Rasterizer& raster2,
-//                               Scanline& scanline1, Scanline& scanline2,
-//                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2){
-
-
-//        if(raster1.MinY()>raster2.MinY()){
-//            BlendXORSoild(raster1,raster2,scanline1,scanline2,renBase,color1,color2);
-//        }else{
-//            BlendXORSoild(raster2,raster1,scanline2,scanline1,renBase,color2,color1);
-//        }
-//    }
-
     template<class Rasterizer,
              class Scanline,
              class BaseRenderer,
@@ -707,16 +616,14 @@ namespace OHOS {
             if(raster1.SweepScanline(scanline1)){
                 y1 = scanline1.GetYLevel();
             }
-
-
-
             if(raster1.MinY()< raster2.MinY()){
                 do{
-
                     y1 = scanline1.GetYLevel();
+                    if(y1==raster2.MinY()){
+                        break;
+                    }
                     unsigned num_spans = scanline1.NumSpans();
                     typename Scanline::ConstIterator span = scanline1.Begin();
-
                     while (true) {
                         int x = span->x;
                         if (span->spanLength > 0) {
@@ -733,9 +640,7 @@ namespace OHOS {
                         }
                         ++span;
                     }
-                    if(y1==raster2.MinY()){
-                        break;
-                    }
+
                 }
                 while(raster1.SweepScanline(scanline1));
             }
@@ -821,7 +726,7 @@ namespace OHOS {
                                 }
                                 // spa2              ------------------------
                                 // spa1     -------                            ----------
-                                //没有混合点各自绘制
+                                // 没有混合点各自绘制
                                 if(x1+span1->spanLength < x2||
                                    x2+span2->spanLength < x1){
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
@@ -889,14 +794,17 @@ namespace OHOS {
              class ColorT>
     void BlendLIGHTER(Rasterizer& raster1, Rasterizer& raster2,
                                Scanline& scanline1, Scanline& scanline2,
-                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2,const ColorT& color3)
+                               BaseRenderer& renBase,const ColorT& color1,const ColorT& color2)
     {
-        RenderScanlinesAntiAliasSolid(raster2,scanline2,renBase,color2);
-        RenderScanlinesAntiAliasSolid(raster1,scanline1,renBase,color1);
-        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,color3);
+
+        ColorT backColor;
+        backColor.redValue = (color1.redValue+color2.redValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(color1.redValue+color2.redValue);
+        backColor.greenValue = (color1.greenValue+color2.greenValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(color1.greenValue+color2.greenValue);
+        backColor.blueValue = (color1.blueValue+color2.blueValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(color1.blueValue+color2.blueValue);
+        backColor.alphaValue = (color1.alphaValue+color2.alphaValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(color1.alphaValue+color2.alphaValue);
+        BlendXOR(raster1, raster2, scanline1, scanline2, renBase,color1,color2);
+        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,backColor);
     }
-
-
 } // namespace OHOS
 
 #endif

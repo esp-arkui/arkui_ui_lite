@@ -676,7 +676,6 @@ namespace OHOS {
         ListNode<DrawCmd>* curDrawEnd = drawCmdList_.Begin();
         RasterizerScanlineAntiAlias<> blendRasterizer;
         Rgba8Color blendColor;
-        Rgba8Color backColor;
         DrawCmd drawCmd;
         int count=0;
         for (; curDrawEnd != drawCmdList_.End(); curDrawEnd = curDrawEnd->next_) {
@@ -707,8 +706,6 @@ namespace OHOS {
                 ChangeColor(blendColor,drawCmd.paint.GetFillColor(),drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha());
             }
         }
-        ChangeColor(backColor,style_->bgColor_,style_->bgColor_.alpha);
-
         ScanlineUnPackedContainer scanline;
         typedef OrderBgra Order;
         typedef RgbaBlender<Rgba8Color, Order> Blender;
@@ -757,15 +754,8 @@ namespace OHOS {
 
             Scanline scanline1;
             Scanline scanline2;
-
-            if(drawCmd.paint.GetGlobalCompositeOperation()==LIGHTER){
-                backColor.redValue = (blendColor.redValue+color.redValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.redValue+color.redValue);
-                backColor.greenValue = (blendColor.greenValue+color.greenValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.greenValue+color.greenValue);
-                backColor.blueValue = (blendColor.blueValue+color.blueValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.blueValue+color.blueValue);
-                backColor.alphaValue = (blendColor.alphaValue+color.alphaValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM:(blendColor.alphaValue+color.alphaValue);
-            }
             BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),
-                                    blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color,backColor);
+                                    blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color);
         }
     }
 
