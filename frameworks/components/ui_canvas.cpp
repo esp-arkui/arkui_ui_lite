@@ -672,10 +672,12 @@ namespace OHOS {
         RenderingBuffer renderBuffer;
         TransAffine transform;
         typedef Rgba8 Rgba8Color;
-
+        typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
         ListNode<DrawCmd>* curDrawEnd = drawCmdList_.Begin();
         RasterizerScanlineAntiAlias<> blendRasterizer;
         Rgba8Color blendColor;
+        typedef SpanSoildColor<Rgba8Color> SpanSoildColor;
+
         DrawCmd drawCmd;
         int count=0;
         for (; curDrawEnd != drawCmdList_.End(); curDrawEnd = curDrawEnd->next_) {
@@ -695,10 +697,12 @@ namespace OHOS {
         blendRasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
         SetRasterizer(*pathParam->vertices, curDraw->data_.paint, blendRasterizer, transform, pathParam->isStroke);
 
+
         if (pathParam->isStroke) {
             if (drawCmd.paint.GetStyle() == Paint::STROKE_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
                 ChangeColor(blendColor,drawCmd.paint.GetStrokeColor(),drawCmd.paint.GetStrokeColor().alpha * drawCmd.paint.GetGlobalAlpha());
+
             }
         } else {
             if (drawCmd.paint.GetStyle() == Paint::FILL_STYLE ||
@@ -706,6 +710,7 @@ namespace OHOS {
                 ChangeColor(blendColor,drawCmd.paint.GetFillColor(),drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha());
             }
         }
+        SpanSoildColor spanBlendSoildColor(blendColor);
         ScanlineUnPackedContainer scanline;
         typedef OrderBgra Order;
         typedef RgbaBlender<Rgba8Color, Order> Blender;
@@ -754,8 +759,15 @@ namespace OHOS {
 
             Scanline scanline1;
             Scanline scanline2;
+            SpanAllocator allocator1;
+            SpanAllocator allocator2;
+            SpanSoildColor spanSoildColor(color);
             BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),
-                                    blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color);
+                          blendRasterizer,rasterizer,
+                          scanline1,scanline2,
+                          renBase,
+                          allocator1,spanBlendSoildColor,
+                          allocator2,spanSoildColor);
         }
     }
 
