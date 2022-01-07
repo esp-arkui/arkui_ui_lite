@@ -28,7 +28,8 @@
 #include <limits>
 
 #include <gfx_utils/graphics/scanline/graphic_geometry_scanline.h>
-
+#include "gfx_utils/color.h"
+#include "gfx_utils/graphics/spancolorfill/graphic_spancolor_fill_base.h"
 #include "render/graphic_render_base.h"
 
 namespace OHOS {
@@ -847,8 +848,10 @@ namespace OHOS {
                       SpanGenerator& spanGen2)
     {
         BlendXOR(raster1, raster2, scanline1, scanline2, renBase,alloc1,spanGen1,alloc2,spanGen2);
-        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,alloc1,spanGen1);
+        typedef Rgba8 Rgba8Color;
+        typedef SpanBlendColor<SpanGenerator,Rgba8Color> SpanBlendColor;
+        SpanBlendColor spanBlendColor(spanGen1,spanGen2);
+        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,alloc1,spanBlendColor);
     }
 } // namespace OHOS
-
 #endif
