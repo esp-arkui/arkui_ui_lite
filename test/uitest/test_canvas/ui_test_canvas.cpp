@@ -1463,6 +1463,7 @@ namespace OHOS {
 #endif
     }
 
+
     void UITestCanvas::RM011StrokeText001()
     {
         CreateTitleLabel("RM011_StrokeText_多国文字加旋转放大");
@@ -1475,8 +1476,9 @@ namespace OHOS {
         fontStyle.letterSpace = FONT_LETTERSPACE2;
         Paint paint;
         paint.SetFillColor(Color::Blue());
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
         canvas->StrokeText("葡萄牙语：Hongmeng, teste", {0, HEIGHT_Y20}, fontStyle, paint);
-        canvas->StrokeText("西班牙语：Hong Meng, test", {0, HEIGHT_Y20}, fontStyle, paint);
+        canvas->StrokeText("西班牙语：Hong Meng, test", {0, HEIGHT_Y40}, fontStyle, paint);
         canvas->StrokeText("法语：HongMeng, test", {0, HEIGHT_Y60}, fontStyle, paint);
         canvas->StrokeText("瓜拉尼语：mitapoañda, pens", {0, HEIGHT_Y80}, fontStyle, paint);
         canvas->StrokeText("荷兰语：Hongmeng, kom op.", {0, HEIGHT_Y100}, fontStyle, paint);
@@ -1488,6 +1490,7 @@ namespace OHOS {
         paint.Scale(SCALE1_X, SCALE1_Y);
         paint.Rotate(ROTATE45);
         canvas->StrokeText("中国 你好，鸿蒙。。", {HEIGHT_Y20, 0}, fontStyle, paint);
+#endif
     }
 
     void UITestCanvas::RM011CanvasScale001()

@@ -122,6 +122,7 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        DestroyMapBufferInfo();
     }
 
     void UICanvas::Clear()
@@ -1254,6 +1255,7 @@ namespace OHOS {
                             gfxDstBuffer.stride);
     }
 
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     void UICanvas::StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint)
     {
         if (text == nullptr) {
@@ -1275,11 +1277,13 @@ namespace OHOS {
             cmd.DeleteParam = DeleteTextParam;
             cmd.DrawGraphics = DoDrawText;
             cmd.paint = paint;
+            cmd.paint.SetUICanvas(this);
             drawCmdList_.PushBack(cmd);
             Invalidate();
             SetStartPosition(point);
         }
     }
+#endif
 
     Point UICanvas::MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint)
     {
@@ -1296,6 +1300,7 @@ namespace OHOS {
         return textSize;
     }
 
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer,
                               void* param,
                               const Paint& paint,
@@ -1334,30 +1339,12 @@ namespace OHOS {
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
 
         if (paint.GetChangeFlag()) {
-            BufferInfo* gfxMapBuffer = new BufferInfo();
-
             Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
-
-            gfxMapBuffer->rect = textRect;
-            gfxMapBuffer->width = textRect.GetWidth();
-            gfxMapBuffer->height = textRect.GetHeight();
-
-            uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
-            uint32_t destStride = gfxMapBuffer->width * destByteSize;
-            gfxMapBuffer->stride = destStride;
-
-            gfxMapBuffer->mode = gfxDstBuffer.mode;
-            gfxMapBuffer->color = gfxDstBuffer.color;
-            uint32_t buffSize = gfxMapBuffer->height * gfxMapBuffer->width * destByteSize;
-            gfxMapBuffer->virAddr = BaseGfxEngine::GetInstance()->AllocBuffer(buffSize, BUFFER_MAP_SURFACE);
-            errno_t err = memset_s(gfxMapBuffer->virAddr, buffSize, 0, buffSize);
-            if (err != EOK) {
-                BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
-                GRAPHIC_LOGE("memset_s gfxMapBuffer fail");
+            if (paint.GetUICanvas() == nullptr) {
                 return;
             }
-            gfxMapBuffer->phyAddr = gfxMapBuffer->virAddr;
-            text->OnDraw(*gfxMapBuffer, textImageRect, textImageRect, textImageRect, 0, drawStyle,
+            BufferInfo* mapBufferInfo = paint.GetUICanvas()->UpdateMapBufferInfo(gfxDstBuffer, textRect);
+            text->OnDraw(*mapBufferInfo, textImageRect, textImageRect, textImageRect, 0, drawStyle,
                          Text::TEXT_ELLIPSIS_END_INV, opa);
 
             TransAffine transform;
@@ -1371,17 +1358,15 @@ namespace OHOS {
             }
             transform.Translate(textParam->position.x, textParam->position.y);
             RenderingBuffer imageRendBuffer;
-            imageRendBuffer.Attach(static_cast<uint8_t*>(gfxMapBuffer->phyAddr), gfxMapBuffer->width,
-                                   gfxMapBuffer->height, gfxMapBuffer->stride);
+            imageRendBuffer.Attach(static_cast<uint8_t*>(mapBufferInfo->phyAddr), mapBufferInfo->width,
+                                   mapBufferInfo->height, mapBufferInfo->stride);
             DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
-            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer->virAddr);
-            delete gfxMapBuffer;
-            gfxMapBuffer = nullptr;
         } else {
             text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0,
                          drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
         }
     }
+#endif
 
     void UICanvas::DoRenderImage(RenderingBuffer& renderBuffer,
                                  const Paint& paint,
@@ -1460,5 +1445,60 @@ namespace OHOS {
         gfxMapBuffer.stride = destStride;
         memset_s(gfxMapBuffer.virAddr, buffSize, 0, buffSize);
         gfxMapBuffer.phyAddr = gfxMapBuffer.virAddr;
+    }
+
+    void UICanvas::InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect)
+    {
+        gfxMapBuffer_ = new BufferInfo();
+        gfxMapBuffer_->rect = rect;
+        gfxMapBuffer_->mode = srcBuff.mode;
+        gfxMapBuffer_->color = srcBuff.color;
+        gfxMapBuffer_->width = rect.GetWidth();
+        gfxMapBuffer_->height = rect.GetHeight();
+        uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(srcBuff.mode);
+        gfxMapBuffer_->stride = gfxMapBuffer_->width * destByteSize;
+        gfxMapBuffer_->virAddr = UIMalloc(gfxMapBuffer_->height * gfxMapBuffer_->stride);
+        gfxMapBuffer_->phyAddr = gfxMapBuffer_->virAddr;
+        uint32_t buffSize = gfxMapBuffer_->height * gfxMapBuffer_->stride;
+        errno_t err = memset_s(gfxMapBuffer_->virAddr, buffSize, 0, buffSize);
+        if (err != EOK) {
+            BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer_->virAddr);
+            GRAPHIC_LOGE("memset_s gfxMapBuffer_ fail");
+            return;
+        }
+    }
+
+    BufferInfo* UICanvas::UpdateMapBufferInfo(const BufferInfo& srcBuff, const Rect& rect)
+    {
+        if (gfxMapBuffer_ == nullptr) {
+            InitGfxMapBuffer(srcBuff, rect);
+            return gfxMapBuffer_;
+        }
+
+        if(rect.GetWidth() != gfxMapBuffer_->width ||
+           rect.GetHeight() != gfxMapBuffer_->height ||
+           srcBuff.mode != gfxMapBuffer_->mode) {
+            DestroyMapBufferInfo();
+            InitGfxMapBuffer(srcBuff, rect);
+        } else {
+            uint32_t buffSize = gfxMapBuffer_->height * gfxMapBuffer_->stride;
+            errno_t err = memset_s(gfxMapBuffer_->virAddr, buffSize, 0, buffSize);
+            if (err != EOK) {
+                BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer_->virAddr);
+                GRAPHIC_LOGE("memset_s gfxMapBuffer_ fail");
+            }
+        }
+        return gfxMapBuffer_;
+    }
+
+    void UICanvas::DestroyMapBufferInfo()
+    {
+        if (gfxMapBuffer_ != nullptr) {
+            BaseGfxEngine::GetInstance()->FreeBuffer(static_cast<uint8_t*>(gfxMapBuffer_->virAddr));
+            gfxMapBuffer_->virAddr = nullptr;
+            gfxMapBuffer_->phyAddr = nullptr;
+            delete gfxMapBuffer_;
+            gfxMapBuffer_ = nullptr;
+        }
     }
 } // namespace OHOS
