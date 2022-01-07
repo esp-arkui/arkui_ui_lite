@@ -91,7 +91,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             if (cover >= COVER_FULL) {
                 SetBlendColor(pColor, r, g, b, a);
@@ -121,7 +121,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba srcColor = GetBlendColor(r, g, b, a, cover);
             if (srcColor.alphaValue > 0) {
@@ -149,7 +149,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
@@ -181,7 +181,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
@@ -208,7 +208,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba sc = GetBlendColor(r, g, b, a, cover);
             Rgba dc = GetBlendColor(pColor, cover);
@@ -236,7 +236,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
@@ -260,7 +260,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t, uint8_t, uint8_t, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t, uint8_t, uint8_t, uint8_t a, uint8_t cover)
         {
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
             Rgba dc = GetBlendColor(pColor, cover);
@@ -286,7 +286,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
@@ -311,7 +311,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t, uint8_t, uint8_t, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t, uint8_t, uint8_t, uint8_t a, uint8_t cover)
         {
             float sa = ColorT::ToFloat(a);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
@@ -336,7 +336,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             float da = ColorT::ToFloat(pColor[Order::ALPHA]);
             if (da > 0) {
@@ -364,7 +364,7 @@ namespace OHOS {
          * @version 1.0..
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             RgbaPrelerpBlender<ColorT, Order>::BlendPix(pColor, r, g, b, a, cover);
         }
@@ -382,7 +382,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
@@ -406,7 +406,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t*, uint8_t, uint8_t, uint8_t, uint8_t, CoverType)
+            uint8_t*, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t)
         {
         }
     };
@@ -416,7 +416,7 @@ namespace OHOS {
         using uint8_t = typename ColorT::uint8_t;
         using uint32_t = typename ColorT::uint32_t;
         using CompOpFuncType =
-            void (*)(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t ca, CoverType cover);
+            void (*)(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t ca, uint8_t cover);
         static CompOpFuncType g_compOpFunc[];
     };
 
@@ -448,7 +448,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            unsigned op, uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+            unsigned op, uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](pColor,
                                                              ColorType::Multiply(r, a),
@@ -473,7 +473,7 @@ namespace OHOS {
          */
         static GRAPHIC_GEOMETRY_INLINE void
             BlendPix(unsigned op, uint8_t* pColor,
-                     uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
+                     uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](pColor, r, g, b, a, cover);
         }

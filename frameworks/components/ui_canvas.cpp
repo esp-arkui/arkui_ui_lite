@@ -1233,7 +1233,7 @@ namespace OHOS {
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
-        drawBlur.Blur(pixf2, OHOS::Uround(paint.GetShadowBlur()));
+        drawBlur.Blur(pixf2, MATH_UROUND(paint.GetShadowBlur()));
 #        endif
 #    endif
     }

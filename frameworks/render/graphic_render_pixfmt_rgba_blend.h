@@ -98,7 +98,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType* covers)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
         }
@@ -109,7 +109,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb,
                                                        (uint8_t)alpha, (uint8_t)cover);
@@ -126,12 +126,12 @@ namespace OHOS {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg,
                                                        (uint8_t)cb, (uint8_t)alpha);
         }
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType srcCover)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType* srcCovers)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
          }
@@ -143,7 +143,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
         {
             BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
         }
@@ -179,7 +179,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType* covers)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
 
@@ -191,7 +191,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg,
                                                           (uint8_t)cb, (uint8_t)alpha, (uint8_t)cover);
@@ -209,13 +209,13 @@ namespace OHOS {
                                                           (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType srcCover)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
 
          }
 
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType* srcCovers)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
 
@@ -229,7 +229,7 @@ namespace OHOS {
          */
         static GRAPHIC_GEOMETRY_INLINE void
             BlendPix(uint8_t* pColor,
-                     uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
+                     uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
         {
             BlendPix(pColor,
                      ColorType::MultCover(cr, cover),
