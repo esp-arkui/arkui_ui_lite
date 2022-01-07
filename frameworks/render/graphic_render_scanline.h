@@ -149,8 +149,8 @@ namespace OHOS {
     void calcinterScanline(ScanlineUnPackedContainer& scanline3,int x1,int x2,Span& span1,Span& span2){
         scanline3.Reset(x1,x2+span2->spanLength);
         unsigned len3 = x2+span2->spanLength-x1;
-        int8u* cover1 = span1->covers;
-        int8u* cover2 = span2->covers+(x1-x2);
+        uint8_t* cover1 = span1->covers;
+        uint8_t* cover2 = span2->covers+(x1-x2);
         int x3=x1;
         for(unsigned i=0; i < len3;i++,cover1++,cover2++){
             if(*(cover1)!=COVER_FULL){
@@ -163,8 +163,8 @@ namespace OHOS {
 
     template<class Span>
     void calcOutScanlineRight(ScanlineUnPackedContainer& scanline,int x1,int x2,Span& span1,Span& span2){
-        int8u* cover1 = span1->covers;
-        int8u* cover2 = span2->covers;
+        uint8_t* cover1 = span1->covers;
+        uint8_t* cover2 = span2->covers;
         scanline.Reset(x2,x2+span2->spanLength);
         for(int i=1;i<=span2->spanLength;i++,cover2++){
             if(x1 == x2){
@@ -179,11 +179,11 @@ namespace OHOS {
 
     template<class Span>
     void calcOutScanlineLeft(ScanlineUnPackedContainer& scanline,int x1,int x2,Span& span1,Span& span2){
-        int8u* cover2 = span2->covers+(x1-x2);
+        uint8_t* cover2 = span2->covers+(x1-x2);
         scanline.Reset(x1,x1+span1->spanLength);
         int len1 = span2->spanLength-(x1-x2);//相交的长度
         int len2 = span1->spanLength-len1;//相交的长度
-        int8u* cover1 = span1->covers+len1;
+        uint8_t* cover1 = span1->covers+len1;
         for(int i=0;i<len1;i++,cover2++){
             scanline.AddCell(x1++,COVER_FULL-(*cover2));
         }
@@ -195,8 +195,8 @@ namespace OHOS {
 
     template<class Span>
     void calcOutScanlineAll(ScanlineUnPackedContainer& scanline,int x1,int x2,Span& span1,Span& span2){
-        int8u* cover1 = span1->covers;
-        int8u* cover2 = span2->covers;
+        uint8_t* cover1 = span1->covers;
+        uint8_t* cover2 = span2->covers;
         int x3=x1;
         scanline.Reset(x2,x2+span2->spanLength);
         for(int i=0;i<span2->spanLength;i++,cover2++){

@@ -34,9 +34,7 @@ namespace OHOS {
     using BlenderType = Blender; \
     using ColorType = typename BlenderType::ColorType; \
     using OrderType = typename BlenderType::OrderType; \
-    using ValueType = typename ColorType::ValueType; \
-    using CalcType = typename ColorType::CalcType; \
-    using PixelType = PixelType<ValueType, OrderType, ColorType>; \
+    using PixelType = PixelType<uint8_t, OrderType, ColorType>; \
 
 // 把像素附加到绘制区.
 #define ATTACH_FUNCTION_DEF \
@@ -72,14 +70,14 @@ namespace OHOS {
 
 // 指针转为像素类型指针
 #define PIX_PTR_FUNCTION_DEF \
-    virtual GRAPHIC_GEOMETRY_INLINE int8u* PixPtr(int x, int y) \
+    virtual GRAPHIC_GEOMETRY_INLINE uint8_t* PixPtr(int x, int y) \
     { \
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP); \
+        return rbuf_->RowPtr(y) + sizeof(uint8_t) * (x * PIX_STEP); \
     } \
 \
-    virtual GRAPHIC_GEOMETRY_INLINE const int8u* PixPtr(int x, int y) const \
+    virtual GRAPHIC_GEOMETRY_INLINE const uint8_t* PixPtr(int x, int y) const \
     { \
-        return rbuf_->RowPtr(y) + sizeof(ValueType) * (x * PIX_STEP); \
+        return rbuf_->RowPtr(y) + sizeof(uint8_t) * (x * PIX_STEP); \
     }
 
     enum {
@@ -91,9 +89,7 @@ namespace OHOS {
     struct RgbaBlender {
         using ColorType = ColorT;
         using OrderType = Order;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
-        using LongType = typename ColorType::LongType;
+
 #ifdef ARM_NEON_OPT
         /**
          * @brief 用颜色分量混合像素.
@@ -102,7 +98,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType* covers)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType* covers)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
         }
@@ -113,7 +109,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb,
                                                        (uint8_t)alpha, (uint8_t)cover);
@@ -125,17 +121,17 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg,
                                                        (uint8_t)cb, (uint8_t)alpha);
         }
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType srcCover)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType srcCover)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType* srcCovers)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType* srcCovers)
         {
             BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
          }
@@ -147,7 +143,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
         {
             BlendPix(pColor, cr, cg, cb, ColorType::MultCover(alpha, cover));
         }
@@ -159,7 +155,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
         {
             pColor[Order::RED] = ColorType::Lerp(pColor[Order::RED], cr, alpha);
             pColor[Order::GREEN] = ColorType::Lerp(pColor[Order::GREEN], cg, alpha);
@@ -172,7 +168,7 @@ namespace OHOS {
     struct RgbaPrelerpBlender {
         using ColorType = ColorT;
         using OrderType = Order;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using CalcType = typename ColorType::CalcType;
         using LongType = typename ColorType::LongType;
 #ifdef ARM_NEON_OPT
@@ -183,7 +179,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType* covers)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType* covers)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
 
@@ -195,7 +191,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg,
                                                           (uint8_t)cb, (uint8_t)alpha, (uint8_t)cover);
@@ -207,19 +203,19 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
-            ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+            uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr,
                                                           (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType srcCover)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType srcCover)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
 
          }
 
-        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, CoverType* srcCovers)
+        static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, CoverType* srcCovers)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
 
@@ -232,8 +228,8 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void
-            BlendPix(ValueType* pColor,
-                     ValueType cr, ValueType cg, ValueType cb, ValueType alpha, CoverType cover)
+            BlendPix(uint8_t* pColor,
+                     uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, CoverType cover)
         {
             BlendPix(pColor,
                      ColorType::MultCover(cr, cover),
@@ -247,8 +243,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static GRAPHIC_GEOMETRY_INLINE void BlendPix(ValueType* pColor,
-                                                     ValueType cr, ValueType cg, ValueType cb, ValueType alpha)
+        static GRAPHIC_GEOMETRY_INLINE void BlendPix(uint8_t* pColor,
+                                                     uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
         {
             pColor[Order::RED] = ColorType::Prelerp(pColor[Order::RED], cr, alpha);
             pColor[Order::GREEN] = ColorType::Prelerp(pColor[Order::GREEN], cg, alpha);
@@ -257,16 +253,16 @@ namespace OHOS {
         }
     };
 
-    template <class ValueType, class OrderType, class ColorType>
+    template <class uint8_t, class OrderType, class ColorType>
     struct PixelType {
-        ValueType colors[NUM_COMPONENTS];
+        uint8_t colors[NUM_COMPONENTS];
         /**
          * @brief 设置颜色.
          * @param r，g，b，a 颜色分量
          * @since 1.0
          * @version 1.0
          */
-        void SetPixelColor(ValueType redValue, ValueType greenValue, ValueType blueValue, ValueType alphaValue)
+        void SetPixelColor(uint8_t redValue, uint8_t greenValue, uint8_t blueValue, uint8_t alphaValue)
         {
             colors[OrderType::RED] = redValue;
             colors[OrderType::GREEN] = greenValue;
@@ -289,7 +285,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void GetPixelColor(ValueType& red, ValueType& green, ValueType& blue, ValueType& alpha) const
+        void GetPixelColor(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha) const
         {
             red = colors[OrderType::RED];
             green = colors[OrderType::GREEN];
@@ -354,7 +350,7 @@ namespace OHOS {
     public:
         BASE_PIXFMT_BLEND_USING_DEF
         enum {
-            PIX_WIDTH = sizeof(ValueType) * PIX_STEP
+            PIX_WIDTH = sizeof(uint8_t) * PIX_STEP
         };
 
     public:
@@ -386,7 +382,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        virtual GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
+        virtual GRAPHIC_GEOMETRY_INLINE uint8_t* RowPtr(int y)
         {
             return rbuf_->RowPtr(y);
         }
@@ -397,7 +393,7 @@ namespace OHOS {
           * @since 1.0
           * @version 1.0
           */
-        virtual GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
+        virtual GRAPHIC_GEOMETRY_INLINE const uint8_t* RowPtr(int y) const
         {
             return rbuf_->RowPtr(y);
         }
@@ -423,7 +419,7 @@ namespace OHOS {
          */
         virtual GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len)
         {
-            return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+            return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(uint8_t) * (x * PIX_STEP));
         }
 
         /**
@@ -434,8 +430,8 @@ namespace OHOS {
          */
         virtual GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {
-            int8u* pixelPtr = rbuf_->RowPtr(y);
-            return pixelPtr ? (PixelType*)(pixelPtr + sizeof(ValueType) * (x * PIX_STEP)) : 0;
+            uint8_t* pixelPtr = rbuf_->RowPtr(y);
+            return pixelPtr ? (PixelType*)(pixelPtr + sizeof(uint8_t) * (x * PIX_STEP)) : 0;
         }
 
         /**
@@ -466,7 +462,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE static void SetPixelColor(int8u* pixelPtr, const ColorType& color)
+        GRAPHIC_GEOMETRY_INLINE static void SetPixelColor(uint8_t* pixelPtr, const ColorType& color)
         {
             ((PixelType*)pixelPtr)->SetPixelColor(color);
         }
@@ -502,7 +498,7 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        virtual GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, int8u cover)
+        virtual GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y, const ColorType& color, uint8_t cover)
         {
             CopyOrBlendPix(PixValuePtr(x, y, 1), color, cover);
         }
@@ -544,7 +540,7 @@ namespace OHOS {
         virtual void BlendHline(int x, int y,
                                 unsigned len,
                                 const ColorType& color,
-                                int8u cover)
+                                uint8_t cover)
         {
             if (!color.IsTransparent()) {
                 PixelType* pPixel = PixValuePtr(x, y, len);
@@ -588,7 +584,7 @@ namespace OHOS {
         virtual void BlendSolidHspan(int x, int y,
                                      unsigned len,
                                      const ColorType& color,
-                                     const int8u* covers)
+                                     const uint8_t* covers)
         {
             if (!color.IsTransparent()) {
                 PixelType* pixelPtr = PixValuePtr(x, y, len);
@@ -623,7 +619,7 @@ namespace OHOS {
         virtual void BlendSolidVspan(int x, int y,
                                      unsigned len,
                                      const ColorType& color,
-                                     const int8u* covers)
+                                     const uint8_t* covers)
         {
             if (!color.IsTransparent()) {
                 do {
@@ -652,7 +648,7 @@ namespace OHOS {
 #ifdef NEON_ARM_OPT
             int16_t step = NEON_STEP_8 * PIX_STEP;
             const int16_t NEON_STEP_COMPONENTS=NEON_STEP_8 * NUM_COMPONENTS;
-            ValueType mColors[NEON_STEP_COMPONENTS];
+            uint8_t mColors[NEON_STEP_COMPONENTS];
             while (len >= NEON_STEP_8) {
                 memset_s(mColors,NEON_STEP_COMPONENTS,0,NEON_STEP_COMPONENTS);
                 NeonMemcpy(mColors, NEON_STEP_COMPONENTS,colors,NEON_STEP_COMPONENTS);
@@ -693,15 +689,15 @@ namespace OHOS {
         virtual void BlendColorHspan(int x, int y,
                                      unsigned len,
                                      const ColorType* colors,
-                                     const int8u* covers,
-                                     int8u cover)
+                                     const uint8_t* covers,
+                                     uint8_t cover)
         {
             PixelType* pixelPtr = PixValuePtr(x, y, len);
             if (covers) {
 #ifdef NEON_ARM_OPT
                 int16_t step = NEON_STEP_8 * PIX_STEP;
                 const int16_t NEON_STEP_COMPONENTS=NEON_STEP_8 * NUM_COMPONENTS;
-                ValueType mColors[NEON_STEP_COMPONENTS];
+                uint8_t mColors[NEON_STEP_COMPONENTS];
                 while (len >= NEON_STEP_8) {
                     memset_s(mColors,NEON_STEP_COMPONENTS,0,NEON_STEP_COMPONENTS);
                     NeonMemcpy(mColors, NEON_STEP_COMPONENTS,colors,NEON_STEP_COMPONENTS);
@@ -721,7 +717,7 @@ namespace OHOS {
 #ifdef NEON_ARM_OPT
                 int16_t step = NEON_STEP_8 * PIX_STEP;
                 const int16_t NEON_STEP_COMPONENTS=NEON_STEP_8 * NUM_COMPONENTS;
-                ValueType mColors[NEON_STEP_COMPONENTS];
+                uint8_t mColors[NEON_STEP_COMPONENTS];
                 while (len >= NEON_STEP_8) {
                     memset_s(mColors,NEON_STEP_COMPONENTS,0,NEON_STEP_COMPONENTS);
                     NeonMemcpy(mColors, NEON_STEP_COMPONENTS,colors,NEON_STEP_COMPONENTS);
@@ -758,7 +754,7 @@ namespace OHOS {
                        int xdst, int ydst,
                        int xsrc, int ysrc,
                        unsigned len,
-                       int8u cover)
+                       uint8_t cover)
         {
             using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
 
@@ -812,19 +808,19 @@ namespace OHOS {
             {
                 blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color, int8u cover)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color, uint8_t cover)
             {
                 blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, int8u srcCover)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
             {
                 blender_.NeonBlendPix(dstColors, srcColors, srcCover);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, ValueType* srcColors, int8u* srcCovers)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
             {
                 blender_.NeonBlendPix(dstColors, srcColors, srcCovers);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(ValueType* dstColors, const ColorType& srcColors, int8u* srcCovers)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, const ColorType& srcColors, uint8_t* srcCovers)
             {
                 blender_.NeonBlendPix(dstColors, srcColors.redValue, srcColors.greenValue, srcColors.blueValue, srcColors.alphaValue, srcCovers);
             }
@@ -898,7 +894,7 @@ namespace OHOS {
     public:
         BASE_PIXFMT_BLEND_USING_DEF
         enum {
-            PIX_WIDTH = sizeof(ValueType) * PIX_STEP,
+            PIX_WIDTH = sizeof(uint8_t) * PIX_STEP,
             COMP_OP_VALUE = 3
         };
 
@@ -947,7 +943,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE int8u* RowPtr(int y)
+        GRAPHIC_GEOMETRY_INLINE uint8_t* RowPtr(int y)
         {
             return rbuf_->row_ptr(y);
         }
@@ -957,7 +953,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* RowPtr(int y) const
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* RowPtr(int y) const
         {
             return rbuf_->RowPtr(y);
         }
@@ -982,7 +978,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE PixelType* PixValuePtr(int x, int y, unsigned len = 1)
         {
-            return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(ValueType) * (x * PIX_STEP));
+            return (PixelType*)(rbuf_->RowPtr(x, y, len) + sizeof(uint8_t) * (x * PIX_STEP));
         }
 
         GRAPHIC_GEOMETRY_INLINE void CopyHline(int x, int y,
@@ -1020,7 +1016,7 @@ namespace OHOS {
          * @version 1.0
          */
         void BlendHline(int x, int y, unsigned len,
-                        const ColorType& color, int8u cover)
+                        const ColorType& color, uint8_t cover)
         {
             PixelType* p = PixValuePtr(x, y, len);
             do {
@@ -1036,7 +1032,7 @@ namespace OHOS {
          * @version 1.0
          */
         void BlendSolidHspan(int x, int y, unsigned len,
-                             const ColorType& color, const int8u* covers)
+                             const ColorType& color, const uint8_t* covers)
         {
             PixelType* pPixel = PixValuePtr(x, y, len);
 
@@ -1054,8 +1050,8 @@ namespace OHOS {
          */
         void BlendColorHspan(int x, int y, unsigned len,
                              const ColorType* colors,
-                             const int8u* covers,
-                             int8u cover)
+                             const uint8_t* covers,
+                             uint8_t cover)
         {
             PixelType* p = PixValuePtr(x, y, len);
 
@@ -1077,7 +1073,7 @@ namespace OHOS {
                        int xdst, int ydst,
                        int xsrc, int ysrc,
                        unsigned len,
-                       int8u cover)
+                       uint8_t cover)
         {
             using SrcPixelType = typename SrcPixelFormatRenderer::PixelType;
 

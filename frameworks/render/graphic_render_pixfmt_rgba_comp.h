@@ -81,7 +81,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaSrc : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -91,7 +91,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             if (cover >= COVER_FULL) {
                 SetBlendColor(pColor, r, g, b, a);
@@ -110,7 +110,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaMinus : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
@@ -121,7 +121,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba srcColor = GetBlendColor(r, g, b, a, cover);
             if (srcColor.alphaValue > 0) {
@@ -138,7 +138,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaLighten : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
 
@@ -149,7 +149,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             if (s.alphaValue > 0) {
@@ -171,7 +171,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaXor : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -181,7 +181,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
@@ -198,7 +198,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaDstAtop : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -208,7 +208,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba sc = GetBlendColor(r, g, b, a, cover);
             Rgba dc = GetBlendColor(pColor, cover);
@@ -226,7 +226,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaSrcAtop : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -236,7 +236,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
@@ -250,7 +250,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaDstOut : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -260,7 +260,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType, ValueType, ValueType, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t, uint8_t, uint8_t, uint8_t a, CoverType cover)
         {
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
             Rgba dc = GetBlendColor(pColor, cover);
@@ -276,7 +276,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaSrcOut : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -286,7 +286,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
@@ -301,7 +301,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaDstIn : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -311,7 +311,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType, ValueType, ValueType, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t, uint8_t, uint8_t, uint8_t a, CoverType cover)
         {
             float sa = ColorT::ToFloat(a);
             Rgba d = GetBlendColor(pColor, COVER_FULL - cover);
@@ -326,7 +326,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaSrcIn : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -336,7 +336,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             float da = ColorT::ToFloat(pColor[Order::ALPHA]);
             if (da > 0) {
@@ -354,7 +354,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaSrcOver : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -364,7 +364,7 @@ namespace OHOS {
          * @version 1.0..
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             RgbaPrelerpBlender<ColorT, Order>::BlendPix(pColor, r, g, b, a, cover);
         }
@@ -372,7 +372,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaDstOver : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         using BlenderBase<ColorT, Order>::GetBlendColor;
         using BlenderBase<ColorT, Order>::SetBlendColor;
         /**
@@ -382,7 +382,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             Rgba s = GetBlendColor(r, g, b, a, cover);
             Rgba d = GetBlendColor(pColor);
@@ -398,7 +398,7 @@ namespace OHOS {
     template <class ColorT, class Order>
     struct CompOpRgbaDst : BlenderBase<ColorT, Order> {
         using ColorType = ColorT;
-        using ValueType = typename ColorType::ValueType;
+        using uint8_t = typename ColorType::uint8_t;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
          * @param pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
@@ -406,17 +406,17 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            ValueType*, ValueType, ValueType, ValueType, ValueType, CoverType)
+            uint8_t*, uint8_t, uint8_t, uint8_t, uint8_t, CoverType)
         {
         }
     };
 
     template <class ColorT, class Order>
     struct CompOpTableRgba {
-        using ValueType = typename ColorT::ValueType;
-        using CalcType = typename ColorT::CalcType;
+        using uint8_t = typename ColorT::uint8_t;
+        using uint32_t = typename ColorT::uint32_t;
         using CompOpFuncType =
-            void (*)(ValueType* pColor, ValueType cr, ValueType cg, ValueType cb, ValueType ca, CoverType cover);
+            void (*)(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t ca, CoverType cover);
         static CompOpFuncType g_compOpFunc[];
     };
 
@@ -440,9 +440,7 @@ namespace OHOS {
     struct CompOpAdaptorRgba {
         using ColorType = ColorT;
         using OrderType = Order;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
-        using LongType = typename ColorType::LongType;
+
         /**
          * @brief 用颜色分量及覆盖率混合像素.
          * @param op 函数表保存了各个子操作的函数的index, pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
@@ -450,7 +448,7 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void BlendPix(
-            unsigned op, ValueType* pColor, ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            unsigned op, uint8_t* pColor, uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](pColor,
                                                              ColorType::Multiply(r, a),
@@ -464,9 +462,9 @@ namespace OHOS {
     struct CompOpAdaptorRgbaPre {
         using ColorType = ColorT;
         using OrderType = Order;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
-        using LongType = typename ColorType::LongType;
+        using uint8_t = typename ColorType::uint8_t;
+        using uint32_t = typename ColorType::uint32_t;
+        using int32_t = typename ColorType::int32_t;
         /**
          * @brief 用颜色分量及覆盖率混合像素.
          * @param op 函数表保存了各个子操作的函数的index, pColor 像素 r,g,b,a 颜色分量,cover 覆盖率
@@ -474,8 +472,8 @@ namespace OHOS {
          * @version 1.0
          */
         static GRAPHIC_GEOMETRY_INLINE void
-            BlendPix(unsigned op, ValueType* pColor,
-                     ValueType r, ValueType g, ValueType b, ValueType a, CoverType cover)
+            BlendPix(unsigned op, uint8_t* pColor,
+                     uint8_t r, uint8_t g, uint8_t b, uint8_t a, CoverType cover)
         {
             CompOpTableRgba<ColorT, Order>::g_compOpFunc[op](pColor, r, g, b, a, cover);
         }

@@ -24,8 +24,6 @@ namespace OHOS {
         using PixfmtType = PixFmt;
         using ColorType = typename PixfmtType::ColorType;
         using RowData = typename PixfmtType::RowData;
-        using ValueType = typename ColorType::ValueType;
-        using CalcType = typename ColorType::CalcType;
 
         PixfmtTransposer() :
             pixf_(0)

@@ -1775,7 +1775,7 @@ class UICanvas;
         }
 #endif
         template <class Color>
-        static void ChangeColor(Color& color,ColorType colorType,int8u alpha){
+        static void ChangeColor(Color& color,ColorType colorType,uint8_t alpha){
             color.redValue = colorType.red;
             color.greenValue = colorType.green;
             color.blueValue = colorType.blue;
