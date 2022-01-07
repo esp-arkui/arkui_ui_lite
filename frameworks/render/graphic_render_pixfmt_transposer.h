@@ -104,7 +104,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE void BlendPixel(int x, int y,
                                                 const ColorType& color,
-                                                int8u cover)
+                                                uint8_t cover)
         {
             pixf_->BlendPixel(y, x, color, cover);
         }
@@ -143,7 +143,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE void BlendHline(int x, int y,
                                                 unsigned len,
-                                                const ColorType& color, int8u cover)
+                                                const ColorType& color, uint8_t cover)
         {
             pixf_->BlendVline(y, x, len, color, cover);
         }
@@ -157,7 +157,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE void BlendVline(int x, int y,
                                                 unsigned len,
                                                 const ColorType& color,
-                                                int8u cover)
+                                                uint8_t cover)
         {
             pixf_->BlendHline(y, x, len, color, cover);
         }
@@ -171,7 +171,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE void BlendSolidHspan(int x, int y,
                                                      unsigned len,
                                                      const ColorType& c,
-                                                     const int8u* covers)
+                                                     const uint8_t* covers)
         {
             pixf_->BlendSolidVspan(y, x, len, c, covers);
         }
@@ -185,7 +185,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE void BlendSolidVspan(int x, int y,
                                                      unsigned len,
                                                      const ColorType& c,
-                                                     const int8u* covers)
+                                                     const uint8_t* covers)
         {
             pixf_->BlendSolidHspan(y, x, len, c, covers);
         }
@@ -225,8 +225,8 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE void BlendColorHspan(int x, int y,
                                                      unsigned len,
                                                      const ColorType* colors,
-                                                     const int8u* covers,
-                                                     int8u cover)
+                                                     const uint8_t* covers,
+                                                     uint8_t cover)
         {
             pixf_->BlendColorVspan(y, x, len, colors, covers, cover);
         }
@@ -240,8 +240,8 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE void BlendColorVspan(int x, int y,
                                                      unsigned len,
                                                      const ColorType* colors,
-                                                     const int8u* covers,
-                                                     int8u cover)
+                                                     const uint8_t* covers,
+                                                     uint8_t cover)
         {
             pixf_->BlendColorHspan(y, x, len, colors, covers, cover);
         }

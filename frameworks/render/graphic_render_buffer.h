@@ -171,7 +171,7 @@ namespace OHOS {
         unsigned height_; // 区域高度
         int bufStride_;   // 每行字节数。
     };
-    using RenderingBuffer = RowAccessor<int8u>;
+    using RenderingBuffer = RowAccessor<uint8_t>;
 } // namespace OHOS
 
 #endif
