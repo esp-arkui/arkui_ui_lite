@@ -68,6 +68,7 @@
 #include "render/graphic_render_scanline.h"
 
 namespace OHOS {
+class UICanvas;
     /**
  * @brief Defines the basic styles of graphs drawn on canvases.
  *
@@ -101,7 +102,8 @@ namespace OHOS {
 #endif
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
-            rotateAngle_(0)
+            rotateAngle_(0),
+            uiCanvas_(nullptr)
         {}
 
         Paint(const Paint& paint)
@@ -181,6 +183,7 @@ namespace OHOS {
             globalCompositeOperation_ = paint.globalCompositeOperation_;
             rotateAngle_ = paint.rotateAngle_;
             transfrom_ = paint.transfrom_;
+            uiCanvas_ = paint.uiCanvas_;
         }
 
         /**
@@ -889,6 +892,16 @@ namespace OHOS {
             return rotateAngle_;
         }
 
+        void SetUICanvas(UICanvas* uiCanvas)
+        {
+            this->uiCanvas_ = uiCanvas;
+        }
+
+        UICanvas* GetUICanvas() const
+        {
+            return uiCanvas_;
+        }
+
     private:
         PaintStyle style_;
         ColorType fillColor_;
@@ -924,6 +937,7 @@ namespace OHOS {
         GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
         float rotateAngle_;                                 // 旋转角度，单位度数
         TransAffine transfrom_;                             // 矩阵
+        UICanvas* uiCanvas_;
     };
 
     /**
@@ -940,7 +954,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        UICanvas() : startPoint_({0, 0}), vertices_(nullptr)
+        UICanvas() : startPoint_({0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
         {}
 
         /**
@@ -1259,8 +1273,10 @@ namespace OHOS {
      */
         void FillPath(const Paint& paint);
 
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
         /*  在画布上绘制文本 */
         void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
+#endif
 
         /* 返回包含指定文本宽度的对象 */
         Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
@@ -1358,6 +1374,7 @@ namespace OHOS {
         List<DrawCmd> drawCmdList_;
         // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
+        BufferInfo* gfxMapBuffer_;
 
         static void DeleteLineParam(void* param)
         {
@@ -1532,8 +1549,11 @@ namespace OHOS {
                                  const Style& style,
                                  const bool& isStroke);
 #endif
+
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
         static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
+#endif
         /**
      * @brief CopyBuffer 复制buffer
      * @param gfxMapBuffer 复制后的buffer
@@ -1771,6 +1791,9 @@ namespace OHOS {
             }
         }
 #endif
+        void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
+        BufferInfo* UpdateMapBufferInfo(const BufferInfo& srcBuff, const Rect& rect);
+        void DestroyMapBufferInfo();
     };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

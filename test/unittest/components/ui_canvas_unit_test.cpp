@@ -1099,6 +1099,7 @@ HWTEST_F(UICanvasTest, UICanvasDrawImage_003, TestSize.Level1)
 }
 #endif
 
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
 /**
  * @tc.name: UICanvasStrokeText_001
  * @tc.desc: Verify StrokeText function, equal.
@@ -1163,6 +1164,7 @@ HWTEST_F(UICanvasTest, UICanvasStrokeText_002, TestSize.Level1)
     EXPECT_EQ(canvas_->GetStartPosition().x, POS_X);
     EXPECT_EQ(canvas_->GetStartPosition().y, POS_Y);
 }
+#endif
 
 /**
  * @tc.name: UICanvasMeasureText_001
@@ -1287,7 +1289,9 @@ HWTEST_F(UICanvasTest, UICanvasSetScale_002, TestSize.Level1)
     fontStyle.letterSpace = LETTER_SPACE;
 
     paint_->Scale(SCALE_X, SCALE_Y);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+#endif
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1358,7 +1362,9 @@ HWTEST_F(UICanvasTest, UICanvasSetTranslate_002, TestSize.Level1)
     fontStyle.letterSpace = LETTER_SPACE;
 
     paint_->Translate(TRANSLATE_X, TRANSLATE_Y);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+#endif
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1433,7 +1439,9 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     fontStyle.letterSpace = LETTER_SPACE;
 
     paint_->Transform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+#endif
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -1512,7 +1520,9 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     fontStyle.letterSpace = LETTER_SPACE;
 
     paint_->SetTransform(SCALE_X, SHEAR_X, SHEAR_Y, SCALE_Y, TRANSLATE_X, TRANSLATE_Y);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+#endif
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
@@ -2136,7 +2146,9 @@ HWTEST_F(UICanvasTest, UICanvasSetRotate_002, TestSize.Level1)
     fontStyle.letterSpace = LETTER_SPACE;
 
     paint_->Rotate(ROTATE);
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     canvas_->StrokeText("hello world", {POS_X, POS_Y}, fontStyle, *paint_);
+#endif
 
     EXPECT_EQ(fontStyle.align, TEXT_ALIGNMENT_CENTER);
     EXPECT_EQ(fontStyle.direct, TEXT_DIRECT_LTR);
