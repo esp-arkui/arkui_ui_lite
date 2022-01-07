@@ -798,12 +798,12 @@ namespace OHOS {
 
         double GetScaleX() const
         {
-            return transfrom_.scaleX_;
+            return transfrom_.GetData()[0];
         }
 
         double GetScaleY() const
         {
-            return transfrom_.scaleY_;
+            return transfrom_.GetData()[4];
         }
 
         /* 旋转当前绘图 */
@@ -832,12 +832,12 @@ namespace OHOS {
         /* 获取重新映射画布上的x 位置 */
         int16_t GetTranslateX() const
         {
-            return transfrom_.translateX;
+            return transfrom_.GetData()[2];
         }
         /* 获取重新映射画布上的y 位置 */
         int16_t GetTranslateY() const
         {
-            return transfrom_.translateY;
+            return transfrom_.GetData()[5];
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -854,22 +854,22 @@ namespace OHOS {
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
             changeFlage_ = true;
-            transLateX += transfrom_.translateX;
-            transLateY += transfrom_.translateY;
-            transfrom_.Translate(-transfrom_.translateX, -transfrom_.translateY);
+            transLateX += transfrom_.GetData()[2];
+            transLateY += transfrom_.GetData()[5];
+            transfrom_.Translate(-transfrom_.GetData()[2], -transfrom_.GetData()[5]);
             Scale(scaleX, scaleY);
             transfrom_.Translate(transLateX, transLateY);
-            transfrom_.shearX += shearX;
-            transfrom_.shearY += shearY;
+            transfrom_.SetData(1, transfrom_.GetData()[1]+shearX);
+            transfrom_.SetData(3, transfrom_.GetData()[3]+shearY);
         }
 
         double GetshearX() const
         {
-            return transfrom_.shearX;
+            return transfrom_.GetData()[1];
         }
         double GetshearY() const
         {
-            return transfrom_.shearY;
+            return transfrom_.GetData()[3];
         }
         TransAffine GetTransAffine() const
         {
