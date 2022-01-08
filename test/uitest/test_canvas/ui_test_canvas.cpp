@@ -973,7 +973,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-        paint.SetStrokeWidth(12);
+        paint.SetStrokeWidth(STROKE_WIDTH12);
         paint.SetStrokeColor(Color::Green());
         paint.SetLineCap(LineCapEnum::BUTT_CAP);
 
@@ -1037,7 +1037,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-        paint.SetStrokeWidth(10);
+        paint.SetStrokeWidth(STROKE_WIDTH10);
         paint.SetStrokeColor(Color::Green());
         paint.SetLineJoin(LineJoinEnum::ROUND_JOIN);
 
@@ -1067,7 +1067,7 @@ namespace OHOS {
 
         // 当斜接角度超过MiterLimit时应该转化为平角
         paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
-        paint.SetMiterLimit(4);
+        paint.SetMiterLimit(MITERLIMIT4);
         canvas->BeginPath();
         canvas->MoveTo({LINE21_X, LINE13_Y});
         canvas->LineTo({LINE21_X, LINE11_Y});
@@ -1187,7 +1187,8 @@ namespace OHOS {
         canvas->FillPath(paint);
         // 放射渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        paint.createRadialGradient(300, 140, 5, 270, 100, 80);
+        paint.createRadialGradient(RADIAL_GRADIENT300, RADIAL_GRADIENT140, RADIAL_GRADIENT5,
+                                   RADIAL_GRADIENT270, RADIAL_GRADIENT100, RADIAL_GRADIENT80);
 #endif
         canvas->BeginPath();
 
@@ -1212,13 +1213,13 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
         Paint paint;
         paint.SetStyle(Paint::GRADIENT);
-        paint.SetStrokeWidth(8);
+        paint.SetStrokeWidth(STROKE_WIDTH8);
         // 线性渐变
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         paint.createLinearGradient(LINEARGRADIENT50, LINEARGRADIENT50, LINEARGRADIENT150, LINEARGRADIENT150);
         paint.addColorStop(0, Color::Yellow());
-        paint.addColorStop(0.3, Color::White());
-        paint.addColorStop(0.6, Color::Green());
+        paint.addColorStop(COLOR_STOP3, Color::White());
+        paint.addColorStop(COLOR_STOP6, Color::Green());
         paint.addColorStop(1, Color::Blue());
 #endif
         canvas->BeginPath();

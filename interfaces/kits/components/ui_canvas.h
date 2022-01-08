@@ -806,7 +806,7 @@ class UICanvas;
 
         double GetScaleY() const
         {
-            return transfrom_.GetData()[4];
+            return transfrom_.GetData()[INDEX_FOUR];
         }
 
         /* 旋转当前绘图 */
@@ -835,12 +835,12 @@ class UICanvas;
         /* 获取重新映射画布上的x 位置 */
         int16_t GetTranslateX() const
         {
-            return transfrom_.GetData()[2];
+            return transfrom_.GetData()[INDEX_TWO];
         }
         /* 获取重新映射画布上的y 位置 */
         int16_t GetTranslateY() const
         {
-            return transfrom_.GetData()[5];
+            return transfrom_.GetData()[INDEX_FIVE];
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -857,22 +857,22 @@ class UICanvas;
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
             changeFlage_ = true;
-            transLateX += transfrom_.GetData()[2];
-            transLateY += transfrom_.GetData()[5];
-            transfrom_.Translate(-transfrom_.GetData()[2], -transfrom_.GetData()[5]);
+            transLateX += transfrom_.GetData()[INDEX_TWO];
+            transLateY += transfrom_.GetData()[INDEX_FIVE];
+            transfrom_.Translate(-transfrom_.GetData()[INDEX_TWO], -transfrom_.GetData()[INDEX_FIVE]);
             Scale(scaleX, scaleY);
             transfrom_.Translate(transLateX, transLateY);
-            transfrom_.SetData(1, transfrom_.GetData()[1]+shearX);
-            transfrom_.SetData(3, transfrom_.GetData()[3]+shearY);
+            transfrom_.SetData(INDEX_ONE, transfrom_.GetData()[INDEX_ONE]+shearX);
+            transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE]+shearY);
         }
 
         double GetshearX() const
         {
-            return transfrom_.GetData()[1];
+            return transfrom_.GetData()[INDEX_ONE];
         }
         double GetshearY() const
         {
-            return transfrom_.GetData()[3];
+            return transfrom_.GetData()[INDEX_THREE];
         }
         TransAffine GetTransAffine() const
         {

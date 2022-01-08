@@ -104,14 +104,12 @@ uint32_t GifCanvasImageAnimator::SetGifFrame(GifFileType* gifFileType, int32_t i
     if (gifImageData_ == nullptr || image_ == nullptr || image_->image == nullptr) {
         return 0;
     }
-    //imageView->gifFrameFlag_ = true;
     ImageInfo gifFrame;
     gifFrame.header.width = gifFileType->SWidth;
     gifFrame.header.height = gifFileType->SHeight;
     gifFrame.header.colorMode = ARGB8888;
     gifFrame.dataSize = gifDataSize_;
     gifFrame.data = gifImageData_;
-    //imageView->SetSrc(&gifFrame);
     image_->image->SetSrc(&gifFrame);
     image_->width = gifFileType->SWidth;
     image_->height = gifFileType->SHeight;
