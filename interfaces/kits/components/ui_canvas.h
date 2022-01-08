@@ -67,7 +67,7 @@
 #include "render/graphic_render_scanline.h"
 
 namespace OHOS {
-class UICanvas;
+    class UICanvas;
     /**
      * @brief Defines the basic styles of graphs drawn on canvases.
      *
@@ -82,7 +82,8 @@ class UICanvas;
          * @since 1.0
          * @version 1.0
          */
-        Paint() : style_(PaintStyle::STROKE_FILL_STYLE),
+        Paint() :
+            style_(PaintStyle::STROKE_FILL_STYLE),
             fillColor_(Color::Black()),
             strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE),
@@ -183,7 +184,7 @@ class UICanvas;
             globalCompositeOperation_ = paint.globalCompositeOperation_;
             rotateAngle_ = paint.rotateAngle_;
             transfrom_ = paint.transfrom_;
-			haveComposite_ = paint.haveComposite_;
+            haveComposite_ = paint.haveComposite_;
             uiCanvas_ = paint.uiCanvas_;
         }
 
@@ -772,7 +773,7 @@ class UICanvas;
         {
             globalCompositeOperation_ = globalCompositeOperation;
             changeFlage_ = true;
-            if(globalCompositeOperation!=SOURCE_OVER){
+            if (globalCompositeOperation != SOURCE_OVER) {
                 haveComposite_ = true;
             }
         }
@@ -862,8 +863,8 @@ class UICanvas;
             transfrom_.Translate(-transfrom_.GetData()[INDEX_TWO], -transfrom_.GetData()[INDEX_FIVE]);
             Scale(scaleX, scaleY);
             transfrom_.Translate(transLateX, transLateY);
-            transfrom_.SetData(INDEX_ONE, transfrom_.GetData()[INDEX_ONE]+shearX);
-            transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE]+shearY);
+            transfrom_.SetData(INDEX_ONE, transfrom_.GetData()[INDEX_ONE] + shearX);
+            transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE] + shearY);
         }
 
         double GetshearX() const
@@ -893,12 +894,12 @@ class UICanvas;
         {
             return uiCanvas_;
         }
-		
-		bool HaveComposite() const
+
+        bool HaveComposite() const
         {
             return haveComposite_;
         }
-		
+
     private:
         PaintStyle style_;
         ColorType fillColor_;
@@ -934,7 +935,7 @@ class UICanvas;
         GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
         float rotateAngle_;                                 // 旋转角度，单位度数
         TransAffine transfrom_;                             // 矩阵
-		bool haveComposite_;
+        bool haveComposite_;
         UICanvas* uiCanvas_;
     };
 
@@ -952,7 +953,8 @@ class UICanvas;
          * @since 1.0
          * @version 1.0
          */
-        UICanvas() : startPoint_({0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
+        UICanvas() :
+            startPoint_({0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
         {}
 
         /**
@@ -1598,12 +1600,12 @@ class UICanvas;
             if (isStroke) {
                 if (paint.GetStyle() == Paint::STROKE_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color,paint.GetStrokeColor(),paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
+                    ChangeColor(color, paint.GetStrokeColor(), paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
                 }
             } else {
                 if (paint.GetStyle() == Paint::FILL_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color,paint.GetFillColor(),paint.GetFillColor().alpha * paint.GetGlobalAlpha());
+                    ChangeColor(color, paint.GetFillColor(), paint.GetFillColor().alpha * paint.GetGlobalAlpha());
                 }
             }
             RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, color);
@@ -1632,10 +1634,12 @@ class UICanvas;
             typedef SpanInterpolatorLinear<> InterpolatorType;
             // 设定线性渐变的线段生成器
             typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate,
-                    GradientColorMode> LinearGradientSpan;
+                                          GradientColorMode>
+                LinearGradientSpan;
             // 设定放射渐变的线段生成器
             typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
-                    GradientColorMode> RadialGradientSpan;
+                                          GradientColorMode>
+                RadialGradientSpan;
 
             ScanlineUnPackedContainer m_scanline;
             typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
@@ -1658,7 +1662,7 @@ class UICanvas;
             for (; count < paint.getStopAndColor().Size(); count++) {
                 ColorType stopColor = iter->data_.color;
                 Srgba8 srgba8Color;
-                ChangeColor(srgba8Color,stopColor,stopColor.alpha * paint.GetGlobalAlpha());
+                ChangeColor(srgba8Color, stopColor, stopColor.alpha * paint.GetGlobalAlpha());
                 gradientColorMode.AddColor(iter->data_.stop, srgba8Color);
                 iter = iter->next_;
             }
@@ -1775,14 +1779,15 @@ class UICanvas;
         }
 #endif
         template <class Color>
-        static void ChangeColor(Color& color,ColorType colorType,uint8_t alpha){
+        static void ChangeColor(Color& color, ColorType colorType, uint8_t alpha)
+        {
             color.redValue = colorType.red;
             color.greenValue = colorType.green;
             color.blueValue = colorType.blue;
             color.alphaValue = alpha;
         }
 
-		void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
+        void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
         BufferInfo* UpdateMapBufferInfo(const BufferInfo& srcBuff, const Rect& rect);
         void DestroyMapBufferInfo();
     };

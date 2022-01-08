@@ -96,7 +96,6 @@ namespace OHOS {
         LineTo({right, bottom});
         LineTo({point.x, bottom});
         ClosePath();
-
     }
 
     void UICanvas::ClosePath()
@@ -678,7 +677,7 @@ namespace OHOS {
         RasterizerScanlineAntiAlias<> blendRasterizer;
         Rgba8Color blendColor;
         DrawCmd drawCmd;
-        int count=0;
+        int count = 0;
         for (; curDrawEnd != drawCmdList_.End(); curDrawEnd = curDrawEnd->next_) {
             if (curDrawEnd->data_.paint.HaveComposite()) {
                 drawCmd = curDrawEnd->data_;
@@ -699,12 +698,12 @@ namespace OHOS {
         if (pathParam->isStroke) {
             if (drawCmd.paint.GetStyle() == Paint::STROKE_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                ChangeColor(blendColor,drawCmd.paint.GetStrokeColor(),drawCmd.paint.GetStrokeColor().alpha * drawCmd.paint.GetGlobalAlpha());
+                ChangeColor(blendColor, drawCmd.paint.GetStrokeColor(), drawCmd.paint.GetStrokeColor().alpha * drawCmd.paint.GetGlobalAlpha());
             }
         } else {
             if (drawCmd.paint.GetStyle() == Paint::FILL_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                ChangeColor(blendColor,drawCmd.paint.GetFillColor(),drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha());
+                ChangeColor(blendColor, drawCmd.paint.GetFillColor(), drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha());
             }
         }
         ScanlineUnPackedContainer scanline;
@@ -715,13 +714,13 @@ namespace OHOS {
         PixFormat pixFormat(renderBuffer);
         RendererBase renBase(pixFormat);
         renBase.ResetClipping(true);
-        renBase.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(),trunc.GetBottom());
+        renBase.ClipBox(trunc.GetLeft(), trunc.GetTop(), trunc.GetRight(), trunc.GetBottom());
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
             if (curDraw->data_.paint.HaveComposite()) {
                 drawCmd = curDraw->data_;
                 count--;
             }
-            if(count<=0){
+            if (count <= 0) {
                 continue;
             }
             typedef ScanlineUnPackedContainer Scanline;
@@ -743,20 +742,19 @@ namespace OHOS {
             if (pathParam->isStroke) {
                 if (curDraw->data_.paint.GetStyle() == Paint::STROKE_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color,curDraw->data_.paint.GetStrokeColor(),curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
+                    ChangeColor(color, curDraw->data_.paint.GetStrokeColor(), curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
                 }
             } else {
                 if (curDraw->data_.paint.GetStyle() == Paint::FILL_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color,curDraw->data_.paint.GetFillColor(),curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
-
+                    ChangeColor(color, curDraw->data_.paint.GetFillColor(), curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
                 }
             }
 
             Scanline scanline1;
             Scanline scanline2;
             BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),
-                                    blendRasterizer,rasterizer,scanline1,scanline2,renBase,blendColor,color);
+                          blendRasterizer, rasterizer, scanline1, scanline2, renBase, blendColor, color);
         }
     }
 
@@ -1053,7 +1051,7 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-       DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
+        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, true);
     }
 
     void UICanvas::DoFillPath(BufferInfo& gfxDstBuffer,
@@ -1063,7 +1061,7 @@ namespace OHOS {
                               const Rect& invalidatedArea,
                               const Style& style)
     {
-       DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
+        DoRender(gfxDstBuffer, param, paint, rect, invalidatedArea, style, false);
     }
 
     void UICanvas::SetRasterizer(UICanvasVertices& vertices,
@@ -1214,7 +1212,7 @@ namespace OHOS {
                           invalidatedArea.GetBottom());
 
         Rgba8Color shadowColor;
-        ChangeColor(shadowColor,paint.GetShadowColor(),paint.GetShadowColor().alpha * paint.GetGlobalAlpha());
+        ChangeColor(shadowColor, paint.GetShadowColor(), paint.GetShadowColor().alpha * paint.GetGlobalAlpha());
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
 #        if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
@@ -1354,7 +1352,7 @@ namespace OHOS {
 
             transform.Translate(textParam->position.x, textParam->position.y);
             if (paint.GetScaleX() != 0) {
-                transform.SetData(0, transform.GetData()[0]*(1.0f / paint.GetScaleX()));
+                transform.SetData(0, transform.GetData()[0] * (1.0f / paint.GetScaleX()));
             }
             transform.Translate(textParam->position.x, textParam->position.y);
             RenderingBuffer imageRendBuffer;
@@ -1410,8 +1408,8 @@ namespace OHOS {
                         invalidatedArea.GetBottom());
 
         float parallelogram[OHOS::INDEX_SIX] = {float(cordsTmp.GetLeft()), float(cordsTmp.GetTop()),
-                                                 float(cordsTmp.GetRight()), float(cordsTmp.GetTop()),
-                                                 float(cordsTmp.GetRight()), float(cordsTmp.GetBottom())};
+                                                float(cordsTmp.GetRight()), float(cordsTmp.GetTop()),
+                                                float(cordsTmp.GetRight()), float(cordsTmp.GetBottom())};
 
         OHOS::TransAffine mtx((float)cordsTmp.GetLeft(), (float)cordsTmp.GetTop(), (float)cordsTmp.GetRight(),
                               (float)cordsTmp.GetBottom(), parallelogram);
@@ -1475,9 +1473,9 @@ namespace OHOS {
             return gfxMapBuffer_;
         }
 
-        if(rect.GetWidth() != gfxMapBuffer_->width ||
-           rect.GetHeight() != gfxMapBuffer_->height ||
-           srcBuff.mode != gfxMapBuffer_->mode) {
+        if (rect.GetWidth() != gfxMapBuffer_->width ||
+            rect.GetHeight() != gfxMapBuffer_->height ||
+            srcBuff.mode != gfxMapBuffer_->mode) {
             DestroyMapBufferInfo();
             InitGfxMapBuffer(srcBuff, rect);
         } else {
