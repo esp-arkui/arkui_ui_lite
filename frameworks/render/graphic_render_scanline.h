@@ -751,7 +751,7 @@ namespace OHOS {
                     }
                 }
             }
-            //绘制raster1的剩余部分
+            // 绘制raster1的剩余部分
             while (raster1.SweepScanline(scanline1)) {
                 int y = scanline1.GetYLevel();
                 unsigned num_spans = scanline1.NumSpans();

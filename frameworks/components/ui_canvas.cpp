@@ -698,12 +698,14 @@ namespace OHOS {
         if (pathParam->isStroke) {
             if (drawCmd.paint.GetStyle() == Paint::STROKE_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                ChangeColor(blendColor, drawCmd.paint.GetStrokeColor(), drawCmd.paint.GetStrokeColor().alpha * drawCmd.paint.GetGlobalAlpha());
+                ChangeColor(blendColor, drawCmd.paint.GetStrokeColor(), drawCmd.paint.GetStrokeColor().alpha
+                            * drawCmd.paint.GetGlobalAlpha());
             }
         } else {
             if (drawCmd.paint.GetStyle() == Paint::FILL_STYLE ||
                 drawCmd.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                ChangeColor(blendColor, drawCmd.paint.GetFillColor(), drawCmd.paint.GetFillColor().alpha * drawCmd.paint.GetGlobalAlpha());
+                ChangeColor(blendColor, drawCmd.paint.GetFillColor(), drawCmd.paint.GetFillColor().alpha
+                            * drawCmd.paint.GetGlobalAlpha());
             }
         }
         ScanlineUnPackedContainer scanline;
@@ -731,7 +733,8 @@ namespace OHOS {
             PathParam* pathParam = static_cast<PathParam*>(curDraw->data_.param);
 
             if (curDraw->data_.paint.HaveShadow()) {
-                DoDrawShadow(gfxDstBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_, pathParam->isStroke);
+                DoDrawShadow(gfxDstBuffer, curDraw->data_.param, curDraw->data_.paint, rect,
+                             trunc, *style_, pathParam->isStroke);
             }
 
             InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, *style_, curDraw->data_.paint);
@@ -742,12 +745,14 @@ namespace OHOS {
             if (pathParam->isStroke) {
                 if (curDraw->data_.paint.GetStyle() == Paint::STROKE_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color, curDraw->data_.paint.GetStrokeColor(), curDraw->data_.paint.GetStrokeColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
+                    ChangeColor(color, curDraw->data_.paint.GetStrokeColor(), curDraw->data_.paint.GetStrokeColor().alpha
+                                * curDraw->data_.paint.GetGlobalAlpha());
                 }
             } else {
                 if (curDraw->data_.paint.GetStyle() == Paint::FILL_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color, curDraw->data_.paint.GetFillColor(), curDraw->data_.paint.GetFillColor().alpha * curDraw->data_.paint.GetGlobalAlpha());
+                    ChangeColor(color, curDraw->data_.paint.GetFillColor(), curDraw->data_.paint.GetFillColor().alpha
+                                * curDraw->data_.paint.GetGlobalAlpha());
                 }
             }
 
