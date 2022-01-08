@@ -785,10 +785,14 @@ namespace OHOS {
                       BaseRenderer& renBase, const ColorT& color1, const ColorT& color2)
     {
         ColorT backColor;
-        backColor.redValue = (color1.redValue + color2.redValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.redValue + color2.redValue);
-        backColor.greenValue = (color1.greenValue + color2.greenValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.greenValue + color2.greenValue);
-        backColor.blueValue = (color1.blueValue + color2.blueValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.blueValue + color2.blueValue);
-        backColor.alphaValue = (color1.alphaValue + color2.alphaValue) >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.alphaValue + color2.alphaValue);
+        backColor.redValue = (color1.redValue + color2.redValue)
+                >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.redValue + color2.redValue);
+        backColor.greenValue = (color1.greenValue + color2.greenValue)
+                >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.greenValue + color2.greenValue);
+        backColor.blueValue = (color1.blueValue + color2.blueValue)
+                >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.blueValue + color2.blueValue);
+        backColor.alphaValue = (color1.alphaValue + color2.alphaValue)
+                >= MAX_COLOR_NUM ? MAX_COLOR_NUM : (color1.alphaValue + color2.alphaValue);
         BlendXOR(raster1, raster2, scanline1, scanline2, renBase, color1, color2);
         BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase, backColor);
     }
