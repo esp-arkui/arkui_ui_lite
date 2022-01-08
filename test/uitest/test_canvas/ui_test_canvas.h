@@ -32,7 +32,6 @@ namespace OHOS {
         void SetUp() override;
         void TearDown() override;
         const UIView* GetTestView() override;
-        void Test11();
         void UIKitCanvasTestDrawLine001();
         void UIKitCanvasTestDrawLine002();
         void UIKitCanvasTestDrawCurve001();

@@ -167,7 +167,7 @@ namespace OHOS {
 
         paint.SetStrokeWidth(LINE_WIDTH5);            // 5: line width
         canvas->SetStartPosition({START_X, START_Y}); // {50, 10}: Start point coordinates x, y;
-        canvas->DrawLine({LINE2_X, RECT_Y}, paint); // {100, 50}: end point coordinates x, y
+        canvas->DrawLine({LINE2_X, RECT_Y}, paint);   // {100, 50}: end point coordinates x, y
     }
 
     void UITestCanvas::UIKitCanvasTestDrawCurve001()
@@ -256,7 +256,7 @@ namespace OHOS {
         paint.SetStrokeColor(Color::Yellow());
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
-        paint.SetOpacity(OPARCITY_127);    // 127: opacity
+        paint.SetOpacity(OPARCITY_127);     // 127: opacity
         // {100, 100}: circle center coordinates, 30: circle radius
         canvas->DrawCircle({LINE_CURVE_X100, LINE_CURVE_Y100}, LINE_CURVE_R30, paint);
     }
@@ -273,7 +273,7 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Blue());
         paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
-        paint.SetOpacity(OPARCITY_127);    // 127: opacity
+        paint.SetOpacity(OPARCITY_127);     // 127: opacity
         // {200, 100}: circle center coordinates, 30: circle radius
         canvas->DrawCircle({LINE_CURVE_X200, LINE_CURVE_Y100}, LINE_CURVE_R30, paint);
     }
@@ -291,7 +291,7 @@ namespace OHOS {
         paint.SetFillColor(Color::Yellow());
         paint.SetStrokeColor(Color::Blue());
         paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
-        paint.SetOpacity(OPARCITY_127);    // 127: opacity
+        paint.SetOpacity(OPARCITY_127);     // 127: opacity
         // {300, 100}: circle center coordinates, 30: circle radius
         canvas->DrawCircle({LINE_CURVE_X300, LINE_CURVE_Y100}, LINE_CURVE_R30, paint);
     }
@@ -348,7 +348,7 @@ namespace OHOS {
         fontStyle.align = TEXT_ALIGNMENT_RIGHT;
         fontStyle.direct = TEXT_DIRECT_LTR;
         fontStyle.fontName = DEFAULT_VECTOR_FONT_FILENAME;
-        fontStyle.fontSize = FONT_SIZE30;    // 30: font size
+        fontStyle.fontSize = FONT_SIZE30;         // 30: font size
         fontStyle.letterSpace = FONT_LETTERSPACE; // 10 letter space
         // {50, 50}: start point coordinates, 100: max width
         canvas->DrawLabel({LABEL_START50, LABEL_START50}, "canvas绘制字体", LABEL_WIDTH100, fontStyle, paint);
@@ -1463,7 +1463,6 @@ namespace OHOS {
         canvas->DrawPath(paint);
 #endif
     }
-
 
     void UITestCanvas::RM011StrokeText001()
     {
