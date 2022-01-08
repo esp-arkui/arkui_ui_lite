@@ -59,7 +59,7 @@ public:
 
     {
 
-        OpenGifFile(image->path);// 打开一次先获取大小
+        OpenGifFile(image->path); // 打开一次先获取大小
         CloseGifFile();
 
     }

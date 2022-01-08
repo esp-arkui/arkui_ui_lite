@@ -152,7 +152,7 @@ namespace OHOS {
         uint8_t* cover1 = span1->covers;
         uint8_t* cover2 = span2->covers+(x1-x2);
         int x3=x1;
-        for(unsigned i=0; i < len3;i++,cover1++,cover2++){
+        for(unsigned i=0; i < len3;i++,cover1++,cover2++) {
             if(*(cover1)!=COVER_FULL){
                 scanline3.AddCell(x3++,*cover1);
             }else{
@@ -166,7 +166,7 @@ namespace OHOS {
         uint8_t* cover1 = span1->covers;
         uint8_t* cover2 = span2->covers;
         scanline.Reset(x2,x2+span2->spanLength);
-        for(int i=1;i<=span2->spanLength;i++,cover2++){
+        for(int i=1;i<=span2->spanLength;i++,cover2++) {
             if(x1 == x2){
                 scanline.AddCell(x2++,COVER_FULL-(*cover1));
                 x1++;
@@ -181,14 +181,14 @@ namespace OHOS {
     void calcOutScanlineLeft(ScanlineUnPackedContainer& scanline,int x1,int x2,Span& span1,Span& span2){
         uint8_t* cover2 = span2->covers+(x1-x2);
         scanline.Reset(x1,x1+span1->spanLength);
-        int len1 = span2->spanLength-(x1-x2);//相交的长度
-        int len2 = span1->spanLength-len1;//相交的长度
+        int len1 = span2->spanLength-(x1-x2);// 相交的长度
+        int len2 = span1->spanLength-len1;// 相交的长度
         uint8_t* cover1 = span1->covers+len1;
-        for(int i=0;i<len1;i++,cover2++){
+        for(int i=0;i<len1;i++,cover2++) {
             scanline.AddCell(x1++,COVER_FULL-(*cover2));
         }
 
-        for(int i=0;i<len2;i++,cover1++){
+        for(int i=0;i<len2;i++,cover1++) {
             scanline.AddCell(x1++,*cover1);
         }
     }
@@ -199,8 +199,8 @@ namespace OHOS {
         uint8_t* cover2 = span2->covers;
         int x3=x1;
         scanline.Reset(x2,x2+span2->spanLength);
-        for(int i=0;i<span2->spanLength;i++,cover2++){
-            if(x3==x2 && x3 <= x1+span1->spanLength-1){
+        for(int i=0;i<span2->spanLength;i++,cover2++) {
+            if(x3==x2 && x3 <= x1+span1->spanLength-1) {
                 scanline.AddCell(x2++,COVER_FULL-(*cover1));
                 x3++;
                 cover1++;
@@ -225,7 +225,7 @@ namespace OHOS {
             scanline2.Reset(raster2.MinX(), raster2.MaxX());
 
             int y1 = 0;
-            if(raster1.SweepScanline(scanline1)){
+            if(raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
             }
             while (raster2.SweepScanline(scanline2)) {
@@ -236,13 +236,13 @@ namespace OHOS {
                 unsigned num_spans1;
                 typename Scanline::ConstIterator span1;
 
-                if(y1 == y2){
+                if(y1 == y2) {
                     num_spans1 = scanline1.NumSpans();
                     span1 = scanline1.Begin();
                 }
 
-                if(y2 > y1){
-                    while(raster1.SweepScanline(scanline1)){
+                if(y2 > y1) {
+                    while(raster1.SweepScanline(scanline1)) {
                         y1 = scanline1.GetYLevel();
                         if(y1 == y2){
                             num_spans1 = scanline1.NumSpans();
@@ -257,14 +257,14 @@ namespace OHOS {
                     if(y1 == y2){
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
-                            if(span1->spanLength > 0){
+                            if(span1->spanLength > 0) {
                                 renBase.BlendSolidHspan(x2, y2, (unsigned)span2->spanLength,
                                                         ren_color2,
                                                         span2->covers);
                                 // span1在span2中
                                 // spa2   ------------------------
                                 // spa1     -------------------
-                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength){
+                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength) {
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
                                                             ren_color1,
                                                             span1->covers);
@@ -274,7 +274,7 @@ namespace OHOS {
                                 // spa1                 -------------------
                                 if(x1>x2 &&
                                    x1<x2+span2->spanLength &&
-                                   x1+span1->spanLength >= x2+span2->spanLength){
+                                   x1+span1->spanLength >= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3,x1,x2,span1,span2);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -287,7 +287,7 @@ namespace OHOS {
                                 // spa1     -------------------
                                 if(x1<x2&&
                                    x1+span1->spanLength > x2 &&
-                                   x1+span1->spanLength < x2+span2->spanLength){
+                                   x1+span1->spanLength < x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3,x2,x1,span2,span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -341,7 +341,7 @@ namespace OHOS {
             scanline2.Reset(raster2.MinX(), raster2.MaxX());
 
             int y1 = 0;
-            if(raster1.SweepScanline(scanline1)){
+            if(raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
             }
             while (raster2.SweepScanline(scanline2)) {
@@ -358,7 +358,7 @@ namespace OHOS {
                 }
 
                 if(y2 > y1){
-                    while(raster1.SweepScanline(scanline1)){
+                    while(raster1.SweepScanline(scanline1)) {
                         y1 = scanline1.GetYLevel();
                         if(y1 == y2){
                             num_spans1 = scanline1.NumSpans();
@@ -373,11 +373,11 @@ namespace OHOS {
                     if(y1 == y2){
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
-                            if(span1->spanLength > 0){
+                            if(span1->spanLength > 0) {
                                 // span1在span2中
                                 // spa2   ------------------------
                                 // spa1     -------------------
-                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength){
+                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength) {
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
                                                             ren_color1,
                                                             span1->covers);
@@ -387,7 +387,7 @@ namespace OHOS {
                                 // spa1                 -------------------
                                 if(x1>x2 &&
                                    x1<x2+span2->spanLength &&
-                                   x1+span1->spanLength >= x2+span2->spanLength){
+                                   x1+span1->spanLength >= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3,x1,x2,span1,span2);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -400,7 +400,7 @@ namespace OHOS {
                                 // spa1     -------------------
                                 if(x1<x2&&
                                    x1+span1->spanLength > x2 &&
-                                   x1+span1->spanLength < x2+span2->spanLength){
+                                   x1+span1->spanLength < x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3,x2,x1,span2,span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -443,12 +443,12 @@ namespace OHOS {
             scanline2.Reset(raster2.MinX(), raster2.MaxX());
 
             int y1 = 0;
-            if(raster1.SweepScanline(scanline1)){
+            if(raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
             }
 
 
-            if(raster1.MinY()< raster2.MinY()){
+            if(raster1.MinY()< raster2.MinY()) {
                 do{
                     y1 = scanline1.GetYLevel();
                     if(y1==raster2.MinY()){
@@ -494,10 +494,10 @@ namespace OHOS {
                     if(y1 == y2){
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
-                            if(span1->spanLength > 0){
+                            if(span1->spanLength > 0) {
                                 // spa2       -----------------
                                 // spa1     -----------------------
-                                if(x1<x2 && x2+span2->spanLength < x1+span1->spanLength){
+                                if(x1<x2 && x2+span2->spanLength < x1+span1->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineAll(scanline3,x2,x1,span2,span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -510,7 +510,7 @@ namespace OHOS {
                                 // 相交部分
                                 if(x1 >= x2 &&
                                    x1 < x2+span2->spanLength &&
-                                   x1+span1->spanLength >= x2+span2->spanLength){
+                                   x1+span1->spanLength >= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline4;
                                     calcOutScanlineLeft(scanline4,x1,x2,span1,span2);
                                     typename Scanline::ConstIterator span4 = scanline4.Begin();
@@ -523,7 +523,7 @@ namespace OHOS {
                                 // spa1     -------------------
                                 if(x1 <= x2&&
                                    x1+span1->spanLength >= x2 &&
-                                   x1+span1->spanLength <= x2+span2->spanLength){
+                                   x1+span1->spanLength <= x2+span2->spanLength) {
 
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineRight(scanline3,x2,x1,span2,span1);
@@ -534,9 +534,9 @@ namespace OHOS {
                                 }
                                 // spa2              ------------------------
                                 // spa1     -------                            ----------
-                                //没有混合点各自绘制
+                                // 没有混合点各自绘制
                                 if(x1+span1->spanLength < x2||
-                                   x2+span2->spanLength < x1){
+                                   x2+span2->spanLength < x1) {
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
                                                             ren_color1,
                                                             span1->covers);
@@ -550,15 +550,15 @@ namespace OHOS {
                     }
                     ++span2;
                 }
-                if(y1 == y2 && y1 < raster2.MaxY()-1){
-                    if(raster1.SweepScanline(scanline1)){
+                if(y1 == y2 && y1 < raster2.MaxY()-1) {
+                    if(raster1.SweepScanline(scanline1)) {
                         y1 = scanline1.GetYLevel();
                         num_spans1 = scanline1.NumSpans();
                         span1 = scanline1.Begin();
                     }
                 }
             }
-            //绘制raster1的剩余部分
+            // 绘制raster1的剩余部分
             while (raster1.SweepScanline(scanline1)) {
                 int y = scanline1.GetYLevel();
                 unsigned num_spans = scanline1.NumSpans();
@@ -613,10 +613,10 @@ namespace OHOS {
             scanline2.Reset(raster2.MinX(), raster2.MaxX());
 
             int y1 = 0;
-            if(raster1.SweepScanline(scanline1)){
+            if(raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
             }
-            if(raster1.MinY()< raster2.MinY()){
+            if(raster1.MinY()< raster2.MinY()) {
                 do{
                     y1 = scanline1.GetYLevel();
                     if(y1==raster2.MinY()){
@@ -660,11 +660,11 @@ namespace OHOS {
                     if(y1 == y2){
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
-                            if(span1->spanLength > 0){
+                            if(span1->spanLength > 0) {
                                 // span1在span2中
                                 // spa2   ------------------------
                                 // spa1     -------------------
-                                if(x1>=x2 && x1+span1->spanLength<=x2+span2->spanLength){
+                                if(x1>=x2 && x1+span1->spanLength<=x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineAll(scanline3,x1,x2,span1,span2);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -674,7 +674,7 @@ namespace OHOS {
                                 }
                                 // spa2       -----------------
                                 // spa1     -----------------------
-                                if(x1<x2 && x2+span2->spanLength < x1+span1->spanLength){
+                                if(x1<x2 && x2+span2->spanLength < x1+span1->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineAll(scanline3,x2,x1,span2,span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -687,7 +687,7 @@ namespace OHOS {
                                 // 相交部分
                                 if(x1 >= x2 &&
                                    x1 < x2+span2->spanLength &&
-                                   x1+span1->spanLength >= x2+span2->spanLength){
+                                   x1+span1->spanLength >= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineRight(scanline3,x1,x2,span1,span2);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -707,7 +707,7 @@ namespace OHOS {
                                 // spa1     -------------------
                                 if(x1 <= x2&&
                                    x1+span1->spanLength >= x2 &&
-                                   x1+span1->spanLength <= x2+span2->spanLength){
+                                   x1+span1->spanLength <= x2+span2->spanLength) {
 
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineRight(scanline3,x2,x1,span2,span1);
@@ -728,7 +728,7 @@ namespace OHOS {
                                 // spa1     -------                            ----------
                                 // 没有混合点各自绘制
                                 if(x1+span1->spanLength < x2||
-                                   x2+span2->spanLength < x1){
+                                   x2+span2->spanLength < x1) {
                                     renBase.BlendSolidHspan(x1, y2, (unsigned)span1->spanLength,
                                                             ren_color1,
                                                             span1->covers);
@@ -755,8 +755,8 @@ namespace OHOS {
                     }
                     ++span2;
                 }
-                if(y1 == y2 && y1 < raster2.MaxY()-1){
-                    if(raster1.SweepScanline(scanline1)){
+                if(y1 == y2 && y1 < raster2.MaxY()-1) {
+                    if(raster1.SweepScanline(scanline1)) {
                         y1 = scanline1.GetYLevel();
                         num_spans1 = scanline1.NumSpans();
                         span1 = scanline1.Begin();

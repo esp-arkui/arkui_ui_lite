@@ -1559,7 +1559,7 @@ class UICanvas;
         template <class LineStyle>
         static void LineStyleCalc(DepictStroke<LineStyle>& strokeLineStyle, const Paint& paint)
         {
-            strokeLineStyle.Width(paint.GetStrokeWidth()); //线条样式相关
+            strokeLineStyle.Width(paint.GetStrokeWidth()); // 线条样式相关
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             strokeLineStyle.LineCap(paint.GetLineCap());
 #endif
