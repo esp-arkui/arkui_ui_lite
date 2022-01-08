@@ -932,6 +932,65 @@ namespace OHOS {
  */
     class UICanvas : public UIView {
     public:
+
+        typedef Rgba8 Rgba8Color;
+        // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+        typedef OrderBgra ComponentOrder;
+
+        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+        typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
+        typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
+        typedef RendererBase<PixFormat> RendererBase;
+
+
+        typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
+        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, RenderingBuffer> PixFormatComp;
+        typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
+
+
+        typedef ScanlineUnPackedContainer Scanline;
+        typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
+
+
+
+
+        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
+        typedef GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> GradientColorMode;
+        // 设定放射渐变的算法
+        typedef GradientRadialCalculate RadialGradientCalculate;
+        // 设定线段插值器
+        typedef SpanInterpolatorLinear<> InterpolatorType;
+        // 设定线性渐变的线段生成器
+        typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate,
+                GradientColorMode> LinearGradientSpan;
+        // 设定放射渐变的线段生成器
+        typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
+                GradientColorMode> RadialGradientSpan;
+
+
+        // 渲染器缓冲区
+        typedef OHOS::RenderingBuffer PatternBuffer;
+        // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        typedef OHOS::ImageAccessorWrap<PixFormatComp, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
+        // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        typedef OHOS::ImageAccessorRepeatX<PixFormatComp, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
+        // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        typedef OHOS::ImageAccessorRepeatY<PixFormatComp, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
+        // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        typedef OHOS::ImageAccessorNoRepeat<PixFormatComp> imgSourceTypeNoRepeat;
+        // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        //  x,y轴都重复
+        typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
+        //  x轴重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
+        //  y轴重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
+        // 不重复
+        typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
+
+
+
+
         /**
      * @brief A constructor used to create a <b>UICanvas</b> instance.
      *
@@ -1571,12 +1630,20 @@ namespace OHOS {
         template <class Pixfmt>
         static void RenderSolid(const Paint& paint,
                                 RasterizerScanlineAntiAlias<>& rasterizer,
-                                RendererBase<Pixfmt>& renBase,
+                                OHOS::RendererBase<Pixfmt>& renBase,
                                 const bool& isStroke)
         {
-            typedef Rgba8 Rgba8Color;
-            ScanlineUnPackedContainer m_scanline;
+            Scanline scanline;
             Rgba8Color color;
+            RenderBlendSolid(paint,color,isStroke);
+            RenderScanlinesAntiAliasSolid(rasterizer, scanline, renBase, color);
+        }
+
+
+        static void RenderBlendSolid(const Paint& paint,
+                                     Rgba8Color& color,
+                                     const bool& isStroke)
+        {
             if (isStroke) {
                 if (paint.GetStyle() == Paint::STROKE_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
@@ -1588,8 +1655,17 @@ namespace OHOS {
                     ChangeColor(color,paint.GetFillColor(),paint.GetFillColor().alpha * paint.GetGlobalAlpha());
                 }
             }
-            RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, renBase, color);
         }
+
+        static bool isSoild(const Paint& paint){
+            if(paint.GetStyle() == Paint::STROKE_STYLE ||
+               paint.GetStyle() == Paint::FILL_STYLE ||
+               paint.GetStyle() == Paint::STROKE_FILL_STYLE){
+                return true;
+            }
+            return false;
+        }
+
 
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
@@ -1599,30 +1675,12 @@ namespace OHOS {
         static void RenderGradient(const Paint& paint,
                                    RasterizerScanlineAntiAlias<>& rasterizer,
                                    TransAffine& transform,
-                                   RendererBase<Pixfmt>& renBase,
+                                   OHOS::RendererBase<Pixfmt>& renBase,
                                    RenderingBuffer& renderBuffer,
                                    SpanFillColorAllocator<color>& allocator,
                                    const Rect& invalidatedArea)
         {
-            typedef Rgba8 Rgba8Color;
-            typedef OrderBgra ComponentOrder;
-            // 设定渐变数组的构造器设定颜色插值器和颜色模板等
-            typedef GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>, 1024> GradientColorMode;
-            // 设定放射渐变的算法
-            typedef GradientRadialCalculate RadialGradientCalculate;
-            // 设定线段插值器
-            typedef SpanInterpolatorLinear<> InterpolatorType;
-            // 设定线性渐变的线段生成器
-            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate,
-                    GradientColorMode> LinearGradientSpan;
-            // 设定放射渐变的线段生成器
-            typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
-                    GradientColorMode> RadialGradientSpan;
-
-            ScanlineUnPackedContainer m_scanline;
-            typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
-            typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, RenderingBuffer> PixFormatComp;
-            typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
+            Scanline scanline;
 
             PixFormatComp pixFormatComp(renderBuffer);
             RendererBaseComp m_renBaseComp(pixFormatComp);
@@ -1632,7 +1690,6 @@ namespace OHOS {
                                   invalidatedArea.GetRight(), invalidatedArea.GetBottom());
             TransAffine gradientMatrix;
             InterpolatorType interpolatorType(gradientMatrix);
-            GradientLinearCalculate gradientLinearCalculate;
             GradientColorMode gradientColorMode;
             gradientColorMode.RemoveAll();
             ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
@@ -1658,8 +1715,9 @@ namespace OHOS {
 
                 double distance = sqrt((linearPoint.x1 - linearPoint.x0) * (linearPoint.x1 - linearPoint.x0) +
                                        (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
+                GradientLinearCalculate gradientLinearCalculate;
                 LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
-                RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, span);
+                RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
             }
 
             if (paint.GetGradient() == Paint::Radial) {
@@ -1674,10 +1732,11 @@ namespace OHOS {
                                                                 radialPoint.y0 - radialPoint.y1);
                 RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
                                         startRadius, endRadius);
-                RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, span);
+                RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
             }
         };
 #endif
+
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /**
      * 渲染Pattern模式
@@ -1686,7 +1745,7 @@ namespace OHOS {
         static void RenderPattern(const Paint& paint,
                                   void* param,
                                   RasterizerScanlineAntiAlias<>& rasterizer,
-                                  RendererBase<Pixfmt>& renBase,
+                                  OHOS::RendererBase<Pixfmt>& renBase,
                                   SpanFillColorAllocator<color>& allocator,
                                   const Rect& rect)
         {
@@ -1698,32 +1757,6 @@ namespace OHOS {
             if (imageParam->image == nullptr) {
                 return;
             }
-            typedef Rgba8 Rgba8Color;
-            // 组装renderbase
-            // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
-            typedef OrderBgra ComponentOrder;
-            // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-            typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> Blender;
-            typedef PixfmtCustomBlendRgba<Blender, RenderingBuffer> PixFormat;
-            // 渲染器缓冲区
-            typedef OHOS::RenderingBuffer PatternBuffer;
-            // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
-            typedef OHOS::ImageAccessorWrap<PixFormat, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
-            // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
-            typedef OHOS::ImageAccessorRepeatX<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
-            // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
-            typedef OHOS::ImageAccessorRepeatY<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
-            // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
-            typedef OHOS::ImageAccessorNoRepeat<PixFormat> imgSourceTypeNoRepeat;
-            // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
-            //  x,y轴都重复
-            typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
-            //  x轴重复
-            typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
-            //  y轴重复
-            typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
-            // 不重复
-            typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 
             ScanlineUnPackedContainer m_scanline;
             PatternBuffer patternBuffer;
@@ -1732,7 +1765,7 @@ namespace OHOS {
                                  imageParam->width,
                                  imageParam->height,
                                  imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-            PixFormat img_pixf(patternBuffer); // 获取图片
+            PixFormatComp img_pixf(patternBuffer); // 获取图片
 
             if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                 ImgSourceTypeRepeat img_src(img_pixf);
