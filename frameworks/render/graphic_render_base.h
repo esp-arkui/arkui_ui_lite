@@ -28,7 +28,6 @@
 
 namespace OHOS {
     template <class PixelFormat>
-
     class RendererBase {
     public:
         typedef PixelFormat pixfmt_type;
