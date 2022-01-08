@@ -100,7 +100,8 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(
             uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
         {
-            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb,
+                                                       (uint8_t)alpha, (uint8_t*)covers);
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -806,23 +807,30 @@ namespace OHOS {
     #ifdef ARM_NEON_OPT
             virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color)
             {
-                blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+                blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue,
+                                      color.blueValue, color.alphaValue);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color, uint8_t cover)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors,
+                                                              const ColorType& color, uint8_t cover)
             {
-                blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue, cover);
+                blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue,
+                                      color.blueValue, color.alphaValue, cover);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors,
+                                                              uint8_t* srcColors, uint8_t srcCover)
             {
                 blender_.NeonBlendPix(dstColors, srcColors, srcCover);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors,
+                                                              uint8_t* srcColors, uint8_t* srcCovers)
             {
                 blender_.NeonBlendPix(dstColors, srcColors, srcCovers);
             }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, const ColorType& srcColors, uint8_t* srcCovers)
+            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, const ColorType& srcColors,
+                                                              uint8_t* srcCovers)
             {
-                blender_.NeonBlendPix(dstColors, srcColors.redValue, srcColors.greenValue, srcColors.blueValue, srcColors.alphaValue, srcCovers);
+                blender_.NeonBlendPix(dstColors, srcColors.redValue, srcColors.greenValue, srcColors.blueValue,
+                                      srcColors.alphaValue, srcCovers);
             }
     #endif
 
