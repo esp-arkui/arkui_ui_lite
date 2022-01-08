@@ -129,13 +129,13 @@ namespace OHOS {
         }
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
         {
-            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors, (uint8_t*)srcColors, (uint8_t)srcCover);
         }
 
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
         {
-            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
-         }
+            BaseGfxEngine::GetInstance()->BlendLerpPix((uint8_t*)dstColors, (uint8_t*)srcColors, (uint8_t*)srcCovers);
+        }
 #endif
         /**
          * @brief 用颜色分量混合像素.
@@ -183,7 +183,6 @@ namespace OHOS {
             uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
         {
             BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)pColor, (uint8_t)cr, (uint8_t)cg, (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
-
         }
         /**
          * @brief 用颜色分量混合像素.
@@ -212,14 +211,12 @@ namespace OHOS {
 
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
         {
-            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t)srcCover);
-
-         }
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors, (uint8_t*)srcColors, (uint8_t)srcCover);
+        }
 
         static GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
         {
-            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors,(uint8_t*)srcColors,(uint8_t*)srcCovers);
-
+            BaseGfxEngine::GetInstance()->BlendPreLerpPix((uint8_t*)dstColors, (uint8_t*)srcColors, (uint8_t*)srcCovers);
         }
 #endif
         /**
@@ -519,7 +516,7 @@ namespace OHOS {
 #ifdef NEON_ARM_OPT
             int16_t step = NEON_STEP_8 * PIX_STEP;
             while (len >= NEON_STEP_8) {
-                OHOS::SetPixelColor_ARGB8888(pixelPtr->colors,color->redValue,
+                OHOS::SetPixelColor_ARGB8888(pixelPtr->colors, color->redValue,
                                              colors->greenValue, colors->blueValue,
                                              colors->alphaValue);
                 pixelPtr = pixelPtr->colors + step;
@@ -648,13 +645,13 @@ namespace OHOS {
             PixelType* pixelPtr = PixValuePtr(x, y, len);
 #ifdef NEON_ARM_OPT
             int16_t step = NEON_STEP_8 * PIX_STEP;
-            const int16_t NEON_STEP_COMPONENTS=NEON_STEP_8 * NUM_COMPONENTS;
+            const int16_t NEON_STEP_COMPONENTS = NEON_STEP_8 * NUM_COMPONENTS;
             uint8_t mColors[NEON_STEP_COMPONENTS];
             while (len >= NEON_STEP_8) {
-                memset_s(mColors,NEON_STEP_COMPONENTS,0,NEON_STEP_COMPONENTS);
-                NeonMemcpy(mColors, NEON_STEP_COMPONENTS,colors,NEON_STEP_COMPONENTS);
+                memset_s(mColors, NEON_STEP_COMPONENTS, 0, NEON_STEP_COMPONENTS);
+                NeonMemcpy(mColors, NEON_STEP_COMPONENTS, colors, NEON_STEP_COMPONENTS);
 
-                OHOS::SetPixelColor_ARGB8888(pixelPtr->colors,mColors);
+                OHOS::SetPixelColor_ARGB8888(pixelPtr->colors, mColors);
                 pixelPtr = pixelPtr->colors + step;
                 colors += NEON_STEP_8;
                 len -= NEON_STEP_8;
@@ -697,11 +694,11 @@ namespace OHOS {
             if (covers) {
 #ifdef NEON_ARM_OPT
                 int16_t step = NEON_STEP_8 * PIX_STEP;
-                const int16_t NEON_STEP_COMPONENTS=NEON_STEP_8 * NUM_COMPONENTS;
+                const int16_t NEON_STEP_COMPONENTS = NEON_STEP_8 * NUM_COMPONENTS;
                 uint8_t mColors[NEON_STEP_COMPONENTS];
                 while (len >= NEON_STEP_8) {
-                    memset_s(mColors,NEON_STEP_COMPONENTS,0,NEON_STEP_COMPONENTS);
-                    NeonMemcpy(mColors, NEON_STEP_COMPONENTS,colors,NEON_STEP_COMPONENTS);
+                    memset_s(mColors, NEON_STEP_COMPONENTS, 0, NEON_STEP_COMPONENTS);
+                    NeonMemcpy(mColors, NEON_STEP_COMPONENTS, colors, NEON_STEP_COMPONENTS);
 
                     NeonBlendPix(pixelPtr->colors, mColors, covers);
                     pixelPtr = pixelPtr->colors + step;
@@ -717,11 +714,11 @@ namespace OHOS {
             } else {
 #ifdef NEON_ARM_OPT
                 int16_t step = NEON_STEP_8 * PIX_STEP;
-                const int16_t NEON_STEP_COMPONENTS=NEON_STEP_8 * NUM_COMPONENTS;
+                const int16_t NEON_STEP_COMPONENTS = NEON_STEP_8 * NUM_COMPONENTS;
                 uint8_t mColors[NEON_STEP_COMPONENTS];
                 while (len >= NEON_STEP_8) {
-                    memset_s(mColors,NEON_STEP_COMPONENTS,0,NEON_STEP_COMPONENTS);
-                    NeonMemcpy(mColors, NEON_STEP_COMPONENTS,colors,NEON_STEP_COMPONENTS);
+                    memset_s(mColors, NEON_STEP_COMPONENTS, 0, NEON_STEP_COMPONENTS);
+                    NeonMemcpy(mColors, NEON_STEP_COMPONENTS, colors, NEON_STEP_COMPONENTS);
 
                     NeonBlendPix(pixelPtr->colors, mColors, cover);
                     pixelPtr = pixelPtr->colors + step;
@@ -803,95 +800,97 @@ namespace OHOS {
                 }
             }
         }
+
     protected:
-    #ifdef ARM_NEON_OPT
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color)
-            {
-                blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue,
-                                      color.blueValue, color.alphaValue);
-            }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors,
-                                                              const ColorType& color, uint8_t cover)
-            {
-                blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue,
-                                      color.blueValue, color.alphaValue, cover);
-            }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors,
-                                                              uint8_t* srcColors, uint8_t srcCover)
-            {
-                blender_.NeonBlendPix(dstColors, srcColors, srcCover);
-            }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors,
-                                                              uint8_t* srcColors, uint8_t* srcCovers)
-            {
-                blender_.NeonBlendPix(dstColors, srcColors, srcCovers);
-            }
-            virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, const ColorType& srcColors,
-                                                              uint8_t* srcCovers)
-            {
-                blender_.NeonBlendPix(dstColors, srcColors.redValue, srcColors.greenValue, srcColors.blueValue,
-                                      srcColors.alphaValue, srcCovers);
-            }
-    #endif
-
-            /**
-             * @brief 用颜色及覆盖率混合到指定像素.
-             *
-             * @since 1.0
-             * @version 1.0
-             */
-            virtual GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
-            {
-                blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue,
+#ifdef ARM_NEON_OPT
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors, const ColorType& color)
+        {
+            blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue,
+                                  color.blueValue, color.alphaValue);
+        }
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(PixelType* pixelColors,
+                                                          const ColorType& color, uint8_t cover)
+        {
+            blender_.NeonBlendPix(pixelColors->colors, color.redValue, color.greenValue,
                                   color.blueValue, color.alphaValue, cover);
-            }
+        }
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors,
+                                                          uint8_t* srcColors, uint8_t srcCover)
+        {
+            blender_.NeonBlendPix(dstColors, srcColors, srcCover);
+        }
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors,
+                                                          uint8_t* srcColors, uint8_t* srcCovers)
+        {
+            blender_.NeonBlendPix(dstColors, srcColors, srcCovers);
+        }
+        virtual GRAPHIC_GEOMETRY_INLINE void NeonBlendPix(uint8_t* dstColors, const ColorType& srcColors,
+                                                          uint8_t* srcCovers)
+        {
+            blender_.NeonBlendPix(dstColors, srcColors.redValue, srcColors.greenValue, srcColors.blueValue,
+                                  srcColors.alphaValue, srcCovers);
+        }
+#endif
 
-            /**
-             * @brief 用颜色混合到指定像素.
-             *
-             * @since 1.0
-             * @version 1.0
-             */
-            virtual GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color)
-            {
-                blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
-            }
-            /**
-             * @brief 用颜色及覆盖率设置或混合到指定像素.
-             *
-             * @since 1.0
-             * @version 1.0
-             */
-            virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr,
-                                                                const ColorType& color, unsigned cover)
-            {
-                if (!color.IsTransparent()) {
-                    if (color.IsOpaque() && cover == COVER_MASK) {
-                        pixelPtr->SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
-                    } else {
-                        blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue,
-                                          color.blueValue, color.alphaValue, cover);
-                    }
+        /**
+         * @brief 用颜色及覆盖率混合到指定像素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        virtual GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color, unsigned cover)
+        {
+            blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue,
+                              color.blueValue, color.alphaValue, cover);
+        }
+
+        /**
+         * @brief 用颜色混合到指定像素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        virtual GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* pixelPtr, const ColorType& color)
+        {
+            blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+        }
+        /**
+         * @brief 用颜色及覆盖率设置或混合到指定像素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr,
+                                                            const ColorType& color, unsigned cover)
+        {
+            if (!color.IsTransparent()) {
+                if (color.IsOpaque() && cover == COVER_MASK) {
+                    pixelPtr->SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
+                } else {
+                    blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue,
+                                      color.blueValue, color.alphaValue, cover);
                 }
             }
+        }
 
-            /**
-             * @brief 用颜色设置或混合到指定像素.
-             *
-             * @since 1.0
-             * @version 1.0.
-             */
-            virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color)
-            {
-                if (!color.IsTransparent()) {
-                    if (color.IsOpaque()) {
-                        pixelPtr->SetPixelColor(color);
-                    } else {
-                        blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue,
-                                          color.blueValue, color.alphaValue);
-                    }
+        /**
+         * @brief 用颜色设置或混合到指定像素.
+         *
+         * @since 1.0
+         * @version 1.0.
+         */
+        virtual GRAPHIC_GEOMETRY_INLINE void CopyOrBlendPix(PixelType* pixelPtr, const ColorType& color)
+        {
+            if (!color.IsTransparent()) {
+                if (color.IsOpaque()) {
+                    pixelPtr->SetPixelColor(color);
+                } else {
+                    blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue,
+                                      color.blueValue, color.alphaValue);
                 }
             }
+        }
+
     protected:
         RbufType* rbuf_;
         Blender blender_;
