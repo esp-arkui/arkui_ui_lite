@@ -1181,7 +1181,7 @@ namespace OHOS {
         if (param == nullptr) {
             return;
         }
-#    if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         TransAffine transform;
         RenderingBuffer renderBuffer;
         // 初始化buffer和 m_transform
@@ -1218,7 +1218,7 @@ namespace OHOS {
         ChangeColor(shadowColor, paint.GetShadowColor(), paint.GetShadowColor().alpha * paint.GetGlobalAlpha());
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
-#        if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
         typedef OHOS::StackBlur<Rgba8Color, OHOS::StackBlurCalcRGBA<>> DrawBlur;
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
         DrawBlur drawBlur;
@@ -1235,8 +1235,8 @@ namespace OHOS {
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
         drawBlur.Blur(pixf2, MATH_UROUND(paint.GetShadowBlur()));
-#        endif
-#    endif
+#endif
+#endif
     }
 #endif
 
