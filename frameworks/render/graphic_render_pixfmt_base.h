@@ -49,7 +49,6 @@ namespace OHOS {
     struct BlenderBase {
         using ColorType = ColorT;
         using OrderType = Order;
-        using ValueType = typename ColorType::ValueType;
 
         /**
          * @brief 把颜色分量设置给颜色.
@@ -57,8 +56,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0.
          */
-        static void SetBlendColor(ValueType* pColor, ValueType redValue, ValueType greenValue, ValueType blueValue,
-                                  ValueType alphaValue)
+        static void SetBlendColor(uint8_t* pColor, uint8_t redValue, uint8_t greenValue, uint8_t blueValue,
+                                  uint8_t alphaValue)
         {
             pColor[OrderType::RED] = redValue;
             pColor[OrderType::GREEN] = greenValue;
@@ -72,7 +71,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static void SetBlendColor(ValueType* pColor, const Rgba& color)
+        static void SetBlendColor(uint8_t* pColor, const Rgba& color)
         {
             pColor[OrderType::RED] = ColorType::FromFloat(color.redValue);
             pColor[OrderType::GREEN] = ColorType::FromFloat(color.greenValue);
@@ -87,8 +86,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0.
          */
-        static Rgba GetBlendColor(ValueType redValue, ValueType greenValue, ValueType blueValue,
-                                  ValueType alphaValue, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(uint8_t redValue, uint8_t greenValue, uint8_t blueValue,
+                                  uint8_t alphaValue, uint8_t cover = COVER_FULL)
         {
             if (cover > COVER_NONE) {
                 Rgba resultColor(ColorType::ToFloat(redValue), ColorType::ToFloat(greenValue),
@@ -115,7 +114,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba GetBlendColor(const ValueType* pColor, CoverType cover = COVER_FULL)
+        static Rgba GetBlendColor(const uint8_t* pColor, uint8_t cover = COVER_FULL)
         {
             return GetBlendColor(pColor[OrderType::RED], pColor[OrderType::GREEN],
                                  pColor[OrderType::BLUE], pColor[OrderType::ALPHA], cover);

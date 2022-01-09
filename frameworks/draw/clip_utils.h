@@ -33,6 +33,10 @@ struct Span : public HeapBase {
 struct PointF {
     float x;
     float y;
+    PointF()
+    {}
+    PointF(float x_, float y_) : x(x_), y(y_)
+    {}
 };
 
 /* Indicates a rectangle in flaot */

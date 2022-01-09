@@ -28,7 +28,6 @@
 
 namespace OHOS {
     template <class PixelFormat>
-
     class RendererBase {
     public:
         typedef PixelFormat pixfmt_type;
@@ -228,7 +227,7 @@ namespace OHOS {
          * @param c 渲染扫描线的颜色
          * @param colors 扫描线对应颜色数组
          */
-        void BlendHline(int x1, int y, int x2, const color_type& color, CoverType cover)
+        void BlendHline(int x1, int y, int x2, const color_type& color, uint8_t cover)
         {
             if (x1 > x2) {
                 int t = x2;
@@ -256,7 +255,7 @@ namespace OHOS {
          * @param c 渲染扫描线的颜色
          * @param colors 扫描线对应颜色数组
          */
-        void BlendSolidHspan(int x, int y, int len, const color_type& color, const CoverType* covers)
+        void BlendSolidHspan(int x, int y, int len, const color_type& color, const uint8_t* covers)
         {
             if (y > GetYmax() || y < GetYmin()) {
                 return;
@@ -317,8 +316,8 @@ namespace OHOS {
          * @param covers 扫描线对应覆盖率数组
          * @param cover 覆盖率
          */
-        void BlendColorHspan(int x, int y, int len, const color_type* colors, const CoverType* covers,
-                             CoverType cover = OHOS::COVER_FULL)
+        void BlendColorHspan(int x, int y, int len, const color_type* colors, const uint8_t* covers,
+                             uint8_t cover = OHOS::COVER_FULL)
         {
             if (y > GetYmax() || y < GetYmin()) {
                 return;
@@ -413,7 +412,7 @@ namespace OHOS {
          */
         template <class SrcPixelFormatRenderer>
         void BlendFrom(const SrcPixelFormatRenderer& src, const RectI* rectSrcPtr = 0, int dx = 0, int dy = 0,
-                       CoverType cover = OHOS::COVER_FULL)
+                       uint8_t cover = OHOS::COVER_FULL)
         {
             RectI rsrc(0, 0, src.Width(), src.Height());
             if (rectSrcPtr) {
@@ -463,6 +462,5 @@ namespace OHOS {
         pixfmt_type* pixfmtType;
         RectI clipBox;
     };
-
 } // namespace OHOS
 #endif

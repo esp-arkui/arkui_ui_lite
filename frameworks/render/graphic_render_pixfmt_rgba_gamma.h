@@ -48,7 +48,8 @@ namespace OHOS {
         using ColorType = ColorT;
         using ValueType = typename ColorType::ValueType;
 
-        ApplyGammaDirRgba(const GammaLut& gamma) : gamma_(gamma)
+        ApplyGammaDirRgba(const GammaLut& gamma) :
+            gamma_(gamma)
         {}
 
         GRAPHIC_GEOMETRY_INLINE void operator()(ValueType* pColor)

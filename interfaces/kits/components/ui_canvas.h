@@ -52,7 +52,6 @@
 #include <gfx_utils/graphics/transform/graphic_transform_image_accessors.h>
 #include <gfx_utils/graphics/vertexprimitive/graphic_geometry_path_storage.h>
 #include <render/graphic_render_pixfmt_rgba_blend.h>
-#include <render/graphic_render_pixfmt_rgba_comp.h>
 
 #include <stack>
 
@@ -67,21 +66,23 @@
 #include "render/graphic_render_scanline.h"
 
 namespace OHOS {
+    class UICanvas;
     /**
- * @brief Defines the basic styles of graphs drawn on canvases.
- *
- * @since 1.0
- * @version 1.0
- */
-    class Paint : public HeapBase {
-    public:
-        /**
-     * @brief A constructor used to create a <b>Paint</b> instance.
+     * @brief Defines the basic styles of graphs drawn on canvases.
      *
      * @since 1.0
      * @version 1.0
      */
-        Paint() : style_(PaintStyle::STROKE_FILL_STYLE),
+    class Paint : public HeapBase {
+    public:
+        /**
+         * @brief A constructor used to create a <b>Paint</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        Paint() :
+            style_(PaintStyle::STROKE_FILL_STYLE),
             fillColor_(Color::Black()),
             strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE),
@@ -101,7 +102,8 @@ namespace OHOS {
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
             rotateAngle_(0),
-            haveComposite_(false)
+            haveComposite_(false),
+            uiCanvas_(nullptr)
         {}
 
         Paint(const Paint& paint)
@@ -182,6 +184,7 @@ namespace OHOS {
             rotateAngle_ = paint.rotateAngle_;
             transfrom_ = paint.transfrom_;
             haveComposite_ = paint.haveComposite_;
+            uiCanvas_ = paint.uiCanvas_;
         }
 
         /**
@@ -395,28 +398,28 @@ namespace OHOS {
         }
 
         /**
-     * @brief Sets the opacity.
-     *
-     * The setting takes effect for the entire graph, including the border, line color, and fill color.
-     *
-     * @param opacity Indicates the opacity. The value range is [0, 255].
-     * @see GetOpacity
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the opacity.
+         *
+         * The setting takes effect for the entire graph, including the border, line color, and fill color.
+         *
+         * @param opacity Indicates the opacity. The value range is [0, 255].
+         * @see GetOpacity
+         * @since 1.0
+         * @version 1.0
+         */
         void SetOpacity(uint8_t opacity)
         {
             opacity_ = opacity;
         }
 
         /**
-     * @brief Obtains the opacity.
-     *
-     * @return Returns the opacity.
-     * @see SetOpacity
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the opacity.
+         *
+         * @return Returns the opacity.
+         * @see SetOpacity
+         * @since 1.0
+         * @version 1.0
+         */
         uint8_t GetOpacity() const
         {
             return opacity_;
@@ -428,44 +431,44 @@ namespace OHOS {
         }
 
         /**
-     * @brief 设置笔帽类型.
-     * @see GetLineCap
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置笔帽类型.
+         * @see GetLineCap
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineCap(LineCapEnum lineCap)
         {
             lineCap_ = lineCap;
             changeFlage_ = true;
         }
         /**
-     * @brief 获取笔帽类型.
-     * @see SetLineCap
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取笔帽类型.
+         * @see SetLineCap
+         * @since 1.0
+         * @version 1.0
+         */
         LineCapEnum GetLineCap() const
         {
             return lineCap_;
         }
 
         /**
-     * @brief 设置笔的路径连接处的风格样式.
-     * @see GetLineJoin
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置笔的路径连接处的风格样式.
+         * @see GetLineJoin
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineJoin(LineJoinEnum lineJoin)
         {
             lineJoin_ = lineJoin;
             changeFlage_ = true;
         }
         /**
-     * @brief 设置路径连接处的尖角的间距限制.
-     * @see GetMiterLimit
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置路径连接处的尖角的间距限制.
+         * @see GetMiterLimit
+         * @since 1.0
+         * @version 1.0
+         */
         void SetMiterLimit(double miterLimit)
         {
             miterLimit_ = miterLimit;
@@ -477,11 +480,11 @@ namespace OHOS {
             return miterLimit_;
         }
         /**
-     * @brief 获取笔的路径连接处的风格样式.
-     * @see SetLineJoin
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取笔的路径连接处的风格样式.
+         * @see SetLineJoin
+         * @since 1.0
+         * @version 1.0
+         */
         LineJoinEnum GetLineJoin() const
         {
             return lineJoin_;
@@ -493,11 +496,11 @@ namespace OHOS {
         }
 
         /**
-     * @brief 设置点划线的数组和数量.
-     * @param lineDashs 表示点划线数组,ndash 表示点划线数量
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置点划线的数组和数量.
+         * @param lineDashs 表示点划线数组,ndash 表示点划线数量
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineDash(float* lineDashs, const unsigned int ndash)
         {
             if (ndash < 0) {
@@ -526,9 +529,9 @@ namespace OHOS {
         }
 
         /**
-     * @brief 获取dash数组
-     * @return
-     */
+         * @brief 获取dash数组
+         * @return
+         */
         float* GetLineDash() const
         {
             return dashArray_;
@@ -540,11 +543,11 @@ namespace OHOS {
         }
 
         /**
-     * @brief 设置dash模式起点的偏移量
-     * @see GetLineDashOffset
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置dash模式起点的偏移量
+         * @see GetLineDashOffset
+         * @since 1.0
+         * @version 1.0
+         */
         void SetLineDashOffset(float offset)
         {
             dashOffset_ = offset; // dash 点偏移量
@@ -553,19 +556,19 @@ namespace OHOS {
         }
 
         /**
-     * @brief 获取dash数组长度
-     * @return
-     */
+         * @brief 获取dash数组长度
+         * @return
+         */
         unsigned int GetLineDashCount() const
         {
             return ndashes_;
         }
 
         /**
-     * @brief 清空点划线的，改用实现绘制.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 清空点划线的，改用实现绘制.
+         * @since 1.0
+         * @version 1.0
+         */
         void ClearLineDash(void)
         {
             dashOffset_ = 0;
@@ -631,9 +634,9 @@ namespace OHOS {
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /*
-     * 设置图元用图案填充样式
-     * @param img 表示填充的图案，text表示填充样式
-     */
+         * 设置图元用图案填充样式
+         * @param img 表示填充的图案，text表示填充样式
+         */
         void CreatePattern(const char* img, PatternRepeatMode patternRepeat)
         {
             image = img;
@@ -655,10 +658,10 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
 
         /**
-     * @brief 设置阴影模糊级别.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置阴影模糊级别.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowBlur(double radius)
         {
             shadowBlurRadius = radius;
@@ -666,67 +669,67 @@ namespace OHOS {
         }
 
         /**
-     * @brief 获取阴影模糊级别.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取阴影模糊级别.
+         * @since 1.0
+         * @version 1.0
+         */
         double GetShadowBlur() const
         {
             return shadowBlurRadius;
         }
 
         /**
-     * @brief 获取阴影横坐标偏移量.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取阴影横坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         double GetShadowOffsetX() const
         {
             return shadowOffsetX;
         }
         /**
-     * @brief 设置阴影横坐标偏移量.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置阴影横坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowOffsetX(double offset)
         {
             shadowOffsetX = offset;
             changeFlage_ = true;
         }
         /**
-     * @brief 获取阴影纵坐标偏移量.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取阴影纵坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         double GetShadowOffsetY() const
         {
             return shadowOffsetY;
         }
         /**
-     * @brief 设置阴影纵坐标偏移量.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置阴影纵坐标偏移量.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowOffsetY(double offset)
         {
             shadowOffsetY = offset;
             changeFlage_ = true;
         }
         /**
-     * @brief 获取阴影的颜色值.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取阴影的颜色值.
+         * @since 1.0
+         * @version 1.0
+         */
         ColorType GetShadowColor() const
         {
             return shadowColor;
         }
         /**
-     * @brief 设置阴影的颜色值.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 设置阴影的颜色值.
+         * @since 1.0
+         * @version 1.0
+         */
         void SetShadowColor(ColorType color)
         {
             shadowColor = color;
@@ -739,8 +742,8 @@ namespace OHOS {
         }
 #endif
         /**
-     * @brief 设置当前绘图的alpha
-     */
+         * @brief 设置当前绘图的alpha
+         */
         void SetGlobalAlpha(float alphaPercentage)
         {
             if (alphaPercentage > 1) {
@@ -755,28 +758,28 @@ namespace OHOS {
             changeFlage_ = true;
         }
         /**
-     * @brief 返回当前绘图的alpha
-     */
+         * @brief 返回当前绘图的alpha
+         */
         float GetGlobalAlpha() const
         {
             return globalAlpha_;
         }
 
         /**
-     * @brief 设置混合模式
-     */
+         * @brief 设置混合模式
+         */
         void SetGlobalCompositeOperation(GlobalCompositeOperation globalCompositeOperation)
         {
             globalCompositeOperation_ = globalCompositeOperation;
             changeFlage_ = true;
-            if(globalCompositeOperation!=SOURCE_OVER){
+            if (globalCompositeOperation != SOURCE_OVER) {
                 haveComposite_ = true;
             }
         }
 
         /**
-     * @brief 获取混合模式
-     */
+         * @brief 获取混合模式
+         */
         GlobalCompositeOperation GetGlobalCompositeOperation() const
         {
             return globalCompositeOperation_;
@@ -803,7 +806,7 @@ namespace OHOS {
 
         double GetScaleY() const
         {
-            return transfrom_.GetData()[4];
+            return transfrom_.GetData()[INDEX_FOUR];
         }
 
         /* 旋转当前绘图 */
@@ -832,12 +835,12 @@ namespace OHOS {
         /* 获取重新映射画布上的x 位置 */
         int16_t GetTranslateX() const
         {
-            return transfrom_.GetData()[2];
+            return transfrom_.GetData()[INDEX_TWO];
         }
         /* 获取重新映射画布上的y 位置 */
         int16_t GetTranslateY() const
         {
-            return transfrom_.GetData()[5];
+            return transfrom_.GetData()[INDEX_FIVE];
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -854,22 +857,22 @@ namespace OHOS {
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
             changeFlage_ = true;
-            transLateX += transfrom_.GetData()[2];
-            transLateY += transfrom_.GetData()[5];
-            transfrom_.Translate(-transfrom_.GetData()[2], -transfrom_.GetData()[5]);
+            transLateX += transfrom_.GetData()[INDEX_TWO];
+            transLateY += transfrom_.GetData()[INDEX_FIVE];
+            transfrom_.Translate(-transfrom_.GetData()[INDEX_TWO], -transfrom_.GetData()[INDEX_FIVE]);
             Scale(scaleX, scaleY);
             transfrom_.Translate(transLateX, transLateY);
-            transfrom_.SetData(1, transfrom_.GetData()[1]+shearX);
-            transfrom_.SetData(3, transfrom_.GetData()[3]+shearY);
+            transfrom_.SetData(INDEX_ONE, transfrom_.GetData()[INDEX_ONE] + shearX);
+            transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE] + shearY);
         }
 
         double GetshearX() const
         {
-            return transfrom_.GetData()[1];
+            return transfrom_.GetData()[INDEX_ONE];
         }
         double GetshearY() const
         {
-            return transfrom_.GetData()[3];
+            return transfrom_.GetData()[INDEX_THREE];
         }
         TransAffine GetTransAffine() const
         {
@@ -879,6 +882,16 @@ namespace OHOS {
         float GetRotateAngle() const
         {
             return rotateAngle_;
+        }
+
+        void SetUICanvas(UICanvas* uiCanvas)
+        {
+            this->uiCanvas_ = uiCanvas;
+        }
+
+        UICanvas* GetUICanvas() const
+        {
+            return uiCanvas_;
         }
 
         bool HaveComposite() const
@@ -922,6 +935,7 @@ namespace OHOS {
         float rotateAngle_;                                 // 旋转角度，单位度数
         TransAffine transfrom_;                             // 矩阵
         bool haveComposite_;
+        UICanvas* uiCanvas_;
     };
 
     /**
@@ -941,9 +955,9 @@ namespace OHOS {
         typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
         typedef RendererBase<PixFormat> RendererBase;
 
-        typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
-        typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, RenderingBuffer> PixFormatComp;
-        typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
+//        typedef OHOS::RgbaBlender<Rgba8Color, ComponentOrder> BlenderComp;
+//        typedef OHOS::PixfmtAlphaBlendRgba<BlenderComp, RenderingBuffer> PixFormat;
+//        typedef OHOS::RendererBase<PixFormat> RendererBase;
 
         typedef ScanlineUnPackedContainer Scanline;
         typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
@@ -965,13 +979,13 @@ namespace OHOS {
         // 渲染器缓冲区
         typedef OHOS::RenderingBuffer PatternBuffer;
         // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
-        typedef OHOS::ImageAccessorWrap<PixFormatComp, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
+        typedef OHOS::ImageAccessorWrap<PixFormat, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
         // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
-        typedef OHOS::ImageAccessorRepeatX<PixFormatComp, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
+        typedef OHOS::ImageAccessorRepeatX<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
         // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
-        typedef OHOS::ImageAccessorRepeatY<PixFormatComp, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
+        typedef OHOS::ImageAccessorRepeatY<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
         // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
-        typedef OHOS::ImageAccessorNoRepeat<PixFormatComp> imgSourceTypeNoRepeat;
+        typedef OHOS::ImageAccessorNoRepeat<PixFormat> imgSourceTypeNoRepeat;
         // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
         //  x,y轴都重复
         typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
@@ -982,217 +996,215 @@ namespace OHOS {
         // 不重复
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 
-
-
-
         /**
-     * @brief A constructor used to create a <b>UICanvas</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-        UICanvas() : startPoint_({0, 0}), vertices_(nullptr)
+         * @brief A constructor used to create a <b>UICanvas</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        UICanvas() :
+            startPoint_({0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
         {}
 
         /**
-     * @brief A destructor used to delete the <b>UICanvas</b> instance.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief A destructor used to delete the <b>UICanvas</b> instance.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         virtual ~UICanvas();
 
         /**
-     * @brief Obtains the view type.
-     *
-     * @return Returns the view type. For details, see {@link UIViewType}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the view type.
+         *
+         * @return Returns the view type. For details, see {@link UIViewType}.
+         * @since 1.0
+         * @version 1.0
+         */
         UIViewType GetViewType() const override
         {
             return UI_CANVAS;
         }
 
         /**
-     * @brief Clears the entire canvas.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Clears the entire canvas.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         void Clear();
 
         /**
-     * @brief Sets the coordinates of the start point for drawing a line. For example, if <b>startPoint</b> is
-     *        set to {50, 50}, the line is drawn from this set of coordinates on the canvas.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @see GetStartPosition
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Sets the coordinates of the start point for drawing a line. For example, if <b>startPoint</b> is
+         *        set to {50, 50}, the line is drawn from this set of coordinates on the canvas.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @see GetStartPosition
+         * @since 1.0
+         * @version 1.0
+         */
         void SetStartPosition(const Point& startPoint)
         {
             startPoint_ = startPoint;
         }
 
         /**
-     * @brief Obtains the coordinates of the start point of a line.
-     *
-     * @return Returns the coordinates of the start point.
-     * @see SetStartPosition
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Obtains the coordinates of the start point of a line.
+         *
+         * @return Returns the coordinates of the start point.
+         * @see SetStartPosition
+         * @since 1.0
+         * @version 1.0
+         */
         const Point& GetStartPosition() const
         {
             return startPoint_;
         }
 
         /**
-     * @brief Draws a straight line.
-     *
-     * If {@link SetStartPosition} is not used to set the coordinates of the start point of the line, the drawing
-     * starts from the end point of the last line.
-     *
-     * @param endPoint Indicates the end point of the straight line.
-     * @param paint    Indicates the straight line style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a straight line.
+         *
+         * If {@link SetStartPosition} is not used to set the coordinates of the start point of the line, the drawing
+         * starts from the end point of the last line.
+         *
+         * @param endPoint Indicates the end point of the straight line.
+         * @param paint    Indicates the straight line style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawLine(const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a straight line from the coordinates of the start point.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param endPoint   Indicates the coordinates of the end point.
-     * @param paint      Indicates the straight line style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a straight line from the coordinates of the start point.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param endPoint   Indicates the coordinates of the end point.
+         * @param paint      Indicates the straight line style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawLine(const Point& startPoint, const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a cubic Bezier curve.
-     *
-     * If {@link SetStartPosition} is not used to set the coordinates of the start point of the curve,
-     * the drawing starts from the end point of the last line.
-     * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
-     *
-     * @param control1 Indicates the coordinates of the first control point of the cubic Bezier curve.
-     * @param control2 Indicates the coordinates of the second control point of the cubic Bezier curve.
-     * @param endPoint Indicates the coordinates of the end point of the cubic Bezier curve.
-     * @param paint    Indicates the curve style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a cubic Bezier curve.
+         *
+         * If {@link SetStartPosition} is not used to set the coordinates of the start point of the curve,
+         * the drawing starts from the end point of the last line.
+         * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
+         *
+         * @param control1 Indicates the coordinates of the first control point of the cubic Bezier curve.
+         * @param control2 Indicates the coordinates of the second control point of the cubic Bezier curve.
+         * @param endPoint Indicates the coordinates of the end point of the cubic Bezier curve.
+         * @param paint    Indicates the curve style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawCurve(const Point& control1, const Point& control2, const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a cubic Bezier curve from the start point coordinates.
-     *
-     * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
-     *
-     * @param startPoint Indicates the coordinates of the start point of the cubic Bezier curve.
-     * @param control1   Indicates the coordinates of the first control point of the cubic Bezier curve.
-     * @param control2   Indicates the coordinates of the second control point of the cubic Bezier curve.
-     * @param endPoint   Indicates the coordinates of the end point of the cubic Bezier curve.
-     * @param paint      Indicates the curve style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a cubic Bezier curve from the start point coordinates.
+         *
+         * Currently, the opacity cannot be set, and the maximum line width is <b>3</b>.
+         *
+         * @param startPoint Indicates the coordinates of the start point of the cubic Bezier curve.
+         * @param control1   Indicates the coordinates of the first control point of the cubic Bezier curve.
+         * @param control2   Indicates the coordinates of the second control point of the cubic Bezier curve.
+         * @param endPoint   Indicates the coordinates of the end point of the cubic Bezier curve.
+         * @param paint      Indicates the curve style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawCurve(const Point& startPoint, const Point& control1, const Point& control2,
                        const Point& endPoint, const Paint& paint);
 
         /**
-     * @brief Draws a rectangle.
-     *
-     * @param startPoint Indicates the coordinates of the point at the upper left corner of the rectangle.
-     * @param height     Indicates the height of the rectangle.
-     * @param width      Indicates the width of the rectangle.
-     * @param paint      Indicates the rectangle style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a rectangle.
+         *
+         * @param startPoint Indicates the coordinates of the point at the upper left corner of the rectangle.
+         * @param height     Indicates the height of the rectangle.
+         * @param width      Indicates the width of the rectangle.
+         * @param paint      Indicates the rectangle style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
         /**
-     * @brief 绘制矩形路径无填充
-     * @param startPoint 起点
-     * @param height 高度
-     * @param width 宽度
-     * @param paint 画笔
-     */
+         * @brief 绘制矩形路径无填充
+         * @param startPoint 起点
+         * @param height 高度
+         * @param width 宽度
+         * @param paint 画笔
+         */
         void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
         /**
-     * @brief 清除矩形内的像素
-     * @param startPoint 起点
-     * @param height 高度
-     * @param width 宽度
-     * @param paint 画笔
-     */
+         * @brief 清除矩形内的像素
+         * @param startPoint 起点
+         * @param height 高度
+         * @param width 宽度
+         * @param paint 画笔
+         */
         void ClearRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
         /**
-     * @brief Draws a circle.
-     *
-     * @param center Indicates the coordinates of the circle center.
-     * @param radius Indicates the radius of the circle.
-     * @param paint  Indicates the circle style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a circle.
+         *
+         * @param center Indicates the coordinates of the circle center.
+         * @param radius Indicates the radius of the circle.
+         * @param paint  Indicates the circle style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawCircle(const Point& center, uint16_t radius, const Paint& paint);
 
         /**
-     * @brief Draws a sector.
-     *
-     * When the start angle is smaller than the end angle, the sector is drawn clockwise.
-     * Otherwise, the sector is drawn counterclockwise.
-     *
-     * @param center     Indicates the coordinates of the sector's center.
-     * @param radius     Indicates the radius of the sector.
-     * @param startAngle Indicates the start angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param paint      Indicates the sector style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws a sector.
+         *
+         * When the start angle is smaller than the end angle, the sector is drawn clockwise.
+         * Otherwise, the sector is drawn counterclockwise.
+         *
+         * @param center     Indicates the coordinates of the sector's center.
+         * @param radius     Indicates the radius of the sector.
+         * @param startAngle Indicates the start angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param endAngle   Indicates the end angle of the sector. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param paint      Indicates the sector style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawSector(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
         /**
-     * @brief Draws an arc.
-     *
-     * Only stroke is supported. \n
-     * When the start angle is smaller than the end angle, the sector is drawn clockwise.
-     * Otherwise, the sector is drawn counterclockwise. \n
-     *
-     * @param center     Indicates the coordinates of the arc's center.
-     * @param radius     Indicates the radius of the arc.
-     * @param startAngle Indicates the start angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param paint      Indicates the arc style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws an arc.
+         *
+         * Only stroke is supported. \n
+         * When the start angle is smaller than the end angle, the sector is drawn clockwise.
+         * Otherwise, the sector is drawn counterclockwise. \n
+         *
+         * @param center     Indicates the coordinates of the arc's center.
+         * @param radius     Indicates the radius of the arc.
+         * @param startAngle Indicates the start angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param endAngle   Indicates the end angle of the arc. Value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param paint      Indicates the arc style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
         /**
-     * @brief Draws an image.
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param image      Indicates the pointer to the image source.
-     * @param paint      Indicates the image style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws an image.
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param image      Indicates the pointer to the image source.
+         * @param paint      Indicates the image style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
         void DrawImage(const Point& startPoint, const char* image, Paint& paint, int16_t width, int16_t height);
@@ -1200,8 +1212,8 @@ namespace OHOS {
         bool IsGif(const char* src);
 #endif
         /**
-     * @brief Defines the font style.
-     */
+         * @brief Defines the font style.
+         */
         struct FontStyle {
             /** Text direction. For details, see {@link UITextLanguageDirect}. */
             UITextLanguageDirect direct;
@@ -1216,102 +1228,104 @@ namespace OHOS {
         };
 
         /**
-     * @brief Draws text.
-     *
-     * Only fill is supported. \n
-     * If the text length exceeds the value of <b>maxWidth</b>, the text will be truncated. \n
-     *
-     * @param startPoint Indicates the coordinates of the start point.
-     * @param text       Indicates the pointer to the text content.
-     * @param maxWidth   Indicates the maximum width of the text that can be displayed. If the maximum width is
-     *                   exceeded, the text is truncated.
-     * @param fontStyle  Indicates the text layout and font style. For details, see {@link FontStyle}.
-     * @param paint      Indicates the text style. For details, see {@link Paint}.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief Draws text.
+         *
+         * Only fill is supported. \n
+         * If the text length exceeds the value of <b>maxWidth</b>, the text will be truncated. \n
+         *
+         * @param startPoint Indicates the coordinates of the start point.
+         * @param text       Indicates the pointer to the text content.
+         * @param maxWidth   Indicates the maximum width of the text that can be displayed. If the maximum width is
+         *                   exceeded, the text is truncated.
+         * @param fontStyle  Indicates the text layout and font style. For details, see {@link FontStyle}.
+         * @param paint      Indicates the text style. For details, see {@link Paint}.
+         * @since 1.0
+         * @version 1.0
+         */
         void DrawLabel(const Point& startPoint, const char* text, uint16_t maxWidth, const FontStyle& fontStyle,
                        const Paint& paint);
 
         /**
-     * @brief Creates a path.
-     *
-     * A round corner can be used to join two lines. Currently, miter and bevel joints are not supported.
-     * To draw this path, you need to call {@link DrawPath}.
-     *
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates a path.
+         *
+         * A round corner can be used to join two lines. Currently, miter and bevel joints are not supported.
+         * To draw this path, you need to call {@link DrawPath}.
+         *
+         * @since 3.0
+         * @version 5.0
+         */
         void BeginPath();
 
         /**
-     * @brief Moves the start point of this path to a specified point.
-     *
-     * @param point Indicates the specified point to move to.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Moves the start point of this path to a specified point.
+         *
+         * @param point Indicates the specified point to move to.
+         * @since 3.0
+         * @version 5.0
+         */
         void MoveTo(const Point& point);
 
         /**
-     * @brief Creates a straight line from the end point of this path to a specified point.
-     *
-     * @param point Indicates the coordinates of the specified point.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates a straight line from the end point of this path to a specified point.
+         *
+         * @param point Indicates the coordinates of the specified point.
+         * @since 3.0
+         * @version 5.0
+         */
         void LineTo(const Point& point);
 
         /**
-     * @brief Creates an arc path.
-     *
-     * @param center     Indicates the coordinates of the arc's center point.
-     * @param radius     Indicates the radius of the arc.
-     * @param startAngle Indicates the start angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
-     *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates an arc path.
+         *
+         * @param center     Indicates the coordinates of the arc's center point.
+         * @param radius     Indicates the radius of the arc.
+         * @param startAngle Indicates the start angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @param endAngle   Indicates the end angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+         *                   and <b>90</b> indicates the 3-o'clock direction.
+         * @since 3.0
+         * @version 5.0
+         */
         void ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle);
 
         /**
-     * @brief Creates a rectangular path.
-     *
-     * @param point  Indicates the coordinates of the rectangle's upper left corner.
-     * @param height Indicates the height of the rectangle.
-     * @param width  Indicates the width of the rectangle.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Creates a rectangular path.
+         *
+         * @param point  Indicates the coordinates of the rectangle's upper left corner.
+         * @param height Indicates the height of the rectangle.
+         * @param width  Indicates the width of the rectangle.
+         * @since 3.0
+         * @version 5.0
+         */
         void AddRect(const Point& point, int16_t height, int16_t width);
 
         /**
-     * @brief Closes this path.
-     *
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Closes this path.
+         *
+         * @since 3.0
+         * @version 5.0
+         */
         void ClosePath();
 
         /**
-     * @brief Draws this path.
-     *
-     * @param paint Indicates the path style. For details, see {@link Paint}.
-     * @since 3.0
-     * @version 5.0
-     */
+         * @brief Draws this path.
+         *
+         * @param paint Indicates the path style. For details, see {@link Paint}.
+         * @since 3.0
+         * @version 5.0
+         */
         void DrawPath(const Paint& paint);
 
         /**
-     * @brief 填充多边形路径
-     * @param paint
-     */
+         * @brief 填充多边形路径
+         * @param paint
+         */
         void FillPath(const Paint& paint);
 
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
         /*  在画布上绘制文本 */
         void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
+#endif
 
         /* 返回包含指定文本宽度的对象 */
         Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
@@ -1410,8 +1424,7 @@ namespace OHOS {
         List<DrawCmd> drawCmdList_;
         // 保存Paint的历史修改信息
         std::stack<Paint> PaintStack;
-
-
+        BufferInfo* gfxMapBuffer_;
 
         static void DeleteLineParam(void* param)
         {
@@ -1467,11 +1480,15 @@ namespace OHOS {
         static void DeletePathParam(void* param)
         {
             PathParam* pathParam = static_cast<PathParam*>(param);
-            pathParam->vertices->FreeAll();
+            if(pathParam->vertices != nullptr) {
+                pathParam->vertices->FreeAll();
+                pathParam->vertices = nullptr;
+            }
             if (pathParam->imageParam != nullptr) {
                 DeleteImageParam(pathParam->imageParam);
             }
             delete pathParam;
+            pathParam = nullptr;
         }
 
         static void DeleteTextParam(void* param)
@@ -1579,22 +1596,25 @@ namespace OHOS {
                                  const Style& style,
                                  const bool& isStroke);
 #endif
+
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
         static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
                                const Rect& invalidatedArea, const Style& style);
+#endif
         /**
-     * @brief CopyBuffer 复制buffer
-     * @param gfxMapBuffer 复制后的buffer
-     * @param gfxDstBuffer 原buffer
-     */
+         * @brief CopyBuffer 复制buffer
+         * @param gfxMapBuffer 复制后的buffer
+         * @param gfxDstBuffer 原buffer
+         */
         static void CopyBuffer(BufferInfo& gfxMapBuffer, BufferInfo& gfxDstBuffer);
 
         /**
-     * 组装参数设置线宽，LineCap，LineJoin
-     */
+         * 组装参数设置线宽，LineCap，LineJoin
+         */
         template <class LineStyle>
         static void LineStyleCalc(DepictStroke<LineStyle>& strokeLineStyle, const Paint& paint)
         {
-            strokeLineStyle.Width(paint.GetStrokeWidth()); //线条样式相关
+            strokeLineStyle.Width(paint.GetStrokeWidth()); // 线条样式相关
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             strokeLineStyle.LineCap(paint.GetLineCap());
 #endif
@@ -1607,8 +1627,8 @@ namespace OHOS {
         };
 
         /**
-     * 设置linedash样式
-     */
+         * 设置linedash样式
+         */
         template <class LineDashStyle>
         static void LineDashStyleCalc(DepictDash<LineDashStyle>& dashStyle, const Paint& paint)
         {
@@ -1619,8 +1639,8 @@ namespace OHOS {
         };
 
         /**
-     * 渲染单色的多边形路径和填充
-     */
+         * 渲染单色的多边形路径和填充
+         */
         template <class Pixfmt>
         static void RenderSolid(const Paint& paint,
                                 RasterizerScanlineAntiAlias<>& rasterizer,
@@ -1641,12 +1661,12 @@ namespace OHOS {
             if (isStroke) {
                 if (paint.GetStyle() == Paint::STROKE_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color,paint.GetStrokeColor(),paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
+                    ChangeColor(color, paint.GetStrokeColor(), paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
                 }
             } else {
                 if (paint.GetStyle() == Paint::FILL_STYLE ||
                     paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color,paint.GetFillColor(),paint.GetFillColor().alpha * paint.GetGlobalAlpha());
+                    ChangeColor(color, paint.GetFillColor(), paint.GetFillColor().alpha * paint.GetGlobalAlpha());
                 }
             }
         }
@@ -1663,8 +1683,8 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
-     * 渲染渐变
-     */
+         * 渲染渐变
+         */
         template <class Pixfmt, class color>
         static void RenderGradient(const Paint& paint,
                                    RasterizerScanlineAntiAlias<>& rasterizer,
@@ -1676,8 +1696,8 @@ namespace OHOS {
         {
             Scanline scanline;
 
-            PixFormatComp pixFormatComp(renderBuffer);
-            RendererBaseComp m_renBaseComp(pixFormatComp);
+            PixFormat pixFormatComp(renderBuffer);
+            RendererBase m_renBaseComp(pixFormatComp);
 
             m_renBaseComp.ResetClipping(true);
             m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
@@ -1686,7 +1706,6 @@ namespace OHOS {
             InterpolatorType interpolatorType(gradientMatrix);
             GradientColorMode gradientColorMode;
             BuildGradientColor(paint,gradientColorMode);
-
             if (paint.GetGradient() == Paint::Linear) {
                 Paint::LinearGradientPoint linearPoint = paint.GetLinearGradientPoint();
 
@@ -1701,19 +1720,6 @@ namespace OHOS {
                                        (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
                 GradientLinearCalculate gradientLinearCalculate;
                 LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
-
-//                span.RemoveAll();
-//                ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
-//                uint16_t count = 0;
-//                for (; count < paint.getStopAndColor().Size(); count++) {
-//                    ColorType stopColor = iter->data_.color;
-//                    Srgba8 srgba8Color;
-//                    ChangeColor(srgba8Color,stopColor,stopColor.alpha * paint.GetGlobalAlpha());
-//                    span.AddColor(iter->data_.stop, srgba8Color);
-//                    iter = iter->next_;
-//                }
-//                span.BuildLut();
-
                 RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
             }
 
@@ -1729,19 +1735,6 @@ namespace OHOS {
                                                                 radialPoint.y0 - radialPoint.y1);
                 RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
                                         startRadius, endRadius);
-
-//                span.RemoveAll();
-//                ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
-//                uint16_t count = 0;
-//                for (; count < paint.getStopAndColor().Size(); count++) {
-//                    ColorType stopColor = iter->data_.color;
-//                    Srgba8 srgba8Color;
-//                    ChangeColor(srgba8Color,stopColor,stopColor.alpha * paint.GetGlobalAlpha());
-//                    span.AddColor(iter->data_.stop, srgba8Color);
-//                    iter = iter->next_;
-//                }
-//                span.BuildLut();
-
                 RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
             }
         }
@@ -1803,8 +1796,8 @@ namespace OHOS {
                                    const Rect& invalidatedArea)
         {
             Scanline scanline;
-            PixFormatComp pixFormatComp(renderBuffer);
-            RendererBaseComp m_renBaseComp(pixFormatComp);
+            PixFormat pixFormatComp(renderBuffer);
+            RendererBase m_renBaseComp(pixFormatComp);
             m_renBaseComp.ResetClipping(true);
             m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
                                   invalidatedArea.GetRight(), invalidatedArea.GetBottom());
@@ -1906,7 +1899,7 @@ namespace OHOS {
                                      imageParam->width,
                                      imageParam->height,
                                      imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-                PixFormatComp img_pixf(patternBuffer); // 获取图片
+                PixFormat img_pixf(patternBuffer); // 获取图片
 
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                     ImgSourceTypeRepeat img_src(img_pixf);
@@ -1937,8 +1930,8 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /**
-     * 渲染Pattern模式
-     */
+         * 渲染Pattern模式
+         */
         template <class Pixfmt, class color>
         static void RenderPattern(const Paint& paint,
                                   void* param,
@@ -1963,7 +1956,7 @@ namespace OHOS {
                                  imageParam->width,
                                  imageParam->height,
                                  imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-            PixFormatComp img_pixf(patternBuffer); // 获取图片
+            PixFormat img_pixf(patternBuffer); // 获取图片
 
             if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                 ImgSourceTypeRepeat img_src(img_pixf);
@@ -1988,12 +1981,17 @@ namespace OHOS {
         }
 #endif
         template <class Color>
-        static void ChangeColor(Color& color,ColorType colorType,int8u alpha){
+        static void ChangeColor(Color& color, ColorType colorType, uint8_t alpha)
+        {
             color.redValue = colorType.red;
             color.greenValue = colorType.green;
             color.blueValue = colorType.blue;
             color.alphaValue = alpha;
         }
+
+        void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
+        BufferInfo* UpdateMapBufferInfo(const BufferInfo& srcBuff, const Rect& rect);
+        void DestroyMapBufferInfo();
     };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H
