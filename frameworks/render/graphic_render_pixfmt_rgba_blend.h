@@ -892,7 +892,6 @@ namespace OHOS {
                 }
             }
         }
-
     protected:
         RbufType* rbuf_;
         Blender blender_;
