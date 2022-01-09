@@ -30,7 +30,6 @@
 #include "gif_lib.h"
 
 namespace OHOS {
-
     class GifCanvasImageAnimator;
     struct ImageParam : public HeapBase {
         Point start;
@@ -62,7 +61,7 @@ namespace OHOS {
             CloseGifFile();
         }
 
-        virtual ~GifCanvasImageAnimator()
+        virtual ~GifCanvasImageAnimator() override
         {
             image_ = nullptr;
             CloseGifFile();
@@ -81,7 +80,7 @@ namespace OHOS {
                               const SavedImage* savedImage,
                               GraphicsControlBlock gcb,
                               const ColorMapObject* colorMap) const;
-        const void OpenGifFile(const char* src);
+        void OpenGifFile(const char* src);
         void CloseGifFile();
         void SetImage(ImageParam* image);
         Point GetSize()

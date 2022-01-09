@@ -22,7 +22,7 @@
 namespace OHOS {
     const int HUNDREDTHS = 10;
     const int GIF_PIX_SIZE = 4;
-    const void GifCanvasImageAnimator::OpenGifFile(const char* src)
+    void GifCanvasImageAnimator::OpenGifFile(const char* src)
     {
         int32_t error = D_GIF_SUCCEEDED;
         GifFileType* gifFileType = DGifOpenFileName(src, &error);
@@ -131,7 +131,9 @@ namespace OHOS {
                                                   GraphicsControlBlock gcb,
                                                   const ColorMapObject* colorMap) const
     {
-        if ((gifFileType == nullptr) || (gifImageDesc == nullptr) || (savedImage == nullptr) || (savedImage->RasterBits == nullptr) || (colorMap == nullptr) || (colorMap->Colors == nullptr)) {
+        if ((gifFileType == nullptr) || (gifImageDesc == nullptr)
+                || (savedImage == nullptr) || (savedImage->RasterBits == nullptr)
+                || (colorMap == nullptr) || (colorMap->Colors == nullptr)) {
             return;
         }
         uint8_t colorIndex = 0;

@@ -462,6 +462,5 @@ namespace OHOS {
         pixfmt_type* pixfmtType;
         RectI clipBox;
     };
-
 } // namespace OHOS
 #endif

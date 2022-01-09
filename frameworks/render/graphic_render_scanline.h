@@ -301,7 +301,6 @@ namespace OHOS {
                             }
                         }
                         ++span1;
-
                     } else {
                         if (span2->spanLength > 0) {
                             renBase.BlendSolidHspan(x2, y2, (unsigned)span2->spanLength,
@@ -632,7 +631,6 @@ namespace OHOS {
                         }
                         ++span;
                     }
-
                 } while (raster1.SweepScanline(scanline1));
             }
 

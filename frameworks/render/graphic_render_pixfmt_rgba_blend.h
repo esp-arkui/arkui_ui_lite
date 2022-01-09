@@ -907,13 +907,6 @@ namespace OHOS {
             COMP_OP_VALUE = 3
         };
 
-    private:
-        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
-        {
-            PixfmtCustomBlendRgba<Blender, RenBuf>::blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue,
-                                                                      c.blueValue, c.alphaValue, cover);
-        }
-
     public:
         PixfmtCustomBlendRgba() :
             rbuf_(0), compOp_(COMP_OP_VALUE)
@@ -1104,6 +1097,13 @@ namespace OHOS {
                     pdst = pdst->Advance(dstinc);
                 } while (--len);
             }
+        }
+
+    private:
+        GRAPHIC_GEOMETRY_INLINE void BlendPix(PixelType* p, const ColorType& c, unsigned cover = COVER_FULL)
+        {
+            PixfmtCustomBlendRgba<Blender, RenBuf>::blender_.BlendPix(compOp_, p->colors, c.redValue, c.greenValue,
+                                                                      c.blueValue, c.alphaValue, cover);
         }
 
     private:
