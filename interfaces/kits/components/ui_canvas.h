@@ -1437,7 +1437,6 @@ namespace OHOS {
             if (pathParam->imageParam != nullptr) {
                 DeleteImageParam(pathParam->imageParam);
             }
-
             delete pathParam;
             pathParam = nullptr;
         }
