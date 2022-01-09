@@ -674,7 +674,6 @@ namespace OHOS {
         ListNode<DrawCmd>* curDrawEnd = drawCmdList_.Begin();
         RasterizerScanlineAntiAlias<> blendRasterizer;
         typedef SpanSoildColor<Rgba8Color> SpanSoildColor;
-
         DrawCmd drawCmd;
         int count=0;
         for (; curDrawEnd != drawCmdList_.End(); curDrawEnd = curDrawEnd->next_) {
@@ -683,76 +682,14 @@ namespace OHOS {
                 count++;
             }
         }
-
         if (drawCmd.param == nullptr) {
             return;
         }
-        PathParam* pathParam = static_cast<PathParam*>(drawCmd.param);
-
+        PathParam* pathParamBlend = static_cast<PathParam*>(drawCmd.param);
         ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, *style_, curDraw->data_.paint);
-
-        blendRasterizer.ClipBox(0, 0, trunc.GetWidth(), trunc.GetHeight());
-        SetRasterizer(*pathParam->vertices, drawCmd.paint, blendRasterizer, transform, pathParam->isStroke);
-
-        Rgba8Color blendColor;
-        if (isSoild(drawCmd.paint)) {
-            RenderBlendSolid(drawCmd.paint,blendColor,pathParam->isStroke);
-        }
-        SpanSoildColor spanBlendSoildColor(blendColor);
-
-        if (drawCmd.paint.GetStyle() == Paint::GRADIENT) {
-                TransAffine gradientMatrix;
-                InterpolatorType interpolatorType(gradientMatrix);
-                GradientColorMode gradientColorMode;
-                gradientColorMode.RemoveAll();
-                ListNode<Paint::StopAndColor>* iter = drawCmd.paint.getStopAndColor().Begin();
-                uint16_t count = 0;
-                for (; count < drawCmd.paint.getStopAndColor().Size(); count++) {
-                    ColorType stopColor = iter->data_.color;
-                    Srgba8 srgba8Color;
-                    ChangeColor(srgba8Color,stopColor,stopColor.alpha * drawCmd.paint.GetGlobalAlpha());
-                    gradientColorMode.AddColor(iter->data_.stop, srgba8Color);
-                    iter = iter->next_;
-                }
-                gradientColorMode.BuildLut();
-
-                if (drawCmd.paint.GetGradient() == Paint::Linear) {
-                    Paint::LinearGradientPoint linearPoint = drawCmd.paint.GetLinearGradientPoint();
-
-                    double angle = atan2(linearPoint.y1 - linearPoint.y0, linearPoint.x1 - linearPoint.x0);
-                    gradientMatrix.Reset();
-                    gradientMatrix *= OHOS::TransAffineRotation(angle);
-                    gradientMatrix *= OHOS::TransAffineTranslation(linearPoint.x0, linearPoint.y0);
-                    gradientMatrix *= transform;
-                    gradientMatrix.Invert();
-
-                    double distance = sqrt((linearPoint.x1 - linearPoint.x0) * (linearPoint.x1 - linearPoint.x0) +
-                                           (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
-                    GradientLinearCalculate gradientLinearCalculate;
-                    LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
-                }
-
-                if (drawCmd.paint.GetGradient() == Paint::Radial) {
-                    Paint::RadialGradientPoint radialPoint = drawCmd.paint.GetRadialGradientPoint();
-                    gradientMatrix.Reset();
-                    gradientMatrix *= OHOS::TransAffineTranslation(radialPoint.x1, radialPoint.y1);
-                    gradientMatrix *= transform;
-                    gradientMatrix.Invert();
-                    double startRadius = radialPoint.r0;
-                    double endRadius = radialPoint.r1;
-                    GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1,
-                                                                    radialPoint.y0 - radialPoint.y1);
-                    RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
-                                            startRadius, endRadius);
-                }
-
-        }
-
-        if (drawCmd.paint.GetStyle() == Paint::PATTERN) {
-
-        }
-
+        blendRasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
+        SetRasterizer(*pathParamBlend->vertices, drawCmd.paint, blendRasterizer, transform, pathParamBlend->isStroke);
         ScanlineUnPackedContainer scanline;
         PixFormat pixFormat(renderBuffer);
         RendererBase renBase(pixFormat);
@@ -771,76 +708,82 @@ namespace OHOS {
                 continue;
             }
             PathParam* pathParam = static_cast<PathParam*>(curDraw->data_.param);
-
             if (curDraw->data_.paint.HaveShadow()) {
                 DoDrawShadow(gfxDstBuffer, curDraw->data_.param, curDraw->data_.paint, rect, trunc, *style_, pathParam->isStroke);
             }
-
             InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, *style_, curDraw->data_.paint);
             rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
             SetRasterizer(*pathParam->vertices, curDraw->data_.paint, rasterizer, transform, pathParam->isStroke);
-
-            Scanline scanline1;
-            Scanline scanline2;
-            SpanAllocator allocator1;
-            SpanAllocator allocator2;
-
             if (isSoild(curDraw->data_.paint)) {
                 Rgba8Color color;
                 RenderBlendSolid(curDraw->data_.paint,color,pathParam->isStroke);
                 SpanSoildColor spanSoildColor(color);
-
-                if (isSoild(drawCmd.paint)) {
-                    BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,spanBlendSoildColor,allocator2,spanSoildColor);
-                }
-
-                if (drawCmd.paint.GetStyle() == Paint::GRADIENT) {
-
-                }
-
-                if (drawCmd.paint.GetStyle() == Paint::PATTERN) {
-
-                }
-
+                BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,spanSoildColor,rect,pathParamBlend->isStroke);
             }
 
             if (curDraw->data_.paint.GetStyle() == Paint::GRADIENT) {
-
-                if (isSoild(drawCmd.paint)) {
-//                    BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-//                                  scanline1,scanline2,renBase,allocator1,spanBlendSoildColor,allocator2,spanSoildColor);
+                TransAffine gradientMatrix;
+                InterpolatorType interpolatorType(gradientMatrix);
+                GradientColorMode gradientColorMode;
+                BuildGradientColor(curDraw->data_.paint,gradientColorMode);
+                if (curDraw->data_.paint.GetGradient() == Paint::Linear) {
+                    double distance = 0;
+                    BuildLineGradientMatrix(drawCmd.paint,gradientMatrix,transform,distance);
+                    GradientLinearCalculate gradientLinearCalculate;
+                    LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
+                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,span,trunc,pathParamBlend->isStroke);
                 }
-
-                if (drawCmd.paint.GetStyle() == Paint::GRADIENT) {
-
-                }
-
-                if (drawCmd.paint.GetStyle() == Paint::PATTERN) {
-
+                if (curDraw->data_.paint.GetGradient() == Paint::Radial) {
+                    Paint::RadialGradientPoint radialPoint = drawCmd.paint.GetRadialGradientPoint();
+                    double startRadius = 0;
+                    double endRadius = 0;
+                    BuildRadialGradientMatrix(drawCmd.paint,gradientMatrix,transform,startRadius,endRadius);
+                    GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
+                                                                    radialPoint.y0 - radialPoint.y1);
+                    RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
+                                            startRadius, endRadius);
+                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,span,trunc,pathParamBlend->isStroke);
                 }
             }
 
             if (curDraw->data_.paint.GetStyle() == Paint::PATTERN) {
-
-                if (isSoild(drawCmd.paint)) {
-//                    BlendScanLine(drawCmd.paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-//                                  scanline1,scanline2,renBase,allocator1,spanBlendSoildColor,allocator2,nullptr);
+                if (curDraw->data_.param == nullptr) {
+                    return;
                 }
-
-                if (drawCmd.paint.GetStyle() == Paint::GRADIENT) {
-
+                PathParam* pathParam = static_cast<PathParam*>(curDraw->data_.param);
+                ImageParam* imageParam = static_cast<ImageParam*>(pathParam->imageParam);
+                if (imageParam->image == nullptr) {
+                    return;
                 }
+                PatternBuffer patternBuffer;
+                uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
+                patternBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data,
+                                     imageParam->width,
+                                     imageParam->height,
+                                     imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
+                PixFormatComp img_pixf(patternBuffer); // 获取图片
 
-                if (drawCmd.paint.GetStyle() == Paint::PATTERN) {
-
+                if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::REPEAT) {
+                    ImgSourceTypeRepeat img_src(img_pixf);
+                    spanPatternTypeRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
+                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                }
+                if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::REPEAT_X) {
+                    imgSourceTypeRepeatX img_src(img_pixf);
+                    spanPatternTypeRepeatX m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
+                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                }
+                if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::REPEAT_Y) {
+                    imgSourceTypeRepeatY img_src(img_pixf);
+                    spanPatternTypeRepeatY m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
+                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                }
+                if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::NO_REPEAT) {
+                    imgSourceTypeNoRepeat img_src(img_pixf);
+                    spanPatternTypeNoRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
+                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
                 }
             }
-
-
-
-
-
         }
     }
 
