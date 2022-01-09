@@ -1430,11 +1430,16 @@ namespace OHOS {
         static void DeletePathParam(void* param)
         {
             PathParam* pathParam = static_cast<PathParam*>(param);
-            pathParam->vertices->FreeAll();
+            if(pathParam->vertices != nullptr) {
+                pathParam->vertices->RemoveAll();
+                pathParam->vertices = nullptr;
+            }
             if (pathParam->imageParam != nullptr) {
                 DeleteImageParam(pathParam->imageParam);
             }
+
             delete pathParam;
+            pathParam = nullptr;
         }
 
         static void DeleteTextParam(void* param)
