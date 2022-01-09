@@ -1423,12 +1423,10 @@ namespace OHOS {
         typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
         Interpolator interpolator(mtx);
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-        typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderCom;
-        typedef PixfmtCustomBlendRgba<BlenderCom, RenderingBuffer> PixFormatCom;
-        typedef OHOS::ImageAccessorClone<PixFormatCom> ImgSourceType;
+        typedef OHOS::ImageAccessorClone<PixFormat> ImgSourceType;
         typedef SpanImageRgba<ImgSourceType, Interpolator> SpanGenType;
 
-        PixFormatCom imagPixfmtCom(imageBuffer);
+        PixFormat imagPixfmtCom(imageBuffer);
         ImgSourceType source(imagPixfmtCom);
         SpanGenType sg(source, interpolator);
         OHOS::RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, sg);

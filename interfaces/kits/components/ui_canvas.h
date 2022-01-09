@@ -52,7 +52,6 @@
 #include <gfx_utils/graphics/transform/graphic_transform_image_accessors.h>
 #include <gfx_utils/graphics/vertexprimitive/graphic_geometry_path_storage.h>
 #include <render/graphic_render_pixfmt_rgba_blend.h>
-#include <render/graphic_render_pixfmt_rgba_comp.h>
 
 #include <stack>
 
@@ -1642,16 +1641,6 @@ namespace OHOS {
                 RadialGradientSpan;
 
             ScanlineUnPackedContainer m_scanline;
-            typedef OHOS::CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderComp;
-            typedef OHOS::PixfmtCustomBlendRgba<BlenderComp, RenderingBuffer> PixFormatComp;
-            typedef OHOS::RendererBase<PixFormatComp> RendererBaseComp;
-
-            PixFormatComp pixFormatComp(renderBuffer);
-            RendererBaseComp m_renBaseComp(pixFormatComp);
-
-            m_renBaseComp.ResetClipping(true);
-            m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
-                                  invalidatedArea.GetRight(), invalidatedArea.GetBottom());
             TransAffine gradientMatrix;
             InterpolatorType interpolatorType(gradientMatrix);
             GradientLinearCalculate gradientLinearCalculate;
@@ -1725,8 +1714,8 @@ namespace OHOS {
             // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
             typedef OrderBgra ComponentOrder;
             // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-            typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> Blender;
-            typedef PixfmtCustomBlendRgba<Blender, RenderingBuffer> PixFormat;
+            typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
+            typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
             // 渲染器缓冲区
             typedef OHOS::RenderingBuffer PatternBuffer;
             // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
