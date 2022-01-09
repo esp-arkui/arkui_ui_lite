@@ -32,8 +32,8 @@ namespace OHOS {
         DGifSlurp(gifFileType);
         /* 3 : when change single pixel to byte, the buffer should divided by 8, equal to shift right 3 bits. */
         uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(ARGB8888) >> 3;
-        gifDataSize_ = gifFileType->SWidth * gifFileType->SHeight * pixelByteSize;
-        size_ = {(int16_t)gifFileType->SWidth, (int16_t)gifFileType->SHeight};
+        gifDataSize_ = static_cast<uint32_t>(gifFileType->SWidth * gifFileType->SHeight * pixelByteSize);
+        size_ = {static_cast<int16_t>(gifFileType->SWidth), static_cast<int16_t>(gifFileType->SHeight)};
         gifImageData_ = static_cast<uint8_t*>(UIMalloc(gifDataSize_));
         if (gifImageData_ == nullptr) {
             CloseGifFile();
@@ -107,14 +107,14 @@ namespace OHOS {
             return 0;
         }
         ImageInfo gifFrame;
-        gifFrame.header.width = gifFileType->SWidth;
-        gifFrame.header.height = gifFileType->SHeight;
+        gifFrame.header.width = static_cast<uint16_t>(gifFileType->SWidth);
+        gifFrame.header.height = static_cast<uint16_t>(gifFileType->SHeight);
         gifFrame.header.colorMode = ARGB8888;
         gifFrame.dataSize = gifDataSize_;
         gifFrame.data = gifImageData_;
         image_->image->SetSrc(&gifFrame);
-        image_->width = gifFileType->SWidth;
-        image_->height = gifFileType->SHeight;
+        image_->width = static_cast<uint16_t>(gifFileType->SWidth);
+        image_->height = static_cast<uint16_t>(gifFileType->SHeight);
 
         if (gcb.DelayTime >= 0) {
             imageView->Invalidate();
