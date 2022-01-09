@@ -45,7 +45,8 @@ namespace OHOS {
 
     class GifCanvasImageAnimator : public Animator, public AnimatorCallback {
     public:
-        GifCanvasImageAnimator(ImageParam* image, UIView* view, const char* src) :
+        GifCanvasImageAnimator(ImageParam* image, UIView* view, const char* src)
+            :
             Animator(this, view, 0, true),
             size_({0, 0}),
             gifFileType_(nullptr),
