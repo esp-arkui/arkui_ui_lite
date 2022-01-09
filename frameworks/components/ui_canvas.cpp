@@ -108,11 +108,6 @@ namespace OHOS {
 
     UICanvas::~UICanvas()
     {
-        if (vertices_ != nullptr) {
-            delete vertices_;
-            vertices_ = nullptr;
-        }
-
         void* param = nullptr;
         ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -121,16 +116,15 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        if (vertices_ != nullptr) {
+            delete vertices_;
+            vertices_ = nullptr;
+        }
         DestroyMapBufferInfo();
     }
 
     void UICanvas::Clear()
     {
-        if (vertices_ != nullptr) {
-            delete vertices_;
-            vertices_ = nullptr;
-        }
-
         void* param = nullptr;
         ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -139,6 +133,10 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        if (vertices_ != nullptr) {
+            delete vertices_;
+            vertices_ = nullptr;
+        }
         Invalidate();
     }
 
