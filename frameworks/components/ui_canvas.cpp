@@ -108,11 +108,6 @@ namespace OHOS {
 
     UICanvas::~UICanvas()
     {
-        if (vertices_ != nullptr) {
-            delete vertices_;
-            vertices_ = nullptr;
-        }
-
         void* param = nullptr;
         ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -121,16 +116,15 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        if (vertices_ != nullptr) {
+            delete vertices_;
+            vertices_ = nullptr;
+        }
         DestroyMapBufferInfo();
     }
 
     void UICanvas::Clear()
     {
-        if (vertices_ != nullptr) {
-            delete vertices_;
-            vertices_ = nullptr;
-        }
-
         void* param = nullptr;
         ListNode<DrawCmd>* curDraw = drawCmdList_.Begin();
         for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
@@ -139,6 +133,10 @@ namespace OHOS {
             curDraw->data_.param = nullptr;
         }
         drawCmdList_.Clear();
+        if (vertices_ != nullptr) {
+            delete vertices_;
+            vertices_ = nullptr;
+        }
         Invalidate();
     }
 
@@ -1424,12 +1422,10 @@ namespace OHOS {
         typedef OHOS::SpanInterpolatorLinear<OHOS::TransAffine> Interpolator;
         Interpolator interpolator(mtx);
         // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
-        typedef CompOpAdaptorRgba<Rgba8Color, ComponentOrder> BlenderCom;
-        typedef PixfmtCustomBlendRgba<BlenderCom, RenderingBuffer> PixFormatCom;
-        typedef OHOS::ImageAccessorClone<PixFormatCom> ImgSourceType;
+        typedef OHOS::ImageAccessorClone<PixFormat> ImgSourceType;
         typedef SpanImageRgba<ImgSourceType, Interpolator> SpanGenType;
 
-        PixFormatCom imagPixfmtCom(imageBuffer);
+        PixFormat imagPixfmtCom(imageBuffer);
         ImgSourceType source(imagPixfmtCom);
         SpanGenType sg(source, interpolator);
         OHOS::RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, sg);
