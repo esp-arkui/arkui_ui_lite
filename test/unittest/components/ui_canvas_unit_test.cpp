@@ -631,7 +631,6 @@ HWTEST_F(UICanvasTest, UICanvasSetLineCap_001, TestSize.Level1)
 
     paint_->SetLineCap(LineCapEnum::ROUND_CAP);
     EXPECT_EQ(paint_->GetLineCap(), LineCapEnum::ROUND_CAP);
-  
 }
 
 /**
@@ -2074,7 +2073,6 @@ HWTEST_F(UICanvasTest, UICanvasFillStyle_001, TestSize.Level1)
 
 HWTEST_F(UICanvasTest, UICanvasStrokeStyle_001, TestSize.Level1)
 {
-    
     if (paint_ == nullptr) {
         EXPECT_EQ(1, 0);
         return;

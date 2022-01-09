@@ -743,7 +743,8 @@ namespace OHOS {
             if (pathParam->isStroke) {
                 if (curDraw->data_.paint.GetStyle() == Paint::STROKE_STYLE ||
                     curDraw->data_.paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
-                    ChangeColor(color, curDraw->data_.paint.GetStrokeColor(), curDraw->data_.paint.GetStrokeColor().alpha
+                    ChangeColor(color, curDraw->data_.paint.GetStrokeColor(),
+                                curDraw->data_.paint.GetStrokeColor().alpha
                                 * curDraw->data_.paint.GetGlobalAlpha());
                 }
             } else {

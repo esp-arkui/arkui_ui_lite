@@ -143,12 +143,14 @@ namespace OHOS {
         DrawUtils::GetInstance()->BlendLerpPix(dstColors, srcColors, srcCovers);
     }
 
-    void BaseGfxEngine::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
+    void BaseGfxEngine::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                                     uint8_t alpha, uint8_t* covers)
     {
         DrawUtils::GetInstance()->BlendLerpPix(pColor, cr, cg, cb, alpha，covers);
     }
 
-    void BaseGfxEngine::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
+    void BaseGfxEngine::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                                        uint8_t alpha, uint8_t cover)
     {
         DrawUtils::GetInstance()->BlendPreLerpPix(pColor, cr, cg, cb, alpha, cover);
     }
@@ -166,7 +168,8 @@ namespace OHOS {
     {
         DrawUtils::GetInstance()->BlendPreLerpPix(dstColors, srcColors, srcCovers);
     }
-    void BaseGfxEngine::BlendPreLerpPix(uint8_t *pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t *covers)
+    void BaseGfxEngine::BlendPreLerpPix(uint8_t *pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                                        uint8_t alpha, uint8_t *covers)
     {
         DrawUtils::GetInstance()->BlendPreLerpPix(pColor, cr, cg, cb, alpha, covers);
     }
