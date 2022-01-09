@@ -1431,7 +1431,7 @@ namespace OHOS {
         {
             PathParam* pathParam = static_cast<PathParam*>(param);
             if(pathParam->vertices != nullptr) {
-                pathParam->vertices->RemoveAll();
+                //pathParam->vertices->RemoveAll();
                 pathParam->vertices = nullptr;
             }
             if (pathParam->imageParam != nullptr) {
