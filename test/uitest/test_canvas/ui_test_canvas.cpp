@@ -308,6 +308,9 @@ namespace OHOS {
         paint.SetStyle(Paint::PaintStyle::STROKE_STYLE);
         paint.SetStrokeColor(Color::Red());
         paint.SetStrokeWidth(LINE_WIDTH10); // 10: line width
+        canvas->BeginPath();
+
+        canvas->MoveTo({LINE11_X, LINE13_Y});
         // {100, 150}: arc's center coordinates, 50: arc radius, 135: start angle, 270: end angle
         canvas->DrawArc({ARC_X100, ARC_Y150}, ARC_R50, ARC_ANGLE135, ARC_ANGLE270, paint);
     }
