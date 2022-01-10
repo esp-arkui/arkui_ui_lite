@@ -1371,7 +1371,7 @@ namespace OHOS {
             RenderingBuffer imageRendBuffer;
             imageRendBuffer.Attach(static_cast<uint8_t*>(mapBufferInfo->phyAddr), mapBufferInfo->width,
                                    mapBufferInfo->height, mapBufferInfo->stride);
-            DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
+            //DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
         } else {
             text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0,
                          drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
