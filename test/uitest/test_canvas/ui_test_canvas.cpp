@@ -332,9 +332,9 @@ namespace OHOS {
         canvas->DrawImage({0, IMAGE_START60}, RED_IMAGE_PATH, paint);
 
         paint.Rotate(ROTATE_20);
-        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint);
+        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIRL_PNG_IMAGE_PATH, paint);
         paint.Rotate(ROTATE_45);
-        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint, IMAGE_WIDTH100, IMAGE_HEIGHT100);
+        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIRL_PNG_IMAGE_PATH, paint, IMAGE_WIDTH100, IMAGE_HEIGHT100);
 #endif
     }
 
