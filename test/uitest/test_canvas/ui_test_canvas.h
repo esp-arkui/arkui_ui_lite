@@ -119,11 +119,11 @@ namespace OHOS {
         const int16_t START1_Y = 10;
         const int16_t START2_X = 80;
         const int16_t START2_Y = 10;
-        const int16_t LINE1_X = 40;
+        static const int16_t LINE1_X = 40;
         const int16_t LINE1_Y = 100;
         const int16_t LINE2_X = 100;
         const int16_t LINE2_Y = 120;
-        const int16_t CENTER_X = 150;
+        static const int16_t CENTER_X = 150;
         const int16_t CENTER_Y = 150;
         const int16_t RADIUS = 50;
         const int16_t START_ANGLE = 30;
@@ -234,7 +234,7 @@ namespace OHOS {
         const int16_t END_ANGLE30 = 30;
         const int16_t START_X350 = 350;
         const int16_t START_Y150 = 150;
-        const int16_t DASH10 = 10;
+        static const int16_t DASH10 = 10;
         const float DASH5 = 5.0f;
         const float DASH2 = 2.0f;
         const int16_t DASH_COUNT = 4;
