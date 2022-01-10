@@ -1029,12 +1029,13 @@ namespace OHOS {
             transform.Translate(imageParam->start.x, imageParam->start.y);
             RenderingBuffer imageRendBuffer;
             uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
+            imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data, imageParam->width,
+                                   imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
             DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
         } else {
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
                                   paint.GetOpacity());
         }
-        free(image);
     }
 #endif
     void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
