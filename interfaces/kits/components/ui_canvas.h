@@ -427,7 +427,7 @@ namespace OHOS {
 
         bool GetChangeFlag() const
         {
-            return changeFlage_;
+            return changeFlage_ && !transfrom_.IsIdentity();
         }
 
         /**
@@ -819,11 +819,11 @@ namespace OHOS {
 
         void Rotate(float angle, int16_t x, int16_t y)
         {
-            changeFlage_ = true;
             transfrom_.Translate(-x, -y);
             transfrom_.Rotate(angle * PI / OHOS::BOXER);
             rotateAngle_ += angle;
             transfrom_.Translate(x, y);
+            changeFlage_ = true;
         }
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)

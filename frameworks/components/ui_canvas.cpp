@@ -1029,6 +1029,8 @@ namespace OHOS {
             transform.Translate(imageParam->start.x, imageParam->start.y);
             RenderingBuffer imageRendBuffer;
             uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
+            imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data, imageParam->width,
+                                   imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
             DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
         } else {
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
@@ -1347,7 +1349,7 @@ namespace OHOS {
         textRect.SetHeight(text->GetTextSize().y);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
 
-        if (paint.GetChangeFlag()) {
+        if (!paint.GetTransAffine().IsIdentity()) {
             Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
             if (paint.GetUICanvas() == nullptr) {
                 return;
