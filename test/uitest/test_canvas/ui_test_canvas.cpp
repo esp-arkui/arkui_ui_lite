@@ -40,7 +40,6 @@ namespace OHOS {
 
     const UIView* UITestCanvas::GetTestView()
     {
-        UIKitCanvasTestDrawImage001();
         RM008UIKitCanvasTest001();
         RM008UIKitCanvasTest002();
         RM008UIKitCanvasTest003();
@@ -325,10 +324,7 @@ namespace OHOS {
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
-        paint.SetOpacity(255);
-        canvas->DrawImage({0, 0}, "C:/Users/yiny/Desktop/111.png", paint);
-        paint.SetOpacity(255); // 127: opacity
-        paint.Rotate(ROTATE20);
+        paint.SetOpacity(OPARCITY_127); // 127: opacity
         // {200, 50}: start point coordinates
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
         canvas->DrawImage({0, IMAGE_START60}, RED_IMAGE_PATH, paint);

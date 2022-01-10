@@ -22,7 +22,6 @@
 #include "draw/draw_arc.h"
 #include "draw/draw_image.h"
 #include "gfx_utils/graphic_log.h"
-#include <ctime>
 namespace OHOS {
     void UICanvas::BeginPath()
     {
@@ -1015,14 +1014,6 @@ namespace OHOS {
         cordsTmp.SetPosition(start.x, start.y);
         cordsTmp.SetHeight(imageParam->height);
         cordsTmp.SetWidth(imageParam->width);
-        uint8_t *image = (uint8_t *)malloc(imageParam->height * imageParam->width * 4);
-        clock_t start1, end;   //clock_t 是clock()的返回变量类型
-            start1 = clock();
-        FastBoxBlur::BoxBlur((uint8_t*)imageParam->image->GetImageInfo()->data,image,
-                             imageParam->width,imageParam->height,imageParam->width * 4,5);
-        end = clock();   //捕捉循环段结束的时间
-        printf("use time: %f \n",(end-start1) / CLK_TCK);
-
         if (paint.GetChangeFlag()) {
             TransAffine transform;
             RenderingBuffer renderBuffer;
@@ -1031,21 +1022,11 @@ namespace OHOS {
             transform.Translate(imageParam->start.x, imageParam->start.y);
             RenderingBuffer imageRendBuffer;
             uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
-//            imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data, imageParam->width,
-//                                   imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-            imageRendBuffer.Attach(image, imageParam->width,
-                                              imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-
             DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
         } else {
-//            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
-//                                  paint.GetOpacity());
-            OpacityType opa = DrawUtils::GetMixOpacity(paint.GetOpacity(), style.imageOpa_);
-            uint8_t pxBitSize = DrawUtils::GetPxSizeByColorMode(ARGB8888);
-            DrawUtils::GetInstance()->DrawImage(gfxDstBuffer, cordsTmp, invalidatedArea, image, opa, pxBitSize,
-                                                static_cast<ColorMode>(ARGB8888));
+            DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
+                                  paint.GetOpacity());
         }
-        free(image);
     }
 #endif
     void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
