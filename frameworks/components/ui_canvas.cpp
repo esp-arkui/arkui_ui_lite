@@ -1021,16 +1021,31 @@ namespace OHOS {
         cordsTmp.SetWidth(imageParam->width);
 
         if (paint.GetChangeFlag()) {
-            TransAffine transform;
-            RenderingBuffer renderBuffer;
-            // 初始化buffer和 m_transform.
-            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
-            transform.Translate(imageParam->start.x, imageParam->start.y);
-            RenderingBuffer imageRendBuffer;
-            uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
-            imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data, imageParam->width,
-                                   imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-            DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
+            TransformMap transMap;
+            transMap.SetTransMapRect(cordsTmp);
+            transMap.Scale({static_cast<float>(paint.GetScaleX()), static_cast<float>(paint.GetScaleY())}, {0, 0});
+            float angle = paint.GetRotateAngle();
+            transMap.Rotate(MATH_ROUND(angle), {0, 0});
+            transMap.Translate({paint.GetTranslateX(), paint.GetTranslateY()});
+            Rect invalidRect = cordsTmp;
+            transMap.SetTransMapRect(cordsTmp);
+            if (invalidRect.Intersect(invalidatedArea, transMap.GetBoxRect()))
+            {
+                OpacityType opa = DrawUtils::GetMixOpacity(paint.GetOpacity(), style.bgOpa_);
+                uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
+                ImageInfo imageInfo;
+                imageInfo.header.colorMode = gfxDstBuffer.mode;
+                imageInfo.dataSize = imageParam->width * imageParam->height *
+                        DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+                imageInfo.header.width = imageParam->width;
+                imageInfo.header.height = imageParam->height;
+                imageInfo.header.reserved = 0;
+                uint8_t* imageAddr = (uint8_t*)(imageParam->image->GetImageInfo()->data);
+                TransformDataInfo imageTranDataInfo = {imageInfo.header, imageAddr, pxSize,
+                                                       BlurLevel::LEVEL0, TransformAlgorithm::BILINEAR};
+                BaseGfxEngine::GetInstance()->DrawTransform(gfxDstBuffer, invalidatedArea, {0, 0}, Color::Black(),
+                                                            opa, transMap, imageTranDataInfo);
+            }
         } else {
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
                                   paint.GetOpacity());
