@@ -81,8 +81,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Paint() :
-            style_(PaintStyle::STROKE_FILL_STYLE),
+        Paint()
+            : style_(PaintStyle::STROKE_FILL_STYLE),
             fillColor_(Color::Black()),
             strokeColor_(Color::White()),
             opacity_(OPA_OPAQUE),
@@ -102,6 +102,10 @@ namespace OHOS {
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
             rotateAngle_(0),
+            scaleRadioX_(1.0f),
+            scaleRadioY_(1.0f),
+            translationX_(0),
+            translationY_(0),
             haveComposite_(false),
             uiCanvas_(nullptr)
         {}
@@ -146,6 +150,10 @@ namespace OHOS {
             dashArray_ = paint.dashArray_;
             ndashes_ = paint.ndashes_;
             changeFlage_ = paint.changeFlage_;
+            scaleRadioX_= paint.scaleRadioX_;
+            scaleRadioY_= paint.scaleRadioY_;
+            translationX_= paint.translationX_;
+            translationY_= paint.translationY_;
             if (isDashMode_ && ndashes_ > 0) {
                 dashArray_ = new float[ndashes_];
                 if (dashArray_) {
@@ -270,7 +278,8 @@ namespace OHOS {
         /**
          * @brief Sets the paint style of a closed graph.
          *
-         * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link PaintStyle}.
+         * @param style Indicates the paint style. Stroke and fill are set by default.
+         * For details, see {@link PaintStyle}.
          * @see GetStyle
          * @since 1.0
          * @version 1.0
@@ -427,7 +436,7 @@ namespace OHOS {
 
         bool GetChangeFlag() const
         {
-            return changeFlage_;
+            return changeFlage_ && !transfrom_.IsIdentity();
         }
 
         /**
@@ -788,8 +797,8 @@ namespace OHOS {
         /* 缩放当前绘图至更大或更小 */
         void Scale(float scaleX, float scaleY)
         {
-            changeFlage_ = true;
-
+            this->scaleRadioX_ *= scaleX;
+            this->scaleRadioY_ *= scaleX;
             if (rotateAngle_ > 0.0 || rotateAngle_ < 0) {
                 transfrom_.Rotate(-rotateAngle_ * PI / OHOS::BOXER);
                 transfrom_.Scale(scaleX, scaleY);
@@ -797,16 +806,17 @@ namespace OHOS {
             } else {
                 transfrom_.Scale(scaleX, scaleY);
             }
+            changeFlage_ = true;
         }
 
         double GetScaleX() const
         {
-            return transfrom_.GetData()[0];
+            return this->scaleRadioX_;
         }
 
         double GetScaleY() const
         {
-            return transfrom_.GetData()[INDEX_FOUR];
+            return this->scaleRadioY_;
         }
 
         /* 旋转当前绘图 */
@@ -819,28 +829,30 @@ namespace OHOS {
 
         void Rotate(float angle, int16_t x, int16_t y)
         {
-            changeFlage_ = true;
             transfrom_.Translate(-x, -y);
             transfrom_.Rotate(angle * PI / OHOS::BOXER);
             rotateAngle_ += angle;
             transfrom_.Translate(x, y);
+            changeFlage_ = true;
         }
         /* 重新映射画布上的 (x,y) 位置 */
         void Translate(int16_t x, int16_t y)
         {
             changeFlage_ = true;
             transfrom_.Translate(x, y);
+            this->translationX_ += x;
+            this->translationY_ += y;
         }
 
         /* 获取重新映射画布上的x 位置 */
         int16_t GetTranslateX() const
         {
-            return transfrom_.GetData()[INDEX_TWO];
+            return this->translationX_;
         }
         /* 获取重新映射画布上的y 位置 */
         int16_t GetTranslateY() const
         {
-            return transfrom_.GetData()[INDEX_FIVE];
+            return this->translationY_;
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -857,6 +869,8 @@ namespace OHOS {
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
             changeFlage_ = true;
+            this->translationX_ += transLateX;
+            this->translationY_ += transLateY;
             transLateX += transfrom_.GetData()[INDEX_TWO];
             transLateY += transfrom_.GetData()[INDEX_FIVE];
             transfrom_.Translate(-transfrom_.GetData()[INDEX_TWO], -transfrom_.GetData()[INDEX_FIVE]);
@@ -866,14 +880,6 @@ namespace OHOS {
             transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE] + shearY);
         }
 
-        double GetshearX() const
-        {
-            return transfrom_.GetData()[INDEX_ONE];
-        }
-        double GetshearY() const
-        {
-            return transfrom_.GetData()[INDEX_THREE];
-        }
         TransAffine GetTransAffine() const
         {
             return transfrom_;
@@ -933,7 +939,11 @@ namespace OHOS {
         float globalAlpha_;                                 // 当前绘图的透明度0-1 百分比
         GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
         float rotateAngle_;                                 // 旋转角度，单位度数
-        TransAffine transfrom_;                             // 矩阵
+        float scaleRadioX_;
+        float scaleRadioY_;
+        int translationX_;
+        int translationY_;
+        TransAffine transfrom_;                             // 矩阵.
         bool haveComposite_;
         UICanvas* uiCanvas_;
     };
@@ -950,14 +960,10 @@ namespace OHOS {
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
 
-        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+        // 根据 ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
         typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
         typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
         typedef RendererBase<PixFormat> RendererBase;
-
-//        typedef OHOS::RgbaBlender<Rgba8Color, ComponentOrder> BlenderComp;
-//        typedef OHOS::PixfmtAlphaBlendRgba<BlenderComp, RenderingBuffer> PixFormat;
-//        typedef OHOS::RendererBase<PixFormat> RendererBase;
 
         typedef ScanlineUnPackedContainer Scanline;
         typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
@@ -1003,8 +1009,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        UICanvas() :
-            startPoint_({0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
+        UICanvas()
+            : startPoint_( {0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
         {}
 
         /**
@@ -1280,9 +1286,11 @@ namespace OHOS {
          *
          * @param center     Indicates the coordinates of the arc's center point.
          * @param radius     Indicates the radius of the arc.
-         * @param startAngle Indicates the start angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+         * @param startAngle Indicates the start angle of the arc.
+         *                   The value <b>0</b> indicates the 12-o'clock direction,
          *                   and <b>90</b> indicates the 3-o'clock direction.
-         * @param endAngle   Indicates the end angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+         * @param endAngle   Indicates the end angle of the arc.
+         *                   The value <b>0</b> indicates the 12-o'clock direction,
          *                   and <b>90</b> indicates the 3-o'clock direction.
          * @since 3.0
          * @version 5.0
@@ -1481,7 +1489,7 @@ namespace OHOS {
         static void DeletePathParam(void* param)
         {
             PathParam* pathParam = static_cast<PathParam*>(param);
-            if(pathParam->vertices != nullptr) {
+            if (pathParam->vertices != nullptr) {
                 pathParam->vertices->FreeAll();
                 pathParam->vertices = nullptr;
             }
@@ -1652,10 +1660,9 @@ namespace OHOS {
         {
             Scanline scanline;
             Rgba8Color color;
-            RenderBlendSolid(paint,color,isStroke);
+            RenderBlendSolid(paint, color, isStroke);
             RenderScanlinesAntiAliasSolid(rasterizer, scanline, renBase, color);
         }
-
 
         static void RenderBlendSolid(const Paint& paint,
                                      Rgba8Color& color,
@@ -1674,15 +1681,15 @@ namespace OHOS {
             }
         }
 
-        static bool isSoild(const Paint& paint){
-            if(paint.GetStyle() == Paint::STROKE_STYLE ||
+        static bool isSoild(const Paint& paint)
+        {
+            if (paint.GetStyle() == Paint::STROKE_STYLE ||
                paint.GetStyle() == Paint::FILL_STYLE ||
-               paint.GetStyle() == Paint::STROKE_FILL_STYLE){
+               paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
                 return true;
             }
             return false;
         }
-
 
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
@@ -1708,7 +1715,7 @@ namespace OHOS {
             TransAffine gradientMatrix;
             InterpolatorType interpolatorType(gradientMatrix);
             GradientColorMode gradientColorMode;
-            BuildGradientColor(paint,gradientColorMode);
+            BuildGradientColor(paint, gradientColorMode);
             if (paint.GetGradient() == Paint::Linear) {
                 Paint::LinearGradientPoint linearPoint = paint.GetLinearGradientPoint();
 
@@ -1742,14 +1749,15 @@ namespace OHOS {
             }
         }
 
-        static void BuildGradientColor(const Paint& paint,GradientColorMode&  gradientColorMode){
+        static void BuildGradientColor(const Paint& paint, GradientColorMode& gradientColorMode)
+        {
             gradientColorMode.RemoveAll();
             ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
             uint16_t count = 0;
             for (; count < paint.getStopAndColor().Size(); count++) {
                 ColorType stopColor = iter->data_.color;
                 Srgba8 srgba8Color;
-                ChangeColor(srgba8Color,stopColor,stopColor.alpha * paint.GetGlobalAlpha());
+                ChangeColor(srgba8Color, stopColor, stopColor.alpha * paint.GetGlobalAlpha());
                 gradientColorMode.AddColor(iter->data_.stop, srgba8Color);
                 iter = iter->next_;
             }
@@ -1759,7 +1767,7 @@ namespace OHOS {
         static void BuildLineGradientMatrix(const Paint& paint,
                                         TransAffine& gradientMatrix,
                                         TransAffine& transform,
-                                        double& distance )
+                                        double& distance)
         {
             Paint::LinearGradientPoint linearPoint = paint.GetLinearGradientPoint();
             double angle = atan2(linearPoint.y1 - linearPoint.y0, linearPoint.x1 - linearPoint.x0);
@@ -1769,7 +1777,7 @@ namespace OHOS {
             gradientMatrix *= transform;
             gradientMatrix.Invert();
             distance = sqrt((linearPoint.x1 - linearPoint.x0) * (linearPoint.x1 - linearPoint.x0) +
-                                                   (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
+                            (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
         }
 
         static void BuildRadialGradientMatrix(const Paint& paint,
@@ -1805,10 +1813,10 @@ namespace OHOS {
             TransAffine gradientMatrix;
             InterpolatorType interpolatorType(gradientMatrix);
             GradientColorMode gradientColorMode;
-            BuildGradientColor(paint,gradientColorMode);
+            BuildGradientColor(paint, gradientColorMode);
             if (paint.GetGradient() == Paint::Linear) {
                 double distance = 0;
-                BuildLineGradientMatrix(paint,gradientMatrix,transform,distance);
+                BuildLineGradientMatrix(paint, gradientMatrix, transform, distance);
                 GradientLinearCalculate gradientLinearCalculate;
                 LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
                 RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
@@ -1818,7 +1826,7 @@ namespace OHOS {
                 Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
                 double startRadius = 0;
                 double endRadius = 0;
-                BuildRadialGradientMatrix(paint,gradientMatrix,transform,startRadius,endRadius);
+                BuildRadialGradientMatrix(paint, gradientMatrix, transform, startRadius, endRadius);
                 GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
                                                                 radialPoint.y0 - radialPoint.y1);
                 RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
@@ -1827,7 +1835,7 @@ namespace OHOS {
             }
         }
 #endif
-        template<class SpanGen,class Pixfmt>
+        template<class SpanGen, class Pixfmt>
         static void BlendRaster(const Paint& paint,
                                 void* param,
                                 RasterizerScanlineAntiAlias<>& blendRasterizer,
@@ -1838,7 +1846,6 @@ namespace OHOS {
                                 const Rect& rect,
                                 bool isStroke)
         {
-
             TransAffine gradientMatrixBlend;
             typedef SpanSoildColor<Rgba8Color> SpanSoildColor;
 
@@ -1849,37 +1856,38 @@ namespace OHOS {
 
             if (isSoild(paint)) {
                 Rgba8Color blendColor;
-                RenderBlendSolid(paint,blendColor,isStroke);
+                RenderBlendSolid(paint, blendColor, isStroke);
                 SpanSoildColor spanBlendSoildColor(blendColor);
-                BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                              scanline1,scanline2,renBase,allocator1,spanBlendSoildColor,allocator2,spanGen);
+                BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                              scanline1, scanline2, renBase, allocator1, spanBlendSoildColor, allocator2, spanGen);
             }
-            #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             InterpolatorType interpolatorTypeBlend(gradientMatrixBlend);
             GradientColorMode gradientColorModeBlend;
 
             if (paint.GetStyle() == Paint::GRADIENT) {
-                BuildGradientColor(paint,gradientColorModeBlend);
+                BuildGradientColor(paint, gradientColorModeBlend);
                 if (paint.GetGradient() == Paint::Linear) {
                     double distance = 0;
-                    BuildLineGradientMatrix(paint,gradientMatrixBlend,transform,distance);
+                    BuildLineGradientMatrix(paint, gradientMatrixBlend, transform, distance);
                     GradientLinearCalculate gradientLinearCalculate;
-                    LinearGradientSpan span(interpolatorTypeBlend, gradientLinearCalculate, gradientColorModeBlend, 0, distance);
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,span,allocator2,spanGen);
+                    LinearGradientSpan span(interpolatorTypeBlend, gradientLinearCalculate,
+                                            gradientColorModeBlend, 0, distance);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, span, allocator2, spanGen);
                 }
 
                 if (paint.GetGradient() == Paint::Radial) {
                     Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
                     double startRadius = 0;
                     double endRadius = 0;
-                    BuildRadialGradientMatrix(paint,gradientMatrixBlend,transform,startRadius,endRadius);
+                    BuildRadialGradientMatrix(paint, gradientMatrixBlend, transform, startRadius, endRadius);
                     GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
                                                                     radialPoint.y0 - radialPoint.y1);
                     RadialGradientSpan span(interpolatorTypeBlend, gradientRadialCalculate, gradientColorModeBlend,
                                             startRadius, endRadius);
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,span,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, span, allocator2, spanGen);
                 }
             }
 
@@ -1908,26 +1916,26 @@ namespace OHOS {
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                     ImgSourceTypeRepeat img_src(img_pixf);
                     spanPatternTypeRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT_X) {
                     imgSourceTypeRepeatX img_src(img_pixf);
                     spanPatternTypeRepeatX m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT_Y) {
                     imgSourceTypeRepeatY img_src(img_pixf);
                     spanPatternTypeRepeatY m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
                 if (paint.GetPatternRepeatMode() == Paint::NO_REPEAT) {
                     imgSourceTypeNoRepeat img_src(img_pixf);
                     spanPatternTypeNoRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
             }
 #endif

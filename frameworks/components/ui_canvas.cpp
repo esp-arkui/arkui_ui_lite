@@ -1200,6 +1200,7 @@ namespace OHOS {
         if (param == nullptr) {
             return;
         }
+
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         TransAffine transform;
         RenderingBuffer renderBuffer;
@@ -1238,12 +1239,18 @@ namespace OHOS {
         bbox.y2 += paint.GetShadowBlur();
         RenderingBuffer shadowBuffer;
         PixfmtAlphaBlendRgba pixf2(shadowBuffer);
-
         Rect shadowRect = {int16_t(bbox.x1), int16_t(bbox.y1), int16_t(bbox.x2), int16_t(bbox.y2)};
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
-        //drawBlur..Blur(pixf2->PixValuePtr(0,0), MATH_UROUND(paint.GetShadowBlur()));
+
+        uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode) >> 3; // 3: Shift right 3 bits
+
+//        drawBlur.BoxBlur((uint8_t*)pixf2.PixValuePtr(0,0),
+//                         (uint8_t*)pixf2.PixValuePtr(0,0),
+//                         pixf2.Width(),pixf2.Height(),pixelByteSize,
+//                         cnavas.Width()*pixelByteSize,
+//                         MATH_UROUND(paint.GetShadowBlur()));
 #endif
 #endif
     }
@@ -1370,7 +1377,8 @@ namespace OHOS {
         textRect.SetWidth(text->GetTextSize().x+ 1);
         textRect.SetHeight(text->GetTextSize().y + 1);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
-         if (!paint.GetTransAffine().IsIdentity()) {
+        if (!paint.GetTransAffine().IsIdentity()) {
+
             Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
             if (paint.GetUICanvas() == nullptr) {
                 return;

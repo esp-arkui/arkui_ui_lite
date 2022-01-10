@@ -305,7 +305,7 @@ namespace OHOS {
                     return;
                 }
             }
-            pixfmtType->copy_color_hspan(x, y, len, colors);
+            pixfmtType->CopyColorHspan(x, y, len, colors);
         }
 
         /**
