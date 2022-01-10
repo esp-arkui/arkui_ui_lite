@@ -102,6 +102,10 @@ namespace OHOS {
             globalAlpha_(1.0),
             globalCompositeOperation_(SOURCE_OVER),
             rotateAngle_(0),
+            scaleRadioX_(1.0f),
+            scaleRadioY_(1.0f),
+            translationX_(0),
+            translationY_(0),
             haveComposite_(false),
             uiCanvas_(nullptr)
         {}
@@ -146,6 +150,10 @@ namespace OHOS {
             dashArray_ = paint.dashArray_;
             ndashes_ = paint.ndashes_;
             changeFlage_ = paint.changeFlage_;
+            scaleRadioX_= paint.scaleRadioX_;
+            scaleRadioY_= paint.scaleRadioY_;
+            translationX_= paint.translationX_;
+            translationY_= paint.translationY_;
             if (isDashMode_ && ndashes_ > 0) {
                 dashArray_ = new float[ndashes_];
                 if (dashArray_) {
@@ -788,8 +796,8 @@ namespace OHOS {
         /* 缩放当前绘图至更大或更小 */
         void Scale(float scaleX, float scaleY)
         {
-            changeFlage_ = true;
-
+            this->scaleRadioX_ *= scaleX;
+            this->scaleRadioY_ *= scaleX;
             if (rotateAngle_ > 0.0 || rotateAngle_ < 0) {
                 transfrom_.Rotate(-rotateAngle_ * PI / OHOS::BOXER);
                 transfrom_.Scale(scaleX, scaleY);
@@ -797,16 +805,17 @@ namespace OHOS {
             } else {
                 transfrom_.Scale(scaleX, scaleY);
             }
+            changeFlage_ = true;
         }
 
         double GetScaleX() const
         {
-            return transfrom_.GetData()[0];
+            return this->scaleRadioX_;
         }
 
         double GetScaleY() const
         {
-            return transfrom_.GetData()[INDEX_FOUR];
+            return this->scaleRadioY_;
         }
 
         /* 旋转当前绘图 */
@@ -830,17 +839,19 @@ namespace OHOS {
         {
             changeFlage_ = true;
             transfrom_.Translate(x, y);
+            this->translationX_ += x;
+            this->translationY_ += y;
         }
 
         /* 获取重新映射画布上的x 位置 */
         int16_t GetTranslateX() const
         {
-            return transfrom_.GetData()[INDEX_TWO];
+            return this->translationX_;
         }
         /* 获取重新映射画布上的y 位置 */
         int16_t GetTranslateY() const
         {
-            return transfrom_.GetData()[INDEX_FIVE];
+            return this->translationY_;
         }
 
         /* 将当前转换重置为单位矩阵。然后运行 transform() */
@@ -857,6 +868,8 @@ namespace OHOS {
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
             changeFlage_ = true;
+            this->translationX_ += transLateX;
+            this->translationY_ += transLateY;
             transLateX += transfrom_.GetData()[INDEX_TWO];
             transLateY += transfrom_.GetData()[INDEX_FIVE];
             transfrom_.Translate(-transfrom_.GetData()[INDEX_TWO], -transfrom_.GetData()[INDEX_FIVE]);
@@ -866,14 +879,6 @@ namespace OHOS {
             transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE] + shearY);
         }
 
-        double GetshearX() const
-        {
-            return transfrom_.GetData()[INDEX_ONE];
-        }
-        double GetshearY() const
-        {
-            return transfrom_.GetData()[INDEX_THREE];
-        }
         TransAffine GetTransAffine() const
         {
             return transfrom_;
@@ -933,6 +938,10 @@ namespace OHOS {
         float globalAlpha_;                                 // 当前绘图的透明度0-1 百分比
         GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
         float rotateAngle_;                                 // 旋转角度，单位度数
+        float scaleRadioX_;
+        float scaleRadioY_;
+        int translationX_;
+        int translationY_;
         TransAffine transfrom_;                             // 矩阵
         bool haveComposite_;
         UICanvas* uiCanvas_;
