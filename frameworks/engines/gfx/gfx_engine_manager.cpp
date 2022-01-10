@@ -146,7 +146,7 @@ namespace OHOS {
     void BaseGfxEngine::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
                                      uint8_t alpha, uint8_t* covers)
     {
-        DrawUtils::GetInstance()->BlendLerpPix(pColor, cr, cg, cb, alpha，covers);
+        DrawUtils::GetInstance()->BlendLerpPix(pColor, cr, cg, cb, alpha, covers);
     }
 
     void BaseGfxEngine::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
