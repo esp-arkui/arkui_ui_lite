@@ -955,10 +955,6 @@ namespace OHOS {
         typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
         typedef RendererBase<PixFormat> RendererBase;
 
-//        typedef OHOS::RgbaBlender<Rgba8Color, ComponentOrder> BlenderComp;
-//        typedef OHOS::PixfmtAlphaBlendRgba<BlenderComp, RenderingBuffer> PixFormat;
-//        typedef OHOS::RendererBase<PixFormat> RendererBase;
-
         typedef ScanlineUnPackedContainer Scanline;
         typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
