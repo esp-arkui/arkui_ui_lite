@@ -92,9 +92,9 @@ namespace OHOS {
             bottom += setup;
         }
         MoveTo(point);
-        LineTo( {right, point.y});
-        LineTo( {right, bottom});
-        LineTo( {point.x, bottom});
+        LineTo({right, point.y});
+        LineTo({right, bottom});
+        LineTo({point.x, bottom});
         ClosePath();
     }
 
