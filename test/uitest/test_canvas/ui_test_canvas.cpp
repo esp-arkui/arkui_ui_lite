@@ -40,6 +40,7 @@ namespace OHOS {
 
     const UIView* UITestCanvas::GetTestView()
     {
+        UIKitCanvasTestDrawImage001();
         RM008UIKitCanvasTest001();
         RM008UIKitCanvasTest002();
         RM008UIKitCanvasTest003();
@@ -321,12 +322,13 @@ namespace OHOS {
             return;
         }
         CreateTitleLabel("绘制图片");
+        // {200, 50}: start point coordinates
+#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
         UICanvas* canvas = CreateCanvas();
 
         Paint paint;
         paint.SetOpacity(OPARCITY_127); // 127: opacity
-        // {200, 50}: start point coordinates
-#if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
+
         canvas->DrawImage({0, IMAGE_START60}, RED_IMAGE_PATH, paint);
 
         paint.Rotate(ROTATE_20);
