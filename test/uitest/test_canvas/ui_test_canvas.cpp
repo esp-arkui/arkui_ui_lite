@@ -322,17 +322,14 @@ namespace OHOS {
             return;
         }
         CreateTitleLabel("绘制图片");
-        UICanvas* canvas = CreateCanvas();
 
-        Paint paint;
-        paint.SetOpacity(255);
-        canvas->DrawImage({0, 0}, "C:/Users/yiny/Desktop/111.png", paint);
-        paint.SetOpacity(255); // 127: opacity
-        paint.Rotate(ROTATE20);
         // {200, 50}: start point coordinates
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE
+        UICanvas* canvas = CreateCanvas();
+        Paint paint;
+        paint.SetOpacity(255); // 127: opacity
+        paint.Rotate(ROTATE20);
         canvas->DrawImage({0, IMAGE_START60}, RED_IMAGE_PATH, paint);
-
         paint.Rotate(ROTATE_20);
         canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint);
         paint.Rotate(ROTATE_45);

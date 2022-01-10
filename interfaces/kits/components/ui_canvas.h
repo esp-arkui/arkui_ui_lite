@@ -961,7 +961,7 @@ namespace OHOS {
 
         typedef ScanlineUnPackedContainer Scanline;
         typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         // 设定渐变数组的构造器设定颜色插值器和颜色模板等
         typedef GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>> GradientColorMode;
         // 设定放射渐变的算法
@@ -974,7 +974,7 @@ namespace OHOS {
         // 设定放射渐变的线段生成器
         typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
                 GradientColorMode> RadialGradientSpan;
-
+#endif
 
         // 渲染器缓冲区
         typedef OHOS::RenderingBuffer PatternBuffer;
@@ -987,6 +987,7 @@ namespace OHOS {
         // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
         typedef OHOS::ImageAccessorNoRepeat<PixFormat> imgSourceTypeNoRepeat;
         // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         //  x,y轴都重复
         typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
         //  x轴重复
@@ -995,7 +996,7 @@ namespace OHOS {
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
         // 不重复
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
-
+#endif
         /**
          * @brief A constructor used to create a <b>UICanvas</b> instance.
          *
@@ -1738,8 +1739,6 @@ namespace OHOS {
                 RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
             }
         }
-#endif
-
 
         static void BuildGradientColor(const Paint& paint,GradientColorMode&  gradientColorMode){
             gradientColorMode.RemoveAll();
@@ -1825,7 +1824,7 @@ namespace OHOS {
                 RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
             }
         }
-
+#endif
         template<class SpanGen,class Pixfmt>
         static void BlendRaster(const Paint& paint,
                                 void* param,
@@ -1839,8 +1838,6 @@ namespace OHOS {
         {
 
             TransAffine gradientMatrixBlend;
-            InterpolatorType interpolatorTypeBlend(gradientMatrixBlend);
-            GradientColorMode gradientColorModeBlend;
             typedef SpanSoildColor<Rgba8Color> SpanSoildColor;
 
             Scanline scanline1;
@@ -1855,6 +1852,9 @@ namespace OHOS {
                 BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
                               scanline1,scanline2,renBase,allocator1,spanBlendSoildColor,allocator2,spanGen);
             }
+            #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+            InterpolatorType interpolatorTypeBlend(gradientMatrixBlend);
+            GradientColorMode gradientColorModeBlend;
 
             if (paint.GetStyle() == Paint::GRADIENT) {
                 BuildGradientColor(paint,gradientColorModeBlend);
@@ -1881,6 +1881,8 @@ namespace OHOS {
                 }
             }
 
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
             if (paint.GetStyle() == Paint::PATTERN) {
                 if (param == nullptr) {
                     return;
@@ -1926,6 +1928,7 @@ namespace OHOS {
                                   scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
                 }
             }
+#endif
         }
 
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR

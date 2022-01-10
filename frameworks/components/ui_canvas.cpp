@@ -706,10 +706,12 @@ namespace OHOS {
                 continue;
             }
             PathParam* pathParam = static_cast<PathParam*>(curDraw->data_.param);
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
             if (curDraw->data_.paint.HaveShadow()) {
                 DoDrawShadow(gfxDstBuffer, curDraw->data_.param, curDraw->data_.paint, rect,
                              trunc, *style_, pathParam->isStroke);
             }
+#endif
             InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, *style_, curDraw->data_.paint);
             rasterizer.ClipBox(0, 0, gfxDstBuffer.width, gfxDstBuffer.height);
             SetRasterizer(*pathParam->vertices, curDraw->data_.paint, rasterizer, transform, pathParam->isStroke);
@@ -719,7 +721,7 @@ namespace OHOS {
                 SpanSoildColor spanSoildColor(color);
                 BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,spanSoildColor,rect,pathParamBlend->isStroke);
             }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             if (curDraw->data_.paint.GetStyle() == Paint::GRADIENT) {
                 TransAffine gradientMatrix;
                 InterpolatorType interpolatorType(gradientMatrix);
@@ -745,6 +747,8 @@ namespace OHOS {
                 }
             }
 
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
             if (curDraw->data_.paint.GetStyle() == Paint::PATTERN) {
                 if (curDraw->data_.param == nullptr) {
                     return;
@@ -783,6 +787,7 @@ namespace OHOS {
                     BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
                 }
             }
+#endif
         }
     }
 
