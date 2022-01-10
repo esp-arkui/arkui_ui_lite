@@ -35,13 +35,14 @@
 
 namespace OHOS {
     /**
-     * @brief 渲染实线的反走样扫描线
-     * 通过scanline.begin获取第一个span,++span获取下一个span
-     * 通过renBase调用对应的函数实现将颜色（color）绘制到对应span所在的画布位置
-     * @param raster 光栅
-     * @param scanline 扫描线
-     * @param renBase 渲染器
-     * @param color 颜色
+     * @brief Anti aliasing scanline for rendering solid lines.
+     * Via scanline Begin gets the first span, and + + span gets the next span.
+     * The corresponding function is called by renbase to draw the color to the
+     * canvas where the corresponding span is located.
+     * @param raster grating
+     * @param scanline Scan line
+     * @param renBase Renderer
+     * @param color colour
      */
     template <class Rasterizer, class Scanline,
               class BaseRenderer, class ColorT>
@@ -78,16 +79,18 @@ namespace OHOS {
     }
 
     /**
-     * @brief 渲染抗锯齿的扫描线
-     * 通过scanline.begin获取第一个span,++span获取下一个span
-     * 通过allocat_->Resize(spanLen)分配一个和span一样长度的颜色数组（color_type）
-     * 通过线段生成器spanGenerat_->Generate(colors, x, y, len);将颜色数组填满得到和扫描线span对应的有数值的颜色数组
-     * 最后通过renBase_调用对应的函数实现将颜色数组绘制到对应span所在的画布位置
-     * @param raster 光栅
-     * @param scanline 扫描线
-     * @param renBase 渲染器
-     * @param alloc 分配器
-     * @param spanGen 线段生成器
+     * @brief Rendering anti aliased scanlines.
+     * Via scanline Begin gets the first span, and + + span gets the next span.
+     * Via allocat_ - > Resize (spanlen) allocates a color_type with the same length as span.
+     * Through segment generator spangenerate_ - > Generate(colors, x, y, len); Fill the color
+     * array to get the color array with values corresponding to the scan line span.
+     * Finally, through renbase_ Call the corresponding function to draw the color array
+     * to the canvas position of the corresponding span.
+     * @param raster grating
+     * @param scanline Scan line
+     * @param renBase Renderer
+     * @param alloc distributor
+     * @param spanGen Segment generator
      */
     template <class Rasterizer, class Scanline, class BaseRenderer,
               class SpanAllocator, class SpanGenerator>
@@ -96,7 +99,7 @@ namespace OHOS {
     {
         if (raster.RewindScanlines()) {
             scanline.Reset(raster.MinX(), raster.MaxX());
-            spanGen.Prepare(); // 线段生成器预备
+            spanGen.Prepare(); // Segment generator preparation
             while (raster.SweepScanline(scanline)) {
                 int y = scanline.GetYLevel();
 
@@ -202,8 +205,8 @@ namespace OHOS {
     {
         uint8_t* cover2 = span2->covers + (x1 - x2);
         scanline.Reset(x1, x1 + span1->spanLength);
-        int len1 = span2->spanLength - (x1 - x2); // 相交的长度
-        int len2 = span1->spanLength - len1;      // 相交的长度
+        int len1 = span2->spanLength - (x1 - x2); // Length of intersection
+        int len2 = span1->spanLength - len1;      // Length of intersection
         uint8_t* cover1 = span1->covers + len1;
         for (int i = 0; i < len1; i++, cover2++) {
             scanline.AddCell(x1++, COVER_FULL - (*cover2));
@@ -251,10 +254,10 @@ namespace OHOS {
             int y1 = 0;
             if (raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
-                spanGen1.Prepare(); // 线段生成器预备
+                spanGen1.Prepare(); // Segment generator preparation
             }
             while (raster2.SweepScanline(scanline2)) {
-                spanGen2.Prepare(); // 线段生成器预备
+                spanGen2.Prepare(); // Segment generator preparation
                 int y2 = scanline2.GetYLevel();
                 unsigned num_spans2 = scanline2.NumSpans();
                 typename Scanline::ConstIterator span2 = scanline2.Begin();
@@ -582,7 +585,7 @@ namespace OHOS {
                     }
                 }
             }
-            // 绘制raster1的剩余部分
+            // Draw the rest of raster1
             while (raster1.SweepScanline(scanline1)) {
                 int y = scanline1.GetYLevel();
                 unsigned num_spans = scanline1.NumSpans();
@@ -789,7 +792,7 @@ namespace OHOS {
                     }
                 }
             }
-            // 绘制raster1的剩余部分
+            // Draw the rest of raster1
             while (raster1.SweepScanline(scanline1)) {
                 int y = scanline1.GetYLevel();
                 unsigned num_spans = scanline1.NumSpans();

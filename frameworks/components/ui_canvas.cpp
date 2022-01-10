@@ -22,7 +22,6 @@
 #include "draw/draw_arc.h"
 #include "draw/draw_image.h"
 #include "gfx_utils/graphic_log.h"
-#include <ctime>
 namespace OHOS {
     void UICanvas::BeginPath()
     {
@@ -1028,17 +1027,32 @@ namespace OHOS {
         cordsTmp.SetHeight(imageParam->height);
         cordsTmp.SetWidth(imageParam->width);
 
-        if (paint.GetChangeFlag()) {
-            TransAffine transform;
-            RenderingBuffer renderBuffer;
-            // 初始化buffer和 m_transform.
-            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
-            transform.Translate(imageParam->start.x, imageParam->start.y);
-            RenderingBuffer imageRendBuffer;
-            uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(imageParam->image->GetImageInfo()->header.colorMode);
-            imageRendBuffer.Attach((unsigned char*)imageParam->image->GetImageInfo()->data, imageParam->width,
-                                   imageParam->height, imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-            DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
+        if (!paint.GetTransAffine().IsIdentity()) {
+            TransformMap transMap;
+            transMap.SetTransMapRect(cordsTmp);
+            transMap.Scale({static_cast<float>(paint.GetScaleX()), static_cast<float>(paint.GetScaleY())}, {0, 0});
+            float angle = paint.GetRotateAngle();
+            transMap.Rotate(MATH_ROUND(angle), {0, 0});
+            transMap.Translate({paint.GetTranslateX(), paint.GetTranslateY()});
+            Rect invalidRect = cordsTmp;
+            transMap.SetTransMapRect(cordsTmp);
+            if (invalidRect.Intersect(invalidatedArea, transMap.GetBoxRect()))
+            {
+                OpacityType opa = DrawUtils::GetMixOpacity(paint.GetOpacity(), style.bgOpa_);
+                uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
+                ImageInfo imageInfo;
+                imageInfo.header.colorMode = gfxDstBuffer.mode;
+                imageInfo.dataSize = imageParam->width * imageParam->height *
+                        DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+                imageInfo.header.width = imageParam->width;
+                imageInfo.header.height = imageParam->height;
+                imageInfo.header.reserved = 0;
+                uint8_t* imageAddr = (uint8_t*)(imageParam->image->GetImageInfo()->data);
+                TransformDataInfo imageTranDataInfo = {imageInfo.header, imageAddr, pxSize,
+                                                       BlurLevel::LEVEL0, TransformAlgorithm::BILINEAR};
+                BaseGfxEngine::GetInstance()->DrawTransform(gfxDstBuffer, invalidatedArea, {0, 0}, Color::Black(),
+                                                            opa, transMap, imageTranDataInfo);
+            }
         } else {
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
                                   paint.GetOpacity());
@@ -1208,6 +1222,7 @@ namespace OHOS {
         if (param == nullptr) {
             return;
         }
+
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         TransAffine transform;
         RenderingBuffer renderBuffer;
@@ -1247,7 +1262,6 @@ namespace OHOS {
         bbox.y2 += paint.GetShadowBlur();
         RenderingBuffer shadowBuffer;
         PixfmtAlphaBlendRgba pixf2(shadowBuffer);
-
         Rect shadowRect = {int16_t(bbox.x1), int16_t(bbox.y1), int16_t(bbox.x2), int16_t(bbox.y2)};
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
@@ -1319,6 +1333,29 @@ namespace OHOS {
         return textSize;
     }
 
+    void UICanvas::BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer, Rect& textRect, TransformMap& transMap, const Rect& invalidatedArea)
+    {
+        Rect invalidRect = textRect;
+        transMap.SetTransMapRect(textRect);
+        if (invalidRect.Intersect(invalidRect, transMap.GetBoxRect()))
+        {
+            uint8_t pxSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode);
+            ImageInfo imageInfo;
+            imageInfo.header.colorMode = gfxDstBuffer.mode;
+            imageInfo.dataSize = gfxMapBuffer.width * gfxMapBuffer.height *
+                    DrawUtils::GetByteSizeByColorMode(gfxDstBuffer.mode);
+            imageInfo.header.width = gfxMapBuffer.width;
+            imageInfo.header.height = gfxMapBuffer.height;
+            imageInfo.header.reserved = 0;
+            uint8_t* addr = reinterpret_cast<uint8_t*>(gfxMapBuffer.virAddr);
+            imageInfo.data = addr;
+            TransformDataInfo imageTranDataInfo = {imageInfo.header, imageInfo.data, pxSize,
+                                                   BlurLevel::LEVEL0, TransformAlgorithm::BILINEAR};
+            BaseGfxEngine::GetInstance()->DrawTransform(gfxDstBuffer, invalidatedArea, {0, 0}, Color::Black(),
+                                                        OPA_OPAQUE, transMap, imageTranDataInfo);
+        }
+    }
+
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
     void UICanvas::DoDrawText(BufferInfo& gfxDstBuffer,
                               void* param,
@@ -1336,7 +1373,7 @@ namespace OHOS {
         }
         Text* text = textParam->textComment;
         text->SetText(textParam->text);
-        text->SetFont(textParam->fontStyle.fontName, textParam->fontStyle.fontSize * paint.GetScaleX());
+        text->SetFont(textParam->fontStyle.fontName, textParam->fontStyle.fontSize);
         text->SetDirect(static_cast<UITextLanguageDirect>(textParam->fontStyle.direct));
         text->SetAlign(static_cast<UITextLanguageAlignment>(textParam->fontStyle.align));
 
@@ -1353,33 +1390,25 @@ namespace OHOS {
         if (text->GetTextSize().x == 0 || text->GetTextSize().y == 0) {
             return;
         }
-        textRect.SetWidth(text->GetTextSize().x);
-        textRect.SetHeight(text->GetTextSize().y);
+        textRect.SetWidth(text->GetTextSize().x+ 1);
+        textRect.SetHeight(text->GetTextSize().y + 1);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
-
         if (!paint.GetTransAffine().IsIdentity()) {
+
             Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
             if (paint.GetUICanvas() == nullptr) {
                 return;
             }
-            BufferInfo* mapBufferInfo = paint.GetUICanvas()->UpdateMapBufferInfo(gfxDstBuffer, textRect);
+            BufferInfo* mapBufferInfo = paint.GetUICanvas()->UpdateMapBufferInfo(gfxDstBuffer, textImageRect);
             text->OnDraw(*mapBufferInfo, textImageRect, textImageRect, textImageRect, 0, drawStyle,
                          Text::TEXT_ELLIPSIS_END_INV, opa);
-
-            TransAffine transform;
-            RenderingBuffer renderBuffer;
-            // 初始化buffer和 m_transform
-            InitRendAndTransform(gfxDstBuffer, renderBuffer, rect, transform, style, paint);
-
-            transform.Translate(textParam->position.x, textParam->position.y);
-            if (paint.GetScaleX() != 0) {
-                transform.SetData(0, transform.GetData()[0] * (1.0f / paint.GetScaleX()));
-            }
-            transform.Translate(textParam->position.x, textParam->position.y);
-            RenderingBuffer imageRendBuffer;
-            imageRendBuffer.Attach(static_cast<uint8_t*>(mapBufferInfo->phyAddr), mapBufferInfo->width,
-                                   mapBufferInfo->height, mapBufferInfo->stride);
-            //DoRenderImage(renderBuffer, paint, invalidatedArea, transform, imageRendBuffer);
+            TransformMap trans;
+            trans.SetTransMapRect(textRect);
+            trans.Scale({static_cast<float>(paint.GetScaleX()), static_cast<float>(paint.GetScaleY())}, {0, 0});
+            float angle = paint.GetRotateAngle();
+            trans.Rotate(MATH_ROUND(angle), {0, 0});
+            trans.Translate({paint.GetTranslateX(), paint.GetTranslateY()});
+            BlitMapBuffer(gfxDstBuffer, *mapBufferInfo, textRect, trans, invalidatedArea);
         } else {
             text->OnDraw(gfxDstBuffer, invalidatedArea, textRect, textRect, 0,
                          drawStyle, Text::TEXT_ELLIPSIS_END_INV, opa);
@@ -1461,13 +1490,14 @@ namespace OHOS {
         gfxMapBuffer_->rect = rect;
         gfxMapBuffer_->mode = srcBuff.mode;
         gfxMapBuffer_->color = srcBuff.color;
-        gfxMapBuffer_->width = rect.GetWidth();
-        gfxMapBuffer_->height = rect.GetHeight();
+        gfxMapBuffer_->width = static_cast<uint16_t>(rect.GetWidth());
+        gfxMapBuffer_->height = static_cast<uint16_t>(rect.GetHeight());
         uint8_t destByteSize = DrawUtils::GetByteSizeByColorMode(srcBuff.mode);
-        gfxMapBuffer_->stride = gfxMapBuffer_->width * destByteSize;
-        gfxMapBuffer_->virAddr = UIMalloc(gfxMapBuffer_->height * gfxMapBuffer_->stride);
-        gfxMapBuffer_->phyAddr = gfxMapBuffer_->virAddr;
+        gfxMapBuffer_->stride = static_cast<int32_t>(gfxMapBuffer_->width) * static_cast<int32_t>(destByteSize);
         uint32_t buffSize = gfxMapBuffer_->height * gfxMapBuffer_->stride;
+        gfxMapBuffer_->virAddr = UIMalloc(buffSize);
+        gfxMapBuffer_->phyAddr = gfxMapBuffer_->virAddr;
+
         errno_t err = memset_s(gfxMapBuffer_->virAddr, buffSize, 0, buffSize);
         if (err != EOK) {
             BaseGfxEngine::GetInstance()->FreeBuffer((uint8_t*)gfxMapBuffer_->virAddr);
