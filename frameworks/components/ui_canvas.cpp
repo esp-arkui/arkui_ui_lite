@@ -1034,7 +1034,6 @@ namespace OHOS {
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
                                   paint.GetOpacity());
         }
-        free(image);
     }
 #endif
     void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
