@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_pixfmt_base.h
  *
- * @brief Defines 定义了像素与颜色分量转换的操作方法.
+ * @brief Defines The operation method of pixel and color component conversion is defined.
  *
  * @since 1.0
  * @version 1.0.
@@ -51,8 +51,8 @@ namespace OHOS {
         using OrderType = Order;
 
         /**
-         * @brief 把颜色分量设置给颜色.
-         * @param r,g,b,a 颜色分量,cover 覆盖率
+         * @brief Set the color component to the color.
+         * @param r,g,b,a Color Component, cover Coverage.
          * @since 1.0
          * @version 1.0.
          */
@@ -66,8 +66,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 把颜色分量设置给颜色.
-         * @param pColor 颜色,color像素颜色分量
+         * @brief Set the color component to the color.
+         * @param pColor Color,color Pixel color component
          * @since 1.0
          * @version 1.0
          */
@@ -80,9 +80,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 通过颜色分量获取颜色.
-         * @return 返回颜色
-         * @param r,g,b,a 颜色分量,cover 覆盖率
+         * @brief Get the color from the color component.
+         * @return Return color.
+         * @param r,g,b,a Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0.
          */
@@ -108,9 +108,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 通过颜色分量获取颜色.
-         * @return 返回颜色
-         * @param pColor 颜色,cover 覆盖率
+         * @brief Get the color from the color component.
+         * @return Return color.
+         * @param pColor Color,cover Coverage
          * @since 1.0
          * @version 1.0
          */

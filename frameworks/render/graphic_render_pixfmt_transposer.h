@@ -30,8 +30,8 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 构造PixfmtTransposer实例，用于初始化pixf_成员.
-         * @Param 屏幕缓存区
+         * @brief Construct a pixfmttransposer instance to initialize pixf_ Members.
+         * @Param pixf Screen buffer.
          * @since 1.0
          * @version 1.0
          */
@@ -40,8 +40,8 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 附加屏幕
-         * @Param 屏幕缓存区
+         * @brief Additional screen.
+         * @Param pixf Screen buffer.
          * @since 1.0
          * @version 1.0
          */
@@ -51,8 +51,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取屏幕宽
-         * @return 宽度
+         * @brief Get screen width.
+         * @return width.
          * @since 1.0
          * @version 1.0
          */
@@ -62,8 +62,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取屏幕高
-         * @return 高度
+         * @brief Get screen height.
+         * @return height.
          * @since 1.0
          * @version 1.0
          */
@@ -73,8 +73,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取指定坐标颜色
-         * @return 颜色
+         * @brief Gets the color of the specified coordinates.
+         * @return Color.
          * @since 1.0
          * @version 1.0
          */
@@ -84,7 +84,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置指定坐标颜色
+         * @brief Sets the color of the specified coordinates.
          *
          * @since 1.0
          * @version 1.0.
@@ -95,7 +95,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起混合颜色
+         * @brief Blend colors from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -108,7 +108,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起横向拷贝len长度的颜色
+         * @brief Copy the color of len length horizontally from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -121,7 +121,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起纵向拷贝len长度的颜色
+         * @brief Copy the color of len length vertically from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -134,7 +134,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起横向混合len长度的颜色
+         * @brief Blends the color of len length horizontally from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -147,7 +147,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起纵向混合len长度的颜色
+         * @brief Blends the color of the len length vertically from the specified x, y
          *
          * @since 1.0
          * @version 1.0
@@ -161,7 +161,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起横向混合len长度的一系列颜色
+         * @brief Horizontally blends a series of colors of len length from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -175,7 +175,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起纵向混合len长度的一系列颜色
+         * @brief Blends a series of colors of len length vertically from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -189,7 +189,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起横向拷贝len长度的一系列颜色
+         * @brief Copies a series of colors of len length horizontally from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -202,7 +202,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起纵向拷贝len长度的一系列颜色
+         * @brief Copies a series of colors of len length vertically from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -215,7 +215,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起横向混合len长度的一系列颜色
+         * @brief Horizontally blends a series of colors of len length from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
@@ -230,7 +230,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从指定x,y起纵向混合len长度的一系列颜色
+         * @brief Blends a series of colors of len length vertically from the specified x, y.
          *
          * @since 1.0
          * @version 1.0
