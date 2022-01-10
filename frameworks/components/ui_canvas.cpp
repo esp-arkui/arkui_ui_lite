@@ -1016,12 +1016,12 @@ namespace OHOS {
         cordsTmp.SetHeight(imageParam->height);
         cordsTmp.SetWidth(imageParam->width);
         uint8_t *image = (uint8_t *)malloc(imageParam->height * imageParam->width * 4);
-        clock_t start1, end;   //clock_t 是clock()的返回变量类型
-            start1 = clock();
+        //clock_t start1, end;   //clock_t 是clock()的返回变量类型
+        //    start1 = clock();
         //FastBoxBlur::BoxBlur((uint8_t*)imageParam->image->GetImageInfo()->data,image,
         //                     imageParam->width,imageParam->height,imageParam->width * 4,5);
-        end = clock();   //捕捉循环段结束的时间
-        printf("use time: %f \n",(end-start1) / CLK_TCK);
+        //end = clock();   //捕捉循环段结束的时间
+        //printf("use time: %f \n",(end-start1) / CLK_TCK);
 
         if (paint.GetChangeFlag()) {
             TransAffine transform;
