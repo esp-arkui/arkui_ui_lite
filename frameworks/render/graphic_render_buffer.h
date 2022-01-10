@@ -69,7 +69,7 @@ namespace OHOS {
          */
         void Attach(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride)
         {
-            renBuf = start_ = renBuf;
+            renBuf_ = start_ = renBuf;
             width_ = areaWidth;
             height_ = areaHeight;
             bufStride_ = stride;
