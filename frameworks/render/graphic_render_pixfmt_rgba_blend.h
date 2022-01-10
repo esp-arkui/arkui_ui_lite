@@ -426,7 +426,7 @@ namespace OHOS {
          * @brief 获取指定左边的像素地址.
          *
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         virtual GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {

@@ -1018,8 +1018,8 @@ namespace OHOS {
         uint8_t *image = (uint8_t *)malloc(imageParam->height * imageParam->width * 4);
         clock_t start1, end;   //clock_t 是clock()的返回变量类型
             start1 = clock();
-        FastBoxBlur::BoxBlur((uint8_t*)imageParam->image->GetImageInfo()->data,image,
-                             imageParam->width,imageParam->height,imageParam->width * 4,5);
+        //FastBoxBlur::BoxBlur((uint8_t*)imageParam->image->GetImageInfo()->data,image,
+        //                     imageParam->width,imageParam->height,imageParam->width * 4,5);
         end = clock();   //捕捉循环段结束的时间
         printf("use time: %f \n",(end-start1) / CLK_TCK);
 
@@ -1254,7 +1254,7 @@ namespace OHOS {
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
-        //drawBlur.Blur(pixf2->PixValuePtr(0,0), MATH_UROUND(paint.GetShadowBlur()));
+        //drawBlur..Blur(pixf2->PixValuePtr(0,0), MATH_UROUND(paint.GetShadowBlur()));
 #endif
 #endif
     }
