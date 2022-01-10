@@ -263,10 +263,10 @@ namespace OHOS {
         };
 
         /**
-         * repeat 铺满整个画布
-         * repeat-x 在画布的x轴重复
-         * repeat-y 在画布的y轴重复
-         * no-repeat 在画布不重复
+         * repeat Spread the whole canvas
+         * repeat-x Repeat on the X axis of the canvas
+         * repeat-y Repeat on the Y axis of the canvas
+         * no-repeat Do not repeat on canvas
          */
         enum PatternRepeatMode {
             REPEAT,
@@ -440,7 +440,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置笔帽类型.
+         * @brief Sets the cap type.
          * @see GetLineCap
          * @since 1.0
          * @version 1.0
@@ -451,7 +451,7 @@ namespace OHOS {
             changeFlage_ = true;
         }
         /**
-         * @brief 获取笔帽类型.
+         * @brief Gets the cap type.
          * @see SetLineCap
          * @since 1.0
          * @version 1.0
@@ -462,7 +462,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置笔的路径连接处的风格样式.
+         * @brief Sets the style at the path connection of the pen.
          * @see GetLineJoin
          * @since 1.0
          * @version 1.0
@@ -473,7 +473,7 @@ namespace OHOS {
             changeFlage_ = true;
         }
         /**
-         * @brief 设置路径连接处的尖角的间距限制.
+         * @brief Sets the spacing limit for sharp corners at path connections.
          * @see GetMiterLimit
          * @since 1.0
          * @version 1.0
@@ -489,7 +489,7 @@ namespace OHOS {
             return miterLimit_;
         }
         /**
-         * @brief 获取笔的路径连接处的风格样式.
+         * @brief Gets the style at the path connection of the pen.
          * @see SetLineJoin
          * @since 1.0
          * @version 1.0
@@ -505,8 +505,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置点划线的数组和数量.
-         * @param lineDashs 表示点划线数组,ndash 表示点划线数量
+         * @brief Sets the array and number of dashes.
+         * @param lineDashs Represents an array of dotted lines,ndash Indicates the number of dotted lines
          * @since 1.0
          * @version 1.0
          */
@@ -538,7 +538,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取dash数组
+         * @brief Get dash array
          * @return
          */
         float* GetLineDash() const
@@ -552,7 +552,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置dash模式起点的偏移量
+         * @brief Sets the offset of the dash mode start point
          * @see GetLineDashOffset
          * @since 1.0
          * @version 1.0
@@ -565,7 +565,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取dash数组长度
+         * @brief Get dash array length
          * @return
          */
         unsigned int GetLineDashCount() const
@@ -574,7 +574,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 清空点划线的，改用实现绘制.
+         * @brief Empty the dotted line and draw it instead.
          * @since 1.0
          * @version 1.0
          */
@@ -643,8 +643,8 @@ namespace OHOS {
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /*
-         * 设置图元用图案填充样式
-         * @param img 表示填充的图案，text表示填充样式
+         * Set hatch patterns for elements
+         * @param img Represents the pattern of the hatch，text Represents a fill pattern
          */
         void CreatePattern(const char* img, PatternRepeatMode patternRepeat)
         {
@@ -667,7 +667,7 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
 
         /**
-         * @brief 设置阴影模糊级别.
+         * @brief Sets the shadow blur level.
          * @since 1.0
          * @version 1.0
          */
@@ -678,7 +678,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取阴影模糊级别.
+         * @brief Gets the shadow blur level.
          * @since 1.0
          * @version 1.0
          */
@@ -688,7 +688,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取阴影横坐标偏移量.
+         * @brief Gets the abscissa offset of the shadow.
          * @since 1.0
          * @version 1.0
          */
@@ -697,7 +697,7 @@ namespace OHOS {
             return shadowOffsetX;
         }
         /**
-         * @brief 设置阴影横坐标偏移量.
+         * @brief Sets the abscissa offset of the shadow.
          * @since 1.0
          * @version 1.0
          */
@@ -707,7 +707,7 @@ namespace OHOS {
             changeFlage_ = true;
         }
         /**
-         * @brief 获取阴影纵坐标偏移量.
+         * @brief Gets the shadow ordinate offset.
          * @since 1.0
          * @version 1.0
          */
@@ -716,7 +716,7 @@ namespace OHOS {
             return shadowOffsetY;
         }
         /**
-         * @brief 设置阴影纵坐标偏移量.
+         * @brief Sets the shadow ordinate offset.
          * @since 1.0
          * @version 1.0
          */
@@ -726,7 +726,7 @@ namespace OHOS {
             changeFlage_ = true;
         }
         /**
-         * @brief 获取阴影的颜色值.
+         * @brief Gets the color value of the shadow.
          * @since 1.0
          * @version 1.0
          */
@@ -735,7 +735,7 @@ namespace OHOS {
             return shadowColor;
         }
         /**
-         * @brief 设置阴影的颜色值.
+         * @brief Sets the color value of the shadow.
          * @since 1.0
          * @version 1.0
          */
@@ -751,7 +751,7 @@ namespace OHOS {
         }
 #endif
         /**
-         * @brief 设置当前绘图的alpha
+         * @brief Sets the alpha of the current drawing.
          */
         void SetGlobalAlpha(float alphaPercentage)
         {
@@ -767,7 +767,7 @@ namespace OHOS {
             changeFlage_ = true;
         }
         /**
-         * @brief 返回当前绘图的alpha
+         * @brief Returns the alpha of the current drawing
          */
         float GetGlobalAlpha() const
         {
@@ -775,7 +775,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置混合模式
+         * @brief Set blend mode
          */
         void SetGlobalCompositeOperation(GlobalCompositeOperation globalCompositeOperation)
         {
@@ -787,14 +787,14 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取混合模式
+         * @brief Get blend mode
          */
         GlobalCompositeOperation GetGlobalCompositeOperation() const
         {
             return globalCompositeOperation_;
         }
 
-        /* 缩放当前绘图至更大或更小 */
+        /* Zooms the current drawing to a larger or smaller size */
         void Scale(float scaleX, float scaleY)
         {
             this->scaleRadioX_ *= scaleX;
@@ -819,7 +819,7 @@ namespace OHOS {
             return this->scaleRadioY_;
         }
 
-        /* 旋转当前绘图 */
+        /* Rotate current drawing */
         void Rotate(float angle)
         {
             changeFlage_ = true;
@@ -835,7 +835,7 @@ namespace OHOS {
             transfrom_.Translate(x, y);
             changeFlage_ = true;
         }
-        /* 重新映射画布上的 (x,y) 位置 */
+        /* Remap the (x, y) position on the canvas */
         void Translate(int16_t x, int16_t y)
         {
             changeFlage_ = true;
@@ -844,18 +844,18 @@ namespace OHOS {
             this->translationY_ += y;
         }
 
-        /* 获取重新映射画布上的x 位置 */
+        /* Gets the x position on the remapping canvas */
         int16_t GetTranslateX() const
         {
             return this->translationX_;
         }
-        /* 获取重新映射画布上的y 位置 */
+        /* Gets the Y position on the remapping canvas */
         int16_t GetTranslateY() const
         {
             return this->translationY_;
         }
 
-        /* 将当前转换重置为单位矩阵。然后运行 transform() */
+        /* Resets the current conversion to the identity matrix. Then run transform () */
         void SetTransform(float scaleX, float shearX, float shearY, float scaleY,
                           int16_t transLateX, int16_t transLateY)
         {
@@ -865,7 +865,7 @@ namespace OHOS {
             changeFlage_ = true;
         }
 
-        /* 将当前转换重置为单位矩阵。然后运行 transform() */
+        /* Resets the current conversion to the identity matrix. Then run transform () */
         void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
         {
             changeFlage_ = true;
@@ -914,11 +914,11 @@ namespace OHOS {
         bool changeFlage_;
         LineJoinEnum lineJoin_;
         LineCapEnum lineCap_;
-        bool isDashMode_;      // 是否是dash模式的线段
-        float dashOffset_;     // dash 点偏移量
-        float* dashArray_;     // dash 点数组
-        unsigned int ndashes_; // dashArray的长度
-        double miterLimit_;    // 设置路径连接处的尖角的间距限制
+        bool isDashMode_;      // Is it a dash mode segment.
+        float dashOffset_;     // dash Point offset.
+        float* dashArray_;     // dash Point array.
+        unsigned int ndashes_; // Length of dasharray
+        double miterLimit_;    // Sets the spacing limit for sharp corners at path connections
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         LinearGradientPoint linearGradientPoint_;
         RadialGradientPoint radialGradientPoint_;
@@ -930,20 +930,20 @@ namespace OHOS {
 #endif
         const char* image;
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
-        double shadowBlurRadius; // 设置阴影模糊半径
-        double shadowOffsetX;    // 设置阴影横坐标偏移量
-        double shadowOffsetY;    // 设置阴影纵坐标偏移量。
-        ColorType shadowColor;   // 设置阴影色彩
-        bool haveShadow;         // 当前是否有阴影
+        double shadowBlurRadius; // Sets the shadow blur radius.
+        double shadowOffsetX;    // Sets the abscissa offset of the shadow.
+        double shadowOffsetY;    // Sets the shadow ordinate offset..
+        ColorType shadowColor;   // Set shadow color.
+        bool haveShadow;         // Is there a shadow currently.
 #endif
-        float globalAlpha_;                                 // 当前绘图的透明度0-1 百分比
-        GlobalCompositeOperation globalCompositeOperation_; // 混合图像方式
-        float rotateAngle_;                                 // 旋转角度，单位度数
+        float globalAlpha_;                                 // The transparency of the current drawing is 0-1 percent
+        GlobalCompositeOperation globalCompositeOperation_; // Mixed image mode
+        float rotateAngle_;                                 // Rotation angle in degrees
         float scaleRadioX_;
         float scaleRadioY_;
         int translationX_;
         int translationY_;
-        TransAffine transfrom_;                             // 矩阵.
+        TransAffine transfrom_;                             // matrix.
         bool haveComposite_;
         UICanvas* uiCanvas_;
     };
@@ -957,10 +957,11 @@ namespace OHOS {
     class UICanvas : public UIView {
     public:
         typedef Rgba8 Rgba8Color;
-        // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
+        // Color array RGBA, index position of blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
 
-        // 根据 ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+        // Fill the color in the position specified by componentorder according to the index of componentorder,
+        // and according to blender_ RGBA mode processing color
         typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
         typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
         typedef RendererBase<PixFormat> RendererBase;
@@ -968,39 +969,44 @@ namespace OHOS {
         typedef ScanlineUnPackedContainer Scanline;
         typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        // 设定渐变数组的构造器设定颜色插值器和颜色模板等
+        // Set the constructor of gradient array, set color interpolator, color template, etc
         typedef GradientColorCalibration<OHOS::ColorInterpolator<OHOS::Srgba8>> GradientColorMode;
-        // 设定放射渐变的算法
+        // Algorithm for setting radial gradient
         typedef GradientRadialCalculate RadialGradientCalculate;
-        // 设定线段插值器
+        // Set segment interpolator
         typedef SpanInterpolatorLinear<> InterpolatorType;
-        // 设定线性渐变的线段生成器
+        // Sets the segment generator for linear gradients
         typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, GradientLinearCalculate,
                 GradientColorMode> LinearGradientSpan;
-        // 设定放射渐变的线段生成器
+        // Sets the segment generator for the radial gradient
         typedef SpanFillColorGradient<Rgba8Color, SpanInterpolatorLinear<>, RadialGradientCalculate,
                 GradientColorMode> RadialGradientSpan;
 #endif
 
-        // 渲染器缓冲区
+        // Renderer buffer
         typedef OHOS::RenderingBuffer PatternBuffer;
-        // 设定图像观察器的模式为Wrap设定X,Y轴上WrapModeRepeat模式，即X,Y上都重复图片
+        // Set the mode of the image viewer to wrap, and set the wrapmoderepeat mode on the X and Y axes,
+        // that is, repeat pictures on both X and Y axes
         typedef OHOS::ImageAccessorWrap<PixFormat, OHOS::WrapModeRepeat, OHOS::WrapModeRepeat> ImgSourceTypeRepeat;
-        // 设定图像观察器的模式为RepeatX设定X轴上WrapModeRepeat模式，即X上都重复图片
+        // Set the mode of the image viewer to repeatx. Set the wrapmoderepeat mode on the X axis,
+        // that is, repeat the picture on the X axis
         typedef OHOS::ImageAccessorRepeatX<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatX;
-        // 设定图像观察器的模式为RepeatY设定Y轴上WrapModeRepeat模式，即Y上都重复图片
+        // Set the mode of the image viewer to repeat. Set the wrapmoderepeat mode on the Y axis,
+        // that is, repeat the pictures on the Y axis
         typedef OHOS::ImageAccessorRepeatY<PixFormat, OHOS::WrapModeRepeat> imgSourceTypeRepeatY;
-        // 设定图像观察器的模式为NoRepeat即X,Y轴上都不重复，只有一张原本的图片
+        // Set the mode of the image viewer to norepeat, that is, there is no repetition on the X and Y axes,
+        // but only one original image
         typedef OHOS::ImageAccessorNoRepeat<PixFormat> imgSourceTypeNoRepeat;
-        // 通过线段生成器SpanPatternRgba设定相应的图像观察器对应的模式生成相应线段
+        // Set the mode corresponding to the corresponding image viewer through the segment generator spanpatternrgba
+        // to generate the corresponding segment
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
-        //  x,y轴都重复
+        //  x. Y-axis repeat
         typedef OHOS::SpanPatternFillRgba<ImgSourceTypeRepeat> spanPatternTypeRepeat;
-        //  x轴重复
+        //  X-axis repeat
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatX> spanPatternTypeRepeatX;
-        //  y轴重复
+        //  Y-axis repeat
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeRepeatY> spanPatternTypeRepeatY;
-        // 不重复
+        // No repetition
         typedef OHOS::SpanPatternFillRgba<imgSourceTypeNoRepeat> spanPatternTypeNoRepeat;
 #endif
         /**
@@ -1137,20 +1143,20 @@ namespace OHOS {
         void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
         /**
-         * @brief 绘制矩形路径无填充
-         * @param startPoint 起点
-         * @param height 高度
-         * @param width 宽度
-         * @param paint 画笔
+         * @brief Draws a rectangular path with no fill.
+         * @param startPoint starting point
+         * @param height
+         * @param width
+         * @param paint paint brush
          */
         void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
         /**
-         * @brief 清除矩形内的像素
-         * @param startPoint 起点
-         * @param height 高度
-         * @param width 宽度
-         * @param paint 画笔
+         * @brief Clears pixels within a rectangle
+         * @param startPoint starting point
+         * @param height
+         * @param width
+         * @param paint paint brush
          */
         void ClearRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
@@ -1326,26 +1332,26 @@ namespace OHOS {
         void DrawPath(const Paint& paint);
 
         /**
-         * @brief 填充多边形路径
+         * @brief Fill polygon path
          * @param paint
          */
         void FillPath(const Paint& paint);
 
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
-        /*  在画布上绘制文本 */
+        /*  Draw text on canvas */
         void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
 #endif
 
-        /* 返回包含指定文本宽度的对象 */
+        /* Returns an object containing the specified text width */
         Point MeasureText(const char* text, const FontStyle& fontStyle, const Paint& paint);
 
-        /* 保存历史状态 */
+        /* Save history status */
         void Save(Paint& paint)
         {
             PaintStack.push(paint);
         }
 
-        /* 恢复到上次历史状态 */
+        /* Restore to last historical state */
         Paint Restore()
         {
             Paint paint;
@@ -1431,7 +1437,7 @@ namespace OHOS {
         Point startPoint_;
         UICanvasVertices* vertices_;
         List<DrawCmd> drawCmdList_;
-        // 保存Paint的历史修改信息
+        // Save historical modification information of paint
         std::stack<Paint> PaintStack;
         BufferInfo* gfxMapBuffer_;
 
@@ -1620,12 +1626,12 @@ namespace OHOS {
         static void CopyBuffer(BufferInfo& gfxMapBuffer, BufferInfo& gfxDstBuffer);
 
         /**
-         * 组装参数设置线宽，LineCap，LineJoin
+         * Assembly parameter setting lineweight，LineCap，LineJoin
          */
         template <class LineStyle>
         static void LineStyleCalc(DepictStroke<LineStyle>& strokeLineStyle, const Paint& paint)
         {
-            strokeLineStyle.Width(paint.GetStrokeWidth()); // 线条样式相关
+            strokeLineStyle.Width(paint.GetStrokeWidth()); // Line style related
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             strokeLineStyle.LineCap(paint.GetLineCap());
 #endif
@@ -1638,7 +1644,7 @@ namespace OHOS {
         };
 
         /**
-         * 设置linedash样式
+         * Set linedash style
          */
         template <class LineDashStyle>
         static void LineDashStyleCalc(DepictDash<LineDashStyle>& dashStyle, const Paint& paint)
@@ -1650,7 +1656,7 @@ namespace OHOS {
         };
 
         /**
-         * 渲染单色的多边形路径和填充
+         * Renders monochrome polygon paths and fills
          */
         template <class Pixfmt>
         static void RenderSolid(const Paint& paint,
@@ -1693,7 +1699,7 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
-         * 渲染渐变
+         * Render gradient
          */
         template <class Pixfmt, class color>
         static void RenderGradient(const Paint& paint,
@@ -1911,7 +1917,7 @@ namespace OHOS {
                                      imageParam->width,
                                      imageParam->height,
                                      imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-                PixFormat img_pixf(patternBuffer); // 获取图片
+                PixFormat img_pixf(patternBuffer); // Get picture
 
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                     ImgSourceTypeRepeat img_src(img_pixf);
@@ -1943,7 +1949,7 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         /**
-         * 渲染Pattern模式
+         * Render pattern mode
          */
         template <class Pixfmt, class color>
         static void RenderPattern(const Paint& paint,
@@ -1969,7 +1975,7 @@ namespace OHOS {
                                  imageParam->width,
                                  imageParam->height,
                                  imageParam->width * (pxSize >> OHOS::PXSIZE2STRIDE_FACTOR));
-            PixFormat img_pixf(patternBuffer); // 获取图片
+            PixFormat img_pixf(patternBuffer); // Get picture
 
             if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                 ImgSourceTypeRepeat img_src(img_pixf);
