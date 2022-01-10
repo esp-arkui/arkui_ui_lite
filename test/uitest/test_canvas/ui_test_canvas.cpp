@@ -40,7 +40,7 @@ namespace OHOS {
 
     const UIView* UITestCanvas::GetTestView()
     {
-        UIKitCanvasTestDrawImage001();
+        //UIKitCanvasTestDrawImage001();
         RM008UIKitCanvasTest001();
         RM008UIKitCanvasTest002();
         RM008UIKitCanvasTest003();
