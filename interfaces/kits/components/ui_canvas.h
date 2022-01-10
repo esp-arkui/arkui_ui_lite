@@ -1001,7 +1001,7 @@ namespace OHOS {
          * @version 1.0
          */
         UICanvas()
-            : startPoint_({0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
+            : startPoint_( {0, 0}), vertices_(nullptr), gfxMapBuffer_(nullptr)
         {}
 
         /**
@@ -1653,7 +1653,6 @@ namespace OHOS {
             RenderScanlinesAntiAliasSolid(rasterizer, scanline, renBase, color);
         }
 
-
         static void RenderBlendSolid(const Paint& paint,
                                      Rgba8Color& color,
                                      const bool& isStroke)
@@ -1671,15 +1670,15 @@ namespace OHOS {
             }
         }
 
-        static bool isSoild(const Paint& paint) {
-            if(paint.GetStyle() == Paint::STROKE_STYLE ||
+        static bool isSoild(const Paint& paint)
+        {
+            if (paint.GetStyle() == Paint::STROKE_STYLE ||
                paint.GetStyle() == Paint::FILL_STYLE ||
                paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
                 return true;
             }
             return false;
         }
-
 
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
@@ -1739,7 +1738,8 @@ namespace OHOS {
             }
         }
 
-        static void BuildGradientColor(const Paint& paint, GradientColorMode& gradientColorMode) {
+        static void BuildGradientColor(const Paint& paint, GradientColorMode& gradientColorMode)
+        {
             gradientColorMode.RemoveAll();
             ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
             uint16_t count = 0;
@@ -1835,7 +1835,6 @@ namespace OHOS {
                                 const Rect& rect,
                                 bool isStroke)
         {
-
             TransAffine gradientMatrixBlend;
             typedef SpanSoildColor<Rgba8Color> SpanSoildColor;
 
@@ -1851,7 +1850,7 @@ namespace OHOS {
                 BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
                               scanline1, scanline2, renBase, allocator1, spanBlendSoildColor, allocator2, spanGen);
             }
-            #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             InterpolatorType interpolatorTypeBlend(gradientMatrixBlend);
             GradientColorMode gradientColorModeBlend;
 
@@ -1859,7 +1858,7 @@ namespace OHOS {
                 BuildGradientColor(paint, gradientColorModeBlend);
                 if (paint.GetGradient() == Paint::Linear) {
                     double distance = 0;
-                    BuildLineGradientMatrix(paint,gradientMatrixBlend,transform,distance);
+                    BuildLineGradientMatrix(paint, gradientMatrixBlend, transform, distance);
                     GradientLinearCalculate gradientLinearCalculate;
                     LinearGradientSpan span(interpolatorTypeBlend, gradientLinearCalculate,
                                             gradientColorModeBlend, 0, distance);
@@ -1871,7 +1870,7 @@ namespace OHOS {
                     Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
                     double startRadius = 0;
                     double endRadius = 0;
-                    BuildRadialGradientMatrix(paint,gradientMatrixBlend,transform,startRadius,endRadius);
+                    BuildRadialGradientMatrix(paint, gradientMatrixBlend, transform, startRadius, endRadius);
                     GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
                                                                     radialPoint.y0 - radialPoint.y1);
                     RadialGradientSpan span(interpolatorTypeBlend, gradientRadialCalculate, gradientColorModeBlend,
@@ -1906,26 +1905,26 @@ namespace OHOS {
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT) {
                     ImgSourceTypeRepeat img_src(img_pixf);
                     spanPatternTypeRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT_X) {
                     imgSourceTypeRepeatX img_src(img_pixf);
                     spanPatternTypeRepeatX m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
                 if (paint.GetPatternRepeatMode() == Paint::REPEAT_Y) {
                     imgSourceTypeRepeatY img_src(img_pixf);
                     spanPatternTypeRepeatY m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
                 if (paint.GetPatternRepeatMode() == Paint::NO_REPEAT) {
                     imgSourceTypeNoRepeat img_src(img_pixf);
                     spanPatternTypeNoRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendScanLine(paint.GetGlobalCompositeOperation(),blendRasterizer,rasterizer,
-                                  scanline1,scanline2,renBase,allocator1,m_spanPatternType,allocator2,spanGen);
+                    BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                                  scanline1, scanline2, renBase, allocator1, m_spanPatternType, allocator2, spanGen);
                 }
             }
 #endif
