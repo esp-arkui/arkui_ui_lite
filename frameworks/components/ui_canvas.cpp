@@ -1020,7 +1020,7 @@ namespace OHOS {
         cordsTmp.SetHeight(imageParam->height);
         cordsTmp.SetWidth(imageParam->width);
 
-        if (paint.GetChangeFlag()) {
+        if (!paint.GetTransAffine().IsIdentity()) {
             TransformMap transMap;
             transMap.SetTransMapRect(cordsTmp);
             transMap.Scale({static_cast<float>(paint.GetScaleX()), static_cast<float>(paint.GetScaleY())}, {0, 0});
