@@ -130,24 +130,36 @@ namespace OHOS {
              class SpanGenerator1,
              class SpanGenerator2>
     void BlendScanLine(GlobalCompositeOperation op,
-                                 Rasterizer& raster1, Rasterizer& raster2,
-                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,
-                                 SpanAllocator& alloc1, SpanGenerator1& spanGen1,
-                                 SpanAllocator& alloc2, SpanGenerator2& spanGen2)
+                       Rasterizer& raster1, Rasterizer& raster2,
+                       Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,
+                       SpanAllocator& alloc1, SpanGenerator1& spanGen1,
+                       SpanAllocator& alloc2, SpanGenerator2& spanGen2)
     {
-        switch(op)
-        {
-        case SOURCE_OVER       : BlendSourceOver   (raster2, raster1, sl2, sl1, renBase,alloc2,spanGen2,alloc1,spanGen1); break;
-        case SOURCE_ATOP       : BlendSourceAtop   (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1,alloc2,spanGen2); break;
-        case SOURCE_IN         : BlendSourceIn     (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1); break;
-        case SOURCE_OUT        : BlendSourceOut   (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1); break;
-        case DESTINATION_OVER  : BlendSourceOver   (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1,alloc2,spanGen2); break;
-        case DESTINATION_ATOP  : BlendSourceAtop   (raster2, raster1, sl2, sl1, renBase,alloc2,spanGen2,alloc1,spanGen1); break;
-        case DESTINATION_IN    : BlendSourceIn     (raster2, raster1, sl2, sl1, renBase,alloc2,spanGen2); break;
-        case DESTINATION_OUT   : BlendSourceOut    (raster2, raster1, sl2, sl1, renBase,alloc2,spanGen2); break;
-        case LIGHTER           : BlendLIGHTER    (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1,alloc2,spanGen2); break;
-        case COPY              : RenderScanlinesAntiAlias(raster1,sl1,renBase,alloc1,spanGen1); break;
-        case XOR               : BlendXOR   (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1,alloc2,spanGen2); break;
+        switch (op) {
+            case SOURCE_OVER       : BlendSourceOver   (raster2, raster1, sl2, sl1, renBase,
+                                                        alloc2, spanGen2, alloc1, spanGen1); break;
+            case SOURCE_ATOP       : BlendSourceAtop   (raster1, raster2, sl1, sl2, renBase,
+                                                        alloc1, spanGen1, alloc2, spanGen2); break;
+            case SOURCE_IN         : BlendSourceIn     (raster1, raster2, sl1, sl2, renBase,
+                                                        alloc1, spanGen1); break;
+            case SOURCE_OUT        : BlendSourceOut   (raster1, raster2, sl1, sl2, renBase,
+                                                       alloc1, spanGen1); break;
+            case DESTINATION_OVER  : BlendSourceOver   (raster1, raster2, sl1, sl2, renBase,
+                                                        alloc1, spanGen1, alloc2, spanGen2); break;
+            case DESTINATION_ATOP  : BlendSourceAtop   (raster2, raster1, sl2, sl1, renBase,
+                                                        alloc2, spanGen2, alloc1, spanGen1); break;
+            case DESTINATION_IN    : BlendSourceIn     (raster2, raster1, sl2, sl1, renBase,
+                                                        alloc2, spanGen2); break;
+            case DESTINATION_OUT   : BlendSourceOut    (raster2, raster1, sl2, sl1, renBase,
+                                                        alloc2, spanGen2); break;
+            case LIGHTER           : BlendLIGHTER    (raster1, raster2, sl1, sl2, renBase,
+                                                      alloc1, spanGen1, alloc2, spanGen2); break;
+            case COPY              : RenderScanlinesAntiAlias(raster1, sl1, renBase,
+                                                              alloc1, spanGen1); break;
+            case XOR               : BlendXOR   (raster1, raster2, sl1, sl2, renBase,
+                                                 alloc1, spanGen1, alloc2, spanGen2); break;
+            default:
+                break;
         }
     }
 
@@ -227,8 +239,8 @@ namespace OHOS {
              class SpanGenerator1,
              class SpanGenerator2>
     void BlendSourceAtop(Rasterizer& raster1, Rasterizer& raster2,
-                               Scanline& scanline1, Scanline& scanline2,
-                               BaseRenderer& renBase,
+                         Scanline& scanline1, Scanline& scanline2,
+                         BaseRenderer& renBase,
                          SpanAllocator& alloc1, SpanGenerator1& spanGen1,
                          SpanAllocator& alloc2, SpanGenerator2& spanGen2)
     {
@@ -271,35 +283,26 @@ namespace OHOS {
                     if (y1 == y2) {
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
-                            if(span1->spanLength > 0){
+                            if (span1->spanLength > 0) {
                                 typename BaseRenderer::color_type* colors = alloc2.Resize(span2->spanLength);
                                 spanGen2.Generate(colors, x2, y2, span2->spanLength);
                                 renBase.BlendColorHspan(x2, y2, (unsigned)span2->spanLength,
                                                         colors,
                                                         span2->covers);
-
-
-                                if(x1<=x2 && x2+span2->spanLength < x1+span1->spanLength){
+                                if (x1<=x2 && x2+span2->spanLength < x1+span1->spanLength) {
                                     typename BaseRenderer::color_type* colors = alloc1.Resize(span2->spanLength);
                                     spanGen1.Generate(colors, x2, y2, span2->spanLength);
                                     renBase.BlendColorHspan(x2, y2, (unsigned)span2->spanLength,
                                                             colors,
                                                             span2->covers);
                                 }
-
-                                // span1在span2中
-                                // spa2   ------------------------
-                                // spa1     -------------------
-                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength){
+                                if (x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength) {
                                     typename BaseRenderer::color_type* colors = alloc1.Resize(span1->spanLength);
                                     spanGen1.Generate(colors, x1, y2, span1->spanLength);
                                     renBase.BlendColorHspan(x1, y2, (unsigned)span1->spanLength,
                                                             colors,
                                                             span1->covers);
                                 }
-
-                                // spa2   ------------------------
-                                // spa1                 -------------------
                                 if (x1 > x2 &&
                                     x1 < x2 + span2->spanLength &&
                                     x1 + span1->spanLength >= x2 + span2->spanLength) {
@@ -312,12 +315,9 @@ namespace OHOS {
                                                             colors,
                                                             span3->covers);
                                 }
-
-                                // spa2              ------------------------
-                                // spa1     -------------------
-                                if(x1<x2&&
+                                if (x1<x2&&
                                    x1+span1->spanLength > x2 &&
-                                   x1+span1->spanLength <= x2+span2->spanLength){
+                                   x1+span1->spanLength <= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3, x2, x1, span2, span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -402,30 +402,21 @@ namespace OHOS {
                     if (y1 == y2) {
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
-                            if(span1->spanLength > 0){
-                                // spa2       -----------------
-                                // spa1     -----------------------
-                                if(x1<=x2 && x2+span2->spanLength < x1+span1->spanLength){
+                            if (span1->spanLength > 0) {
+                                if (x1<=x2 && x2+span2->spanLength < x1+span1->spanLength) {
                                     typename BaseRenderer::color_type* colors = alloc1.Resize(span2->spanLength);
                                     spanGen1.Generate(colors, x2, y2, span2->spanLength);
                                     renBase.BlendColorHspan(x2, y2, (unsigned)span2->spanLength,
                                                             colors,
                                                             span2->covers);
                                 }
-
-                                // span1在span2中
-                                // spa2   ------------------------
-                                // spa1     -------------------
-                                if(x1>=x2 &&x1+span1->spanLength<=x2+span2->spanLength){
+                                if (x1>=x2 && x1+span1->spanLength <= x2+span2->spanLength) {
                                     typename BaseRenderer::color_type* colors = alloc1.Resize(span1->spanLength);
                                     spanGen1.Generate(colors, x1, y2, span1->spanLength);
                                     renBase.BlendColorHspan(x1, y2, (unsigned)span1->spanLength,
                                                             colors,
                                                             span1->covers);
                                 }
-
-                                // spa2   ------------------------
-                                // spa1                 -------------------
                                 if (x1 > x2 &&
                                     x1 < x2 + span2->spanLength &&
                                     x1 + span1->spanLength >= x2 + span2->spanLength) {
@@ -438,12 +429,9 @@ namespace OHOS {
                                                             colors,
                                                             span3->covers);
                                 }
-
-                                // spa2              ------------------------
-                                // spa1     -------------------
-                                if(x1<x2&&
-                                   x1+span1->spanLength > x2 &&
-                                   x1+span1->spanLength <= x2+span2->spanLength){
+                                if (x1<x2&&
+                                    x1+span1->spanLength > x2 &&
+                                    x1+span1->spanLength <= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3, x2, x1, span2, span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
@@ -535,8 +523,6 @@ namespace OHOS {
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
                             if (span1->spanLength > 0) {
-                                // spa2       -----------------
-                                // spa1     -----------------------
                                 if (x1 < x2 && x2 + span2->spanLength < x1 + span1->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineAll(scanline3, x2, x1, span2, span1);
@@ -547,9 +533,6 @@ namespace OHOS {
                                                             colors,
                                                             span3->covers);
                                 }
-                                // spa2   ------------------------
-                                // spa1                 -------------------
-                                // 相交部分
                                 if (x1 >= x2 &&
                                     x1 < x2 + span2->spanLength &&
                                     x1 + span1->spanLength >= x2 + span2->spanLength) {
@@ -562,8 +545,6 @@ namespace OHOS {
                                                             colors,
                                                             span4->covers);
                                 }
-                                // spa2              ------------------------
-                                // spa1     -------------------
                                 if (x1 <= x2 &&
                                     x1 + span1->spanLength >= x2 &&
                                     x1 + span1->spanLength <= x2 + span2->spanLength) {
@@ -576,11 +557,8 @@ namespace OHOS {
                                                             colors,
                                                             span3->covers);
                                 }
-                                // spa2              ------------------------
-                                // spa1     -------                            ----------
-                                //没有混合点各自绘制
-                                if(x1+span1->spanLength < x2||
-                                   x2+span2->spanLength < x1){
+                                if (x1+span1->spanLength < x2||
+                                    x2+span2->spanLength < x1) {
                                     typename BaseRenderer::color_type* colors = alloc1.Resize(span1->spanLength);
                                     spanGen1.Generate(colors, x1, y2, span1->spanLength);
                                     renBase.BlendColorHspan(x1, y2, (unsigned)span1->spanLength,
@@ -634,15 +612,15 @@ namespace OHOS {
              class SpanGenerator1,
              class SpanGenerator2>
     void BlendSourceOver(Rasterizer& raster1, Rasterizer& raster2,
-                               Scanline& scanline1, Scanline& scanline2,
-                               BaseRenderer& renBase,
+                         Scanline& scanline1, Scanline& scanline2,
+                         BaseRenderer& renBase,
                          SpanAllocator& alloc1,
                          SpanGenerator1& spanGen1,
                          SpanAllocator& alloc2,
                          SpanGenerator2& spanGen2)
-    {   
-        RenderScanlinesAntiAlias(raster1,scanline1,renBase,alloc1,spanGen1);
-        RenderScanlinesAntiAlias(raster2,scanline2,renBase,alloc2,spanGen2);
+    {
+        RenderScanlinesAntiAlias(raster1, scanline1, renBase, alloc1, spanGen1);
+        RenderScanlinesAntiAlias(raster2, scanline2, renBase, alloc2, spanGen2);
     }
 
 
@@ -711,9 +689,6 @@ namespace OHOS {
                         int x1 = span1->x;
                         if (span2->spanLength > 0) {
                             if (span1->spanLength > 0) {
-                                // span1在span2中
-                                // spa2   ------------------------
-                                // spa1     -------------------
                                 if (x1 >= x2 && x1 + span1->spanLength <= x2 + span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineAll(scanline3, x1, x2, span1, span2);
@@ -724,8 +699,6 @@ namespace OHOS {
                                                             colors,
                                                             span3->covers);
                                 }
-                                // spa2       -----------------
-                                // spa1     -----------------------
                                 if (x1 < x2 && x2 + span2->spanLength < x1 + span1->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcOutScanlineAll(scanline3, x2, x1, span2, span1);
@@ -736,9 +709,6 @@ namespace OHOS {
                                                             colors,
                                                             span3->covers);
                                 }
-                                // spa2   ------------------------
-                                // spa1                 -------------------
-                                // 相交部分
                                 if (x1 >= x2 &&
                                     x1 < x2 + span2->spanLength &&
                                     x1 + span1->spanLength >= x2 + span2->spanLength) {
@@ -760,8 +730,6 @@ namespace OHOS {
                                                             colors2,
                                                             span4->covers);
                                 }
-                                // spa2              ------------------------
-                                // spa1     -------------------
                                 if (x1 <= x2 &&
                                     x1 + span1->spanLength >= x2 &&
                                     x1 + span1->spanLength <= x2 + span2->spanLength) {
@@ -783,11 +751,8 @@ namespace OHOS {
                                                             colors2,
                                                             span4->covers);
                                 }
-                                // spa2              ------------------------
-                                // spa1     -------                            ----------
-                                // 没有混合点各自绘制
-                                if(x1+span1->spanLength < x2||
-                                   x2+span2->spanLength < x1){
+                                if (x1+span1->spanLength < x2||
+                                   x2+span2->spanLength < x1) {
                                     typename BaseRenderer::color_type* colors = alloc1.Resize(span1->spanLength);
                                     spanGen1.Generate(colors, x1, y2, span1->spanLength);
                                     renBase.BlendColorHspan(x1, y2, (unsigned)span1->spanLength,
@@ -861,11 +826,11 @@ namespace OHOS {
                       SpanAllocator& alloc2,
                       SpanGenerator2& spanGen2)
     {
-        BlendXOR(raster1, raster2, scanline1, scanline2, renBase,alloc1,spanGen1,alloc2,spanGen2);
+        BlendXOR(raster1, raster2, scanline1, scanline2, renBase, alloc1, spanGen1, alloc2, spanGen2);
         typedef Rgba8 Rgba8Color;
-        typedef SpanBlendColor<SpanGenerator1,SpanGenerator2,Rgba8Color> SpanBlendColor;
-        SpanBlendColor spanBlendColor(spanGen1,spanGen2);
-        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase,alloc1,spanBlendColor);
+        typedef SpanBlendColor<SpanGenerator1, SpanGenerator2, Rgba8Color> SpanBlendColor;
+        SpanBlendColor spanBlendColor(spanGen1, spanGen2);
+        BlendSourceIn(raster1, raster2, scanline1, scanline2, renBase, alloc1, spanBlendColor);
     }
 } // namespace OHOS
 #endif
