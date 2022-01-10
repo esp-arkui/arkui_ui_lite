@@ -1236,7 +1236,8 @@ namespace OHOS {
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
-        typedef OHOS::FastBoxBlur DrawBlur;
+        typedef OHOS::FastBoxBlur<Rgba8Color> DrawBlur;
+//        typedef OHOS::FastBoxBlur<> DrawBlur;
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
         DrawBlur drawBlur;
 
@@ -1251,7 +1252,7 @@ namespace OHOS {
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
-        //drawBlur..Blur(pixf2->PixValuePtr(0,0), MATH_UROUND(paint.GetShadowBlur()));
+        drawBlur.BoxBlur(pixf2, MATH_UROUND(paint.GetShadowBlur()));
 #endif
 #endif
     }
