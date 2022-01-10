@@ -116,25 +116,25 @@ namespace OHOS {
         }
 
         /*
-         * 对于数据成员进行初始化
-         * style_;       paint style
-         * fillColor_;   设置笔的填充颜色
-         * strokeColor_; 设置笔的线条颜色
-         * opacity_;     设置透明度
-         * strokeWidth_; 设置线宽
-         * lineCap_;     设置笔帽
-         * lineJoin_;    设置笔的路径连接处的风格样式
-         * miterLimit_;  设置路径连接处的尖角的间距限制
-         * dashOffset;   dash 点偏移量
-         * isDrawDash;   是否绘制点划线
-         * dashArray;    dash 点数组
-         * ndashes;      点划线数量
-         * globalAlpha;  设置图元全局alpha
-         * shadowBlurRadius;  设置阴影模糊半径
-         * shadowOffsetX;     设置阴影横坐标偏移量
-         * shadowOffsetY;     设置阴影纵坐标偏移量
-         * shadowColor;       设置阴影色彩
-         * blendMode;     设置多图元混合渲染模式
+         * Initialize data members.
+         * style_;       paint style.
+         * fillColor_;   Sets the fill color of the pen.
+         * strokeColor_; Sets the line color of the pen.
+         * opacity_;     Set transparency.
+         * strokeWidth_; Set lineweight.
+         * lineCap_;     Set pen cap.
+         * lineJoin_;    Sets the style at the path connection of the pen.
+         * miterLimit_;  Sets the spacing limit for sharp corners at path connections.
+         * dashOffset;   dash Point offset.
+         * isDrawDash;   Whether to draw dotted line.
+         * dashArray;    dash Point group.
+         * ndashes;      Number of dotted lines.
+         * globalAlpha;  Set element Global alpha.
+         * shadowBlurRadius;  Sets the shadow blur radius.
+         * shadowOffsetX;     Sets the abscissa offset of the shadow.
+         * shadowOffsetY;     Sets the shadow ordinate offset.
+         * shadowColor;       Set shadow color.
+         * blendMode;     Set multi entity blend rendering mode.
          */
         void Init(const Paint& paint)
         {
@@ -219,42 +219,42 @@ namespace OHOS {
             FILL_STYLE,
             /** Stroke and fill */
             STROKE_FILL_STYLE,
-            /** 渐变 */
+            /** Gradual change */
             GRADIENT,
-            /** 图像模式 */
+            /** Image mode */
             PATTERN
         };
 
         struct LinearGradientPoint {
-            /**  开始点坐标x  */
+            /**  Start point coordinate x  */
             double x0;
-            /**  开始点坐标y  */
+            /**  Start point coordinate y  */
             double y0;
-            /**  结束点坐标x  */
+            /**  End point coordinate x  */
             double x1;
-            /**  结束点坐标y  */
+            /**  End point coordinate y  */
             double y1;
         };
 
         struct RadialGradientPoint {
-            /**  开始圆点坐标x  */
+            /**  Start dot coordinate x  */
             double x0;
-            /**  开始圆点坐标y  */
+            /** Start dot coordinate y  */
             double y0;
-            /**  开始圆半径r0  */
+            /**  Start circle radius r0  */
             double r0;
-            /**  结束圆点坐标x  */
+            /**  End dot coordinates x  */
             double x1;
-            /**  结束圆点坐标y  */
+            /**  End dot coordinates y  */
             double y1;
-            /**  开始圆半径r0  */
+            /**  Start circle radius r0  */
             double r1;
         };
 
         struct StopAndColor {
-            /** 介于 0.0 与 1.0 之间的值，表示渐变中开始与结束之间的位置。  */
+            /** Values between 0.0 and 1.0 represent the position between the beginning and end of the ramp.  */
             double stop;
-            /** 在结束位置显示的颜色值 */
+            /** The color value displayed at the end */
             ColorType color;
         };
         enum Gradient {
@@ -1605,6 +1605,8 @@ namespace OHOS {
                                  const Style& style,
                                  const bool& isStroke);
 #endif
+       static void  BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer,
+                                  Rect& textRect, TransformMap& transMap, const Rect& invalidatedArea);
 
 #if GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT
         static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,

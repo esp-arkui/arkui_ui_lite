@@ -27,39 +27,45 @@ namespace OHOS {
     class BaseGfxEngine;
 
     enum BlendMode {
-        /** 不混合 */
+        /** No mixing */
         BLEND_MODE = -1,
         /** S */
         BLEND_SRC,
         /** D */
         BLEND_DST,
-        /** 默认。在目标图像上显示源图像。 */
+        /** Default. Displays the source image on the target image. */
         /** S + (1 - Sa) * D */
         BLEND_SRC_OVER,
-        /** 在源图像上显示目标图像。 */
+        /** Displays the target image on the source image. */
         /** (1 - Da) * S + D */
         BLEND_DST_OVER,
-        /** 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。 */
+        /** Displays the source image in the target image. Only the source image part within the target image
+         *  will be displayed, and the target image is transparent. */
         /** Da * S */
         BLEND_SRC_IN,
-        /** 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。 */
+        /** Displays the target image in the source image. Only the target image part within the source image
+         *  will be displayed, and the source image is transparent. */
         /** Sa * D */
         BLEND_DST_IN,
-        /** 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。 */
+        /** Displays the source image outside the target image. Only the source image part other than the target
+         *  image will be displayed, and the target image is transparent. */
         /** S * (1 - Da) */
         BLEND_SRC_OUT,
-        /** 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。 */
+        /** Displays the target image outside the source image. Only the part of the target image other than the
+         *  source image will be displayed, and the source image is transparent. */
         /** D * (1 - Sa) */
         BLEND_DST_OUT,
-        /** 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。 */
+        /** Displays the source image at the top of the target image. The part of the source image outside the
+         *  target image is invisible. */
         BLEND_SRC_ATOP,
-        /** 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。 */
+        /** Displays the target image at the top of the source image. The part of the target image outside the
+         *  source image is invisible. */
         BLEND_DST_ATOP,
-        /** 使用异或操作对源图像与目标图像进行组合。 */
+        /** Use the XOR operation to combine the source image with the target image. */
         BLEND_XOR,
-        /** 显示源图像 + 目标图像。 */
+        /** Display source image + target image. */
         BLEND_LIGHTEN,
-        /** 混合透明度 */
+        /** Blend transparency */
         BLEND_ALPHA,
         /** S + D - S * D */
         BLEND_SCREEN,
@@ -69,7 +75,7 @@ namespace OHOS {
         BLEND_ADDITIVE,
         /** D * (1 - S) */
         BLEND_SUBTRACT,
-        /** 显示源图像。忽略目标图像。 */
+        /** Displays the source image. Ignore the target image. */
         BLEND_COPY = 1000
     };
 

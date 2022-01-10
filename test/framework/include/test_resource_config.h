@@ -69,5 +69,6 @@ namespace OHOS {
 #define TEST_BACK_LEFT_ARROW (IMAGE_DIR "ic_back.png")
 #define TEST_CIRCLE_FORE_IMAGE (FACE_DIR "fore.png")
 #define IMAGE_RESIZEMODE_PATH (IMAGE_DIR "blue.png")
+#define GIRL_PNG_IMAGE_PATH (IMAGE_DIR "girl.png")
 } // namespace OHOS
 #endif // TEST_RESOURCE_CONFIG_H
