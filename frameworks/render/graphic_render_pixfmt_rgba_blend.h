@@ -426,12 +426,12 @@ namespace OHOS {
          * @brief Gets the pixel address of the specified left.
          *
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         virtual GRAPHIC_GEOMETRY_INLINE const PixelType* PixValuePtr(int x, int y) const
         {
             uint8_t* pixelPtr = rbuf_->RowPtr(y);
-            return pixelPtr ? (PixelType*)(pixelPtr + sizeof(uint8_t) * (x * PIX_STEP)) : 0;
+            return pixelPtr ? (PixelType*)(pixelPtr + sizeof(uint8_t) * (x * PIX_STEP)) : nullptr;
         }
 
         /**

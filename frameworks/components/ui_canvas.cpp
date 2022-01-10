@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 #include "draw/draw_arc.h"
 #include "draw/draw_image.h"
 #include "gfx_utils/graphic_log.h"
+#include <ctime>
 namespace OHOS {
     void UICanvas::BeginPath()
     {
@@ -1014,6 +1015,7 @@ namespace OHOS {
         cordsTmp.SetPosition(start.x, start.y);
         cordsTmp.SetHeight(imageParam->height);
         cordsTmp.SetWidth(imageParam->width);
+
         if (paint.GetChangeFlag()) {
             TransAffine transform;
             RenderingBuffer renderBuffer;
@@ -1027,6 +1029,7 @@ namespace OHOS {
             DrawImage::DrawCommon(gfxDstBuffer, cordsTmp, invalidatedArea, imageParam->image->GetImageInfo(), style,
                                   paint.GetOpacity());
         }
+        free(image);
     }
 #endif
     void UICanvas::DoDrawLabel(BufferInfo& gfxDstBuffer,
@@ -1220,7 +1223,7 @@ namespace OHOS {
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
-        typedef OHOS::StackBlur<Rgba8Color, OHOS::StackBlurCalcRGBA<>> DrawBlur;
+        typedef OHOS::FastBoxBlur DrawBlur;
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
         DrawBlur drawBlur;
 
@@ -1235,7 +1238,7 @@ namespace OHOS {
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
-        drawBlur.Blur(pixf2, MATH_UROUND(paint.GetShadowBlur()));
+        //drawBlur..Blur(pixf2->PixValuePtr(0,0), MATH_UROUND(paint.GetShadowBlur()));
 #endif
 #endif
     }
