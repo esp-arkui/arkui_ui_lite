@@ -15,7 +15,7 @@
 
 /**
  * @file renderer_base.h
- * @brief Defines 基础渲染器
+ * @brief Defines Base renderer
  * @since 1.0
  * @version 1.0.
  */
@@ -46,7 +46,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 传入pixfmt_type参数
+         * @brief afferent pixfmt_type param
          */
         void Attach(pixfmt_type& ren)
         {
@@ -55,7 +55,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取需要渲染的宽度
+         * @brief Gets the width to render
          */
         unsigned Width() const
         {
@@ -63,7 +63,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取需要渲染的高度
+         * @brief Gets the height to render
          */
         unsigned Height() const
         {
@@ -71,12 +71,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief ClipBox 设定剪裁盒子的大小
-         * @param x1矩形起点x坐标
-         * @param y1矩形起点y坐标
-         * @param x2矩形对角x坐标
-         * @param y2矩形对角y坐标
-         * @return 返回矩形是否创建成功
+         * @brief ClipBox Sets the size of the clipping box
+         * @param x1 rectangular starting point x coordinate
+         * @param y1 rectangular starting point y coordinate
+         * @param x2 rectangular diagonal x coordinate
+         * @param y2 rectangular diagonal y coordinate
+         * @return Returns whether the rectangle was created successfully
          */
         bool ClipBox(int x1, int y1, int x2, int y2)
         {
@@ -91,8 +91,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief ResetClipping 根据可见性设定剪裁盒子的大小，可见正常设置，不可见设定为一个像素
-         * @param visibility 可见性
+         * @brief ResetClipping Set the size of the clipping box according to the visibility,
+         *  The visibility is set to normal, and the invisibility is set to one pixel.
+         * @param visibility Visible
          */
         void ResetClipping(bool visibility)
         {
@@ -104,11 +105,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief ClipBoxNaked 设置盒子的大小
-         * @param x1矩形起点x坐标
-         * @param y1矩形起点y坐标
-         * @param x2矩形对角x坐标
-         * @param y2矩形对角y坐标
+         * @brief ClipBoxNaked Sets the size of the box
+         * @param x1 rectangular starting point x coordinate
+         * @param y1 rectangular starting point y coordinate
+         * @param x2 rectangular starting point x coordinate
+         * @param y2 rectangular starting point y coordinate
          */
         void ClipBoxNaked(int x1, int y1, int x2, int y2)
         {
@@ -119,10 +120,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief inbox 判断点（x,y）是否在矩形内
-         * @param x 点的x坐标
-         * @param y 点的y坐标
-         * @return 返回是否
+         * @brief inbox determines whether the point (x, y) is within the rectangle
+         * @param x coordinate of x point
+         * @param y coordinate of y point
+         * @return Return whether
          */
         bool Inbox(int x, int y) const
         {
@@ -130,8 +131,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief GetClipBox 获取剪切的盒子
-         * @return 返回对应盒子
+         * @brief GetClipBox Get cut box
+         * @return Return to the corresponding box
          */
         const RectI& GetClipBox() const
         {
