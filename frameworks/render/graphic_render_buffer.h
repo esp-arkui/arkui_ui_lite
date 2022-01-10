@@ -29,7 +29,7 @@
 
 namespace OHOS {
     /**
-     * 行访问器
+     * Row accessor.
      */
     template <class T>
     class RowAccessor {
@@ -44,11 +44,11 @@ namespace OHOS {
         {
         }
         /**
-         * @brief RowAccessor 行访问器
-         * @param renBuf 缓冲区
-         * @param areaWidth 缓冲区内像素区域的宽度
-         * @param areaHeight 缓冲区内像素区域的高度
-         * @param stride 缓冲区的步幅
+         * @brief RowAccessor Row accessor.
+         * @param renBuf buffer.
+         * @param areaWidth The width of the pixel area in the buffer.
+         * @param areaHeight The height of the pixel area in the buffer.
+         * @param stride Buffer stride.
          */
         RowAccessor(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride) :
             renBuf_(0),
@@ -61,11 +61,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief attach 传入参数
-         * @param renBuf 缓冲区
-         * @param areaWidth 缓冲区内像素区域的宽度
-         * @param areaHeight 缓冲区内像素区域的高度
-         * @param stride 缓冲区的步幅
+         * @brief attach Incoming parameters.
+         * @param renBuf buffer
+         * @param areaWidth The width of the pixel area in the buffer.
+         * @param areaHeightThe height of the pixel area in the buffer.
+         * @param stride Buffer stride.
          */
         void Attach(T* renBuf, unsigned areaWidth, unsigned areaHeight, int stride)
         {
@@ -78,28 +78,28 @@ namespace OHOS {
             }
         }
         /**
-         * @brief GetBuf 获取渲染缓冲区的指针
+         * @brief GetBuf Gets a pointer to the render buffer.
          */
         GRAPHIC_GEOMETRY_INLINE T* GetBuf()
         {
             return renBuf_;
         }
         /**
-         * @brief GetBuf 获取渲染缓冲区的指针
+         * @brief GetBuf Gets a pointer to the render buffer.
          */
         GRAPHIC_GEOMETRY_INLINE const T* GetBuf() const
         {
             return renBuf_;
         }
         /**
-         * @brief GetBuf 获取区域宽度
+         * @brief GetBuf Get area width.
          */
         GRAPHIC_GEOMETRY_INLINE unsigned GetWidth() const
         {
             return width_;
         }
         /**
-         * @brief GetBuf 获取区域高度
+         * @brief GetBuf GetBuf Get area height.
          */
         GRAPHIC_GEOMETRY_INLINE unsigned GetHeight() const
         {
@@ -115,7 +115,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief row_ptr 获取行首地址
+         * @brief row_ptr Get line start address.
          */
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int, int y, unsigned = 1)
@@ -123,7 +123,7 @@ namespace OHOS {
             return start_ + y * (int64_t)bufStride_;
         }
         /**
-         * @brief row_ptr 返回指向第y行起点的指针
+         * @brief row_ptr Returns a pointer to the beginning of line y.
          */
 
         GRAPHIC_GEOMETRY_INLINE T* RowPtr(int y)
@@ -131,14 +131,14 @@ namespace OHOS {
             return start_ + y * (int64_t)bufStride_;
         }
         /**
-         * @brief row_ptr 返回指向第y行起点的指针
+         * @brief row_ptr Returns a pointer to the beginning of line y。
          */
         GRAPHIC_GEOMETRY_INLINE const T* RowPtr(int y) const
         {
             return start_ + y * (int64_t)bufStride_;
         }
         /**
-         * @brief row 获取行数据
+         * @brief row Get row data
          */
 
         GRAPHIC_GEOMETRY_INLINE rowData Row(int y) const
@@ -147,7 +147,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief Clear 以value值填充整个内存块
+         * @brief Clear Fill the entire memory block with the value
          * @param value
          */
         void Clear(T value)
@@ -165,11 +165,11 @@ namespace OHOS {
         }
 
     private:
-        T* renBuf_;       // 指向渲染缓冲区的指针
-        T* start_;        // 根据步幅指向第一个像素
-        unsigned width_;  // 区域宽度
-        unsigned height_; // 区域高度
-        int bufStride_;   // 每行字节数。
+        T* renBuf_;       // Pointer to render buffer.
+        T* start_;        // Point to the first pixel according to the stride.
+        unsigned width_;  // Area width.
+        unsigned height_; // Area height.
+        int bufStride_;   // Number of bytes per line.
     };
     using RenderingBuffer = RowAccessor<uint8_t>;
 } // namespace OHOS

@@ -36,7 +36,7 @@ namespace OHOS {
     using OrderType = typename BlenderType::OrderType; \
     using PixelType = PixelType<uint8_t, OrderType, ColorType>; \
 
-// 把像素附加到绘制区.
+// Attach pixels to the drawing area.
 #define ATTACH_FUNCTION_DEF \
     virtual void Attach(RbufType& rb) \
     { \
@@ -56,7 +56,7 @@ namespace OHOS {
         return false; \
     }
 
-    // 获取每屏幕（绘制缓冲区）大小
+    // Get the size of each screen (draw buffer).
 #define GET_SIZE_FRUNCTION_DEF \
     virtual GRAPHIC_GEOMETRY_INLINE unsigned Width() const \
     { \
@@ -68,7 +68,7 @@ namespace OHOS {
         return rbuf_->GetHeight(); \
     }
 
-// 指针转为像素类型指针
+// Pointer to Pixel Pointer.
 #define PIX_PTR_FUNCTION_DEF \
     virtual GRAPHIC_GEOMETRY_INLINE uint8_t* PixPtr(int x, int y) \
     { \
@@ -92,8 +92,8 @@ namespace OHOS {
 
 #ifdef ARM_NEON_OPT
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -104,8 +104,8 @@ namespace OHOS {
                                                        (uint8_t)alpha, (uint8_t*)covers);
         }
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -116,8 +116,8 @@ namespace OHOS {
                                                        (uint8_t)alpha, (uint8_t)cover);
         }
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component
          * @since 1.0
          * @version 1.0
          */
@@ -138,8 +138,8 @@ namespace OHOS {
         }
 #endif
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -150,8 +150,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component
          * @since 1.0
          * @version 1.0
          */
@@ -174,8 +174,8 @@ namespace OHOS {
         using LongType = typename ColorType::LongType;
 #ifdef ARM_NEON_OPT
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -186,8 +186,8 @@ namespace OHOS {
                                                           (uint8_t)cb, (uint8_t)alpha, (uint8_t*)covers);
         }
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -198,8 +198,8 @@ namespace OHOS {
                                                           (uint8_t)cb, (uint8_t)alpha, (uint8_t)cover);
         }
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component.
          * @since 1.0
          * @version 1.0
          */
@@ -222,8 +222,8 @@ namespace OHOS {
         }
 #endif
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量，cover 覆盖率
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component,cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -238,8 +238,8 @@ namespace OHOS {
                      ColorType::MultCover(alpha, cover));
         }
         /**
-         * @brief 用颜色分量混合像素.
-         * @param pColor 颜色，cr，cg，cb，alpha 颜色分量
+         * @brief Mix the pixels with the color component.
+         * @param pColor color,cr,cg,cb,alpha Color Component.
          * @since 1.0
          * @version 1.0
          */
@@ -257,8 +257,8 @@ namespace OHOS {
     struct PixelType {
         uint8_t colors[NUM_COMPONENTS];
         /**
-         * @brief 设置颜色.
-         * @param r，g，b，a 颜色分量
+         * @brief Set Colors.
+         * @param r,g,b,a Color Component.
          * @since 1.0
          * @version 1.0
          */
@@ -270,8 +270,8 @@ namespace OHOS {
             colors[OrderType::ALPHA] = alphaValue;
         }
         /**
-         * @brief 设置颜色.
-         * @param color 颜色
+         * @brief Set Colors.
+         * @param color Colors.
          * @since 1.0
          * @version 1.0
          */
@@ -280,8 +280,8 @@ namespace OHOS {
             SetPixelColor(color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
         /**
-         * @brief 获取颜色.
-         * @param r，g，b，a 颜色分量
+         * @brief Get Colors.
+         * @param r,g,b,a Color Component.
          * @since 1.0
          * @version 1.0
          */
@@ -293,8 +293,8 @@ namespace OHOS {
             alpha = colors[OrderType::ALPHA];
         }
         /**
-         * @brief 获取颜色.
-         * @return 颜色
+         * @brief Get Colors.
+         * @return Colors
          * @since 1.0
          * @version 1.0
          */
@@ -304,7 +304,7 @@ namespace OHOS {
                              colors[OrderType::BLUE], colors[OrderType::ALPHA]);
         }
         /**
-        * @brief 获取下一个像素的颜色分量.
+        * @brief Gets the color component of the next pixel.
         *
         * @since 1.0
         * @version 1.0
@@ -314,7 +314,7 @@ namespace OHOS {
             return (PixelType*)(colors + PIX_STEP);
         }
         /**
-        * @brief 获取下一个像素的颜色分量首地址.
+        * @brief Gets the first address of the color component of the next pixel.
         *
         * @since 1.0
         * @version 1.0
@@ -324,7 +324,7 @@ namespace OHOS {
             return (const PixelType*)(colors + PIX_STEP);
         }
         /**
-        * @brief 获取第n个像素的颜色分量首地址.
+        * @brief Gets the first address of the color component of the nth pixe.
         *
         * @since 1.0
         * @version 1.0
@@ -334,7 +334,7 @@ namespace OHOS {
             return (PixelType*)(colors + n * PIX_STEP);
         }
         /**
-        * @brief 获取第n个像素的颜色分量首地址.
+        * @brief Gets the first address of the color component of the nth pixe.
         *
         * @since 1.0
         * @version 1.0
@@ -366,7 +366,7 @@ namespace OHOS {
         GET_SIZE_FRUNCTION_DEF
 
         /**
-          * @brief 返回窗口一行的字节数.
+          * @brief Returns the number of bytes in a row of the window.
           *
           * @since 1.0
           * @version 1.0
@@ -377,7 +377,7 @@ namespace OHOS {
         }
 
         /**
-          * @brief 返回窗口一行的行地址.
+          * @brief Returns the row address of a window row.
           *
           * @since 1.0
           * @version 1.0
@@ -388,7 +388,7 @@ namespace OHOS {
         }
 
         /**
-          * @brief 返回窗口一行的行地址.
+          * @brief Returns the row address of a window row.
           *
           * @since 1.0
           * @version 1.0
@@ -399,7 +399,7 @@ namespace OHOS {
         }
 
         /**
-          * @brief 返回窗口一行的行数据.
+          * @brief Returns the row data of one row of the window.
           *
           * @since 1.0
           * @version 1.0
@@ -412,7 +412,7 @@ namespace OHOS {
         PIX_PTR_FUNCTION_DEF
 
         /**
-         * @brief 指针转为像素类型指针.
+         * @brief Pointer to pixel type pointer.
          *
          * @since 1.0
          * @version 1.0
@@ -423,7 +423,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取指定左边的像素地址.
+         * @brief Gets the pixel address of the specified left.
          *
          * @since 1.0
          * @version 1.0.
@@ -435,7 +435,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 指针转为像素类型指针.
+         * @brief Pointer to pixel type pointer.
          *
          * @since 1.0
          * @version 1.0
@@ -446,7 +446,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 指针转为像素类型指针.
+         * @brief Pointer to pixel type pointer.
          *
          * @since 1.0
          * @version 1.0
@@ -457,7 +457,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 给一个地址设置颜色.
+         * @brief Set a color for an address.
          *
          * @since 1.0
          * @version 1.0
@@ -468,7 +468,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取一个像素的颜色.
+         * @brief Gets the color of a pixel.
          *
          * @since 1.0
          * @version 1.0
@@ -482,7 +482,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 拷贝颜色到像素.
+         * @brief Copy color to pixel.
          *
          * @since 1.0
          * @version 1.0
@@ -493,7 +493,7 @@ namespace OHOS {
         }
 
         /**
-        * @brief 用颜色c以cover（覆盖率 = 透明度）的透明度混合像素(x, y).
+        * @brief Mix pixels (x, y) with the transparency of cover (coverage = transparency) with color color.
         *
         * @since 1.0
         * @version 1.0
@@ -503,7 +503,7 @@ namespace OHOS {
             CopyOrBlendPix(PixValuePtr(x, y, 1), color, cover);
         }
         /**
-         * @brief 从(x, y)开始打横顺序设置len长度的像素.
+         * @brief Set the pixels of len length in horizontal order starting from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -532,7 +532,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始打横顺序混合len长度的像素.
+         * @brief Pixels of len length are mixed horizontally from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -576,7 +576,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始打横顺序混合len长度的一系列颜色.
+         * @brief Mix a series of colors of len length in horizontal order starting from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -611,7 +611,7 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 从(x, y)开始打竖顺序混合len长度的一系列颜色.
+         * @brief Mix a series of colors of len length in vertical order starting from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -635,7 +635,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始打横顺序设置len长度的颜色.
+         * @brief Set the color of len length in horizontal order starting from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -666,7 +666,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始打竖顺序设置len长度的颜色.
+         * @brief Set the color of len length in vertical order starting from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -681,7 +681,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从(x, y)开始打横顺序混合len长度的一系列颜色.
+         * @brief Mix a series of colors of len length in horizontal order starting from (x, y).
          *
          * @since 1.0
          * @version 1.0
@@ -743,9 +743,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief 把源像素及覆盖率混合到rbuf_.
-         * @param from 源像素缓存区,xdst,ydst 目的缓冲区起始位置,xsrc,ysrc 源缓冲区起始位置,
-         *        len 要混合的长度 cover 覆盖率.
+         * @brief Mix source pixels and coverage into rbuf_.
+         * @param from Source pixel buffer.
+         * @param xdst,ydst Destination buffer start position.
+         * @param xsrc,ysrc Source buffer start position.
+         * @param len Length to blend.
+         * @param cover Coverage.
          * @since 1.0
          * @version 1.0
          */
@@ -835,7 +838,7 @@ namespace OHOS {
 #endif
 
         /**
-         * @brief 用颜色及覆盖率混合到指定像素.
+         * @brief Blend color and coverage to specified pixels.
          *
          * @since 1.0
          * @version 1.0
@@ -847,7 +850,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 用颜色混合到指定像素.
+         * @brief Blend colors to specified pixels.
          *
          * @since 1.0
          * @version 1.0
@@ -857,7 +860,7 @@ namespace OHOS {
             blender_.BlendPix(pixelPtr->colors, color.redValue, color.greenValue, color.blueValue, color.alphaValue);
         }
         /**
-         * @brief 用颜色及覆盖率设置或混合到指定像素.
+         * @brief Set or blend to specified pixels with color and coverage.
          *
          * @since 1.0
          * @version 1.0
@@ -876,7 +879,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 用颜色设置或混合到指定像素.
+         * @brief Sets or blends the color to the specified pixel.
          *
          * @since 1.0
          * @version 1.0.
