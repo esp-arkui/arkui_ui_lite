@@ -92,9 +92,9 @@ namespace OHOS {
             bottom += setup;
         }
         MoveTo(point);
-        LineTo({right, point.y});
-        LineTo({right, bottom});
-        LineTo({point.x, bottom});
+        LineTo( {right, point.y});
+        LineTo( {right, bottom});
+        LineTo( {point.x, bottom});
         ClosePath();
     }
 
@@ -719,7 +719,8 @@ namespace OHOS {
                 Rgba8Color color;
                 RenderBlendSolid(curDraw->data_.paint,color,pathParam->isStroke);
                 SpanSoildColor spanSoildColor(color);
-                BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,spanSoildColor,rect,pathParamBlend->isStroke);
+                BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer,
+                            renBase, transform, spanSoildColor, rect, pathParamBlend->isStroke);
             }
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             if (curDraw->data_.paint.GetStyle() == Paint::GRADIENT) {
@@ -732,7 +733,8 @@ namespace OHOS {
                     BuildLineGradientMatrix(drawCmd.paint,gradientMatrix,transform,distance);
                     GradientLinearCalculate gradientLinearCalculate;
                     LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
-                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,span,trunc,pathParamBlend->isStroke);
+                    BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer,
+                                renBase, transform, span, trunc, pathParamBlend->isStroke);
                 }
                 if (curDraw->data_.paint.GetGradient() == Paint::Radial) {
                     Paint::RadialGradientPoint radialPoint = drawCmd.paint.GetRadialGradientPoint();
@@ -743,7 +745,8 @@ namespace OHOS {
                                                                     radialPoint.y0 - radialPoint.y1);
                     RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
                                             startRadius, endRadius);
-                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,span,trunc,pathParamBlend->isStroke);
+                    BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer, renBase,
+                                transform, span, trunc, pathParamBlend->isStroke);
                 }
             }
 
@@ -769,22 +772,26 @@ namespace OHOS {
                 if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::REPEAT) {
                     ImgSourceTypeRepeat img_src(img_pixf);
                     spanPatternTypeRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                    BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer, renBase,
+                                transform, m_spanPatternType, trunc, pathParamBlend->isStroke);
                 }
                 if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::REPEAT_X) {
                     imgSourceTypeRepeatX img_src(img_pixf);
                     spanPatternTypeRepeatX m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                    BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer, renBase,
+                                transform, m_spanPatternType, trunc, pathParamBlend->isStroke);
                 }
                 if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::REPEAT_Y) {
                     imgSourceTypeRepeatY img_src(img_pixf);
                     spanPatternTypeRepeatY m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                    BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer, renBase,
+                                transform, m_spanPatternType, trunc, pathParamBlend->isStroke);
                 }
                 if (curDraw->data_.paint.GetPatternRepeatMode() == Paint::NO_REPEAT) {
                     imgSourceTypeNoRepeat img_src(img_pixf);
                     spanPatternTypeNoRepeat m_spanPatternType(img_src, 0 - rect.GetLeft(), 0 - rect.GetTop());
-                    BlendRaster(drawCmd.paint,drawCmd.param,blendRasterizer,rasterizer,renBase,transform,m_spanPatternType,trunc,pathParamBlend->isStroke);
+                    BlendRaster(drawCmd.paint, drawCmd.param, blendRasterizer, rasterizer, renBase,
+                                transform, m_spanPatternType, trunc, pathParamBlend->isStroke);
                 }
             }
 #endif
