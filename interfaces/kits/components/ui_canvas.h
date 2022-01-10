@@ -943,7 +943,7 @@ namespace OHOS {
         float scaleRadioY_;
         int translationX_;
         int translationY_;
-        TransAffine transfrom_;                             // 矩阵
+        TransAffine transfrom_;                             // 矩阵.
         bool haveComposite_;
         UICanvas* uiCanvas_;
     };
@@ -960,7 +960,7 @@ namespace OHOS {
         // 颜色数组rgba,的索引位置blue:0,green:1,red:2,alpha:3,
         typedef OrderBgra ComponentOrder;
 
-        // 根据ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
+        // 根据 ComponentOrder的索引将颜色填入ComponentOrder规定的位置，根据blender_rgba模式处理颜色
         typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
         typedef PixfmtAlphaBlendRgba<Blender, RenderingBuffer> PixFormat;
         typedef RendererBase<PixFormat> RendererBase;
