@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_pixfmt_rgba.h
 *
-* @brief Defines 颜色分量gamma操作类.
+* @brief Defines Color component gamma operation class
 *
 * @since 1.0
 * @version 1.0

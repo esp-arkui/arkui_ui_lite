@@ -46,7 +46,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief afferent pixfmt_type param
+         * @brief afferent pixfmt_type param.
          */
         void Attach(pixfmt_type& ren)
         {
@@ -55,7 +55,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief Gets the width to render
+         * @brief Gets the width to render.
          */
         unsigned Width() const
         {
@@ -63,7 +63,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief Gets the height to render
+         * @brief Gets the height to render.
          */
         unsigned Height() const
         {
@@ -71,12 +71,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief ClipBox Sets the size of the clipping box
-         * @param x1 rectangular starting point x coordinate
-         * @param y1 rectangular starting point y coordinate
-         * @param x2 rectangular diagonal x coordinate
-         * @param y2 rectangular diagonal y coordinate
-         * @return Returns whether the rectangle was created successfully
+         * @brief ClipBox Sets the size of the clipping box.
+         * @param x1 rectangular starting point x coordinate.
+         * @param y1 rectangular starting point y coordinate.
+         * @param x2 rectangular diagonal x coordinate.
+         * @param y2 rectangular diagonal y coordinate.
+         * @return Returns whether the rectangle was created successfully.
          */
         bool ClipBox(int x1, int y1, int x2, int y2)
         {
@@ -93,7 +93,7 @@ namespace OHOS {
         /**
          * @brief ResetClipping Set the size of the clipping box according to the visibility,
          *  The visibility is set to normal, and the invisibility is set to one pixel.
-         * @param visibility Visible
+         * @param visibility Visible.
          */
         void ResetClipping(bool visibility)
         {
@@ -105,11 +105,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief ClipBoxNaked Sets the size of the box
-         * @param x1 rectangular starting point x coordinate
-         * @param y1 rectangular starting point y coordinate
-         * @param x2 rectangular starting point x coordinate
-         * @param y2 rectangular starting point y coordinate
+         * @brief ClipBoxNaked Sets the size of the box.
+         * @param x1 rectangular starting point x coordinate.
+         * @param y1 rectangular starting point y coordinate.
+         * @param x2 rectangular starting point x coordinate.
+         * @param y2 rectangular starting point y coordinate.
          */
         void ClipBoxNaked(int x1, int y1, int x2, int y2)
         {
@@ -120,10 +120,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief inbox determines whether the point (x, y) is within the rectangle
-         * @param x coordinate of x point
-         * @param y coordinate of y point
-         * @return Return whether
+         * @brief inbox determines whether the point (x, y) is within the rectangle.
+         * @param x coordinate of x point.
+         * @param y coordinate of y point.
+         * @return Return whether.
          */
         bool Inbox(int x, int y) const
         {
@@ -131,36 +131,36 @@ namespace OHOS {
         }
 
         /**
-         * @brief GetClipBox Get cut box
-         * @return Return to the corresponding box
+         * @brief GetClipBox Get cut box.
+         * @return Return to the corresponding box.
          */
         const RectI& GetClipBox() const
         {
             return clipBox;
         }
         /**
-         * @return 返回盒子的x轴最小值
+         * @return Returns the minimum value of the x-axis of the box.
          */
         int GetXmin() const
         {
             return clipBox.x1;
         }
         /**
-         * @return 返回盒子的y轴最小值
+         * @return Returns the minimum value of the y-axis of the box.
          */
         int GetYmin() const
         {
             return clipBox.y1;
         }
         /**
-         * @return 返回盒子的x轴最大值
+         * @return Returns the maximum value of the x-axis of the box.
          */
         int GetXmax() const
         {
             return clipBox.x2;
         }
         /**
-         * @return 返回盒子的y轴最大值
+         * @return Returns the maximum value of the Y-axis of the box.
          */
         int GetYmax() const
         {
@@ -168,8 +168,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief clear 以颜色c清楚GetWidth()宽度下GetHeight()高度下的矩形内的像素
-         * @param c 颜色
+         * @brief Clear clear the pixels in the rectangle under getwidth() width and getheight() height with color.
+         * @param color colour.
          */
         void Clear(const color_type& color)
         {
@@ -182,8 +182,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief ReplaceColor 替换原本有颜色的区域的颜色为color
-         * @param c 颜色
+         * @brief ReplaceColor Replace the color of the original colored area with color.
+         * @param color colour.
          */
         void ReplaceColor(const color_type& color)
         {
@@ -196,8 +196,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief fill 填充GetWidth()宽度下GetHeight()高度下的矩形颜色c
-         * @param c 需要填充的颜色
+         * @brief fill fills the rectangle color under getwidth() width and getheight() height.
+         * @param color Color to fill.
          */
         void Fill(const color_type& color)
         {
@@ -210,9 +210,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief pixel 返回（x,y）的坐标对应的像素
-         * @param x 坐标x
-         * @param y 坐标y
+         * @brief Pixel returns the pixel corresponding to the coordinate of (x, y).
+         * @param x Coordinate x
+         * @param y Coordinate y
          * @return
          */
         color_type Pixel(int x, int y) const
@@ -221,12 +221,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief BlendHline 渲染y上x轴一定范围内的扫描线
-         * @param x1 扫描线左侧坐标
-         * @param y 扫描线 y轴坐标
-         * @param x2 扫描线右侧坐标
-         * @param c 渲染扫描线的颜色
-         * @param colors 扫描线对应颜色数组
+         * @brief BlendHline Render scanlines within a certain range of the X axis on the Y axis.
+         * @param x1 Scan line left coordinate.
+         * @param y  Scan line Y-axis coordinates.
+         * @param x2 Scan line right coordinate.
+         * @param c The color of the rendered scanline.
+         * @param colors Scan line corresponding color array.
          */
         void BlendHline(int x1, int y, int x2, const color_type& color, uint8_t cover)
         {
@@ -249,12 +249,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief BlendSolidHspan 渲染y轴一定范围内实线的扫描线
-         * @param x 扫描线 x轴开始坐标
-         * @param y 扫描线 y轴坐标
-         * @param len 扫描线长度
-         * @param c 渲染扫描线的颜色
-         * @param colors 扫描线对应颜色数组
+         * @brief BlendSolidHspan Renders a scan line of a solid line within a certain range of the Y axis.
+         * @param x scan line X-axis start coordinate.
+         * @param y scan line Y-axis start coordinate.
+         * @param len Scan line length.
+         * @param c The color of the rendered scanline.
+         * @param colors Scan line corresponding color array.
          */
         void BlendSolidHspan(int x, int y, int len, const color_type& color, const uint8_t* covers)
         {
@@ -279,11 +279,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief CopyColorHspan 复制一定y轴范围内颜色
-         * @param x 扫描线 x轴开始坐标
-         * @param y 扫描线 y轴坐标
-         * @param len 扫描线长度
-         * @param colors 扫描线对应颜色数组
+         * @brief CopyColorHspan Copy colors within a certain Y-axis range
+         * @param x Scan line X-axis start coordinate
+         * @param y Scan line Y-axis start coordinate
+         * @param len Scan line length.
+         * @param colors Scan line corresponding color array.
          */
         void CopyColorHspan(int x, int y, int len, const color_type* colors)
         {
@@ -309,13 +309,13 @@ namespace OHOS {
         }
 
         /**
-         * @brief BlendColorHspan 混合一定高度内颜色
-         * @param x 扫描线 x轴开始坐标
-         * @param y 扫描线 y轴坐标
-         * @param len 扫描线长度
-         * @param colors 扫描线对应颜色数组
-         * @param covers 扫描线对应覆盖率数组
-         * @param cover 覆盖率
+         * @brief BlendColorHspan Mix colors within a certain height.
+         * @param x Scan line X-axis start coordinate
+         * @param y Scan line Y-axis start coordinate
+         * @param len Scan line length.
+         * @param colors Scan line corresponding color array.
+         * @param covers Scan line corresponding coverage array.
+         * @param cover Coverage
          */
         void BlendColorHspan(int x, int y, int len, const color_type* colors, const uint8_t* covers,
                              uint8_t cover = OHOS::COVER_FULL)
@@ -345,12 +345,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief ClipRectArea 剪辑矩形区域
+         * @brief ClipRectArea Clip rectangular area
          * @param dst
          * @param src
          * @param wsrc
          * @param hsrc
-         * @return  返回剪辑的区域
+         * @return Returns the area of the clip
          */
         RectI ClipRectArea(RectI& dst, RectI& src, int wsrc, int hsrc) const
         {
@@ -404,12 +404,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief 从src中取一段到缓冲区进行混合
-         * @param src 一段缓冲区
-         * @param rectSrcPtr 矩形边界
-         * @param dx 需要取出的x长度
-         * @param dy 需要取出的y长度
-         * @param cover 覆盖率
+         * @brief Take a segment from SRC to buffer for mixing.
+         * @param src one segment buffer.
+         * @param rectSrcPtr Rectangular boundary.
+         * @param dx X length to be taken out
+         * @param dy Y length to be taken out
+         * @param cover Coverage
          */
         template <class SrcPixelFormatRenderer>
         void BlendFrom(const SrcPixelFormatRenderer& src, const RectI* rectSrcPtr = 0, int dx = 0, int dy = 0,
