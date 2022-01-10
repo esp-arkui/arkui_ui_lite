@@ -1349,7 +1349,7 @@ namespace OHOS {
         textRect.SetHeight(text->GetTextSize().y);
         OpacityType opa = DrawUtils::GetMixOpacity(textParam->fontOpa, style.bgOpa_);
 
-        if (paint.GetChangeFlag()) {
+        if (!paint.GetTransAffine().IsIdentity()) {
             Rect textImageRect(0, 0, textRect.GetWidth(), textRect.GetHeight());
             if (paint.GetUICanvas() == nullptr) {
                 return;
