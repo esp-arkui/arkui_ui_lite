@@ -137,6 +137,7 @@ namespace OHOS {
     {
         switch(op)
         {
+        case SOURCE_OVER       : BlendSourceOver   (raster2, raster1, sl2, sl1, renBase,alloc2,spanGen2,alloc1,spanGen1); break;
         case SOURCE_ATOP       : BlendSourceAtop   (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1,alloc2,spanGen2); break;
         case SOURCE_IN         : BlendSourceIn     (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1); break;
         case SOURCE_OUT        : BlendSourceOut   (raster1, raster2, sl1, sl2, renBase,alloc1,spanGen1); break;
