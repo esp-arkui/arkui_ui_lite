@@ -130,10 +130,10 @@ namespace OHOS {
              class SpanGenerator1,
              class SpanGenerator2>
     void BlendScanLine(GlobalCompositeOperation op,
-                                 Rasterizer& raster1, Rasterizer& raster2,
-                                 Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,
-                                 SpanAllocator& alloc1, SpanGenerator1& spanGen1,
-                                 SpanAllocator& alloc2, SpanGenerator2& spanGen2)
+                       Rasterizer& raster1, Rasterizer& raster2,
+                       Scanline& sl1, Scanline& sl2, BaseRenderer& renBase,
+                       SpanAllocator& alloc1, SpanGenerator1& spanGen1,
+                       SpanAllocator& alloc2, SpanGenerator2& spanGen2)
     {
         switch (op) {
             case SOURCE_OVER       : BlendSourceOver   (raster2, raster1, sl2, sl1, renBase,
@@ -430,8 +430,8 @@ namespace OHOS {
                                                             span3->covers);
                                 }
                                 if (x1<x2&&
-                                   x1+span1->spanLength > x2 &&
-                                   x1+span1->spanLength <= x2+span2->spanLength){
+                                    x1+span1->spanLength > x2 &&
+                                    x1+span1->spanLength <= x2+span2->spanLength) {
                                     ScanlineUnPackedContainer scanline3;
                                     calcinterScanline(scanline3, x2, x1, span2, span1);
                                     typename Scanline::ConstIterator span3 = scanline3.Begin();
