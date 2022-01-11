@@ -1407,8 +1407,6 @@ HWTEST_F(UICanvasTest, UICanvasTransform_001, TestSize.Level0)
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
     EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
     EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
-    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
-    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
     EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
     EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
@@ -1449,8 +1447,6 @@ HWTEST_F(UICanvasTest, UICanvasTransform_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
     EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
     EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
-    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
-    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
     EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
     EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
@@ -1488,8 +1484,6 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_001, TestSize.Level0)
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
     EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
     EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
-    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
-    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
     EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
     EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
@@ -1530,8 +1524,6 @@ HWTEST_F(UICanvasTest, UICanvasSetTransform_002, TestSize.Level1)
     EXPECT_EQ(fontStyle.letterSpace, LETTER_SPACE);
     EXPECT_EQ(paint_->GetScaleX(), SCALE_X);
     EXPECT_EQ(paint_->GetScaleY(), SCALE_Y);
-    EXPECT_EQ(paint_->GetshearX(), SHEAR_X);
-    EXPECT_EQ(paint_->GetshearY(), SHEAR_Y);
     EXPECT_EQ(paint_->GetTranslateX(), TRANSLATE_X);
     EXPECT_EQ(paint_->GetTranslateY(), TRANSLATE_Y);
 }
