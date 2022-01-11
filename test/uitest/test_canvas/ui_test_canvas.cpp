@@ -1086,6 +1086,7 @@ namespace OHOS {
     }
     void UITestCanvas::RM009LineDashDrawPath()
     {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         if (container_ == nullptr) {
             return;
         }
@@ -1094,7 +1095,7 @@ namespace OHOS {
         Paint paint;
         paint.SetStrokeWidth(DASH_LINE_WIDTH2);
         paint.SetStrokeColor(Color::Green());
-        float ds2[] = {DASH10, DASH5, DASH5, DASH2};
+        float ds2[] = {DASH10, DASH5, DASH5, DASH2};        
         paint.SetLineDash(ds2, DASH_COUNT);
         canvas->BeginPath();
         canvas->MoveTo({MOVETO20, MOVETO20});
@@ -1112,6 +1113,7 @@ namespace OHOS {
         canvas->LineTo({LINET020, LINET0180});
         canvas->ClosePath();
         canvas->DrawPath(paint);
+#endif
     }
 
     void UITestCanvas::RM009StrokeAndClearRectDrawPath()

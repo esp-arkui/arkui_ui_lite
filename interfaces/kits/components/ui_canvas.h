@@ -94,10 +94,12 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             lineCap_(LineCapEnum::BUTT_CAP),
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             isDashMode_(false),
             dashOffset_(0),
             dashArray_(nullptr),
             ndashes_(0),
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             miterLimit_(0),
 #endif
@@ -155,15 +157,18 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             lineJoin_ = paint.lineJoin_;
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             isDashMode_ = paint.isDashMode_;
             dashOffset_ = paint.dashOffset_;
             dashArray_ = paint.dashArray_;
             ndashes_ = paint.ndashes_;
+#endif
             changeFlage_ = paint.changeFlage_;
             scaleRadioX_= paint.scaleRadioX_;
             scaleRadioY_= paint.scaleRadioY_;
             translationX_= paint.translationX_;
             translationY_= paint.translationY_;
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
             if (isDashMode_ && ndashes_ > 0) {
                 dashArray_ = new float[ndashes_];
                 if (dashArray_) {
@@ -180,8 +185,9 @@ namespace OHOS {
             } else {
                 dashArray_ = nullptr;
             }
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
-            miterLimit_ = paint.ndashes_;
+            miterLimit_ = paint.miterLimit_;
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             linearGradientPoint_ = paint.linearGradientPoint_;
@@ -520,6 +526,7 @@ namespace OHOS {
             return lineJoin_;
         }
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         bool IsLineDash() const
         {
             return isDashMode_;
@@ -609,7 +616,7 @@ namespace OHOS {
                 dashArray_ = nullptr;
             }
         }
-
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         void createLinearGradient(double startx, double starty, double endx, double endy)
         {
@@ -940,10 +947,12 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCapEnum lineCap_;
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         bool isDashMode_;      // Is it a dash mode segment.
         float dashOffset_;     // dash Point offset.
         float* dashArray_;     // dash Point array.
         unsigned int ndashes_; // Length of dasharray
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         double miterLimit_;    // Sets the spacing limit for sharp corners at path connections
 #endif
@@ -956,7 +965,9 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         PatternRepeatMode patternRepeat_;
 #endif
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
         const char* image;
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         double shadowBlurRadius; // Sets the shadow blur radius.
         double shadowOffsetX;    // Sets the abscissa offset of the shadow.
@@ -1670,7 +1681,7 @@ namespace OHOS {
             }
 #endif
         };
-
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         /**
          * Set linedash style
          */
@@ -1682,7 +1693,7 @@ namespace OHOS {
             }
             dashStyle.DashStart(paint.GetLineDashOffset());
         };
-
+#endif
         /**
          * Renders monochrome polygon paths and fills
          */

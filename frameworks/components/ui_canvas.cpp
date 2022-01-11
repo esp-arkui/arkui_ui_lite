@@ -1120,8 +1120,9 @@ namespace OHOS {
         typedef DepictCurve<UICanvasVertices> UICanvasPath;
         UICanvasPath canvasPath(vertices);
         if (isStroke) {
-            if (paint.IsLineDash()) {
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
+            if (paint.IsLineDash()) {
+
                 typedef DepictDash<UICanvasPath> DashStyle;
                 typedef DepictStroke<DashStyle> StrokeDashStyle;
                 typedef DepictTransform<StrokeDashStyle> StrokeDashTransform;
@@ -1132,17 +1133,18 @@ namespace OHOS {
                 StrokeDashTransform strokeDashTransform(strokeDashStyle, transform);
                 rasterizer.Reset();
                 rasterizer.AddPath(strokeDashTransform);
-#endif
-            } else {
-                typedef DepictStroke<UICanvasPath> StrokeLineStyle;
-                typedef DepictTransform<StrokeLineStyle> StrokeTransform;
-                StrokeLineStyle strokeLineStyle(canvasPath);
-                LineStyleCalc(strokeLineStyle, paint);
-
-                StrokeTransform strokeTransform(strokeLineStyle, transform);
-                rasterizer.Reset();
-                rasterizer.AddPath(strokeTransform);
+                return;
             }
+#endif
+
+            typedef DepictStroke<UICanvasPath> StrokeLineStyle;
+            typedef DepictTransform<StrokeLineStyle> StrokeTransform;
+            StrokeLineStyle strokeLineStyle(canvasPath);
+            LineStyleCalc(strokeLineStyle, paint);
+
+            StrokeTransform strokeTransform(strokeLineStyle, transform);
+            rasterizer.Reset();
+            rasterizer.AddPath(strokeTransform);
         } else {
             typedef OHOS::DepictTransform<UICanvasPath> PathTransform;
             PathTransform pathTransform(canvasPath, transform);
