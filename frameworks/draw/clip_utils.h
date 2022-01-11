@@ -33,6 +33,10 @@ struct Span : public HeapBase {
 struct PointF {
     float x;
     float y;
+    PointF()
+    {}
+    PointF(float x_, float y_) : x(x_), y(y_)
+    {}
 };
 
 /* Indicates a rectangle in flaot */
@@ -171,7 +175,7 @@ public:
 class ClipImageBlitter : public Blitter {
 public:
     explicit ClipImageBlitter(const ImageInfo* src) : src_(src) {}
-    virtual ~ClipImageBlitter() {}
+    virtual ~ClipImageBlitter() override {}
 
     void DrawHorSpan(const List<Span>& span, int16_t yCur) override;
     void Finish() override;

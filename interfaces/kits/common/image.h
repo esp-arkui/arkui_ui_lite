@@ -114,6 +114,18 @@ public:
     }
 
     /**
+     * @brief Obtains the image format type.
+     *
+     * @return Returns the image format type.
+     * @since 1.0
+     * @version 1.0
+     */
+    uint8_t GetImgType() const
+    {
+        return imageType_;
+    }
+
+    /**
      * @brief Sets the image path.
      *
      * @param src Indicates the pointer to image path in the format of <b>..\\xxx\\xxx\\xxx.bin</b>.
@@ -133,6 +145,8 @@ public:
      */
     bool SetSrc(const ImageInfo* src);
 
+    bool PreParse(const char* src);
+
     void DrawImage(BufferInfo& gfxDstBuffer,
                    const Rect& coords,
                    const Rect& mask,
@@ -144,16 +158,18 @@ protected:
     const char* path_;
 
 private:
+
 #if ENABLE_JPEG_AND_PNG
     enum ImageType {
         IMG_PNG,
         IMG_JPEG,
+        IMG_GIF,
         IMG_UNKNOWN,
     };
-
     const static uint8_t IMG_BYTES_TO_CHECK = 4; // 4: check 4 bytes of image file
 #endif
 
+    ImageType imageType_;
     uint8_t srcType_;
     bool mallocFlag_;
     bool SetLiteSrc(const char* src);
@@ -167,7 +183,7 @@ private:
     {
         return (!strcmp(suffix, ".png") || !strcmp(suffix, ".PNG") || !strcmp(suffix, ".jpg") ||
             !strcmp(suffix, ".JPG") || !strcmp(suffix, ".jpeg") || !strcmp(suffix, ".JPEG") ||
-            !strcmp(suffix, ".BMP") || !strcmp(suffix, ".bmp"));
+            !strcmp(suffix, ".BMP") || !strcmp(suffix, ".bmp") || !strcmp(suffix, ".GIF") || !strcmp(suffix, ".gif"));
     }
 };
 } // namespace OHOS
