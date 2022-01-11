@@ -22,7 +22,7 @@
 #include "font/ui_font_header.h"
 
 namespace OHOS {
-class Monitor : public QObject, public BaseGfxEngine {
+class Monitor : public QObject, public GfxEngineManager {
     Q_OBJECT
 public:
     Monitor() : defaultColor_ (0x44) {}

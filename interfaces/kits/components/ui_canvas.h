@@ -10,7 +10,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License..
  */
 
 /**
@@ -36,11 +36,64 @@
 #ifndef GRAPHIC_LITE_UI_CANVAS_H
 #define GRAPHIC_LITE_UI_CANVAS_H
 
+#include <gfx_utils/diagram/depiction/graphic_depict_curve.h>
+#include <gfx_utils/diagram/depiction/graphic_depict_dash.h>
+#include <gfx_utils/diagram/depiction/graphic_depict_stroke.h>
+#include <gfx_utils/diagram/imagefilter/graphic_filter_blur.h>
+#include <gfx_utils/diagram/rasterizer/graphic_rasterizer_scanline_antialias.h>
+#include <gfx_utils/diagram/scanline/graphic_geometry_scanline.h>
+#include <gfx_utils/diagram/spancolorfill/graphic_spancolor_fill_base.h>
+#include <gfx_utils/diagram/spancolorfill/graphic_spancolor_fill_gradient.h>
+#include <gfx_utils/diagram/spancolorfill/graphic_spancolor_fill_gradient_lut.h>
+#include <gfx_utils/diagram/spancolorfill/graphic_spancolor_fill_interpolator.h>
+#include <gfx_utils/diagram/spancolorfill/graphic_spancolor_fill_pattern_rgba.h>
+#include <gfx_utils/diagram/imageaccessor/graphic_image_accessors.h>
+#include <gfx_utils/diagram/vertexprimitive/graphic_geometry_path_storage.h>
+#include <render/graphic_render_pixfmt_rgba_blend.h>
+
+#include <stack>
+
+#include "draw/draw_utils.h"
+#include "animator/gif_canvas_image_animator.h"
 #include "common/image.h"
 #include "components/ui_label.h"
+#include "gfx_utils/file.h"
 #include "gfx_utils/list.h"
-
+#include "gif_lib.h"
+#include "render/graphic_render_base.h"
+#include "render/graphic_render_buffer.h"
+#include "render/graphic_render_scanline.h"
 namespace OHOS {
+#define DECLARE_UI_CANVAS class UICanvas
+
+    DECLARE_UI_CANVAS;
+#define GRADIENT_FILLSTROKECOLOR \
+    InterpolatorType interpolatorTypeBlend(gradientMatrixBlend); \
+    GradientColorMode gradientColorModeBlend; \
+    if (paint.GetStyle() == Paint::GRADIENT) { \
+        BuildGradientColor(paint, gradientColorModeBlend); \
+        if (paint.GetGradient() == Paint::Linear) { \
+            double distance = 0; \
+            BuildLineGradientMatrix(paint, gradientMatrixBlend, transform, distance); \
+            GradientLinearCalculate gradientLinearCalculate; \
+            LinearGradientSpan span(interpolatorTypeBlend, gradientLinearCalculate, \
+                                    gradientColorModeBlend, 0, distance); \
+            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer, \
+                          scanline1, scanline2, renBase, allocator1, span, spanGen); \
+        }else if (paint.GetGradient() == Paint::Radial) { \
+            Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint(); \
+            double startRadius = 0; \
+            double endRadius = 0; \
+            BuildRadialGradientMatrix(paint, gradientMatrixBlend, transform, startRadius, endRadius); \
+            GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1, \
+                                                            radialPoint.y0 - radialPoint.y1); \
+            RadialGradientSpan span(interpolatorTypeBlend, gradientRadialCalculate, gradientColorModeBlend, \
+                                    startRadius, endRadius); \
+            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer, \
+                          scanline1, scanline2, renBase, allocator1, span, spanGen); \
+        } \
+    }
+
 /**
  * @brief Defines the basic styles of graphs drawn on canvases.
  *
@@ -56,8 +109,138 @@ public:
      * @version 1.0
      */
     Paint()
-        : style_(PaintStyle::STROKE_FILL_STYLE), fillColor_(Color::Black()),
-          strokeColor_(Color::White()), opacity_(OPA_OPAQUE), strokeWidth_(2) {}
+        : style_(PaintStyle::STROKE_FILL_STYLE),
+        fillColor_(Color::Black()),
+        strokeColor_(Color::White()),
+        opacity_(OPA_OPAQUE),
+        strokeWidth_(2),
+        changeFlage_(false),
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+        lineJoin_(LineJoinEnum::ROUND_JOIN),
+#endif
+#if GRAPHIC_ENABLE_LINECAP_FLAG
+        lineCap_(LineCapEnum::BUTT_CAP),
+#endif
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+        isDashMode_(false),
+        dashOffset_(0),
+        dashArray_(nullptr),
+        ndashes_(0),
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+        miterLimit_(0),
+#endif
+#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+        shadowColor_(Color::Black()),
+        haveShadow_(false),
+#endif
+        globalAlpha_(1.0),
+        globalCompositeOperation_(SOURCE_OVER),
+        rotateAngle_(0),
+        scaleRadioX_(1.0f),
+        scaleRadioY_(1.0f),
+        translationX_(0),
+        translationY_(0),
+        haveComposite_(false),
+        uiCanvas_(nullptr)
+    {}
+
+    Paint(const Paint& paint)
+    {
+        Init(paint);
+    }
+    void InitDash(const Paint& paint)
+    {
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+        if (isDashMode_ && ndashes_ > 0) {
+            dashArray_ = new float[ndashes_];
+            if (dashArray_) {
+                if (memset_s(dashArray_, ndashes_ * sizeof(float), 0, ndashes_ * sizeof(float)) != EOF) {
+                }
+                for (unsigned int i = 0; i < ndashes_; i++) {
+                    dashArray_[i] = paint.dashArray_[i];
+                }
+            } else {
+                ndashes_ = 0;
+                dashOffset_ = 0;
+                isDashMode_ = false;
+            }
+        } else {
+            dashArray_ = nullptr;
+        }
+#endif
+    }
+    /*
+     * Initialize data members.
+     * style_;       paint style.
+     * fillColor_;   Sets the fill color of the pen.
+     * strokeColor_; Sets the line color of the pen.
+     * opacity_;     Set transparency.
+     * strokeWidth_; Set lineweight.
+     * lineCap_;     Set pen cap.
+     * lineJoin_;    Sets the style at the path connection of the pen.
+     * miterLimit_;  Sets the spacing limit for sharp corners at path connections.
+     * dashOffset;   dash Point offset.
+     * isDrawDash;   Whether to draw dotted line.
+     * dashArray;    dash Point group.
+     * ndashes;      Number of dotted lines.
+     * globalAlpha;  Set element Global alpha.
+     * shadowBlurRadius;  Sets the shadow blur radius.
+     * shadowOffsetX;     Sets the abscissa offset of the shadow.
+     * shadowOffsetY;     Sets the shadow ordinate offset.
+     * shadowColor;       Set shadow color.
+     */
+    void Init(const Paint& paint)
+    {
+        style_ = paint.style_;
+        fillColor_ = paint.fillColor_;
+        strokeColor_ = paint.strokeColor_;
+        strokeWidth_ = paint.strokeWidth_;
+        opacity_ = paint.opacity_;
+#if GRAPHIC_ENABLE_LINECAP_FLAG
+        lineCap_ = paint.lineCap_;
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+        lineJoin_ = paint.lineJoin_;
+#endif
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+        isDashMode_ = paint.isDashMode_;
+        dashOffset_ = paint.dashOffset_;
+        dashArray_ = paint.dashArray_;
+        ndashes_ = paint.ndashes_;
+#endif
+        changeFlage_ = paint.changeFlage_;
+        scaleRadioX_= paint.scaleRadioX_;
+        scaleRadioY_= paint.scaleRadioY_;
+        translationX_= paint.translationX_;
+        translationY_= paint.translationY_;
+        InitDash(paint);
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+        miterLimit_ = paint.miterLimit_;
+#endif
+#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+        linearGradientPoint_ = paint.linearGradientPoint_;
+        radialGradientPoint_ = paint.radialGradientPoint_;
+        stopAndColors_ = paint.stopAndColors_;
+        gradientflag_ = paint.gradientflag_;
+#endif
+#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+        patternRepeat_ = paint.patternRepeat_;
+#endif
+#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+        shadowBlurRadius_ = paint.shadowBlurRadius_;
+        shadowOffsetX_ = paint.shadowOffsetX_;
+        shadowOffsetY_ = paint.shadowOffsetY_;
+        shadowColor_ = paint.shadowColor_;
+        haveShadow_ = paint.haveShadow_;
+#endif
+        globalAlpha_ = paint.globalAlpha_;
+        globalCompositeOperation_ = paint.globalCompositeOperation_;
+        rotateAngle_ = paint.rotateAngle_;
+        transfrom_ = paint.transfrom_;
+        haveComposite_ = paint.haveComposite_;
+        uiCanvas_ = paint.uiCanvas_;
+    }
 
     /**
      * @brief A destructor used to delete the <b>Paint</b> instance.
@@ -65,8 +248,14 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    virtual ~Paint() {}
+    virtual ~Paint()
+    {}
 
+    const Paint& operator=(const Paint& paint)
+    {
+        Init(paint);
+        return *this;
+    }
     /**
      * @brief Enumerates paint styles of a closed graph. The styles are invalid for non-closed graphs.
      */
@@ -77,12 +266,54 @@ public:
         FILL_STYLE,
         /** Stroke and fill */
         STROKE_FILL_STYLE,
+        /** Gradual change */
+        GRADIENT,
+        /** Image mode */
+        PATTERN
+    };
+
+    struct LinearGradientPoint {
+        /**  Start point coordinate x  */
+        double x0;
+        /**  Start point coordinate y  */
+        double y0;
+        /**  End point coordinate x  */
+        double x1;
+        /**  End point coordinate y  */
+        double y1;
+    };
+
+    struct RadialGradientPoint {
+        /**  Start dot coordinate x  */
+        double x0;
+        /** Start dot coordinate y  */
+        double y0;
+        /**  Start circle radius r0  */
+        double r0;
+        /**  End dot coordinates x  */
+        double x1;
+        /**  End dot coordinates y  */
+        double y1;
+        /**  Start circle radius r0  */
+        double r1;
+    };
+
+    struct StopAndColor {
+        /** Values between 0.0 and 1.0 represent the position between the beginning and end of the ramp.  */
+        double stop;
+        /** The color value displayed at the end */
+        ColorType color;
+    };
+    enum Gradient {
+        Linear,
+        Radial
     };
 
     /**
      * @brief Sets the paint style of a closed graph.
      *
-     * @param style Indicates the paint style. Stroke and fill are set by default. For details, see {@link PaintStyle}.
+     * @param style Indicates the paint style. Stroke and fill are set by default.
+     * For details, see {@link PaintStyle}.
      * @see GetStyle
      * @since 1.0
      * @version 1.0
@@ -90,6 +321,27 @@ public:
     void SetStyle(PaintStyle style)
     {
         style_ = style;
+    }
+
+    void StrokeStyle(ColorType color)
+    {
+        SetStyle(Paint::STROKE_STYLE);
+        SetStrokeColor(color);
+    }
+
+    void FillStyle(ColorType color)
+    {
+        SetStyle(Paint::FILL_STYLE);
+        SetFillColor(color);
+    }
+
+    void StrokeStyle(PaintStyle style)
+    {
+        SetStyle(style);
+    }
+    void FillStyle(PaintStyle style)
+    {
+        SetStyle(style);
     }
 
     /**
@@ -143,6 +395,7 @@ public:
     void SetStrokeColor(ColorType color)
     {
         strokeColor_ = color;
+        changeFlage_ = true;
     }
 
     /**
@@ -171,6 +424,7 @@ public:
     void SetFillColor(ColorType color)
     {
         fillColor_ = color;
+        changeFlage_ = true;
     }
 
     /**
@@ -214,12 +468,538 @@ public:
         return opacity_;
     }
 
+    bool GetChangeFlag() const
+    {
+        return changeFlage_;
+    }
+#if GRAPHIC_ENABLE_LINECAP_FLAG
+    /**
+     * @brief Sets the cap type.
+     * @see GetLineCap
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetLineCap(LineCapEnum lineCap)
+    {
+        lineCap_ = lineCap;
+        changeFlage_ = true;
+    }
+#endif
+
+#if GRAPHIC_ENABLE_LINECAP_FLAG
+    /**
+     * @brief Gets the cap type.
+     * @see SetLineCap
+     * @since 1.0
+     * @version 1.0
+     */
+    LineCapEnum GetLineCap() const
+    {
+        return lineCap_;
+    }
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    /**
+     * @brief Sets the style at the path connection of the pen.
+     * @see GetLineJoin
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetLineJoin(LineJoinEnum lineJoin)
+    {
+        lineJoin_ = lineJoin;
+        changeFlage_ = true;
+    }
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    /**
+     * @brief Sets the spacing limit for sharp corners at path connections.
+     * @see GetMiterLimit
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetMiterLimit(float miterLimit)
+    {
+        miterLimit_ = miterLimit;
+        changeFlage_ = true;
+    }
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    double GetMiterLimit() const
+    {
+        return miterLimit_;
+    }
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    /**
+     * @brief Gets the style at the path connection of the pen.
+     * @see SetLineJoin
+     * @since 1.0
+     * @version 1.0
+     */
+    LineJoinEnum GetLineJoin() const
+    {
+        return lineJoin_;
+    }
+#endif
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+    bool IsLineDash() const
+    {
+        return isDashMode_;
+    }
+
+    /**
+     * @brief Sets the array and number of dashes.
+     * @param lineDashs Represents an array of dotted lines,ndash Indicates the number of dotted lines
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetLineDash(float* lineDashs, const unsigned int ndash)
+    {
+        if (ndash < 0) {
+            GRAPHIC_LOGE("SetLineDash fail,because ndash < =0");
+            return;
+        }
+        ClearLineDash();
+        if (lineDashs == nullptr || ndash == 0) {
+            return;
+        }
+        ndashes_ = ndash;
+        isDashMode_ = true;
+        dashArray_ = new float[ndashes_];
+        if (dashArray_) {
+            if (memset_s(dashArray_, ndashes_ * sizeof(float), 0, ndashes_ * sizeof(float)) != EOF) {
+            }
+            for (unsigned int iIndex = 0; iIndex < ndashes_; iIndex++) {
+                dashArray_[iIndex] = lineDashs[iIndex];
+            }
+        } else {
+            ndashes_ = 0;
+            dashOffset_ = 0;
+            isDashMode_ = false;
+        }
+        changeFlage_ = true;
+    }
+
+    /**
+     * @brief Get dash array
+     * @return
+     */
+    float* GetLineDash() const
+    {
+        return dashArray_;
+    }
+
+    float GetLineDashOffset() const
+    {
+        return dashOffset_;
+    }
+
+    /**
+     * @brief Sets the offset of the dash mode start point
+     * @see GetLineDashOffset
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetLineDashOffset(float offset)
+    {
+        dashOffset_ = offset;
+        changeFlage_ = true;
+        isDashMode_ = true;
+    }
+
+    /**
+     * @brief Get dash array length
+     * @return
+     */
+    unsigned int GetLineDashCount() const
+    {
+        return ndashes_;
+    }
+
+    /**
+     * @brief Empty the dotted line and draw it instead.
+     * @since 1.0
+     * @version 1.0
+     */
+    void ClearLineDash(void)
+    {
+        dashOffset_ = 0;
+        ndashes_ = 0;
+        isDashMode_ = false;
+        if (dashArray_ != nullptr) {
+            delete[] dashArray_;
+            dashArray_ = nullptr;
+        }
+    }
+#endif
+#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+    void createLinearGradient(double startx, double starty, double endx, double endy)
+    {
+        gradientflag_ = Linear;
+        linearGradientPoint_.x0 = startx;
+        linearGradientPoint_.y0 = starty;
+        linearGradientPoint_.x1 = endx;
+        linearGradientPoint_.y1 = endy;
+        changeFlage_ = true;
+    }
+
+    void addColorStop(double stop, ColorType color)
+    {
+        StopAndColor stopAndColor;
+        stopAndColor.stop = stop;
+        stopAndColor.color = color;
+        stopAndColors_.PushBack(stopAndColor);
+    }
+
+    void createRadialGradient(double start_x, double start_y, double start_r, double end_x, double end_y,
+                              double end_r)
+    {
+        gradientflag_ = Radial;
+        radialGradientPoint_.x0 = start_x;
+        radialGradientPoint_.y0 = start_y;
+        radialGradientPoint_.r0 = start_r;
+        radialGradientPoint_.x1 = end_x;
+        radialGradientPoint_.y1 = end_y;
+        radialGradientPoint_.r1 = end_r;
+        changeFlage_ = true;
+    }
+
+    List<StopAndColor> getStopAndColor() const
+    {
+        return stopAndColors_;
+    }
+
+    LinearGradientPoint GetLinearGradientPoint() const
+    {
+        return linearGradientPoint_;
+    }
+
+    RadialGradientPoint GetRadialGradientPoint() const
+    {
+        return radialGradientPoint_;
+    }
+
+    Gradient GetGradient() const
+    {
+        return gradientflag_;
+    }
+#endif
+#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+    /*
+     * Set hatch patterns for elements
+     * @param img Represents the pattern of the hatch，text Represents a fill pattern
+     */
+    void CreatePattern(const char* img, PatternRepeatMode patternRepeat)
+    {
+        image_ = img;
+        patternRepeat_ = patternRepeat;
+        changeFlage_ = true;
+    }
+
+    const char* GetPatternImage() const
+    {
+        return image_;
+    }
+
+    PatternRepeatMode GetPatternRepeatMode() const
+    {
+        return patternRepeat_;
+    }
+#endif
+
+#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+    /**
+     * @brief Sets the shadow blur level.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowBlur(double radius)
+    {
+        shadowBlurRadius_ = radius;
+        changeFlage_ = true;
+    }
+
+    /**
+     * @brief Gets the shadow blur level.
+     * @since 1.0
+     * @version 1.0
+     */
+    double GetShadowBlur() const
+    {
+        return shadowBlurRadius_;
+    }
+
+    /**
+     * @brief Gets the abscissa offset of the shadow.
+     * @since 1.0
+     * @version 1.0
+     */
+    double GetShadowOffsetX() const
+    {
+        return shadowOffsetX_;
+    }
+    /**
+     * @brief Sets the abscissa offset of the shadow.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowOffsetX(double offset)
+    {
+        shadowOffsetX_ = offset;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief Gets the shadow ordinate offset.
+     * @since 1.0
+     * @version 1.0
+     */
+    double GetShadowOffsetY() const
+    {
+        return shadowOffsetY_;
+    }
+    /**
+     * @brief Sets the shadow ordinate offset.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowOffsetY(double offset)
+    {
+        shadowOffsetY_ = offset;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief Gets the color value of the shadow.
+     * @since 1.0
+     * @version 1.0
+     */
+    ColorType GetShadowColor() const
+    {
+        return shadowColor_;
+    }
+    /**
+     * @brief Sets the color value of the shadow.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetShadowColor(ColorType color)
+    {
+        shadowColor_ = color;
+        changeFlage_ = true;
+        haveShadow_ = true;
+    }
+    bool HaveShadow() const
+    {
+        return haveShadow_;
+    }
+#endif
+    /**
+     * @brief Sets the alpha of the current drawing.
+     */
+    void SetGlobalAlpha(float alphaPercentage)
+    {
+        if (alphaPercentage > 1) {
+            globalAlpha_ = 1.0;
+            return;
+        }
+        if (alphaPercentage < 0) {
+            globalAlpha_ = 0.0;
+            return;
+        }
+        globalAlpha_ = alphaPercentage;
+        changeFlage_ = true;
+    }
+    /**
+     * @brief Returns the alpha of the current drawing
+     */
+    float GetGlobalAlpha() const
+    {
+        return globalAlpha_;
+    }
+
+    /**
+     * @brief Set blend mode
+     */
+    void SetGlobalCompositeOperation(GlobalCompositeOperation globalCompositeOperation)
+    {
+        globalCompositeOperation_ = globalCompositeOperation;
+        changeFlage_ = true;
+        if (globalCompositeOperation != SOURCE_OVER) {
+            haveComposite_ = true;
+        }
+    }
+
+    /**
+     * @brief Get blend mode
+     */
+    GlobalCompositeOperation GetGlobalCompositeOperation() const
+    {
+        return globalCompositeOperation_;
+    }
+
+    /* Zooms the current drawing to a larger or smaller size */
+    void Scale(float scaleX, float scaleY)
+    {
+        this->scaleRadioX_ *= scaleX;
+        this->scaleRadioY_ *= scaleX;
+        if (rotateAngle_ > 0.0 || rotateAngle_ < 0) {
+            transfrom_.Rotate(-rotateAngle_ * PI / OHOS::BOXER);
+            transfrom_.Scale(scaleX, scaleY);
+            transfrom_.Rotate(rotateAngle_ * PI / OHOS::BOXER);
+        } else {
+            transfrom_.Scale(scaleX, scaleY);
+        }
+        changeFlage_ = true;
+    }
+
+    double GetScaleX() const
+    {
+        return this->scaleRadioX_;
+    }
+
+    double GetScaleY() const
+    {
+        return this->scaleRadioY_;
+    }
+
+    /* Rotate current drawing */
+    void Rotate(float angle)
+    {
+        changeFlage_ = true;
+        transfrom_.Rotate(angle * PI / OHOS::BOXER);
+        rotateAngle_ += angle;
+    }
+
+    void Rotate(float angle, int16_t x, int16_t y)
+    {
+        transfrom_.Translate(-x, -y);
+        transfrom_.Rotate(angle * PI / OHOS::BOXER);
+        rotateAngle_ += angle;
+        transfrom_.Translate(x, y);
+        changeFlage_ = true;
+    }
+    /* Remap the (x, y) position on the canvas */
+    void Translate(int16_t x, int16_t y)
+    {
+        changeFlage_ = true;
+        transfrom_.Translate(x, y);
+        this->translationX_ += x;
+        this->translationY_ += y;
+    }
+
+    /* Gets the x position on the remapping canvas */
+    int16_t GetTranslateX() const
+    {
+        return this->translationX_;
+    }
+    /* Gets the Y position on the remapping canvas */
+    int16_t GetTranslateY() const
+    {
+        return this->translationY_;
+    }
+
+    /* Resets the current conversion to the identity matrix. Then run transform () */
+    void SetTransform(float scaleX, float shearX, float shearY, float scaleY,
+                      int16_t transLateX, int16_t transLateY)
+    {
+        transfrom_.Reset();
+        rotateAngle_ = 0;
+        Transform(scaleX, shearX, shearY, scaleY, transLateX, transLateY);
+        changeFlage_ = true;
+    }
+
+    /* Resets the current conversion to the identity matrix. Then run transform () */
+    void Transform(float scaleX, float shearX, float shearY, float scaleY, int16_t transLateX, int16_t transLateY)
+    {
+        changeFlage_ = true;
+        this->translationX_ += transLateX;
+        this->translationY_ += transLateY;
+        transLateX += transfrom_.GetData()[INDEX_TWO];
+        transLateY += transfrom_.GetData()[INDEX_FIVE];
+        transfrom_.Translate(-transfrom_.GetData()[INDEX_TWO], -transfrom_.GetData()[INDEX_FIVE]);
+        Scale(scaleX, scaleY);
+        transfrom_.Translate(transLateX, transLateY);
+        transfrom_.SetData(INDEX_ONE, transfrom_.GetData()[INDEX_ONE] + shearX);
+        transfrom_.SetData(INDEX_THREE, transfrom_.GetData()[INDEX_THREE] + shearY);
+    }
+
+    TransAffine GetTransAffine() const
+    {
+        return transfrom_;
+    }
+
+    float GetRotateAngle() const
+    {
+        return rotateAngle_;
+    }
+
+    void SetUICanvas(UICanvas* uiCanvas)
+    {
+        this->uiCanvas_ = uiCanvas;
+    }
+
+    UICanvas* GetUICanvas() const
+    {
+        return uiCanvas_;
+    }
+
+    bool HaveComposite() const
+    {
+        return haveComposite_;
+    }
+
 private:
     PaintStyle style_;
     ColorType fillColor_;
     ColorType strokeColor_;
     uint8_t opacity_;
     uint16_t strokeWidth_;
+    bool changeFlage_;
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    LineJoinEnum lineJoin_;
+#endif
+
+#if GRAPHIC_ENABLE_LINECAP_FLAG
+    LineCapEnum lineCap_;
+#endif
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+    bool isDashMode_;      // Is it a dash mode segment.
+    float dashOffset_;     // dash Point offset.
+    float* dashArray_;     // dash Point array.
+    unsigned int ndashes_; // Length of dasharray
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    double miterLimit_;    // Sets the spacing limit for sharp corners at path connections
+#endif
+#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+    LinearGradientPoint linearGradientPoint_;
+    RadialGradientPoint radialGradientPoint_;
+    List<StopAndColor> stopAndColors_;
+    Gradient gradientflag_;
+#endif
+#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+    PatternRepeatMode patternRepeat_;
+#endif
+#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+    const char* image_;
+#endif
+#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+    double shadowBlurRadius_; // Sets the shadow blur radius.
+    double shadowOffsetX_;    // Sets the abscissa offset of the shadow.
+    double shadowOffsetY_;    // Sets the shadow ordinate offset.
+    ColorType shadowColor_;   // Set shadow color.
+    bool haveShadow_;         // Is there a shadow currently.
+#endif
+    float globalAlpha_;                                 // The transparency of the current drawing is 0-1 percent
+    GlobalCompositeOperation globalCompositeOperation_; // Mixed image mode
+    float rotateAngle_;                                 // Rotation angle in degrees
+    float scaleRadioX_;
+    float scaleRadioY_;
+    int translationX_;
+    int translationY_;
+    TransAffine transfrom_;                             // matrix.
+    bool haveComposite_;
+    UICanvas* uiCanvas_;
 };
 
 /**
@@ -230,13 +1010,41 @@ private:
  */
 class UICanvas : public UIView {
 public:
+    typedef Rgba8 Rgba8Color;
+    // Color array RGBA, index position of blue:0,green:1,red:2,alpha:3,
+    typedef OrderBgra ComponentOrder;
+
+    // Fill the color in the position specified by componentorder according to the index of componentorder,
+    // and according to blender_ RGBA mode processing color
+    typedef RgbaBlender<Rgba8Color, ComponentOrder> Blender;
+    typedef GraphicRenderPixfmtRgbaBlend<Blender, RenderingBuffer> PixFormat;
+    typedef GraphicRenderBase<PixFormat> RendererBase;
+
+    typedef GraphicGeometryScanline Scanline;
+    typedef OHOS::SpanFillColorAllocator<Rgba8Color> SpanAllocator;
+#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+    // Set the constructor of gradient array, set color interpolator, color template, etc
+    typedef GraphicSpancolorFillGradientLut<OHOS::ColorInterpolator<OHOS::Srgba8>> GradientColorMode;
+    // Algorithm for setting radial gradient
+    typedef GradientRadialCalculate RadialGradientCalculate;
+    // Set segment interpolator
+    typedef GraphicSpancolorFillInterpolator<> InterpolatorType;
+    // Sets the segment generator for linear gradients
+    typedef SpanFillColorGradient<Rgba8Color, GraphicSpancolorFillInterpolator<>, GradientLinearCalculate,
+            GradientColorMode> LinearGradientSpan;
+    // Sets the segment generator for the radial gradient
+    typedef SpanFillColorGradient<Rgba8Color, GraphicSpancolorFillInterpolator<>, RadialGradientCalculate,
+            GradientColorMode> RadialGradientSpan;
+#endif
     /**
      * @brief A constructor used to create a <b>UICanvas</b> instance.
      *
      * @since 1.0
      * @version 1.0
      */
-    UICanvas() : startPoint_({ 0, 0 }), path_(nullptr) {}
+    UICanvas()
+        : startPoint_(PointValue(0, 0)), vertices_(nullptr), gfxMapBuffer_(nullptr)
+    {}
 
     /**
      * @brief A destructor used to delete the <b>UICanvas</b> instance.
@@ -347,7 +1155,7 @@ public:
      * @version 1.0
      */
     void DrawCurve(const Point& startPoint, const Point& control1, const Point& control2,
-        const Point& endPoint, const Paint& paint);
+                   const Point& endPoint, const Paint& paint);
 
     /**
      * @brief Draws a rectangle.
@@ -360,6 +1168,23 @@ public:
      * @version 1.0
      */
     void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
+    /**
+     * @brief Draws a rectangular path with no fill.
+     * @param startPoint starting point
+     * @param height
+     * @param width
+     * @param paint paint brush
+     */
+    void StrokeRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
+    /**
+     * @brief Clears pixels within a rectangle
+     * @param startPoint starting point
+     * @param height
+     * @param width
+     */
+    void ClearRect(const Point& startPoint, int16_t height, int16_t width);
 
     /**
      * @brief Draws a circle.
@@ -409,6 +1234,7 @@ public:
      */
     void DrawArc(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle, const Paint& paint);
 
+#if GRAPHIC_ENABLE_DRAW_IMAGE_FLAG
     /**
      * @brief Draws an image.
      *
@@ -420,6 +1246,10 @@ public:
      */
     void DrawImage(const Point& startPoint, const char* image, const Paint& paint);
 
+    void DrawImage(const Point& startPoint, const char* image, const Paint& paint, int16_t width, int16_t height);
+
+    bool IsGif(const char* src);
+#endif
     /**
      * @brief Defines the font style.
      */
@@ -452,7 +1282,7 @@ public:
      * @version 1.0
      */
     void DrawLabel(const Point& startPoint, const char* text, uint16_t maxWidth, const FontStyle& fontStyle,
-        const Paint& paint);
+                   const Paint& paint);
 
     /**
      * @brief Creates a path.
@@ -488,9 +1318,11 @@ public:
      *
      * @param center     Indicates the coordinates of the arc's center point.
      * @param radius     Indicates the radius of the arc.
-     * @param startAngle Indicates the start angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+     * @param startAngle Indicates the start angle of the arc.
+     *                   The value <b>0</b> indicates the 12-o'clock direction,
      *                   and <b>90</b> indicates the 3-o'clock direction.
-     * @param endAngle   Indicates the end angle of the arc. The value <b>0</b> indicates the 12-o'clock direction,
+     * @param endAngle   Indicates the end angle of the arc.
+     *                   The value <b>0</b> indicates the 12-o'clock direction,
      *                   and <b>90</b> indicates the 3-o'clock direction.
      * @since 3.0
      * @version 5.0
@@ -524,6 +1356,40 @@ public:
      * @version 5.0
      */
     void DrawPath(const Paint& paint);
+
+    /**
+     * @brief Fill polygon path
+     * @param paint
+     */
+    void FillPath(const Paint& paint);
+
+#if GRAPHIC_ENABLE_DRAW_TEXT_FLAG
+    /*  Draw text on canvas */
+    void StrokeText(const char* text, const Point& point, const FontStyle& fontStyle, const Paint& paint);
+#endif
+
+    /* Returns an object containing the specified text width */
+    Point MeasureText(const char* text, const FontStyle& fontStyle);
+
+    /* Save history status */
+    void Save(Paint& paint)
+    {
+        PaintStack.push(paint);
+    }
+
+    /* Restore to last historical state */
+    Paint Restore()
+    {
+        Paint paint;
+        if (PaintStack.empty()) {
+            return paint;
+        }
+        paint = PaintStack.top();
+        PaintStack.pop();
+        return paint;
+    }
+
+    void OnBlendDraw(BufferInfo& gfxDstBuffer, const Rect& trunc);
 
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
@@ -560,47 +1426,54 @@ protected:
         int16_t endAngle;
     };
 
-    struct ImageParam : public HeapBase {
-        Point start;
-        uint16_t height;
-        uint16_t width;
-        Image* image;
-    };
-
-    enum PathCmd {
-        CMD_MOVE_TO,
-        CMD_LINE_TO,
-        CMD_ARC,
-        CMD_CLOSE,
-    };
-
-    class UICanvasPath : public HeapBase {
-    public:
-        UICanvasPath() : startPos_({ 0, 0 }), strokeCount_(0) {};
-        ~UICanvasPath();
-        List<Point> points_;
-        List<PathCmd> cmd_;
-        List<ArcParam> arcParam_;
-        Point startPos_;
-        uint16_t strokeCount_;
-    };
-
     struct PathParam : public HeapBase {
-        UICanvasPath* path;
-        uint16_t count;
+        UICanvasVertices* vertices;
+        ImageParam* imageParam = nullptr;
+        bool isStroke;
+    };
+
+    struct TextParam : public HeapBase {
+        const char* text;
+        Point position;
+        Color32 fontColor;
+        uint8_t fontOpa;
+        FontStyle fontStyle;
+        Text* textComment;
+        TextParam()
+        {
+            textComment = new Text;
+        }
+
+        ~TextParam()
+        {
+            if (textComment) {
+                delete textComment;
+                textComment = nullptr;
+            }
+        };
     };
 
     struct DrawCmd : public HeapBase {
         Paint paint;
         void* param;
-        void(*DrawGraphics)(BufferInfo&, void*, const Paint&, const Rect&, const Rect&, const Style&);
-        void(*DeleteParam)(void *);
+        void (*DrawGraphics)(BufferInfo&, void*, const Paint&, const Rect&, const Rect&, const Style&);
+        void (*DeleteParam)(void*);
     };
 
     Point startPoint_;
-    UICanvasPath* path_;
+    UICanvasVertices* vertices_;
     List<DrawCmd> drawCmdList_;
-
+    // Save historical modification information of paint
+    std::stack<Paint> PaintStack;
+    BufferInfo* gfxMapBuffer_;
+#if GRAPHIC_ENABLE_BLUR_EFFECT_FLAG
+    typedef OHOS::GraphicFilterblur DrawBlur;
+    DrawBlur drawBlur;
+    DrawBlur GetDrawBoxBlur() const
+    {
+        return drawBlur;
+    }
+#endif
     static void DeleteLineParam(void* param)
     {
         LineParam* lineParam = static_cast<LineParam*>(param);
@@ -636,6 +1509,12 @@ protected:
         ImageParam* imageParam = static_cast<ImageParam*>(param);
         if (imageParam->image != nullptr) {
             delete imageParam->image;
+            imageParam->image = nullptr;
+        }
+        if (imageParam->gifImageAnimator != nullptr) {
+            imageParam->gifImageAnimator->Stop();
+            delete imageParam->gifImageAnimator;
+            imageParam->gifImageAnimator = nullptr;
         }
         delete imageParam;
     }
@@ -649,11 +1528,21 @@ protected:
     static void DeletePathParam(void* param)
     {
         PathParam* pathParam = static_cast<PathParam*>(param);
-        pathParam->path->strokeCount_--;
-        if (pathParam->path->strokeCount_ == 0) {
-            delete pathParam->path;
+        if (pathParam->vertices != nullptr) {
+            pathParam->vertices->FreeAll();
+            pathParam->vertices = nullptr;
+        }
+        if (pathParam->imageParam != nullptr) {
+            DeleteImageParam(pathParam->imageParam);
         }
         delete pathParam;
+        pathParam = nullptr;
+    }
+
+    static void DeleteTextParam(void* param)
+    {
+        TextParam* textParam = static_cast<TextParam*>(param);
+        delete textParam;
     }
 
     static void DoDrawLine(BufferInfo& gfxDstBuffer,
@@ -692,12 +1581,19 @@ protected:
                           const Rect& rect,
                           const Rect& invalidatedArea,
                           const Style& style);
+#if GRAPHIC_ENABLE_DRAW_IMAGE_FLAG
     static void DoDrawImage(BufferInfo& gfxDstBuffer,
                             void* param,
                             const Paint& paint,
                             const Rect& rect,
                             const Rect& invalidatedArea,
                             const Style& style);
+#endif
+    static void DoRenderImage(RenderingBuffer& renderBuffer,
+                              const Paint& paint,
+                              const Rect& invalidatedArea,
+                              TransAffine& transform,
+                              RenderingBuffer& imageBuffer);
     static void DoDrawLabel(BufferInfo& gfxDstBuffer,
                             void* param,
                             const Paint& paint,
@@ -715,6 +1611,370 @@ protected:
                                const Point& center,
                                const Rect& invalidatedArea,
                                const Paint& paint);
+
+    static void InitRendAndTransform(BufferInfo& gfxDstBuffer, RenderingBuffer& renderBuffer, const Rect& rect,
+                                     TransAffine& transform, const Style& style, const Paint& paint);
+
+    static void DoFillPath(BufferInfo& gfxDstBuffer,
+                           void* param,
+                           const Paint& paint,
+                           const Rect& rect,
+                           const Rect& invalidatedArea,
+                           const Style& style);
+
+    static void SetRasterizer(UICanvasVertices& vertices,
+                              const Paint& paint,
+                              GraphicRasterizerScanlineAntialias<>& rasterizer,
+                              TransAffine& transform,
+                              const bool& isStroke);
+
+    static void DoRender(BufferInfo& gfxDstBuffer,
+                         void* param,
+                         const Paint& paint,
+                         const Rect& rect,
+                         const Rect& invalidatedArea,
+                         const Style& style,
+                         const bool& isStroke);
+#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+    static void DoDrawShadow(BufferInfo& gfxDstBuffer,
+                             void* param,
+                             const Paint& paint,
+                             const Rect& rect,
+                             const Rect& invalidatedArea,
+                             const Style& style,
+                             const bool& isStroke);
+#endif
+   static void  BlitMapBuffer(BufferInfo &gfxDstBuffer, BufferInfo& gfxMapBuffer,
+                              Rect& textRect, TransformMap& transMap, const Rect& invalidatedArea);
+
+#if GRAPHIC_ENABLE_DRAW_TEXT_FLAG
+    static void DoDrawText(BufferInfo& gfxDstBuffer, void* param, const Paint& paint, const Rect& rect,
+                           const Rect& invalidatedArea, const Style& style);
+#endif
+    /**
+     * Assembly parameter setting lineweight，LineCap，LineJoin
+     */
+    template <class LineStyle>
+    static void LineStyleCalc(DepictStroke<LineStyle>& strokeLineStyle, const Paint& paint)
+    {
+        strokeLineStyle.Width(paint.GetStrokeWidth()); // Line style related
+#if GRAPHIC_ENABLE_LINECAP_FLAG
+        strokeLineStyle.LineCap(paint.GetLineCap());
+#endif
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+        strokeLineStyle.LineJoin(paint.GetLineJoin());
+        if (paint.GetMiterLimit() > 0) {
+            strokeLineStyle.MiterLimit(paint.GetMiterLimit());
+        }
+#endif
+    };
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+    /**
+     * Set linedash style
+     */
+    template <class LineDashStyle>
+    static void LineDashStyleCalc(DepictDash<LineDashStyle>& dashStyle, const Paint& paint)
+    {
+        for (unsigned int i = 0; i < paint.GetLineDashCount(); i += TWO_STEP) {
+            dashStyle.AddDash(paint.GetLineDash()[i], paint.GetLineDash()[i + 1]);
+        }
+        dashStyle.DashStart(paint.GetLineDashOffset());
+    };
+#endif
+    /**
+     * Renders monochrome polygon paths and fills
+     */
+    template <class Pixfmt>
+    static void RenderSolid(const Paint& paint,
+                            GraphicRasterizerScanlineAntialias<>& rasterizer,
+                            OHOS::GraphicRenderBase<Pixfmt>& renBase,
+                            const bool& isStroke)
+    {
+        Scanline scanline;
+        Rgba8Color color;
+        RenderBlendSolid(paint, color, isStroke);
+        RenderScanlinesAntiAliasSolid(rasterizer, scanline, renBase, color);
+    }
+
+    static void RenderBlendSolid(const Paint& paint,
+                                 Rgba8Color& color,
+                                 const bool& isStroke)
+    {
+        if (isStroke) {
+            if (paint.GetStyle() == Paint::STROKE_STYLE ||
+                paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+                ChangeColor(color, paint.GetStrokeColor(), paint.GetStrokeColor().alpha * paint.GetGlobalAlpha());
+            }
+        } else {
+            if (paint.GetStyle() == Paint::FILL_STYLE ||
+                paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+                ChangeColor(color, paint.GetFillColor(), paint.GetFillColor().alpha * paint.GetGlobalAlpha());
+            }
+        }
+    }
+
+    static bool isSoild(const Paint& paint)
+    {
+        if (paint.GetStyle() == Paint::STROKE_STYLE ||
+           paint.GetStyle() == Paint::FILL_STYLE ||
+           paint.GetStyle() == Paint::STROKE_FILL_STYLE) {
+            return true;
+        }
+        return false;
+    }
+
+#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+    /**
+     * Render gradient
+     */
+    template <class Pixfmt, class color>
+    static void RenderGradient(const Paint& paint,
+                               GraphicRasterizerScanlineAntialias<>& rasterizer,
+                               TransAffine& transform,
+                               OHOS::GraphicRenderBase<Pixfmt>& renBase,
+                               RenderingBuffer& renderBuffer,
+                               SpanFillColorAllocator<color>& allocator,
+                               const Rect& invalidatedArea)
+    {
+        Scanline scanline;
+
+        PixFormat pixFormatComp(renderBuffer);
+        RendererBase m_renBaseComp(pixFormatComp);
+
+        m_renBaseComp.ResetClipping(true);
+        m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
+                              invalidatedArea.GetRight(), invalidatedArea.GetBottom());
+        TransAffine gradientMatrix;
+        InterpolatorType interpolatorType(gradientMatrix);
+        GradientColorMode gradientColorMode;
+        BuildGradientColor(paint, gradientColorMode);
+        if (paint.GetGradient() == Paint::Linear) {
+            Paint::LinearGradientPoint linearPoint = paint.GetLinearGradientPoint();
+
+            double angle = atan2(linearPoint.y1 - linearPoint.y0, linearPoint.x1 - linearPoint.x0);
+            gradientMatrix.Reset();
+            gradientMatrix *= OHOS::TransAffineRotation(angle);
+            gradientMatrix *= OHOS::TransAffineTranslation(linearPoint.x0, linearPoint.y0);
+            gradientMatrix *= transform;
+            gradientMatrix.Invert();
+
+            double distance = sqrt((linearPoint.x1 - linearPoint.x0) * (linearPoint.x1 - linearPoint.x0) +
+                                   (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
+            GradientLinearCalculate gradientLinearCalculate;
+            LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
+            RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
+        }
+
+        if (paint.GetGradient() == Paint::Radial) {
+            Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
+            gradientMatrix.Reset();
+            gradientMatrix *= OHOS::TransAffineTranslation(radialPoint.x1, radialPoint.y1);
+            gradientMatrix *= transform;
+            gradientMatrix.Invert();
+            double startRadius = radialPoint.r0;
+            double endRadius = radialPoint.r1;
+            GradientRadialCalculate gradientRadialCalculate(radialPoint.r1, radialPoint.x0 - radialPoint.x1,
+                                                            radialPoint.y0 - radialPoint.y1);
+            RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
+                                    startRadius, endRadius);
+            RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
+        }
+    }
+
+    static void BuildGradientColor(const Paint& paint, GradientColorMode& gradientColorMode)
+    {
+        gradientColorMode.RemoveAll();
+        ListNode<Paint::StopAndColor>* iter = paint.getStopAndColor().Begin();
+        uint16_t count = 0;
+        for (; count < paint.getStopAndColor().Size(); count++) {
+            ColorType stopColor = iter->data_.color;
+            Srgba8 srgba8Color;
+            ChangeColor(srgba8Color, stopColor, stopColor.alpha * paint.GetGlobalAlpha());
+            gradientColorMode.AddColor(iter->data_.stop, srgba8Color);
+            iter = iter->next_;
+        }
+        gradientColorMode.BuildLut();
+    }
+
+    static void BuildLineGradientMatrix(const Paint& paint,
+                                    TransAffine& gradientMatrix,
+                                    TransAffine& transform,
+                                    double& distance)
+    {
+        Paint::LinearGradientPoint linearPoint = paint.GetLinearGradientPoint();
+        double angle = atan2(linearPoint.y1 - linearPoint.y0, linearPoint.x1 - linearPoint.x0);
+        gradientMatrix.Reset();
+        gradientMatrix *= OHOS::TransAffineRotation(angle);
+        gradientMatrix *= OHOS::TransAffineTranslation(linearPoint.x0, linearPoint.y0);
+        gradientMatrix *= transform;
+        gradientMatrix.Invert();
+        distance = sqrt((linearPoint.x1 - linearPoint.x0) * (linearPoint.x1 - linearPoint.x0) +
+                        (linearPoint.y1 - linearPoint.y0) * (linearPoint.y1 - linearPoint.y0));
+    }
+
+    static void BuildRadialGradientMatrix(const Paint& paint,
+                                    TransAffine& gradientMatrix,
+                                    TransAffine& transform,
+                                    double& startRadius,
+                                    double& endRadius)
+    {
+        Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
+        gradientMatrix.Reset();
+        gradientMatrix *= OHOS::TransAffineTranslation(radialPoint.x1, radialPoint.y1);
+        gradientMatrix *= transform;
+        gradientMatrix.Invert();
+        startRadius = radialPoint.r0;
+        endRadius = radialPoint.r1;
+    }
+
+    template <class Pixfmt, class color>
+    static void SetGradient(const Paint& paint,
+                               GraphicRasterizerScanlineAntialias<>& rasterizer,
+                               TransAffine& transform,
+                               OHOS::GraphicRenderBase<Pixfmt>& renBase,
+                               RenderingBuffer& renderBuffer,
+                               SpanFillColorAllocator<color>& allocator,
+                               const Rect& invalidatedArea)
+    {
+        Scanline scanline;
+        PixFormat pixFormatComp(renderBuffer);
+        RendererBase m_renBaseComp(pixFormatComp);
+        m_renBaseComp.ResetClipping(true);
+        m_renBaseComp.ClipBox(invalidatedArea.GetLeft(), invalidatedArea.GetTop(),
+                              invalidatedArea.GetRight(), invalidatedArea.GetBottom());
+        TransAffine gradientMatrix;
+        InterpolatorType interpolatorType(gradientMatrix);
+        GradientColorMode gradientColorMode;
+        BuildGradientColor(paint, gradientColorMode);
+        if (paint.GetGradient() == Paint::Linear) {
+            double distance = 0;
+            BuildLineGradientMatrix(paint, gradientMatrix, transform, distance);
+            GradientLinearCalculate gradientLinearCalculate;
+            LinearGradientSpan span(interpolatorType, gradientLinearCalculate, gradientColorMode, 0, distance);
+            RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
+        }
+
+        if (paint.GetGradient() == Paint::Radial) {
+            Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
+            double startRadius = 0;
+            double endRadius = 0;
+            BuildRadialGradientMatrix(paint, gradientMatrix, transform, startRadius, endRadius);
+            GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
+                                                            radialPoint.y0 - radialPoint.y1);
+            RadialGradientSpan span(interpolatorType, gradientRadialCalculate, gradientColorMode,
+                                    startRadius, endRadius);
+            RenderScanlinesAntiAlias(rasterizer, scanline, renBase, allocator, span);
+        }
+    }
+#endif
+    template<class SpanGen, class Pixfmt>
+    static void BlendRaster(const Paint& paint,
+                            void* param,
+                            GraphicRasterizerScanlineAntialias<>& blendRasterizer,
+                            GraphicRasterizerScanlineAntialias<>& rasterizer,
+                            OHOS::GraphicRenderBase<Pixfmt>& renBase,
+                            TransAffine& transform,
+                            SpanGen& spanGen,
+                            const Rect& rect,
+                            bool isStroke)
+    {
+        TransAffine gradientMatrixBlend;
+        typedef SpanSoildColor<Rgba8Color> SpanSoildColor;
+
+        Scanline scanline1;
+        Scanline scanline2;
+        SpanAllocator allocator1;
+
+        if (isSoild(paint)) {
+            Rgba8Color blendColor;
+            RenderBlendSolid(paint, blendColor, isStroke);
+            SpanSoildColor spanBlendSoildColor(blendColor);
+            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                          scanline1, scanline2, renBase, allocator1, spanBlendSoildColor, spanGen);
+        }
+#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+        GRADIENT_FILLSTROKECOLOR
+#endif
+#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+        if (paint.GetStyle() == Paint::PATTERN) {
+            if (param == nullptr) {
+                return;
+            }
+
+            PathParam* pathParam = static_cast<PathParam*>(param);
+
+            ImageParam* imageParam = static_cast<ImageParam*>(pathParam->imageParam);
+
+            if (imageParam->image == nullptr) {
+                return;
+            }
+            typedef GraphicSpancolorFillPatternRgba<Rgba8Color> PatternColorType ;
+            PatternColorType spanPattern(imageParam->image->GetImageInfo(),
+                                         paint.GetPatternRepeatMode(),
+                                         rect.GetLeft(),
+                                         rect.GetTop());
+            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                          scanline1, scanline2, renBase, allocator1, spanPattern, spanGen);
+        }
+#endif
+    }
+
+#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+    /**
+     * Render pattern mode
+     */
+    template <class Pixfmt, class color>
+    static void RenderPattern(const Paint& paint,
+                              void* param,
+                              GraphicRasterizerScanlineAntialias<>& rasterizer,
+                              OHOS::GraphicRenderBase<Pixfmt>& renBase,
+                              SpanFillColorAllocator<color>& allocator,
+                              const Rect& rect)
+    {
+        if (param == nullptr) {
+            return;
+        }
+        ImageParam* imageParam = static_cast<ImageParam*>(param);
+        if (imageParam->image == nullptr) {
+            return;
+        }
+        GraphicGeometryScanline m_scanline;
+        typedef GraphicSpancolorFillPatternRgba<Rgba8Color> PatternColorType ;
+        PatternColorType spanPattern(imageParam->image->GetImageInfo(),
+                                     paint.GetPatternRepeatMode(),
+                                     rect.GetLeft(),
+                                     rect.GetTop());
+        RenderScanlinesAntiAlias(rasterizer, m_scanline, renBase, allocator, spanPattern);
+    }
+#endif
+    template <class Color>
+    static void ChangeColor(Color& color, ColorType colorType, uint8_t alpha)
+    {
+        color.redValue = colorType.red;
+        color.greenValue = colorType.green;
+        color.blueValue = colorType.blue;
+        color.alphaValue = alpha;
+    }
+
+    void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);
+    BufferInfo* UpdateMapBufferInfo(const BufferInfo& srcBuff, const Rect& rect);
+    void DestroyMapBufferInfo();
+
+    void OnBlendDrawPattern(ListNode<DrawCmd>* curDraw, DrawCmd& drawCmd,
+                            Rect& rect, const Rect& trunc,
+                            GraphicRasterizerScanlineAntialias<>& blendRasterizer,
+                            GraphicRasterizerScanlineAntialias<>& rasterizer,
+                            RendererBase& renBase,
+                            TransAffine& transform,
+                            PathParam* pathParamBlend);
+
+    void OnBlendDrawGradient(ListNode<DrawCmd>* curDraw, DrawCmd& drawCmd,
+                             const Rect& trunc,
+                             GraphicRasterizerScanlineAntialias<>& blendRasterizer,
+                             GraphicRasterizerScanlineAntialias<>& rasterizer,
+                             RendererBase& renBase,
+                             TransAffine& transform,
+                             PathParam* pathParamBlend);
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_CANVAS_H

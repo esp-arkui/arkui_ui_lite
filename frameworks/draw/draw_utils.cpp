@@ -26,134 +26,134 @@
 #include "securec.h"
 
 #ifdef ARM_NEON_OPT
-#include "graphic_neon_pipeline.h"
-#include "graphic_neon_utils.h"
+#    include "graphic_neon_pipeline.h"
+#    include "graphic_neon_utils.h"
 #endif
 
 #if ENABLE_ARM_MATH
-#include "arm_math.h"
+#    include "arm_math.h"
 #endif
 
 namespace OHOS {
 // Preprocess operation for draw
-#define DRAW_UTILS_PREPROCESS(gfxBufferInfo, opa)                         \
-    if ((opa) == OPA_TRANSPARENT) {                                       \
-        return;                                                           \
-    }                                                                     \
+#define DRAW_UTILS_PREPROCESS(gfxBufferInfo, opa) \
+    if ((opa) == OPA_TRANSPARENT) { \
+        return; \
+    } \
     uint8_t* screenBuffer = static_cast<uint8_t*>(gfxBufferInfo.virAddr); \
-    if (screenBuffer == nullptr) {                                        \
-        return;                                                           \
-    }                                                                     \
-    ColorMode bufferMode = gfxBufferInfo.mode;                            \
-    uint8_t bufferPxSize = GetByteSizeByColorMode(bufferMode);            \
+    if (screenBuffer == nullptr) { \
+        return; \
+    } \
+    ColorMode bufferMode = gfxBufferInfo.mode; \
+    uint8_t bufferPxSize = GetByteSizeByColorMode(bufferMode); \
     uint16_t screenBufferWidth = gfxBufferInfo.width;
 
 /* cover mode, src alpha is 255 */
-#define COLOR_FILL_COVER(d, dm, r2, g2, b2, sm)               \
-    if ((dm) == ARGB8888) {                                   \
-        reinterpret_cast<Color32*>(d)->alpha = OPA_OPAQUE;    \
-        if (sm == RGB565) {                                   \
-            reinterpret_cast<Color32*>(d)->red = (r2) << 3;   \
+#define COLOR_FILL_COVER(d, dm, r2, g2, b2, sm) \
+    if ((dm) == ARGB8888) { \
+        reinterpret_cast<Color32*>(d)->alpha = OPA_OPAQUE; \
+        if (sm == RGB565) { \
+            reinterpret_cast<Color32*>(d)->red = (r2) << 3; \
             reinterpret_cast<Color32*>(d)->green = (g2) << 2; \
-            reinterpret_cast<Color32*>(d)->blue = (b2) << 3;  \
-        } else {                                              \
-            reinterpret_cast<Color32*>(d)->red = (r2);        \
-            reinterpret_cast<Color32*>(d)->green = (g2);      \
-            reinterpret_cast<Color32*>(d)->blue = (b2);       \
-        }                                                     \
-    } else if ((dm) == RGB888) {                              \
-        if (sm == RGB565) {                                   \
-            reinterpret_cast<Color24*>(d)->red = (r2) << 3;   \
+            reinterpret_cast<Color32*>(d)->blue = (b2) << 3; \
+        } else { \
+            reinterpret_cast<Color32*>(d)->red = (r2); \
+            reinterpret_cast<Color32*>(d)->green = (g2); \
+            reinterpret_cast<Color32*>(d)->blue = (b2); \
+        } \
+    } else if ((dm) == RGB888) { \
+        if (sm == RGB565) { \
+            reinterpret_cast<Color24*>(d)->red = (r2) << 3; \
             reinterpret_cast<Color24*>(d)->green = (g2) << 2; \
-            reinterpret_cast<Color24*>(d)->blue = (b2) << 3;  \
-        } else {                                              \
-            reinterpret_cast<Color24*>(d)->red = (r2);        \
-            reinterpret_cast<Color24*>(d)->green = (g2);      \
-            reinterpret_cast<Color24*>(d)->blue = (b2);       \
-        }                                                     \
-    } else if ((dm) == RGB565) {                              \
-        if ((sm) == ARGB8888 || (sm) == RGB888) {             \
-            reinterpret_cast<Color16*>(d)->red = (r2) >> 3;   \
+            reinterpret_cast<Color24*>(d)->blue = (b2) << 3; \
+        } else { \
+            reinterpret_cast<Color24*>(d)->red = (r2); \
+            reinterpret_cast<Color24*>(d)->green = (g2); \
+            reinterpret_cast<Color24*>(d)->blue = (b2); \
+        } \
+    } else if ((dm) == RGB565) { \
+        if ((sm) == ARGB8888 || (sm) == RGB888) { \
+            reinterpret_cast<Color16*>(d)->red = (r2) >> 3; \
             reinterpret_cast<Color16*>(d)->green = (g2) >> 2; \
-            reinterpret_cast<Color16*>(d)->blue = (b2) >> 3;  \
-        } else {                                              \
-            reinterpret_cast<Color16*>(d)->red = (r2);        \
-            reinterpret_cast<Color16*>(d)->green = (g2);      \
-            reinterpret_cast<Color16*>(d)->blue = (b2);       \
-        }                                                     \
-    } else {                                                  \
-        ASSERT(0);                                            \
+            reinterpret_cast<Color16*>(d)->blue = (b2) >> 3; \
+        } else { \
+            reinterpret_cast<Color16*>(d)->red = (r2); \
+            reinterpret_cast<Color16*>(d)->green = (g2); \
+            reinterpret_cast<Color16*>(d)->blue = (b2); \
+        } \
+    } else { \
+        ASSERT(0); \
     }
 
-#define COLOR_BLEND_RGBA(r1, g1, b1, a1, r2, g2, b2, a2)            \
-    const float Alpha1 = static_cast<float>(a1) / OPA_OPAQUE;       \
-    const float Alpha2 = static_cast<float>(a2) / OPA_OPAQUE;       \
-    const float Alpha3 = 1 - (1 - Alpha1) * (1 - Alpha2);           \
+#define COLOR_BLEND_RGBA(r1, g1, b1, a1, r2, g2, b2, a2) \
+    const float Alpha1 = static_cast<float>(a1) / OPA_OPAQUE; \
+    const float Alpha2 = static_cast<float>(a2) / OPA_OPAQUE; \
+    const float Alpha3 = 1 - (1 - Alpha1) * (1 - Alpha2); \
     (r1) = (Alpha2 * (r2) + (1 - Alpha2) * Alpha1 * (r1)) / Alpha3; \
     (g1) = (Alpha2 * (g2) + (1 - Alpha2) * Alpha1 * (g1)) / Alpha3; \
     (b1) = (Alpha2 * (b2) + (1 - Alpha2) * Alpha1 * (b1)) / Alpha3; \
     (a1) = Alpha3 * OPA_OPAQUE;
 
-#define COLOR_BLEND_RGB(r1, g1, b1, r2, g2, b2, a2)                                    \
+#define COLOR_BLEND_RGB(r1, g1, b1, r2, g2, b2, a2) \
     (r1) = (((r2) * (a2)) / OPA_OPAQUE) + (((r1) * (OPA_OPAQUE - (a2))) / OPA_OPAQUE); \
     (g1) = (((g2) * (a2)) / OPA_OPAQUE) + (((g1) * (OPA_OPAQUE - (a2))) / OPA_OPAQUE); \
     (b1) = (((b2) * (a2)) / OPA_OPAQUE) + (((b1) * (OPA_OPAQUE - (a2))) / OPA_OPAQUE);
 
 // 565
-#define COLOR_FILL_BLEND(d, dm, s, sm, a)                                                                           \
-    if ((dm) == ARGB8888) {                                                                                         \
-        Color32* p = reinterpret_cast<Color32*>(d);                                                                 \
-        if ((sm) == ARGB8888) {                                                                                     \
-            Color32* sTmp = reinterpret_cast<Color32*>(s);                                                          \
-            uint8_t alpha = (sTmp->alpha * (a)) / OPA_OPAQUE;                                                       \
-            COLOR_BLEND_RGBA(p->red, p->green, p->blue, p->alpha, sTmp->red, sTmp->green, sTmp->blue, alpha);       \
-        } else if ((sm) == RGB888) {                                                                                \
-            Color24* sTmp = reinterpret_cast<Color24*>(s);                                                          \
-            COLOR_BLEND_RGBA(p->red, p->green, p->blue, p->alpha, sTmp->red, sTmp->green, sTmp->blue, a);           \
-        } else if ((sm) == RGB565) {                                                                                \
-            Color16* sTmp = reinterpret_cast<Color16*>(s);                                                          \
-            COLOR_BLEND_RGBA(p->red, p->green, p->blue, p->alpha, (sTmp->red) << 3, (sTmp->green) << 2,             \
-                             (sTmp->blue) << 3, a);                                                                 \
-        }                                                                                                           \
-    } else if ((dm) == RGB888) {                                                                                    \
-        Color24* p = reinterpret_cast<Color24*>(d);                                                                 \
-        if ((sm) == ARGB8888) {                                                                                     \
-            Color32* sTmp = reinterpret_cast<Color32*>(s);                                                          \
-            uint8_t alpha = (sTmp->alpha * (a)) / OPA_OPAQUE;                                                       \
-            COLOR_BLEND_RGB(p->red, p->green, p->blue, sTmp->red, sTmp->green, sTmp->blue, alpha);                  \
-        } else if ((sm) == RGB888) {                                                                                \
-            Color24* sTmp = reinterpret_cast<Color24*>(s);                                                          \
-            COLOR_BLEND_RGB(p->red, p->green, p->blue, sTmp->red, sTmp->green, sTmp->blue, a);                      \
-        } else if ((sm) == RGB565) {                                                                                \
-            Color16* sTmp = reinterpret_cast<Color16*>(s);                                                          \
+#define COLOR_FILL_BLEND(d, dm, s, sm, a) \
+    if ((dm) == ARGB8888) { \
+        Color32* p = reinterpret_cast<Color32*>(d); \
+        if ((sm) == ARGB8888) { \
+            Color32* sTmp = reinterpret_cast<Color32*>(s); \
+            uint8_t alpha = (sTmp->alpha * (a)) / OPA_OPAQUE; \
+            COLOR_BLEND_RGBA(p->red, p->green, p->blue, p->alpha, sTmp->red, sTmp->green, sTmp->blue, alpha); \
+        } else if ((sm) == RGB888) { \
+            Color24* sTmp = reinterpret_cast<Color24*>(s); \
+            COLOR_BLEND_RGBA(p->red, p->green, p->blue, p->alpha, sTmp->red, sTmp->green, sTmp->blue, a); \
+        } else if ((sm) == RGB565) { \
+            Color16* sTmp = reinterpret_cast<Color16*>(s); \
+            COLOR_BLEND_RGBA(p->red, p->green, p->blue, p->alpha, (sTmp->red) << 3, (sTmp->green) << 2, \
+                             (sTmp->blue) << 3, a); \
+        } \
+    } else if ((dm) == RGB888) { \
+        Color24* p = reinterpret_cast<Color24*>(d); \
+        if ((sm) == ARGB8888) { \
+            Color32* sTmp = reinterpret_cast<Color32*>(s); \
+            uint8_t alpha = (sTmp->alpha * (a)) / OPA_OPAQUE; \
+            COLOR_BLEND_RGB(p->red, p->green, p->blue, sTmp->red, sTmp->green, sTmp->blue, alpha); \
+        } else if ((sm) == RGB888) { \
+            Color24* sTmp = reinterpret_cast<Color24*>(s); \
+            COLOR_BLEND_RGB(p->red, p->green, p->blue, sTmp->red, sTmp->green, sTmp->blue, a); \
+        } else if ((sm) == RGB565) { \
+            Color16* sTmp = reinterpret_cast<Color16*>(s); \
             COLOR_BLEND_RGB(p->red, p->green, p->blue, (sTmp->red) << 3, (sTmp->green) << 2, (sTmp->blue) << 3, a); \
-        }                                                                                                           \
-    } else if ((dm) == RGB565) {                                                                                    \
-        Color16* p = reinterpret_cast<Color16*>(d);                                                                 \
-        if ((sm) == ARGB8888) {                                                                                     \
-            Color32* sTmp = reinterpret_cast<Color32*>(s);                                                          \
-            uint8_t alpha = (sTmp->alpha * (a)) / OPA_OPAQUE;                                                       \
-            COLOR_BLEND_RGB(p->red, p->green, p->blue, (sTmp->red) >> 3, (sTmp->green) >> 2, (sTmp->blue) >> 3,     \
-                            alpha);                                                                                 \
-        } else if ((sm) == RGB888) {                                                                                \
-            Color24* sTmp = reinterpret_cast<Color24*>(s);                                                          \
+        } \
+    } else if ((dm) == RGB565) { \
+        Color16* p = reinterpret_cast<Color16*>(d); \
+        if ((sm) == ARGB8888) { \
+            Color32* sTmp = reinterpret_cast<Color32*>(s); \
+            uint8_t alpha = (sTmp->alpha * (a)) / OPA_OPAQUE; \
+            COLOR_BLEND_RGB(p->red, p->green, p->blue, (sTmp->red) >> 3, (sTmp->green) >> 2, (sTmp->blue) >> 3, \
+                            alpha); \
+        } else if ((sm) == RGB888) { \
+            Color24* sTmp = reinterpret_cast<Color24*>(s); \
             COLOR_BLEND_RGB(p->red, p->green, p->blue, (sTmp->red) >> 3, (sTmp->green) >> 2, (sTmp->blue) >> 3, a); \
-        } else if ((sm) == RGB565) {                                                                                \
-            Color16* sTmp = reinterpret_cast<Color16*>(s);                                                          \
-            COLOR_BLEND_RGB(p->red, p->green, p->blue, sTmp->red, sTmp->green, sTmp->blue, a);                      \
-        }                                                                                                           \
-    } else {                                                                                                        \
-        ASSERT(0);                                                                                                  \
+        } else if ((sm) == RGB565) { \
+            Color16* sTmp = reinterpret_cast<Color16*>(s); \
+            COLOR_BLEND_RGB(p->red, p->green, p->blue, sTmp->red, sTmp->green, sTmp->blue, a); \
+        } \
+    } else { \
+        ASSERT(0); \
     }
 
 #ifdef VERSION_STANDARD
-const int16_t HARDWARE_ACC_SIZE_LIMIT = 50 * 50;
+    const int16_t HARDWARE_ACC_SIZE_LIMIT = 50 * 50;
 #endif
 
 namespace {
-static constexpr uint8_t OPACITY_STEP_A1 = 255;
-static constexpr uint8_t OPACITY_STEP_A2 = 85;
-static constexpr uint8_t OPACITY_STEP_A4 = 17;
+    static constexpr uint8_t OPACITY_STEP_A1 = 255;
+    static constexpr uint8_t OPACITY_STEP_A2 = 85;
+    static constexpr uint8_t OPACITY_STEP_A4 = 17;
 } // namespace
 
 TriangleEdge::TriangleEdge(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
@@ -171,7 +171,8 @@ TriangleEdge::TriangleEdge(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
 #endif
 }
 
-TriangleEdge::~TriangleEdge() {}
+TriangleEdge::~TriangleEdge()
+{}
 
 DrawUtils* DrawUtils::GetInstance()
 {
@@ -320,8 +321,8 @@ void DrawUtils::DrawLetter(BufferInfo& gfxDstBuffer, const LabelLetterInfo& lett
     Rect subRect(posX + colStart, posY + rowStart, colEnd - 1 + posX, rowEnd - 1 + posY);
 
     uint8_t fontWeight = fontEngine->GetFontWeight(letterInfo.fontId);
-    BaseGfxEngine::GetInstance()->DrawLetter(gfxDstBuffer, fontMap, srcRect, subRect, fontWeight, letterInfo.color,
-                                             letterInfo.opa);
+    BaseGfxEngine::GetInstance()->DrawLetter(gfxDstBuffer, fontMap, srcRect, subRect,
+                                             fontWeight, letterInfo.color, letterInfo.opa);
     return;
 }
 
@@ -336,27 +337,22 @@ void DrawUtils::DrawLetter(BufferInfo& gfxDstBuffer,
     Color32 fillColor;
     fillColor.full = Color::ColorTo32(color);
     uint8_t opacityMask;
-    uint8_t colorMode = 0;
     uint8_t opacityStep = 1;
     switch (fontWeight) {
         case FONT_WEIGHT_1:
             opacityStep = OPACITY_STEP_A1;
             opacityMask = 0x01;
-            colorMode = A1;
             break;
         case FONT_WEIGHT_2:
             opacityStep = OPACITY_STEP_A2;
             opacityMask = 0x03;
-            colorMode = A2;
             break;
         case FONT_WEIGHT_4:
             opacityStep = OPACITY_STEP_A4;
             opacityMask = 0x0F;
-            colorMode = A4;
             break;
         case FONT_WEIGHT_8:
             opacityMask = 0xFF;
-            colorMode = A8;
             break;
         default:
             return;
@@ -541,6 +537,65 @@ void DrawUtils::FillAreaWithSoftWare(BufferInfo& gfxDstBuffer,
     }
 }
 
+#ifdef ARM_NEON_OPT
+void DrawUtils::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
+}
+
+void DrawUtils::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha);
+}
+void DrawUtils::BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCover);
+}
+
+void DrawUtils::BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCovers);
+}
+
+void DrawUtils::BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(pColor, cr, cg, cb, alpha, covers);
+}
+
+void DrawUtils::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t cover)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha, cover);
+}
+
+void DrawUtils::BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonPrelerp_ARGB8888(pColor, cr, cg, cb, alpha);
+}
+void DrawUtils::BlendPreLerpPix(uint8_t *dstColors, uint8_t *srcColors, uint8_t srcCover)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCover);
+}
+
+void DrawUtils::BlendPreLerpPix(uint8_t *dstColors, uint8_t *srcColors, uint8_t *srcCovers)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonLerp_ARGB8888(dstColors, srcColors, srcCovers);
+}
+
+void DrawUtils::BlendPreLerpPix(uint8_t *pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t *covers)
+{
+    NeonBlendPipeLine mNeonBlendPipeLine;
+    mNeonBlendPipeLine.NeonPreLerp_ARGB8888(pColor, cr, cg, cb, alpha, covers);
+}
+#endif
 void DrawUtils::BlendWithSoftWare(const uint8_t* src1,
                                   const Rect& srcRect,
                                   uint32_t srcStride,
@@ -703,7 +758,8 @@ void DrawUtils::DrawTriangleAlphaBilinear(const TriangleScanInfo& in, const Colo
 #if ENABLE_FIXED_POINT
             int16_t intU = FO_TO_INTEGER(u);
             int16_t intV = FO_TO_INTEGER(v);
-            if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0) && (intV < (in.info.header.height - 1))) {
+            if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0)
+                    && (intV < (in.info.header.height - 1))) {
                 int16_t intUPlus1 = intU + 1;
                 int16_t intVPlus1 = intV + 1;
 #else
@@ -805,7 +861,8 @@ void DrawUtils::DrawTriangleTrueColorBilinear565(const TriangleScanInfo& in, con
 #if ENABLE_FIXED_POINT
             int16_t intU = FO_TO_INTEGER(u);
             int16_t intV = FO_TO_INTEGER(v);
-            if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0) && (intV < (in.info.header.height - 1))) {
+            if ((u >= 0) && (intU < (in.info.header.width - 1))
+                    && (v >= 0) && (intV < (in.info.header.height - 1))) {
 #else
             const int16_t intU = static_cast<int16_t>(u);
             const int16_t intV = static_cast<int16_t>(v);
@@ -1022,13 +1079,13 @@ static void DrawTriangleTrueColorBilinear8888Inner(const TriangleScanInfo& in,
         const int16_t intU = static_cast<int16_t>(u);
         const int16_t intV = static_cast<int16_t>(v);
         if ((u >= 0) && (intU < in.info.header.width - 1) && (v >= 0) && (intV < in.info.header.height - 1)) {
-#if ENABLE_ARM_MATH
+#    if ENABLE_ARM_MATH
             uint32_t val1 = __SMUAD(intV, in.srcLineWidth);
             uint32_t val2 = __SMUAD(intU, in.pixelSize);
             uint32_t px1 = val1 + val2;
-#else
+#    else
             uint32_t px1 = intV * in.srcLineWidth + intU * in.pixelSize;
-#endif
+#    endif
             uint8_t* imgHead = const_cast<uint8_t*>(in.info.data);
             const ColorType p1 = *(reinterpret_cast<ColorType*>(&imgHead[px1]));
             const ColorType p2 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.pixelSize]));
@@ -1045,20 +1102,21 @@ static void DrawTriangleTrueColorBilinear8888Inner(const TriangleScanInfo& in,
             const int32_t w3 = static_cast<int32_t>(decUMinus1 * decV * 256.0f);       // 256:shift 8 bit left
             const int32_t w4 = static_cast<int32_t>(decU * decV * 256.0f);             // 256:shift 8 bit left
 
-#if ENABLE_ARM_MATH
-            const int32_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2) + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
+#    if ENABLE_ARM_MATH
+            const int32_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2)
+                    + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
             const int32_t outG =
                 __SMUAD(p1.green, w1) + __SMUAD(p2.green, w2) + __SMUAD(p3.green, w3) + __SMUAD(p4.green, w4);
             const int32_t outB =
                 __SMUAD(p1.blue, w1) + __SMUAD(p2.blue, w2) + __SMUAD(p3.blue, w3) + __SMUAD(p4.blue, w4);
             const int32_t outA =
                 __SMUAD(p1.alpha, w1) + __SMUAD(p2.alpha, w2) + __SMUAD(p3.alpha, w3) + __SMUAD(p4.alpha, w4);
-#else
+#    else
             const int32_t outR = p1.red * w1 + p2.red * w2 + p3.red * w3 + p4.red * w4;
             const int32_t outG = p1.green * w1 + p2.green * w2 + p3.green * w3 + p4.green * w4;
             const int32_t outB = p1.blue * w1 + p2.blue * w2 + p3.blue * w3 + p4.blue * w4;
             const int32_t outA = p1.alpha * w1 + p2.alpha * w2 + p3.alpha * w3 + p4.alpha * w4;
-#endif
+#    endif
 
             Color32 result;
             result.red = static_cast<uint8_t>(outR >> 8);   // 8:shift 8 bit right
@@ -1114,9 +1172,11 @@ static void DrawFixedTriangleTrueColorBilinear8888Inner(const TriangleScanInfo& 
             // parameters above are Q15 fixed-point number
 
 #if ENABLE_ARM_MATH
-            const int64_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2) + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
+            const int64_t outR = __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2)
+                    + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
             const int64_t outG =
-                __SMUAD(p1.green, w1) + __SMUAD(p2.green, w2) + __SMUAD(p3.green, w3) + __SMUAD(p4.green, w4);
+                __SMUAD(p1.green, w1) + __SMUAD(p2.green, w2)
+                    + __SMUAD(p3.green, w3) + __SMUAD(p4.green, w4);
             const int64_t outB =
                 __SMUAD(p1.blue, w1) + __SMUAD(p2.blue, w2) + __SMUAD(p3.blue, w3) + __SMUAD(p4.blue, w4);
             const int64_t outA =
@@ -1162,21 +1222,21 @@ static void DrawTriangleTrueColorBilinear8888InnerNeon(const TriangleScanInfo& i
     float arrayV[NEON_STEP_8] = {0};
     int32_t arrayPx1[NEON_STEP_8] = {0};
     int16_t step = in.bufferPxSize * NEON_STEP_8;
-#if ENABLE_FIXED_POINT
+#    if ENABLE_FIXED_POINT
     float duHorizon = static_cast<float>(in.init.duHorizon) / FIXED_NUM_1;
     float dvHorizon = static_cast<float>(in.init.dvHorizon) / FIXED_NUM_1;
-#endif
+#    endif
     while (len >= NEON_STEP_8) {
         for (uint32_t i = 0; i < NEON_STEP_8; ++i) {
             arrayU[i] = u;
             arrayV[i] = v;
-#if ENABLE_FIXED_POINT
+#    if ENABLE_FIXED_POINT
             u += duHorizon;
             v += dvHorizon;
-#else
+#    else
             u += in.init.duHorizon;
             v += in.init.dvHorizon;
-#endif
+#    endif
         }
         // Monotonically increasing or decreasing, so only judge the beginning and end.
         if ((arrayU[0] >= 0) && (arrayU[0] < in.info.header.width - 1) && (arrayV[0] >= 0) &&
@@ -1188,8 +1248,8 @@ static void DrawTriangleTrueColorBilinear8888InnerNeon(const TriangleScanInfo& i
             float32x4_t vV = vld1q_f32(arrayV);
             int32x4_t vIntU = vcvtq_s32_f32(vU);
             int32x4_t vIntV = vcvtq_s32_f32(vV);
-            int32x4_t vPx1 =
-                vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)), vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
+            int32x4_t vPx1 = vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)),
+                                       vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
             vst1q_s32(arrayPx1, vPx1);
             float32x4_t vDecU = vsubq_f32(vU, vcvtq_f32_s32(vIntU));
             float32x4_t vDecV = vsubq_f32(vV, vcvtq_f32_s32(vIntV));
@@ -1206,7 +1266,8 @@ static void DrawTriangleTrueColorBilinear8888InnerNeon(const TriangleScanInfo& i
             vIntU = vcvtq_s32_f32(vU);
             vIntV = vcvtq_s32_f32(vV);
             vPx1 =
-                vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)), vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
+                vaddq_s32(vmulq_s32(vIntV, vdupq_n_s32(in.srcLineWidth)),
+                          vmulq_s32(vIntU, vdupq_n_s32(in.pixelSize)));
             vst1q_s32(arrayPx1 + NEON_STEP_4, vPx1);
             vDecU = vsubq_f32(vU, vcvtq_f32_s32(vIntU));
             vDecV = vsubq_f32(vV, vcvtq_f32_s32(vIntV));
@@ -1238,43 +1299,50 @@ static void DrawTriangleTrueColorBilinear8888InnerNeon(const TriangleScanInfo& i
             uint8x8x4_t v4p3 = vld4_u8(reinterpret_cast<uint8_t*>(arrayp3));
             uint8x8x4_t v4p4 = vld4_u8(reinterpret_cast<uint8_t*>(arrayp4));
             uint8x8_t vOutB =
-                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_B]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_B]), vW2) +
-                                vmulq_u16(vmovl_u8(v4p3.val[NEON_B]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_B]), vW4),
+                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_B]), vW1)
+                            + vmulq_u16(vmovl_u8(v4p2.val[NEON_B]), vW2)
+                            + vmulq_u16(vmovl_u8(v4p3.val[NEON_B]), vW3)
+                            + vmulq_u16(vmovl_u8(v4p4.val[NEON_B]), vW4),
                             8); // 8:shift 8 bit right
             uint8x8_t vOutG =
-                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_G]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_G]), vW2) +
-                                vmulq_u16(vmovl_u8(v4p3.val[NEON_G]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_G]), vW4),
+                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_G]), vW1)
+                            + vmulq_u16(vmovl_u8(v4p2.val[NEON_G]), vW2)
+                            + vmulq_u16(vmovl_u8(v4p3.val[NEON_G]), vW3)
+                            + vmulq_u16(vmovl_u8(v4p4.val[NEON_G]), vW4),
                             8); // 8:shift 8 bit right
             uint8x8_t vOutR =
-                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_R]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_R]), vW2) +
-                                vmulq_u16(vmovl_u8(v4p3.val[NEON_R]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_R]), vW4),
+                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_R]), vW1)
+                            + vmulq_u16(vmovl_u8(v4p2.val[NEON_R]), vW2)
+                            + vmulq_u16(vmovl_u8(v4p3.val[NEON_R]), vW3)
+                            + vmulq_u16(vmovl_u8(v4p4.val[NEON_R]), vW4),
                             8); // 8:shift 8 bit right
             uint8x8_t vOutA =
-                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_A]), vW1) + vmulq_u16(vmovl_u8(v4p2.val[NEON_A]), vW2) +
-                                vmulq_u16(vmovl_u8(v4p3.val[NEON_A]), vW3) + vmulq_u16(vmovl_u8(v4p4.val[NEON_A]), vW4),
-                            8); // 8:shift 8 bit right
+                vshrn_n_u16(vmulq_u16(vmovl_u8(v4p1.val[NEON_A]), vW1)
+                            + vmulq_u16(vmovl_u8(v4p2.val[NEON_A]), vW2)
+                            + vmulq_u16(vmovl_u8(v4p3.val[NEON_A]), vW3)
+                            + vmulq_u16(vmovl_u8(v4p4.val[NEON_A]), vW4), 8); // 8:shift 8 bit right
             vOutA = NeonMulDiv255(vdup_n_u8(in.opaScale), vOutA);
             pipeLine.Invoke(screenBuffer, vOutR, vOutG, vOutB, vOutA);
         } else {
-#if ENABLE_FIXED_POINT
+#    if ENABLE_FIXED_POINT
             int64_t fixedU = FO_TRANS_FLOAT_TO_FIXED(arrayU[0]);
             int64_t fixedV = FO_TRANS_FLOAT_TO_FIXED(arrayV[0]);
             DrawFixedTriangleTrueColorBilinear8888Inner(in, screenBuffer, NEON_STEP_8, bufferMode, fixedU, fixedV);
-#else
+#    else
             DrawTriangleTrueColorBilinear8888Inner(in, screenBuffer, NEON_STEP_8, bufferMode, arrayU[0], arrayV[0]);
-#endif
+#    endif
         }
         screenBuffer += step;
         len -= NEON_STEP_8;
     }
     if (len > 0) {
-#if ENABLE_FIXED_POINT
+#    if ENABLE_FIXED_POINT
         int64_t fixedU = FO_TRANS_FLOAT_TO_FIXED(u);
         int64_t fixedV = FO_TRANS_FLOAT_TO_FIXED(v);
         DrawFixedTriangleTrueColorBilinear8888Inner(in, screenBuffer, len, bufferMode, fixedU, fixedV);
-#else
+#    else
         DrawTriangleTrueColorBilinear8888Inner(in, screenBuffer, len, bufferMode, u, v);
-#endif
+#    endif
     }
 }
 #endif
@@ -1345,7 +1413,8 @@ void DrawUtils::Draw3DTriangleTrueColorBilinear8888(const TriangleScanInfo& in, 
                 const ColorType p1 = *(reinterpret_cast<ColorType*>(&imgHead[px1]));
                 const ColorType p2 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.pixelSize]));
                 const ColorType p3 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.srcLineWidth]));
-                const ColorType p4 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.srcLineWidth + in.pixelSize]));
+                const ColorType p4 = *(reinterpret_cast<ColorType*>(&imgHead[px1 + in.srcLineWidth
+                                       + in.pixelSize]));
 #if ENABLE_FIXED_POINT
                 int64_t decU = FO_DECIMAL(u);
                 int64_t decV = FO_DECIMAL(v);
@@ -1355,7 +1424,7 @@ void DrawUtils::Draw3DTriangleTrueColorBilinear8888(const TriangleScanInfo& in, 
                 int64_t w2 = FO_MUL(decU, decVMinus1);
                 int64_t w3 = FO_MUL(decUMinus1, decV);
                 int64_t w4 = FO_MUL(decU, decV);
-#if ENABLE_ARM_MATH
+#    if ENABLE_ARM_MATH
                 const int64_t outR =
                     __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2) + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
                 const int64_t outG =
@@ -1364,12 +1433,12 @@ void DrawUtils::Draw3DTriangleTrueColorBilinear8888(const TriangleScanInfo& in, 
                     __SMUAD(p1.blue, w1) + __SMUAD(p2.blue, w2) + __SMUAD(p3.blue, w3) + __SMUAD(p4.blue, w4);
                 const int64_t outA =
                     __SMUAD(p1.alpha, w1) + __SMUAD(p2.alpha, w2) + __SMUAD(p3.alpha, w3) + __SMUAD(p4.alpha, w4);
-#else
+#    else
                 const int64_t outR = p1.red * w1 + p2.red * w2 + p3.red * w3 + p4.red * w4;
                 const int64_t outG = p1.green * w1 + p2.green * w2 + p3.green * w3 + p4.green * w4;
                 const int64_t outB = p1.blue * w1 + p2.blue * w2 + p3.blue * w3 + p4.blue * w4;
                 const int64_t outA = p1.alpha * w1 + p2.alpha * w2 + p3.alpha * w3 + p4.alpha * w4;
-#endif
+#    endif
                 Color32 result;
                 result.red = static_cast<uint8_t>(outR >> FIXED_Q_NUM);
                 result.green = static_cast<uint8_t>(outG >> FIXED_Q_NUM);
@@ -1384,7 +1453,7 @@ void DrawUtils::Draw3DTriangleTrueColorBilinear8888(const TriangleScanInfo& in, 
                 const int32_t w2 = static_cast<int32_t>(decU * decVMinus1 * 256.0f);       // 256:shift 8 bit left
                 const int32_t w3 = static_cast<int32_t>(decUMinus1 * decV * 256.0f);       // 256:shift 8 bit left
                 const int32_t w4 = static_cast<int32_t>(decU * decV * 256.0f);
-#if ENABLE_ARM_MATH
+#    if ENABLE_ARM_MATH
                 const int32_t outR =
                     __SMUAD(p1.red, w1) + __SMUAD(p2.red, w2) + __SMUAD(p3.red, w3) + __SMUAD(p4.red, w4);
                 const int32_t outG =
@@ -1393,18 +1462,18 @@ void DrawUtils::Draw3DTriangleTrueColorBilinear8888(const TriangleScanInfo& in, 
                     __SMUAD(p1.blue, w1) + __SMUAD(p2.blue, w2) + __SMUAD(p3.blue, w3) + __SMUAD(p4.blue, w4);
                 const int32_t outA =
                     __SMUAD(p1.alpha, w1) + __SMUAD(p2.alpha, w2) + __SMUAD(p3.alpha, w3) + __SMUAD(p4.alpha, w4);
-#else  // ENABLE_ARM_MATH
+#    else  // ENABLE_ARM_MATH
                 const int32_t outR = p1.red * w1 + p2.red * w2 + p3.red * w3 + p4.red * w4;
                 const int32_t outG = p1.green * w1 + p2.green * w2 + p3.green * w3 + p4.green * w4;
                 const int32_t outB = p1.blue * w1 + p2.blue * w2 + p3.blue * w3 + p4.blue * w4;
                 const int32_t outA = p1.alpha * w1 + p2.alpha * w2 + p3.alpha * w3 + p4.alpha * w4;
-#endif // ENABLE_ARM_MATH
+#    endif // ENABLE_ARM_MATH
                 Color32 result;
                 result.red = static_cast<uint8_t>(outR >> 8);   // 8:shift 8 bit right
                 result.green = static_cast<uint8_t>(outG >> 8); // 8:shift 8 bit right
                 result.blue = static_cast<uint8_t>(outB >> 8);  // 8:shift 8 bit right
                 result.alpha = static_cast<uint8_t>(outA >> 8); // 8:shift 8 bit right
-#endif // ENABLE_FIXED_POINT
+#endif     // ENABLE_FIXED_POINT
                 if ((in.opaScale == OPA_OPAQUE) && (result.alpha == OPA_OPAQUE)) {
                     COLOR_FILL_COVER(screenBuffer, bufferMode, result.red, result.green, result.blue, ARGB8888);
                 } else {
@@ -1445,26 +1514,27 @@ void DrawUtils::DrawTriangleTrueColorBilinear8888(const TriangleScanInfo& in, co
         uint8_t* screenBuffer = in.screenBuffer + (y * in.screenBufferWidth + xMin) * in.bufferPxSize;
 #ifdef ARM_NEON_OPT
         {
-#if ENABLE_FIXED_POINT
+#    if ENABLE_FIXED_POINT
             float u = static_cast<float>(in.init.verticalU) / FIXED_NUM_1;
             float v = static_cast<float>(in.init.verticalV) / FIXED_NUM_1;
-#else
+#    else
             float u = in.init.verticalU;
             float v = in.init.verticalV;
-#endif
+#    endif
             DEBUG_PERFORMANCE_TRACE("DrawTriangleTrueColorBilinear8888_neon");
-            DrawTriangleTrueColorBilinear8888InnerNeon(in, screenBuffer, xMax - xMin + 1, u, v, pipeLine, bufferMode);
+            DrawTriangleTrueColorBilinear8888InnerNeon(in, screenBuffer, xMax - xMin + 1, u, v,
+                                                       pipeLine, bufferMode);
         }
 #else
         {
             DEBUG_PERFORMANCE_TRACE("DrawTriangleTrueColorBilinear8888");
-#if ENABLE_FIXED_POINT
+#    if ENABLE_FIXED_POINT
             DrawFixedTriangleTrueColorBilinear8888Inner(in, screenBuffer, xMax - xMin + 1, bufferMode,
                                                         in.init.verticalU, in.init.verticalV);
-#else
-            DrawTriangleTrueColorBilinear8888Inner(in, screenBuffer, xMax - xMin + 1, bufferMode, in.init.verticalU,
-                                                   in.init.verticalV);
-#endif
+#    else
+            DrawTriangleTrueColorBilinear8888Inner(in, screenBuffer, xMax - xMin + 1, bufferMode,
+                                                   in.init.verticalU, in.init.verticalV);
+#    endif
         }
 #endif
         StepToNextLine(in.edge1, in.edge2);
@@ -1515,7 +1585,8 @@ void DrawUtils::DrawTriangleTrueColorNearest(const TriangleScanInfo& in, const C
 #if ENABLE_FIXED_POINT
             int16_t intU = FO_TO_INTEGER(u);
             int16_t intV = FO_TO_INTEGER(v);
-            if ((u >= 0) && (intU < (in.info.header.width - 1)) && (v >= 0) && (intV < (in.info.header.height - 1))) {
+            if ((u >= 0) && (intU < (in.info.header.width - 1)) &&
+                (v >= 0) && (intV < (in.info.header.height - 1))) {
 #else
             const int16_t intU = static_cast<int16_t>(u);
             const int16_t intV = static_cast<int16_t>(v);
@@ -1815,7 +1886,8 @@ void DrawUtils::UpdateTransMap(int16_t width, int16_t height, TransformMap& tran
     transMap.SetPolygon(polygon);
     Matrix3<float> matrix3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[1][0], matrix[1][1], matrix[1][3],
                            matrix[3][0], matrix[3][1], matrix[3][3]);
-    transMap.invMatrix_ = (matrix3 * (Matrix3<float>::Translate(Vector2<float>(rect.GetX(), rect.GetY())))).Inverse();
+    transMap.invMatrix_ = (matrix3 * (Matrix3<float>::Translate(Vector2<float>(rect.GetX(), rect.GetY()))))
+            .Inverse();
 }
 
 void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
@@ -1834,7 +1906,8 @@ void DrawUtils::DrawTransform(BufferInfo& gfxDstBuffer,
     }
     TransformDataInfo newDataInfo = dataInfo;
     TransformMap newTransMap = transMap;
-    // If the width and height of the rectangle of transMap are not equal to the width and height of the ImageHeader,
+    // If the width and height of the rectangle of transMap are not equal to the width
+    // and height of the ImageHeader,
     // a border of transparency values to the data cannot be added.
     if ((transMap.GetTransMapRect().GetWidth() == dataInfo.header.width) &&
         (transMap.GetTransMapRect().GetHeight() == dataInfo.header.height)) {
@@ -1943,7 +2016,8 @@ void DrawUtils::DrawTranspantArea(BufferInfo& gfxDstBuffer, const Rect& rect, co
     FillArea(gfxDstBuffer, rect, mask, true, nullptr);
 }
 
-void DrawUtils::DrawWithBuffer(BufferInfo& gfxDstBuffer, const Rect& rect, const Rect& mask, const ColorType* colorBuf)
+void DrawUtils::DrawWithBuffer(BufferInfo& gfxDstBuffer, const Rect& rect,
+                               const Rect& mask, const ColorType* colorBuf)
 {
     FillArea(gfxDstBuffer, rect, mask, false, colorBuf);
 }
