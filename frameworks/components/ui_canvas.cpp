@@ -1258,14 +1258,10 @@ namespace OHOS {
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
+        //uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode) >> 3; // 3: Shift right 3 bits
 
-        uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode) >> 3; // 3: Shift right 3 bits
+        drawBlur.BoxBlur(pixf2,MATH_UROUND(paint.GetShadowBlur()),gfxDstBuffer.stride);
 
-//        drawBlur.BoxBlur((uint8_t*)pixf2.PixValuePtr(0,0),
-//                         (uint8_t*)pixf2.PixValuePtr(0,0),
-//                         pixf2.Width(),pixf2.Height(),pixelByteSize,
-//                         cnavas.Width()*pixelByteSize,
-//                         MATH_UROUND(paint.GetShadowBlur()));
 #endif
 #endif
     }
