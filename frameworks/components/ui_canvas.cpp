@@ -657,6 +657,11 @@ namespace OHOS {
                 curDraw = drawCmdList_.Begin();
                 for (; curDraw != drawCmdList_.End(); curDraw = curDraw->next_) {
                     param = curDraw->data_.param;
+#if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
+                    if (curDraw->data_.paint.HaveShadow()) {
+                        curDraw->data_.paint.SetUICanvas(this);
+                    }
+#endif
                     curDraw->data_.DrawGraphics(gfxDstBuffer, param, curDraw->data_.paint, rect, trunc, *style_);
                 }
             }
@@ -707,6 +712,7 @@ namespace OHOS {
             PathParam* pathParam = static_cast<PathParam*>(curDraw->data_.param);
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
             if (curDraw->data_.paint.HaveShadow()) {
+                curDraw->data_.paint.SetUICanvas(this);
                 DoDrawShadow(gfxDstBuffer, curDraw->data_.param, curDraw->data_.paint, rect,
                              trunc, *style_, pathParam->isStroke);
             }
@@ -1246,10 +1252,7 @@ namespace OHOS {
 
         RenderScanlinesAntiAliasSolid(rasterizer, m_scanline, m_renBase, shadowColor);
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
-        typedef OHOS::FastBoxBlur DrawBlur;
         typedef OHOS::PixfmtAlphaBlendRgba<Blender, OHOS::RenderingBuffer> PixfmtAlphaBlendRgba;
-        DrawBlur drawBlur;
-
         bbox.x1 -= paint.GetShadowBlur();
         bbox.y1 -= paint.GetShadowBlur();
         bbox.x2 += paint.GetShadowBlur();
@@ -1260,14 +1263,10 @@ namespace OHOS {
         shadowRect.Intersect(shadowRect, invalidatedArea);
         pixf2.Attach(m_pixFormat, shadowRect.GetLeft(), shadowRect.GetTop(),
                      shadowRect.GetRight(), shadowRect.GetBottom());
-
         uint8_t pixelByteSize = DrawUtils::GetPxSizeByColorMode(gfxDstBuffer.mode) >> 3; // 3: Shift right 3 bits
 
-//        drawBlur.BoxBlur((uint8_t*)pixf2.PixValuePtr(0,0),
-//                         (uint8_t*)pixf2.PixValuePtr(0,0),
-//                         pixf2.Width(),pixf2.Height(),pixelByteSize,
-//                         cnavas.Width()*pixelByteSize,
-//                         MATH_UROUND(paint.GetShadowBlur()));
+        paint.GetUICanvas()->GetDrawBoxBlur().BoxBlur(pixf2,MATH_UROUND(paint.GetShadowBlur()),pixelByteSize,gfxDstBuffer.stride);
+
 #endif
 #endif
     }

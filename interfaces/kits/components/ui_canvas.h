@@ -693,7 +693,6 @@ namespace OHOS {
 #endif
 
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
-
         /**
          * @brief Sets the shadow blur level.
          * @since 1.0
@@ -1479,7 +1478,14 @@ namespace OHOS {
         // Save historical modification information of paint
         std::stack<Paint> PaintStack;
         BufferInfo* gfxMapBuffer_;
-
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
+        typedef OHOS::FastBoxBlur DrawBlur;
+        DrawBlur drawBlur;
+        DrawBlur GetDrawBoxBlur() const
+        {
+            return drawBlur;
+        }
+#endif
         static void DeleteLineParam(void* param)
         {
             LineParam* lineParam = static_cast<LineParam*>(param);
