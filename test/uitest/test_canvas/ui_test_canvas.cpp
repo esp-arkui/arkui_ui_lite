@@ -40,7 +40,6 @@ namespace OHOS {
 
     const UIView* UITestCanvas::GetTestView()
     {
-        UIKitCanvasTestDrawImage001();
         RM008UIKitCanvasTest001();
         RM008UIKitCanvasTest002();
         RM008UIKitCanvasTest003();
@@ -330,11 +329,10 @@ namespace OHOS {
         paint.SetOpacity(OPARCITY_127); // 127: opacity
 
         canvas->DrawImage({0, IMAGE_START60}, RED_IMAGE_PATH, paint);
-
+        paint.SetOpacity(OPA_OPAQUE);
         paint.Rotate(ROTATE_20);
-        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint);
-        paint.Rotate(ROTATE_45);
-        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, GIF_IMAGE_PATH, paint, IMAGE_WIDTH100, IMAGE_HEIGHT100);
+        canvas->DrawImage({IMAGE_START100, IMAGE_START20}, JPEG_IMAGE_PATH, paint);
+        canvas->DrawImage({0, 0}, JPEG_IMAGE_PATH, paint, IMAGE_WIDTH100, IMAGE_HEIGHT100);
 #endif
     }
 
