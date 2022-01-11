@@ -88,13 +88,19 @@ namespace OHOS {
             opacity_(OPA_OPAQUE),
             strokeWidth_(2),
             changeFlage_(false),
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             lineJoin_(LineJoinEnum::ROUND_JOIN),
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             lineCap_(LineCapEnum::BUTT_CAP),
+#endif
             isDashMode_(false),
             dashOffset_(0),
             dashArray_(nullptr),
             ndashes_(0),
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             miterLimit_(0),
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
             shadowColor(Color::Black()),
             haveShadow(false),
@@ -143,8 +149,12 @@ namespace OHOS {
             strokeColor_ = paint.strokeColor_;
             strokeWidth_ = paint.strokeWidth_;
             opacity_ = paint.opacity_;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             lineCap_ = paint.lineCap_;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             lineJoin_ = paint.lineJoin_;
+#endif
             isDashMode_ = paint.isDashMode_;
             dashOffset_ = paint.dashOffset_;
             dashArray_ = paint.dashArray_;
@@ -170,7 +180,9 @@ namespace OHOS {
             } else {
                 dashArray_ = nullptr;
             }
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             miterLimit_ = paint.ndashes_;
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
             linearGradientPoint_ = paint.linearGradientPoint_;
             radialGradientPoint_ = paint.radialGradientPoint_;
@@ -438,7 +450,7 @@ namespace OHOS {
         {
             return changeFlage_ && !transfrom_.IsIdentity();
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
          * @brief Sets the cap type.
          * @see GetLineCap
@@ -450,6 +462,9 @@ namespace OHOS {
             lineCap_ = lineCap;
             changeFlage_ = true;
         }
+#endif
+
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
          * @brief Gets the cap type.
          * @see SetLineCap
@@ -460,7 +475,8 @@ namespace OHOS {
         {
             return lineCap_;
         }
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
          * @brief Sets the style at the path connection of the pen.
          * @see GetLineJoin
@@ -472,6 +488,8 @@ namespace OHOS {
             lineJoin_ = lineJoin;
             changeFlage_ = true;
         }
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
          * @brief Sets the spacing limit for sharp corners at path connections.
          * @see GetMiterLimit
@@ -483,11 +501,14 @@ namespace OHOS {
             miterLimit_ = miterLimit;
             changeFlage_ = true;
         }
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         double GetMiterLimit() const
         {
             return miterLimit_;
         }
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
          * @brief Gets the style at the path connection of the pen.
          * @see SetLineJoin
@@ -498,7 +519,7 @@ namespace OHOS {
         {
             return lineJoin_;
         }
-
+#endif
         bool IsLineDash() const
         {
             return isDashMode_;
@@ -912,13 +933,20 @@ namespace OHOS {
         uint8_t opacity_;
         uint16_t strokeWidth_;
         bool changeFlage_;
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         LineJoinEnum lineJoin_;
+#endif
+
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCapEnum lineCap_;
+#endif
         bool isDashMode_;      // Is it a dash mode segment.
         float dashOffset_;     // dash Point offset.
         float* dashArray_;     // dash Point array.
         unsigned int ndashes_; // Length of dasharray
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         double miterLimit_;    // Sets the spacing limit for sharp corners at path connections
+#endif
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         LinearGradientPoint linearGradientPoint_;
         RadialGradientPoint radialGradientPoint_;
@@ -932,7 +960,7 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE
         double shadowBlurRadius; // Sets the shadow blur radius.
         double shadowOffsetX;    // Sets the abscissa offset of the shadow.
-        double shadowOffsetY;    // Sets the shadow ordinate offset..
+        double shadowOffsetY;    // Sets the shadow ordinate offset.
         ColorType shadowColor;   // Set shadow color.
         bool haveShadow;         // Is there a shadow currently.
 #endif
@@ -949,11 +977,11 @@ namespace OHOS {
     };
 
     /**
- * @brief Defines a canvas, which is used to draw multiple types of 2D graphs.
- *
- * @since 1.0
- * @version 1.0
- */
+     * @brief Defines a canvas, which is used to draw multiple types of 2D graphs.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
     class UICanvas : public UIView {
     public:
         typedef Rgba8 Rgba8Color;

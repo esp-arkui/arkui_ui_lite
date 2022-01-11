@@ -977,8 +977,9 @@ namespace OHOS {
         Paint paint;
         paint.SetStrokeWidth(STROKE_WIDTH12);
         paint.SetStrokeColor(Color::Green());
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(LineCapEnum::BUTT_CAP);
-
+#endif
         canvas->BeginPath();
         canvas->MoveTo({LINE11_X, LINE13_Y}); // 竖线
         canvas->LineTo({LINE11_X, LINE11_Y});
@@ -995,8 +996,9 @@ namespace OHOS {
         canvas->DrawPath(paint);
 
         paint.SetStrokeColor(Color::Red());
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(LineCapEnum::SQUARE_CAP);
-
+#endif
         canvas->BeginPath();
         canvas->MoveTo({LINE1_X, LINE13_Y}); // 竖线
         canvas->LineTo({LINE19_X, LINE11_Y});
@@ -1013,8 +1015,9 @@ namespace OHOS {
         canvas->DrawPath(paint);
 
         paint.SetStrokeColor(Color::Blue());
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         paint.SetLineCap(LineCapEnum::ROUND_CAP);
-
+#endif
         canvas->BeginPath();
         canvas->MoveTo({LINE22_X, LINE13_Y}); // 竖线
         canvas->LineTo({LINE22_X, LINE11_Y});
@@ -1041,35 +1044,39 @@ namespace OHOS {
         Paint paint;
         paint.SetStrokeWidth(STROKE_WIDTH10);
         paint.SetStrokeColor(Color::Green());
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(LineJoinEnum::ROUND_JOIN);
-
+#endif
         canvas->BeginPath();
         canvas->MoveTo({LINE11_X, LINE13_Y});
         canvas->LineTo({LINE11_X, LINE11_Y});
         canvas->LineTo({LINE25_X, LINE25_X});
         canvas->LineTo({LINE22_X, LINE11_Y});
         canvas->DrawPath(paint);
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(LineJoinEnum::BEVEL_JOIN);
-
+#endif
         canvas->BeginPath();
         canvas->MoveTo({LINE1_Y, LINE13_Y});
         canvas->LineTo({LINE2_X, LINE11_Y});
         canvas->LineTo({LINE26_X, LINE25_Y});
         canvas->LineTo({LINE27_X, LINE11_Y});
         canvas->DrawPath(paint);
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
+#endif
         canvas->BeginPath();
         canvas->MoveTo({LINE14_X, LINE13_Y});
         canvas->LineTo({LINE14_X, LINE11_Y});
         canvas->LineTo({LINE28_X, LINE25_Y});
         canvas->LineTo({LINE29_X, LINE11_Y});
         canvas->DrawPath(paint);
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         // 当斜接角度超过MiterLimit时应该转化为平角
         paint.SetLineJoin(LineJoinEnum::MITER_JOIN);
         paint.SetMiterLimit(MITERLIMIT4);
+#endif
+
         canvas->BeginPath();
         canvas->MoveTo({LINE21_X, LINE13_Y});
         canvas->LineTo({LINE21_X, LINE11_Y});
