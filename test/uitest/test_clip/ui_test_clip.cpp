@@ -158,9 +158,8 @@ void UITestClip::SetUpButton(UILabelButton* btn, const char* title, int16_t x, i
 void UITestClip::ClipImage(UIImageView* imageView, ClipPath& path)
 {
     const ImageInfo* info = imageView->GetImageInfo();
-    ClipImageBlitter blitter(info);
     ClipUtils clip;
-    clip.PerformScan(path, blitter);
+    clip.PerformScan(path, info);
 }
 
 void UITestClip::UIKitClipTest001()

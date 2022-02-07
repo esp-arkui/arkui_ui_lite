@@ -123,7 +123,7 @@ HWTEST_F(ImageTest, Graphic_Image_Test_GetImageInfo_003, TestSize.Level0)
         if (success) {
             ImageCacheFree(imgInfos_[i]);
         } else {
-            EXPECT_EQ(success, true);
+            EXPECT_EQ(success, false);
         }
     }
 }
