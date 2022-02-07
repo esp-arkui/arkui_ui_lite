@@ -16,8 +16,8 @@
 #ifndef GRAPHIC_LITE_DRAW_UTILS_H
 #define GRAPHIC_LITE_DRAW_UTILS_H
 
-#include "gfx_utils/color.h"
 #include "common/text.h"
+#include "gfx_utils/color.h"
 #include "gfx_utils/geometry2d.h"
 #include "gfx_utils/graphic_buffer.h"
 #include "gfx_utils/graphic_types.h"
@@ -25,21 +25,21 @@
 #include "gfx_utils/transform.h"
 
 namespace OHOS {
-#define SWAP_INT16(x, y)    \
-    do {                    \
+#define SWAP_INT16(x, y) \
+    do { \
         int16_t temp = (x); \
-        (x) = (y);          \
-        (y) = temp;         \
+        (x) = (y); \
+        (y) = temp; \
     } while (0)
 
 #define SWAP_POINTS(x1, x2, y1, y2) \
-    SWAP_INT16(x1, x2);             \
+    SWAP_INT16(x1, x2); \
     SWAP_INT16(y1, y2);
 
 // FixedPointed Related definition.
 #define FIXED_NUM_1 1048576
 #define FIXED_Q_NUM 20
-#define FO_TRANS_FLOAT_TO_FIXED(f) (static_cast<int64_t>((f) * FIXED_NUM_1))
+#define FO_TRANS_FLOAT_TO_FIXED(f) (static_cast<int64_t>((f)*FIXED_NUM_1))
 #define FO_TRANS_INTEGER_TO_FIXED(f) ((static_cast<int64_t>(f)) << FIXED_Q_NUM)
 #define FO_DIV(n1, n2) ((static_cast<int64_t>(n1) << FIXED_Q_NUM) / (n2))
 #define FO_TO_INTEGER(n) ((n) >= 0 ? ((n) >> FIXED_Q_NUM) : (((n) >> FIXED_Q_NUM) + 1))
@@ -292,6 +292,23 @@ public:
                               const Rect& fillArea,
                               const ColorType& color,
                               const OpacityType& opa) const;
+#ifdef ARM_NEON_OPT
+
+    void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                      uint8_t alpha, uint8_t cover);
+    void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                      uint8_t alpha);
+    void BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover);
+    void BlendLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers);
+    void BlendLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers);
+    void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                         uint8_t alpha, uint8_t cover);
+    void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb,
+                         uint8_t alpha);
+    void BlendPreLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t srcCover);
+    void BlendPreLerpPix(uint8_t* dstColors, uint8_t* srcColors, uint8_t* srcCovers);
+    void BlendPreLerpPix(uint8_t* pColor, uint8_t cr, uint8_t cg, uint8_t cb, uint8_t alpha, uint8_t* covers);
+#endif
 private:
     using DrawTriangleTransformFuc = void (*)(const TriangleScanInfo& triangle, const ColorMode bufferMode);
 
