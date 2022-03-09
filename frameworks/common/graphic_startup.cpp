@@ -57,7 +57,7 @@ void GraphicStartUp::InitFontEngine(uintptr_t cacheMemAddr,
     if (ret == INVALID_RET_VALUE) {
         GRAPHIC_LOGW("SetFontPath failed");
         constexpr static char *reservePath = "/sdcard/data/";
-        uiFont->SetFontPath(const_cast<char*>(reservePath), nullptr)
+        uiFont->SetFontPath(const_cast<char*>(reservePath), nullptr);
     }
     if (uiFont->IsVectorFont()) {
         if (ttfName != nullptr) {
