@@ -45,7 +45,7 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-class UITimePicker : public UIViewGroup {
+class UITimePicker : public UIViewGroup, UIPicker::SelectedListener {
 public:
 #if ENABLE_ROTATE_INPUT
     static constexpr const char* HOUR_LIST_NAME = "hour";
@@ -247,6 +247,8 @@ public:
      */
     void SetLoopState(const uint8_t pickerType, bool state);
 
+    void OnPickerStoped(UIPicker& picker) override;
+
     /**
      * @brief Defines the listener used by the time picker. This listener is triggered when an item is selected
      *        after sliding stops.
@@ -296,62 +298,23 @@ public:
     }
 
 private:
-    class UIPickerListener : public UIPicker::SelectedListener {
-    public:
-        UIPickerListener(UITimePicker* timePicker)
-        {
-            timePicker_ = timePicker;
-        }
-
-        ~UIPickerListener() {}
-
-        virtual void OnPickerStoped(UIPicker& picker) override
-        {
-            if (timePicker_ != nullptr) {
-                timePicker_->TimeSelectedCallback();
-            }
-        }
-
-    private:
-        UITimePicker* timePicker_;
-    };
     static constexpr uint8_t TIME_START = 0;
     static constexpr uint8_t HOUR_END = 23;
     static constexpr uint8_t MIN_END = 59;
     static constexpr uint8_t SEC_END = 59;
     static constexpr uint8_t BUF_SIZE = 3;
     static constexpr uint8_t SELECTED_VALUE_SIZE = 9;
-    static constexpr uint8_t SEC_VISIBLE_COUNT = 3;
-    static constexpr uint8_t SEC_INVISIBLE_COUNT = 2;
-    void TimeSelectedCallback();
-    void InitTimePicker();
-    void DeInitTimePicker();
-    void RefreshTimePicker();
     bool RefreshSelected(const char* value);
-    void InitPicker(UIPicker*& picker, int16_t start, int16_t end);
-    void DeInitPicker(UIPicker*& picker);
     void GetValueByIndex(char* value, uint8_t len, uint16_t index, int16_t start, int16_t end);
-    UIPicker* hourPicker_;
-    UIPicker* minutePicker_;
-    UIPicker* secondPicker_;
+    void RefreshPickerSize();
+    UIPicker hourPicker_;
+    UIPicker minutePicker_;
+    UIPicker secondPicker_;
     char selectedValue_[SELECTED_VALUE_SIZE];
     char selectedHour_[BUF_SIZE];
     char selectedMinute_[BUF_SIZE];
     char selectedSecond_[BUF_SIZE];
     bool secVisible_;
-    bool loopState_[PICKER_MAX];
-    uint16_t pickerWidth_;
-    uint16_t itemsHeight_;
-    int16_t xPos_;
-    uint8_t highlightFontId_;
-    uint8_t backgroundFontId_;
-    uint8_t backgroundFontSize_;
-    uint8_t highlightFontSize_;
-    char* backgroundFontName_;
-    char* highlightFontName_;
-    ColorType highlightColor_;
-    ColorType backgroundColor_;
-    UIPickerListener pickerListener_;
     SelectedListener* timePickerListener_;
 };
 } // namespace OHOS
