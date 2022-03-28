@@ -53,7 +53,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    CancelEvent(const Point& pos) : Event(pos) {}
+    explicit CancelEvent(const Point& pos) : Event(pos) {}
 
     /**
      * @brief A destructor used to delete the <b>CancelEvent</b> instance.

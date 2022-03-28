@@ -52,7 +52,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    PressEvent(const Point& pos) : Event(pos) {}
+    explicit PressEvent(const Point& pos) : Event(pos) {}
 
     /**
      * @brief A destructor used to delete the <b>PressEvent</b> instance.

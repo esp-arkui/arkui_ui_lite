@@ -59,7 +59,7 @@ public:
      * @brief A constructor used to create a <b>Task</b> instance with the specified running period.
      * @param period Indicates the running period of this task.
      */
-    Task(uint32_t period) : period_(period), lastRun_(0) {}
+    explicit Task(uint32_t period) : period_(period), lastRun_(0) {}
 
     /**
      * @brief A destructor used to delete the <b>Task</b> instance.
