@@ -57,9 +57,9 @@ public:
      * @since 5.0
      * @version 3.0
      */
-    RotateEvent(int16_t rotate) : rotate_(static_cast<int16_t>(rotate * ROTATE_SENSITIVITY)) {} // Rotation direction
+    explicit RotateEvent(int16_t rotate) : rotate_(static_cast<int16_t>(rotate * ROTATE_SENSITIVITY)) {} // Rotation direction
 
-    ~RotateEvent() {};
+    ~RotateEvent() {}
 
     /**
      * @brief Obtains the number reported by a <b>RotateEvent</b>.

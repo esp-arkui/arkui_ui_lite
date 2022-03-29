@@ -63,7 +63,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    Event(const Point& curPos);
+    explicit Event(const Point& curPos);
 
     /**
      * @brief A destructor used to delete the <b>Event</b> instance.
@@ -104,6 +104,7 @@ public:
     {
         timeStamp_ = timeStamp;
     }
+
 protected:
     TimeType timeStamp_;
     Point curPos_;
