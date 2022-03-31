@@ -519,6 +519,7 @@ protected:
     bool RefreshSelected(uint16_t index);
     void RefreshList();
     virtual void ClearList();
+    virtual void ClearAdapter();
     virtual void Refresh();
     virtual void InitTextAdapter()
     {
@@ -536,7 +537,6 @@ protected:
     TextAdapter* textAdapter_;
     uint16_t maxCount_;
     PickerListScrollListener* listListener_;
-
 private:
     friend class PickerListScrollListener;
     bool RefreshValues(const char* value[], uint16_t count);
