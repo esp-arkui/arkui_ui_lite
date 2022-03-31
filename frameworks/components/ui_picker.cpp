@@ -292,9 +292,9 @@ void UIPicker::ClearList()
 
 void UIPicker::ClearAdapter()
 {
-	textAdapter_ = nullptr;
-	list_.SetAdapter(textAdapter_);
-	list_.RefreshList();
+    textAdapter_ = nullptr;
+    list_.SetAdapter(textAdapter_);
+    list_.RefreshList();
 }
 
 bool UIPicker::SetSelected(uint16_t index)
