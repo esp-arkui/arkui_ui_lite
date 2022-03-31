@@ -530,6 +530,7 @@ protected:
             }
         }
     }
+    virtual void ClearAdapter();
 
     bool isWidthSet_ : 1;
     bool isHeightSet_ : 1;
