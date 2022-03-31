@@ -1,0 +1,63 @@
+/* 输入扑克 求最大连续输入最大
+ * value: 0 - 9
+ * color: 0 - 3
+ */
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+typedef struct {
+    int value;
+    int color;
+} PokerInfo;
+
+class Solution {
+public:
+    int permutation(vector<PokerInfo> s) {
+        for (int i = 0; i < s.size(); i++) {  // 第一个位置
+            swap(s[0], s[i]);
+            dfs(s, 1);
+            swap(s[0], s[i]);
+        }
+        return Max;
+    }
+private:
+    int Max;
+
+    void dfs(vector<PokerInfo> s, int x) {
+        for (int i = x; i < s.size(); i++) {
+            if (s[x - 1].value == s[i].value || s[x - 1].color == s[i].color) {
+                swap(s[i], s[x]);
+                dfs(s, x + 1);                          // 开启固定第 x + 1 位字符
+                swap(s[i], s[x]);
+            }
+        }
+        if (x > Max) {
+            Max = x;
+        }
+    }
+};
+
+
+int main()
+{
+    vector<PokerInfo> poker;
+    PokerInfo num;
+    num.value = 1;
+    num.color = 0;
+    poker.insert(poker.begin(), num);
+    num.value = 1;
+    num.color = 0;
+    poker.insert(poker.begin(), num);
+    num.value = 1;
+    num.color = 0;
+    poker.insert(poker.begin(), num);
+    num.value = 1;
+    num.color = 0;
+    poker.insert(poker.begin(), num);
+
+    Solution test;
+    cout << test.permutation(poker);
+    return 0;
+}
