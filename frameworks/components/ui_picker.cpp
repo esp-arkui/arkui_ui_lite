@@ -292,7 +292,7 @@ void UIPicker::ClearList()
 
 void UIPicker::ClearAdapter()
 {
-    if(textAdapter_ != nullptr){
+    if( textAdapter_ != nullptr ) {
         delete textAdapter_;
         textAdapter_ = nullptr;
     }
