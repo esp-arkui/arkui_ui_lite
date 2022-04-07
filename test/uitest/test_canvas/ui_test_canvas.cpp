@@ -54,6 +54,7 @@ const UIView* UITestCanvas::GetTestView()
     UIKitCanvasTestDrawSector001();
     UIKitCanvasTestClear001();
     UIKitCanvasTestDrawPath001();
+    
     UIKitCanvasTestDrawPath002();
     UIKitCanvasTestDrawPath003();
     UIKitCanvasTestDrawPath004();
