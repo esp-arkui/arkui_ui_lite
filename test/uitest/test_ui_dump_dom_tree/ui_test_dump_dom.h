@@ -40,6 +40,7 @@ public:
     void UIKit_TestDumpDom_004();
     void UIKit_TestDumpDom_005();
     void UIKit_TestDumpDom_006();
+    void UIKit_TestDumpDom_007();
     UILabelButton* GetLabelButton(const char* buttonname);
 
 private:
@@ -56,6 +57,7 @@ private:
     UIView::OnClickListener* clickDumpDomListener10_ = nullptr;
     UIView::OnClickListener* clickDumpDomListener11_ = nullptr;
     UIView::OnClickListener* clickDumpDomListener12_ = nullptr;
+    UIView::OnClickListener* clickDumpDomListener13_ = nullptr;
 };
 }
 #endif // ENABLE_DEBUG
