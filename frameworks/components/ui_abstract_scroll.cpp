@@ -128,6 +128,7 @@ UIAbstractScroll::UIAbstractScroll()
       rotateIndex_(0),
       reserve_(0),
       easingFunc_(EasingEquation::CubicEaseOut),
+      alignEasingFunc_(EasingEquation::CubicEaseOut),
       scrollAnimator_(&animatorCallback_, this, 0, true),
       scrollBarSide_(SCROLL_BAR_RIGHT_SIDE),
       scrollBarCenter_({0, 0}),
@@ -258,6 +259,7 @@ void UIAbstractScroll::StartAnimator(int16_t dragDistanceX, int16_t dragDistance
     animatorCallback_.SetDragStartValue(0, 0);
     animatorCallback_.SetDragEndValue(dragDistanceX, dragDistanceY);
     animatorCallback_.SetDragTimes(dragTimes * DRAG_ACC_FACTOR / GetDragACCLevel());
+    animatorCallback_.currentFunc_ = easingFunc_;
     scrollAnimator_.Start();
 }
 
@@ -322,7 +324,7 @@ void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
         bool needStopX = false;
         bool needStopY = false;
         if (startValueY_ != endValueY_) {
-            int16_t actY = scrollView->easingFunc_(startValueY_, endValueY_, curtTime_, dragTimes_);
+            int16_t actY = currentFunc_(startValueY_, endValueY_, curtTime_, dragTimes_);
             if (!scrollView->DragYInner(actY - previousValueY_)) {
                 needStopY = true;
             }
@@ -331,7 +333,7 @@ void UIAbstractScroll::ListAnimatorCallback::Callback(UIView* view)
             needStopY = true;
         }
         if (startValueX_ != endValueX_) {
-            int16_t actX = scrollView->easingFunc_(startValueX_, endValueX_, curtTime_, dragTimes_);
+            int16_t actX = currentFunc_(startValueX_, endValueX_, curtTime_, dragTimes_);
             if (!scrollView->DragXInner(actX - previousValueX_)) {
                 needStopX = true;
             }
