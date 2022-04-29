@@ -90,3 +90,4 @@ private:
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_TYPE_TEXT_H
+///测试2
