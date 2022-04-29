@@ -31,7 +31,11 @@ Point TypedText::GetTextSize(const char* text, int16_t letterSpace, int16_t line
         GRAPHIC_LOGE("TypedText::GetTextSize invalid parameter");
         return size;
     }
+    
 
+
+
+    
     uint32_t lineBegin = 0;
     uint32_t newLineBegin = 0;
     uint16_t letterHeight = UIFont::GetInstance()->GetHeight();
