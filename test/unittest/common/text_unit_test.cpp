@@ -62,26 +62,6 @@ HWTEST_F(TextTest, TextSetText_001, TestSize.Level0)
 }
 
 /**
- * @tc.name: TextSetDirect_001
- * @tc.desc: Verify SetDirect function, equal.
- * @tc.type: FUNC
- * @tc.require: AR000DSMQ1
- */
-HWTEST_F(TextTest, TextSetDirect_001, TestSize.Level0)
-{
-    if (text_ == nullptr) {
-        EXPECT_NE(0, 0);
-        return;
-    }
-    UITextLanguageDirect direct = UITextLanguageDirect::TEXT_DIRECT_LTR;
-    text_->SetDirect(direct);
-    EXPECT_EQ(text_->GetDirect(), direct);
-    direct = UITextLanguageDirect::TEXT_DIRECT_RTL;
-    text_->SetDirect(direct);
-    EXPECT_EQ(text_->GetDirect(), direct);
-}
-
-/**
  * @tc.name: TextSetAlign_001
  * @tc.desc: Verify SetAlign function, equal.
  * @tc.type: FUNC
