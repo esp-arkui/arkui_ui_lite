@@ -207,18 +207,6 @@ public:
     }
 
     /**
-     * @brief Sets the direction for this text.
-     *
-     * @param direct Indicates the text direction, as defined in {@link UITextLanguageDirect}.
-     * @since 1.0
-     * @version 1.0
-     */
-    void SetDirect(UITextLanguageDirect direct)
-    {
-        direct_ = direct;
-    }
-
-    /**
      * @brief Obtains the direction of this text.
      *
      * @return Returns the text direction, as defined in {@link UITextLanguageDirect}.
@@ -476,6 +464,18 @@ protected:
     List<LineBackgroundColor> linebackgroundColor_;
     SizeSpan* sizeSpans_;
     uint32_t characterSize_;
+
+    /**
+     * @brief Sets the direction for this text.
+     *
+     * @param direct Indicates the text direction, as defined in {@link UITextLanguageDirect}.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetDirect(UITextLanguageDirect direct)
+    {
+        direct_ = direct;
+    }
 
 private:
     uint8_t horizontalAlign_ : 4; // UITextLanguageAlignment

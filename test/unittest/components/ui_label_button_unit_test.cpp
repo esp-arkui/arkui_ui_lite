@@ -118,22 +118,6 @@ HWTEST_F(UILabelButtonTest, UILabelButtonSetAlign_001, TestSize.Level0)
 }
 
 /**
- * @tc.name: UILabelButtonSetDirect_001
- * @tc.desc: Verify SetDirect function.
- * @tc.type: FUNC
- * @tc.require: AR000EEMQ5
- */
-HWTEST_F(UILabelButtonTest, UILabelButtonSetDirect_001, TestSize.Level0)
-{
-    if (labelBtn_ == nullptr) {
-        EXPECT_NE(0, 0);
-        return;
-    }
-    labelBtn_->SetDirect(UITextLanguageDirect::TEXT_DIRECT_RTL);
-    EXPECT_EQ(labelBtn_->GetDirect(), UITextLanguageDirect::TEXT_DIRECT_RTL);
-}
-
-/**
  * @tc.name: UILabelButtonSetLabelStyle_001
  * @tc.desc: Verify SetLabelStyle function.
  * @tc.type: FUNC
