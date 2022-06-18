@@ -217,12 +217,12 @@ uint8_t UIFontVector::GetFontWeight(uint8_t fontId)
     return FONT_BPP_8;
 }
 
-int8_t UIFontVector::SetFontPath(const char* dpath, const char* spath)
+int8_t UIFontVector::SetFontPath(const char* path, FontType type)
 {
-    if (dpath == nullptr) {
+    if (path == nullptr) {
         return INVALID_RET_VALUE;
     }
-    ttfDir_ = dpath;
+    ttfDir_ = path;
     return RET_VALUE_OK;
 }
 
@@ -342,9 +342,7 @@ int16_t UIFontVector::GetWidth(uint32_t unicode, uint8_t fontId, uint8_t fontSiz
     int8_t ret = INVALID_RET_VALUE;
 
     if (TypedText::IsColourWord(unicode, fontId, fontSize)) {
-
         ret = LoadGlyphIntoFace(fontId, unicode, faceInfo.face);
-
         if (ret != RET_VALUE_OK) {
             return INVALID_RET_VALUE;
         }
@@ -678,7 +676,11 @@ inline uint32_t UIFontVector::GetKey(uint8_t fontId, uint32_t size)
     return ((static_cast<uint32_t>(fontId)) << 24) + size; // fontId store at the (24+1)th bit
 }
 
-uint16_t UIFontVector::GetOffsetPosY(const char *text, uint16_t lineLength, bool& isEmojiLarge, uint8_t fontId, uint8_t fontSize)
+uint16_t UIFontVector::GetOffsetPosY(const char* text,
+                                     uint16_t lineLength,
+                                     bool& isEmojiLarge,
+                                     uint8_t fontId,
+                                     uint8_t fontSize)
 {
     if (!freeTypeInited_ || (bitmapCache_ == nullptr)) {
         return INVALID_RET_VALUE;
@@ -792,6 +794,5 @@ uint16_t UIFontVector::GetMaxSubLineHeight(uint16_t textNum, uint16_t loopNum, u
         }
     }
     return maxHeight;
-    //return GetMaxSubLineHeight(textNum, loopNum, maxHeight, emojiNum);
 }
 } // namespace OHOS
