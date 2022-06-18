@@ -53,7 +53,7 @@ void GraphicStartUp::InitFontEngine(uintptr_t cacheMemAddr,
         return;
     }
     uiFont->SetPsramMemory(cacheMemAddr, cacheMemLen);
-    int8_t ret = uiFont->SetFontPath(const_cast<char*>(dPath), nullptr);
+    int8_t ret = uiFont->SetFontPath(dPath, BaseFont::DYNAMIC_FONT);
     if (ret == INVALID_RET_VALUE) {
         GRAPHIC_LOGW("SetFontPath failed");
     }
@@ -66,6 +66,20 @@ void GraphicStartUp::InitFontEngine(uintptr_t cacheMemAddr,
         }
     } else {
         (void)uiFont->SetCurrentLangId(0); // set language
+    }
+}
+
+void GraphicStartUp::InitFontFileEx(const char* path)
+{
+    UIFont* uiFont = UIFont::GetInstance();
+    if (uiFont == nullptr) {
+        GRAPHIC_LOGE("Get UIFont error");
+        return;
+    }
+
+    int8_t ret = uiFont->SetFontPath(path, BaseFont::DYNAMIC_FONT);
+    if (ret == INVALID_RET_VALUE) {
+        GRAPHIC_LOGW("SetFontPath failed");
     }
 }
 
