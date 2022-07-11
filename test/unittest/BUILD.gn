@@ -10,8 +10,8 @@
 # limitations under the License.
 
 if (ohos_kernel_type != "liteos_m") {
-  import("//build/lite/config/subsystem/graphic/config.gni")
-  import("//build/lite/config/test.gni")
+  import("//build/hb/config/subsystem/graphic/config.gni")
+  import("//build/hb/config/test.gni")
 
   group("lite_graphic_ui_test") {
     if (ohos_build_type == "debug") {
