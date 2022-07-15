@@ -46,11 +46,13 @@ void PointerInputDevice::DispatchEvent(const DeviceData& data)
         return;
     }
     // invalid touchable and draggable view will be reset to nullptr
-    if ((touchableView_ != nullptr) && !RootView::FindSubView(*rootView, touchableView_)) {
+    if ((touchableView_ != nullptr) && (!RootView::FindSubView(*rootView, touchableView_) ||
+                                        !touchableView_->IsTouchable())) {
         touchableView_ = nullptr;
         lastPos_ = curPos_;
     }
-    if ((draggableView_ != nullptr) && !RootView::FindSubView(*rootView, draggableView_)) {
+    if ((draggableView_ != nullptr) && (!RootView::FindSubView(*rootView, draggableView_) ||
+                                        !draggableView_->IsDraggable())) {
         draggableView_ = nullptr;
         lastPos_ = curPos_;
         dragLastPos_ = curPos_;
