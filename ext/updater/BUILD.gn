@@ -12,6 +12,7 @@
 import("//build/ohos.gni")
 import("//foundation/graphic/ui/ui.gni")
 import("//foundation/graphic/utils/utils.gni")
+
 ohos_static_library("libupdater_layout") {
   defines = [
     "__LITEOS_M__",
