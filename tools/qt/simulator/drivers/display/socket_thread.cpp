@@ -13,33 +13,30 @@
  * limitations under the License.
  */
 
-#include "ui_auto_test_render.h"
-#include "ui_test_render.h"
+#include "scoket_thread.h"
 
 namespace OHOS {
-void UIAutoTestRender::Reset() const
+SocketThread::SocketThread()
 {
-    ResetMainMenu();
-    EnterSubMenu(UI_TEST_RENDER_ID);
+    clientManager_ = OHOS::TcpSocketClientManager::GetInstance();
 }
 
-void UIAutoTestRender::RunTestList()
+SocketThread::~SocketThread()
 {
-    Reset();
-    UIKitRenderTestRender001();
-    UIKitRenderTestRenderMeasure001();
+    clientManager_ = nullptr;
 }
 
-void UIAutoTestRender::UIKitRenderTestRender001() const
+void SocketThread::run()
 {
-    const char* fileName = "ui_test_render_001.bmp";
-    CompareByBinary(fileName);
+    taskQuitQry = false;
+    while (!taskQuitQry) {
+        TcpSocketClientManager::GetInstance()->DispatchMsg();
+        Sleep(DEFAULT_TASK_PERIOD);
+    }
 }
 
-void UIAutoTestRender::UIKitRenderTestRenderMeasure001() const
+void SocketThread::Quit()
 {
-    ClickViewById(UI_TEST_RENDER_UPDATA_BUTTON_ID_01);
-    const char* fileName = "ui_test_render_measure_001.bmp";
-    CompareByBinary(fileName);
+    taskQuitQry = true;
 }
 } // namespace OHOS
