@@ -15,12 +15,31 @@
 
 #include "ui_test_app.h"
 #include "graphic_thread.h"
+#include "auto_test_manager.h"
+#include <functional>
 
 void RunApp()
 {
     OHOS::UITestApp::GetInstance()->Start();
-#if ENABEL_UI_AUTO_TEST
-    ThreadAttr attr;
-    ThreadCreate(OHOS::AutoTestThread, nullptr, &attr);
-#endif // ENABEL_UI_AUTO_TEST
 }
+
+void DispatchAppMsg(std::vector<std::shared_ptr<OHOS::TestMsgInfo>> msgInfo)
+{
+    OHOS::AutoTestManager::GetInstance()->StartTest(msgInfo);
+}
+
+void DipatchAppConfigMsg(std::shared_ptr<OHOS::TestConfigInfo> configInfo)
+{
+    OHOS::AutoTestManager::GetInstance()->SetConfigInfo(configInfo);
+}
+
+void DispatchCompleteMsg()
+{
+    OHOS::AutoTestManager::GetInstance()->TestComplete();
+}
+
+void BindSendMsg(void (*func)(size_t mainID))
+{
+    OHOS::AutoTestManager::GetInstance()->SetSendMsgFuncCallBack(std::bind(func, std::placeholders::_1));
+}
+

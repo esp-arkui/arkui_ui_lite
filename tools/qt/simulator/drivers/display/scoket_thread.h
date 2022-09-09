@@ -13,29 +13,31 @@
  * limitations under the License.
  */
 
-#ifndef GRAPHIC_LITE_AUTO_TEST_CASE_GROUP_H
-#define GRAPHIC_LITE_AUTO_TEST_CASE_GROUP_H
-
-#include "gfx_utils/list.h"
+#ifndef GRAPHIC_LITE_SOCKET_THREAD_H
+#define GRAPHIC_LITE_SOCKET_THREAD_H
+#include <QThread>
+#include <windows.h>
+#include "tcp_socket_manager.h"
 
 namespace OHOS {
-class AutoTestCaseGroup {
+class SocketThread : public QThread {
+    Q_OBJECT
 public:
-    class AutoTestCase {
-    public:
-        AutoTestCase() {}
-        virtual ~AutoTestCase() {}
-        virtual void RunTestList() = 0;
-        virtual void Reset() const = 0;
-        virtual void ResetMainMenu() const = 0;
+    SocketThread();
+    ~SocketThread();
+
+    void run() override;
+    void Quit();
+
+    inline TcpSocketClientManager* GetClientManager()
+    {
+        return clientManager_;
     };
 
-    static List<AutoTestCase*>& GetTestCase();
-    static void TearDownTestCase();
-    static void AddTestCase(AutoTestCase* testCaseInfo);
-
 private:
-    static List<AutoTestCase*> testCaseList_;
+    volatile bool taskQuitQry = false;
+    TcpSocketClientManager* clientManager_;
 };
 } // namespace OHOS
-#endif // GRAPHIC_LITE_AUTO_TEST_CASE_GROUP_H
+
+#endif // GRAPHIC_LITE_SOCKET_THREAD_H

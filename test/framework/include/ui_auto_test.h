@@ -16,21 +16,39 @@
 #ifndef GRAPHIC_LITE_UI_AUTO_TEST_H
 #define GRAPHIC_LITE_UI_AUTO_TEST_H
 
-#include "auto_test_case_group.h"
 #include "components/ui_view.h"
+#include "ui_test_message.h"
+#include "compare_tools.h"
+
 
 namespace OHOS {
-class UIAutoTest : public AutoTestCaseGroup::AutoTestCase {
+class UIAutoTest {
 public:
-    UIAutoTest() {}
-    virtual ~UIAutoTest() {}
+    UIAutoTest();
+    virtual ~UIAutoTest();
 
-    static void SetUpTestCase();
     void ResetMainMenu() const;
+    void Reset(std::string testID) const;
+
+    void RunTest(std::vector<std::shared_ptr<TestMsgInfo>> msgInfo);
+    void TestComplete() const;
+
     void EnterSubMenu(const char* id) const;
     void ClickViewById(const char* id) const;
     void DragViewToHead(const char* id) const;
-    void CompareByBinary(const char* fileName) const;
+    bool CompareByBinary(const char* fileName) const;
+
+private:
+    void OnTest(std::shared_ptr<TestMsgInfo> info);
+    void OnEnterPage(std::vector<std::string> pageNav);
+    void OnTestBySteps(std::vector<TestSteps> steps, std::string className);
+    void OnTestOneStep(TestSteps step, std::string className, size_t stepIndex);
+    void OnSaveFile(std::string className, std::string viewID, size_t stepIndex);
+    void OnCompareFile(std::string fileName) const;
+    std::string OnGetSystemTime() const;
+
+private:
+    std::vector<std::string> fileNames_;
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_AUTO_TEST_H

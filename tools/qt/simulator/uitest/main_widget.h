@@ -34,6 +34,7 @@
 #include "mousewheel_input.h"
 #include "task_thread.h"
 #include "ui_mainwidget.h"
+#include "scoket_thread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -50,6 +51,7 @@ public:
     ~MainWidget();
     void CreateGUIThread();
     void CreateTaskThread();
+    void CreateSocketThread();
 
 protected:
     void mouseMoveEvent(QMouseEvent* event) override;
@@ -67,6 +69,7 @@ private:
     uint32_t height_;
     GUIThread* guiThread_;
     TaskThread* taskThread_;
+    SocketThread* socketThread_;
 
 public slots:
     void UpdatePaintSlot(uint32_t* tftFb, uint32_t imgWidth, uint32_t imgHeight)
@@ -80,6 +83,17 @@ public slots:
         }
         update();
     };
+
+    void SendMsgSlot(size_t mainID)
+    {
+        TcpScoketClient* tcpSocket = OHOS::TcpSocketClientManager::GetInstance()->GetTcpSocket();
+        if (tcpSocket) {
+            QString str = QString::number(mainID);
+            printf("SendMsgSlot----------str=[%s] \n", str.toStdString().c_str());
+            fflush(stdout);
+            tcpSocket->OnSendMessage(str);
+        }
+    }
 };
 } // namespace OHOS
 
