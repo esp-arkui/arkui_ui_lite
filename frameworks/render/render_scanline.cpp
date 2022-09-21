@@ -219,7 +219,6 @@ void BlendSourceAtop(RasterizerScanlineAntialias& raster1, RasterizerScanlineAnt
         if (y1 == y2) {
             raster1.SweepScanline(scanline1);
             y1 = scanline1.GetYLevel();
-            span1 = scanline1.Begin();
         }
     }
 }
@@ -331,7 +330,6 @@ void BlendSourceOut(RasterizerScanlineAntialias& raster1, RasterizerScanlineAnti
         if (y1 == y2 && y1 < raster2.GetMaxY() - 1) {
             if (raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
-                span1 = scanline1.Begin();
             }
         }
     }
@@ -498,7 +496,6 @@ void BlendXOR(RasterizerScanlineAntialias& raster1, RasterizerScanlineAntialias&
         if (y1 == y2 && y1 < raster2.GetMaxY() - 1) {
             if (raster1.SweepScanline(scanline1)) {
                 y1 = scanline1.GetYLevel();
-                span1 = scanline1.Begin();
             }
         }
     }
@@ -630,7 +627,6 @@ void BlendSourceInLoop(RasterizerScanlineAntialias& raster1, GeometryScanline& s
     if (y1 == y2) {
         raster1.SweepScanline(scanline1);
         y1 = scanline1.GetYLevel();
-        span1 = scanline1.Begin();
     }
 }
 
