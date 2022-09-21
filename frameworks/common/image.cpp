@@ -116,6 +116,7 @@ bool Image::SetStandardSrc(const char* src)
         return false;
     }
     path_ = imagePath;
+    mallocFlag_ = true;
     srcType_ = IMG_SRC_FILE;
     return true;
 }
@@ -170,6 +171,7 @@ bool Image::SetLiteSrc(const char* src)
         }
     }
     path_ = imagePath;
+    mallocFlag_ = true;
     srcType_ = IMG_SRC_FILE;
     return true;
 }
@@ -362,7 +364,7 @@ bool Image::SetPNGSrc(const char* src)
         FreePngBytep(&rowPointer, height);
         return false;
     }
-    uint8_t* srcData = static_cast<uint8_t*>(UIMalloc(dataSize));
+    uint8_t* srcData = static_cast<uint8_t*>(ImageCacheMalloc(dataSize));
     if (srcData == nullptr) {
         FreePngBytep(&rowPointer, height);
         UIFree(imgInfo);
@@ -422,7 +424,7 @@ bool Image::SetJPEGSrc(const char* src)
         fclose(infile);
         return false;
     }
-    uint8_t* srcData = static_cast<uint8_t*>(UIMalloc(dataSize));
+    uint8_t* srcData = static_cast<uint8_t*>(ImageCacheMalloc(dataSize));
     if (srcData == nullptr) {
         jpeg_finish_decompress(&cinfo);
         jpeg_destroy_decompress(&cinfo);
@@ -460,7 +462,7 @@ void Image::ReInitImageInfo(ImageInfo* imgInfo, bool mallocFlag)
 {
     if (mallocFlag_) {
         if (imageInfo_->data != nullptr) {
-            UIFree(reinterpret_cast<void*>(const_cast<uint8_t*>(imageInfo_->data)));
+            ImageCacheFree(const_cast<ImageInfo&>(*imageInfo_));
         }
     }
     UIFree(reinterpret_cast<void*>(const_cast<ImageInfo*>(imageInfo_)));
