@@ -209,6 +209,9 @@ RetCode CacheManager::Reset()
 
 RetCode CacheManager::ReadToCache(CacheEntry& entry)
 {
+    if (entry.dsc_.decoder == nullptr) {
+        GRAPHIC_LOGW("CacheManager::ReadToCache entry.dsc_.decoder is nullptr\n");
+    }
     return entry.dsc_.decoder->ReadToCache(entry.dsc_);
 }
 
