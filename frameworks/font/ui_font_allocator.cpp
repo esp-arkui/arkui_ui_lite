@@ -16,6 +16,7 @@
 #include "font/ui_font_allocator.h"
 
 #include "gfx_utils/graphic_buffer.h"
+#include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
 UIFontAllocator::UIFontAllocator()
@@ -27,7 +28,11 @@ UIFontAllocator::~UIFontAllocator() {}
 
 void UIFontAllocator::SetRamAddr(uint8_t* ram, uint32_t size)
 {
+    GRAPHIC_LOGE("youbing----UIFontAllocator::SetRamAddr1---rm=[%p], size=[%zu]", ram, size);
+
     UI_ADDR_ALIGN(ram, size);
+
+    GRAPHIC_LOGE("youbing----UIFontAllocator::SetRamAddr2---rm=[%p], size=[%zu]", ram, size);
 
     struct Chunk* chunk = nullptr;
     ram_ = ram;
