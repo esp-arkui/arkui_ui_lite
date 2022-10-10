@@ -138,6 +138,7 @@ void UITestVectorFont::Font_FontEngine_Vector_Test_JA_Lang_001()
         label->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
         label->SetFont(NOTOSANSCJKJP_REGULAR, 24); // 24 : size
         label->SetText("ランニン");
+        label->SetViewId("testVectirFont");
         container_->Add(label);
         positionY_ += LABEL_HEIGHT + GAP;
     }

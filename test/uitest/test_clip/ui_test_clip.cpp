@@ -111,12 +111,13 @@ bool UITestClip::OnClick(UIView& view, const ClickEvent& event)
     return true;
 }
 
-void UITestClip::CreateTitleLabel(const char* title)
+void UITestClip::CreateTitleLabel(const char* title, const char* viewid)
 {
     UILabel* titleLabel = new UILabel();
     titleLabel->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, Screen::GetInstance().GetWidth(), TITLE_HEIGHT);
     titleLabel->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     titleLabel->SetText(title);
+    titleLabel->SetViewId(viewid);
     container_->Add(titleLabel);
     positionY_ += TITLE_HEIGHT + 8; // 8: gap
 }
@@ -205,18 +206,18 @@ void UITestClip::UIKitClipTest002()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("弧形裁剪 ");
+    CreateTitleLabel("弧形裁剪 ", UI_TEST_CLIP_1);
     int16_t x = VIEW_DISTANCE_TO_LEFT_SIDE + BLOCK_WIDTH + GAP;
     int16_t y = positionY_;
     btnStartAngleInc_ = new UILabelButton();
-    SetUpButton(btnStartAngleInc_, "起始角度+", x, y);
+    SetUpButton(btnStartAngleInc_, "起始角度+", x, y, UI_TEST_ANGLE_1);
     btnStartAngleDec_ = new UILabelButton();
-    SetUpButton(btnStartAngleDec_, "起始角度-", x + BUTTON_WIDHT2 + GAP, y);
+    SetUpButton(btnStartAngleDec_, "起始角度-", x + BUTTON_WIDHT2 + GAP, y, UI_TEST_ANGLE_2);
     btnEndAngleInc_ = new UILabelButton();
     y += BUTTON_HEIGHT2 + GAP;
-    SetUpButton(btnEndAngleInc_, "结束角度+", x, y);
+    SetUpButton(btnEndAngleInc_, "结束角度+", x, y, UI_TEST_ANGLE_3);
     btnEndAngleDec_ = new UILabelButton();
-    SetUpButton(btnEndAngleDec_, "结束角度-", x + BUTTON_WIDHT2 + GAP, y);
+    SetUpButton(btnEndAngleDec_, "结束角度-", x + BUTTON_WIDHT2 + GAP, y, UI_TEST_ANGLE_4);
 
     ClipPath path;
     // {80, 80}: center; 50: radius
@@ -231,7 +232,7 @@ void UITestClip::UIKitClipTest003()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("多边形裁剪----五角星 ");
+    CreateTitleLabel("多边形裁剪----五角星 ", UI_TEST_CLIP_2);
 
     int32_t rot = 0;
     // 80: Radius of outer circle
@@ -264,7 +265,7 @@ void UITestClip::UIKitClipTest004()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("贝塞尔曲线裁剪 ");
+    CreateTitleLabel("贝塞尔曲线裁剪 ", UI_TEST_CLIP_3);
 
     ClipPath path;
     // {50, 50}, {100, 50}, {100, 100}, {50, 100}: path points; {60, 110}, {80, 10}: control points of curve
@@ -279,7 +280,7 @@ void UITestClip::UIKitClipTest005()
     if (container_ == nullptr) {
         return;
     }
-    CreateTitleLabel("多边形裁剪 ");
+    CreateTitleLabel("多边形裁剪 ", UI_TEST_CLIP_4);
 
     ClipPath path;
     // {20, 70}, {50, 60}, {110, 80}, {110, 130}, {50, 100}, {20, 120}: path points

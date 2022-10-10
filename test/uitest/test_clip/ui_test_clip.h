@@ -27,6 +27,14 @@ constexpr char* UI_TEST_RADIUS_1 = "radius+1";
 constexpr char* UI_TEST_RADIUS_2 = "radius-1";
 constexpr char* UI_TEST_RADIUS_3 = "radius+5";
 constexpr char* UI_TEST_RADIUS_4 = "radius-5";
+constexpr char* UI_TEST_ANGLE_1 = "startAngle+";
+constexpr char* UI_TEST_ANGLE_2 = "startAngle-";
+constexpr char* UI_TEST_ANGLE_3 = "endAngle+";
+constexpr char* UI_TEST_ANGLE_4 = "endAngle-";
+constexpr char* UI_TEST_CLIP_1 = "arcClip";
+constexpr char* UI_TEST_CLIP_2 = "starClip";
+constexpr char* UI_TEST_CLIP_3 = "bezierClip";
+constexpr char* UI_TEST_CLIP_4 = "polygonClip";
 class UITestClip : public UITest, public UIView::OnClickListener {
 public:
     UITestClip() {}
@@ -54,7 +62,7 @@ private:
     const static int16_t RADIUS_STEP_1 = 1;
     const static int16_t RADIUS_STEP_5 = 5;
 
-    void CreateTitleLabel(const char* title);
+    void CreateTitleLabel(const char* title, const char* viewId = nullptr);
     UIImageView* CreateImageView();
     void ClipImage(UIImageView* imageView, ClipPath& path);
     void SetUpButton(UILabelButton* btn, const char* title, int16_t x, int16_t y, const char* id = nullptr);

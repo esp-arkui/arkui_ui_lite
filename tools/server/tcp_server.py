@@ -28,7 +28,7 @@ class TestServer(threading.Thread):
 
     PORT = 23495
 
-    config_file_name = "config.json"
+    config_file_name = "./tools/server/config.json"
 
     # Run base_ Dir directory
     TestModeBase = 1
@@ -137,14 +137,15 @@ class TestServer(threading.Thread):
 
         send_config =  {'main_id': self.S_C_MAIN_ID_SEND_CONFIG_INFO,\
             'test_mode': test_mode,\
-            'base_dir': base_dir,\
-            'run_dir': run_dir,\
-            'log_dir': log_dir}
+            'base_dir': os.path.abspath(base_dir) + '/',\
+            'run_dir': os.path.abspath(run_dir) + '/',\
+            'log_dir': os.path.abspath(log_dir) + '/'}
 
         self.send_message(conn, send_config)
 
 
     def read_data_from_json(self, filename):
+        print(filename)
         with open(filename, 'r') as json_file:
             json_data = json.load(json_file)
 

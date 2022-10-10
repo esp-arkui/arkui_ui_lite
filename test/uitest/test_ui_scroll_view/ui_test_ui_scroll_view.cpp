@@ -137,6 +137,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_002()
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
+    label->SetViewId(UI_TEST_UI_SCROLL_LABLE_1);
     positionY_ += DELTA_Y_COORDINATE_2;
 
     UIScrollView* scroll = new UIScrollView();
@@ -160,6 +161,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_003()
     }
     UILabel* label = GetTitleLabel("UIScrollView游标滑动状态 ");
     container_->Add(label);
+    label->SetViewId(UI_TEST_UI_SCROLL_LABLE_2);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
     positionY_ += DELTA_Y_COORDINATE_2;
@@ -192,6 +194,7 @@ void UITestUIScrollView::UIKit_UIScrollView_Test_bar_004()
     container_->Add(label);
     positionY_ += DELTA_Y_COORDINATE;
     label->SetPosition(positionX_, positionY_);
+    label->SetViewId(UI_TEST_UI_SCROLL_LABLE_3);
     positionY_ += DELTA_Y_COORDINATE_2;
 
     UIScrollView* scroll = new UIScrollView();

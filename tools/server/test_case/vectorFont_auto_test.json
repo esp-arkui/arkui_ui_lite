@@ -1,0 +1,26 @@
+{
+	"testInfo": [
+        {
+            "className": "Font_FontEngine_Vector_Test_001",
+            "pageNav": ["Vector_Font"],
+            "testSteps": [
+                {
+                    "viewID": "testVectirFont",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "testVectirFont",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "testVectirFont",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        }
+	]
+}

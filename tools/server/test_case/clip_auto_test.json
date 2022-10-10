@@ -2,36 +2,102 @@
 	"testInfo": [
         {
             "className": "clip_test_radius_01",
-            "pageNav": ["Clip", "Next"],
+            "pageNav": ["Clip"],
             "testSteps": [
                 {
                     "viewID": "radius+5",
                     "eventID": 0,
-                    "eventValue": [1,2],
                     "saveCheckPoint": true
                 },
                 {
                     "viewID": "radius-5",
                     "eventID": 0,
-                    "eventValue": [1,2],
                     "saveCheckPoint": true
-                }
-            ]
-        },
-        {
-            "className": "clip_test_radius_01",
-            "pageNav": ["Clip"],
-            "testSteps": [
+                },
                 {
                     "viewID": "radius+1",
                     "eventID": 0,
-                    "eventValue": [1,2],
                     "saveCheckPoint": true
                 },
                 {
                     "viewID": "radius-1",
                     "eventID": 0,
-                    "eventValue": [1,2],
+                    "saveCheckPoint": true
+                }
+            ]
+        },
+        {
+            "className": "clip_test_radius_02",
+            "pageNav": ["Clip"],
+            "testSteps": [
+                {
+                    "viewID": "startAngle+",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "startAngle-",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "endAngle+",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "endAngle-",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        },
+        {
+            "className": "clip_test_radius_03",
+            "pageNav": ["Clip"],
+            "testSteps": [
+                {
+                    "viewID": "arcClip",
+                    "eventID": 1,
+                    "eventValue": [100,120],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "starClip",
+                    "eventID": 0,
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "starClip",
+                    "eventID": 1,
+                    "eventValue": [100,120],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "bezierClip",
+                    "eventID": 0,
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "bezierClip",
+                    "eventID": 1,
+                    "eventValue": [100,120],
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "polygonClip",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "polygonClip",
+                    "eventID": 1,
+                    "eventValue": [100,120],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "polygonClip",
+                    "eventID": 0,
                     "saveCheckPoint": true
                 }
             ]

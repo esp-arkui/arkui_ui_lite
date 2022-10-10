@@ -1,0 +1,70 @@
+{
+	"testInfo": [
+        {
+            "className": "UIKit_UIImage_Test_SetImage_001",
+            "pageNav": ["Image"],
+            "testSteps": [
+                {
+                    "viewID": "SetImage_005",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "SetImage_005",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "SetImage_005",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "SetImage_008",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "SetImage_008",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "SetImage_011",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "SetImage_011",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "SetImage_014",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "SetImage_014",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "Uncompress_001",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "Uncompress_001",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        }
+	]
+}

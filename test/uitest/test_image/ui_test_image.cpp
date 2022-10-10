@@ -172,6 +172,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_005()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示ARGB8888 数组型图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_1);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 40); // 40 : increase offset
@@ -244,6 +245,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_008()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深2索引png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_2);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -307,6 +309,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_011()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深24真彩色png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_3);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -370,6 +373,7 @@ void UITestImage::UIKit_UIImage_Test_SetImage_014()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("显示位深16灰度png图片 ");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_4);
 
         UIImageView* imageView = new UIImageView();
         imageView->SetPosition(VIEW_DISTANCE_TO_LEFT_SIDE, g_height + 30); // 30 : offset
@@ -497,6 +501,7 @@ void UITestImage::UIKit_UIImage_Test_Uncompress_001()
                            TITLE_LABEL_DEFAULT_HEIGHT);
         label->SetText("图片解压测试");
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
+        label->SetViewId(UI_TEST_IMAGE_5);
 
         UIImageView* imageView1 = new UIImageView();
         imageView1->SetPosition(48, g_height + 30); // 48 : offset; 30 : offset

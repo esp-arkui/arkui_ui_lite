@@ -90,6 +90,7 @@ void UITestRender::UIKit_Render_Test_Render_001()
     view->Resize(200, 50);     // 200: width 50: height
     view->SetPosition(50, 50); // 50: position x 50: position y
     view->SetStyle(STYLE_BACKGROUND_COLOR, Color::Yellow().full);
+    view->SetViewId(UI_TEST_RENDER_1);
     group->Add(view);
     view->SetTouchable(true);
     view->SetOnClickListener(new TestRenderClickListener());
@@ -100,6 +101,7 @@ void UITestRender::UIKit_Render_Test_Render_001()
     view1->SetStyle(STYLE_BACKGROUND_COLOR, Color::Green().full);
     view1->SetTouchable(true);
     view1->SetOnClickListener(new TestRenderClickListener());
+    view1->SetViewId(UI_TEST_RENDER_2);
     group->Add(view1);
     container_->Add(group);
 }

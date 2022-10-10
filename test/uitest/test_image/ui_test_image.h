@@ -27,6 +27,11 @@
 #endif
 
 namespace OHOS {
+constexpr char* UI_TEST_IMAGE_1 = "SetImage_005";
+constexpr char* UI_TEST_IMAGE_2 = "SetImage_008";
+constexpr char* UI_TEST_IMAGE_3 = "SetImage_011";
+constexpr char* UI_TEST_IMAGE_4 = "SetImage_014";
+constexpr char* UI_TEST_IMAGE_5 = "Uncompress_001";
 #if (ENABLE_GIF == 1)
 class UITestImage : public UITest, public OHOS::UIView::OnClickListener {
 #else

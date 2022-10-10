@@ -145,7 +145,6 @@ void TcpSocketClientManager::OnGetMsgInfo(const std::shared_ptr<QByteArray> recv
     if (object.contains(JSON_VALUE_MAIN_ID.c_str())) {
         mainID = static_cast<size_t>(object.value(JSON_VALUE_MAIN_ID.c_str()).toInt());
     }
-
     printf("OnGetMsgInfo------mainID = [%zu]\n", mainID);
     fflush(stdout);
     switch (mainID) {

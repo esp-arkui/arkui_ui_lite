@@ -22,6 +22,84 @@
 #include "layout/grid_layout.h"
 #include "ui_test.h"
 namespace OHOS {
+constexpr char* UI_TEST_CANVAS_1 = "drawPicture";
+constexpr char* UI_TEST_CANVAS_2 = "fillStyleSolid";
+constexpr char* UI_TEST_CANVAS_3 = "fillStyleRM";
+constexpr char* UI_TEST_CANVAS_4 = "strokeStyleRM";
+constexpr char* UI_TEST_CANVAS_5 = "patternRepeat";
+constexpr char* UI_TEST_CANVAS_6 = "patternRepeatX";
+constexpr char* UI_TEST_CANVAS_7 = "patternRepeatY";
+constexpr char* UI_TEST_CANVAS_8 = "patternNoRepeat";
+constexpr char* UI_TEST_CANVAS_9 = "changeColor";
+constexpr char* UI_TEST_CANVAS_10 = "lineCap";
+constexpr char* UI_TEST_CANVAS_11 = "lineJoin";
+constexpr char* UI_TEST_CANVAS_12 = "lineDash";
+constexpr char* UI_TEST_CANVAS_13 = "strokeRect";
+constexpr char* UI_TEST_CANVAS_14 = "strokeText";
+constexpr char* UI_TEST_CANVAS_15 = "changeScale";
+constexpr char* UI_TEST_CANVAS_16 = "resetRect";
+constexpr char* UI_TEST_CANVAS_17 = "setOpa1";
+constexpr char* UI_TEST_CANVAS_18 = "setOpa2";
+constexpr char* UI_TEST_CANVAS_19 = "sourceOver";
+constexpr char* UI_TEST_CANVAS_20 = "sourceAtop";
+constexpr char* UI_TEST_CANVAS_21 = "sourceIn";
+constexpr char* UI_TEST_CANVAS_22 = "sourceOut";
+constexpr char* UI_TEST_CANVAS_23 = "destinationOver";
+constexpr char* UI_TEST_CANVAS_24 = "destinationAtop";
+constexpr char* UI_TEST_CANVAS_25 = "destinationIn";
+constexpr char* UI_TEST_CANVAS_26 = "destinationOut";
+constexpr char* UI_TEST_CANVAS_27 = "hybridLighter";
+constexpr char* UI_TEST_CANVAS_28 = "hybridCopy";
+constexpr char* UI_TEST_CANVAS_29 = "hybridXor";
+constexpr char* UI_TEST_CANVAS_30 = "drawLine1";
+constexpr char* UI_TEST_CANVAS_31 = "drawLine2";
+constexpr char* UI_TEST_CANVAS_32 = "drawCurve1";
+constexpr char* UI_TEST_CANVAS_33 = "drawCurve2";
+constexpr char* UI_TEST_CANVAS_34 = "rectFill";
+constexpr char* UI_TEST_CANVAS_35 = "rectStroke";
+constexpr char* UI_TEST_CANVAS_36 = "rectFillStroke";
+constexpr char* UI_TEST_CANVAS_37 = "circularFill";
+constexpr char* UI_TEST_CANVAS_38 = "circularStroke";
+constexpr char* UI_TEST_CANVAS_39 = "circularFillStroke";
+constexpr char* UI_TEST_CANVAS_40 = "drawArc";
+constexpr char* UI_TEST_CANVAS_41 = "drawPicture2";
+constexpr char* UI_TEST_CANVAS_42 = "drawWord";
+constexpr char* UI_TEST_CANVAS_43 = "sectorFill";
+constexpr char* UI_TEST_CANVAS_44 = "cleanNothing";
+constexpr char* UI_TEST_CANVAS_45 = "moveToNothing";
+constexpr char* UI_TEST_CANVAS_46 = "lineToNothing";
+constexpr char* UI_TEST_CANVAS_47 = "arcOnly";
+constexpr char* UI_TEST_CANVAS_48 = "rectOnly";
+constexpr char* UI_TEST_CANVAS_49 = "closePath";
+constexpr char* UI_TEST_CANVAS_50 = "moveToLineTo";
+constexpr char* UI_TEST_CANVAS_51 = "moveToArc";
+constexpr char* UI_TEST_CANVAS_52 = "moveToRect";
+constexpr char* UI_TEST_CANVAS_53 = "moveToClosePath";
+constexpr char* UI_TEST_CANVAS_54 = "callClosePath";
+constexpr char* UI_TEST_CANVAS_55 = "moveLineMoveLine";
+constexpr char* UI_TEST_CANVAS_56 = "moveLineArc";
+constexpr char* UI_TEST_CANVAS_57 = "moveLineArcClosePath";
+constexpr char* UI_TEST_CANVAS_58 = "moveLineRect";
+constexpr char* UI_TEST_CANVAS_59 = "moveLineRectClosePath";
+constexpr char* UI_TEST_CANVAS_60 = "RectLineTo";
+constexpr char* UI_TEST_CANVAS_61 = "rectMoveLine";
+constexpr char* UI_TEST_CANVAS_62 = "rectArc";
+constexpr char* UI_TEST_CANVAS_63 = "arcRect";
+constexpr char* UI_TEST_CANVAS_64 = "moveArcClosePathLine";
+constexpr char* UI_TEST_CANVAS_65 = "noBeginPath";
+constexpr char* UI_TEST_CANVAS_66 = "noDrawPath";
+constexpr char* UI_TEST_CANVAS_67 = "moveLineClosePath";
+constexpr char* UI_TEST_CANVAS_68 = "moveClosePath";
+constexpr char* UI_TEST_CANVAS_69 = "multiDrawPath";
+constexpr char* UI_TEST_CANVAS_70 = "arcChangeAngle";
+constexpr char* UI_TEST_CANVAS_71 = "arcBeyond360";
+constexpr char* UI_TEST_CANVAS_72 = "drawLast";
+constexpr char* UI_TEST_CANVAS_73 = "drawDiffPath";
+constexpr char* UI_TEST_CANVAS_74 = "drawPath100";
+constexpr char* UI_TEST_CANVAS_75 = "lineBeyondCanvas";
+constexpr char* UI_TEST_CANVAS_76 = "lineCritical";
+constexpr char* UI_TEST_CANVAS_77 = "ArcCritical";
+constexpr char* UI_TEST_CANVAS_78 = "RectCritical";
 class UITestCanvas : public UITest {
 public:
     UITestCanvas()
@@ -110,7 +188,7 @@ public:
     void RM012GlobalCompositeOperationXOR();
     void RM012SaveOrRestore002();
 private:
-    void CreateTitleLabel(const char* title);
+    void CreateTitleLabel(const char* title, const char* viewId = nullptr);
     UICanvas* CreateCanvas();
 
     UIScrollView* container_ = nullptr;

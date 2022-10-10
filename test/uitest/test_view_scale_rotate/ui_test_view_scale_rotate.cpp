@@ -86,44 +86,47 @@ void UITestViewScaleRotate::Callback(UIView* view)
     label_->Scale(scaleValue_, VIEW_CENTER);
 }
 
-void UITestViewScaleRotate::SetUpLabel(const char* title) const
+void UITestViewScaleRotate::SetUpLabel(const char* title, const char* viewId) const
 {
     UILabel* label = new UILabel();
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, TEXT_DISTANCE_TO_TOP_SIDE,
         Screen::GetInstance().GetWidth(), TITLE_LABEL_DEFAULT_HEIGHT);
     label->SetText(title);
+    label->SetViewId(viewId);
     label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     list_->Add(label);
 }
 
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_Label_001()
 {
-    SetUpLabel("UILabel组件旋转 ");
+    SetUpLabel("UILabel组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_1");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     label_ = new UILabel();
     label_->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
     label_->SetText("Test UILabel");
     label_->SetPosition(100, 100, 200, 50); // 100: x 100: y 200: width 50: height
+    label_->SetViewId("UI_TEST_SCALE_ROTATE_1");
     group->Add(label_);
     list_->Add(group);
 }
 
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_LabelButton_002()
 {
-    SetUpLabel("UILabelButton组件旋转 ");
+    SetUpLabel("UILabelButton组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_2");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     list_->Add(group);
     button1_ = new UILabelButton();
     button1_->SetPosition(100, 100, 200, 50); // 100: x 100: y 200: width 50: height
     button1_->SetText("Test UILabelButton");
+    button1_->SetViewId("UI_TEST_SCALE_ROTATE_2");
     group->Add(button1_);
 }
 
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_Canvas_003()
 {
-    SetUpLabel("UICanvas组件旋转 ");
+    SetUpLabel("UICanvas组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_3");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     list_->Add(group);
@@ -132,6 +135,7 @@ void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_Canvas_003()
 
     canvas_->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     canvas_->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
+    canvas_->SetViewId("UI_TEST_SCALE_ROTATE_3");
 
     Paint paint;
     paint.SetStrokeWidth(20); // 20: StrokeWidth
@@ -144,7 +148,7 @@ void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_Canvas_003()
 
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_UIBoxProgress_004()
 {
-    SetUpLabel("UIBoxProgress组件旋转 ");
+    SetUpLabel("UIBoxProgress组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_4");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     list_->Add(group);
@@ -155,12 +159,13 @@ void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_UIBoxProgress_004()
     boxProgress_->SetValue(80); // 80: value
     boxProgress_->SetBackgroundStyle(STYLE_BACKGROUND_OPA, OPA_OPAQUE);
     boxProgress_->SetBackgroundStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
+    boxProgress_->SetViewId("UI_TEST_SCALE_ROTATE_4");
     group->Add(boxProgress_);
 }
 
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_UICircleProgress_005()
 {
-    SetUpLabel("UICircleProgress组件旋转 ");
+    SetUpLabel("UICircleProgress组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_5");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     list_->Add(group);
@@ -171,11 +176,12 @@ void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_UICircleProgress_005()
     circleProgress_->SetValue(20);                  // 20: value
     circleProgress_->SetStyle(STYLE_BACKGROUND_OPA, OPA_OPAQUE);
     circleProgress_->SetStyle(STYLE_BACKGROUND_COLOR, Color::Yellow().full);
+    circleProgress_->SetViewId("UI_TEST_SCALE_ROTATE_5");
     group->Add(circleProgress_);
 }
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_UIDigitalClock_006()
 {
-    SetUpLabel("UIDigitalClock组件旋转 ");
+    SetUpLabel("UIDigitalClock组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_6");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     list_->Add(group);
@@ -183,12 +189,13 @@ void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_UIDigitalClock_006()
     dClock_->SetPosition(10, 10, 150, 150);             // 10: x 10:y 150: width 150: height
     dClock_->SetFont(DEFAULT_VECTOR_FONT_FILENAME, 30); // 30: font size
     dClock_->SetTime24Hour(7, 25, 50);                  // 7: hour, 25: minute, 50: second
+    dClock_->SetViewId("UI_TEST_SCALE_ROTATE_6");
     group->Add(dClock_);
 }
 
 void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_Group_007()
 {
-    SetUpLabel("UIViewGroup组件旋转 ");
+    SetUpLabel("UIViewGroup组件旋转 ", "UI_TEST_SCALE_ROTATE_LABLE_7");
     UIViewGroup* group = new UIViewGroup();
     group->SetPosition(0, 0, GROUP_WIDHT, GROUP_HEIGHT);
     list_->Add(group);
@@ -208,6 +215,7 @@ void UITestViewScaleRotate::UIKit_View_Scale_Rotate_Test_Group_007()
     UILabelButton* button = new UILabelButton();
     button->SetPosition(10, 100, 200, 50); // 10: x 100:y 200: width 50: height
     button->SetText("test ViewGroup");
+    button->SetViewId("UI_TEST_SCALE_ROTATE_7");
     group1_->Add(button);
 }
 } // namespace OHOS
