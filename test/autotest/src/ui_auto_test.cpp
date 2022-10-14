@@ -24,13 +24,9 @@
 #include "ui_test_group.h"
 
 namespace OHOS {
-UIAutoTest::UIAutoTest()
-{
-}
+UIAutoTest::UIAutoTest() {}
 
-UIAutoTest::~UIAutoTest()
-{
-}
+UIAutoTest::~UIAutoTest() {}
 
 void UIAutoTest::Reset(std::string testID) const
 {
@@ -89,6 +85,22 @@ void UIAutoTest::ClickViewById(const char* id) const
     CompareTools::WaitSuspend();
 }
 
+void UIAutoTest::PressViewById(const char* id) const
+{
+    if (id == nullptr) {
+        return;
+    }
+    UIView* view = RootView::GetInstance()->GetChildById(id);
+    if (view == nullptr) {
+        return;
+    }
+    Point point;
+    point.x = view->GetOrigRect().GetX();
+    point.y = view->GetOrigRect().GetY();
+    EventInjector::GetInstance()->SetLongPressEvent(point);
+    CompareTools::WaitSuspend();
+}
+
 void UIAutoTest::DragViewToHead(const char* id) const
 {
     if (id == nullptr) {
@@ -101,11 +113,11 @@ void UIAutoTest::DragViewToHead(const char* id) const
     Point startPoint;
     startPoint.x = view->GetOrigRect().GetX();
     startPoint.y = view->GetOrigRect().GetY();
-
+    
     Point endPoint;
-    endPoint.x = 100; // 100 :end point x position;
-    endPoint.y = 100; // 100 :end point y position;
-    EventInjector::GetInstance()->SetDragEvent(startPoint, endPoint, 300); // 300: drag time
+    endPoint.x = 100;                                                      // 100 :end point x position;
+    endPoint.y = 60;                                                       // 100 :end point y position;
+    EventInjector::GetInstance()->SetDragEvent(startPoint, endPoint, 100); // 300: drag time
     CompareTools::WaitSuspend();
 }
 
@@ -125,7 +137,7 @@ void UIAutoTest::DrageToView(const char* id, int16_t x, int16_t y) const
     Point endPoint;
     endPoint.x = x;
     endPoint.y = y;
-    EventInjector::GetInstance()->SetDragEvent(startPoint, endPoint, 300); // 300: drag time
+    EventInjector::GetInstance()->SetDragEvent(startPoint, endPoint, 100); // 300: drag time
     CompareTools::WaitSuspend();
 }
 
@@ -181,10 +193,11 @@ void UIAutoTest::OnTestOneStep(TestSteps step, std::string className, size_t ste
         if (step.eventValue.size() < EVENT_VALUE_SIZE_TWO) {
             return;
         }
-
         int16_t x = static_cast<int16_t>(step.eventValue[0]);
         int16_t y = static_cast<int16_t>(step.eventValue[1]);
         DrageToView(step.viewID.c_str(), x, y);
+    } else if (step.eventID == TestEventID::TEST_PRESS_EVENT) {
+        PressViewById(step.viewID.c_str());
     }
 
     if (step.saveCheckPoint) {
@@ -211,11 +224,10 @@ void UIAutoTest::OnSaveFile(std::string className, std::string viewID, size_t st
     std::string filePath;
     std::shared_ptr<TestConfigInfo> config = AutoTestManager::GetInstance()->GetConfigInfo();
     if (config->testMode == TestMode::TEST_MODE_BASE) {
-        filePath =  config->baseDir + fileName;
+        filePath = config->baseDir + fileName;
     } else if (config->testMode == TestMode::TEST_MODE_RUN) {
-        filePath =  config->runDir + fileName;
+        filePath = config->runDir + fileName;
     }
-
     printf("OnSaveFile, filePath = %s\n", filePath.c_str());
     fflush(stdout);
     CompareTools::SaveFile(filePath.c_str(), strlen(filePath.c_str()));
@@ -223,7 +235,6 @@ void UIAutoTest::OnSaveFile(std::string className, std::string viewID, size_t st
 
 void UIAutoTest::TestComplete() const
 {
-    printf("UIAutoTest::TestComplete");
     fflush(stdout);
     std::shared_ptr<TestConfigInfo> config = AutoTestManager::GetInstance()->GetConfigInfo();
     if (!config) {
@@ -232,14 +243,47 @@ void UIAutoTest::TestComplete() const
     if (config->testMode != TestMode::TEST_MODE_RUN) {
         return;
     }
-
     config->logDir += OnGetSystemTime();
     config->logDir += ".txt";
     printf("UIAutoTest::OnCompareFile--logDir=[%s]\n", config->logDir.c_str());
     fflush(stdout);
-    for (auto it: fileNames_) {
-        OnCompareFile(it);
+    for (auto it : fileNames_) {
+        if (it.find("Rotate") == std::string::npos) {
+            OnCompareFile(it);
+        }
+        else {
+            OnCompareRotateFile(it);
+        }
     }
+}
+
+void UIAutoTest::OnCompareRotateFile(std::string fileName) const
+{
+    std::shared_ptr<TestConfigInfo> config = AutoTestManager::GetInstance()->GetConfigInfo();
+    if (!config) {
+        return;
+    }
+    std::string log;
+
+    int pos_a = fileName.find_last_of("@");
+    int pos_d  = fileName.find_last_of(".");
+
+    int num = stoi(fileName.substr(pos_a+1, pos_d)+'\0');
+    if (num == 0) {
+        log = "[SUCESS]:[" + fileName + "]\n";
+    }
+    else {
+        std::string fileBasePath = config->baseDir + fileName;
+        std::string fileRunPath = config->runDir + fileName.substr(0, pos_a+1) + std::to_string(num-1) + ".bmp";
+        if (CompareTools::CompareFile(fileBasePath.c_str(), fileRunPath.c_str())) {
+            printf("UIAutoTest::OnCompareFile----different\n");
+            fflush(stdout);
+            log = "[FAIL]:[" + fileName + "]\n";
+        } else {
+            log = "[SUCESS]:[" + fileName + "]\n";
+        }
+    }
+    CompareTools::SaveResultLog(config->logDir.c_str(), log.c_str(), strlen(log.c_str()));
 }
 
 void UIAutoTest::OnCompareFile(std::string fileName) const
@@ -248,7 +292,6 @@ void UIAutoTest::OnCompareFile(std::string fileName) const
     if (!config) {
         return;
     }
-
     std::string fileBasePath = config->baseDir + fileName;
     std::string fileRunPath = config->runDir + fileName;
 
@@ -267,7 +310,7 @@ void UIAutoTest::OnCompareFile(std::string fileName) const
 std::string UIAutoTest::OnGetSystemTime() const
 {
     time_t t = time(0);
-    char tmp[32] = { 0 };
+    char tmp[32] = {0};
     strftime(tmp, sizeof(tmp), "%Y-%m-%d-%H-%M-%S", localtime(&t));
 
     std::string loctime = tmp;

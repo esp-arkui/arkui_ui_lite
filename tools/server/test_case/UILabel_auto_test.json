@@ -1,0 +1,143 @@
+{
+	"testInfo": [
+        {
+            "className": "UILabel_Test_01",
+            "pageNav": ["UILabel"],
+            "testSteps": [
+                {
+                    "viewID": "fontSize=18",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "fontSize=26",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "fontSize=30",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "alignLeft",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "alignMiddle",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "alignRight",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "white",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "changeColor",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "halfOpa",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "cutdown",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "ellipsis",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "rotate",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        },
+        {
+            "className": "UILabel_Test_02",
+            "pageNav": ["UILabel"],
+            "testSteps": [ 
+                {
+                    "viewID": "singleLine",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "doubleLine",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "alignTop",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "alignCenter",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "alignDown",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "leftToRight",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "rightToLeft",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        },
+        {
+            "className": "UILabel_Test_03",
+            "pageNav": ["UILabel"],
+            "testSteps": [
+                {
+                    "viewID": "white",
+                    "eventID": 1,
+                    "eventValue": [100,60],
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "white",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "dynamicHeight",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "doubleLine",
+                    "eventID": 0,
+                    "saveCheckPoint": false
+                },
+                {
+                    "viewID": "dynamicWidth",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        }
+	]
+}

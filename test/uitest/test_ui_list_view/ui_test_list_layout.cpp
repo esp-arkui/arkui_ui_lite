@@ -132,6 +132,7 @@ void UITestListLayout::UIKit_List_Vertical_Remove_Test_Auto_Size_002()
     UILabel* label = GetTitleLabel("UILIst高度自适应 RemoveAll");
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
+    label->SetViewId(UI_TEST_LIST_LAYOUT_1);
 
     ListLayout* list = new ListLayout(ListLayout::VERTICAL);
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
@@ -159,6 +160,7 @@ void UITestListLayout::UIKit_List_Hor_Add_Test_Auto_Size_001()
     UILabel* label = GetTitleLabel("UILIst宽度自适应 Add Insert");
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
+    label->SetViewId(UI_TEST_LIST_LAYOUT_2);
 
     ListLayout* list = new ListLayout(ListLayout::HORIZONTAL);
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
@@ -185,6 +187,7 @@ void UITestListLayout::UIKit_List_Hor_Remove_Test_Auto_Size_001()
     UILabel* label = GetTitleLabel("UILIst宽度自适应 Remove");
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
+    label->SetViewId(UI_TEST_LIST_LAYOUT_3);
 
     ListLayout* list = new ListLayout(ListLayout::HORIZONTAL);
     list->SetStyle(STYLE_BACKGROUND_COLOR, Color::Red().full);
@@ -210,6 +213,7 @@ void UITestListLayout::UIKit_List_Hor_Remove_Test_Auto_Size_002()
         return;
     }
     UILabel* label = GetTitleLabel("UILIst宽度自适应 RemoveAll");
+    label->SetViewId(UI_TEST_LIST_LAYOUT_4);
     container_->Add(label);
     label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_ + g_blank);
 

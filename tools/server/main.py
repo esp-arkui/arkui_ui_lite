@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import time
+from tracemalloc import start
 import schedule
 from tcp_server import TestServer
 
@@ -23,6 +24,9 @@ def main():
     tcp_servr.start()
     print(tcp_servr.config)
     start_test_time = tcp_servr.config['start_test_time']
+    
+    start_test_time = time.strftime('%H:%M') + ':' + str(time.localtime().tm_sec + 2)
+
     schedule.every().day.at(start_test_time).do(tcp_servr.start_client_process)
 
     while True:

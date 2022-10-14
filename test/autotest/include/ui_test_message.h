@@ -25,8 +25,9 @@
 
 namespace OHOS {
 enum TestEventID : uint8_t {
-    TEST_CLICK_EVENT,
-    TEST_MOVE_EVENT,
+    TEST_CLICK_EVENT, // click event, click a view by viewId.
+    TEST_MOVE_EVENT, // Drag event, drag a view to target point based on viewId.
+    TEST_PRESS_EVENT, // press event, long press a view by viewId.
 };
 
 enum TestMode: uint8_t {

@@ -21,6 +21,10 @@
 #include "ui_test.h"
 
 namespace OHOS {
+constexpr char* UI_TEST_LIST_LAYOUT_1 = "autoHeightRemoveAll";
+constexpr char* UI_TEST_LIST_LAYOUT_2 = "autoWidthAddInsert";
+constexpr char* UI_TEST_LIST_LAYOUT_3 = "autoWidthRemove";
+constexpr char* UI_TEST_LIST_LAYOUT_4 = "autoWidthRemoveAll";
 class UITestListLayout : public UITest {
 public:
     UITestListLayout() {}

@@ -21,6 +21,10 @@
 #include "ui_test.h"
 
 namespace OHOS {
+constexpr char* UI_TEST_UI_SCROLL_LABLE_1 = "scrollLable1";
+constexpr char* UI_TEST_UI_SCROLL_LABLE_2 = "scrollLable2";
+constexpr char* UI_TEST_UI_SCROLL_LABLE_3 = "scrollLable3";
+
 class UITestUIScrollView : public UITest {
 public:
     UITestUIScrollView() {}

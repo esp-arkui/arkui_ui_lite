@@ -24,6 +24,8 @@
 namespace OHOS {
 namespace {
     constexpr char* UI_TEST_RENDER_ID = "Render";
+    constexpr char* UI_TEST_RENDER_1 = "renderLong";
+    constexpr char* UI_TEST_RENDER_2 = "renderShort";
     constexpr char* UI_TEST_RENDER_UPDATA_BUTTON_ID_01 = "test_render_updata_buttin_01";
 }
 class UITestRender : public UITest, public UIView::OnClickListener {

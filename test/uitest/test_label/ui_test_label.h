@@ -22,6 +22,29 @@
 #include "ui_test.h"
 
 namespace OHOS {
+
+constexpr char* UI_TEST_FONT_SIZE_1 = "fontSize=18";
+constexpr char* UI_TEST_FONT_SIZE_2 = "fontSize=26";
+constexpr char* UI_TEST_FONT_SIZE_3 = "fontSize=30";
+constexpr char* UI_TEST_LINE_NUM_1 = "singleLine";
+constexpr char* UI_TEST_LINE_NUM_2 = "doubleLine";
+constexpr char* UI_TEST_HOR_ALIGN_1 = "alignLeft";
+constexpr char* UI_TEST_HOR_ALIGN_2 = "alignMiddle";
+constexpr char* UI_TEST_HOR_ALIGN_3 = "alignRight";
+constexpr char* UI_TEST_VER_ALIGN_1 = "alignTop";
+constexpr char* UI_TEST_VER_ALIGN_2 = "alignCenter";
+constexpr char* UI_TEST_VER_ALIGN_3 = "alignDown";
+constexpr char* UI_TEST_COLOR_1 = "white";
+constexpr char* UI_TEST_COLOR_2 = "changeColor";
+constexpr char* UI_TEST_COLOR_3 = "halfOpa";
+constexpr char* UI_TEST_DIRECTION_1 = "leftToRight";
+constexpr char* UI_TEST_DIRECTION_2 = "rightToLeft";
+constexpr char* UI_TEST_BEYOND_1 = "cutdown";
+constexpr char* UI_TEST_BEYOND_2 = "ellipsis";
+constexpr char* UI_TEST_BEYOND_3 = "rotate";
+constexpr char* UI_TEST_LABEL_SIZE_1 = "dynamicWidth";
+constexpr char* UI_TEST_LABEL_SIZE_2 = "dynamicHeight";
+
 class UITestLabel : public UITest, public UIView::OnClickListener {
 public:
     UITestLabel() {}
@@ -68,7 +91,7 @@ private:
 
     void InnerTestTitle(const char* title);
     UILabelButton* SetUpButton(const char* title, int16_t x, int16_t y, UIViewGroup* uiViewGroup,
-        int16_t width = 80, int16_t height = 40)
+        const char* id = nullptr, int16_t width = 80, int16_t height = 40)
     {
         if (uiViewGroup == nullptr) {
             return nullptr;
@@ -78,6 +101,7 @@ private:
         btn->SetText(title);
         btn->SetFont(DEFAULT_VECTOR_FONT_FILENAME, BUTTON_LABEL_SIZE);
         btn->SetOnClickListener(this);
+        btn->SetViewId(id);
         btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::RELEASED);
         btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::PRESSED);
         btn->SetStyleForState(STYLE_BORDER_RADIUS, BUTTON_STYLE_BORDER_RADIUS_VALUE, UIButton::INACTIVE);

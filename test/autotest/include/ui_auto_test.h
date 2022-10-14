@@ -34,6 +34,7 @@ public:
 
     void EnterSubMenu(const char* id) const;
     void ClickViewById(const char* id) const;
+    void PressViewById(const char* id) const;
     void DragViewToHead(const char* id) const;
     bool CompareByBinary(const char* fileName) const;
     void DrageToView(const char* id, int16_t x, int16_t y) const;
@@ -44,7 +45,9 @@ private:
     void OnTestBySteps(std::vector<TestSteps> steps, std::string className);
     void OnTestOneStep(TestSteps step, std::string className, size_t stepIndex);
     void OnSaveFile(std::string className, std::string viewID, size_t stepIndex);
+    void OnCompareRotateFile(std::string fileName) const;
     void OnCompareFile(std::string fileName) const;
+    void SleepMs(uint16_t ms) const;
     std::string OnGetSystemTime() const;
 
 private:

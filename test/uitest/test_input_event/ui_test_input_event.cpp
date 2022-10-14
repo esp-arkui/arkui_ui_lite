@@ -277,78 +277,84 @@ const UIView* UITestInputEvent::GetTestView()
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Simple_Event_001()
 {
-    InnerTest("可点击对象事件测试 ", true, false, false);
+    InnerTest("可点击对象事件测试 ", true, false, false, UI_TEST_INPUT_EVENT_1);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Simple_Event_002()
 {
-    InnerTest("不可点击对象事件测试 ", false, false, false);
+    InnerTest("不可点击对象事件测试 ", false, false, false, UI_TEST_INPUT_EVENT_2);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Drag_Event_001()
 {
-    InnerTest("可点击可拖拽dragparent测试 ", true, true, true);
+    InnerTest("可点击可拖拽dragparent测试 ", true, true, true, UI_TEST_INPUT_EVENT_3);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Drag_Event_002()
 {
-    InnerTest("可点击可拖拽非dragparent测试 ", true, true, false);
+    InnerTest("可点击可拖拽非dragparent测试 ", true, true, false, UI_TEST_INPUT_EVENT_4);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Drag_Event_003()
 {
-    InnerTest("不可点击可拖拽测试 ", false, true, false);
+    InnerTest("不可点击可拖拽测试 ", false, true, false, UI_TEST_INPUT_EVENT_5);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_001()
 {
     positionY_ = 0;
-    InnerBubbleTest("可点击有监听事件不消费冒泡测试 ", true, true, true, false);
+    InnerBubbleTest("可点击有监听事件不消费冒泡测试 ", true, true, true, false, UI_TEST_INPUT_LISTENER_1);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_002()
 {
-    InnerBubbleTest("可点击有监听事件消费冒泡测试 ", true, true, true, true);
+    InnerBubbleTest("可点击有监听事件消费冒泡测试 ", true, true, true, true, UI_TEST_INPUT_LISTENER_2);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_003()
 {
-    InnerBubbleTest("可点击无监听事件不消费冒泡测试 ", true, true, false, false);
+    InnerBubbleTest("可点击无监听事件不消费冒泡测试 ", true, true, false, false, UI_TEST_INPUT_LISTENER_3);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_004()
 {
-    InnerBubbleTest("不可点击有监听事件消费冒泡测试 ", false, false, true, true);
+    InnerBubbleTest("不可点击有监听事件消费冒泡测试 ", false, false, true, true, UI_TEST_INPUT_LISTENER_4);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_005()
 {
-    InnerBubbleDragTest("子父可拖拽有监听事件不消费冒泡测试 ", true, true, true, false);
+    InnerBubbleDragTest("子父可拖拽有监听事件不消费冒泡测试 ",
+                        true, true, true, false, UI_TEST_INPUT_LISTENER_5);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_006()
 {
-    InnerBubbleDragTest("子父可拖拽有监听事件消费冒泡测试 ", true, true, true, true);
+    InnerBubbleDragTest("子父可拖拽有监听事件消费冒泡测试 ",
+                        true, true, true, true, UI_TEST_INPUT_LISTENER_6);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_007()
 {
-    InnerBubbleDragTest("子父可拖拽无监听事件消费冒泡测试 ", true, true, false, true);
+    InnerBubbleDragTest("子父可拖拽无监听事件消费冒泡测试 ",
+                        true, true, false, true, UI_TEST_INPUT_LISTENER_7);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_008()
 {
-    InnerBubbleDragTest("子父不可拖拽有监听事件消费冒泡测试 ", false, false, true, true);
+    InnerBubbleDragTest("子父不可拖拽有监听事件消费冒泡测试 ",
+                        false, false, true, true, UI_TEST_INPUT_LISTENER_8);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_009()
 {
-    InnerBubbleDragTest("子不可拖拽父可拖拽有监听事件消费冒泡测试 ", false, true, true, true);
+    InnerBubbleDragTest("子不可拖拽父可拖拽有监听事件消费冒泡测试 ",
+                        false, true, true, true, UI_TEST_INPUT_LISTENER_9);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Bubble_010()
 {
-    InnerBubbleDragTest("子不可拖拽父可拖拽有监听事件不消费冒泡测试 ", false, true, true, false);
+    InnerBubbleDragTest("子不可拖拽父可拖拽有监听事件不消费冒泡测试 ",
+                        false, true, true, false, UI_TEST_INPUT_LISTENER_10);
 }
 
 void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Key_Event_001()
@@ -361,6 +367,7 @@ void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_Key_Event_001()
             (Screen::GetInstance().GetWidth() / 2 - TEXT_DISTANCE_TO_LEFT_SIDE), // 2: half of screen width;
             128);                                                                // 128: height
         container_->Add(uiViewGroup);
+        container_->SetViewId(UI_TEST_INPUT_EVENT_6);
 
         UILabel* label = new UILabel();
         uiViewGroup->Add(label);
@@ -388,6 +395,7 @@ void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_InVisible_Event_001()
         // 2: half of screen width; 36: decrease x-coordinate; 90: y-coordinate
         uiViewGroup->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, 480, 128); // 480: width; 128: height
         container_->Add(uiViewGroup);
+        uiViewGroup->SetViewId(UI_TEST_INPUT_EVENT_7);
         UILabel* label = new UILabel();
         uiViewGroup->Add(label);
         // 2: half of screen width;
@@ -430,7 +438,7 @@ void UITestInputEvent::UIKit_Pointer_Input_Test_Dispatch_InVisible_Event_001()
     }
 }
 
-void UITestInputEvent::InnerTest(const char* title, bool touchable, bool draggable, bool dragParent)
+void UITestInputEvent::InnerTest(const char* title, bool touchable, bool draggable, bool dragParent, const char* viewId)
 {
     if (container_ != nullptr) {
         UILabel* label = new UILabel();
@@ -447,6 +455,7 @@ void UITestInputEvent::InnerTest(const char* title, bool touchable, bool draggab
         testView->SetTouchable(touchable);
         testView->SetDraggable(draggable);
         testView->SetDragParentInstead(dragParent);
+        testView->SetViewId(viewId);
         UILabel* label1 = new UILabel();
         container_->Add(label1);
         label1->SetPosition(positionX_ + TEST_VIEW_GAP, positionY_ + 2 * GAP, TEXT_W, TEXT_H); // 2: double GAP
@@ -460,7 +469,8 @@ void UITestInputEvent::InnerBubbleTest(const char* title,
                                        bool touchable,
                                        bool draggable,
                                        bool hasListener,
-                                       bool isBubble)
+                                       bool isBubble,
+                                       const char* viewId)
 {
     if (container_ != nullptr) {
         UILabel* label = new UILabel();
@@ -478,6 +488,7 @@ void UITestInputEvent::InnerBubbleTest(const char* title,
         parentContainer->SetPosition(Screen::GetInstance().GetWidth() / 2 + TEXT_DISTANCE_TO_LEFT_SIDE, positionY_,
                                      Screen::GetInstance().GetWidth() - TEXT_DISTANCE_TO_LEFT_SIDE, ITEM_H);
         container_->Add(parentContainer);
+        parentContainer->SetViewId(viewId);
         TestView* testView = new TestView();
         parentContainer->Add(testView);
         testView->SetPosition(0, 0, TEST_VIEW_W, TEST_VIEW_H);
@@ -530,7 +541,8 @@ void UITestInputEvent::InnerBubbleDragTest(const char* title,
                                            bool childDraggable,
                                            bool parentDraggable,
                                            bool hasListener,
-                                           bool isBubble)
+                                           bool isBubble,
+                                           const char* viewId)
 {
     int32_t itemH1 = ITEM_H * 2; // 2 times of ITEM_H
     int32_t itemH2 = itemH1 + ITEM_H;
@@ -552,6 +564,7 @@ void UITestInputEvent::InnerBubbleDragTest(const char* title,
         parentScroll->SetPosition(halfScreenWith + TEXT_DISTANCE_TO_LEFT_SIDE, positionY_, itemH1, itemH1);
         parentScroll->SetThrowDrag(parentDraggable);
         parentScroll->SetDraggable(parentDraggable);
+        parentScroll->SetViewId(viewId);
         container_->Add(parentScroll);
 
         OHOS::TestUIScrollView* childScroll = new TestUIScrollView();

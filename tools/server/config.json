@@ -1,25 +1,15 @@
 {
-    "start_test_time": "11:08",
+    "start_test_time": "10:08",
     "testGroup":[
         {
             "test_mode" : 2,
-            "process_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/build-simulator-Desktop_Qt_6_3_1_MinGW_64_bit-Debug/libs/",
+            "process_dir": "./tools/qt/build-simulator-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/libs/",
             "process_name": "UITest.exe",
-            "base_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/simulator/config/auto_test/A/",
-            "run_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/simulator/config/auto_test/B/",
-            "log_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/simulator/config/auto_test/",
-            "test_case": [],
-            "test_case_dir": "D:/WorkSpace/Pyhton_demo/test_case"
-        }, 
-        {
-            "test_mode" : 2,  
-            "process_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/build-simulator-Desktop_Qt_6_3_1_MinGW_64_bit-Debug/libs/",
-            "process_name": "UITest.exe",
-            "base_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/simulator/config/auto_test/A/",
-            "run_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/simulator/config/auto_test/B/",
-            "log_dir": "D:/WorkSpace/OpenHarmony/foundation/graphic/ui/tools/qt/simulator/config/auto_test/",
-            "test_case": [],
-            "test_case_dir": "D:/WorkSpace/Pyhton_demo/test_case"
+            "base_dir": "./tools/qt/build-simulator-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/autotest/auto_test_result_pic/A/",
+            "run_dir": "./tools/qt/build-simulator-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/autotest/auto_test_result_pic/B/",
+            "log_dir": "./tools/qt/build-simulator-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/autotest/auto_test_result_pic/",
+            "test_case": ["clip_auto_test.json"],
+            "test_case_dir": "./tools/server/test_case"
         }
     ]
 }

@@ -218,6 +218,7 @@ void UITestRotateInput::UIKit_Rotate_Event_List_001()
     list_->SetReboundSize(50);  // 50 : rebound size
     list_->SetIntercept(true);
     list_->SetLoopState(true);
+    list_->SetViewId(UI_TEST_UILIST_1);
     container_->Add(list_);
     SetLastPos(list_);
 }
@@ -228,6 +229,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Scroll_View_002()
         return;
     }
     UILabel* label = GetTitleLabel("UIScrollView Test");
+    label->SetViewId(UI_TEST_UISCROLL_1);
     container_->Add(label);
     label->SetPosition(0, lastY_ + g_blank);
     if (scroll_ == nullptr) {
@@ -247,6 +249,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Scroll_View_002()
     scroll_->SetOnTouchListener(this);
     scroll_->SetReboundSize(50); // 50 : rebound size
     scroll_->SetIntercept(true);
+    scroll_->SetViewId(UI_TEST_UISCROLL_2);
     container_->Add(scroll_);
     SetTestLabelButton(label, scroll_);
     SetLastPos(scroll_);
@@ -258,6 +261,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Swipe_View_003()
         return;
     }
     UILabel* label = GetTitleLabel("UISwipeView Test");
+    label->SetViewId(UI_TEST_UISWIPE_1);
     container_->Add(label);
     label->SetPosition(0, lastY_ + g_blank);
     if (swipe_ == nullptr) {
@@ -297,6 +301,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Swipe_View_003()
     swipe_->SetOnTouchListener(this);
     swipe_->SetRotateFactor(30); // 30 : rotate factor
     swipe_->SetIntercept(true);
+    swipe_->SetViewId(UI_TEST_UISWIPE_2);
     container_->Add(swipe_);
     SetTestLabelButton(label, swipe_);
     SetLastPos(swipe_);
@@ -308,6 +313,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Slider_004()
         return;
     }
     UILabel* label = GetTitleLabel("UISlider Test");
+    label->SetViewId(UI_TEST_UISLIDER_1);
     container_->Add(label);
     label->SetPosition(0, lastY_ + g_blank);
     if (slider_ == nullptr) {
@@ -319,6 +325,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Slider_004()
     slider_->SetDirection(UISlider::Direction::DIR_BOTTOM_TO_TOP);
     slider_->SetStyle(STYLE_BACKGROUND_COLOR, Color::Gray().full);
     slider_->SetOnTouchListener(this);
+    slider_->SetViewId(UI_TEST_UISLIDER_2);
     container_->Add(slider_);
     SetLastPos(slider_);
 }
@@ -329,6 +336,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Time_Picker_005()
         return;
     }
     UILabel* label = GetTitleLabel("UITimePicker Test");
+    label->SetViewId(UI_TEST_UITIME_PICKER_1);
     container_->Add(label);
     label->SetPosition(0, lastY_ + g_blank);
     if (timePicker_ == nullptr) {
@@ -359,6 +367,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Time_Picker_005()
     }
     static_cast<UIList*>(second)->SetRotateFactor(5); // 5: rotate factor
     second->SetOnTouchListener(this);
+    timePicker_->SetViewId(UI_TEST_UITIME_PICKER_2);
 
     container_->Add(timePicker_);
     SetLastPos(timePicker_);
@@ -370,6 +379,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Picker_006()
         return;
     }
     UILabel* label = GetTitleLabel("UIPicker Test");
+    label->SetViewId(UI_TEST_UIPICKER_1);
     container_->Add(label);
     label->SetPosition(0, lastY_ + g_blank);
     if (picker_ == nullptr) {
@@ -380,6 +390,7 @@ void UITestRotateInput::UIKit_Rotate_Event_Picker_006()
     picker_->SetValues(g_pickerRange, sizeof(g_pickerRange) / sizeof(g_pickerRange[0]));
     picker_->SetOnTouchListener(this);
     picker_->SetRotateFactor(5); // 5: rotate factor
+    picker_->SetViewId(UI_TEST_UIPICKER_2);
     container_->Add(picker_);
     SetLastPos(picker_);
 }

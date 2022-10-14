@@ -33,6 +33,21 @@
 #include "ui_test.h"
 
 namespace OHOS {
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_1 = "viewScaleRotateLabel_1";
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_2 = "viewScaleRotateLabel_2";
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_3 = "viewScaleRotateLabel_3";
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_4 = "viewScaleRotateLabel_4";
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_5 = "viewScaleRotateLabel_5";
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_6 = "viewScaleRotateLabel_6";
+constexpr char* UI_TEST_SCALE_ROTATE_LABLE_7 = "viewScaleRotateLabel_7";
+constexpr char* UI_TEST_SCALE_ROTATE_1 = "viewScaleRotate_1";
+constexpr char* UI_TEST_SCALE_ROTATE_2 = "viewScaleRotate_2";
+constexpr char* UI_TEST_SCALE_ROTATE_3 = "viewScaleRotate_3";
+constexpr char* UI_TEST_SCALE_ROTATE_4 = "viewScaleRotate_4";
+constexpr char* UI_TEST_SCALE_ROTATE_5 = "viewScaleRotate_5";
+constexpr char* UI_TEST_SCALE_ROTATE_6 = "viewScaleRotate_6";
+constexpr char* UI_TEST_SCALE_ROTATE_7 = "viewScaleRotate_7";
+
 class UITestViewScaleRotate : public UITest, public AnimatorCallback {
 public:
     UITestViewScaleRotate() : animator_(this, nullptr, 1000, true) // 1000: the animator duration time is 1000ms
@@ -58,7 +73,7 @@ private:
     const Vector2<float> VIEW_CENTER = {75, 75};
     const Vector2<float> GROUP_CENTER = {200, 200};
 
-    void SetUpLabel(const char* title) const;
+    void SetUpLabel(const char* title, const char* viewId) const;
 
     UIScrollView* container_ = nullptr;
     ListLayout* list_ = nullptr;

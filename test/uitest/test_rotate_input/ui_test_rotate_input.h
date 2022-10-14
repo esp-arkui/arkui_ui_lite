@@ -25,6 +25,17 @@
 
 #if ENABLE_ROTATE_INPUT
 namespace OHOS {
+constexpr char* UI_TEST_UILIST_1 = "UIList";
+constexpr char* UI_TEST_UISCROLL_1 = "UIScrollLabel";
+constexpr char* UI_TEST_UISCROLL_2 = "UIScroll";
+constexpr char* UI_TEST_UISWIPE_1 = "UISwipeLabel";
+constexpr char* UI_TEST_UISWIPE_2 = "UISwipe";
+constexpr char* UI_TEST_UISLIDER_1 = "UISliderLabel";
+constexpr char* UI_TEST_UISLIDER_2 = "UISlider";
+constexpr char* UI_TEST_UITIME_PICKER_1 = "timePickerLabel";
+constexpr char* UI_TEST_UITIME_PICKER_2 = "timePicker";
+constexpr char* UI_TEST_UIPICKER_1 = "UIPickerLabel";
+constexpr char* UI_TEST_UIPICKER_2 = "UIPicker";
 class UITestRotateInput : public UITest, UIView::OnTouchListener {
 public:
     UITestRotateInput() {}

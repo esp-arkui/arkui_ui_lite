@@ -24,6 +24,24 @@
 #include "ui_test.h"
 
 namespace OHOS {
+constexpr char* UI_TEST_INPUT_EVENT_1 = "leftView1";
+constexpr char* UI_TEST_INPUT_EVENT_2 = "leftView2";
+constexpr char* UI_TEST_INPUT_EVENT_3 = "leftView3";
+constexpr char* UI_TEST_INPUT_EVENT_4 = "leftView4";
+constexpr char* UI_TEST_INPUT_EVENT_5 = "leftView5";
+constexpr char* UI_TEST_INPUT_EVENT_6 = "leftView6";
+constexpr char* UI_TEST_INPUT_EVENT_7 = "leftView7";
+constexpr char* UI_TEST_INPUT_LISTENER_1 = "rightView1";
+constexpr char* UI_TEST_INPUT_LISTENER_2 = "rightView2";
+constexpr char* UI_TEST_INPUT_LISTENER_3 = "rightView3";
+constexpr char* UI_TEST_INPUT_LISTENER_4 = "rightView4";
+constexpr char* UI_TEST_INPUT_LISTENER_5 = "rightView5";
+constexpr char* UI_TEST_INPUT_LISTENER_6 = "rightView6";
+constexpr char* UI_TEST_INPUT_LISTENER_7 = "rightView7";
+constexpr char* UI_TEST_INPUT_LISTENER_8 = "rightView8";
+constexpr char* UI_TEST_INPUT_LISTENER_9 = "rightView9";
+constexpr char* UI_TEST_INPUT_LISTENER_10 = "rightView10";
+
 class TestKeyInputListener : public RootView::OnKeyActListener {
 public:
     explicit TestKeyInputListener(UILabel* label) : label_(label) {}
@@ -260,13 +278,15 @@ public:
 private:
     UIScrollView* container_ = nullptr;
     TestKeyInputListener* keyListener_ = nullptr;
-    void InnerTest(const char* title, bool touchable, bool draggable, bool dragParent);
-    void InnerBubbleTest(const char* title, bool touchable, bool draggable, bool hasListener, bool isBubble);
+    void InnerTest(const char* title, bool touchable, bool draggable, bool dragParent, const char* viewId = nullptr);
+    void InnerBubbleTest(const char* title, bool touchable, bool draggable, bool hasListener,
+                         bool isBubble, const char* viewId = nullptr);
     void InnerBubbleDragTest(const char* title,
                              bool childDraggable,
                              bool parentDraggable,
                              bool hasListener,
-                             bool isBubble);
+                             bool isBubble,
+                             const char* viewId = nullptr);
 };
 } // namespace OHOS
 #endif // UI_TEST_INPUT_EVENT_H

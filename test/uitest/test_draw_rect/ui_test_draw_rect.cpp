@@ -472,7 +472,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderNoRadius_001", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderNoRadius_002", 10); // 10 : offset size
 }
 
 void UITestDrawRect::UIKit_DrawRect_Test_RectBorderRadius_002()
@@ -777,7 +777,7 @@ void UITestDrawRect::UIKit_DrawRect_Test_Rect_001()
     group->Add(view);
 
     container_->Add(group);
-    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_009", 10); // 10 : offset size
+    group->LayoutBottomToSibling("UIKit_DrawRect_Test_RectBorderRadius_011", 10); // 10 : offset size
 }
 
 void UITestDrawRect::UIKit_DrawRect_Test_RectColor_001()

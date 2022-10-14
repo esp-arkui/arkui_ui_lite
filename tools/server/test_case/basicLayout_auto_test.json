@@ -1,0 +1,105 @@
+{
+	"testInfo": [
+        {
+            "className": "UIKitLayoutTestBasicLayout001",
+            "pageNav": ["Basic_Layout"],
+            "testSteps": [
+                {
+                    "viewID": "test_basic_layout_margin_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_padding_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_reset_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_center_of_parent_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_left_of_parent_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_right_of_parent_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_top_of_parent_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_bottom_of_parent_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_left_of_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_right_of_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_top_of_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_bottom_of_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_hor_center_of_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_ver_center_of_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_left_to_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_right_to_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_top_to_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_bottom_to_sibling_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                },
+                {
+                    "viewID": "test_basic_layout_invalid_layout_button",
+                    "eventID": 0,
+                    "saveCheckPoint": true
+                }
+            ]
+        }
+	]
+}
