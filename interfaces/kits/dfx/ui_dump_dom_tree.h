@@ -123,6 +123,7 @@ private:
     void AddNameField(UIViewType type, cJSON* usr) const;
     void AddCommonField(UIView* view, cJSON* usr) const;
     void AddImageViewSpecialField(const UIView* view, cJSON* usr) const;
+    void AddButtonField(const UIView* view, cJSON* usr) const;
     void AddLabelField(const UIView* view, cJSON* usr) const;
     void AddLabelButtonField(const UIView* view, cJSON* usr) const;
     void AddCheckboxField(const UIView* view, cJSON* usr) const;

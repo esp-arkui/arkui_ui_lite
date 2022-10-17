@@ -94,6 +94,10 @@ void UITestDumpDomTree::TearDown()
         delete clickDumpDomListener12_;
         clickDumpDomListener12_ = nullptr;
     }
+    if (clickDumpDomListener13_ != nullptr) {
+        delete clickDumpDomListener13_;
+        clickDumpDomListener13_ = nullptr;
+    }
     positionY_ = 0;
     DeleteChildren(container_);
     container_ = nullptr;
@@ -108,6 +112,7 @@ const UIView* UITestDumpDomTree::GetTestView()
     UIKit_TestDumpDom_004();
     UIKit_TestDumpDom_005();
     UIKit_TestDumpDom_006();
+    UIKit_TestDumpDom_007();
     return container_;
 }
 
@@ -442,7 +447,7 @@ void UITestDumpDomTree::UIKit_TestDumpDom_006()
         group6->SetHeight(250); // 250: height
         group6->SetViewId("dump_group6");
         container_->Add(group6);
-        positionY_ += group6->GetHeight();
+        positionY_ = group6->GetY() + group6->GetHeight();
 
         UILabel* label = GetTitleLabel("dump circle progress");
         label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, TEXT_DISTANCE_TO_TOP_SIDE);
@@ -477,6 +482,41 @@ void UITestDumpDomTree::UIKit_TestDumpDom_006()
         }
         dumpButton->SetOnClickListener(clickDumpDomListener12_);
         group6->Add(dumpButton);
+    }
+}
+
+void UITestDumpDomTree::UIKit_TestDumpDom_007()
+{
+    if (container_ != nullptr) {
+        UIViewGroup* group7 = new UIViewGroup();
+        group7->SetPosition(Screen::GetInstance().GetWidth() / 2, positionY_); // 2: half of screen width
+        group7->SetWidth(Screen::GetInstance().GetWidth() / 2); // 2: half of screen width
+        group7->SetHeight(200); // 200: height
+        group7->SetViewId("dump_group7");
+        container_->Add(group7);
+        positionY_ += group7->GetHeight();
+
+        UILabel* label = GetTitleLabel("dump button");
+        label->SetPosition(TEXT_DISTANCE_TO_LEFT_SIDE, TEXT_DISTANCE_TO_TOP_SIDE);
+        group7->Add(label);
+
+        UIButton* button = new UIButton();
+        button->SetPosition(VIEW_DISTANCE_TO_TOP_SIDE, TEXT_DISTANCE_TO_LEFT_SIDE + label->GetHeight());
+        button->SetWidth(50); // 50: width
+        button->SetHeight(50); // 50: height
+        button->SetImageSrc(BLUE_RGB888_IMAGE_PATH, BLUE_RGB888_IMAGE_PATH);
+        button->SetViewId("dump_button");
+        group7->Add(button);
+
+        UILabelButton* dumpButton = GetLabelButton("dump");
+        dumpButton->SetPosition(170, 73); // 170: x-coordinate, 73: y-coordinate
+        /* dump node here */
+        if (clickDumpDomListener13_ == nullptr) {
+            clickDumpDomListener13_ = static_cast<UIView::OnClickListener*>(
+                new TestBtnOnClickDumpDomListener(static_cast<UIView*>(dumpButton), "dump_button"));
+        }
+        dumpButton->SetOnClickListener(clickDumpDomListener13_);
+        group7->Add(dumpButton);
     }
 }
 
