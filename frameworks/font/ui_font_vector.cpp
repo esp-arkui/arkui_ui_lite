@@ -319,11 +319,7 @@ bool UIFontVector::GetTtfInfoFromTtf(uint8_t ttfId,
     if (fpTtf < 0) {
         return false;
     }
-    int32_t headerLength = lseek(fpTtf, 0, SEEK_END);
-    if (headerLength < 0) {
-        return false;
-    }
-    ttfHeader.len = static_cast<uint32_t>(headerLength);
+    ttfHeader.len = lseek(fpTtf, 0, SEEK_END);
     if (ttfHeader.len > ttfBufferSize) {
         close(fpTtf);
         return false;
@@ -334,7 +330,7 @@ bool UIFontVector::GetTtfInfoFromTtf(uint8_t ttfId,
         return false;
     }
     ret = read(fpTtf, reinterpret_cast<void*>(ttfBuffer), ttfHeader.len);
-    if (ret != headerLength) {
+    if (ret != ttfHeader.len) {
         close(fpTtf);
         return false;
     }
@@ -400,10 +396,7 @@ bool UIFontVector::GetTtfInfoFromTtc(uint8_t ttfId,
         return false;
     }
     uint32_t ttfLength = 0;
-    FT_ULong ttcLength = stream->size;
-    if (ttcLength < ttfOffset) {
-        return false;
-    }
+    FT_Long ttcLength = stream->size;
     if (ttfIndex + 1 == header.numFonts) {
         ttfLength = ttcLength - ttfOffset;
     } else {
