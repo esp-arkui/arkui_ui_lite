@@ -17,6 +17,7 @@
 #define GRAPHIC_LITE_CACHE_MANAGER_H
 
 #include "file_img_decoder.h"
+#include "graphic_config.h"
 
 namespace OHOS {
 class CacheEntry : public HeapBase {
@@ -103,7 +104,7 @@ private:
     static constexpr uint8_t AGING_INTERVAL = 1;
     static constexpr uint8_t LIFE_GAIN_INTERVAL = 1;
     static constexpr uint16_t LIFE_LIMIT = 1000;
-    static constexpr uint8_t MAX_CACHE_ENTRY_NUM = 64;
+    static constexpr uint8_t MAX_CACHE_ENTRY_NUM = DEFAULT_MAX_CACHE_ENTRY_NUM;
 };
 } // namespace OHOS
 
