@@ -43,7 +43,7 @@ config("graphic_define_config") {
   if (defined(board_toolchain_type) && board_toolchain_type == "iccarm") {
     cflags = [
       "--diag_suppress",
-      "Pa084,Pa093,Pa137,Pe161,Pe177,Pe186,Pe223,Pe226,Pe366,Pe367,Pe550,Pe940",
+      "Pa084,Pa093,Pa137,Pe161,Pe177,Pe186,Pa205,Pe223,Pe226,Pe366,Pe367,Pe550,Pe940",
     ]
     cflags_cc = cflags
   }
@@ -221,6 +221,7 @@ lite_library("ui") {
     include_dirs = [
       "frameworks",
       "//third_party/freetype/include",
+      "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
     ]
     sources -= [
       "frameworks/components/ui_surface_view.cpp",
@@ -283,7 +284,5 @@ lite_library("ui") {
     cflags_cc = cflags
   } else {
     defines = [ "ENABLE_ICU=1" ]
-    include_dirs +=
-        [ "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite" ]
   }
 }
