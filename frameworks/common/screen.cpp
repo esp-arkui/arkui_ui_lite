@@ -43,7 +43,7 @@ bool Screen::GetCurrentScreenBitmap(ImageInfo& info)
     if (bufferInfo == nullptr) {
         return false;
     }
-    uint16_t screenWidth = BaseGfxEngine::GetInstance()->GetScreenWidth();
+    uint16_t screenWidth = BaseGfxEngine::GetInstance()->GetFBBufferInfo()->width;
     uint16_t screenHeight = BaseGfxEngine::GetInstance()->GetScreenHeight();
     info.header.colorMode = ARGB8888;
     info.dataSize = screenWidth * screenHeight * DrawUtils::GetByteSizeByColorMode(info.header.colorMode);
@@ -60,10 +60,11 @@ bool Screen::GetCurrentScreenBitmap(ImageInfo& info)
     Point dstPos = {0, 0};
     BlendOption blendOption;
     blendOption.opacity = OPA_OPAQUE;
+    blendOption.mode = BLEND_SRC;
 
     BufferInfo dstBufferInfo;
     dstBufferInfo.rect = screenRect;
-    dstBufferInfo.mode = ARGB8888;
+    dstBufferInfo.mode = (BaseGfxEngine::GetInstance()->GetFBBufferInfo()->mode == ARGB8888) ? XRGB8888 : ARGB8888;
     dstBufferInfo.color = 0x44;
     dstBufferInfo.phyAddr = dstBufferInfo.virAddr = static_cast<void*>(const_cast<uint8_t*>(info.data));
     dstBufferInfo.stride = screenWidth * 4; // 4: bpp
