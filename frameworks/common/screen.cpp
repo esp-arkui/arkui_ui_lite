@@ -39,11 +39,12 @@ uint16_t Screen::GetHeight()
 
 bool Screen::GetCurrentScreenBitmap(ImageInfo& info)
 {
+#ifdef __LITEOS_M__
     BufferInfo* bufferInfo = BaseGfxEngine::GetInstance()->GetFBBufferInfo();
     if (bufferInfo == nullptr) {
         return false;
     }
-    uint16_t screenWidth = BaseGfxEngine::GetInstance()->GetScreenWidth();
+    uint16_t screenWidth = BaseGfxEngine::GetInstance()->GetFBBufferInfo()->width;
     uint16_t screenHeight = BaseGfxEngine::GetInstance()->GetScreenHeight();
     info.header.colorMode = ARGB8888;
     info.dataSize = screenWidth * screenHeight * DrawUtils::GetByteSizeByColorMode(info.header.colorMode);
@@ -60,6 +61,7 @@ bool Screen::GetCurrentScreenBitmap(ImageInfo& info)
     Point dstPos = {0, 0};
     BlendOption blendOption;
     blendOption.opacity = OPA_OPAQUE;
+    blendOption.mode = BLEND_SRC;
 
     BufferInfo dstBufferInfo;
     dstBufferInfo.rect = screenRect;
@@ -72,6 +74,9 @@ bool Screen::GetCurrentScreenBitmap(ImageInfo& info)
 
     BaseGfxEngine::GetInstance()->Blit(dstBufferInfo, dstPos, *bufferInfo, screenRect, blendOption);
     return true;
+#else
+    return false;
+#endif
 }
 
 ScreenShape Screen::GetScreenShape()
