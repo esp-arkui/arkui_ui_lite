@@ -67,7 +67,7 @@ bool Screen::GetCurrentScreenBitmap(ImageInfo& info)
 
     BufferInfo dstBufferInfo;
     dstBufferInfo.rect = screenRect;
-    dstBufferInfo.mode = ARGB8888;
+    dstBufferInfo.mode = (BaseGfxEngine::GetInstance()->GetFBBufferInfo()->mode == ARGB8888) ? XRGB8888 : ARGB8888;
     dstBufferInfo.color = 0x44;
     dstBufferInfo.phyAddr = dstBufferInfo.virAddr = static_cast<void*>(const_cast<uint8_t*>(info.data));
     dstBufferInfo.stride = screenWidth * 4; // 4: bpp
