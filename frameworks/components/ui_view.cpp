@@ -1287,8 +1287,14 @@ bool UIView::GetBitmap(ImageInfo& imageInfo, ColorMode colorMode)
     BufferInfo bufInfo{mask, 0, nullptr, nullptr, 0, 0, colorMode, 0};
     bufInfo.width = mask.GetWidth();
     bufInfo.height = mask.GetHeight();
-    bufInfo.stride = bufInfo.width * DrawUtils::GetByteSizeByColorMode(bufInfo.mode);
+    uint8_t colorModeSize = DrawUtils::GetByteSizeByColorMode(bufInfo.mode);
+    if (colorModeSize == 0) {
+        GRAPHIC_LOGE("GetBitmap get colorMode size failed.");
+        return false;
+    }
+    bufInfo.stride = bufInfo.width * colorModeSize;
     BaseGfxEngine::GetInstance()->AdjustLineStride(bufInfo);
+    bufInfo.width = bufInfo.stride / colorModeSize;
     imageInfo.header.colorMode = bufInfo.mode;
     imageInfo.dataSize = bufInfo.stride * bufInfo.height;
     imageInfo.header.width = bufInfo.width;
