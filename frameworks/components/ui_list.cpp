@@ -231,6 +231,20 @@ bool UIList::OnPressEvent(const PressEvent& event)
     return UIView::OnPressEvent(event);
 }
 
+bool UIList::OnReleaseEvent(const ReleaseEvent& event)
+{
+    isReCalculateDragEnd_ = false;
+    ReCalculateDragEnd();
+    return UIView::OnReleaseEvent(event);
+}
+
+bool UIList::OnCancelEvent(const CancelEvent& event)
+{
+    isReCalculateDragEnd_ = false;
+    ReCalculateDragEnd();
+    return UIView::OnCancelEvent(event);
+}
+
 #if ENABLE_ROTATE_INPUT
 bool UIList::OnRotateStartEvent(const RotateEvent& event)
 {

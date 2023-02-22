@@ -213,6 +213,10 @@ public:
 
     bool OnPressEvent(const PressEvent& event) override;
 
+    bool OnReleaseEvent(const ReleaseEvent& event) override;
+
+    bool OnCancelEvent(const CancelEvent& event) override;
+
 #if ENABLE_ROTATE_INPUT
     bool OnRotateStartEvent(const RotateEvent& event) override;
 
