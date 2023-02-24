@@ -1,18 +1,18 @@
 {
-  "name": "@ohos/ui",
+  "name": "@ohos/ui_lite",
   "description": "Graphic ui components",
   "version": "3.1",
   "license": "Apache License 2.0",
   "pubiishAs": "code-segment",
   "segment": {
-    "destPath": "foundation/graphic/ui"
+    "destPath": "foundation/arkui/ui_lite"
   },
   "dirs": {},
   "scripts": {},
   "component": {
-    "name": "ui",
-    "subsystem": "graphic",
-    "syscap": [ "SystemCapability.Graphic.UI" ],
+    "name": "ui_lite",
+    "subsystem": "arkui",
+    "syscap": [ "SystemCapability.Arkui.UILite" ],
     "feature": [],
     "adapted_system_type": [ "mini","small" ],
     "rom": "900KB",
@@ -26,8 +26,8 @@
     },
     "build": {
       "sub_component": [ 
-        "//foundation/graphic/ui:lite_ui",
-        "//foundation/graphic/ui/test/unittest:lite_graphic_ui_test" 
+        "//foundation/arkui/ui_lite:ui_lite",
+        "//foundation/arkui/ui_lite/test/unittest:arkui_ui_lite_test" 
       ],
       "inner_kits": [],
       "test": []
