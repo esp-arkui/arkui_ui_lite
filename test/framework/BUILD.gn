@@ -9,8 +9,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/lite/config/component/lite_component.gni")
-import("//build/lite/config/subsystem/graphic/config.gni")
+import("//build/hb/config/component/lite_component.gni")
+import("//build/hb/config/subsystem/graphic/config.gni")
 
 config("graphic_test_config") {
   if (ohos_kernel_type == "linux") {
@@ -97,7 +97,7 @@ static_library("framework") {
   ]
 
   public_deps = [
-    "//build/lite/config/component/cJSON:cjson_shared",
+    "//build/hb/config/component/cJSON:cjson_shared",
     "//foundation/graphic/ui:ui",
     "//foundation/graphic/wms:wms_client",
   ]
@@ -125,7 +125,7 @@ static_library("auto_framework") {
     "-Wl,-rpath-link=$ohos_root_path/$root_out_dir",
   ]
   public_deps = [
-    "//build/lite/config/component/cJSON:cjson_shared",
+    "//build/hb/config/component/cJSON:cjson_shared",
     "//foundation/graphic/ui:ui",
     "//foundation/graphic/wms:wms_client",
   ]

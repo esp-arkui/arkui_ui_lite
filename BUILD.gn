@@ -9,9 +9,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/lite/config/component/lite_component.gni")
-import("//build/lite/config/subsystem/graphic/config.gni")
-import("//build/lite/ndk/ndk.gni")
+import("//build/hb/config/component/lite_component.gni")
+import("//build/hb/config/subsystem/graphic/config.gni")
+import("//build/hb/ndk/ndk.gni")
 
 lite_component("lite_ui") {
   features = [ ":ui" ]
@@ -234,7 +234,7 @@ lite_library("ui") {
       "frameworks/window/window_impl.cpp",
     ]
     deps = [
-      "//build/lite/config/component/cJSON:cjson_static",
+      "//build/hb/config/component/cJSON:cjson_static",
       "//third_party/bounds_checking_function:libsec_static",
       "//third_party/freetype:freetype",
       "//third_party/giflib:libgif",
@@ -247,7 +247,7 @@ lite_library("ui") {
     target_type = "shared_library"
     include_dirs = [ "frameworks" ]
     deps = [
-      "//build/lite/config/component/cJSON:cjson_shared",
+      "//build/hb/config/component/cJSON:cjson_shared",
       "//foundation/graphic/surface:lite_surface",
       "//foundation/graphic/utils:lite_graphic_hals",
       "//foundation/graphic/wms:lite_wms",
