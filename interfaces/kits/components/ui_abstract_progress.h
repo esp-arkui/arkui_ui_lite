@@ -114,6 +114,10 @@ public:
         return curValue_;
     }
 
+    int32_t GetLastValue() const
+    {
+        return lastValue_;
+    }
     /**
      * @brief Sets the range for this progress bar.
      *
