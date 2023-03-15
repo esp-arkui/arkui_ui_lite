@@ -24,6 +24,7 @@ namespace OHOS {
 /** @brief A Rotate input device. */
 class RotateInputDevice : public InputDevice {
 public:
+    const uint8_t ROTATE_END_ZERO_COUNT = 2;
     /** @brief Constructor */
     RotateInputDevice();
     /** @brief Destructor */
@@ -39,6 +40,7 @@ protected:
     bool rotateStart_;
     int16_t threshold_;
     int16_t cachedRotation_;
+    uint8_t zeroCount_;
 };
 } // namespace OHOS
 
