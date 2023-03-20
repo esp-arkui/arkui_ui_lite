@@ -48,9 +48,9 @@ public:
         }
     }
 
-    static void DestoryWindow(RootView* rootView)
+    static void DestroyWindow(RootView* rootView)
     {
-        Window::DestoryWindow(rootView->GetBoundWindow());
+        Window::DestroyWindow(rootView->GetBoundWindow());
     }
 };
 
@@ -103,7 +103,7 @@ HWTEST_F(RenderTest, Graphic_RenderTest_Test_Measuer_001, TestSize.Level0)
     rootView->RemoveAll();
     delete view1;
     delete vg1;
-    RenderTest::DestoryWindow(rootView);
+    RenderTest::DestroyWindow(rootView);
     RootView::DestoryWindowRootView(rootView);
 }
 
@@ -136,7 +136,7 @@ HWTEST_F(RenderTest, Graphic_RenderTest_Test_Measuer_02, TestSize.Level0)
     rootView->RemoveAll();
     delete view1;
     delete vg1;
-    RenderTest::DestoryWindow(rootView);
+    RenderTest::DestroyWindow(rootView);
     RootView::DestoryWindowRootView(rootView);
 }
 } // namespace OHOS
