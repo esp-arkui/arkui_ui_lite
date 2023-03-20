@@ -55,9 +55,9 @@ public:
         }
     }
 
-    static void DestoryWindow(RootView* rootView)
+    static void DestroyWindow(RootView* rootView)
     {
-        Window::DestoryWindow(rootView->GetBoundWindow());
+        Window::DestroyWindow(rootView->GetBoundWindow());
     }
 #endif // ENABLE_WINDOW
 };
@@ -179,7 +179,7 @@ HWTEST_F(ViewBoundsTest, ViewBoundsOnPostDraw001, TestSize.Level0)
     rootView->RemoveAll();
     delete view1;
     delete vg1;
-    ViewBoundsTest::DestoryWindow(rootView);
+    ViewBoundsTest::DestroyWindow(rootView);
     RootView::DestoryWindowRootView(rootView);
 }
 
@@ -230,12 +230,12 @@ HWTEST_F(ViewBoundsTest, ViewBoundsOnPostDraw002, TestSize.Level0)
     rootView1->RemoveAll();
     delete view1;
     delete vg1;
-    ViewBoundsTest::DestoryWindow(rootView1);
+    ViewBoundsTest::DestroyWindow(rootView1);
     RootView::DestoryWindowRootView(rootView1);
     rootView2->RemoveAll();
     delete view2;
     delete vg2;
-    ViewBoundsTest::DestoryWindow(rootView2);
+    ViewBoundsTest::DestroyWindow(rootView2);
     RootView::DestoryWindowRootView(rootView2);
 }
 #endif // ENABLE_WINDOW
