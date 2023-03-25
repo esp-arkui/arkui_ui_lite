@@ -13,7 +13,7 @@ if (ohos_kernel_type != "liteos_m") {
   import("//build/lite/config/subsystem/graphic/config.gni")
   import("//build/lite/config/test.gni")
 
-  group("lite_graphic_ui_test") {
+  group("arkui_ui_lite_test") {
     if (ohos_build_type == "debug") {
       deps = [ ":graphic_test_ui_door" ]
     }
@@ -22,9 +22,9 @@ if (ohos_kernel_type != "liteos_m") {
   config("graphic_test_config") {
     include_dirs = [
       "../framework/include",
-      "//foundation/graphic/ui/frameworks",
-      "//foundation/graphic/ui/test/framework",
-      "//foundation/graphic/surface/interfaces/kits",
+      "//foundation/arkui/ui_lite/frameworks",
+      "//foundation/arkui/ui_lite/test/framework",
+      "//foundation/graphic/surface_lite/interfaces/kits",
       "//third_party/bounds_checking_function/include",
       "//third_party/freetype/include",
       "//foundation/systemabilitymgr/samgr_lite/interfaces/kits/registry",
@@ -106,7 +106,7 @@ if (ohos_kernel_type != "liteos_m") {
         "themes/theme_manager_unit_test.cpp",
       ]
 
-      deps = [ "//foundation/graphic/ui:ui" ]
+      deps = [ "//foundation/arkui/ui_lite:ui" ]
 
       if (enable_video_component) {
         sources += [ "components/ui_video_unit_test.cpp" ]
@@ -116,6 +116,6 @@ if (ohos_kernel_type != "liteos_m") {
     }
   }
 } else {
-  group("lite_graphic_ui_test") {
+  group("arkui_ui_lite_test") {
   }
 }
