@@ -783,6 +783,9 @@ int8_t UIFontVector::LoadGlyphIntoFace(uint16_t& fontId, uint8_t fontSize, uint3
         if (fontId > FONT_ID_MAX || fontId != GetFontId(unicode)) {
             return INVALID_RET_VALUE;
         }
+        if (fontId > FONT_ID_MAX) {
+            return INVALID_RET_VALUE;
+        }
         error = FT_Load_Glyph(ftFaces_[fontId], unicode & (0xFFFFFF), FT_LOAD_RENDER);
     } else {
         if (IsEmojiFont(fontId)) {
