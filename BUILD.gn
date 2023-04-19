@@ -99,6 +99,7 @@ if (enable_graphic_font) {
   }
 }
 
+# test ci
 lite_library("ui") {
   sources = [
     "frameworks/animator/animator.cpp",
