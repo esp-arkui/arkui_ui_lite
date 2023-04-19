@@ -132,7 +132,7 @@ if (ohos_kernel_type != "liteos_m") {
       "frameworks/hals/gfx_engines.cpp",
       "frameworks/hals/hi_fbdev.cpp",
     ]
-    include_dirs = [ "//foundation/graphic/wms/interfaces/innerkits" ]
+    include_dirs = [ "//foundation/window/window_manager_lite/interfaces/innerkits" ]
     deps = [
       ":graphic_utils_lite",
       "//drivers/peripheral/display/hal:hdi_display",
