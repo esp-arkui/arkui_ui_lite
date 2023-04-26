@@ -230,11 +230,8 @@ bool UIPicker::RefreshValues(const char* value[], uint16_t count)
     }
     uint16_t userSelectIndex = listListener_->GetSelectIndex();
     ClearList();
-    for (uint16_t i = 0; i < count; i++) {
-        dataList_.PushBack(value[i]);
-    }
     InitTextAdapter();
-    textAdapter_->SetData(&dataList_);
+    textAdapter_->SetData(value, count);
     RefreshList();
     RefreshSelected(userSelectIndex);
 

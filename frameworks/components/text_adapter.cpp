@@ -202,6 +202,31 @@ void TextAdapter::SetData(List<const char*>* data)
     dataMode_ = DYNAMIC_TEXT_MODE;
 }
 
+void TextAdapter::SetData(const char* value[], int count)
+{
+    if( value == nullptr) {
+        return;
+    }
+    if (!dynamicText_.IsEmpty()) {
+        ClearDynamicText();
+    }
+    for (int i = 0; i < count; i++) {
+        uint32_t len = strlen(value[i]);
+        char* stringData = static_cast<char*>(UIMalloc(len + 1));
+        if (stringData == nullptr) {
+            return;
+        }
+        if (memcpy_s(stringData, len + 1, value[i], len) != EOK) {
+            UIFree(reinterpret_cast<void*>(stringData));
+            stringData = nullptr;
+            return;
+        }
+        stringData[len] = '\0';
+        dynamicText_.PushBack(stringData);
+    }
+    dataMode_ = DYNAMIC_TEXT_MODE;
+}
+
 void TextAdapter::SetData(int16_t start, int16_t end)
 {
     if (start <= end) {
