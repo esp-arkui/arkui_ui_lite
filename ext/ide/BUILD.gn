@@ -55,7 +55,10 @@ config("graphic_config_ide") {
 
 ohos_static_library("ui_ide") {
   sources = graphic_ui_sources
-  include_dirs = [ "//foundation/graphic/surface/interfaces/kits" ]
+  # include_dirs = [ "//foundation/graphic/surface/interfaces/kits" ]
+  external_deps = [
+    "surface":"kits"
+  ]
   deps = [
     "//third_party/bounds_checking_function:libsec_static",
     "//third_party/cJSON:cjson_static",
