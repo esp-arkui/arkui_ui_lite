@@ -328,6 +328,21 @@ public:
     }
 
     /**
+     * @brief Decide whether to use the new algorithm
+     *
+     * @param useNewAlgorithm Indicates whether use the new algorithm
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetUseNewAlgorithm(bool useNewAlgorithm)
+    {
+        if (useNewAlgorithm_ != useNewAlgorithm) {
+            useNewAlgorithm_ = useNewAlgorithm;
+            RefreshArcLabel();
+        }
+    }
+
+    /**
      * @brief Draws an arc text.
      *
      * @param invalidatedArea Indicates the area to draw.
@@ -365,6 +380,7 @@ protected:
                                 TextOrientation orientation,
                                 const ArcTextInfo& arcTextInfo);
 
+    bool useNewAlgorithm_;
 private:
     void ReMeasure() override;
     void MeasureArcTextInfo();
