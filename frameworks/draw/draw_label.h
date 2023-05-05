@@ -37,7 +37,7 @@ public:
                                int16_t letterSpace,
                                const ArcTextInfo arcTextInfo,
                                bool xorFlag,
-                               uint32_t tmp,
+                               uint32_t index,
                                TextOrientation orientation,
                                float& posX,
                                float& posY,

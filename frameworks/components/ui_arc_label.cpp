@@ -24,6 +24,7 @@
 namespace OHOS {
 UIArcLabel::UIArcLabel()
     : arcLabelText_(nullptr),
+      useNewAlgorithm_(false),
       needRefresh_(false),
       textSize_({0, 0}),
       radius_(0),
@@ -31,8 +32,7 @@ UIArcLabel::UIArcLabel()
       endAngle_(0),
       arcCenter_({0, 0}),
       orientation_(TextOrientation::INSIDE),
-      arcTextInfo_{0},
-      useNewAlgorithm_{false}
+      arcTextInfo_{0}
 {
     Theme* theme = ThemeManager::GetInstance().GetCurrent();
     style_ = (theme != nullptr) ? &(theme->GetLabelStyle()) : &(StyleDefault::GetLabelStyle());

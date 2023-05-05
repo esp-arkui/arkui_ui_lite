@@ -194,7 +194,7 @@ bool DrawLabel::CalculateAngle(uint16_t letterWidth,
                                int16_t letterSpace,
                                const ArcTextInfo arcTextInfo,
                                bool xorFlag,
-                               uint32_t tmp,
+                               uint32_t index,
                                TextOrientation orientation,
                                float& posX,
                                float& posY,
@@ -204,7 +204,7 @@ bool DrawLabel::CalculateAngle(uint16_t letterWidth,
                                bool useNewAlgorithm)
 {
     if (!useNewAlgorithm) {
-        if ((tmp == arcTextInfo.lineStart) && xorFlag) {
+        if ((index == arcTextInfo.lineStart) && xorFlag) {
             angle += TypedText::GetAngleForArcLen(static_cast<float>(letterWidth), letterHeight, arcTextInfo.radius,
                                                   arcTextInfo.direct, orientation);
         }
@@ -223,7 +223,7 @@ bool DrawLabel::CalculateAngle(uint16_t letterWidth,
         TypedText::GetArcLetterPos(arcCenter, arcTextInfo.radius, angle, posX, posY);
         angle += incrementAngle;
     } else {
-        if ((tmp == arcTextInfo.lineStart) && xorFlag) {
+        if ((index == arcTextInfo.lineStart) && xorFlag) {
             angle += TypedText::GetAngleForArcLen(letterWidth, letterSpace, arcTextInfo.radius);
         }
         float incrementAngle = TypedText::GetAngleForArcLen(letterWidth, letterSpace, arcTextInfo.radius);
