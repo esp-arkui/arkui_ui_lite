@@ -144,7 +144,8 @@ void DrawLabel::DrawArcText(BufferInfo& gfxDstBuffer,
                             const ArcTextInfo arcTextInfo,
                             TextOrientation orientation,
                             const Style& style,
-                            OpacityType opaScale)
+                            OpacityType opaScale,
+                            bool useNewAlgorithm)
 {
     if ((text == nullptr) || (arcTextInfo.lineStart == arcTextInfo.lineEnd) || (arcTextInfo.radius == 0)) {
         GRAPHIC_LOGE("DrawLabel::DrawArcText invalid parameter\n");
@@ -176,13 +177,40 @@ void DrawLabel::DrawArcText(BufferInfo& gfxDstBuffer,
             break;
         }
         letterWidth = UIFont::GetInstance()->GetWidth(letter, fontId, fontSize, 0);
-        if ((tmp == arcTextInfo.lineStart) && xorFlag) {
+        if (!DrawLabel::CalculateAngle(letterWidth, letterHeight, style.letterSpace_,
+                                       arcTextInfo, xorFlag, tmp, orientation,
+                                       posX, posY, rotateAngle, angle,
+                                       arcCenter, useNewAlgorithm)) {
+            continue;
+        }
+
+        DrawLetterWithRotate(gfxDstBuffer, mask, fontId, fontSize, letter, Point { MATH_ROUND(posX), MATH_ROUND(posY) },
+                             static_cast<int16_t>(rotateAngle), style.textColor_, opaScale, useNewAlgorithm);
+    }
+}
+
+bool DrawLabel::CalculateAngle(uint16_t letterWidth,
+                               uint16_t letterHeight,
+                               int16_t letterSpace,
+                               const ArcTextInfo arcTextInfo,
+                               bool xorFlag,
+                               uint32_t index,
+                               TextOrientation orientation,
+                               float& posX,
+                               float& posY,
+                               float& rotateAngle,
+                               float& angle,
+                               const Point& arcCenter,
+                               bool useNewAlgorithm)
+{
+    if (!useNewAlgorithm) {
+        if ((index == arcTextInfo.lineStart) && xorFlag) {
             angle += TypedText::GetAngleForArcLen(static_cast<float>(letterWidth), letterHeight, arcTextInfo.radius,
                                                   arcTextInfo.direct, orientation);
         }
-        uint16_t arcLen = letterWidth + style.letterSpace_;
+        uint16_t arcLen = letterWidth + letterSpace;
         if (arcLen == 0) {
-            continue;
+            return false;
         }
         float incrementAngle = TypedText::GetAngleForArcLen(static_cast<float>(arcLen), letterHeight,
                                                             arcTextInfo.radius, arcTextInfo.direct, orientation);
@@ -194,10 +222,22 @@ void DrawLabel::DrawArcText(BufferInfo& gfxDstBuffer,
         rotateAngle += (xorFlag ? -fineTuningAngle : fineTuningAngle);
         TypedText::GetArcLetterPos(arcCenter, arcTextInfo.radius, angle, posX, posY);
         angle += incrementAngle;
+    } else {
+        if ((index == arcTextInfo.lineStart) && xorFlag) {
+            angle += TypedText::GetAngleForArcLen(letterWidth, letterSpace, arcTextInfo.radius);
+        }
+        float incrementAngle = TypedText::GetAngleForArcLen(letterWidth, letterSpace, arcTextInfo.radius);
+        if (incrementAngle >= -EPSINON && incrementAngle <= EPSINON) {
+            return false;
+        }
 
-        DrawLetterWithRotate(gfxDstBuffer, mask, fontId, fontSize, letter, Point { MATH_ROUND(posX), MATH_ROUND(posY) },
-                             static_cast<int16_t>(rotateAngle), style.textColor_, opaScale);
+        float fineTuningAngle = incrementAngle / 2;
+        rotateAngle = xorFlag ? (angle - SEMICIRCLE_IN_DEGREE - fineTuningAngle) : (angle + fineTuningAngle);
+        TypedText::GetArcLetterPos(arcCenter, arcTextInfo.radius, angle, posX, posY);
+        angle = xorFlag ? (angle - incrementAngle) : (angle + incrementAngle);
     }
+
+    return true;
 }
 
 void DrawLabel::DrawLetterWithRotate(BufferInfo& gfxDstBuffer,
@@ -208,7 +248,8 @@ void DrawLabel::DrawLetterWithRotate(BufferInfo& gfxDstBuffer,
                                      const Point& pos,
                                      int16_t rotateAngle,
                                      const ColorType& color,
-                                     OpacityType opaScale)
+                                     OpacityType opaScale,
+                                     bool useNewAlgorithm)
 {
     UIFont* fontEngine = UIFont::GetInstance();
     FontHeader head;
@@ -226,11 +267,13 @@ void DrawLabel::DrawLetterWithRotate(BufferInfo& gfxDstBuffer,
     }
     uint8_t fontWeight = fontEngine->GetFontWeight(fontId);
     ColorMode colorMode = fontEngine->GetColorType(fontId);
+
+    int16_t offset = useNewAlgorithm ? 0 : head.ascender;
     Rect rectLetter;
-    rectLetter.SetPosition(pos.x + node.left, pos.y + head.ascender - node.top);
+    rectLetter.SetPosition(pos.x + node.left, pos.y + offset - node.top);
     rectLetter.Resize(node.cols, node.rows);
     TransformMap transMap(rectLetter);
-    transMap.Rotate(rotateAngle, Vector2<float>(-node.left, node.top - head.ascender));
+    transMap.Rotate(rotateAngle, Vector2<float>(-node.left, node.top - offset));
     TransformDataInfo letterTranDataInfo = {ImageHeader{colorMode, 0, 0, 0, node.cols, node.rows}, fontMap, fontWeight,
                                             BlurLevel::LEVEL0, TransformAlgorithm::BILINEAR};
     BaseGfxEngine::GetInstance()->DrawTransform(gfxDstBuffer, mask, Point { 0, 0 }, color, opaScale, transMap,
