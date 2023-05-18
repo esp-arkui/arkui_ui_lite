@@ -317,13 +317,14 @@ bool UIPicker::RefreshSelected(uint16_t index)
     }
     if (itemsHeight_ && (list_.GetChildrenHead() != nullptr) && isWidthSet_ && isHeightSet_) {
         listListener_->SetInitStatus(false);
-        // 2: half
-        int16_t yOffset = (list_.GetHeight() - itemsHeight_) / 2 -
-                          itemsHeight_ * (index - list_.GetChildrenHead()->GetViewIndex());
-        list_.SetScrollStateListener(nullptr);
-        list_.ScrollBy(yOffset - list_.GetChildrenHead()->GetY());
+        if (listListener->GetScrollState() != ListScrollListener::SCROLL_STATE_MOVE) {
+            // 2: half
+            int16_t yOffset = (list_.GetHeight() - itemsHeight_) / 2 -
+                               itemsHeight_ * (index - list_.GetChildrenHead()->GetViewIndex());
+            list_.SetScrollStateListener(nullptr);
+            list_.ScrollBy(yOffset - list_.GetChildrenHead()->GetY());
+        }
         list_.SetScrollStateListener(listListener_);
-        listListener_->SetScrollState(ListScrollListener::SCROLL_STATE_STOP);
         UIView* childView = static_cast<UIView*>(list_.GetChildrenHead());
         uint16_t lastSelectIndex = listListener_->GetSelectIndex();
 
