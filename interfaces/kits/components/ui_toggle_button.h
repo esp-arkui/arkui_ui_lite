@@ -105,6 +105,18 @@ public:
         return (state_ != UNSELECTED);
     }
 
+    /**
+     * @brief Sets the mirrored state for this toggle button.
+     *
+     * @param mirrored Indicates the mirrored state of this toggle button. The value <b>true</b> indicates the white
+     * circle in button is at left side when the state is ON, at right side when the state is OFF. The value 
+     * <b>false</b> indicates oppositely.
+     * @since 1.0
+     * @version 1.0
+     */
+    void EnableMirrored(bool mirrored);
+
+    bool IsMirrored();
 protected:
     void CalculateSize() override;
 #if DEFAULT_ANIMATION
@@ -121,6 +133,7 @@ private:
     Point currentCenter_ = {0, 0};
     ColorType bgColor_ = Color::White();
     Rect rectMid_ = {0, 0, 0, 0};
+    bool mirrored_ = false;
 }; // class UIToggleButton
 } // namespace OHOS
 #endif // GRAPHIC_LITE_UI_TOGGLE_BUTTON_H
