@@ -497,9 +497,27 @@ uint16_t Text::GetPosXByLetterIndex(const Rect &textRect, const Style &style, ui
 {
     std::string preText = text_;
     int16_t maxWidth = (expandWidth_ ? COORD_MAX : textRect.GetWidth());
-    Point textSize = TypedText::GetTextSize(preText.substr(0, letterIndex).c_str(), fontId_, fontSize_,
-        style.letterSpace_, style.lineHeight_, maxWidth, style.lineSpace_, sizeSpans_);
-    return textSize.x;
+    uint16_t totalWidth = 0;
+    int16_t count = 0;
+    for (int i = 0; i < preText.length(); i++) {
+        if ((preText[i] & 0x80) == 0) {
+            char c = preText[i];
+            uint32_t unicode = (uint32_t)c;
+            uint16_t width = UIFont::GetInstance()->GetWidth(unicode, fontId_, fontSize_,0);
+            totalWidth += (width+style.letterSpace_);
+        } else {
+            wchar_t wc = (preText[i] & 0x0f) << 12 | (preText[i+1] & 0x3f) << 6 | (preText[i+2] & 0x3f);
+            uint32_t unicode = (uint32_t)wc;
+            uint16_t width = UIFont::GetInstance()->GetWidth(unicode, fontId_, fontSize_,0);
+            totalWidth += (width+style.letterSpace_);
+            i += 2;
+        }
+        count += 1;
+        if(count >= letterIndex){
+            break;
+        }
+    }
+    return totalWidth>maxWidth?maxWidth:totalWidth;
 }
 
 uint16_t Text::GetLetterIndexByPosition(const Rect& textRect, const Style& style, const Point& pos)
