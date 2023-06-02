@@ -111,6 +111,30 @@ public:
     bool GetPoint(uint16_t index, Point& point);
 
     /**
+     * @brief Obtains the original target of the data set
+     *
+     * @param index Indicates the index of the data point to obtain.
+     * @param point Indicates the obtained coordinates. If the data set is not added to the chart,
+     *              the original value of the data point is printed.
+     *
+     * @return Returns <b>true</b> if the operation is successful; returns <b>false</b> otherwise.
+     * @since 1.0
+     * @version 1.0
+     */
+    bool GetOriginalPoint(uint16_t index, Point& point);
+
+    /**
+     * @brief Make pointArrrayBack point to the object's pointArray_ and reassign the object's pointArray
+     *
+     * @param pointArrayBack point to the object's pointArray_.
+     *
+     * @return Returns <b>true</b> if the operation is successful; returns <b>false</b> otherwise.
+     * @since 1.0
+     * @version 1.0
+     */
+    bool CopyPointArray(Point** pointArrayBack);
+
+    /**
      * @brief Adds data points.
      *
      * The new data points are appended to the last added data. \n
@@ -884,6 +908,7 @@ private:
                             uint16_t endIndex,
                             const Rect& invalidatedArea,
                             UIChartDataSerial* data);
+    void GetDataBySmooth(uint16_t startIndex, uint16_t endIndex, UIChartDataSerial* data);
     void DrawPolyLine(BufferInfo& gfxDstBuffer, uint16_t startIndex, uint16_t endIndex,
                       const Rect& invalidatedArea, UIChartDataSerial* data);
     bool GetLineCrossPoint(const Point& p1, const Point& p2, const Point& p3, const Point& p4, Point& cross);
