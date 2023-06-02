@@ -414,14 +414,16 @@ void UIEditText::InsertText(std::string text)
 
 void UIEditText::InsertTextByCursorIndex(std::string text)
 {
-    std::string preText = textStr_.substr(0, cursorIndex_).c_str();
-    std::string postText = "";
-    if (cursorIndex_ < textStr_.length()) {
-        postText = textStr_.substr(cursorIndex_);
-    }
-    std::string updatedString = preText + text + postText;
-    cursorIndex_ += text.length();
-    SetText(updatedString);
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+    std::wstring wideText = convert.from_bytes(textStr_);
+    std::wstring insertWText = convert.from_bytes(text);
+    uint32_t textLen = wideText.length();
+    uint32_t insertWTextLen = insertWText.length();
+    std::wstring newWideText = std::wstring(wideText, 0, cursorIndex_) + insertWText
+                               + std::wstring(wideText, cursorIndex_, textLen);
+    std::string newText = convert.to_bytes(newWideText);
+    cursorIndex_ += insertWTextLen ;
+    SetText(newText);
 
     if (isFocused_) {
         if (cursorAnimator_ != nullptr) {
