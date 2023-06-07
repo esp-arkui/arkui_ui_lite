@@ -358,7 +358,7 @@ void UIEditText::UpdateOffsetX(bool isDeleteCharacter)
     } else {
         if (isSetTextByInterface_) {
             isSetTextByInterface_ = false;
-            offsetX_ = contentRect.GetWidth() - textSize.x - DEFAULT_TEXT_OFFSET;
+            offsetX_ = DEFAULT_TEXT_OFFSET;
             return;
         }
 

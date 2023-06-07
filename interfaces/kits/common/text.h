@@ -36,6 +36,8 @@
 #ifndef GRAPHIC_LITE_TEXT_H
 #define GRAPHIC_LITE_TEXT_H
 
+#include <cstring>
+
 #include "gfx_utils/geometry2d.h"
 #include "gfx_utils/graphic_types.h"
 #include "gfx_utils/list.h"
