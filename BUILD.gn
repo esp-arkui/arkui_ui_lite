@@ -71,7 +71,6 @@ if (os_level != "standard") {
       defines += [
         "ENABLE_CANVAS_EXTEND=0",
         "GRAPHIC_ENABLE_DASH_GENERATE_FLAG=1",
-        "GRAPHIC_ENABLE_BLUR_EFFECT_FLAG=1",
         "GRAPHIC_ENABLE_PATTERN_FILL_FLAG=1",
         "GRAPHIC_ENABLE_DRAW_IMAGE_FLAG=1",
       ]
