@@ -219,6 +219,22 @@ bool UIChartDataSerial::GetPoint(uint16_t index, Point& point)
     return true;
 }
 
+bool UIChartDataSerial::GetOriginalPoint(uint16_t index, Point& point)
+{
+    if ((index >= dataCount_) || (pointArray_ == nullptr)) {
+        return false;
+    }
+    point = pointArray_[index];
+    return true;
+}
+
+bool UIChartDataSerial::CopyPointArray(Point** pointArrayBack)
+{
+    *pointArrayBack = pointArray_;
+    pointArray_ = static_cast<Point*>(UIMalloc(sizeof(Point) * maxCount_));
+    return memcpy_s(pointArray_, dataCount_ * sizeof(Point), *pointArrayBack, dataCount_ * sizeof(Point)) != EOK;
+}
+
 void UIChartDataSerial::HidePoint(uint16_t index, uint16_t count)
 {
     hideIndex_ = index;
@@ -512,7 +528,17 @@ void UIChartPolyline::DrawDataSerials(BufferInfo& gfxDstBuffer, const Rect& inva
             continue;
         }
         if (data->IsGradient()) {
-            GradientColor(gfxDstBuffer, invalidatedArea, data);
+            if (data->IsSmooth()) {
+                Point* pointArrayBack = nullptr;
+                data->CopyPointArray(&pointArrayBack);
+                GetDataBySmooth(0, dataCount - 1, data);
+                GradientColor(gfxDstBuffer, invalidatedArea, data);
+                data->ClearData();
+                data->AddPoints(pointArrayBack, dataCount);
+                UIFree(pointArrayBack);
+            } else {
+                GradientColor(gfxDstBuffer, invalidatedArea, data);
+            }
         }
         if (data->GetHideCount() != 0) {
             uint16_t hideIndex = data->GetHideIndex();
@@ -524,6 +550,43 @@ void UIChartPolyline::DrawDataSerials(BufferInfo& gfxDstBuffer, const Rect& inva
 
         data->DrawPoint(gfxDstBuffer, invalidatedArea);
     }
+}
+
+void UIChartPolyline::GetDataBySmooth(uint16_t startIndex, uint16_t endIndex, UIChartDataSerial* data)
+{
+    if (data == nullptr) {
+        return;
+    }
+    Point* pointArray = static_cast<Point*>(UIMalloc(sizeof(Point) * data->GetDataCount()));
+    Point start;
+    Point end;
+
+    uint16_t slope;
+    data->GetPoint(startIndex, start);
+    data->GetOriginalPoint(startIndex, pointArray[0]);
+    int count = 1;
+    data->GetPoint(startIndex + 1, end);
+    uint16_t preSlope = (start.x == end.x) ? QUARTER_IN_DEGREE : FastAtan2(end.x - start.x, end.y - start.y);
+    Point current;
+    for (uint16_t i = startIndex; i < endIndex; i++) {
+        data->GetPoint(i + 1, current);
+        if (((end.y - start.y <= 0) && (current.y - end.y <= 0)) ||
+            ((end.y - start.y >= 0) && (current.y - end.y >= 0))) {
+            slope = (current.x == start.x) ? QUARTER_IN_DEGREE : FastAtan2(current.x - start.x, current.y - start.y);
+            if (MATH_ABS(slope - preSlope) < SMOOTH_SLOPE_ANGLE) {
+                end = current;
+                continue;
+            }
+        }
+        preSlope = (current.x == end.x) ? QUARTER_IN_DEGREE : FastAtan2(current.x - end.x, current.y - end.y);
+        data->GetOriginalPoint(i, pointArray[count++]);
+        start = end;
+        end = current;
+    }
+    data->GetOriginalPoint(endIndex, pointArray[count++]);
+    data->ClearData();
+    data->AddPoints(pointArray, count);
+    UIFree(pointArray);
 }
 
 void UIChartPolyline::DrawSmoothPolyLine(BufferInfo& gfxDstBuffer,
