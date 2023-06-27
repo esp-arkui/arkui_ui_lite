@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 
+#include "common/ui_text_language.h"
+#include "dfx/ui_view_bounds.h"
+
 #include "ui_test_vector_font.h"
 #if ENABLE_VECTOR_FONT
 #include "common/screen.h"
@@ -32,7 +35,7 @@ const uint16_t SIXTEEN = 16;
 const uint16_t LABEL_HEIGHT = 50;
 const uint16_t BUF_SIZE = 200;
 const uint16_t LANGUAGE_FILE_ID_MAX = 9;
-const char* HYQIHEI_65S = "HYQiHei-65S.otf";
+const char* HYQIHEI_65S = "SourceHanSansSC-Regular.otf"; //"HYQiHei-65S.otf";
 const char* NOTONASKHARABIC_REGULAR = "NotoNaskhArabic-Regular.ttf";
 const char* ROBOTOCONDENSED_REGULAR = "RobotoCondensed-Regular.ttf";
 const char* NOTOSANSCJKJP_REGULAR = "NotoSansCJKjp-Regular.otf";
@@ -41,6 +44,7 @@ const char* NOTOSANSHEBREW_REGULAR = "NotoSansHebrew-Regular.ttf";
 const char* NOTOSANSDEVANAGARI_REGULAR = "NotoSansDevanagari-Regular.otf";
 const char* NOTOSANSMYANMAR_CONDENSED = "NotoSansMyanmar-Condensed.ttf";
 const char* NOTOSANSBENGALI_REGULAR = "NotoSansBengali-Regular.ttf";
+const char* test_cjf = "happyfont.ttf";
 } // namespace
 namespace OHOS {
 void UITestVectorFont::SetUp()
@@ -75,15 +79,23 @@ void UITestVectorFont::InnerTestTitle(const char* title)
 
 const UIView* UITestVectorFont::GetTestView()
 {
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
-    TestDrawTextITALYBOLD();
-#endif
-    FontFontEngineVectorTestCHLang001();
-    FontFontEngineVectorTestCHLang002();
-    FontFontEngineVectorTestJALang001();
-    FontFontEngineVectorTestJALang002();
-    FontFontEngineVectorTestKRLang001();
-    FontFontEngineVectorTestVILang001();
+//#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
+//    TestDrawTextITALYBOLD();
+//#endif
+//    FontFontEngineVectorTestCHLang002();
+    cjf_size();
+    cjf_fontId();
+    cjf_sizeFontId();
+    cjf_BackgroundColor();
+//    cjf_LineBackgroundColor();
+
+//    FontFontEngineVectorTestCHLang001();
+//    FontFontEngineVectorTestCHLang002();
+//    FontFontEngineVectorTestJALang001();
+//    FontFontEngineVectorTestJALang002();
+//    FontFontEngineVectorTestKRLang001();
+//    FontFontEngineVectorTestVILang001();
+
 #if ENABLE_MULTI_FONT
     FontFontEngineMultiLanguageTestJALang001();
     FontFontEngineMultiLanguageTestJALang002();
@@ -96,6 +108,164 @@ const UIView* UITestVectorFont::GetTestView()
     return container_;
 }
 
+
+// ---- cjf ----
+void UITestVectorFont::cjf_size()
+{
+    if (container_ != nullptr)
+    {
+        UILabel* label = new UILabel();
+        UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
+        label->SetVisible(true);
+
+        label->SetPosition(positionX_, positionY_);
+        label->Resize(LABEL_WIDTH, LABEL_HEIGHT);
+        label->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label->SetText("测试字号");
+        container_->Add(label);
+        #if defined(SR_1) && SR_1
+            label->SetSizeSpan(0,2,36);
+        #else
+            label->SetAbsoluteSizeSpan(0,2,36);
+        #endif
+
+        positionY_ += LABEL_HEIGHT + GAP;
+    }
+}
+// ---- cjf end ----
+
+// ---- cjf ----
+void UITestVectorFont::cjf_fontId()
+{
+    if (container_ != nullptr) {
+        UILabel* label_2 = new UILabel();
+        UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
+        uint8_t test_value = UIFont::GetInstance()->RegisterFontInfo(test_cjf);
+        label_2->SetPosition(positionX_, positionY_);
+        label_2->Resize(LABEL_WIDTH*2, LABEL_HEIGHT);
+        label_2->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label_2->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label_2->SetText("快乐字体 普通字体");
+
+        label_2->SetVisible(true);
+
+        #if defined(SR_1) && SR_1
+            label_2->SetFontNameSpan(0,4,test_cjf);
+        #else
+            label_2->SetFont(test_cjf, 24);
+        #endif
+
+//        label_2->SetFont(test_cjf,24);
+
+        container_->Add(label_2);
+        positionY_ += LABEL_HEIGHT + GAP;
+    }
+}
+// ---- cjf end ----
+
+
+// ---- cjf --------
+void UITestVectorFont::cjf_sizeFontId()
+{
+    if (container_ != nullptr)
+    {
+        UILabel* label = new UILabel();
+        UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
+        uint8_t test_value = UIFont::GetInstance()->RegisterFontInfo(test_cjf);
+        label->SetPosition(positionX_, positionY_);
+        label->Resize(LABEL_WIDTH*2, LABEL_HEIGHT);
+        label->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label->SetText("快乐字体 普通字体");
+
+        label->SetVisible(true);
+
+        #if defined(SR_1) && SR_1
+            label->SetFontNameSpan(0,4,test_cjf);
+            label->SetSizeSpan(3,6,12);
+        #else
+            // 无事发生
+        #endif
+
+        container_->Add(label);
+        positionY_ += LABEL_HEIGHT + GAP;
+    }
+}
+
+// ---- cjf end ----
+
+// ---- cjf  ----
+void UITestVectorFont::cjf_BackgroundColor()
+{
+    if (container_ != nullptr) {
+        UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
+        UILabel* label = new UILabel();
+        label->SetPosition(positionX_, positionY_);
+        label->Resize(LABEL_WIDTH*2, LABEL_HEIGHT);
+        label->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label->SetText("红色绿色黄色");
+        label->SetBackgroundColorSpan(Color::Red(),0,2);
+        label->SetBackgroundColorSpan(Color::Green(),2,4);
+        label->SetBackgroundColorSpan(Color::Yellow(),4,6);
+        container_->Add(label);
+        positionY_ += LABEL_HEIGHT + GAP;
+
+
+        UILabel* label_2 = new UILabel();
+        label_2->SetPosition(positionX_, positionY_);
+        label_2->Resize(LABEL_WIDTH*2, LABEL_HEIGHT);
+        label_2->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label_2->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label_2->SetText("红色绿色黄色");
+        label_2->SetForegroundColorSpan(Color::Red(),0,2);
+        label_2->SetForegroundColorSpan(Color::Green(),2,4);
+        label_2->SetForegroundColorSpan(Color::Yellow(),4,6);
+        container_->Add(label_2);
+        positionY_ += LABEL_HEIGHT + GAP;
+
+        UILabel* label_3 = new UILabel();
+        label_3->SetPosition(positionX_, positionY_);
+        label_3->Resize(LABEL_WIDTH*2, LABEL_HEIGHT);
+        label_3->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label_3->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label_3->SetText("红色绿色黄色");
+        label_3->SetLineBackgroundSpan(Color::Red(),0,2);
+        label_3->SetLineBackgroundSpan(Color::Green(),2,4);
+        label_3->SetLineBackgroundSpan(Color::Yellow(),4,6);
+        container_->Add(label_3);
+        positionY_ += LABEL_HEIGHT + GAP;
+
+        UIViewBounds::GetInstance()->SetShowState(true);
+
+    }
+}
+void UITestVectorFont::cjf_LineBackgroundColor()
+{
+    if (container_ != nullptr) {
+        UIFont::GetInstance()->RegisterFontInfo(HYQIHEI_65S);
+        UILabel* label = new UILabel();
+        label->SetPosition(positionX_, positionY_);
+        label->Resize(LABEL_WIDTH*2, LABEL_HEIGHT);
+        label->SetLineBreakMode(UILabel::LINE_BREAK_MARQUEE);
+        label->SetFont(HYQIHEI_65S, 24); // 24 : size
+        label->SetText("红色绿色黄色");
+
+//        label->SetLineBackgroundSpan(Color::Green(),2,4);
+//        label->SetLineBackgroundSpan(Color::Yellow(),4,6);
+        label->SetLineBackgroundSpan(Color::Red(),0,2);
+
+        UIViewBounds::GetInstance()->SetShowState(true);
+        container_->Add(label);
+        positionY_ += LABEL_HEIGHT + GAP;
+
+
+
+    }
+}
+
+// ---- cjf end ----
 void UITestVectorFont::FontFontEngineVectorTestCHLang001()
 {
     if (container_ != nullptr) {

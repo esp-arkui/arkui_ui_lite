@@ -647,7 +647,11 @@ int8_t UIFontVector::GetGlyphNode(uint32_t unicode, GlyphNode& glyphNode, uint16
     }
 
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
-    uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode, glyphNode.textStyle);
+// ---- cjf ----
+    uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode);
+    // uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode, glyphNode.textStyle);
+// ---- cjf end ----
+    
 #else
     uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode);
 #endif
@@ -686,7 +690,10 @@ uint8_t* UIFontVector::GetBitmap(uint32_t unicode, GlyphNode& glyphNode, uint16_
     uint16_t fontKey = GetKey(fontId, fontSize);
     UIFontCacheManager* fontCacheManager = UIFontCacheManager::GetInstance();
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
-    uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode, glyphNode.textStyle);
+// ---- cjf ----
+    uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode);
+    // uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode, glyphNode.textStyle);
+// ---- cjf end ----
 #else
     uint8_t* bitmap = fontCacheManager->GetBitmap(fontKey, unicode);
 #endif
@@ -717,7 +724,10 @@ uint8_t* UIFontVector::GetBitmap(uint32_t unicode, GlyphNode& glyphNode, uint16_
     }
 
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
-    bitmap = fontCacheManager->GetBitmap(fontKey, unicode, glyphNode.textStyle);
+// ---- cjf ----
+    bitmap = fontCacheManager->GetBitmap(fontKey, unicode);
+    // bitmap = fontCacheManager->GetBitmap(fontKey, unicode, glyphNode.textStyle);
+// ---- cjf end ----
 #else
     bitmap = fontCacheManager->GetBitmap(fontKey, unicode);
 #endif
@@ -945,8 +955,13 @@ void UIFontVector::SetFace(FaceInfo& faceInfo, uint32_t unicode, TextStyle textS
     uint32_t bitmapSize = faceInfo.face->glyph->bitmap.width * faceInfo.face->glyph->bitmap.rows * pixSize;
     // cache bitmap
     UIFontCacheManager* fontCacheManager = UIFontCacheManager::GetInstance();
+// ---- cjf ----
     uint8_t* bitmap =
-        fontCacheManager->GetSpace(faceInfo.key, unicode, bitmapSize + sizeof(Metric), textStyle);
+        fontCacheManager->GetSpace(faceInfo.key, unicode, bitmapSize + sizeof(Metric));
+    // uint8_t* bitmap =
+    //     fontCacheManager->GetSpace(faceInfo.key, unicode, bitmapSize + sizeof(Metric), textStyle);
+// ---- cjf end ----
+    
     if (bitmap != nullptr) {
         if (memcpy_s(bitmap, sizeof(Metric), &f, sizeof(Metric)) != EOK) {
             fontCacheManager->PutSpace(bitmap);
@@ -1032,6 +1047,57 @@ uint16_t UIFontVector::GetOffsetPosY(const char* text,
     return offset;
 }
 
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+uint16_t UIFontVector::GetLineMaxHeight(const char* text,
+                                        uint16_t lineLength,
+                                        uint16_t fontId,
+                                        uint8_t fontSize,
+                                        uint16_t& letterIndex,
+                                        SpannableString* spannableString)
+{
+    if (!freeTypeInited_) {
+        return INVALID_RET_VALUE;
+    }
+    uint32_t i = 0;
+    uint16_t textNum = 0;
+    uint16_t emojiNum = 0;
+    uint16_t loopNum = 0;
+    uint16_t maxHeight = GetHeight(fontId, fontSize);
+    while (i < lineLength) {
+        uint32_t unicode = TypedText::GetUTF8Next(text, i, i);
+        TypedText::IsColourWord(unicode, fontId, fontSize) ? emojiNum++ : textNum++;
+        loopNum++;
+        // 当前字是富文本，
+        if( spannableString != nullptr && spannableString->isSizeSpan_[i])
+        {
+            uint16_t spannableHeight = 0;
+            // 从List height 中寻找
+            spannableHeight = spannableString->GetHeight(letterIndex);
+            if(spannableHeight == 0)
+            {
+                uint16_t tempFontId  = 0;
+                bool fontIdHasFind = spannableString->GetFontId(letterIndex,tempFontId);
+                tempFontId = (fontIdHasFind)?tempFontId:fontId;
+                uint8_t tempFontSize  = 0;
+                bool sizeHasFind = spannableString->GetSize(letterIndex,tempFontSize);
+                tempFontSize = (sizeHasFind)?tempFontSize:fontSize;
+                spannableHeight =  GetHeight( tempFontId, tempFontSize);
+            }
+            else
+            {
+                spannableHeight = spannableString->GetHeight(letterIndex);
+            }
+            maxHeight = spannableHeight > maxHeight ? spannableHeight : maxHeight;
+        }
+        letterIndex++;
+        if (i > 0 && ((text[i - 1] == '\r') || (text[i - 1] == '\n'))) {
+            break;
+        }
+    }
+    return GetMaxSubLineHeight(textNum, loopNum, maxHeight, emojiNum);
+}
+#else
 uint16_t UIFontVector::GetLineMaxHeight(const char* text,
                                         uint16_t lineLength,
                                         uint16_t fontId,
@@ -1068,6 +1134,7 @@ uint16_t UIFontVector::GetLineMaxHeight(const char* text,
     }
     return GetMaxSubLineHeight(textNum, loopNum, maxHeight, emojiNum);
 }
+#endif
 
 uint16_t UIFontVector::GetMaxSubLineHeight(uint16_t textNum, uint16_t loopNum, uint16_t maxHeight, uint16_t emojiNum)
 {

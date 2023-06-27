@@ -21,6 +21,13 @@
 #include "gfx_utils/geometry2d.h"
 #include "gfx_utils/heap_base.h"
 #include "gfx_utils/style.h"
+#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
+#include "common/spannable_string.h"
+#endif
+
+// ---- cjf ----
+#include "font/fulltext.h"
+// ---- cjf end ----
 
 namespace OHOS {
 class DrawLabel : public HeapBase {
@@ -56,9 +63,16 @@ public:
                                      const ColorType& color,
                                      OpacityType opaScale,
                                      bool compatibilityMode);
-
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    static uint8_t GetLineMaxLetterSize(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
+                                        uint16_t letterIndex, SpannableString* spannableString);
+#else
     static uint8_t GetLineMaxLetterSize(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
                                         uint16_t letterIndex, SizeSpan* sizeSpans);
+#endif
+// ---- cjf end ----
+    
     static void GetLineBackgroundColor(uint16_t letterIndex, List<LineBackgroundColor>* linebackgroundColor,
                                        bool& havelinebackground, ColorType& linebgColor);
     static void GetBackgroundColor(uint16_t letterIndex, List<BackgroundColor>* backgroundColor,

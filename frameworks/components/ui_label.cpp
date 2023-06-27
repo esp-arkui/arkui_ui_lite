@@ -194,6 +194,31 @@ void UILabel::SetText(const SpannableString* text)
 }
 #endif
 
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+void UILabel::SetSizeSpan(uint16_t start, uint16_t end, uint8_t size)
+{
+    if (labelText_ == nullptr) {
+        return;
+    }
+    labelText_->SetSizeSpan(start, end, size);
+    if (labelText_->IsNeedRefresh()) {
+        RefreshLabel();
+    }
+}
+
+void UILabel::SetFontNameSpan(uint16_t start, uint16_t end,const char* fontName)
+{
+    InitLabelText();
+    labelText_->SetFontNameSpan(start,end, fontName);
+    if (labelText_->IsNeedRefresh()) {
+        RefreshLabel();
+    }
+}
+
+#endif
+// ---- cjf end ----
+
 void UILabel::SetAbsoluteSizeSpan(uint16_t start, uint16_t end, uint8_t size)
 {
     if (labelText_ == nullptr) {

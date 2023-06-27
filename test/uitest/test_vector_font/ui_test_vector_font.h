@@ -31,6 +31,13 @@ public:
     void SetUp() override;
     void TearDown() override;
     const UIView* GetTestView() override;
+// ---- cjf ----
+    void cjf_size();
+    void cjf_fontId();
+    void cjf_sizeFontId();
+    void cjf_BackgroundColor();
+    void cjf_LineBackgroundColor();
+// ---- cjf end ----
     void FontFontEngineVectorTestCHLang001();
     void FontFontEngineVectorTestCHLang002();
     void FontFontEngineVectorTestJALang001();

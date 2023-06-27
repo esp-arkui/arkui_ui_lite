@@ -24,6 +24,10 @@
 #include "font/ui_font_cache.h"
 #include <memory>
 
+// ---- cjf ----
+#include "font/fulltext.h"
+// ---- cjf end ----
+
 namespace OHOS {
 class UIFontVector : public BaseFont {
 public:
@@ -54,8 +58,16 @@ public:
     bool IsColorEmojiFont(FT_Face &face);
     uint16_t GetOffsetPosY(const char* text, uint16_t lineLength,
                            bool& isEmojiLarge, uint16_t fontId, uint8_t fontSize) override;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
     uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
-                              uint16_t& letterIndex, SizeSpan* sizeSpans)  override;
+                              uint16_t& letterIndex, SpannableString* spannableString)  ;
+#else
+   uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
+                             uint16_t& letterIndex, SizeSpan* sizeSpans)  override;
+#endif
+// ---- cjf end ----
+
     bool GetTtfInfo(uint8_t ttfId, uint8_t* ttfBuffer, uint32_t ttfBufferSize, TtfHeader& ttfHeader) override;
     void SetPsramMemory(uintptr_t psramAddr, uint32_t psramLen) override;
     int8_t SetCurrentLangId(uint8_t langId) override;

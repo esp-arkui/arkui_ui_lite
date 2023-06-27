@@ -16,6 +16,10 @@
 #define UI_FONT_H
 #include "font/base_font.h"
 
+// ---- cjf ----
+#include "font/fulltext.h"
+// ---- cjf end ----
+
 namespace OHOS {
 class UIFont : public HeapBase {
 public:
@@ -228,9 +232,15 @@ public:
     {
         return instance_->GetOffsetPosY(text, lineLength, isAllEmoji, fontId, fontSize);
     }
-
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    virtual uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
+                                      uint16_t letterIndex, SpannableString* spannableString);
+#else
     virtual uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
                                       uint16_t letterIndex, SizeSpan* sizeSpans);
+#endif
+// ---- cjf end ----
 
     bool IsEmojiFont(uint16_t fontid)
     {

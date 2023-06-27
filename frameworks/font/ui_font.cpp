@@ -265,10 +265,18 @@ uint16_t UIFont::GetWidth(uint32_t unicode, uint16_t fontId, uint8_t fontSize, u
 #endif
     return 0;
 }
-
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+uint16_t UIFont::GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
+                                  uint16_t letterIndex, SpannableString* spannableString)
+{
+    return instance_->GetLineMaxHeight(text, lineLength, fontId, fontSize, letterIndex, spannableString);
+}
+#else
 uint16_t UIFont::GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
                                   uint16_t letterIndex, SizeSpan* sizeSpans)
 {
     return instance_->GetLineMaxHeight(text, lineLength, fontId, fontSize, letterIndex, sizeSpans);
 }
+#endif
 } // namespace OHOS

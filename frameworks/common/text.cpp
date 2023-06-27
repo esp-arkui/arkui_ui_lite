@@ -44,6 +44,11 @@ Text::Text()
 {
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     textStyles_ = nullptr;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    spannableString_ = new SpannableString();
+#endif
+// ---- cjf end ----
 #endif
     SetFont(DEFAULT_VECTOR_FONT_FILENAME, DEFAULT_VECTOR_FONT_SIZE);
 }
@@ -59,6 +64,14 @@ Text::~Text()
         UIFree(textStyles_);
         textStyles_ = nullptr;
     }
+    // ---- cjf ----
+    #if defined(SR_1) && SR_1
+    if (spannableString_ != nullptr) {
+        UIFree(spannableString_);
+        spannableString_ = nullptr;
+    }
+    #endif
+    // ---- cjf end ----
 #endif
     if (backgroundColor_.Size() > 0) {
         backgroundColor_.Clear();
@@ -78,7 +91,6 @@ Text::~Text()
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
 void Text::SetSpannableString(const SpannableString* spannableString)
 {
-    SetText(spannableString->text_);
     if (textStyles_ != nullptr) {
         UIFree(textStyles_);
         textStyles_ = nullptr;
@@ -143,6 +155,16 @@ void Text::SetText(const char* text)
         UIFree(sizeSpans_);
         sizeSpans_ = nullptr;
     }
+
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    if (spannableString_ != nullptr) {
+        UIFree(spannableString_);
+        spannableString_ = nullptr;
+        spannableString_ =  new SpannableString(text);
+    }
+#endif
+// ---- cjf end ----
 }
 
 void Text::SetFont(const char* name, uint8_t size)
@@ -153,8 +175,10 @@ void Text::SetFont(const char* name, uint8_t size)
     UIFont* font = UIFont::GetInstance();
     if (font->IsVectorFont()) {
         uint16_t fontId = font->GetFontId(name);
-        if ((fontId != UIFontBuilder::GetInstance()->GetTotalFontId()) &&
-            ((fontId_ != fontId) || (fontSize_ != size))) {
+        if ((fontId != UIFontBuilder::GetInstance()->GetTotalFontId()) 
+                // && ((fontId_ != fontId) || (fontSize_ != size))
+            ) 
+        {
             fontId_ = fontId;
             fontSize_ = size;
             needRefresh_ = true;
@@ -308,10 +332,18 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
         lineHeight = font->GetHeight(fontId_, fontSize_);
         lineHeight += style.lineSpace_;
     }
+
     if ((style.lineSpace_ == 0) && (sizeSpans_ != nullptr)) {
         uint16_t letterIndex = 0;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+        curLineHeight = font->GetLineMaxHeight(text_, textLine_[0].lineBytes, fontId_, fontSize_,
+                                               letterIndex, spannableString_);
+#else
         curLineHeight = font->GetLineMaxHeight(text_, textLine_[0].lineBytes, fontId_, fontSize_,
                                                letterIndex, sizeSpans_);
+#endif
+// ---- cjf end----
         curLineHeight += style.lineSpace_;
     } else {
         curLineHeight = lineHeight;
@@ -351,9 +383,19 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
                                      nullptr, baseLine_,
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
                                      textStyles_,
-#endif
-                                     &backgroundColor_, &foregroundColor_, &linebackgroundColor_, sizeSpans_, 0};
-
+#endif                                  
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+                                    // 待修改，这里要换成 SpannableString 中的属性
+                                    &(spannableString_->backgroundColor_),
+                                    &(spannableString_->foregroundColor_),
+                                    &(spannableString_->linebackgroundColor_),
+                                    spannableString_,
+                                    0};
+#else
+                                    &backgroundColor_, &foregroundColor_, &linebackgroundColor_, sizeSpans_,0};
+#endif                                
+// ---- cjf end ----                                                             
             uint16_t ellipsisOssetY = DrawLabel::DrawTextOneLine(gfxDstBuffer, labelLine, letterIndex);
             if ((i == (lineCount - 1)) && (ellipsisIndex != TEXT_ELLIPSIS_END_INV)) {
                 labelLine.ellipsisOssetY = ellipsisOssetY;
@@ -363,8 +405,15 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
             letterIndex = TypedText::GetUTF8CharacterSize(text_, lineBegin + lineBytes);
         }
         if ((style.lineSpace_ == 0) && (sizeSpans_ != nullptr)) {
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+            curLineHeight = font->GetLineMaxHeight(&text_[lineBegin], textLine_[i].lineBytes, fontId_,
+                                                   fontSize_, tempLetterIndex, spannableString_);
+#else
             curLineHeight = font->GetLineMaxHeight(&text_[lineBegin], textLine_[i].lineBytes, fontId_,
                                                    fontSize_, tempLetterIndex, sizeSpans_);
+#endif
+// ---- cjf end ----
             curLineHeight += style.lineSpace_;
         } else {
             curLineHeight = lineHeight;
@@ -373,6 +422,7 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
         pos.y += curLineHeight;
     }
 }
+
 
 int16_t Text::TextPositionY(const Rect& textRect, int16_t textHeight)
 {
@@ -567,6 +617,66 @@ uint16_t Text::GetLetterIndexByPosition(const Rect& textRect, const Style& style
                                            letterIndex, sizeSpans_, true, 0xFFFF, IsEliminateTrailingSpaces());
     return (lineStart < textLen) ? lineStart : TEXT_ELLIPSIS_END_INV;
 }
+
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+void Text::SetSizeSpan(uint16_t start, uint16_t end, uint8_t inputSize) // 前闭后开
+{
+#if defined(ENABLE_VECTOR_FONT) && ENABLE_VECTOR_FONT
+    if (fontId_ == FONT_ID_MAX) {
+        return;
+    }
+#else
+    if (fontId_ == UIFontBuilder::GetInstance()->GetBitmapFontIdMax()) {
+        return;
+    }
+#endif
+    uint16_t fontId = GetSpanFontIdBySize(inputSize);
+#if defined(ENABLE_VECTOR_FONT) && !ENABLE_VECTOR_FONT
+    if (fontId == fontId_) {
+        return;
+    }
+#endif
+    if (text_ != nullptr && spannableString_ !=  nullptr) // 可以修改成默认是空指针，节省空间
+    {
+        characterSize_ = TypedText::GetUTF8CharacterSize(text_, GetTextStrLen());
+
+        if(spannableString_->isSizeSpan_ == nullptr)//
+        {
+            spannableString_->InitIsSizeSpan(characterSize_); // 这个会在每一种富文本设置的接口中设置一次
+        } 
+    }
+    spannableString_->SetSize(inputSize,start,end);
+}
+#endif
+// ---- cjf end ----
+
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+// 点阵字没有这个功能
+void Text::SetFontNameSpan(uint16_t start, uint16_t end,const char* inputFontName)
+{
+    
+    if (inputFontName == nullptr) {
+        return;
+    }
+    UIFont* font = UIFont::GetInstance();
+    if (font->IsVectorFont()) {
+        uint16_t fontId = font->GetFontId(inputFontName);
+        if ((fontId != UIFontBuilder::GetInstance()->GetTotalFontId()) )
+        {
+            spannableString_->SetFontId(fontId,start,end);
+            needRefresh_ = true;
+        }
+    } else {
+        // 点阵字部分未处理
+    }
+
+}
+#endif
+// ---- cjf end ----
+
+
 
 void Text::SetAbsoluteSizeSpan(uint16_t start, uint16_t end, uint8_t size)
 {
