@@ -44,6 +44,7 @@ public:
 
     constexpr static uint8_t STATE_RELEASE = 0;
     constexpr static uint8_t STATE_PRESS = 1;
+    constexpr static uint8_t STATE_LONG_PRESS = 2;
 
     virtual void OnViewLifeEvent() {}
 
