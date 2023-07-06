@@ -88,6 +88,10 @@ void SpannableString::InitIsSizeSpan(int characterSize)
 void SpannableString::SetSize( uint8_t inputSize, uint16_t startIndex, uint16_t endIndex)
 {
     bool needAddNode = true;
+    if(startIndex >=endIndex)
+    {
+        return;
+    }
     if(sizeList_.IsEmpty())
     {
         FontSizeSpan inputSpan = { startIndex, endIndex, inputSize};
