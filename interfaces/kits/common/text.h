@@ -46,6 +46,7 @@
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
 #include "common/spannable_string.h"
 #endif
+#include <cstring>
 
 namespace OHOS {
 /**

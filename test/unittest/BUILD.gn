@@ -86,6 +86,7 @@ if (os_level != "standard") {
           "components/ui_toggle_button_unit_test.cpp",
           "components/ui_view_group_unit_test.cpp",
           "components/ui_view_unit_test.cpp",
+          "components/ui_spannable_string_unit_test.cpp",
           "dfx/event_injector_unit_test.cpp",
           "dfx/view_bounds_unit_test.cpp",
           "events/cancel_event_unit_test.cpp",

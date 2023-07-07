@@ -17,8 +17,48 @@
 #define SPANNABLE_STRING_H
 #include "gfx_utils/list.h"
 #include "font/ui_font_header.h"
+#include "gfx_utils/color.h"
 namespace OHOS {
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
+struct FontSizeSpan {
+    uint16_t start;
+    uint16_t end;
+    uint8_t size;
+};
+
+/**
+ * @brief Stores the attribute information about letter height for full text.
+ */
+struct LetterHeightSpan {
+    uint16_t start;
+    uint16_t end;
+    int16_t height;
+};
+
+struct FontIdSpan {
+    uint16_t start;
+    uint16_t end;
+    uint16_t fontId;
+};
+
+struct BackgroundColor : public HeapBase {
+    int16_t start;
+    int16_t end;
+    ColorType backgroundColor;
+};
+
+struct ForegroundColor : public HeapBase {
+    int16_t start;
+    int16_t end;
+    ColorType fontColor;
+};
+
+struct LineBackgroundColor : public HeapBase {
+    int16_t start;
+    int16_t end;
+    ColorType linebackgroundColor;
+};
+
 class StyleSpan : public HeapBase {
 public:
     StyleSpan() {};
@@ -41,6 +81,16 @@ public:
     char* text_;
     List<StyleSpan*> spanList_;
     void SetTextStyle(TextStyle textStyle, uint16_t startIndex, uint16_t endIndex);
+    
+    /** Record each letter having full text setting or not. */
+    bool* isSizeSpan_;
+    void InitIsSizeSpan(int characterSize);
+    List<FontSizeSpan> sizeList_;
+    void SetSize(uint8_t inputSize, uint16_t startIndex, uint16_t endIndex);
+    bool GetSize(uint16_t index, uint8_t& outputSize);
+    List<BackgroundColor> backgroundColor_;
+    void SetBackgroundColorSpan(ColorType backgroundColor, int16_t start, int16_t end);
+    List<BackgroundColor> GetBackgroundColorSpan();
 };
 #endif
 }
