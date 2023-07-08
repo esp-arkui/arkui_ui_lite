@@ -40,16 +40,16 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
     uint16_t retOffsetY = 0; // ret value elipse offsetY
     uint16_t offsetPosY = 0;
     uint8_t maxLetterSize = GetLineMaxLetterSize(labelLine.text, labelLine.lineLength, labelLine.fontId,
-                                                 labelLine.fontSize, letterIndex, labelLine.sizeSpans);
+                                                 labelLine.fontSize, letterIndex, labelLine.spannableString);
     DrawLineBackgroundColor(gfxDstBuffer, letterIndex, labelLine);
     GlyphNode glyphNode;
     while (i < labelLine.lineLength) {
         uint32_t letter = TypedText::GetUTF8Next(labelLine.text, i, i);
         uint16_t fontId = labelLine.fontId;
         uint8_t fontSize = labelLine.fontSize;
-        if (labelLine.sizeSpans != nullptr && labelLine.sizeSpans[letterIndex].isSizeSpan) {
-            fontId = labelLine.sizeSpans[letterIndex].fontId;
-            fontSize = labelLine.sizeSpans[letterIndex].size;
+         if (labelLine.spannableString != nullptr && labelLine.spannableString->isSizeSpan_[letterIndex]) {
+            bool fontIdHasFind= labelLine.spannableString->GetFontId(letterIndex,fontId);
+            bool fontSizeHasFind = labelLine.spannableString->GetSize(letterIndex,fontSize);
         }
         bool havebackgroundColor = false;
         ColorType backgroundColor;
@@ -111,9 +111,9 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
 }
 
 uint8_t DrawLabel::GetLineMaxLetterSize(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
-                                        uint16_t letterIndex, SizeSpan* sizeSpans)
+                                        uint16_t letterIndex, SpannableString* spannableString)
 {
-    if (sizeSpans == nullptr) {
+    if (spannableString == nullptr) {
         return fontSize;
     }
     uint32_t i = 0;
@@ -124,8 +124,9 @@ uint8_t DrawLabel::GetLineMaxLetterSize(const char* text, uint16_t lineLength, u
             letterIndex++;
             continue;
         }
-        if (sizeSpans != nullptr && sizeSpans[letterIndex].isSizeSpan) {
-            uint8_t tempSize = sizeSpans[letterIndex].size;
+        if (spannableString != nullptr && spannableString->isSizeSpan_[letterIndex]) {
+            uint8_t tempSize=0;
+            bool fontSizeHasFind = spannableString->GetSize(letterIndex,tempSize);
             if (tempSize > maxLetterSize) {
                 maxLetterSize = tempSize;
             }

@@ -119,7 +119,7 @@ uint32_t UILineBreakEngine::GetNextLineAndWidth(const char* text,
                                                 int16_t& maxWidth,
                                                 int16_t& maxHeight,
                                                 uint16_t& letterIndex,
-                                                SizeSpan* sizeSpans,
+                                                SpannableString* spannableString,
                                                 uint16_t len,
                                                 bool eliminateTrailingSpaces)
 {
@@ -153,7 +153,7 @@ uint32_t UILineBreakEngine::GetNextLineAndWidth(const char* text,
             lastIndex = preIndex;
             lastWidth = eliminateTrailingSpaces ? preWidth : curWidth;
         }
-        width = GetLetterWidth(unicode, letterIndex, height, fontId, fontSize, sizeSpans);
+        width = GetLetterWidth(unicode, letterIndex, height, fontId, fontSize, spannableString);
         letterIndex++;
         if (height > maxHeight) {
             maxHeight = height;
@@ -191,19 +191,20 @@ uint32_t UILineBreakEngine::GetNextLineAndWidth(const char* text,
 }
 
 int16_t UILineBreakEngine::GetLetterWidth(uint32_t unicode, uint16_t& letterIndex, int16_t& height,
-                                          uint16_t fontId, uint8_t fontSize, SizeSpan* sizeSpans)
+                                          uint16_t fontId, uint8_t fontSize, SpannableString* spannableString)
 {
     UIFont* fontEngine = UIFont::GetInstance();
-    if (sizeSpans != nullptr && sizeSpans[letterIndex].isSizeSpan) {
-        int16_t width = fontEngine->GetWidth(unicode, sizeSpans[letterIndex].fontId,
-                                             sizeSpans[letterIndex].size, 0);
-
-        if (sizeSpans[letterIndex].height == 0) {
-            height = fontEngine->GetHeight(sizeSpans[letterIndex].fontId,
-                                           sizeSpans[letterIndex].size);
-            sizeSpans[letterIndex].height = height;
+    if (spannableString != nullptr && spannableString->isSizeSpan_[letterIndex]) {
+        uint16_t tempFontId = fontId;
+        spannableString->GetFontId(letterIndex, tempFontId);
+        uint8_t tempSize = fontSize;
+        spannableString->GetSize(letterIndex, tempSize);
+        int16_t width = fontEngine->GetWidth(unicode, tempFontId,tempSize, 0);
+        if (spannableString->GetHeight(letterIndex) == 0) {
+            height = fontEngine->GetHeight(tempFontId,tempSize);
+            spannableString->SetHeight(height,letterIndex,letterIndex+1);
         } else {
-            height = sizeSpans[letterIndex].height;
+            height = spannableString->GetHeight(letterIndex);
         }
         return width;
     } else {
