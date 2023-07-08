@@ -114,9 +114,9 @@ void UICanvas::LineTo(const Point& point)
 #endif
 }
 
-void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle)
-{
 #if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+void UICanvas::SetArcPara(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle)
+{
     if (vertices_ == nullptr || startAngle == endAngle) {
         return;
     }
@@ -137,6 +137,13 @@ void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, i
         largeArcFlag = true;
     }
     vertices_->ArcTo(radius, radius, angle, largeArcFlag, 1, float(center.x + sinma), float(center.y - cosma));
+}
+#endif
+
+void UICanvas::ArcTo(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle)
+{
+#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+    SetArcPara();
 #else
     if (path_ == nullptr) {
         return;
@@ -376,24 +383,7 @@ void UICanvas::DrawCurve(const Point& startPoint,
 void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
 {
 #if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
-    if (!paint.GetChangeFlag()) {
-        if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
-            DrawRectSetCmd(startPoint, height, width, paint, Paint::PaintStyle::STROKE_STYLE);
-        }
-
-        if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
-            DrawRectSetCmd(startPoint, height, width, paint, Paint::PaintStyle::FILL_STYLE);
-        }
-    } else {
-        BeginPath();
-        MoveTo(startPoint);
-        LineTo({static_cast<int16_t>(startPoint.x + width), startPoint.y});
-        LineTo({static_cast<int16_t>(startPoint.x + width), static_cast<int16_t>(startPoint.y + height)});
-        LineTo({startPoint.x, static_cast<int16_t>(startPoint.y + height)});
-        ClosePath();
-        FillPath(paint);
-        DrawPath(paint);
-    }
+    SetDrawRectCmdScope(startPoint, height, width, paint);
 #else
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
         RectParam* rectParam = new RectParam;
@@ -433,6 +423,30 @@ void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, 
 #endif
     Invalidate();
 }
+
+#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+void UICanvas::SetDrawRectCmdScope(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
+{
+    if (!paint.GetChangeFlag()) {
+        if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
+            DrawRectSetCmd(startPoint, height, width, paint, Paint::PaintStyle::STROKE_STYLE);
+        }
+
+        if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::FILL_STYLE) {
+            DrawRectSetCmd(startPoint, height, width, paint, Paint::PaintStyle::FILL_STYLE);
+        }
+    } else {
+        BeginPath();
+        MoveTo(startPoint);
+        LineTo({static_cast<int16_t>(startPoint.x + width), startPoint.y});
+        LineTo({static_cast<int16_t>(startPoint.x + width), static_cast<int16_t>(startPoint.y + height)});
+        LineTo({startPoint.x, static_cast<int16_t>(startPoint.y + height)});
+        ClosePath();
+        FillPath(paint);
+        DrawPath(paint);
+    }
+}
+#endif
 
 void UICanvas::DrawRectSetCmd(const Point& startPoint, int16_t height, int16_t width, const Paint& paint,
                               Paint::PaintStyle paintStyle)
@@ -1578,7 +1592,46 @@ void UICanvas::DestroyMapBufferInfo()
     }
 }
 
-#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+#if (defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && (GRAPHIC_ENABLE_GRADIENT_FILL_FLAG == 1))
+void UICanvas::SetBlendScanLine(const Paint& paint,
+                                RasterizerScanlineAntialias& blendRasterizer,
+                                RasterizerScanlineAntialias& rasterizer,
+                                RenderBase& renBase,
+                                TransAffine& gradientMatrixBlend,
+                                FillGradientLut& gradientColorModeBlend,
+                                TransAffine& transform,
+                                FillInterpolator& interpolatorTypeBlend,
+                                GeometryScanline& scanline1,
+                                GeometryScanline& scanline2,
+                                FillBase& allocator1,
+                                SpanBase& spanGen)
+{
+    if (paint.GetStyle() == Paint::GRADIENT) {
+        DrawCanvas::BuildGradientColor(paint, gradientColorModeBlend);
+        if (paint.GetGradient() == Paint::Linear) {
+            float distance = 0;
+            DrawCanvas::BuildLineGradientMatrix(paint, gradientMatrixBlend, transform, distance);
+            GradientLinearCalculate gradientLinearCalculate;
+            FillGradient span(interpolatorTypeBlend, gradientLinearCalculate, gradientColorModeBlend, 0, distance);
+            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                          scanline1, scanline2, renBase, allocator1, span, spanGen);
+        } else if (paint.GetGradient() == Paint::Radial) {
+            Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
+            float startRadius = 0;
+            float endRadius = 0;
+            DrawCanvas::BuildRadialGradientMatrix(paint, gradientMatrixBlend, transform, startRadius, endRadius);
+            GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
+                                                            radialPoint.y0 - radialPoint.y1);
+            FillGradient span(interpolatorTypeBlend, gradientRadialCalculate, gradientColorModeBlend,
+                                    startRadius, endRadius);
+            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
+                          scanline1, scanline2, renBase, allocator1, span, spanGen);
+        }
+    }
+}
+#endif
+
+#if (defined(ENABLE_CANVAS_EXTEND) && (ENABLE_CANVAS_EXTEND == 1))
 void UICanvas::BlendRaster(const Paint& paint,
                            void* param,
                            RasterizerScanlineAntialias& blendRasterizer,
@@ -1601,32 +1654,12 @@ void UICanvas::BlendRaster(const Paint& paint,
         BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
                       scanline1, scanline2, renBase, allocator1, spanBlendSoildColor, spanGen);
     }
-#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if (defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && (GRAPHIC_ENABLE_GRADIENT_FILL_FLAG == 1))
     FillInterpolator interpolatorTypeBlend(gradientMatrixBlend);
     FillGradientLut gradientColorModeBlend;
-    if (paint.GetStyle() == Paint::GRADIENT) {
-        DrawCanvas::BuildGradientColor(paint, gradientColorModeBlend);
-        if (paint.GetGradient() == Paint::Linear) {
-            float distance = 0;
-            DrawCanvas::BuildLineGradientMatrix(paint, gradientMatrixBlend, transform, distance);
-            GradientLinearCalculate gradientLinearCalculate;
-            FillGradient span(interpolatorTypeBlend, gradientLinearCalculate,
-                                    gradientColorModeBlend, 0, distance);
-            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
-                          scanline1, scanline2, renBase, allocator1, span, spanGen);
-        } else if (paint.GetGradient() == Paint::Radial) {
-            Paint::RadialGradientPoint radialPoint = paint.GetRadialGradientPoint();
-            float startRadius = 0;
-            float endRadius = 0;
-            DrawCanvas::BuildRadialGradientMatrix(paint, gradientMatrixBlend, transform, startRadius, endRadius);
-            GradientRadialCalculate gradientRadialCalculate(endRadius, radialPoint.x0 - radialPoint.x1,
-                                                            radialPoint.y0 - radialPoint.y1);
-            FillGradient span(interpolatorTypeBlend, gradientRadialCalculate, gradientColorModeBlend,
-                                    startRadius, endRadius);
-            BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
-                          scanline1, scanline2, renBase, allocator1, span, spanGen);
-        }
-    }
+    SetBlendScanLine(paint, blendRasterizer, rasterizer, renBase, gradientMatrixBlend,
+                     gradientColorModeBlend, transform, interpolatorTypeBlend, scanline1, scanline2,
+                     allocator1, spanGen);
 #endif
 #if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
     if (paint.GetStyle() == Paint::PATTERN) {

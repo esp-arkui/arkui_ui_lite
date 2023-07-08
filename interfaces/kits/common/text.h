@@ -520,6 +520,11 @@ protected:
 
     virtual uint16_t GetLetterIndexByPosition(const Rect& textRect, const Style& style, const Point& pos);
 
+    void CalCulateCurLineHeight(const Style& style, int16_t& curLineHeight);
+
+    Point GetPoint(int16_t lineHeight, const Style& style,
+                   const Rect& coords, uint16_t lineCount, const Rect& mask);
+
     virtual void Draw(BufferInfo& gfxDstBuffer,
                       const Rect& mask,
                       const Rect& coords,

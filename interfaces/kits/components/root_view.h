@@ -317,6 +317,8 @@ private:
     void ClearMapBuffer();
     void UpdateMapBufferInfo(Rect& invalidatedArea);
     void RestoreMapBufferInfo();
+    void SetCurViewInfo(Rect& origRect, UIView* curView, Rect& relativeRect);
+    void SetInvalidatedArea(Rect& invalidatedArea);
 #if LOCAL_RENDER
     void RemoveViewFromInvalidMap(UIView *view);
     void DrawInvalidMap(const Rect &buffRect);

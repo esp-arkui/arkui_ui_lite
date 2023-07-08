@@ -288,6 +288,35 @@ void Text::OnDraw(BufferInfo& gfxDstBuffer,
     }
 }
 
+void Text::CalCulateCurLineHeight(const Style& style, int16_t& curLineHeight)
+{
+    if ((style.lineSpace_ == 0) && (sizeSpans_ != nullptr)) {
+        uint16_t letterIndex = 0;
+        curLineHeight = font->GetLineMaxHeight(text_, textLine_[0].lineBytes, fontId_, fontSize_,
+                                               letterIndex, sizeSpans_);
+        curLineHeight += style.lineSpace_;
+    } else {
+        curLineHeight = lineHeight;
+    }
+}
+
+Point Text::GetPoint(int16_t lineHeight, const Style& style,
+                     const Rect& coords, uint16_t lineCount, const Rect& mask)
+{
+    Point pos;
+    if (lineHeight == style.lineHeight_) {
+        pos.y = TextPositionY(coords, (lineCount * lineHeight));
+    } else {
+        pos.y = TextPositionY(coords, (lineCount * lineHeight - style.lineSpace_));
+    }
+
+    if (nextLine >= mask.GetTop()) {
+        pos.x = LineStartPos(coords, textLine_[i].linePixelWidth);
+    }
+
+    return pos;
+}
+
 void Text::Draw(BufferInfo& gfxDstBuffer,
                 const Rect& mask,
                 const Rect& coords,
@@ -308,20 +337,9 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
         lineHeight = font->GetHeight(fontId_, fontSize_);
         lineHeight += style.lineSpace_;
     }
-    if ((style.lineSpace_ == 0) && (sizeSpans_ != nullptr)) {
-        uint16_t letterIndex = 0;
-        curLineHeight = font->GetLineMaxHeight(text_, textLine_[0].lineBytes, fontId_, fontSize_,
-                                               letterIndex, sizeSpans_);
-        curLineHeight += style.lineSpace_;
-    } else {
-        curLineHeight = lineHeight;
-    }
-    Point pos;
-    if (lineHeight == style.lineHeight_) {
-        pos.y = TextPositionY(coords, (lineCount * lineHeight));
-    } else {
-        pos.y = TextPositionY(coords, (lineCount * lineHeight - style.lineSpace_));
-    }
+    CalCulateCurLineHeight(style, curLineHeight);
+
+    Point pos = GetPoint(lineHeight, style, coords, lineCount);
     OpacityType opa = DrawUtils::GetMixOpacity(opaScale, style.textOpa_);
     uint16_t letterIndex = 0;
     for (uint16_t i = 0; i < lineCount; i++) {
@@ -344,7 +362,6 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
         }
 #endif
         if (nextLine >= mask.GetTop()) {
-            pos.x = LineStartPos(coords, textLine_[i].linePixelWidth);
             LabelLineInfo labelLine {pos, offset, mask, curLineHeight, lineBytes,
                                      0, opa, style, &text_[lineBegin], lineBytes,
                                      lineBegin, fontId_, fontSize_, 0, static_cast<UITextLanguageDirect>(direct_),
