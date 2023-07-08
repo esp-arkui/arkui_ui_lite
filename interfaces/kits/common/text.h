@@ -47,6 +47,8 @@
 #include "common/spannable_string.h"
 #endif
 
+#include <cstring>
+
 namespace OHOS {
 /**
  * @brief Enumerates text alignment modes.
@@ -116,13 +118,6 @@ struct LineBackgroundColor : public HeapBase {
     int16_t start;
     int16_t end;
     ColorType linebackgroundColor;
-};
-
-struct SizeSpan {
-    bool isSizeSpan;
-    uint8_t size;
-    uint16_t fontId;
-    int16_t height;
 };
 
 struct LabelLineInfo;
@@ -516,7 +511,7 @@ protected:
 
     virtual uint32_t
         GetTextLine(uint32_t begin, uint32_t textLen, int16_t width, uint16_t lineNum, uint8_t letterSpace,
-                    uint16_t& letterIndex, SizeSpan* sizeSpans);
+                    uint16_t& letterIndex, SpannableString* spannableString);
 
     virtual uint16_t GetLetterIndexByPosition(const Rect& textRect, const Style& style, const Point& pos);
 
@@ -535,9 +530,8 @@ protected:
     uint32_t CalculateLineWithEllipsis(uint32_t begin, uint32_t textLen, int16_t width,
                                        uint8_t letterSpace, uint16_t& lineNum,
                                        uint16_t& letterIndex,
-                                       SizeSpan* sizeSpans);
+                                       SpannableString* spannableString);
     uint16_t GetSpanFontIdBySize(uint8_t size);
-    void InitSizeSpans();
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle* textStyles_;
 #endif
@@ -553,8 +547,8 @@ protected:
     List<BackgroundColor> backgroundColor_;
     List<ForegroundColor> foregroundColor_;
     List<LineBackgroundColor> linebackgroundColor_;
-    SizeSpan* sizeSpans_;
     uint32_t characterSize_;
+    SpannableString* spannableString_;
 
 private:
     uint8_t horizontalAlign_ : 4; // UITextLanguageAlignment

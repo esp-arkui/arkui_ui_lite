@@ -76,11 +76,11 @@ struct LabelLineInfo {
     bool baseLine;
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle* textStyles;
+    SpannableString* spannableString;
 #endif
     List<BackgroundColor>*  backgroundColor;
     List<ForegroundColor>*  foregroundColor;
     List<LineBackgroundColor>*  linebackgroundColor;
-    SizeSpan* sizeSpans;
     uint16_t ellipsisOssetY;
 };
 
