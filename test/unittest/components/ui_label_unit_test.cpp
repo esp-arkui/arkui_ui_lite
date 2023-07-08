@@ -263,7 +263,6 @@ HWTEST_F(UILabelTest, UILabelOnPreDraw_001, TestSize.Level1)
     invalidatedArea = nullptr;
 }
 
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
 /**
  * @tc.name: UILabelSetText_002
  * @tc.desc: Verify SetText function.
@@ -281,7 +280,6 @@ HWTEST_F(UILabelTest, UILabelSetText_002, TestSize.Level1)
     label_->SetText(&spannableString);
     EXPECT_EQ(spannableString.spanList_.Size(), 3);
 }
-#endif
 
 /**
  * @tc.name: UILabelSetFontId_001
