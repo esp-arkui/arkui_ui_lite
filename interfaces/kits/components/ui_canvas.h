@@ -197,7 +197,16 @@ public:
      */
     void DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
 
-#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+#if (defined(ENABLE_CANVAS_EXTEND) && (ENABLE_CANVAS_EXTEND == 1))
+    /**
+     * @brief Set the range of the cmd command for the box
+     * @param startPoint starting point
+     * @param height
+     * @param width
+     * @param paint paint brush
+     */
+    void UICanvas::SetDrawRectCmdScope(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+
     /**
      * @brief Draws a rectangular path with no fill.
      * @param startPoint starting point
@@ -348,6 +357,10 @@ public:
      */
     void LineTo(const Point& point);
 
+#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+    void UICanvas::SetArcPara(const Point& center, uint16_t radius, int16_t startAngle, int16_t endAngle);
+#endif
+
     /**
      * @brief Creates an arc path.
      *
@@ -440,14 +453,28 @@ public:
     void OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea) override;
 
     static void BlendRaster(const Paint& paint,
-                        void* param,
-                        RasterizerScanlineAntialias& blendRasterizer,
-                        RasterizerScanlineAntialias& rasterizer,
-                        RenderBase& renBase,
-                        TransAffine& transform,
-                        SpanBase& spanGen,
-                        const Rect& rect,
-                        bool isStroke);
+                            void* param,
+                            RasterizerScanlineAntialias& blendRasterizer,
+                            RasterizerScanlineAntialias& rasterizer,
+                            RenderBase& renBase,
+                            TransAffine& transform,
+                            SpanBase& spanGen,
+                            const Rect& rect,
+                            bool isStroke);
+#if (defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && (GRAPHIC_ENABLE_GRADIENT_FILL_FLAG == 1))
+    void UICanvas::SetBlendScanLine(const Paint& paint,
+                                    RasterizerScanlineAntialias& blendRasterizer,
+                                    RasterizerScanlineAntialias& rasterizer,
+                                    RenderBase& renBase,
+                                    TransAffine& gradientMatrixBlend,
+                                    FillGradientLut& gradientColorModeBlend,
+                                    TransAffine& transform,
+                                    FillInterpolator& interpolatorTypeBlend,
+                                    GeometryScanline& scanline1,
+                                    GeometryScanline& scanline2,
+                                    FillBase& allocator1,
+                                    SpanBase& spanGen);
+#endif
     static void DeleteImageParam(void* param);
     static void DeletePathParam(void* param);
 protected:

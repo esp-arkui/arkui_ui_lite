@@ -611,6 +611,28 @@ void RootView::RestoreMapBufferInfo()
         dc_.mapBufferInfo->width * (DrawUtils::GetPxSizeByColorMode(dc_.mapBufferInfo->mode) >> 3); // 3: Shift 3 bits
 }
 
+void RootView::SetCurViewInfo(Rect& origRect, UIView* curView, Rect& relativeRect)
+{
+    origRect = curView->GetOrigRect();
+    relativeRect = curView->GetRelativeRect();
+    curView->GetTransformMap().SetInvalid(true);
+    curView->SetPosition(
+        relativeRect.GetX() - origRect.GetX() - curView->GetStyle(STYLE_MARGIN_LEFT),
+        relativeRect.GetY() - origRect.GetY() - curView->GetStyle(STYLE_MARGIN_TOP));
+
+    ClearMapBuffer();
+}
+
+void RootView::SetInvalidatedArea(Rect& invalidatedArea)
+{
+    invalidatedArea.SetWidth(dc_.mapBufferInfo->width);
+    invalidatedArea.SetHeight(dc_.mapBufferInfo->height);
+    if (invalidatedArea.GetWidth() < curView->GetWidth()) {
+        UpdateMapBufferInfo(invalidatedArea);
+        updateMapBufferInfo = true;
+    }
+}
+
 void RootView::DrawTop(UIView* view, const Rect& rect)
 {
     if (view == nullptr) {
@@ -644,26 +666,14 @@ void RootView::DrawTop(UIView* view, const Rect& rect)
                 if (curViewRect.Intersect(curView->GetMaskedRect(), mask) || enableAnimator) {
                     if ((curView->GetViewType() != UI_IMAGE_VIEW) && (curView->GetViewType() != UI_TEXTURE_MAPPER) &&
                         !curView->IsTransInvalid() && !enableAnimator) {
-                        origRect = curView->GetOrigRect();
-                        relativeRect = curView->GetRelativeRect();
-                        curView->GetTransformMap().SetInvalid(true);
-                        curView->SetPosition(
-                            relativeRect.GetX() - origRect.GetX() - curView->GetStyle(STYLE_MARGIN_LEFT),
-                            relativeRect.GetY() - origRect.GetY() - curView->GetStyle(STYLE_MARGIN_TOP));
-
-                        ClearMapBuffer();
+                        SetCurViewInfo(origRect, curView, relativeRect, curTransMap);
                         curTransMap = curView->GetTransformMap();
                         enableAnimator = true;
                     }
 
                     if (enableAnimator) {
                         Rect invalidatedArea;
-                        invalidatedArea.SetWidth(dc_.mapBufferInfo->width);
-                        invalidatedArea.SetHeight(dc_.mapBufferInfo->height);
-                        if (invalidatedArea.GetWidth() < curView->GetWidth()) {
-                            UpdateMapBufferInfo(invalidatedArea);
-                            updateMapBufferInfo = true;
-                        }
+                        SetInvalidatedArea(invalidatedArea);
                         curView->OnDraw(*dc_.mapBufferInfo, invalidatedArea);
                         curViewRect = invalidatedArea;
                     } else {
