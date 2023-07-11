@@ -344,6 +344,20 @@ uint16_t UIFontBitmap::GetOffsetPosY(const char* text,
     return offset;
 }
 
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+uint16_t UIFontBitmap::GetLineMaxHeight(const char* text,
+                                        uint16_t lineLength,
+                                        uint16_t fontId,
+                                        uint8_t fontSize,
+                                        uint16_t& letterIndex,
+                                        SpannableString* spannableString)
+{
+    uint16_t maxHeight = GetHeight(fontId, fontSize);
+    return maxHeight;
+}
+#else
+
 uint16_t UIFontBitmap::GetLineMaxHeight(const char* text,
                                         uint16_t lineLength,
                                         uint16_t fontId,
@@ -378,7 +392,8 @@ uint16_t UIFontBitmap::GetLineMaxHeight(const char* text,
 
     return maxHeight;
 }
-
+#endif
+// ---- cjf end ----
 void UIFontBitmap::SetPsramMemory(uintptr_t psramAddr, uint32_t psramLen)
 {
     BaseFont::SetPsramMemory(psramAddr, psramLen);

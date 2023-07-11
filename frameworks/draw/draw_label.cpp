@@ -23,6 +23,8 @@
 #include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
+
+
 uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInfo& labelLine,
                                     uint16_t& letterIndex)
 {
@@ -39,18 +41,38 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
     uint32_t i = 0;
     uint16_t retOffsetY = 0; // ret value elipse offsetY
     uint16_t offsetPosY = 0;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    uint8_t maxLetterSize = GetLineMaxLetterSize(labelLine.text, labelLine.lineLength, labelLine.fontId,
+                                                 labelLine.fontSize, letterIndex, labelLine.spannableString);
+#else
     uint8_t maxLetterSize = GetLineMaxLetterSize(labelLine.text, labelLine.lineLength, labelLine.fontId,
                                                  labelLine.fontSize, letterIndex, labelLine.sizeSpans);
-    DrawLineBackgroundColor(gfxDstBuffer, letterIndex, labelLine);
+    DrawLineBackgroundColor(gfxDstBuffer, letterIndex, labelLine);                                             
+#endif
+// ---- cjf end ----
     GlyphNode glyphNode;
     while (i < labelLine.lineLength) {
         uint32_t letter = TypedText::GetUTF8Next(labelLine.text, i, i);
         uint16_t fontId = labelLine.fontId;
         uint8_t fontSize = labelLine.fontSize;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+        if (labelLine.spannableString != nullptr && labelLine.spannableString->isSizeSpan_[letterIndex]) {
+            bool fontIdHasFind= labelLine.spannableString->GetFontId(letterIndex,fontId);
+            bool fontSizeHasFind = labelLine.spannableString->GetSize(letterIndex,fontSize);
+        }
+        bool haveLineBackground = false;
+        ColorType lineBackgroundColor;
+        GetLineBackgroundColor(letterIndex, labelLine.linebackgroundColor, haveLineBackground, lineBackgroundColor);
+#else
         if (labelLine.sizeSpans != nullptr && labelLine.sizeSpans[letterIndex].isSizeSpan) {
             fontId = labelLine.sizeSpans[letterIndex].fontId;
             fontSize = labelLine.sizeSpans[letterIndex].size;
-        }
+        } 
+#endif
+// ---- cjf end ----
+
         bool havebackgroundColor = false;
         ColorType backgroundColor;
         GetBackgroundColor(letterIndex, labelLine.backgroundColor, havebackgroundColor, backgroundColor);
@@ -81,7 +103,15 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
                                    labelLine.style.letterSpace_,
                                    labelLine.style.lineSpace_,
                                    havebackgroundColor,
-                                   backgroundColor};
+                                   backgroundColor,
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+                                   haveLineBackground,
+                                   lineBackgroundColor,
+                                   labelLine.lineHeight,
+#endif
+// ---- cjf end----
+                                   };
 #if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         glyphNode.textStyle = letterInfo.textStyle;
 #endif
@@ -111,11 +141,27 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
 }
 
 uint8_t DrawLabel::GetLineMaxLetterSize(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
-                                        uint16_t letterIndex, SizeSpan* sizeSpans)
+                                        uint16_t letterIndex, 
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+                                        SpannableString* spannableString
+#else
+                                        SizeSpan* sizeSpans
+#endif
+// ---- cjf end----
+                                        )
 {
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    if (spannableString == nullptr) {
+        return fontSize;
+    }
+#else
     if (sizeSpans == nullptr) {
         return fontSize;
     }
+#endif
+// ---- cjf end----
     uint32_t i = 0;
     uint8_t maxLetterSize = fontSize;
     while (i < lineLength) {
@@ -124,12 +170,24 @@ uint8_t DrawLabel::GetLineMaxLetterSize(const char* text, uint16_t lineLength, u
             letterIndex++;
             continue;
         }
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+        if (spannableString != nullptr && spannableString->isSizeSpan_[letterIndex]) {
+            uint8_t tempSize=0;
+            bool fontSizeHasFind = spannableString->GetSize(letterIndex,tempSize);
+            if (tempSize > maxLetterSize) {
+                maxLetterSize = tempSize;
+            }
+        }
+#else
         if (sizeSpans != nullptr && sizeSpans[letterIndex].isSizeSpan) {
             uint8_t tempSize = sizeSpans[letterIndex].size;
             if (tempSize > maxLetterSize) {
                 maxLetterSize = tempSize;
             }
         }
+#endif
+// ---- cjf end----
         letterIndex++;
     }
     return maxLetterSize;
@@ -279,7 +337,24 @@ void DrawLabel::DrawLetterWithRotate(BufferInfo& gfxDstBuffer,
     BaseGfxEngine::GetInstance()->DrawTransform(gfxDstBuffer, mask, Point { 0, 0 }, color, opaScale, transMap,
                                                 letterTranDataInfo);
 }
-
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+void DrawLabel::GetLineBackgroundColor(uint16_t letterIndex, List<LineBackgroundColor>* linebackgroundColor,
+                                       bool& havelinebackground, ColorType& linebgColor)
+{
+    if (linebackgroundColor->Size() > 0) {
+        ListNode<LineBackgroundColor>* lbColor = linebackgroundColor->Begin();
+        for (; lbColor != linebackgroundColor->End(); lbColor = lbColor->next_) {
+            uint32_t start = lbColor->data_.start;
+            uint32_t end = lbColor->data_.end;
+            if (letterIndex >= start && letterIndex < end) { // 原本是 <= ，现在改成左闭右开，去掉等号
+                havelinebackground = true;
+                linebgColor = lbColor->data_.linebackgroundColor ;
+            }
+        }
+    }
+};
+#else
 void DrawLabel::GetLineBackgroundColor(uint16_t letterIndex, List<LineBackgroundColor>* linebackgroundColor,
                                        bool& havelinebackground, ColorType& linebgColor)
 {
@@ -295,6 +370,8 @@ void DrawLabel::GetLineBackgroundColor(uint16_t letterIndex, List<LineBackground
         }
     }
 };
+#endif
+// ---- cjf end ----
 
 void DrawLabel::GetBackgroundColor(uint16_t letterIndex, List<BackgroundColor>* backgroundColor,
                                    bool& havebackground, ColorType& bgColor)
@@ -304,10 +381,18 @@ void DrawLabel::GetBackgroundColor(uint16_t letterIndex, List<BackgroundColor>* 
         for (; bColor != backgroundColor->End(); bColor = bColor->next_) {
             uint16_t start = bColor->data_.start;
             uint16_t end = bColor->data_.end;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+            if (letterIndex >= start && letterIndex < end) {
+                havebackground = true;
+                bgColor = bColor->data_.backgroundColor ;
+            }
+#else
             if (letterIndex >= start && letterIndex <= end) {
                 havebackground = true;
                 bgColor = bColor->data_.backgroundColor ;
             }
+#endif
         }
     }
 };
@@ -319,9 +404,16 @@ void DrawLabel::GetForegroundColor(uint16_t letterIndex, List<ForegroundColor>* 
         for (; fColor != foregroundColor->End(); fColor = fColor->next_) {
             uint32_t start = fColor->data_.start;
             uint32_t end = fColor->data_.end;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+            if (letterIndex >= start && letterIndex < end) {
+                fgColor = fColor->data_.fontColor;
+            }
+#else
             if (letterIndex >= start && letterIndex <= end) {
                 fgColor = fColor->data_.fontColor;
             }
+#endif
         }
     }
 };

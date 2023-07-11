@@ -25,7 +25,11 @@
 #include "gfx_utils/list.h"
 #include "gfx_utils/style.h"
 #include "gfx_utils/transform.h"
-
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+#include "common/spannable_string.h"
+#endif
+// ---- cjf end ----
 namespace OHOS {
 #define SWAP_INT16(x, y)    \
     do {                    \
@@ -80,9 +84,17 @@ struct LabelLineInfo {
     List<BackgroundColor>*  backgroundColor;
     List<ForegroundColor>*  foregroundColor;
     List<LineBackgroundColor>*  linebackgroundColor;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    SpannableString* spannableString;
+#else
     SizeSpan* sizeSpans;
+#endif
+// ---- cjf end----
     uint16_t ellipsisOssetY;
 };
+
+
 
 struct LabelLetterInfo {
     const Point& pos;
@@ -105,6 +117,13 @@ struct LabelLetterInfo {
     int16_t lineSpace_;
     bool havebackgroundColor;
     ColorType backgroundColor;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    bool haveLineBackgroundColor;
+    ColorType lineBackgroundColor;
+    int16_t lineHeight;
+#endif
+// ---- cjf end----
 };
 
 struct TransformInitState {

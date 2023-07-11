@@ -21,6 +21,10 @@
 #include "font/ui_font_cache.h"
 #include "graphic_locker.h"
 
+// ---- cjf ----
+#include "font/fulltext.h"
+// ---- cjf end ----
+
 namespace OHOS {
 class UIFontBitmap : public BaseFont {
 public:
@@ -46,8 +50,16 @@ public:
     void SetFontFileOffset(uint32_t offset) override;
     uint16_t GetOffsetPosY(const char* text, uint16_t lineLength, bool& isEmoijLerge,
                            uint16_t fontId, uint8_t fontSize) override;
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+
     uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
-                              uint16_t& letterIndex, SizeSpan* sizeSpans) override;
+                              uint16_t& letterIndex, SpannableString* spannableString);
+#else
+    uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
+                              uint16_t& letterIndex, SizeSpan* sizeSpans)  override;
+#endif
+// ---- cjf end ----
     bool IsEmojiFont(uint16_t fontId) override;
     void SetPsramMemory(uintptr_t psramAddr, uint32_t psramLen) override;
 protected:

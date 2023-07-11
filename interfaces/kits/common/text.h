@@ -36,6 +36,12 @@
 #ifndef GRAPHIC_LITE_TEXT_H
 #define GRAPHIC_LITE_TEXT_H
 
+// ---- cjf ----
+#include <cstring>
+#include "font/fulltext.h"
+// ---- cjf end ----
+
+
 #include "gfx_utils/geometry2d.h"
 #include "gfx_utils/graphic_types.h"
 #include "gfx_utils/list.h"
@@ -100,6 +106,8 @@ enum class TextOrientation : uint8_t {
     OUTSIDE,
 };
 
+// ---- cjf ----
+#if !(defined(SR_1) && SR_1)
 struct BackgroundColor : public HeapBase {
     int16_t start;
     int16_t end;
@@ -117,6 +125,8 @@ struct LineBackgroundColor : public HeapBase {
     int16_t end;
     ColorType linebackgroundColor;
 };
+#endif
+// ---- cjf end ----
 
 struct SizeSpan {
     bool isSizeSpan;
@@ -426,7 +436,38 @@ public:
     {
         baseLine_ = baseLine;
     }
+// ---- cjf ----
+#if (defined(SR_1) && SR_1)
+    void SetBackgroundColorSpan(ColorType backgroundColor, int16_t start, int16_t end)
+    {
+        spannableString_->SetBackgroundColorSpan( backgroundColor,  start,  end);
+    }
 
+    List<BackgroundColor> GetBackgroundColorSpan()
+    {
+        return spannableString_->GetBackgroundColorSpan();
+    }
+
+    void SetForegroundColorSpan(ColorType fontColor, int16_t start, int16_t end)
+    {
+        spannableString_->SetForegroundColorSpan( fontColor,  start,  end);
+    }
+
+    List<ForegroundColor> GetForegroundColorSpan()
+    {
+        return spannableString_->GetForegroundColorSpan();
+    }
+
+    void SetLineBackgroundSpan(ColorType linebackgroundColor, int16_t start, int16_t end)
+    {
+        spannableString_->SetLineBackgroundSpan( linebackgroundColor,  start,  end);
+    }
+
+    List<LineBackgroundColor> GetLineBackgroundSpan()
+    {
+        return spannableString_->GetLineBackgroundSpan();
+    }
+#else
     void SetBackgroundColorSpan(ColorType backgroundColor, int16_t start, int16_t end)
     {
         BackgroundColor bgcolor;
@@ -468,7 +509,15 @@ public:
     {
         return linebackgroundColor_;
     }
+#endif
+// ---- cjf end----
 
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    void SetSizeSpan(uint16_t start, uint16_t end, uint8_t inputSize);
+    void SetFontNameSpan(uint16_t start, uint16_t end, const char* fontName);
+#endif
+// ---- cjf end ----
     void SetAbsoluteSizeSpan(uint16_t start, uint16_t end, uint8_t size);
     void SetRelativeSizeSpan(uint16_t start, uint16_t end, float size);
     virtual uint16_t GetLetterIndexByLinePosition(const Style& style,
@@ -555,7 +604,12 @@ protected:
     List<LineBackgroundColor> linebackgroundColor_;
     SizeSpan* sizeSpans_;
     uint32_t characterSize_;
+    // ---- cjf ----
+#if defined(SR_1) && SR_1
+    SpannableString* spannableString_;
 
+#endif
+    // ---- cjf end ----
 private:
     uint8_t horizontalAlign_ : 4; // UITextLanguageAlignment
     uint8_t verticalAlign_ : 4;   // UITextLanguageAlignment

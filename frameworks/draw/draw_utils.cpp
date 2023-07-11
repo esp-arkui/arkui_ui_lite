@@ -380,6 +380,26 @@ void DrawUtils::DrawNormalLetter(BufferInfo& gfxDstBuffer,
         posX = letterInfo.pos.x + node.left + letterInfo.offsetX;
     }
     BaseGfxEngine* baseGfxEngine = BaseGfxEngine::GetInstance();
+    // ---- cjf ----
+#if defined(SR_1) && SR_1
+    if (letterInfo.haveLineBackgroundColor) 
+    {
+        // 这里x正确，但y不对，之前用的是行高，现在用的是字高，二者未必相同。
+        Rect LineBackgroundRect(posX, 
+                                letterInfo.pos.y,
+                                posX + node.advance ,
+                                letterInfo.pos.y + letterInfo.lineHeight
+                                );
+
+        // ---
+        Style LineStyle;
+        LineStyle.bgColor_ = letterInfo.lineBackgroundColor;
+        BaseGfxEngine::GetInstance()->DrawRect(gfxDstBuffer, letterInfo.mask,
+                                                LineBackgroundRect, LineStyle, letterInfo.lineBackgroundColor.alpha);
+    }
+#endif
+    // ---- cjf end ----
+
     if (letterInfo.havebackgroundColor) {
         Rect backgroundRect(posX, letterInfo.mask.GetTop(), posX + letterW + letterInfo.letterSpace_ - 1,
                             letterInfo.mask.GetBottom() - letterInfo.lineSpace_);

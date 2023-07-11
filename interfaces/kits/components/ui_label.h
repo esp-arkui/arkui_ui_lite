@@ -432,6 +432,9 @@ public:
         labelText_->SetSupportBaseLine(baseLine);
     }
 
+
+// ---- cjf ----
+#if !(defined(SR_1) && SR_1)
     void SetBackgroundColorSpan(ColorType backgroundColor, int16_t start, int16_t end)
     {
         labelText_->SetBackgroundColorSpan(backgroundColor, start, end);
@@ -442,9 +445,19 @@ public:
         labelText_->SetForegroundColorSpan(fontColor, start, end);
     }
 
-    void SetEliminateTrailingSpaces(bool eliminateTrailingSpaces)
+    void SetLineBackgroundSpan(ColorType lineBackgroundColor, int16_t start, int16_t end)
     {
-        labelText_->SetEliminateTrailingSpaces(eliminateTrailingSpaces);
+        labelText_->SetLineBackgroundSpan(lineBackgroundColor, start, end);
+    }
+#else
+    void SetBackgroundColorSpan(ColorType backgroundColor, int16_t start, int16_t end)
+    {
+        labelText_->SetBackgroundColorSpan(backgroundColor, start, end);
+    }
+
+    void SetForegroundColorSpan(ColorType fontColor, int16_t start, int16_t end)
+    {
+        labelText_->SetForegroundColorSpan(fontColor, start, end);
     }
 
     void SetLineBackgroundSpan(ColorType lineBackgroundColor, int16_t start, int16_t end)
@@ -452,6 +465,18 @@ public:
         labelText_->SetLineBackgroundSpan(lineBackgroundColor, start, end);
     }
 
+#endif
+// ---- cjf end----
+    void SetEliminateTrailingSpaces(bool eliminateTrailingSpaces)
+    {
+        labelText_->SetEliminateTrailingSpaces(eliminateTrailingSpaces);
+    }
+// ---- cjf ----
+#if defined(SR_1) && SR_1
+    void SetSizeSpan(uint16_t start, uint16_t end, uint8_t size);
+    void SetFontNameSpan(uint16_t start, uint16_t end, const char* fontName); // 仅仅适用矢量字
+#endif
+// ---- cjf end ----
     void SetAbsoluteSizeSpan(uint16_t start, uint16_t end, uint8_t size);
     void SetRelativeSizeSpan(uint16_t start, uint16_t end, float size);
     uint8_t GetFontSize();

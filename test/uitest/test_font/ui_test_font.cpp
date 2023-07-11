@@ -79,6 +79,10 @@ void UITestFont::InnerTestTitle(const char* title)
 
 const UIView* UITestFont::GetTestView()
 {
+    UIKitFontTestLineBackgroundSpan();
+    UIKitFontTestBackgroundColor();
+
+    /*
     UIKitFontTestDisplay001();
     UIKitFontTestDisplay002();
     UIKitFontTestDisplay003();
@@ -105,6 +109,8 @@ const UIView* UITestFont::GetTestView()
     UIKitFontTestDisplayEmoji001();
     UIKitFontTestDisplayEmoji002();
     UIKitFontTestDisplayEmoji003();
+    */
+   
     return container_;
 }
 

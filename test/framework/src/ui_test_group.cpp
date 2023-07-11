@@ -88,6 +88,12 @@ void UITestGroup::AddTestCase(TestCaseInfo testCaseInfo)
 
 void UITestGroup::SetUpTestCase()
 {
+    if (UIFont::GetInstance()->IsVectorFont()) {
+        testCaseList_.PushBack(TestCaseInfo{"Vector_Font", new UITestVectorFont()});
+    }
+    testCaseList_.PushBack(TestCaseInfo{"Font", new UITestFont()});
+    testCaseList_.PushBack(TestCaseInfo{"Circle_Progress", new UITestCircleProgress()});
+
     testCaseList_.PushBack(TestCaseInfo{"View zIndex", new UITestViewZIndex()});
     testCaseList_.PushBack(TestCaseInfo{"EditText", new UITestEditText()});
     testCaseList_.PushBack(TestCaseInfo{"Clip", new UITestClip()});
@@ -155,6 +161,7 @@ void UITestGroup::SetUpTestCase()
 #endif
     testCaseList_.PushBack(TestCaseInfo{"Border_Margin_Padding", new UITestBorderMarginPadding()});
     testCaseList_.PushBack(TestCaseInfo{"ScrollBar", new UITestScrollBar()});
+
 }
 
 List<TestCaseInfo>& UITestGroup::GetTestCase()
