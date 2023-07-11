@@ -86,25 +86,30 @@ bool UIScrollView::OnPressEvent(const PressEvent& event)
     return UIView::OnPressEvent(event);
 }
 
-#if ENABLE_ROTATE_INPUT
+#if (defined(ENABLE_ROTATE_INPUT) && (ENABLE_ROTATE_INPUT == 1))
+void UIScrollView::SetIsEdge(bool& IsEdge, Rect childRect)
+{
+    if (direction_ == HORIZONTAL) {
+        if (childRect.GetLeft() - scrollBlankSize_ >= 0 || childRect.GetRight() + scrollBlankSize_ <= GetWidth()) {
+            IsEdge = true;
+        }
+    } else {
+        if (childRect.GetTop() - scrollBlankSize_ >= 0 || childRect.GetBottom() + scrollBlankSize_ <= GetHeight()) {
+            IsEdge = true;
+        }
+    }
+}
+
 bool UIScrollView::OnRotateEvent(const RotateEvent& event)
 {
     if (direction_ == HORIZONTAL_NOR_VERTICAL) {
         return UIView::OnRotateEvent(event);
     }
     int16_t rotateLen = static_cast<int16_t>(event.GetRotate() * rotateFactor_);
-#if ENABLE_VIBRATOR
+#if (defined(ENABLE_VIBRATOR) && (ENABLE_VIBRATOR == 1))
     bool lastIsEdge = false;
     Rect childRect = GetAllChildRelativeRect();
-    if (direction_ == HORIZONTAL) {
-        if (childRect.GetLeft() - scrollBlankSize_ >= 0 || childRect.GetRight() + scrollBlankSize_ <= GetWidth()) {
-            lastIsEdge = true;
-        }
-    } else {
-        if (childRect.GetTop() - scrollBlankSize_ >= 0 || childRect.GetBottom() + scrollBlankSize_ <= GetHeight()) {
-            lastIsEdge = true;
-        }
-    }
+    SetIsEdge(lastIsEdge, childRect);
 #endif
     RefreshRotate(rotateLen);
     if (direction_ == HORIZONTAL) {
@@ -112,19 +117,11 @@ bool UIScrollView::OnRotateEvent(const RotateEvent& event)
     } else {
         DragYInner(rotateLen);
     }
-#if ENABLE_VIBRATOR
+#if (defined(ENABLE_VIBRATOR) && (ENABLE_VIBRATOR == 1))
     totalRotateLen_ += rotateLen;
     childRect = GetAllChildRelativeRect();
     bool isEdge = false;
-    if (direction_ == HORIZONTAL) {
-        if (childRect.GetLeft() - scrollBlankSize_ >= 0 || childRect.GetRight() + scrollBlankSize_ <= GetWidth()) {
-            isEdge = true;
-        }
-    } else {
-        if (childRect.GetTop() - scrollBlankSize_ >= 0 || childRect.GetBottom() + scrollBlankSize_ <= GetHeight()) {
-            isEdge = true;
-        }
-    }
+    SetIsEdge(isEdge, childRect);
     VibratorFunc vibratorFunc = VibratorManager::GetInstance()->GetVibratorFunc();
     if (vibratorFunc != nullptr && !isEdge) {
         rotateLen = MATH_ABS(totalRotateLen_ - lastVibratorRotateLen_);

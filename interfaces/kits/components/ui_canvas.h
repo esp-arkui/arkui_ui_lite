@@ -703,6 +703,14 @@ protected:
         return false;
     }
 
+#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+    void SetImageParamValues(const Paint& paint, PathParam* pathParam);
+    void SetSpanPatternValue(const Paint& paint, void* param, const Rect& rect);
+#endif
+    void SetDrawLinePath(const Point& startPoint, int16_t height, int16_t width, const Paint& paint);
+#endif
+
     void DrawRectSetCmd(const Point& startPoint, int16_t height, int16_t width, const Paint& paint,
                         Paint::PaintStyle paintStyle);
     static void InitGfxMapBuffer(const BufferInfo& srcBuff, const Rect& rect);

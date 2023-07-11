@@ -288,6 +288,31 @@ void Text::OnDraw(BufferInfo& gfxDstBuffer,
     }
 }
 
+Point Text::GetPointValues(int16_t lineHeight, uint16_t lineCount, const Rect& coords, const Style& style)
+{
+    Point pos;
+    if (lineHeight == style.lineHeight_) {
+        pos.y = TextPositionY(coords, (lineCount * lineHeight));
+    } else {
+        pos.y = TextPositionY(coords, (lineCount * lineHeight - style.lineSpace_));
+    }
+
+    return pos;
+}
+
+#if defined(ENABLE_ICU) && ENABLE_ICU
+void Text::CalculateLineBytes(uint16_t& lineBytes, uint16_t& lineBegin)
+{
+    if (this->IsEliminateTrailingSpaces()) {
+        int j = lineBytes - 1;
+        while (j >= 0 && text_[lineBegin + j] == ' ') {
+            --j;
+        }
+        lineBytes = j + 1;
+    }
+}
+#endif
+
 void Text::Draw(BufferInfo& gfxDstBuffer,
                 const Rect& mask,
                 const Rect& coords,
@@ -316,12 +341,8 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
     } else {
         curLineHeight = lineHeight;
     }
-    Point pos;
-    if (lineHeight == style.lineHeight_) {
-        pos.y = TextPositionY(coords, (lineCount * lineHeight));
-    } else {
-        pos.y = TextPositionY(coords, (lineCount * lineHeight - style.lineSpace_));
-    }
+    Point pos = GetPointValues(lineHeight, lineCount, coords, style);
+
     OpacityType opa = DrawUtils::GetMixOpacity(opaScale, style.textOpa_);
     uint16_t letterIndex = 0;
     for (uint16_t i = 0; i < lineCount; i++) {
@@ -335,13 +356,7 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
         int16_t tempLetterIndex = letterIndex;
         uint16_t lineBytes = textLine_[i].lineBytes;
 #if defined(ENABLE_ICU) && ENABLE_ICU
-        if (this->IsEliminateTrailingSpaces()) {
-            int j = lineBytes - 1;
-            while (j >= 0 && text_[lineBegin + j] == ' ') {
-                --j;
-            }
-            lineBytes = j + 1;
-        }
+        CalculateLineBytes(lineBytes, lineBegin);
 #endif
         if (nextLine >= mask.GetTop()) {
             pos.x = LineStartPos(coords, textLine_[i].linePixelWidth);

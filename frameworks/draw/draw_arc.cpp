@@ -125,6 +125,20 @@ uint16_t DrawArc::CalculateTanDegree(uint16_t x, uint16_t y)
     return degree;
 }
 
+void DrawArc::RecalculateYStartAndYEnd(int16_t& yStart, int16_t& yEnd)
+{
+    if ((yStart >= 0) && (yEnd >= 0)) {
+        int16_t tmp = yStart;
+        yStart = -yEnd;
+        yEnd = -tmp;
+    } else if ((yStart < 0) && (yEnd > 0)) {
+        yStart = MATH_MIN(yStart, -yEnd);
+        yEnd = -1;
+    }
+    yStart = MATH_MAX(yStart, -outRadius_) - 1;
+    yEnd = MATH_MIN(yEnd, -1);
+}
+
 void DrawArc::DrawCircleNoEndpoint(BufferInfo& gfxDstBuffer,
                                    ArcInfo& arcInfo,
                                    const Rect& mask,
@@ -136,16 +150,7 @@ void DrawArc::DrawCircleNoEndpoint(BufferInfo& gfxDstBuffer,
 
     int16_t yStart = mask.GetTop() - arcInfo.center.y;
     int16_t yEnd = mask.GetBottom() - arcInfo.center.y;
-    if ((yStart >= 0) && (yEnd >= 0)) {
-        int16_t tmp = yStart;
-        yStart = -yEnd;
-        yEnd = -tmp;
-    } else if ((yStart < 0) && (yEnd > 0)) {
-        yStart = MATH_MIN(yStart, -yEnd);
-        yEnd = -1;
-    }
-    yStart = MATH_MAX(yStart, -outRadius_) - 1;
-    yEnd = MATH_MIN(yEnd, -1);
+    RecalculateYStartAndYEnd(yStart, yEnd);
 
     int16_t xLineStart = -outRadius_;
     int16_t xLineStart2 = xLineStart - 1;
@@ -405,14 +410,9 @@ uint16_t DrawArc::GetDegreeInQuadrant(uint16_t degree, uint8_t quadrant)
     }
 }
 
-void DrawArc::Draw(BufferInfo& gfxDstBuffer, ArcInfo& arcInfo, const Rect& mask,
-                   const Style& style, uint8_t opaScale, uint8_t cap)
+void DrawArc::SetIsAntialias(BufferInfo& gfxDstBuffer, ArcInfo& arcInfo,
+                             const Rect& mask, const Style& style, OpacityType opa)
 {
-    OpacityType opa = DrawUtils::GetMixOpacity(opaScale, style.lineOpa_);
-    if ((opa == OPA_TRANSPARENT) || (style.lineWidth_ < 1)) {
-        return;
-    }
-
     SetArcInfo(arcInfo, style);
     if (arcInfo.startAngle != arcInfo.endAngle) {
         if ((arcInfo.imgSrc != nullptr) && (arcInfo.imgSrc->GetSrcType() != IMG_SRC_UNKNOWN)) {
@@ -421,6 +421,17 @@ void DrawArc::Draw(BufferInfo& gfxDstBuffer, ArcInfo& arcInfo, const Rect& mask,
             DrawCircleNoEndpoint(gfxDstBuffer, arcInfo, mask, style, opa, true);
         }
     }
+}
+
+void DrawArc::Draw(BufferInfo& gfxDstBuffer, ArcInfo& arcInfo, const Rect& mask,
+                   const Style& style, uint8_t opaScale, uint8_t cap)
+{
+    OpacityType opa = DrawUtils::GetMixOpacity(opaScale, style.lineOpa_);
+    if ((opa == OPA_TRANSPARENT) || (style.lineWidth_ < 1)) {
+        return;
+    }
+
+    SetIsAntialias(gfxDstBuffer, arcInfo, mask, style, opa);
 
     if (!isCircle_ && (cap != CapType::CAP_NONE)) {
         int16_t lineWidth = style.lineWidth_;

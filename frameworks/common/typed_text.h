@@ -62,8 +62,8 @@ public:
                                 int16_t letterSpace);
 
     static Rect GetArcTextRect(const char* text,
-                                uint16_t fontId,
-                                uint8_t fontSize,
+                               uint16_t fontId,
+                               uint8_t fontSize,
                                const Point& arcCenter,
                                int16_t letterSpace,
                                TextOrientation orientation,
@@ -100,6 +100,8 @@ public:
 
 private:
     static bool GetWrapPoint(const char* text, uint32_t& breakPoint);
+    static void RecalculateSizeY(uint32_t& lineBegin, const char* text, bool hasLineHeight,
+                                 Point& size, uint16_t letterHeight, int16_t lineHeight, int8_t lineSpace);
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_TYPE_TEXT_H

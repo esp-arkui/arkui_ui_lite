@@ -395,6 +395,25 @@ void UISwipeView::RefreshCurrentViewByPosition(int16_t (UIView::*pfnGetXOrY)() c
 #endif
 }
 
+void UISwipeView::UpdateCurrentIndexInc(uint8_t dragDirection, uint16_t swipeMid,
+                                        int16_t (UIView::*pfnGetXOrY)() const,
+                                        int16_t (UIView::*pfnGetWidthOrHeight)())
+{
+    /*
+    * If the absolute value of the offset is greater than the page turning threshold,
+    * page turning is considered.
+    */
+    int16_t offset = (curView_->*pfnGetXOrY)() + ((curView_->*pfnGetWidthOrHeight)() >> 1) - swipeMid;
+    int16_t threshold = (this->*pfnGetWidthOrHeight)() >> 2; // 2: 1/4 width or height
+    if (offset > threshold && (dragDirection == DragEvent::DIRECTION_TOP_TO_BOTTOM ||
+                               dragDirection == DragEvent::DIRECTION_LEFT_TO_RIGHT)) {
+        CurrentIndexDec();
+    } else if ((offset < -threshold) && (dragDirection == DragEvent::DIRECTION_BOTTOM_TO_TOP ||
+                                         dragDirection == DragEvent::DIRECTION_RIGHT_TO_LEFT)) {
+        CurrentIndexInc();
+    }
+}
+
 void UISwipeView::RefreshCurrentViewByThrow(int16_t distance,
                                             uint8_t dragDirection,
                                             int16_t (UIView::*pfnGetXOrY)() const,
@@ -451,19 +470,7 @@ void UISwipeView::RefreshCurrentViewByThrow(int16_t distance,
                 CurrentIndexDec();
             }
         } else {
-            /*
-             * If the absolute value of the offset is greater than the page turning threshold,
-             * page turning is considered.
-             */
-            int16_t offset = (curView_->*pfnGetXOrY)() + ((curView_->*pfnGetWidthOrHeight)() >> 1) - swipeMid;
-            int16_t threshold = (this->*pfnGetWidthOrHeight)() >> 2; // 2: 1/4 width or height
-            if (offset > threshold && (dragDirection == DragEvent::DIRECTION_TOP_TO_BOTTOM ||
-                                       dragDirection == DragEvent::DIRECTION_LEFT_TO_RIGHT)) {
-                CurrentIndexDec();
-            } else if ((offset < -threshold) && (dragDirection == DragEvent::DIRECTION_BOTTOM_TO_TOP ||
-                                                 dragDirection == DragEvent::DIRECTION_RIGHT_TO_LEFT)) {
-                CurrentIndexInc();
-            }
+            UpdateCurrentIndexInc(dragDirection, swipeMid, pfnGetXOrY, pfnGetWidthOrHeight);
         }
     }
     curView_ = GetViewByIndex(curIndex_);

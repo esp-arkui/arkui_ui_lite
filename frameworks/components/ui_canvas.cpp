@@ -373,9 +373,9 @@ void UICanvas::DrawCurve(const Point& startPoint,
     SetStartPosition(endPoint);
 }
 
-void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
-{
 #if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+void UICanvas::SetDrawLinePath(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
+{
     if (!paint.GetChangeFlag()) {
         if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
             DrawRectSetCmd(startPoint, height, width, paint, Paint::PaintStyle::STROKE_STYLE);
@@ -394,6 +394,13 @@ void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, 
         FillPath(paint);
         DrawPath(paint);
     }
+}
+#endif
+
+void UICanvas::DrawRect(const Point& startPoint, int16_t height, int16_t width, const Paint& paint)
+{
+#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+    SetDrawLinePath(startPoint, height, width, Paint& paint);
 #else
     if (static_cast<uint8_t>(paint.GetStyle()) & Paint::PaintStyle::STROKE_STYLE) {
         RectParam* rectParam = new RectParam;
@@ -735,22 +742,10 @@ void UICanvas::DrawImage(const Point& startPoint, const char* image,
 }
 #endif
 
-void UICanvas::DrawPath(const Paint& paint)
-{
 #if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
-    if (vertices_ == nullptr) {
-        return;
-    }
-
-    PathParam* pathParam = new PathParam;
-    if (pathParam == nullptr) {
-        GRAPHIC_LOGE("new LineParam fail");
-        return;
-    }
-
-    pathParam->vertices = vertices_;
-    pathParam->isStroke = true;
 #if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+void UICanvas::SetImageParamValues(const Paint& paint, PathParam* pathParam)
+{
     if (paint.GetStyle() == Paint::PATTERN) {
         ImageParam* imageParam = new ImageParam;
         if (imageParam == nullptr) {
@@ -774,6 +769,43 @@ void UICanvas::DrawPath(const Paint& paint)
 
         pathParam->imageParam = imageParam;
     }
+}
+
+void UICanvas::SetSpanPatternValue(const Paint& paint, void* param, const Rect& rect)
+{
+    if (param == nullptr) {
+        return;
+    }
+
+    PathParam* pathParam = static_cast<PathParam*>(param);
+    ImageParam* imageParam = static_cast<ImageParam*>(pathParam->imageParam);
+
+    if (imageParam->image == nullptr) {
+        return;
+    }
+    FillPatternRgba spanPattern(imageParam->image->GetImageInfo(), paint.GetPatternRepeatMode(), rect.GetLeft(),
+                                rect.GetTop());
+}
+#endif
+#endif
+
+void UICanvas::DrawPath(const Paint& paint)
+{
+#if defined(ENABLE_CANVAS_EXTEND) && ENABLE_CANVAS_EXTEND
+    if (vertices_ == nullptr) {
+        return;
+    }
+
+    PathParam* pathParam = new PathParam;
+    if (pathParam == nullptr) {
+        GRAPHIC_LOGE("new LineParam fail");
+        return;
+    }
+
+    pathParam->vertices = vertices_;
+    pathParam->isStroke = true;
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+    SetImageParamValues(paint, pathParam);
 #endif
 #else
     if ((path_ == nullptr) || (path_->cmd_.Size() == 0)) {
@@ -1630,19 +1662,7 @@ void UICanvas::BlendRaster(const Paint& paint,
 #endif
 #if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
     if (paint.GetStyle() == Paint::PATTERN) {
-        if (param == nullptr) {
-            return;
-        }
-
-        PathParam* pathParam = static_cast<PathParam*>(param);
-
-        ImageParam* imageParam = static_cast<ImageParam*>(pathParam->imageParam);
-
-        if (imageParam->image == nullptr) {
-            return;
-        }
-        FillPatternRgba spanPattern(imageParam->image->GetImageInfo(), paint.GetPatternRepeatMode(), rect.GetLeft(),
-                                    rect.GetTop());
+        SetSpanPatternValue(paint, param, rect);
         BlendScanLine(paint.GetGlobalCompositeOperation(), blendRasterizer, rasterizer,
                       scanline1, scanline2, renBase, allocator1, spanPattern, spanGen);
     }

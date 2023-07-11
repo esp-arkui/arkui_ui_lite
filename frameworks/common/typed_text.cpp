@@ -61,7 +61,14 @@ Point TypedText::GetTextSize(const char* text, uint16_t fontId, uint8_t fontSize
         size.x = MATH_MAX(lineWidth, size.x);
         lineBegin = newLineBegin;
     }
+    RecalculateSizeY(lineBegin, text, hasLineHeight, size, letterHeight, lineHeight, lineSpace);
 
+    return size;
+}
+
+void TypedText::RecalculateSizeY(uint32_t& lineBegin, const char* text, bool hasLineHeight,
+                                 Point& size, uint16_t letterHeight, int16_t lineHeight, int8_t lineSpace)
+{
     if ((lineBegin != 0) && ((text[lineBegin - 1] == '\n') || (text[lineBegin - 1] == '\r'))) {
         if (!hasLineHeight) {
             size.y += letterHeight + lineSpace;
@@ -81,7 +88,6 @@ Point TypedText::GetTextSize(const char* text, uint16_t fontId, uint8_t fontSize
             size.y = lineHeight;
         }
     }
-    return size;
 }
 
 Rect TypedText::GetArcTextRect(const char* text,
@@ -118,8 +124,7 @@ Rect TypedText::GetArcTextRect(const char* text,
         uint16_t letterWidth = UIFont::GetInstance()->GetWidth(letter, fontId, fontSize, 0);
         if (tmp == arcTextInfo.lineStart) {
             angle += xorFlag ? GetAngleForArcLen(static_cast<float>(letterWidth), letterHeight, arcTextInfo.radius,
-                                                 arcTextInfo.direct, orientation)
-                             : 0;
+                                                 arcTextInfo.direct, orientation) : 0;
             GetArcLetterPos(arcCenter, arcTextInfo.radius, angle, posX, posY);
             rect.SetPosition(MATH_ROUND(posX), MATH_ROUND(posY));
         }

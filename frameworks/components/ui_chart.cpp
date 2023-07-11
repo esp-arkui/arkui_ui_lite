@@ -791,6 +791,20 @@ void UIChartPolyline::FindCrossPoints(const ChartLine& line, const ChartLine& po
     }
 }
 
+void UIChartPolyline::SetCrossPointSet(CrossPointSet& cross, int16_t mixScale, Rect currentRect,
+                                       const ChartLine& limitPoints, int16_t y, int16_t startY)
+{
+    if ((mixScale < 0) || (mixScale >= currentRect.GetHeight())) {
+        return;
+    }
+    bool onVerticalLine = enableReverse_ ? (y <= limitPoints.start.y) : (y >= limitPoints.start.y);
+    if (onVerticalLine) {
+        cross.first.x = limitPoints.start.x;
+        cross.first.y = enableReverse_ ? (y - startY) : (startY - y);
+        cross.firstFind = true;
+    }
+}
+
 void UIChartPolyline::DrawGradientColor(BufferInfo& gfxDstBuffer,
                                         const Rect& invalidatedArea,
                                         UIChartDataSerial* data,
@@ -807,15 +821,7 @@ void UIChartPolyline::DrawGradientColor(BufferInfo& gfxDstBuffer,
     uint16_t pointCount = data->GetDataCount() - 1;
     int16_t y = enableReverse_ ? (linePoints.start.y + startY) : (startY - linePoints.start.y);
     int16_t mixScale = !enableReverse_ ? (currentRect.GetBottom() - y) : (y - currentRect.GetTop());
-    if ((mixScale < 0) || (mixScale >= currentRect.GetHeight())) {
-        return;
-    }
-    bool onVerticalLine = enableReverse_ ? (y <= limitPoints.start.y) : (y >= limitPoints.start.y);
-    if (onVerticalLine) {
-        cross.first.x = limitPoints.start.x;
-        cross.first.y = enableReverse_ ? (y - startY) : (startY - y);
-        cross.firstFind = true;
-    }
+    SetCrossPointSet(cross, mixScale, currentRect, limitPoints, y, startY);
     Point start;
     Point end;
     BaseGfxEngine* baseGfxEngine = BaseGfxEngine::GetInstance();

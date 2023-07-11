@@ -364,6 +364,9 @@ protected:
 
 private:
     void RefreshCurrentViewByPosition(int16_t (UIView::*pfnGetXOrY)() const, int16_t (UIView::*pfnGetWidthOrHeight)());
+    void UpdateCurrentIndexInc(uint8_t dragDirection, uint16_t swipeMid,
+                               int16_t (UIView::*pfnGetXOrY)() const,
+                               int16_t (UIView::*pfnGetWidthOrHeight)());
     void RefreshCurrentViewByThrow(int16_t distance,
                                    uint8_t dragDirection,
                                    int16_t (UIView::*pfnGetXOrY)() const,
