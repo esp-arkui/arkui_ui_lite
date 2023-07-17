@@ -14,7 +14,6 @@
  */
 
 #include "draw/draw_label.h"
-#include <cstdio>
 #include "common/typed_text.h"
 #include "draw/draw_utils.h"
 #include "engines/gfx/gfx_engine_manager.h"
@@ -23,8 +22,7 @@
 #include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
-uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInfo& labelLine,
-                                    uint16_t& letterIndex)
+uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInfo& labelLine, uint16_t& letterIndex)
 {
     if (labelLine.text == nullptr) {
         return 0;
@@ -35,34 +33,30 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
     } else {
         labelLine.pos.x += labelLine.offset.x;
     }
-
     uint32_t i = 0;
     uint16_t retOffsetY = 0; // ret value elipse offsetY
     uint16_t offsetPosY = 0;
     uint8_t maxLetterSize = GetLineMaxLetterSize(labelLine.text, labelLine.lineLength, labelLine.fontId,
-                                                 labelLine.fontSize, letterIndex, labelLine.sizeSpans);
+                                                 labelLine.fontSize, letterIndex, labelLine.spannableString);
     DrawLineBackgroundColor(gfxDstBuffer, letterIndex, labelLine);
     GlyphNode glyphNode;
     while (i < labelLine.lineLength) {
         uint32_t letter = TypedText::GetUTF8Next(labelLine.text, i, i);
         uint16_t fontId = labelLine.fontId;
         uint8_t fontSize = labelLine.fontSize;
-        if (labelLine.sizeSpans != nullptr && labelLine.sizeSpans[letterIndex].isSizeSpan) {
-            fontId = labelLine.sizeSpans[letterIndex].fontId;
-            fontSize = labelLine.sizeSpans[letterIndex].size;
+        if (labelLine.spannableString != nullptr && labelLine.spannableString->GetIsSizeSpan(letterIndex)) {
+            labelLine.spannableString->GetFontId(letterIndex, fontId);
+            labelLine.spannableString->GetFontSize(letterIndex, fontSize);
         }
         bool havebackgroundColor = false;
         ColorType backgroundColor;
         GetBackgroundColor(letterIndex, labelLine.backgroundColor, havebackgroundColor, backgroundColor);
-
         ColorType foregroundColor = labelLine.style.textColor_;
         GetForegroundColor(letterIndex, labelLine.foregroundColor, foregroundColor);
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         TextStyle textStyle = TEXT_STYLE_NORMAL;
         if (labelLine.textStyles) {
             textStyle = labelLine.textStyles[letterIndex];
         }
-#endif
         LabelLetterInfo letterInfo{labelLine.pos,
                                    labelLine.mask,
                                    foregroundColor,
@@ -74,17 +68,13 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
                                    fontId,
                                    0,
                                    fontSize,
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
                                    textStyle,
-#endif
                                    labelLine.baseLine,
                                    labelLine.style.letterSpace_,
                                    labelLine.style.lineSpace_,
                                    havebackgroundColor,
                                    backgroundColor};
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         glyphNode.textStyle = letterInfo.textStyle;
-#endif
         glyphNode.advance = 0;
         uint8_t* fontMap = fontEngine->GetBitmap(letterInfo.letter, glyphNode, letterInfo.fontId, letterInfo.fontSize,
                                                  letterInfo.shapingId);
@@ -104,16 +94,15 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
         } else {
             labelLine.pos.x += (glyphNode.advance + labelLine.style.letterSpace_);
         }
-
         letterIndex++;
     }
     return retOffsetY;
 }
 
 uint8_t DrawLabel::GetLineMaxLetterSize(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
-                                        uint16_t letterIndex, SizeSpan* sizeSpans)
+                                        uint16_t letterIndex, SpannableString* spannableString)
 {
-    if (sizeSpans == nullptr) {
+    if (spannableString == nullptr) {
         return fontSize;
     }
     uint32_t i = 0;
@@ -124,8 +113,9 @@ uint8_t DrawLabel::GetLineMaxLetterSize(const char* text, uint16_t lineLength, u
             letterIndex++;
             continue;
         }
-        if (sizeSpans != nullptr && sizeSpans[letterIndex].isSizeSpan) {
-            uint8_t tempSize = sizeSpans[letterIndex].size;
+        if (spannableString != nullptr && spannableString->GetIsSizeSpan(letterIndex)) {
+            uint8_t tempSize = fontSize;
+            spannableString->GetFontSize(letterIndex, tempSize);
             if (tempSize > maxLetterSize) {
                 maxLetterSize = tempSize;
             }
@@ -254,20 +244,16 @@ void DrawLabel::DrawLetterWithRotate(BufferInfo& gfxDstBuffer,
     UIFont* fontEngine = UIFont::GetInstance();
     FontHeader head;
     GlyphNode node;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     node.textStyle = TEXT_STYLE_NORMAL;
-#endif
     if (fontEngine->GetFontHeader(head, fontId, fontSize) != 0) {
         return;
     }
-
     const uint8_t* fontMap = fontEngine->GetBitmap(letter, node, fontId, fontSize, 0);
     if (fontMap == nullptr) {
         return;
     }
     uint8_t fontWeight = fontEngine->GetFontWeight(fontId);
     ColorMode colorMode = fontEngine->GetColorType(fontId);
-
     int16_t offset = compatibilityMode ? head.ascender : 0;
     Rect rectLetter;
     rectLetter.SetPosition(pos.x + node.left, pos.y + offset - node.top);

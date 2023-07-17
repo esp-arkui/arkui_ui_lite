@@ -19,9 +19,8 @@
 #include <locale>
 #include <string>
 #include "common/text.h"
-#if defined(ENABLE_VECTOR_FONT) && ENABLE_VECTOR_FONT
 #include "common/spannable_string.h"
-#else
+#if !(defined(ENABLE_VECTOR_FONT) && ENABLE_VECTOR_FONT)
 #include "common/ui_text_language.h"
 #endif
 #include "gfx_utils/color.h"
@@ -185,7 +184,6 @@ HWTEST_F(TextTest, TextSetRelativeSpan_001, TestSize.Level1)
     text = nullptr;
 }
 
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
 HWTEST_F(TextTest, TextSetStyleSpan_001, TestSize.Level1)
 {
     SpannableString spannableString("图形子系统测试正常粗体斜体粗斜体");
@@ -194,7 +192,6 @@ HWTEST_F(TextTest, TextSetStyleSpan_001, TestSize.Level1)
     spannableString.SetTextStyle(TEXT_STYLE_BOLD_ITALIC, 13, 16);
     EXPECT_EQ(spannableString.spanList_.Size(), 3);
 }
-#endif
 
 #if defined(ENABLE_VECTOR_FONT) && ENABLE_VECTOR_FONT
 HWTEST_F(TextTest, TextSetText_002, TestSize.Level0)
