@@ -73,9 +73,7 @@ uint8_t* UIFontCache::GetSpace(uint16_t fontId, uint32_t unicode, uint32_t size,
 
     bitmap->fontId = fontId;
     bitmap->unicode = unicode;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     bitmap->textStyle = textStyle;
-#endif
 
     return reinterpret_cast<uint8_t*>(bitmap->data);
 }
@@ -98,12 +96,11 @@ uint8_t* UIFontCache::GetBitmap(uint16_t fontKey, uint32_t unicode, TextStyle te
     Bitmap* bitmap = nullptr;
     ListHead* head = hashTable_ + unicode % FONT_CACHE_HASH_NR;
     for (ListHead* node = head->next; node != head; node = node->next) {
-        bitmap = reinterpret_cast<struct Bitmap*>(reinterpret_cast<uint8_t*>(node) -
-                                                  offsetof(struct Bitmap, hashHead));
+        bitmap = reinterpret_cast<struct Bitmap*>(reinterpret_cast<uint8_t*>(node) - offsetof(struct Bitmap, hashHead));
         if ((bitmap->fontId == fontKey) &&
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
+
             (bitmap->textStyle == textStyle) &&
-#endif
+
             (bitmap->unicode == unicode)) {
             UpdateLru(bitmap);
             return reinterpret_cast<uint8_t*>(bitmap->data);
