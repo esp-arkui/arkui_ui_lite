@@ -74,9 +74,8 @@ public:
     void FontFontEngineMultiLanguageTestROLang001();
 #endif
 
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     void TestDrawTextITALYBOLD();
-#endif
+
 private:
     UIScrollView* container_ = nullptr;
     void InnerTestTitle(const char* title);

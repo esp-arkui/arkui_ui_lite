@@ -56,9 +56,7 @@ public:
         uint32_t unicode;
         uint32_t reserve1;
         uint32_t reserve2;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         TextStyle textStyle;
-#endif
         uint8_t data[];
     };
 
@@ -66,9 +64,10 @@ public:
 
     ~UIFontCache();
 
-    uint8_t* GetSpace(uint16_t fontKey, uint32_t unicode, uint32_t size, TextStyle textStyle = TEXT_STYLE_NORMAL);
+    /* default textStyle is TEXT_STYLE_NORMAL, TextStyle textStyle = TEXT_STYLE_NORMAL */
+    uint8_t* GetSpace(uint16_t fontKey, uint32_t unicode, uint32_t size, TextStyle textStyle);
     void PutSpace(uint8_t* addr);
-    uint8_t* GetBitmap(uint16_t fontKey, uint32_t unicode, TextStyle textStyle = TEXT_STYLE_NORMAL);
+    uint8_t* GetBitmap(uint16_t fontKey, uint32_t unicode, TextStyle textStyle);
 
 private:
     void UpdateLru(Bitmap* bitmap);

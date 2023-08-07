@@ -75,9 +75,8 @@ void UITestVectorFont::InnerTestTitle(const char* title)
 
 const UIView* UITestVectorFont::GetTestView()
 {
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TestDrawTextITALYBOLD();
-#endif
+
     FontFontEngineVectorTestCHLang001();
     FontFontEngineVectorTestCHLang002();
     FontFontEngineVectorTestJALang001();
@@ -340,7 +339,7 @@ void UITestVectorFont::FontFontEngineMultiLanguageTestROLang001()
     }
 }
 #endif
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
+
 void UITestVectorFont::TestDrawTextITALYBOLD()
 {
     if (container_ != nullptr) {
@@ -361,6 +360,5 @@ void UITestVectorFont::TestDrawTextITALYBOLD()
         positionY_ += LABEL_HEIGHT + GAP;
     }
 }
-#endif
 } // namespace OHOS
 #endif // ENABLE_VECTOR_FONT
