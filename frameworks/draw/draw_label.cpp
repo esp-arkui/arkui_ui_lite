@@ -88,6 +88,13 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
         glyphNode.advance = 0;
         uint8_t* fontMap = fontEngine->GetBitmap(letterInfo.letter, glyphNode, letterInfo.fontId, letterInfo.fontSize,
                                                  letterInfo.shapingId);
+#if defined(UPDATER_UI_LITE)
+        // when letter not supported, show ? to inform user in updater mode
+        if (fontMap == nullptr && letterInfo.letter != '\n' && letterInfo.letter != '\r') {
+            fontMap = fontEngine->GetBitMap('?', glyphNode, letterInfo.fontId, letterInfo.fontSize,
+                                                 letterInfo.shapingId);
+        }
+#endif
         if (fontMap != nullptr) {
             uint8_t weight = fontEngine->GetFontWeight(glyphNode.fontId);
             // 16: rgb565->16 rgba8888->32 font with rgba
