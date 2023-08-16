@@ -35,6 +35,7 @@ if (os_level != "standard") {
       "GRAPHIC_ENABLE_GRADIENT_FILL_FLAG=1",
       "GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG=1",
       "GRAPHIC_ENABLE_DRAW_TEXT_FLAG=1",
+      "ENABLE_SPANNABLE_STRING=1",
     ]
     if (defined(board_toolchain_type) && board_toolchain_type == "iccarm") {
       cflags = [
