@@ -318,8 +318,9 @@ public:
                               const Rect& fillArea,
                               const ColorType& color,
                               const OpacityType& opa) const;
-#ifdef ARM_NEON_OPT
 
+    static void SetLinePosition(const TrianglePartInfo& part, Rect& line);
+#ifdef ARM_NEON_OPT
     void BlendLerpPix(uint8_t* color, uint8_t red, uint8_t green, uint8_t blue,
                       uint8_t alpha, uint8_t cover);
     void BlendLerpPix(uint8_t* color, uint8_t red, uint8_t green, uint8_t blue,
@@ -362,6 +363,12 @@ private:
 
     void FillArea(BufferInfo& gfxDstBuffer, const Rect& rect, const Rect& mask,
                   bool isTransparent, const ColorType* colorBuf);
+
+#ifdef ARM_NEON_OPT
+    void SetDestAndSrc(ColorMode destMode, ColorMode srcMode, uint8_t* dest,
+                       uint8_t* src, uint32_t width, OpacityType& opa, uint32_t height,
+                       uint8_t destByteSize, uint8_t srcByteSize, uint32_t destStride, uint32_t srcStride) const;
+#endif
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_DRAW_UTILS_H

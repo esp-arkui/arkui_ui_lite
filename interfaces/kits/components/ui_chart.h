@@ -893,6 +893,8 @@ private:
     uint16_t gradientBottom_;
 
     void GradientColor(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea, UIChartDataSerial* data);
+    void SetCrossPointSet(CrossPointSet& cross, int16_t mixScale, Rect currentRect,
+                          const ChartLine& limitPoints, int16_t y, int16_t startY);
     void DrawGradientColor(BufferInfo& gfxDstBuffer,
                            const Rect& invalidatedArea,
                            UIChartDataSerial* data,

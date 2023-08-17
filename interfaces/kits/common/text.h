@@ -569,6 +569,11 @@ protected:
     TextLine preIndexLine_;
 
 private:
+    Point GetPointValues(int16_t lineHeight, uint16_t lineCount, const Rect& coords, const Style& style);
+
+#if defined(ENABLE_ICU) && ENABLE_ICU
+    void CalculateLineBytes(uint16_t& lineBytes, uint16_t& lineBegin);
+#endif
     uint8_t horizontalAlign_ : 4; // UITextLanguageAlignment
     uint8_t verticalAlign_ : 4;   // UITextLanguageAlignment
     bool eliminateTrailingSpaces_;

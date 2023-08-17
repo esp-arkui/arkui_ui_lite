@@ -118,6 +118,11 @@ private:
 
     void DrawAxisLine(BufferInfo& gfxDstBuffer, ArcInfo& arcInfo, const Rect& mask, const Style& style, uint8_t opa);
 
+    void RecalculateYStartAndYEnd(int16_t& yStart, int16_t& yEnd);
+
+    void SetIsAntialias(BufferInfo& gfxDstBuffer, ArcInfo& arcInfo,
+                        const Rect& mask, const Style& style, OpacityType opa);
+
     void DrawLineWithDegree(BufferInfo& gfxDstBuffer,
                             ArcInfo& arcInfo,
                             int16_t start,

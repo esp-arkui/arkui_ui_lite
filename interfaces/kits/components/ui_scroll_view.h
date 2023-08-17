@@ -241,6 +241,9 @@ protected:
     bool MoveOffset(int16_t offsetX, int16_t offsetY);
 
 private:
+#if (defined(ENABLE_ROTATE_INPUT) && (ENABLE_ROTATE_INPUT == 1))
+    void SetIsEdge(bool& IsEdge, Rect childRect);
+#endif
     void Drag(const DragEvent& event);
     void CalculateReboundDistance(int16_t& dragDistanceX, int16_t& dragDistanceY) override;
     void RefreshScrollBar();

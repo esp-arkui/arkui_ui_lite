@@ -690,6 +690,38 @@ void DrawUtils::BlendPreLerpPix(uint8_t *color, uint8_t red, uint8_t green, uint
 }
 #endif
 
+#ifdef ARM_NEON_OPT
+void DrawUtils::SetDestAndSrc(ColorMode destMode, ColorMode srcMode, uint8_t* dest,
+                              uint8_t* src, uint32_t width, OpacityType& opa,
+                              uint32_t height, uint8_t destByteSize, uint8_t srcByteSize,
+                              uint32_t destStride, uint32_t srcStride) const
+{
+    DEBUG_PERFORMANCE_TRACE("BlendWithSoftWare_neon");
+    NeonBlendPipeLine pipeLine;
+    pipeLine.Construct(destMode, srcMode);
+    int16_t dstStep = NEON_STEP_8 * GetByteSizeByColorMode(destMode);
+    int16_t srcStep = NEON_STEP_8 * GetByteSizeByColorMode(srcMode);
+    for (uint32_t row = 0; row < height; ++row) {
+        uint8_t* dstBuf = dest;
+        uint8_t* srcBuf = const_cast<uint8_t*>(src);
+        int16_t tmpWidth = width;
+        while (tmpWidth >= NEON_STEP_8) {
+            pipeLine.Invoke(dstBuf, srcBuf, opa);
+            dstBuf += dstStep;
+            srcBuf += srcStep;
+            tmpWidth -= NEON_STEP_8;
+        }
+        for (int16_t i = 0; i < tmpWidth; ++i) {
+            COLOR_FILL_BLEND(dstBuf, destMode, srcBuf, srcMode, opa);
+            dstBuf += destByteSize;
+            srcBuf += srcByteSize;
+        }
+        dest += destStride;
+        src += srcStride;
+    }
+}
+#endif
+
 void DrawUtils::BlendWithSoftWare(const uint8_t* src1,
                                   const Rect& srcRect,
                                   uint32_t srcStride,
@@ -717,31 +749,7 @@ void DrawUtils::BlendWithSoftWare(const uint8_t* src1,
     uint32_t width = srcRect.GetWidth();
     uint32_t height = srcRect.GetHeight();
 #ifdef ARM_NEON_OPT
-    {
-        DEBUG_PERFORMANCE_TRACE("BlendWithSoftWare_neon");
-        NeonBlendPipeLine pipeLine;
-        pipeLine.Construct(destMode, srcMode);
-        int16_t dstStep = NEON_STEP_8 * GetByteSizeByColorMode(destMode);
-        int16_t srcStep = NEON_STEP_8 * GetByteSizeByColorMode(srcMode);
-        for (uint32_t row = 0; row < height; ++row) {
-            uint8_t* dstBuf = dest;
-            uint8_t* srcBuf = const_cast<uint8_t*>(src);
-            int16_t tmpWidth = width;
-            while (tmpWidth >= NEON_STEP_8) {
-                pipeLine.Invoke(dstBuf, srcBuf, opa);
-                dstBuf += dstStep;
-                srcBuf += srcStep;
-                tmpWidth -= NEON_STEP_8;
-            }
-            for (int16_t i = 0; i < tmpWidth; ++i) {
-                COLOR_FILL_BLEND(dstBuf, destMode, srcBuf, srcMode, opa);
-                dstBuf += destByteSize;
-                srcBuf += srcByteSize;
-            }
-            dest += destStride;
-            src += srcStride;
-        }
-    }
+    SetDestAndSrc(destMode, srcMode, dest, src, width, opa, height, destByteSize, srcByteSize, destStride, srcStride);
 #else
     {
         DEBUG_PERFORMANCE_TRACE("BlendWithSoftWare");
@@ -1740,7 +1748,7 @@ void DrawUtils::DrawTriangleTrueColorNearest(const TriangleScanInfo& in, const C
     }
 }
 
-void DrawUtils::DrawTriangleTransformPart(BufferInfo& gfxDstBuffer, const TrianglePartInfo& part)
+void DrawUtils::SetLinePosition(const TrianglePartInfo& part, Rect& line)
 {
 #if ENABLE_FIXED_POINT
     // parameters below are Q15 fixed-point number
@@ -1749,7 +1757,6 @@ void DrawUtils::DrawTriangleTransformPart(BufferInfo& gfxDstBuffer, const Triang
     part.edge1.curY = yMin;
     part.edge2.curX += (static_cast<int64_t>(part.edge2.du) * (yMin - part.edge2.curY) / part.edge2.dv);
     part.edge2.curY = yMin;
-    Rect line;
     line.SetLeft(FO_TO_INTEGER(part.edge1.curX));
     line.SetRight(FO_TO_INTEGER(part.edge1.curX));
     line.SetTop(FO_TO_INTEGER(part.edge1.curY));
@@ -1760,12 +1767,17 @@ void DrawUtils::DrawTriangleTransformPart(BufferInfo& gfxDstBuffer, const Triang
     part.edge1.curY = part.yMin;
     part.edge2.curX += part.edge2.du * (part.yMin - part.edge2.curY) / part.edge2.dv;
     part.edge2.curY = part.yMin;
-    Rect line;
     line.SetLeft(static_cast<int16_t>(part.edge1.curX));
     line.SetRight(static_cast<int16_t>(part.edge1.curX));
     line.SetTop(static_cast<int16_t>(part.edge1.curY));
     line.SetBottom(static_cast<int16_t>(part.edge1.curY));
 #endif
+}
+
+void DrawUtils::DrawTriangleTransformPart(BufferInfo& gfxDstBuffer, const TrianglePartInfo& part)
+{
+    Rect line;
+    SetLinePosition(part, line);
     TransformInitState init;
     GetTransformInitState(part.transMap, part.position, line, init);
 
@@ -1833,20 +1845,8 @@ void DrawUtils::DrawTriangleTransform(BufferInfo& gfxDstBuffer,
                         triangleInfo.p1.x * triangleInfo.p2.y - triangleInfo.p2.x * triangleInfo.p1.y) < 0;
     TriangleEdge edge1;
     TriangleEdge edge2;
-    TrianglePartInfo part{
-        mask,
-        transMap,
-        position,
-        edge1,
-        edge2,
-        0,
-        0,
-        triangleInfo.info,
-        color,
-        opaScale,
-        triangleInfo.isRightPart,
-        triangleInfo.ignoreJunctionPoint,
-    };
+    TrianglePartInfo part {mask, transMap, position, edge1, edge2, 0, 0, triangleInfo.info, color,
+                           opaScale, triangleInfo.isRightPart, triangleInfo.ignoreJunctionPoint};
 
     uint8_t yErr = 1;
     if (triangleInfo.p2.y == triangleInfo.p1.y) {
