@@ -226,7 +226,8 @@ int8_t UIFontBitmap::GetDynamicFontBitmap(uint32_t unicode, BufferInfo& bufInfo,
 
 uint8_t* UIFontBitmap::GetCacheBitmap(uint16_t fontId, uint32_t unicode)
 {
-    return UIFontCacheManager::GetInstance()->GetBitmap(fontId, unicode);
+    TextStyle textStyle = TEXT_STYLE_NORMAL;
+    return UIFontCacheManager::GetInstance()->GetBitmap(fontId, unicode, textStyle);
 }
 
 void UIFontBitmap::PutCacheSpace(uint8_t* addr)
@@ -254,7 +255,8 @@ uint8_t* UIFontBitmap::SearchInFont(uint32_t unicode, GlyphNode& glyphNode, uint
     if (ret != RET_VALUE_OK) {
         return nullptr;
     }
-    uint8_t* bitmap = fontCacheManager->GetBitmap(fontId, unicode);
+    TextStyle textStyle = TEXT_STYLE_NORMAL;
+    uint8_t* bitmap = fontCacheManager->GetBitmap(fontId, unicode, textStyle);
     if (bitmap != nullptr) {
         if (glyphNode.dataFlag == glyphNode.fontId && fontId == glyphNode.fontId) {
             return bitmap;
@@ -349,25 +351,31 @@ uint16_t UIFontBitmap::GetLineMaxHeight(const char* text,
                                         uint16_t fontId,
                                         uint8_t fontSize,
                                         uint16_t& letterIndex,
-                                        SizeSpan* sizeSpans)
+                                        SpannableString* spannableString)
 {
     uint16_t maxHeight = GetHeight(fontId, fontSize);
-    if (sizeSpans == nullptr) {
+    if (spannableString == nullptr) {
         return maxHeight;
     }
 
     uint32_t i = 0;
     while (i < lineLength) {
         TypedText::GetUTF8Next(text, i, i);
-        if (sizeSpans != nullptr && sizeSpans[letterIndex].isSizeSpan) {
-            uint16_t spannableHeight = 0;
-            if (sizeSpans[letterIndex].height == 0) {
-                spannableHeight = GetHeight(sizeSpans[letterIndex].fontId, sizeSpans[letterIndex].size);
-                sizeSpans[letterIndex].height = spannableHeight;
+        if (spannableString != nullptr && spannableString->GetSpannable(letterIndex)) {
+            int16_t spannableHeight = 0;
+            spannableString->GetHeight(letterIndex, spannableHeight);
+            if (spannableHeight == 0) {
+                uint8_t tempSize = fontSize;
+                spannableString->GetFontSize(letterIndex, tempSize);
+                uint16_t tempFontId = fontId;
+                spannableString->GetFontId(letterIndex, tempFontId);
+                spannableHeight = GetHeight(tempFontId, tempSize);
+                spannableString->SetHeight(spannableHeight, letterIndex, letterIndex + 1);
             } else {
-                spannableHeight = sizeSpans[letterIndex].height;
+                /* spannableHeight is the output of func GetHeight() */
             }
-            maxHeight = spannableHeight > maxHeight ? spannableHeight : maxHeight;
+            uint16_t tempHeight = static_cast<int16_t>(spannableHeight);
+            maxHeight = tempHeight > maxHeight ? tempHeight : maxHeight;
         }
 
         letterIndex++;
