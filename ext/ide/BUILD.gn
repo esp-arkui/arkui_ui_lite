@@ -55,7 +55,10 @@ config("graphic_config_ide") {
 
 ohos_static_library("ui_ide") {
   sources = arkui_ui_lite_sources
-  include_dirs = [ "//foundation/graphic/surface_lite/interfaces/kits" ]
+  include_dirs = [
+    "//foundation/graphic/surface_lite/interfaces/kits",
+    "//third_party/libpng/libpng-1.6.37",
+  ]
   deps = [
     "//third_party/bounds_checking_function:libsec_static",
     "//third_party/cJSON:cjson_static",
