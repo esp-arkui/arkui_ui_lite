@@ -24,16 +24,16 @@
 #include "ui_test.h"
 
 namespace OHOS {
-constexpr char* UI_TEST_TOWRADS_LEFT = "towards_left";
-constexpr char* UI_TEST_TOWRADS_RIGHT = "towards_right";
-constexpr char* UI_TEST_TOWRADS_UP = "towards_up";
-constexpr char* UI_TEST_TOWRADS_DOWN = "towards_down";
-constexpr char* UI_TEST_2_FOCUSABLE = "2_focusable";
-constexpr char* UI_TEST_2_UNFOCUSABLE = "2_unfocusable";
-constexpr char* UI_TEST_4_INTERCEPT = "4_intercept";
-constexpr char* UI_TEST_4_CANCEL_INTERCEPT = "4_cancel_intercept";
-constexpr char* UI_TEST_RESET_FOCUS = "reset_focus";
-constexpr char* UI_TEST_CLEAR_FOCUS = "clear_focus";
+const char* UI_TEST_TOWRADS_LEFT = "towards_left";
+const char* UI_TEST_TOWRADS_RIGHT = "towards_right";
+const char* UI_TEST_TOWRADS_UP = "towards_up";
+const char* UI_TEST_TOWRADS_DOWN = "towards_down";
+const char* UI_TEST_2_FOCUSABLE = "2_focusable";
+const char* UI_TEST_2_UNFOCUSABLE = "2_unfocusable";
+const char* UI_TEST_4_INTERCEPT = "4_intercept";
+const char* UI_TEST_4_CANCEL_INTERCEPT = "4_cancel_intercept";
+const char* UI_TEST_RESET_FOCUS = "reset_focus";
+const char* UI_TEST_CLEAR_FOCUS = "clear_focus";
 
 class UITestFocusManager : public UITest {
 public:
@@ -46,6 +46,9 @@ public:
     void UIKitFocusManagerTest001();
 
 private:
+    void CreateLabels(UIViewGroup* viewGroup, UIViewGroup* viewGroup1);
+    void InitListeners();
+    void TearDownListeners001();
     UIView* CreateTestUILabel(UIViewGroup* parent, int16_t x, int16_t y,
         const char* text, bool focusable);
     UIViewGroup* CreateTestUIViewGroup(UIViewGroup* parent, bool focusable, bool interceptFocus);
