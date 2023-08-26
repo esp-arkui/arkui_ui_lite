@@ -152,7 +152,8 @@ float TypedText::GetAngleForArcLen(float len,
                                    uint16_t height,
                                    uint16_t radius,
                                    UITextLanguageDirect direct,
-                                   TextOrientation orientation)
+                                   TextOrientation orientation,
+                                   UITextLanguageDirect textDirect)
 {
     if (radius == 0) {
         return 0;
@@ -160,7 +161,13 @@ float TypedText::GetAngleForArcLen(float len,
     float realRadius =
         static_cast<float>((orientation == TextOrientation::OUTSIDE) ? (radius + height) : radius);
     float angle = static_cast<float>(len * SEMICIRCLE_IN_DEGREE) / (UI_PI * realRadius);
-    return (direct == TEXT_DIRECT_LTR) ? angle : -angle;
+    if (textDirect == TEXT_DIRECT_LTR) {
+        angle = (direct == TEXT_DIRECT_LTR) ? angle : -angle;
+    } else if (textDirect == TEXT_DIRECT_RTL) {
+        angle = (direct == TEXT_DIRECT_LTR) ? -angle : angle;
+    }
+
+    return angle;
 }
 
 float TypedText::GetAngleForArcLen(uint16_t letterWidth, int16_t letterSpace, uint16_t radius)
