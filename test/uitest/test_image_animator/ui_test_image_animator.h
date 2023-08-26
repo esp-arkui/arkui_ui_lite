@@ -87,6 +87,13 @@ public:
 
 private:
     void InitImageInfo();
+    void SetSrcData3(uint8_t* srcData3, uint8_t* srcData2, uint8_t* srcData1, bool& isReturn);
+    void SetImageInfoPara(ImageInfo* imageInfo,
+                          const uint16_t width,
+                          const uint16_t height,
+                          uint32_t dataSize,
+                          uint8_t* srcData);
+    void SetimageAnimatorImageInfos();
     UIScrollView* container_ = nullptr;
     GridLayout* layout_ = nullptr;
     UIImageAnimatorView* imageAnimator_ = nullptr;
@@ -114,7 +121,7 @@ private:
     ImageInfo* imageInfo1_ = nullptr;
     ImageInfo* imageInfo2_ = nullptr;
     ImageInfo* imageInfo3_ = nullptr;
-    ImageAnimatorInfo imageAnimatorImageInfo_[3] = { 0 };
+    ImageAnimatorInfo imageAnimatorImageInfo_[3];
 };
 } // namespace OHOS
 #endif // UI_TEST_IMAGE_ANIMATOR_H

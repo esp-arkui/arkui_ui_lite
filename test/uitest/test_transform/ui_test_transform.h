@@ -36,16 +36,16 @@ enum ImageScaleMode {
     SCALE_DOWN,
 };
 
-constexpr char* UI_TEST_ROTATE = "rotate";
-constexpr char* UI_TEST_ZOOM = "zoom";
-constexpr char* UI_TEST_TRANSLATION = "translation";
-constexpr char* UI_TEST_AUTO = "auto";
-constexpr char* UI_TEST_TILING = "tiling";
-constexpr char* UI_TEST_COVER = "cover";
-constexpr char* UI_TEST_CONTAIN = "contain";
-constexpr char* UI_TEST_FILL = "fill";
-constexpr char* UI_TEST_CENTER = "center";
-constexpr char* UI_TEST_SCALE_DOWN = "scale_down";
+const char* UI_TEST_ROTATE = "rotate";
+const char* UI_TEST_ZOOM = "zoom";
+const char* UI_TEST_TRANSLATION = "translation";
+const char* UI_TEST_AUTO = "auto";
+const char* UI_TEST_TILING = "tiling";
+const char* UI_TEST_COVER = "cover";
+const char* UI_TEST_CONTAIN = "contain";
+const char* UI_TEST_FILL = "fill";
+const char* UI_TEST_CENTER = "center";
+const char* UI_TEST_SCALE_DOWN = "scale_down";
 
 class UITestTransform : public UITest, public UIView::OnClickListener {
 public:
