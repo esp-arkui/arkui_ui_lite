@@ -263,26 +263,6 @@ HWTEST_F(UILabelTest, UILabelOnPreDraw_001, TestSize.Level1)
     invalidatedArea = nullptr;
 }
 
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
-/**
- * @tc.name: UILabelSetText_002
- * @tc.desc: Verify SetText function.
- */
-HWTEST_F(UILabelTest, UILabelSetText_002, TestSize.Level1)
-{
-    if (label_ == nullptr) {
-        EXPECT_EQ(1, 0);
-        return;
-    }
-    SpannableString spannableString("图形子系统测试正常粗体斜体粗斜体");
-    spannableString.SetTextStyle(TEXT_STYLE_ITALIC, 11, 13);
-    spannableString.SetTextStyle(TEXT_STYLE_BOLD, 9, 11);
-    spannableString.SetTextStyle(TEXT_STYLE_BOLD_ITALIC, 13, 16);
-    label_->SetText(&spannableString);
-    EXPECT_EQ(spannableString.spanList_.Size(), 3);
-}
-#endif
-
 /**
  * @tc.name: UILabelSetFontId_001
  * @tc.desc: Verify SetFontId function.

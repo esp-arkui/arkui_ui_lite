@@ -64,7 +64,6 @@ struct LabelLineInfo {
     uint8_t shapingId;
     uint8_t opaScale;
     const Style& style;
-
     const char* text;
     uint16_t length;
     uint16_t start;
@@ -74,13 +73,11 @@ struct LabelLineInfo {
     UITextLanguageDirect direct;
     uint32_t* codePoints;
     bool baseLine;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle* textStyles;
-#endif
+    SpannableString* spannableString;
     List<BackgroundColor>*  backgroundColor;
     List<ForegroundColor>*  foregroundColor;
     List<LineBackgroundColor>*  linebackgroundColor;
-    SizeSpan* sizeSpans;
     uint16_t ellipsisOssetY;
 };
 
@@ -91,15 +88,12 @@ struct LabelLetterInfo {
     OpacityType opa;
     int8_t offsetX;
     int8_t offsetY;
-
     const uint32_t& letter;
     UITextLanguageDirect direct;
     uint16_t fontId;
     uint8_t shapingId;
     uint8_t fontSize;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle textStyle;
-#endif
     bool baseLine;
     int16_t letterSpace_;
     int16_t lineSpace_;
