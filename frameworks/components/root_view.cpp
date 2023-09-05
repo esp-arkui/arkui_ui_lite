@@ -642,8 +642,8 @@ void RootView::DrawTop(UIView* view, const Rect& rect)
         if (curView != nullptr) {
             if (curView->IsVisible()) {
                 if (curViewRect.Intersect(curView->GetMaskedRect(), mask) || enableAnimator) {
-                    if ((curView->GetViewType() != UI_IMAGE_VIEW) && (curView->GetViewType() != UI_TEXTURE_MAPPER) &&
-                        !curView->IsTransInvalid() && !enableAnimator) {
+                    if (!((curView->GetViewType() == UI_IMAGE_VIEW) && (curView->GetStyle(STYLE_BORDER_WIDTH) == 0))  && 
+                        (curView->GetViewType() != UI_TEXTURE_MAPPER) && !curView->IsTransInvalid() && !enableAnimator) {
                         origRect = curView->GetOrigRect();
                         relativeRect = curView->GetRelativeRect();
                         curView->GetTransformMap().SetInvalid(true);
