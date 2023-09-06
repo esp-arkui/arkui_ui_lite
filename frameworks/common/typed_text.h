@@ -75,7 +75,8 @@ public:
                                    uint16_t height,
                                    uint16_t radius,
                                    UITextLanguageDirect direct,
-                                   TextOrientation orientation);
+                                   TextOrientation orientation,
+                                   UITextLanguageDirect textDirect == TEXT_DIRECT_LTR);
 
     static float GetAngleForArcLen(uint16_t letterWidth, int16_t letterSpace, uint16_t radius);
 

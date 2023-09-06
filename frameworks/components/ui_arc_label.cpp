@@ -235,6 +235,17 @@ void UIArcLabel::MeasureArcTextInfo()
     arcTextInfo_.lineEnd = GetLineEnd(static_cast<int16_t>(maxLength));
 
     arcTextInfo_.startAngle = startAngle_ % CIRCLE_IN_DEGREE;
+    int16_t maxTextLength = arcLabelText_->GetTextWidth(*style_);
+
+    float maxTextAngle = 0.0f;
+    if (compatibilityMode_) {
+        maxTextAngle = TypedText::GetAngleForArcLen(maxTextLength, letterHeight, arcTextInfo_.radius,
+            arcTextInfo_.direct, orientation_);
+    } else {
+        maxTextAngle = TypedText::GetAngleForArcLen(maxTextLength, style_->letterSpace_, arcTextInfo_.radius);
+        maxTextAngle = arcLabelText_->GetDirect() == TEXT_DIRECT_RTL ? -maxTextAngle : maxTextAngle;
+    }
+
     int16_t actLength =
         TypedText::GetTextWidth(&text[arcTextInfo_.lineStart], arcLabelText_->GetFontId(), arcLabelText_->GetFontSize(),
                                 arcTextInfo_.lineEnd - arcTextInfo_.lineStart, style_->letterSpace_);
@@ -245,6 +256,7 @@ void UIArcLabel::MeasureArcTextInfo()
         }
         arcTextInfo_.startAngle += TypedText::GetAngleForArcLen(gapLength, letterHeight, arcTextInfo_.radius,
                                                                 arcTextInfo_.direct, orientation_);
+        arcTextInfo_.startAngle += maxTextAngle;
     }
 }
 } // namespace OHOS
