@@ -30,6 +30,7 @@ if (os_level == "standard") {
       "ENABLE_SHAPING = 0",
       "ENABLE_STATIC_FONT = 0",
       "ENABLE_VECTOR_FONT = 1",
+      "UPDATER_UI_LITE"
     ]
 
     sources = arkui_ui_lite_sources + graphic_utils_sources
