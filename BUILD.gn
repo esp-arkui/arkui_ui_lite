@@ -24,6 +24,7 @@ if (os_level != "standard") {
     include_dirs = [
       "interfaces/kits",
       "interfaces/innerkits",
+      "//third_party/libpng/libpng-1.6.37",
     ]
     defines += [
       "GRAPHIC_ENABLE_ELLIPSE_FLAG=1",
@@ -220,6 +221,7 @@ if (os_level != "standard") {
       include_dirs = [
         "frameworks",
         "//third_party/freetype/include",
+        "//third_party/libpng/libpng-1.6.37",
       ]
       sources -= [
         "frameworks/components/ui_surface_view.cpp",
@@ -240,7 +242,10 @@ if (os_level != "standard") {
       ]
     } else {
       target_type = "shared_library"
-      include_dirs = [ "frameworks" ]
+      include_dirs = [
+        "frameworks",
+        "//third_party/libpng/libpng-1.6.37",
+      ]
       deps = [
         "//build/lite/config/component/cJSON:cjson_shared",
         "//foundation/graphic/graphic_utils_lite:lite_graphic_hals",
