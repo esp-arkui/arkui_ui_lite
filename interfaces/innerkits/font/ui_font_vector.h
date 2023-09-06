@@ -15,6 +15,7 @@
 
 #ifndef UI_FONT_VECTOR_H
 #define UI_FONT_VECTOR_H
+#include <memory>
 #include "font/base_font.h"
 #include "graphic_config.h"
 #include "ft2build.h"
@@ -22,8 +23,6 @@
 #include "freetype/tttables.h"
 #include "font/glyphs_cache.h"
 #include "font/ui_font_cache.h"
-#include <memory>
-
 namespace OHOS {
 class UIFontVector : public BaseFont {
 public:
@@ -55,7 +54,7 @@ public:
     uint16_t GetOffsetPosY(const char* text, uint16_t lineLength,
                            bool& isEmojiLarge, uint16_t fontId, uint8_t fontSize) override;
     uint16_t GetLineMaxHeight(const char* text, uint16_t lineLength, uint16_t fontId, uint8_t fontSize,
-                              uint16_t& letterIndex, SizeSpan* sizeSpans)  override;
+                              uint16_t& letterIndex, SpannableString* spannableString)  override;
     bool GetTtfInfo(uint8_t ttfId, uint8_t* ttfBuffer, uint32_t ttfBufferSize, TtfHeader& ttfHeader) override;
     void SetPsramMemory(uintptr_t psramAddr, uint32_t psramLen) override;
     int8_t SetCurrentLangId(uint8_t langId) override;
@@ -87,15 +86,11 @@ private:
     uint16_t GetFontId(uint32_t unicode) const;
     uint16_t GetKey(uint16_t fontId, uint8_t size);
     int8_t LoadGlyphIntoFace(uint16_t& fontId, uint8_t fontSize, uint32_t unicode, GlyphNode& glyphNode);
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     int8_t LoadGlyphIntoFace(uint16_t& fontId, uint32_t unicode, FT_Face face, TextStyle textStyle);
-#endif
     void SaveGlyphNode(uint32_t unicode, uint16_t fontKey, Metric* metric);
     uint8_t IsGlyphFont(uint32_t unicode);
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     void SetItaly(FT_GlyphSlot slot);
     void SetBold(uint16_t fontId);
-#endif
     int8_t GetFaceInfo(uint16_t fontId, uint8_t fontSize, FaceInfo& faceInfo);
     uint16_t GetMaxSubLineHeight(uint16_t textNum, uint16_t loopNum, uint16_t maxHeight, uint16_t emojiNum);
     bool GetTtfInfoFromTtf(uint8_t* ttfBuffer,

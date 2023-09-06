@@ -75,9 +75,8 @@ void UITestVectorFont::InnerTestTitle(const char* title)
 
 const UIView* UITestVectorFont::GetTestView()
 {
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TestDrawTextITALYBOLD();
-#endif
+
     FontFontEngineVectorTestCHLang001();
     FontFontEngineVectorTestCHLang002();
     FontFontEngineVectorTestJALang001();
@@ -340,7 +339,7 @@ void UITestVectorFont::FontFontEngineMultiLanguageTestROLang001()
     }
 }
 #endif
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
+
 void UITestVectorFont::TestDrawTextITALYBOLD()
 {
     if (container_ != nullptr) {
@@ -352,15 +351,14 @@ void UITestVectorFont::TestDrawTextITALYBOLD()
         label->Resize(LABEL_WIDTH * TWO, LABEL_HEIGHT);
         label->SetFont(DEFAULT_VECTOR_FONT_FILENAME, FONT_DEFAULT_SIZE);
         label->SetText("图形子系统展示正常粗体斜体粗斜体");
-        SpannableString spannableString(label->GetText());
-        spannableString.SetTextStyle(TextStyle::TEXT_STYLE_ITALIC, ELEVEN, THIRTEEN);
-        spannableString.SetTextStyle(TEXT_STYLE_BOLD, NINE, ELEVEN);
-        spannableString.SetTextStyle(TEXT_STYLE_BOLD_ITALIC, THIRTEEN, SIXTEEN);
-        label->SetText(&spannableString);
+        SpannableString* spannableString = new SpannableString();
+        spannableString->SetTextStyle(TextStyle::TEXT_STYLE_ITALIC, ELEVEN, THIRTEEN);
+        spannableString->SetTextStyle(TEXT_STYLE_BOLD, NINE, ELEVEN);
+        spannableString->SetTextStyle(TEXT_STYLE_BOLD_ITALIC, THIRTEEN, SIXTEEN);
+        label->SetText(spannableString);
         container_->Add(label);
         positionY_ += LABEL_HEIGHT + GAP;
     }
 }
-#endif
 } // namespace OHOS
 #endif // ENABLE_VECTOR_FONT
