@@ -57,8 +57,8 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
 
         ColorType foregroundColor = labelLine.style.textColor_;
         GetForegroundColor(letterIndex, labelLine.foregroundColor, foregroundColor);
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         TextStyle textStyle = TEXT_STYLE_NORMAL;
+#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         if (labelLine.textStyles) {
             textStyle = labelLine.textStyles[letterIndex];
         }
@@ -74,17 +74,13 @@ uint16_t DrawLabel::DrawTextOneLine(BufferInfo& gfxDstBuffer, const LabelLineInf
                                    fontId,
                                    0,
                                    fontSize,
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
                                    textStyle,
-#endif
                                    labelLine.baseLine,
                                    labelLine.style.letterSpace_,
                                    labelLine.style.lineSpace_,
                                    havebackgroundColor,
                                    backgroundColor};
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         glyphNode.textStyle = letterInfo.textStyle;
-#endif
         glyphNode.advance = 0;
         uint8_t* fontMap = fontEngine->GetBitmap(letterInfo.letter, glyphNode, letterInfo.fontId, letterInfo.fontSize,
                                                  letterInfo.shapingId);

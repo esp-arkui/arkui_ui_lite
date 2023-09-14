@@ -73,9 +73,7 @@ uint8_t* UIFontCache::GetSpace(uint16_t fontId, uint32_t unicode, uint32_t size,
 
     bitmap->fontId = fontId;
     bitmap->unicode = unicode;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     bitmap->textStyle = textStyle;
-#endif
 
     return reinterpret_cast<uint8_t*>(bitmap->data);
 }

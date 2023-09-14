@@ -609,9 +609,7 @@ protected:
                                        SizeSpan* sizeSpans);
     uint16_t GetSpanFontIdBySize(uint8_t size);
     void InitSizeSpans();
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle* textStyles_;
-#endif
     char* text_;
     uint16_t fontId_;
     uint8_t fontSize_; // Only the vector font library has a valid value.

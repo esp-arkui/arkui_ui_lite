@@ -74,9 +74,7 @@ struct LabelLineInfo {
     UITextLanguageDirect direct;
     uint32_t* codePoints;
     bool baseLine;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle* textStyles;
-#endif
     List<BackgroundColor>*  backgroundColor;
     List<ForegroundColor>*  foregroundColor;
     List<LineBackgroundColor>*  linebackgroundColor;
@@ -97,9 +95,7 @@ struct LabelLetterInfo {
     uint16_t fontId;
     uint8_t shapingId;
     uint8_t fontSize;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     TextStyle textStyle;
-#endif
     bool baseLine;
     int16_t letterSpace_;
     int16_t lineSpace_;
