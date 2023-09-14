@@ -56,9 +56,7 @@ public:
         uint32_t unicode;
         uint32_t reserve1;
         uint32_t reserve2;
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
         TextStyle textStyle;
-#endif
         uint8_t data[];
     };
 

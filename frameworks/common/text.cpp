@@ -42,9 +42,7 @@ Text::Text()
       eliminateTrailingSpaces_(false)
 
 {
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     textStyles_ = nullptr;
-#endif
     SetFont(DEFAULT_VECTOR_FONT_FILENAME, DEFAULT_VECTOR_FONT_SIZE);
 }
 
@@ -54,12 +52,10 @@ Text::~Text()
         UIFree(text_);
         text_ = nullptr;
     }
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     if (textStyles_ != nullptr) {
         UIFree(textStyles_);
         textStyles_ = nullptr;
     }
-#endif
     if (backgroundColor_.Size() > 0) {
         backgroundColor_.Clear();
     }
@@ -132,12 +128,10 @@ void Text::SetText(const char* text)
         text_ = nullptr;
         return;
     }
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
     if (textStyles_ != nullptr) {
         UIFree(textStyles_);
         textStyles_ = nullptr;
     }
-#endif
     needRefresh_ = true;
     if (sizeSpans_ != nullptr) {
         UIFree(sizeSpans_);
@@ -329,9 +323,7 @@ void Text::Draw(BufferInfo& gfxDstBuffer,
                                      0, opa, style, &text_[lineBegin], lineBytes,
                                      lineBegin, fontId_, fontSize_, 0, static_cast<UITextLanguageDirect>(direct_),
                                      nullptr, baseLine_,
-#if defined(ENABLE_SPANNABLE_STRING) && ENABLE_SPANNABLE_STRING
                                      textStyles_,
-#endif
                                      &backgroundColor_, &foregroundColor_, &linebackgroundColor_, sizeSpans_, 0};
 
             uint16_t ellipsisOssetY = DrawLabel::DrawTextOneLine(gfxDstBuffer, labelLine, letterIndex);
