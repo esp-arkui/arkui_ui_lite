@@ -324,6 +324,7 @@ protected:
     bool transMapInvalid_ = true;
 
 private:
+    bool needUpdateContentMatrix_;
     void ReMeasure() override;
 #if defined(ENABLE_GIF) && (ENABLE_GIF == 1)
     friend class GifImageAnimator;
@@ -333,7 +334,7 @@ private:
     bool gifFrameFlag_;
 #endif
     void UpdateContentMatrix();
-    void UpdateDrawTransMap(bool updateContentMatrix = false);
+    void UpdateDrawTransMap();
     void AdjustScaleAndTranslate(Vector3<float>& scale, Vector3<int16_t>& translate,
                                  int16_t widgetWidth, int16_t widgetHeight) const;
     void SetCordsTmpRect(BufferInfo& gfxDstBuffer, Rect& viewRect, Rect& trunc, Rect& cordsTmp, OpacityType opa);
