@@ -16,6 +16,7 @@
 #include "components/root_view.h"
 
 #include "common/screen.h"
+#include "components/ui_image_view.h"
 #include "core/render_manager.h"
 #include "draw/draw_utils.h"
 #include "gfx_utils/graphic_log.h"
@@ -612,6 +613,10 @@ void RootView::RestoreMapBufferInfo()
 }
 
 bool RootView::CheckNeedRootViewTransView(UIView *curView) {
+    if ((curView->GetViewType() == UI_IMAGE_VIEW) &&
+        (static_cast<UIImageView*>(curView)->GetResizeMode() == UIImageView::NONE && !curView->IsTransInvalid())) {
+        return true;
+    }
     if ((curView->GetViewType() == UI_IMAGE_VIEW) && (curView->GetStyle(STYLE_BORDER_WIDTH) == 0)) {
         return false;
     }

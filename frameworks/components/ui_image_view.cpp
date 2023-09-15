@@ -258,10 +258,8 @@ void UIImageView::SetResizeMode(ImageResizeMode mode)
         imageResizeMode_ = mode;
     } else if (imageResizeMode_ != mode) {
         needRefresh_ = true;
-        ReMeasure();
         // must update the mode, before calling UpdateDrawTransMap
         imageResizeMode_ = mode;
-        UpdateDrawTransMap(true);
     }
 }
 
@@ -336,16 +334,12 @@ void UIImageView::UpdateContentMatrix()
     *contentMatrix_ = translateMatrix * scaleMatrix;
 }
 
-void UIImageView::UpdateDrawTransMap(bool updateContentMatrix)
+void UIImageView::UpdateDrawTransMap()
 {
     auto viewRect = GetOrigRect();
-    if (updateContentMatrix || (drawTransMap_ != nullptr &&
-        (drawTransMap_->GetTransMapRect().GetX() != viewRect.GetX() ||
-        drawTransMap_->GetTransMapRect().GetY() != viewRect.GetY()))) {
-        UpdateContentMatrix();
-    }
+    UpdateContentMatrix();
     // has no transformation
-    if ((contentMatrix_ == nullptr) && ((transMap_ == nullptr) || transMap_->IsInvalid())) {
+    if (contentMatrix_ == nullptr) {
         if (drawTransMap_ != nullptr) {
             delete drawTransMap_;
             drawTransMap_ = nullptr;
@@ -359,53 +353,12 @@ void UIImageView::UpdateDrawTransMap(bool updateContentMatrix)
             return;
         }
     }
-    if (contentMatrix_ != nullptr) {
-        drawTransMap_->SetTransMapRect(Rect(viewRect.GetX(), viewRect.GetY(),
-            viewRect.GetX() + imageWidth_ - 1, viewRect.GetY() + imageHeight_ - 1));
-    } else {
-        drawTransMap_->SetTransMapRect(viewRect);
-    }
-    // only contentMatrix
-    if (transMap_ == nullptr || transMap_->IsInvalid()) {
-        if (contentMatrix_ == nullptr) {
-            GRAPHIC_LOGE("Text: UpdateDrawTransMap contentMatrix_ is nullptr");
-            return;
-        }
-        drawTransMap_->SetMatrix(*contentMatrix_);
-        return;
-    }
-    // update the transMap, now the transMap is not nullptr
-    if (!(transMap_->GetTransMapRect() == viewRect)) {
-        transMap_->SetTransMapRect(viewRect);
-    }
-    // only transMap
-    if (contentMatrix_ == nullptr) {
-        *drawTransMap_ = *transMap_;
-        return;
-    }
-    // merge the transMap and content matrix
-    auto rect = transMap_->GetTransMapRect();
-    auto translate = Matrix4<float>::Translate(Vector3<float>(-rect.GetX(), -rect.GetY(), 0));
-    auto matrix = transMap_->GetTransformMatrix() * translate;
-    matrix = matrix * (*contentMatrix_);
-    drawTransMap_->SetMatrix(matrix);
+    drawTransMap_->SetTransMapRect(Rect(viewRect.GetX(), viewRect.GetY(),
+        viewRect.GetX() + imageWidth_ - 1, viewRect.GetY() + imageHeight_ - 1));
+    drawTransMap_->SetMatrix(*contentMatrix_);
+    return;
 }
 
-void UIImageView::SetHeight(int16_t height)
-{
-    if (GetHeight() != height) {
-        UIView::SetHeight(height);
-        UpdateDrawTransMap(true);
-    }
-}
-
-void UIImageView::SetWidth(int16_t width)
-{
-    if (GetWidth() != width) {
-        UIView::SetWidth(width);
-        UpdateDrawTransMap(true);
-    }
-}
 
 bool UIImageView::OnPreDraw(Rect& invalidatedArea) const
 {
@@ -431,17 +384,15 @@ void UIImageView::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     if ((imageHeight_ == 0) || (imageWidth_ == 0)) {
         return;
     }
-    UpdateDrawTransMap();
     Rect viewRect = GetContentRect();
     Rect trunc(invalidatedArea);
     if (trunc.Intersect(trunc, viewRect)) {
         uint8_t srcType = image_.GetSrcType();
         if ((srcType == IMG_SRC_FILE) || (srcType == IMG_SRC_VARIABLE)) {
-            Rect cordsTmp;
-            cordsTmp.SetTop(viewRect.GetY());
-            cordsTmp.SetBottom(viewRect.GetY() + imageHeight_ - 1);
-
             if ((drawTransMap_ == nullptr) || drawTransMap_->IsInvalid()) {
+                Rect cordsTmp;
+                cordsTmp.SetTop(viewRect.GetY());
+                cordsTmp.SetBottom(viewRect.GetY() + imageHeight_ - 1);
                 SetCordsTmpRect(gfxDstBuffer, viewRect, trunc, cordsTmp, opa);
             } else if ((drawTransMap_ != nullptr) && !drawTransMap_->IsInvalid()) {
                 ImageInfo imgInfo;
@@ -461,9 +412,7 @@ void UIImageView::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
                                                        static_cast<TransformAlgorithm>(algorithm_)};
                 OpacityType opaScale = DrawUtils::GetMixOpacity(opa, style_->imageOpa_);
                 Matrix4<float> scaleMatrix = drawTransMap_->GetScaleMatrix();
-                int16_t paddingX = style_->paddingLeft_ * scaleMatrix[0][0];
-                int16_t paddingY = style_->paddingTop_ * scaleMatrix[1][1];
-                baseGfxEngine->DrawTransform(gfxDstBuffer, trunc, {paddingX, paddingY}, Color::Black(),
+                baseGfxEngine->DrawTransform(gfxDstBuffer, trunc, {0, 0}, Color::Black(),
                                              opaScale, *drawTransMap_, imageTranDataInfo);
             }
         }
@@ -527,31 +476,27 @@ void UIImageView::SetSrc(const char* src)
         return;
     }
     needRefresh_ = true;
-    if (autoEnable_) {
-        UIImageView::ReMeasure();
-    }
+    UpdateImageWidthAndHeight();
     Invalidate();
 }
 
 void UIImageView::ReMeasure()
 {
-    if (!needRefresh_) {
-        return;
+    if (autoEnable_) {
+        Invalidate();
+        Resize(imageWidth_, imageHeight_);
+        Invalidate();
     }
-    needRefresh_ = false;
+}
 
+void UIImageView::UpdateImageWidthAndHeight()
+{
     ImageHeader header = {0};
     image_.GetHeader(header);
 
     imageWidth_ = header.width;
     imageHeight_ = header.height;
     colorFormat_ = header.colorMode;
-
-    if (autoEnable_) {
-        Invalidate();
-        Resize(imageWidth_, imageHeight_);
-        Invalidate();
-    }
 }
 
 void UIImageView::SetSrc(const ImageInfo* src)
@@ -567,9 +512,7 @@ void UIImageView::SetSrc(const ImageInfo* src)
         return;
     }
     needRefresh_ = true;
-    if (autoEnable_) {
-        UIImageView::ReMeasure();
-    }
+    UpdateImageWidthAndHeight();
     Invalidate();
 }
 
