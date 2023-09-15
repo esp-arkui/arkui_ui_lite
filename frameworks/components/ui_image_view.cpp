@@ -258,10 +258,9 @@ void UIImageView::SetResizeMode(ImageResizeMode mode)
         imageResizeMode_ = mode;
     } else if (imageResizeMode_ != mode) {
         needRefresh_ = true;
-        ReMeasure();
         // must update the mode, before calling UpdateDrawTransMap
         imageResizeMode_ = mode;
-        UpdateDrawTransMap(true);
+        needUpdateContentMatrix_ = true;
     }
 }
 
@@ -336,13 +335,16 @@ void UIImageView::UpdateContentMatrix()
     *contentMatrix_ = translateMatrix * scaleMatrix;
 }
 
-void UIImageView::UpdateDrawTransMap(bool updateContentMatrix)
+void UIImageView::UpdateDrawTransMap()
 {
     auto viewRect = GetOrigRect();
-    if (updateContentMatrix || (drawTransMap_ != nullptr &&
+    if (needUpdateContentMatrix_ || (drawTransMap_ != nullptr &&
         (drawTransMap_->GetTransMapRect().GetX() != viewRect.GetX() ||
-        drawTransMap_->GetTransMapRect().GetY() != viewRect.GetY()))) {
+        drawTransMap_->GetTransMapRect().GetY() != viewRect.GetY() ||
+        drawTransMap_->GetTransMapRect().GetWidth() != viewRect.GetWidth() ||
+        drawTransMap_->GetTransMapRect().GetHeight() != viewRect.GetHeight()))) {
         UpdateContentMatrix();
+        needUpdateContentMatrix_ = false;
     }
     // has no transformation
     if ((contentMatrix_ == nullptr) && ((transMap_ == nullptr) || transMap_->IsInvalid())) {
@@ -395,7 +397,7 @@ void UIImageView::SetHeight(int16_t height)
 {
     if (GetHeight() != height) {
         UIView::SetHeight(height);
-        UpdateDrawTransMap(true);
+        needUpdateContentMatrix_ = true;
     }
 }
 
@@ -403,7 +405,7 @@ void UIImageView::SetWidth(int16_t width)
 {
     if (GetWidth() != width) {
         UIView::SetWidth(width);
-        UpdateDrawTransMap(true);
+        needUpdateContentMatrix_ = true;
     }
 }
 
@@ -431,7 +433,6 @@ void UIImageView::OnDraw(BufferInfo& gfxDstBuffer, const Rect& invalidatedArea)
     if ((imageHeight_ == 0) || (imageWidth_ == 0)) {
         return;
     }
-    UpdateDrawTransMap();
     Rect viewRect = GetContentRect();
     Rect trunc(invalidatedArea);
     if (trunc.Intersect(trunc, viewRect)) {
@@ -527,9 +528,7 @@ void UIImageView::SetSrc(const char* src)
         return;
     }
     needRefresh_ = true;
-    if (autoEnable_) {
-        UIImageView::ReMeasure();
-    }
+    needUpdateContentMatrix_ = true;
     Invalidate();
 }
 
@@ -552,6 +551,7 @@ void UIImageView::ReMeasure()
         Resize(imageWidth_, imageHeight_);
         Invalidate();
     }
+    UpdateDrawTransMap()
 }
 
 void UIImageView::SetSrc(const ImageInfo* src)
@@ -567,9 +567,7 @@ void UIImageView::SetSrc(const ImageInfo* src)
         return;
     }
     needRefresh_ = true;
-    if (autoEnable_) {
-        UIImageView::ReMeasure();
-    }
+    needUpdateContentMatrix_ = true;
     Invalidate();
 }
 
