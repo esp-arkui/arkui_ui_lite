@@ -88,8 +88,8 @@ public:
      */
     int16_t GetWidth() override
     {
-        if (needRefresh_ && autoEnable_) {
-            ReMeasure();
+        if (autoEnable_) {
+            return imageWidth_;
         }
         return UIView::GetWidth();
     }
@@ -103,8 +103,8 @@ public:
      */
     int16_t GetHeight() override
     {
-        if (needRefresh_ && autoEnable_) {
-            ReMeasure();
+        if(autoEnable_){
+            return imageHeight_;
         }
         return UIView::GetHeight();
     }
@@ -157,9 +157,8 @@ public:
     void SetAutoEnable(bool enable)
     {
         if (autoEnable_ != enable) {
-            needRefresh_ = autoEnable_ ? needRefresh_ : true;
+            needRefresh_ = true;
             autoEnable_ = enable;
-            UpdateDrawTransMap(true);
         }
     }
 
@@ -269,8 +268,6 @@ public:
         SCALE_DOWN,
     };
     void SetResizeMode(ImageResizeMode mode);
-    void SetWidth(int16_t width) override;
-    void SetHeight(int16_t height) override;
 
     /**
      * @brief Obtains the ImageResizeMode.
@@ -324,6 +321,7 @@ protected:
     bool transMapInvalid_ = true;
 
 private:
+    Rect rectBack_;
     void ReMeasure() override;
 #if defined(ENABLE_GIF) && (ENABLE_GIF == 1)
     friend class GifImageAnimator;
@@ -333,7 +331,8 @@ private:
     bool gifFrameFlag_;
 #endif
     void UpdateContentMatrix();
-    void UpdateDrawTransMap(bool updateContentMatrix = false);
+    void UpdateDrawTransMap();
+    void UpdateImageWidthAndHeight();
     void AdjustScaleAndTranslate(Vector3<float>& scale, Vector3<int16_t>& translate,
                                  int16_t widgetWidth, int16_t widgetHeight) const;
     void SetCordsTmpRect(BufferInfo& gfxDstBuffer, Rect& viewRect, Rect& trunc, Rect& cordsTmp, OpacityType opa);
