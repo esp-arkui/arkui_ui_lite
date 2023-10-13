@@ -110,6 +110,16 @@ public:
     void SetData(List<const char*>* data);
 
     /**
+     * @brief Sets the UILabel adapter data, which is char* array.
+     *
+     * @param value Indicates the pointer of the string linked list data.
+     * @param count Indicates length of array.
+     * @since 1.0
+     * @version 1.0
+     */
+    void SetData(const char** value, int count);
+
+    /**
      * @brief Sets continuously increasing data. For example, if you need to set data <b>0</b>, <b>1</b>, <b>2</b>,
      *        <b>3</b>, <b>4</b>, use this function to set <b>start</b> to 0 and <b>end</b> to 4.
      *
