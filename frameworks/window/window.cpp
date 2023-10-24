@@ -34,11 +34,15 @@ Window* Window::CreateWindow(const WindowConfig& config)
 void Window::DestroyWindow(Window* window)
 {
     if (window != nullptr) {
-        WindowImpl* windowImpl = reinterpret_cast<WindowImpl*>(window);
+        WindowImpl* windowImpl = dynamic_cast<WindowImpl*>(window);
         windowImpl->RemoveFromDisplay();
         windowImpl->UnbindRootView();
         windowImpl->Destroy();
-        delete windowImpl;
+        if (windowImpl != nullptr) {
+            delete windowImpl;
+            windowImpl = nullptr;
+            window = nullptr;
+        }
     }
 }
 }
