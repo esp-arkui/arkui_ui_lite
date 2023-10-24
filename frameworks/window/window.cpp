@@ -35,10 +35,10 @@ void Window::DestroyWindow(Window* window)
 {
     if (window != nullptr) {
         WindowImpl* windowImpl = dynamic_cast<WindowImpl*>(window);
-        windowImpl->RemoveFromDisplay();
-        windowImpl->UnbindRootView();
-        windowImpl->Destroy();
         if (windowImpl != nullptr) {
+            windowImpl->RemoveFromDisplay();
+            windowImpl->UnbindRootView();
+            windowImpl->Destroy();
             delete windowImpl;
             windowImpl = nullptr;
             window = nullptr;
