@@ -114,7 +114,7 @@ public:
     Window() = default;
 
     /**
-     * @brief A destructor used to delete the <b>Theme</b> instance.
+     * @brief A destructor used to delete the <b>Window</b> instance.
      *
      * @since 1.0
      * @version 1.0
