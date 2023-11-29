@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,6 +191,7 @@ bool UISwipeView::OnDragEndEvent(const DragEvent& event)
     SwitchToPage(curIndex_);
 
     Invalidate();
+    InvalidateRect(Rect(0, 0, GetRelativeRect().GetWhith(), GetRelativeRect().GetHeight()));
     return UIView::OnDragEndEvent(event);
 }
 
