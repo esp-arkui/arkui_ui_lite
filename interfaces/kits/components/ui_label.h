@@ -472,6 +472,7 @@ private:
     int16_t offsetX_;
     ColorType textColor_;
 
+    static constexpr float MULTILINE_HEIGHT_COEFFICIENT = 1.1f;
     static constexpr uint16_t DEFAULT_ANIMATOR_SPEED = 35;
     union {
         Animator* animator;
