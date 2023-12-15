@@ -240,7 +240,7 @@ void UILabel::SetLineBreakMode(const uint8_t lineBreakMode)
     } else {
         labelText_->SetExpandHeight(false);
     }
-    if ((lineBreakMode_ == LINE_BREAK_CLIP)) {
+    if (lineBreakMode_ == LINE_BREAK_CLIP) {
         labelText_->SetExpandHeight(false);
         labelText_->SetExpandWidth(true);
     }
