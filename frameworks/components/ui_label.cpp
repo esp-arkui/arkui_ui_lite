@@ -343,7 +343,8 @@ void UILabel::ReMeasure()
     uint32_t textLen = static_cast<uint32_t>(strlen(labelText_->GetText()));
     switch (lineBreakMode_) {
         case LINE_BREAK_ADAPT:
-            Resize(textSize.x, static_cast<int16_t>(MULTILINE_HEIGHT_COEFFICIENT * GetFontSize())); // GetFontSize() * 1.1 : label more higher than text font size
+            // GetFontSize() * 1.1 : label more higher than text font size
+            Resize(textSize.x, static_cast<int16_t>(MULTILINE_HEIGHT_COEFFICIENT * GetFontSize()));
             break;
         case LINE_BREAK_STRETCH:
             SetWidth(textSize.x);
