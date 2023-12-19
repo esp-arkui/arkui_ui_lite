@@ -240,6 +240,11 @@ void UILabel::SetLineBreakMode(const uint8_t lineBreakMode)
     } else {
         labelText_->SetExpandHeight(false);
     }
+    if (lineBreakMode_ == LINE_BREAK_CLIP) {
+        labelText_->SetExpandHeight(false);
+        labelText_->SetExpandWidth(true);
+    }
+
     if (lineBreakMode_ != LINE_BREAK_MARQUEE) {
         offsetX_ = 0;
         if (hasAnimator_) {
@@ -335,22 +340,32 @@ void UILabel::ReMeasure()
     }
     labelText_->ReMeasureTextSize(GetContentRect(), style);
     Point textSize = labelText_->GetTextSize();
+    uint32_t textLen = static_cast<uint32_t>(strlen(labelText_->GetText()));
     switch (lineBreakMode_) {
         case LINE_BREAK_ADAPT:
-            Resize(textSize.x, textSize.y);
+            // GetFontSize() * 1.1 : label more higher than text font size
+            Resize(textSize.x, static_cast<int16_t>(MULTILINE_HEIGHT_COEFFICIENT * GetFontSize()));
             break;
         case LINE_BREAK_STRETCH:
             SetWidth(textSize.x);
             break;
-        case LINE_BREAK_WRAP:
-            SetHeight(textSize.y);
+        case LINE_BREAK_WRAP: {
+            if (GetFontSize() * textLen % textSize.x != 0) {
+                SetHeight((GetFontSize() * textLen / textSize.x + 1) * GetFontSize());
+            } else {
+                SetHeight((GetFontSize() * textLen / textSize.x) * GetFontSize());
+            }
             break;
+        }
         case LINE_BREAK_ELLIPSIS:
             ellipsisIndex_ = labelText_->GetEllipsisIndex(GetContentRect(), style);
             labelText_->ReMeasureTextWidthInEllipsisMode(GetContentRect(), style, ellipsisIndex_);
             break;
         case LINE_BREAK_MARQUEE:
             RemeasureForMarquee(textSize.x);
+            break;
+        case LINE_BREAK_CLIP:
+            SetWidth(GetWidth());
             break;
         default:
             break;
