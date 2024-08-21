@@ -118,7 +118,7 @@ void WindowImpl::Hide()
     }
 }
 
-void WindowImpl::MoveTo(int16_t x, int16_t y)
+void WindowImpl::MoveTo(int16_t x, int16_t y, bool isMoveToGlobal)
 {
     GRAPHIC_LOGI("MoveTo");
     config_.rect.SetPosition(x, y);

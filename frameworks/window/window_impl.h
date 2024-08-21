@@ -34,7 +34,7 @@ public:
 
     void Show() override;
     void Hide() override;
-    void MoveTo(int16_t x, int16_t y) override;
+    void MoveTo(int16_t x, int16_t y, bool isMoveToGlobal = false) override;
     void Resize(int16_t width, int16_t height) override;
     void RaiseToTop() override;
     void LowerToBottom() override;
