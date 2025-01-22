@@ -210,7 +210,7 @@ int8_t UIFontBitmap::GetFontVersion(FontType type, const char* path, char* versi
 
 int8_t UIFontBitmap::SetCurrentLangId(uint8_t langId)
 {
-    GRAPHIC_LOGE("UIFontBitmap::SetCurrentLangId start");
+    GRAPHIC_LOGI("UIFontBitmap::SetCurrentLangId start");
     UIFontCacheManager* fontCacheManager = UIFontCacheManager::GetInstance();
 
     if (fontCacheManager->GlyphsCacheInit() != RET_VALUE_OK) {

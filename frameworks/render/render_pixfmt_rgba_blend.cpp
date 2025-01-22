@@ -16,6 +16,10 @@
 #include "render_pixfmt_rgba_blend.h"
 
 namespace OHOS {
+
+ColorMode RgbaBlender::DstColorMode;
+uint8_t RgbaBlender::PIX_STEP;
+
 bool RenderPixfmtRgbaBlend::Attach(RenderPixfmtRgbaBlend& pixf, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
     Rect32 r(x1, y1, x2, y2);

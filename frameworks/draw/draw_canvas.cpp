@@ -150,6 +150,9 @@ void DrawCanvas::InitRenderAndTransform(BufferInfo& gfxDstBuffer,
                                         const Style& style,
                                         const Paint& paint)
 {
+    RgbaBlender::DstColorMode = gfxDstBuffer.mode;
+    RgbaBlender::PIX_STEP = DrawUtils::GetByteSizeByColorMode(RgbaBlender::DstColorMode);
+
     int16_t realLeft = rect.GetLeft() + style.paddingLeft_ + style.borderWidth_;
     int16_t realTop = rect.GetTop() + style.paddingTop_ + style.borderWidth_;
     transform.Reset();

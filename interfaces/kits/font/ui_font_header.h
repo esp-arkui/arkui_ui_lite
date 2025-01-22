@@ -170,6 +170,40 @@ constexpr uint32_t SHAPING_CACHE_LENGTH             = 0x50000; // 328K
 constexpr uint32_t MIN_SHAPING_PSRAM_LENGTH =
     SHAPING_TTF_TABLE_LENGTH + SHAPING_WORD_DICT_LENGTH + SHAPING_CACHE_LENGTH + HARFBUZ_CACHE_LENGTH;
 
+#ifdef BIT0
+#undef BIT0
+#endif
+#ifdef BIT1
+#undef BIT1
+#endif
+#ifdef BIT2
+#undef BIT2
+#endif
+#ifdef BIT3
+#undef BIT3
+#endif
+#ifdef BIT4
+#undef BIT4
+#endif
+#ifdef BIT5
+#undef BIT5
+#endif
+#ifdef BIT6
+#undef BIT6
+#endif
+#ifdef BIT7
+#undef BIT7
+#endif
+#ifdef BIT8
+#undef BIT8
+#endif
+
+#ifdef BIT12
+#undef BIT12
+#endif
+#ifdef BIT18
+#undef BIT18
+#endif
 // other definition
 constexpr uint8_t FONT_DPI = 100;
 constexpr uint8_t FONT_PIXEL_IN_POINT = 64;

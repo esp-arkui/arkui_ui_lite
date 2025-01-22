@@ -47,7 +47,7 @@ void GraphicStartUp::InitFontEngine(uintptr_t cacheMemAddr,
                                     const char* dPath,
                                     const char* ttfName)
 {
-    GRAPHIC_LOGE("GraphicStartUp::InitFontEngine start");
+    GRAPHIC_LOGI("GraphicStartUp::InitFontEngine start");
     UIFont* uiFont = UIFont::GetInstance();
     if (uiFont == nullptr) {
         GRAPHIC_LOGE("Get UIFont error");
@@ -62,7 +62,7 @@ void GraphicStartUp::InitFontEngine(uintptr_t cacheMemAddr,
         if (ttfName != nullptr) {
             uint8_t ret2 = uiFont->RegisterFontInfo(ttfName);
             if (ret2 == INVALID_UCHAR_ID) {
-                GRAPHIC_LOGW("SetTtfName failed");
+                GRAPHIC_LOGW("SetTtfName %s failed", ttfName);
             }
         }
     }

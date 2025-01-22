@@ -25,6 +25,9 @@ namespace OHOS {
 #elif defined _WIN32
 #define IMAGE_DIR "..\\config\\images\\"
 #define FACE_DIR "..\\config\\faces\\default\\"
+#elif defined ESP_PLATFORM
+#define IMAGE_DIR "/rootfs/config/images/"
+#define FACE_DIR "/rootfs/config/faces/default/"
 #else
 #define IMAGE_DIR RESOURCE_DIR
 #define FACE_DIR RESOURCE_DIR

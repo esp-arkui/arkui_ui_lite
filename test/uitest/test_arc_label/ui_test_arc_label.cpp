@@ -153,6 +153,7 @@ public:
         label->SetRollCount(ANIMATOR_LOOPCOUNT);
         label->SetRollSpeed(ANIMATOR_SPEED);
         label->Start();
+        return true;
     }
 private:
     UIView* view_;

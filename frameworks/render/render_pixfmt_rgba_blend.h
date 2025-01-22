@@ -17,6 +17,7 @@
 #define GRAPHIC_LITE_RENDER_PIXFMT_RGBA_BLEND_H
 
 #include "draw/draw_utils.h"
+#include "draw/color_fill.h"
 #include "engines/gfx/gfx_engine_manager.h"
 #include "gfx_utils/heap_base.h"
 #include "gfx_utils/graphic_log.h"
@@ -26,10 +27,10 @@
 #include "graphic_neon_pipeline.h"
 #endif
 namespace OHOS {
-const uint8_t NUM_COMPONENTS = 4;
-const uint8_t PIX_STEP = 4;
 
 struct RgbaBlender {
+    static ColorMode DstColorMode;
+    static uint8_t PIX_STEP;
 #ifdef ARM_NEON_OPT
     /**
      * @brief Mix the pixels with the color component.
@@ -96,17 +97,19 @@ struct RgbaBlender {
      * @version 1.0
      */
     static inline void BlendPix(
-        uint8_t* color, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+        uint8_t* color, uint8_t red, uint8_t green, uint8_t blue, uint8_t _alpha)
     {
-        color[OrderBgra::RED] = Rgba8T::Lerp(color[OrderBgra::RED], red, alpha);
-        color[OrderBgra::GREEN] = Rgba8T::Lerp(color[OrderBgra::GREEN], green, alpha);
-        color[OrderBgra::BLUE] = Rgba8T::Lerp(color[OrderBgra::BLUE], blue, alpha);
-        color[OrderBgra::ALPHA] = Rgba8T::Prelerp(color[OrderBgra::ALPHA], alpha, alpha);
+        Color32 fillColor;
+        fillColor.red = red;
+        fillColor.green = green;
+        fillColor.blue = blue;
+        fillColor.alpha = _alpha;
+        COLOR_FILL_BLEND(color, DstColorMode, &fillColor, ARGB8888, _alpha);
     }
 };
 
 struct PixelColorType {
-    uint8_t colors[NUM_COMPONENTS];
+    uint8_t colors[4];
 
     /**
      * @brief Set Colors.
@@ -114,12 +117,14 @@ struct PixelColorType {
      * @since 1.0
      * @version 1.0
      */
-    void SetPixelColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+    void SetPixelColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t _alpha)
     {
-        colors[OrderBgra::RED] = red;
-        colors[OrderBgra::GREEN] = green;
-        colors[OrderBgra::BLUE] = blue;
-        colors[OrderBgra::ALPHA] = alpha;
+        Color32 fillColor;
+        fillColor.red = red;
+        fillColor.green = green;
+        fillColor.blue = blue;
+        fillColor.alpha = _alpha;
+        COLOR_FILL_BLEND(colors, RgbaBlender::DstColorMode, &fillColor, ARGB8888, _alpha);
     }
 
     /**
@@ -141,6 +146,7 @@ struct PixelColorType {
      */
     void GetPixelColor(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha) const
     {
+        GRAPHIC_LOGW("GetPixelColor is only supportd in RGBA8888");
         red = colors[OrderBgra::RED];
         green = colors[OrderBgra::GREEN];
         blue = colors[OrderBgra::BLUE];
@@ -155,6 +161,7 @@ struct PixelColorType {
      */
     Rgba8T GetPixelColor() const
     {
+        GRAPHIC_LOGW("GetPixelColor is only supportd in RGBA8888");
         return Rgba8T(colors[OrderBgra::RED], colors[OrderBgra::GREEN],
                       colors[OrderBgra::BLUE], colors[OrderBgra::ALPHA]);
     }
@@ -167,7 +174,7 @@ struct PixelColorType {
     */
     PixelColorType* Next()
     {
-        return reinterpret_cast<PixelColorType*>((colors + PIX_STEP));
+        return reinterpret_cast<PixelColorType*>((colors + RgbaBlender::PIX_STEP));
     }
 
     /**
@@ -178,7 +185,7 @@ struct PixelColorType {
     */
     const PixelColorType* Next() const
     {
-        return reinterpret_cast<const PixelColorType*>(colors + PIX_STEP);
+        return reinterpret_cast<const PixelColorType*>(colors + RgbaBlender::PIX_STEP);
     }
 
     /**
@@ -189,7 +196,7 @@ struct PixelColorType {
     */
     PixelColorType* Advance(int32_t pixelIndex)
     {
-        return reinterpret_cast<PixelColorType*>(colors + pixelIndex * PIX_STEP);
+        return reinterpret_cast<PixelColorType*>(colors + pixelIndex * RgbaBlender::PIX_STEP);
     }
 
     /**
@@ -200,13 +207,13 @@ struct PixelColorType {
     */
     const PixelColorType* Advance(int32_t pixelIndex) const
     {
-        return reinterpret_cast<const PixelColorType*>(colors + pixelIndex * PIX_STEP);
+        return reinterpret_cast<const PixelColorType*>(colors + pixelIndex * RgbaBlender::PIX_STEP);
     }
 };
 
 class RenderPixfmtRgbaBlend : public HeapBase {
 public:
-    const uint8_t PIX_WIDTH = sizeof(uint8_t) * PIX_STEP;
+
     RenderPixfmtRgbaBlend() : rBuf_(0) {}
     explicit RenderPixfmtRgbaBlend(RenderBuffer& rBuf) :  rBuf_(&rBuf) {}
 
@@ -285,12 +292,12 @@ public:
 
     virtual inline uint8_t* PixPtr(int32_t x, int32_t y)
     {
-        return rBuf_->GetRowPtr(y) + sizeof(uint8_t) * (x * PIX_STEP);
+        return rBuf_->GetRowPtr(y) + sizeof(uint8_t) * (x * RgbaBlender::PIX_STEP);
     }
 
     virtual inline const uint8_t* PixPtr(int32_t x, int32_t y) const
     {
-        return rBuf_->GetRowPtr(y) + sizeof(uint8_t) * (x * PIX_STEP);
+        return rBuf_->GetRowPtr(y) + sizeof(uint8_t) * (x * RgbaBlender::PIX_STEP);
     }
 
     /**
@@ -301,7 +308,7 @@ public:
      */
     virtual inline PixelColorType* PixValuePtr(int32_t x, int32_t y)
     {
-        return reinterpret_cast<PixelColorType*>(rBuf_->GetRowPtr(y) + sizeof(uint8_t) * (x * PIX_STEP));
+        return reinterpret_cast<PixelColorType*>(rBuf_->GetRowPtr(y) + sizeof(uint8_t) * (x * RgbaBlender::PIX_STEP));
     }
 
     /**
@@ -313,7 +320,7 @@ public:
     virtual inline const PixelColorType* PixValuePtr(int32_t x, int32_t y) const
     {
         uint8_t* pixelPtr = rBuf_->GetRowPtr(y);
-        return pixelPtr ? reinterpret_cast<PixelColorType*>(pixelPtr + sizeof(uint8_t) * (x * PIX_STEP)) : nullptr;
+        return pixelPtr ? reinterpret_cast<PixelColorType*>(pixelPtr + sizeof(uint8_t) * (x * RgbaBlender::PIX_STEP)) : nullptr;
     }
 
     /**

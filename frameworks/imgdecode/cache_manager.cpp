@@ -181,7 +181,7 @@ bool CacheManager::GetImageHeader(const char* path, ImageHeader& header)
     Style useless;
     RetCode ret = Open(path, useless, entry);
     if (ret != RetCode::OK) {
-        GRAPHIC_LOGW("CacheManager::GetImageHeader Image get info found unknown src type\n");
+        GRAPHIC_LOGW("CacheManager::GetImageHeader Image [%s] get info found unknown src type\n", path);
         return false;
     }
 
